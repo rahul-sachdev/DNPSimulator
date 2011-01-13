@@ -322,6 +322,39 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //check that no more frags are sent			
 	}
 
+	BOOST_AUTO_TEST_CASE(UnsolEventBufferOverflow)
+	{
+		SlaveConfig cfg;
+		cfg.mUnsolMask.class1 = true; // this allows the EnableUnsol sequence to be skipped
+		cfg.mMaxBinaryEvents = 2; // set the max to 3 to max testing easy
+		cfg.mUnsolPackDelay = 0;
+		AsyncSlaveTestObject t(cfg);
+		t.db.Configure(DT_BINARY, 1);
+		t.db.SetClass(DT_BINARY, PC_CLASS_1);
+
+		// null unsol
+		t.slave.OnLowerLayerUp();
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
+
+		// this transaction will overflow the event buffer
+		{
+			Transaction tr(t.slave.GetDataObserver());
+			t.slave.GetDataObserver()->Update(Binary(true, BQ_ONLINE), 0);
+			t.slave.GetDataObserver()->Update(Binary(false, BQ_ONLINE), 0);
+			t.slave.GetDataObserver()->Update(Binary(true, BQ_ONLINE), 0);
+		}
+
+		BOOST_REQUIRE(t.mts.DispatchOne()); //dispatch the data update event
+
+		// should immediately try to send 2 unsol events
+		// Grp2Var1, qual 0x17, count 2, index 0
+		// The last two values should be published, 0x01 and 0x81 (false and true)
+		// the first value is lost off the front of the buffer
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 02 01 17 02 00 01 00 81");
+
+		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //check that no more frags are sent			
+	}
+
 	BOOST_AUTO_TEST_CASE(UnsolMultiFragments)
 	{
 		SlaveConfig cfg;

@@ -354,14 +354,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DNP3 Test Set"
-        "ProductCode" = "8:{73C3B9AD-3CC6-498E-873B-F1CF59C08F52}"
-        "PackageCode" = "8:{7AAD7375-DD8D-4B55-B84C-3B585D1BD977}"
+        "ProductCode" = "8:{680D0FB5-2E33-4078-BABE-C1DAC7A9C5E3}"
+        "PackageCode" = "8:{CED7715C-132E-44F9-A4AB-A986D14C17E2}"
         "UpgradeCode" = "8:{F07912E9-9BAF-4F92-ADE2-8C169AAFB16E}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.9.0"
+        "ProductVersion" = "8:0.9.3"
         "Manufacturer" = "8:http://code.google.com/p/dnp3/"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -970,7 +970,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_6A312EAB7E9140DC81E3439C767051CA"
             {
-            "SourcePath" = "8:..\\testset\\debug\\TestSet.exe"
+            "SourcePath" = "8:..\\testset\\release\\TestSet.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_9C472356ABDA4F198CFB74D8416F04A0"

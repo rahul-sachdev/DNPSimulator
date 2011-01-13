@@ -128,8 +128,11 @@ namespace apl { namespace dnp {
 
 		if(this->NumUnselected() > M_MAX_EVENTS) { //we've overflown and we've got to drop an event
 			mIsOverflown = true;
-			if(mDropFirst) mEventSet.erase(mEventSet.begin());
-			else mEventSet.erase((++mEventSet.rbegin()).base());
+			typename SetType::Type::iterator itr;			
+			if(mDropFirst) itr = mEventSet.begin();
+			else itr = (++mEventSet.rbegin()).base();
+			this->mCounter.DecrCount(itr->mClass);
+			mEventSet.erase(itr);
 		}
 	}
 
