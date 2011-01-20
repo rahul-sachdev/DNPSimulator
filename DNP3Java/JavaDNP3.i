@@ -11,7 +11,7 @@ using namespace apl::dnp;
 
 %pragma(java) jniclasscode=%{
   static {
-    System.loadLibrary("dnp3java");    
+    if(System.getProperty("reef.protocol.dnp3.nostaticload") == null) System.loadLibrary("dnp3java");    
   }
 %}
 
