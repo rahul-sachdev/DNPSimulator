@@ -8,7 +8,7 @@ $options = {
 :libs => $PLATFORM_LIBS + Boost::get_static_libs + $WINSOCK_LIBS,
 :project_libs => [:dnp3, :apl],
 :plugins => ['swigjava'], #swigjava specific options
-:java_package => 'reef.protocol.dnp3', 
-:java_outdir => 'src/main/java/reef/protocol/dnp3'
+:java_package => 'org.totalgrid.reef.protocol.dnp3', 
+:java_outdir => 'src/main/java/org/totalgrid/reef/protocol/dnp3'
 }
 
