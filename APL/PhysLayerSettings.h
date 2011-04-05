@@ -24,18 +24,23 @@
 
 namespace apl {
 
+class IPhysMonitor;
+
 struct PhysLayerSettings
 {
 	public:
-	PhysLayerSettings() {}
+	PhysLayerSettings() : mpObserver(NULL), LogLevel(LEV_INFO), RetryTimeout(5000) {}
 
-	PhysLayerSettings(FilterLevel aLevel, millis_t aRetryTimeout) :
+	
+	PhysLayerSettings(FilterLevel aLevel, millis_t aRetryTimeout, IPhysMonitor* apObserver = NULL) :
 	LogLevel(aLevel),
-	RetryTimeout(aRetryTimeout)
+	RetryTimeout(aRetryTimeout),
+	mpObserver(apObserver)
 	{}
 
-	FilterLevel LogLevel;
-	millis_t RetryTimeout;
+	const FilterLevel LogLevel;
+	const millis_t RetryTimeout;
+	IPhysMonitor* mpObserver;
 };
 
 }

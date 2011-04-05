@@ -37,7 +37,7 @@ class PhysLayerInstance
 		PhysLayerInstance(IPhysicalLayerAsyncFactory);
 		PhysLayerInstance(IPhysicalLayerAsync* apPhys, Logger*);
 
-		IPhysicalLayerAsync* GetAsync(Logger*, boost::asio::io_service*);
+		IPhysicalLayerAsync* GetLayer(Logger*, boost::asio::io_service*);		
 		void Release();
 
 
@@ -45,6 +45,7 @@ class PhysLayerInstance
 
 		IPhysicalLayerAsyncFactory mFactoryAsync;
 		IPhysicalLayerAsync* mpLayer;
+		
 		Logger* mpLogger;
 
 		void SetLayer(IPhysicalLayerAsync* apLayer, Logger* apLogger);

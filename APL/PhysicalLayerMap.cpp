@@ -47,7 +47,7 @@ namespace apl
 	IPhysicalLayerAsync* PhysicalLayerMap ::GetLayer(const std::string& arName, boost::asio::io_service* apService)
 	{
 		PhysLayerSettings s = this->GetSettings(arName);
-		return mInstanceMap[arName].GetAsync(this->MakeLogger(arName, s.LogLevel), apService);
+		return mInstanceMap[arName].GetLayer(this->MakeLogger(arName, s.LogLevel), apService);
 	}
 
 	void PhysicalLayerMap ::AddLayer(const std::string& arName, PhysLayerSettings aSettings, PhysLayerInstance aInstance)
@@ -55,8 +55,8 @@ namespace apl
 		if(mSettingsMap.find(arName) != mSettingsMap.end())
 			throw Exception(LOCATION, "Layer with that name already exists");
 		
-		mSettingsMap[arName] = aSettings;
-		mInstanceMap[arName] = aInstance;
+		mSettingsMap.insert(SettingsMap::value_type(arName, aSettings));
+		mInstanceMap.insert(InstanceMap::value_type(arName, aInstance));
 	}
 
 

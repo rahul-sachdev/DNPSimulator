@@ -62,7 +62,7 @@ class AsyncPort : public Loggable, public IPhysMonitor
 	};
 
 	public:
-	AsyncPort(const std::string& arName, Logger*, AsyncTaskGroup*, ITimerSource* apTimerSrc, IPhysicalLayerAsync*, millis_t aOpenDelay);
+	AsyncPort(const std::string& arName, Logger*, AsyncTaskGroup*, ITimerSource* apTimerSrc, IPhysicalLayerAsync*, millis_t aOpenDelay, IPhysMonitor*);
 	~AsyncPort();
 
 
@@ -83,6 +83,7 @@ class AsyncPort : public Loggable, public IPhysMonitor
 	AsyncLinkLayerRouter mRouter;
 	AsyncTaskGroup* mpGroup;
 	IPhysicalLayerAsync* mpPhys;
+	IPhysMonitor* mpObserver;
 	bool mRelease;
 
 	private:
