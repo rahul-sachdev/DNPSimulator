@@ -29,7 +29,7 @@ class IPhysMonitor;
 struct PhysLayerSettings
 {
 	public:
-	PhysLayerSettings() : mpObserver(NULL), LogLevel(LEV_INFO), RetryTimeout(5000) {}
+	PhysLayerSettings() : LogLevel(LEV_INFO), RetryTimeout(5000), mpObserver(NULL) {}
 
 	
 	PhysLayerSettings(FilterLevel aLevel, millis_t aRetryTimeout, IPhysMonitor* apObserver = NULL) :

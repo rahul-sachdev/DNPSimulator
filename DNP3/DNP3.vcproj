@@ -564,6 +564,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\MasterObserver.h"
+					>
+				</File>
+				<File
 					RelativePath=".\MasterStackConfig.h"
 					>
 				</File>

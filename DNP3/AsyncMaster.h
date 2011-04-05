@@ -32,6 +32,7 @@
 #include "MasterConfig.h"
 #include "ObjectInterfaces.h"
 #include "MasterSchedule.h"
+#include "MasterObserver.h"
 
 // includes for tasks
 #include "StartupTasks.h"
@@ -58,13 +59,7 @@ class AMS_Base;
 	Coordination of tasks is handled by a higher level task scheduler.
 */
 class AsyncMaster : public Loggable, public IAsyncAppUser
-{
-	enum CommsStatus
-	{
-		COMMS_DOWN = 0,
-		COMMS_UP = 2
-	};
-
+{	
 	friend class AMS_Base;
 	friend class AMS_Idle;
 	friend class AMS_OpenBase;
@@ -98,6 +93,8 @@ class AsyncMaster : public Loggable, public IAsyncAppUser
 
 	private:
 
+	void UpdateState(MasterStates aState);
+
 	/* Task functions used for scheduling */
 
 	void WriteIIN(ITask* apTask);
@@ -113,8 +110,6 @@ class AsyncMaster : public Loggable, public IAsyncAppUser
 	void ProcessDataResponse(const APDU&);	/// Read data output of solicited or unsolicited response and publish
 	void StartTask(MasterTaskBase*, bool aInit);		/// Starts a task running
 
-	CachedLogVariable mCommsStatus;			/// notifies the outside world of status
-
 	PostingNotifierSource mNotifierSource;	/// way to get special notifiers for the command queue / vto
 	CommandQueue mCommandQueue;				/// Threadsafe queue for buffering command requests
 	
@@ -128,7 +123,9 @@ class AsyncMaster : public Loggable, public IAsyncAppUser
 
 	AMS_Base* mpState;						 /// Pointer to active state, start in TLS_Closed
 	MasterTaskBase* mpTask;					 /// The current master task
-	ITask* mpScheduledTask;						 /// The current scheduled task
+	ITask* mpScheduledTask;					 /// The current scheduled task
+	IMasterObserver* mpObserver;		     /// Callback for master state enumeration
+	MasterStates mState;					 /// Current state of the master
 
 	/* --- Task plumbing --- */
 

@@ -24,16 +24,18 @@
 #include <APL/CommandResponseQueue.h>
 
 #include "AsyncMasterTestObject.h"
+#include "QueueingMasterObserver.h"
 
 using namespace apl;
 using namespace apl::dnp;
 using namespace boost;
 
 
-	void TestForIntegrityPoll(AsyncMasterTestObject& t)
+	void TestForIntegrityPoll(AsyncMasterTestObject& t, bool aSucceed = true)
 	{
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06");
-		t.RespondToMaster("C0 81 00 00");
+		if(aSucceed) t.RespondToMaster("C0 81 00 00");
+		else t.master.OnSolFailure();
 	}
 
 	void DoControlSelect(AsyncMasterTestObject& t, CommandResponseQueue& q)
@@ -125,6 +127,46 @@ using namespace boost;
 			
 			TestForIntegrityPoll(t);
 			BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0);
+		}
+		
+		BOOST_AUTO_TEST_CASE(StateTransitionSuccessFailure)
+		{	
+			QueueingMasterObserver obs;
+			MasterConfig cfg; cfg.IntegrityRate = 1000;
+			cfg.mpObserver = &obs;
+			AsyncMasterTestObject t(cfg);
+			BOOST_REQUIRE_EQUAL(obs.mQueue.size(), 1);
+			BOOST_REQUIRE_EQUAL(obs.mQueue.front(), MS_COMMS_DOWN);
+			obs.mQueue.pop_front();
+			t.master.OnLowerLayerUp();
+			BOOST_REQUIRE_EQUAL(obs.mQueue.size(), 0);
+			
+			TestForIntegrityPoll(t);
+			BOOST_REQUIRE_EQUAL(obs.mQueue.size(), 1);
+			BOOST_REQUIRE_EQUAL(obs.mQueue.front(), MS_COMMS_UP);
+			obs.mQueue.pop_front();
+
+			t.fake_time.Advance(2000);
+			BOOST_REQUIRE(t.mts.DispatchOne());			
+			TestForIntegrityPoll(t, false);
+						
+			BOOST_REQUIRE_EQUAL(obs.mQueue.size(), 1);
+			BOOST_REQUIRE_EQUAL(obs.mQueue.front(), MS_COMMS_DOWN);
+			obs.mQueue.pop_front();
+
+			t.fake_time.Advance(10000);
+			BOOST_REQUIRE(t.mts.DispatchOne());
+			TestForIntegrityPoll(t);
+						
+			BOOST_REQUIRE_EQUAL(obs.mQueue.size(), 1);
+			BOOST_REQUIRE_EQUAL(obs.mQueue.front(), MS_COMMS_UP);
+			obs.mQueue.pop_front();
+
+			t.master.OnLowerLayerDown();
+
+			BOOST_REQUIRE_EQUAL(obs.mQueue.size(), 1);
+			BOOST_REQUIRE_EQUAL(obs.mQueue.front(), MS_COMMS_DOWN);
+			obs.mQueue.pop_front();
 		}
 
 		BOOST_AUTO_TEST_CASE(UnsolDisableEnableOnStartup)
