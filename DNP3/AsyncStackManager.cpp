@@ -179,7 +179,7 @@ AsyncPort* AsyncStackManager::AllocatePort(const std::string& arName)
 		IPhysicalLayerAsync* pPhys = mMgr.GetLayer(arName, mService.Get());
 		Logger* pPortLogger = mpLogger->GetSubLogger(arName, s.LogLevel);
 		pPortLogger->SetVarName(arName);
-		pPort = this->CreatePort(arName, pPhys, pPortLogger, s.RetryTimeout);		
+		pPort = this->CreatePort(arName, pPhys, pPortLogger, s.RetryTimeout, s.mpObserver);		
 	}
 	return pPort;
 }
@@ -192,10 +192,10 @@ AsyncPort* AsyncStackManager::GetPort(const std::string& arName)
 }
 
 
-AsyncPort* AsyncStackManager::CreatePort(const std::string& arName, IPhysicalLayerAsync* apPhys, Logger* apLogger, millis_t aOpenDelay)
+AsyncPort* AsyncStackManager::CreatePort(const std::string& arName, IPhysicalLayerAsync* apPhys, Logger* apLogger, millis_t aOpenDelay, IPhysMonitor* apObserver)
 {
 	if(GetPortPointer(arName) != NULL) throw ArgumentException(LOCATION, "Port already exists");
-	AsyncPort* pPort = new AsyncPort(arName, apLogger, mScheduler.NewGroup(), &mTimerSrc, apPhys, aOpenDelay);
+	AsyncPort* pPort = new AsyncPort(arName, apLogger, mScheduler.NewGroup(), &mTimerSrc, apPhys, aOpenDelay, apObserver);
 	mPortToPort[arName] = pPort;
 	return pPort;
 }

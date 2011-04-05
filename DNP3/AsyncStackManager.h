@@ -128,7 +128,7 @@ class AsyncStackManager : private Threadable, private Loggable
 	private:
 
 		AsyncPort* AllocatePort(const std::string& arName);
-		AsyncPort* CreatePort(const std::string& arName, IPhysicalLayerAsync* apPhys, Logger* apLogger, millis_t aOpenDelay);
+		AsyncPort* CreatePort(const std::string& arName, IPhysicalLayerAsync* apPhys, Logger* apLogger, millis_t aOpenDelay, IPhysMonitor* apObserver);
 		AsyncPort* GetPort(const std::string& arName);
 		AsyncPort* GetPortByStackName(const std::string& arStackName);
 		AsyncPort* GetPortPointer(const std::string& arName);

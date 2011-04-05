@@ -28,12 +28,13 @@
 
 namespace apl { namespace dnp {
 
-AsyncPort::AsyncPort(const std::string& arName, Logger* apLogger, AsyncTaskGroup* apGroup, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, millis_t aOpenDelay) :
+AsyncPort::AsyncPort(const std::string& arName, Logger* apLogger, AsyncTaskGroup* apGroup, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, millis_t aOpenDelay, IPhysMonitor* apObserver) :
 Loggable(apLogger->GetSubLogger("port")),
 mName(arName),
 mRouter(apLogger, apPhys, apTimerSrc, aOpenDelay),
 mpGroup(apGroup),
 mpPhys(apPhys),
+mpObserver(apObserver),
 mRelease(false)
 {
 	mRouter.SetMonitor(this);
@@ -58,13 +59,10 @@ void AsyncPort::Release() //do nothing right now
 
 void AsyncPort::OnStateChange(IPhysMonitor::State aState)
 {
-	switch(aState) {
-		case(IPhysMonitor::Stopped):
-			if(mRelease) delete this; //when the router stops, delete ourselves
-			break;
-		default:
-			break; 
-	}	
+	if(mpObserver != NULL) mpObserver->OnStateChange(aState);
+
+	//when the router stops, delete ourselves
+	if((aState == IPhysMonitor::Stopped) && mRelease) delete this;
 }
 
 void AsyncPort::Associate(const std::string& arStackName, AsyncStack* apStack, uint_16_t aLocalAddress)
