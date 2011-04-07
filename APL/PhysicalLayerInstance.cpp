@@ -46,7 +46,7 @@ void PhysLayerInstance::Release()
 	SetLayer(NULL, NULL);
 }
 
-IPhysicalLayerAsync*  PhysLayerInstance::GetAsync(Logger* apLogger, boost::asio::io_service* apService)
+IPhysicalLayerAsync*  PhysLayerInstance::GetLayer(Logger* apLogger, boost::asio::io_service* apService)
 {
 	if(mpLayer == NULL) this->SetLayer(mFactoryAsync(apLogger, apService), apLogger);
 	return mpLayer;

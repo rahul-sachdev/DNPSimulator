@@ -42,7 +42,6 @@ namespace apl { namespace dnp {
 
 AsyncMaster::AsyncMaster(Logger* apLogger, MasterConfig aCfg, IAsyncAppLayer* apAppLayer, IDataObserver* apPublisher, AsyncTaskGroup* apTaskGroup, ITimerSource* apTimerSrc, ITimeSource* apTimeSrc) :
 Loggable(apLogger),
-mCommsStatus(apLogger, "comms_status"),
 mRequest(aCfg.FragSize),
 mpAppLayer(apAppLayer),
 mpPublisher(apPublisher),
@@ -52,6 +51,8 @@ mpTimeSrc(apTimeSrc),
 mpState(AMS_Closed::Inst()),
 mpTask(NULL),
 mpScheduledTask(NULL),
+mpObserver(aCfg.mpObserver),
+mState(MS_UNKNOWN),
 mSchedule(MasterSchedule::GetSchedule(aCfg, this, apTaskGroup)),
 mClassPoll(apLogger, apPublisher),
 mClearRestart(apLogger),
@@ -60,8 +61,16 @@ mTimeSync(apLogger, apTimeSrc),
 mExecuteBO(apLogger),
 mExecuteSP(apLogger)
 {
-	mCommandQueue.SetNotifier(mNotifierSource.Get(boost::bind(&AsyncTaskBase::Enable, mSchedule.mpCommandTask), mpTimerSrc));
-	mCommsStatus.Set(COMMS_DOWN);
+	mCommandQueue.SetNotifier(mNotifierSource.Get(boost::bind(&AsyncTaskBase::Enable, mSchedule.mpCommandTask), mpTimerSrc));	
+	this->UpdateState(MS_COMMS_DOWN);
+}
+
+void AsyncMaster::UpdateState(MasterStates aState)
+{
+	if(mState != aState) {
+		mState = aState;
+		if(mpObserver != NULL) mpObserver->OnStateChange(aState);
+	}
 }
 
 void AsyncMaster::ProcessIIN(const IINField& arIIN)
@@ -181,7 +190,7 @@ void AsyncMaster::OnLowerLayerDown()
 {
 	mpState->OnLowerLayerDown(this);
 	mSchedule.DisableOnlineTasks();
-	mCommsStatus.Set(COMMS_DOWN);
+	this->UpdateState(MS_COMMS_DOWN);
 }
 
 void AsyncMaster::OnSolSendSuccess()
@@ -191,6 +200,7 @@ void AsyncMaster::OnSolSendSuccess()
 
 void AsyncMaster::OnSolFailure()
 {
+	this->UpdateState(MS_COMMS_DOWN);
 	mpState->OnFailure(this);
 }
 
@@ -205,27 +215,25 @@ void AsyncMaster::OnUnsolFailure()
 }
 
 void AsyncMaster::OnPartialResponse(const APDU& arAPDU)
-{
+{	
 	mLastIIN = arAPDU.GetIIN();
 	this->ProcessIIN(mLastIIN);
-	mpState->OnPartialResponse(this, arAPDU);
-	mCommsStatus.Set(COMMS_UP);
+	mpState->OnPartialResponse(this, arAPDU);	
 }
 
 void AsyncMaster::OnFinalResponse(const APDU& arAPDU)
 {
+	this->UpdateState(MS_COMMS_UP);
 	mLastIIN = arAPDU.GetIIN();
 	this->ProcessIIN(arAPDU.GetIIN());
-	mpState->OnFinalResponse(this, arAPDU);
-	mCommsStatus.Set(COMMS_UP);
+	mpState->OnFinalResponse(this, arAPDU);	
 }
 
 void AsyncMaster::OnUnsolResponse(const APDU& arAPDU)
-{
+{	
 	mLastIIN = arAPDU.GetIIN();
 	this->ProcessIIN(mLastIIN);
-	mpState->OnUnsolResponse(this, arAPDU);	
-	mCommsStatus.Set(COMMS_UP);
+	mpState->OnUnsolResponse(this, arAPDU);		
 }
 
 /* Private functions */

@@ -22,10 +22,12 @@
 #include "DNPConstants.h"
 #include "PointClass.h"
 #include "MasterConfigTypes.h"
+#include "MasterObserver.h"
 
 #include <vector>
 
 namespace apl { namespace dnp {
+
 
 /**
 Configuration information for the dnp3 master
@@ -40,7 +42,8 @@ struct MasterConfig
 	EnableUnsol(true),
 	UnsolClassMask(PC_ALL_EVENTS),
 	IntegrityRate(5000),
-	TaskRetryRate(5000)
+	TaskRetryRate(5000),
+	mpObserver(NULL)
 	{}
 
 	/** Adds a periodic exception scan to the configuration
@@ -75,8 +78,11 @@ struct MasterConfig
 	/// Time delay between task retries
 	millis_t TaskRetryRate;
 
-	///vector that holds exception scans
+	/// vector that holds exception scans
 	std::vector<ExceptionScan> mScans;
+
+	/// Observer class for notifying outside world what the master is doing
+	IMasterObserver* mpObserver;
 };
 
 }}

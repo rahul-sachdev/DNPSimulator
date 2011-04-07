@@ -16,32 +16,25 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __MASTER_STACK_CONFIG_H_
-#define __MASTER_STACK_CONFIG_H_
-
-#include "MasterConfig.h"
-#include "AppConfig.h"
-#include "LinkConfig.h"
+#ifndef __MASTER_OBSERVER_H_
+#define __MASTER_OBSERVER_H_
 
 namespace apl { namespace dnp {
 
-/** A composite configuration struct that contains all the config
-	information for a dnp3 master stack
-*/
-struct MasterStackConfig
+enum MasterStates
 {
-	MasterStackConfig() :
-	link(true, false)
-	{}
+	MS_COMMS_UP,
+	MS_COMMS_DOWN,
+	MS_UNKNOWN
+};
 
-	MasterConfig master;  /// Master config
-	AppConfig app;		  /// Application layer config
-	LinkConfig link;	  /// Link layer config
+class IMasterObserver
+{
+public:
 
-
+	virtual void OnStateChange(MasterStates aState) = 0;
 };
 
 }}
 
 #endif
-

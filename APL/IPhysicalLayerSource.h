@@ -41,15 +41,12 @@ namespace apl
 
 	class IPhysicalLayerSource
 	{
-		public:
-			virtual ~IPhysicalLayerSource(){}
+	public:
+		virtual ~IPhysicalLayerSource(){}
 
-			virtual PhysLayerSettings GetSettings(const std::string& arName) = 0;
-			virtual IPhysicalLayerAsync* GetLayer(const std::string& arName, boost::asio::io_service*) = 0;
+		virtual PhysLayerSettings GetSettings(const std::string& arName) = 0;
+		virtual IPhysicalLayerAsync* GetLayer(const std::string& arName, boost::asio::io_service*) = 0;
 	};
-
-
 }
-
 
 #endif

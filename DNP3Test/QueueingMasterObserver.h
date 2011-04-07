@@ -16,32 +16,22 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __MASTER_STACK_CONFIG_H_
-#define __MASTER_STACK_CONFIG_H_
+#ifndef __QUEUEING_MASTER_OBSERVER_H_
+#define __QUEUEING_MASTER_OBSERVER_H_
 
-#include "MasterConfig.h"
-#include "AppConfig.h"
-#include "LinkConfig.h"
+#include <DNP3/MasterObserver.h>
+#include <deque>
 
 namespace apl { namespace dnp {
 
-/** A composite configuration struct that contains all the config
-	information for a dnp3 master stack
-*/
-struct MasterStackConfig
+class QueueingMasterObserver : public IMasterObserver
 {
-	MasterStackConfig() :
-	link(true, false)
-	{}
+	public:
+	void OnStateChange(MasterStates aState) { mQueue.push_back(aState); }
 
-	MasterConfig master;  /// Master config
-	AppConfig app;		  /// Application layer config
-	LinkConfig link;	  /// Link layer config
-
-
+	std::deque<MasterStates> mQueue;
 };
 
 }}
 
 #endif
-
