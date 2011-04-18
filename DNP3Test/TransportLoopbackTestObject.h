@@ -25,8 +25,8 @@
 #include <APLTestTools/LogTester.h>
 #include <APLTestTools/MockUpperLayer.h>
 
-#include <DNP3/AsyncLinkLayerRouter.h>
-#include <DNP3/AsyncLinkLayer.h>
+#include <DNP3/LinkLayerRouter.h>
+#include <DNP3/LinkLayer.h>
 #include <DNP3/AsyncTransportLayer.h>
 
 namespace apl { namespace dnp {
@@ -59,11 +59,11 @@ class TransportLoopbackTestObject : public LogTester, public AsyncTestObjectASIO
 		LinkConfig mCfgA;
 		LinkConfig mCfgB;
 
-		AsyncLinkLayer mLinkA;
-		AsyncLinkLayer mLinkB;
+		LinkLayer mLinkA;
+		LinkLayer mLinkB;
 		AsyncTransportLayer mTransA;
 		AsyncTransportLayer mTransB;
-		AsyncLinkLayerRouter mRouter;
+		LinkLayerRouter mRouter;
 
 	public:
 		MockUpperLayer mUpperA;

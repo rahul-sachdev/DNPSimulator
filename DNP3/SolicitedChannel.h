@@ -31,7 +31,7 @@ namespace apl { namespace dnp {
 class SolicitedChannel : public AppLayerChannel
 {
 	public:
-	SolicitedChannel(Logger* apLogger, AsyncAppLayer* apApp, ITimerSource* apTimerSrc, millis_t aTimeout);
+	SolicitedChannel(Logger* apLogger, AppLayer* apApp, ITimerSource* apTimerSrc, millis_t aTimeout);
 	virtual ~SolicitedChannel(){}
 
 	/// Called when the app layer has a problem parsing an object header

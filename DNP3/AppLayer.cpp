@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "AsyncAppLayer.h"
+#include "AppLayer.h"
 
 
 #include <APL/Logger.h>
@@ -26,7 +26,7 @@ using namespace std;
 
 namespace apl { namespace dnp {
 
-AsyncAppLayer::AsyncAppLayer(apl::Logger* apLogger, ITimerSource* apTimerSrc, AppConfig aAppCfg) :
+AppLayer::AppLayer(apl::Logger* apLogger, ITimerSource* apTimerSrc, AppConfig aAppCfg) :
 Loggable(apLogger),
 IUpperLayer(apLogger),
 mIncoming(aAppCfg.FragSize),
@@ -41,17 +41,17 @@ mNumRetry(aAppCfg.NumRetry)
 	mConfirm.SetFunction(FC_CONFIRM);	
 }
 
-void AsyncAppLayer::SetUser(IAsyncAppUser* apUser)
+void AppLayer::SetUser(IAppUser* apUser)
 {
 	assert(mpUser == NULL); assert(apUser != NULL);
 	mpUser = apUser;
 }
 
 /////////////////////////////
-// IAsyncAppLayer
+// IAppLayer
 /////////////////////////////
 
-void AsyncAppLayer::SendResponse(APDU& arAPDU)
+void AppLayer::SendResponse(APDU& arAPDU)
 {
 	this->Validate(arAPDU.GetControl(), false, false, true, false);
 		
@@ -61,7 +61,7 @@ void AsyncAppLayer::SendResponse(APDU& arAPDU)
 	mSolicited.Send(arAPDU, this->GetRetries(FC_RESPONSE));	
 }
 
-void AsyncAppLayer::SendUnsolicited(APDU& arAPDU)
+void AppLayer::SendUnsolicited(APDU& arAPDU)
 {
 	this->Validate(arAPDU.GetControl(), false, true, true, true);
 
@@ -71,7 +71,7 @@ void AsyncAppLayer::SendUnsolicited(APDU& arAPDU)
 	mUnsolicited.Send(arAPDU, this->GetRetries(FC_UNSOLICITED_RESPONSE));	
 }
 
-void AsyncAppLayer::SendRequest(APDU& arAPDU)
+void AppLayer::SendRequest(APDU& arAPDU)
 {
 	this->Validate(arAPDU.GetControl(), true, true, false, false);
 
@@ -81,7 +81,7 @@ void AsyncAppLayer::SendRequest(APDU& arAPDU)
 	mSolicited.Send(arAPDU, this->GetRetries(arAPDU.GetFunction()));
 }
 
-void AsyncAppLayer::CancelResponse()
+void AppLayer::CancelResponse()
 {
 	mSolicited.Cancel();
 }
@@ -90,7 +90,7 @@ void AsyncAppLayer::CancelResponse()
 // External events
 /////////////////////////////
 
-void AsyncAppLayer::_OnReceive(const apl::byte_t* apBuffer, size_t aSize)
+void AppLayer::_OnReceive(const apl::byte_t* apBuffer, size_t aSize)
 {
 	if(!this->IsLowerLayerUp())
 		throw InvalidStateException(LOCATION, "LowerLaterDown");
@@ -129,12 +129,12 @@ void AsyncAppLayer::_OnReceive(const apl::byte_t* apBuffer, size_t aSize)
 	}
 }
 
-void AsyncAppLayer::_OnLowerLayerUp()
+void AppLayer::_OnLowerLayerUp()
 {
 	mpUser->OnLowerLayerUp();
 }
 
-void AsyncAppLayer::_OnLowerLayerDown()
+void AppLayer::_OnLowerLayerDown()
 {
 	//reset both the channels
 	mSolicited.Reset();
@@ -148,7 +148,7 @@ void AsyncAppLayer::_OnLowerLayerDown()
 	mpUser->OnLowerLayerDown();
 }
 
-void AsyncAppLayer::OnSendResult(bool aSuccess)
+void AppLayer::OnSendResult(bool aSuccess)
 {
 	if(!mSending)
 		throw InvalidStateException(LOCATION, "No Active Send");
@@ -177,16 +177,16 @@ void AsyncAppLayer::OnSendResult(bool aSuccess)
 	this->CheckForSend();
 }
 
-void AsyncAppLayer::_OnSendSuccess() { this->OnSendResult(true); }
+void AppLayer::_OnSendSuccess() { this->OnSendResult(true); }
 	
-void AsyncAppLayer::_OnSendFailure() { this->OnSendResult(false); }
+void AppLayer::_OnSendFailure() { this->OnSendResult(false); }
 
 
 /////////////////////////////
 // Internal Events
 /////////////////////////////
 
-void AsyncAppLayer::OnResponse(const AppControlField& arCtrl, APDU& arAPDU)
+void AppLayer::OnResponse(const AppControlField& arCtrl, APDU& arAPDU)
 {
 	if(arCtrl.UNS) 
 		throw Exception(LOCATION, "Bad unsol bit", ALERR_BAD_UNSOL_BIT);
@@ -201,7 +201,7 @@ void AsyncAppLayer::OnResponse(const AppControlField& arCtrl, APDU& arAPDU)
 	mSolicited.OnResponse(arAPDU);	
 }
 
-void AsyncAppLayer::OnUnsolResponse(const AppControlField& arCtrl, APDU& arAPDU)
+void AppLayer::OnUnsolResponse(const AppControlField& arCtrl, APDU& arAPDU)
 {
 	if(!arCtrl.UNS)
 		throw Exception(LOCATION, ALERR_BAD_UNSOL_BIT);
@@ -215,7 +215,7 @@ void AsyncAppLayer::OnUnsolResponse(const AppControlField& arCtrl, APDU& arAPDU)
 	mUnsolicited.OnUnsol(arAPDU);	
 }
 
-void AsyncAppLayer::OnConfirm(const AppControlField& arCtrl, APDU& arAPDU)
+void AppLayer::OnConfirm(const AppControlField& arCtrl, APDU& arAPDU)
 {
 	arAPDU.Interpret(); //throws if there is additional data beyond length of 2
 
@@ -232,7 +232,7 @@ void AsyncAppLayer::OnConfirm(const AppControlField& arCtrl, APDU& arAPDU)
 }
 
 
-void AsyncAppLayer::OnUnknownObject(FunctionCodes aCode, const AppControlField& arCtrl)
+void AppLayer::OnUnknownObject(FunctionCodes aCode, const AppControlField& arCtrl)
 {
 	if(!mpUser->IsMaster())
 	{
@@ -250,7 +250,7 @@ void AsyncAppLayer::OnUnknownObject(FunctionCodes aCode, const AppControlField& 
 	}
 }
 
-void AsyncAppLayer::OnRequest(const AppControlField& arCtrl, APDU& arAPDU)
+void AppLayer::OnRequest(const AppControlField& arCtrl, APDU& arAPDU)
 {
 	if(arCtrl.UNS)
 		throw Exception(LOCATION, "Received request with UNS bit", ALERR_BAD_UNSOL_BIT);
@@ -268,7 +268,7 @@ void AsyncAppLayer::OnRequest(const AppControlField& arCtrl, APDU& arAPDU)
 // Helperss
 /////////////////////////////
 
-void AsyncAppLayer::QueueConfirm(bool aUnsol, int aSeq)
+void AppLayer::QueueConfirm(bool aUnsol, int aSeq)
 {	
 	if(mConfirmSending)
 		throw Exception(LOCATION, "Unsol flood", aUnsol ? ALERR_UNSOL_FLOOD : ALERR_SOL_FLOOD);
@@ -279,13 +279,13 @@ void AsyncAppLayer::QueueConfirm(bool aUnsol, int aSeq)
 	this->QueueFrame(mConfirm);
 }
 
-void AsyncAppLayer::QueueFrame(const APDU& arAPDU)
+void AppLayer::QueueFrame(const APDU& arAPDU)
 {
 	mSendQueue.push_back(&arAPDU);
 	this->CheckForSend();
 }
 
-void AsyncAppLayer::CheckForSend()
+void AppLayer::CheckForSend()
 {
 	if(!mSending && mSendQueue.size() > 0) {
 		mSending = true;
@@ -295,7 +295,7 @@ void AsyncAppLayer::CheckForSend()
 	}
 }
 
-void AsyncAppLayer::Validate(const AppControlField& arCtrl, bool aMaster, bool aRequireFIRFIN, bool aAllowCON, bool aUNS)
+void AppLayer::Validate(const AppControlField& arCtrl, bool aMaster, bool aRequireFIRFIN, bool aAllowCON, bool aUNS)
 {
 	if(!this->IsLowerLayerUp())
 		throw InvalidStateException(LOCATION, "LowerLaterDown");
@@ -316,7 +316,7 @@ void AsyncAppLayer::Validate(const AppControlField& arCtrl, bool aMaster, bool a
 		throw ArgumentException(LOCATION, "Bad unsolicited bit");
 }
 
-size_t AsyncAppLayer::GetRetries(FunctionCodes aCode)
+size_t AppLayer::GetRetries(FunctionCodes aCode)
 {
 	switch(aCode) {
 		case(FC_DIRECT_OPERATE):

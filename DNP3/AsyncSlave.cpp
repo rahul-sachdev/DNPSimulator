@@ -35,7 +35,7 @@ namespace apl { namespace dnp {
 
 AsyncSlave::AsyncSlave(
 					   Logger* apLogger, 
-					   IAsyncAppLayer* apAppLayer,
+					   IAppLayer* apAppLayer,
 					   ITimerSource* apTimerSrc,
 					   ITimeManager* apTime,
 					   AsyncDatabase* apDatabase,
@@ -82,7 +82,7 @@ mpTimeTimer(NULL)
 	mCommsStatus.Set(COMMS_DOWN);
 }
 
-/* Implement IAsyncAppUser - external callbacks from the app layer */
+/* Implement IAppUser - external callbacks from the app layer */
 	
 void AsyncSlave::OnLowerLayerUp()
 {

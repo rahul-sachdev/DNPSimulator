@@ -16,32 +16,27 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "AsyncLinkLayerTest.h"
+#include "AppInterfaces.h"
+
+#include <APL/Configure.h>
+#include <APL/Exception.h>
 
 namespace apl { namespace dnp {
 
-	AsyncLinkLayerTest::AsyncLinkLayerTest(LinkConfig arCfg, FilterLevel aLevel, bool aImmediate) :
-	LogTester(aImmediate),
-	mts(),
-	upper(mLog.GetLogger(aLevel, "MockUpperLayer")),
-	link(mLog.GetLogger(aLevel, "LinkLayer"), &mts, arCfg),	
-	mNumSend(0)
-	{
-		link.SetUpperLayer(&upper);
-		link.SetRouter(this);	
-	}
+void IAppUser::OnPartialResponse(const APDU&)
+{ throw Exception(LOCATION, "Unhandled frame"); }
+		
+void IAppUser::OnFinalResponse(const APDU&)
+{ throw Exception(LOCATION, "Unhandled frame"); }
+ 
+void IAppUser::OnUnsolResponse(const APDU&)
+{ throw Exception(LOCATION, "Unhandled frame"); }
+		
+void IAppUser::OnRequest(const APDU&, SequenceInfo)
+{ throw Exception(LOCATION, "Unhandled frame"); }
 
-	void AsyncLinkLayerTest::Transmit(const LinkFrame& arFrame)
-	{
-		mLastSend = arFrame;
-		++mNumSend;
-	}
 
-	LinkConfig AsyncLinkLayerTest::DefaultConfig()
-	{
-		LinkConfig cfg(true, false);
-		return cfg;
-	}
-
-}}
-
+void IAppUser::OnUnknownObject()
+{ throw Exception(LOCATION, "Unhandled frame"); }
+		
+}} //end ns

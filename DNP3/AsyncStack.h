@@ -19,9 +19,9 @@
 #ifndef __ASYNC_STACK_H_
 #define __ASYNC_STACK_H_
 
-#include "AsyncLinkLayer.h"
+#include "LinkLayer.h"
 #include "AsyncTransportLayer.h"
-#include "AsyncAppLayer.h"
+#include "AppLayer.h"
 
 namespace apl {
 class Logger;
@@ -36,9 +36,9 @@ class AsyncStack
 	AsyncStack(Logger*, ITimerSource* apTimerSrc, AppConfig aAppCfg, LinkConfig aCfg);
 	virtual ~AsyncStack() {}
 
-	AsyncLinkLayer mLink;
+	LinkLayer mLink;
 	AsyncTransportLayer mTransport;
-	AsyncAppLayer mApplication;
+	AppLayer mApplication;
 };
 
 }}

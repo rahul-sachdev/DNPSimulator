@@ -23,7 +23,7 @@
 #include <APL/Logger.h>
 
 #include "DNPConstants.h"
-#include "AsyncLinkLayer.h"
+#include "LinkLayer.h"
 
 namespace apl { namespace dnp {
 
@@ -31,22 +31,22 @@ namespace apl { namespace dnp {
 // PriStateBase
 ///////////////////////////////////////////////////////////
 
-void PriStateBase::Ack(AsyncLinkLayer* apLL, bool aIsRcvBuffFull)
+void PriStateBase::Ack(LinkLayer* apLL, bool aIsRcvBuffFull)
 { ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "Frame context not understood", DLERR_UNEXPECTED_FRAME); }
-void PriStateBase::Nack(AsyncLinkLayer* apLL, bool aIsRcvBuffFull)
+void PriStateBase::Nack(LinkLayer* apLL, bool aIsRcvBuffFull)
 { ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "Frame context not understood", DLERR_UNEXPECTED_FRAME); }
-void PriStateBase::LinkStatus(AsyncLinkLayer* apLL, bool aIsRcvBuffFull)
+void PriStateBase::LinkStatus(LinkLayer* apLL, bool aIsRcvBuffFull)
 { ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "Frame context not understood", DLERR_UNEXPECTED_FRAME); }
-void PriStateBase::NotSupported (AsyncLinkLayer* apLL, bool aIsRcvBuffFull)
+void PriStateBase::NotSupported (LinkLayer* apLL, bool aIsRcvBuffFull)
 { ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "Frame context not understood", DLERR_UNEXPECTED_FRAME); }
 
-void PriStateBase::OnTimeout(AsyncLinkLayer* apLL)
+void PriStateBase::OnTimeout(LinkLayer* apLL)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void PriStateBase::SendConfirmed(AsyncLinkLayer*, const apl::byte_t*, size_t)
+void PriStateBase::SendConfirmed(LinkLayer*, const apl::byte_t*, size_t)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void PriStateBase::SendUnconfirmed(AsyncLinkLayer*, const apl::byte_t*, size_t)
+void PriStateBase::SendUnconfirmed(LinkLayer*, const apl::byte_t*, size_t)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -55,13 +55,13 @@ void PriStateBase::SendUnconfirmed(AsyncLinkLayer*, const apl::byte_t*, size_t)
 
 PLLS_SecNotReset PLLS_SecNotReset::mInstance;
 
-void PLLS_SecNotReset::SendUnconfirmed(AsyncLinkLayer* apLL, const apl::byte_t* apData, size_t aLength)
+void PLLS_SecNotReset::SendUnconfirmed(LinkLayer* apLL, const apl::byte_t* apData, size_t aLength)
 {	
 	apLL->SendUnconfirmedUserData(apData, aLength);
 
 }
 
-void PLLS_SecNotReset::SendConfirmed(AsyncLinkLayer* apLL, const apl::byte_t* apData, size_t aLength)
+void PLLS_SecNotReset::SendConfirmed(LinkLayer* apLL, const apl::byte_t* apData, size_t aLength)
 {
 	apLL->ResetRetry();
 	apLL->StartTimer();
@@ -78,12 +78,12 @@ void PLLS_SecNotReset::SendConfirmed(AsyncLinkLayer* apLL, const apl::byte_t* ap
 
 PLLS_SecReset PLLS_SecReset::mInstance;
 
-void PLLS_SecReset::SendUnconfirmed(AsyncLinkLayer* apLL, const apl::byte_t* apData, size_t aLength)
+void PLLS_SecReset::SendUnconfirmed(LinkLayer* apLL, const apl::byte_t* apData, size_t aLength)
 {	
 	apLL->SendUnconfirmedUserData(apData, aLength);
 }
 
-void PLLS_SecReset::SendConfirmed(AsyncLinkLayer* apLL, const apl::byte_t* apData, size_t aLength)
+void PLLS_SecReset::SendConfirmed(LinkLayer* apLL, const apl::byte_t* apData, size_t aLength)
 {
 	apLL->ResetRetry();
 	apLL->StartTimer();
@@ -99,7 +99,7 @@ void PLLS_SecReset::SendConfirmed(AsyncLinkLayer* apLL, const apl::byte_t* apDat
 
 PLLS_ResetLinkWait PLLS_ResetLinkWait::mInstance;
 
-void PLLS_ResetLinkWait::Ack(AsyncLinkLayer* apLL, bool aIsRcvBuffFull)
+void PLLS_ResetLinkWait::Ack(LinkLayer* apLL, bool aIsRcvBuffFull)
 {
 	apLL->ResetWriteFCB();
 	apLL->CancelTimer();
@@ -108,7 +108,7 @@ void PLLS_ResetLinkWait::Ack(AsyncLinkLayer* apLL, bool aIsRcvBuffFull)
 	apLL->SendDelayedUserData(apLL->NextWriteFCB());
 }
 
-void PLLS_ResetLinkWait::OnTimeout(AsyncLinkLayer* apLL)
+void PLLS_ResetLinkWait::OnTimeout(LinkLayer* apLL)
 {
 	if(apLL->Retry()) {
 		ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "Confirmed data timeout, retrying, " << apLL->RetryRemaining() << " remaining", DLERR_TIMEOUT_RETRY);		
@@ -122,7 +122,7 @@ void PLLS_ResetLinkWait::OnTimeout(AsyncLinkLayer* apLL)
 	}
 }
 
-void PLLS_ResetLinkWait::Failure(AsyncLinkLayer* apLL)
+void PLLS_ResetLinkWait::Failure(LinkLayer* apLL)
 {
 	apLL->CancelTimer();
 	apLL->ChangeState(PLLS_SecNotReset::Inst());
@@ -135,7 +135,7 @@ void PLLS_ResetLinkWait::Failure(AsyncLinkLayer* apLL)
 
 PLLS_ConfDataWait PLLS_ConfDataWait::mInstance;
 
-void PLLS_ConfDataWait::Ack(AsyncLinkLayer* apLL, bool aIsRcvBuffFull)
+void PLLS_ConfDataWait::Ack(LinkLayer* apLL, bool aIsRcvBuffFull)
 {
 	apLL->ToggleWriteFCB();
 	apLL->CancelTimer();
@@ -143,14 +143,14 @@ void PLLS_ConfDataWait::Ack(AsyncLinkLayer* apLL, bool aIsRcvBuffFull)
 	apLL->DoSendSuccess();
 }
 
-void PLLS_ConfDataWait::Failure(AsyncLinkLayer* apLL)
+void PLLS_ConfDataWait::Failure(LinkLayer* apLL)
 {
 	apLL->CancelTimer();
 	apLL->ChangeState(PLLS_SecNotReset::Inst());
 	apLL->DoSendFailure();
 }
 
-void PLLS_ConfDataWait::OnTimeout(AsyncLinkLayer* apLL)
+void PLLS_ConfDataWait::OnTimeout(LinkLayer* apLL)
 {
 	if(apLL->Retry()) {
 		ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "Retry confirmed data", DLERR_TIMEOUT_RETRY);

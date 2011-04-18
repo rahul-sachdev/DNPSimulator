@@ -23,7 +23,7 @@
 #include <APL/Logger.h>
 
 #include "DNPConstants.h"
-#include "AsyncLinkLayer.h"
+#include "LinkLayer.h"
 
 namespace apl { namespace dnp {
 
@@ -31,19 +31,19 @@ namespace apl { namespace dnp {
 // SecStateBase
 ///////////////////////////////////////////////////////////
 
-void SecStateBase::ResetLinkStates(AsyncLinkLayer* apLL)
+void SecStateBase::ResetLinkStates(LinkLayer* apLL)
 { 
 	apLL->ResetReadFCB();
 	apLL->SendAck();
 	apLL->ChangeState(SLLS_Reset::Inst());
 }
 
-void SecStateBase::RequestLinkStatus(AsyncLinkLayer* apLL)
+void SecStateBase::RequestLinkStatus(LinkLayer* apLL)
 {
 	apLL->SendLinkStatus();
 }
 
-void SecStateBase::UnconfirmedUserData(AsyncLinkLayer* apLL, const apl::byte_t* apData, size_t aDataLength)
+void SecStateBase::UnconfirmedUserData(LinkLayer* apLL, const apl::byte_t* apData, size_t aDataLength)
 { 
 	apLL->DoDataUp(apData, aDataLength);
 }
@@ -53,12 +53,12 @@ void SecStateBase::UnconfirmedUserData(AsyncLinkLayer* apLL, const apl::byte_t* 
 ////////////////////////////////////////////////////////////////////////////////////
 SLLS_NotReset SLLS_NotReset::mInstance;
 
-void SLLS_NotReset::TestLinkStatus(AsyncLinkLayer* apLL, bool aFcb)
+void SLLS_NotReset::TestLinkStatus(LinkLayer* apLL, bool aFcb)
 {
 	ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "TestLinkStatus ignored", DLERR_UNEXPECTED_FRAME);	
 }
 
-void SLLS_NotReset::ConfirmedUserData(AsyncLinkLayer* apLL, bool aFcb, const apl::byte_t* apData, size_t aDataLength)
+void SLLS_NotReset::ConfirmedUserData(LinkLayer* apLL, bool aFcb, const apl::byte_t* apData, size_t aDataLength)
 {	
 	ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "ConfirmedUserData ignored", DLERR_UNEXPECTED_FRAME);
 }
@@ -68,7 +68,7 @@ void SLLS_NotReset::ConfirmedUserData(AsyncLinkLayer* apLL, bool aFcb, const apl
 ////////////////////////////////////////////////////////////////////////////////////
 SLLS_Reset SLLS_Reset::mInstance;
 
-void SLLS_Reset::TestLinkStatus(AsyncLinkLayer* apLL, bool aFcb)
+void SLLS_Reset::TestLinkStatus(LinkLayer* apLL, bool aFcb)
 {
 	if(apLL->NextReadFCB() == aFcb) {		
 		apLL->ToggleReadFCB(); 
@@ -81,7 +81,7 @@ void SLLS_Reset::TestLinkStatus(AsyncLinkLayer* apLL, bool aFcb)
 	}
 }
 
-void SLLS_Reset::ConfirmedUserData(AsyncLinkLayer* apLL, bool aFcb, const apl::byte_t* apData, size_t aDataLength)
+void SLLS_Reset::ConfirmedUserData(LinkLayer* apLL, bool aFcb, const apl::byte_t* apData, size_t aDataLength)
 {	
 	apLL->SendAck();
 

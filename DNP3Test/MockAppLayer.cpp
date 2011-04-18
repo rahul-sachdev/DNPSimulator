@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "MockAsyncAppLayer.h"
+#include "MockAppLayer.h"
 
 #include <boost/foreach.hpp>
 #include <APL/Logger.h>
@@ -25,7 +25,7 @@
 
 namespace apl { namespace dnp {
 
-MockAsyncAppLayer::MockAsyncAppLayer(Logger* apLogger) :
+MockAppLayer::MockAppLayer(Logger* apLogger) :
 Loggable(apLogger),
 mNumCancel(0),
 mpUser(NULL),
@@ -35,23 +35,23 @@ mIsSuccess(true)
 	
 }
 
-void MockAsyncAppLayer::SetUser(IAsyncAppUser* apUser)
+void MockAppLayer::SetUser(IAppUser* apUser)
 {
 	mpUser = apUser;
 }
 
-void MockAsyncAppLayer::EnableAutoSendCallback(bool aIsSuccess)
+void MockAppLayer::EnableAutoSendCallback(bool aIsSuccess)
 {
 	mAutoSendCallback = true;
 	mIsSuccess = aIsSuccess;
 }
 
-void MockAsyncAppLayer::DisableAutoSendCallback()
+void MockAppLayer::DisableAutoSendCallback()
 {
 	mAutoSendCallback = false;
 }
 
-void MockAsyncAppLayer::DoSendUnsol()
+void MockAppLayer::DoSendUnsol()
 {
 	if(mAutoSendCallback) {
 		assert(mpUser != NULL);
@@ -60,7 +60,7 @@ void MockAsyncAppLayer::DoSendUnsol()
 	}
 }
 
-void MockAsyncAppLayer::DoSendSol()
+void MockAppLayer::DoSendSol()
 {
 	if(mAutoSendCallback) {
 		assert(mpUser != NULL);
@@ -69,7 +69,7 @@ void MockAsyncAppLayer::DoSendSol()
 	}
 }
 
-void MockAsyncAppLayer::SendResponse(APDU& arAPDU)
+void MockAppLayer::SendResponse(APDU& arAPDU)
 {
 	LOG_BLOCK(LEV_COMM, "=> " << toHex(arAPDU.GetBuffer(), arAPDU.Size(), true));
 	LOG_BLOCK(LEV_INTERPRET, "=> " << arAPDU.ToString());
@@ -78,7 +78,7 @@ void MockAsyncAppLayer::SendResponse(APDU& arAPDU)
 	
 }
 
-void MockAsyncAppLayer::SendUnsolicited(APDU& arAPDU)
+void MockAppLayer::SendUnsolicited(APDU& arAPDU)
 {
 	LOG_BLOCK(LEV_COMM, "=> " << toHex(arAPDU.GetBuffer(), arAPDU.Size(), true));
 	LOG_BLOCK(LEV_INTERPRET, "=> " << arAPDU.ToString());
@@ -86,14 +86,14 @@ void MockAsyncAppLayer::SendUnsolicited(APDU& arAPDU)
 	this->DoSendUnsol();
 }
 
-void MockAsyncAppLayer::SendRequest(APDU& arAPDU)
+void MockAppLayer::SendRequest(APDU& arAPDU)
 {
 	LOG_BLOCK(LEV_COMM, "=> " << toHex(arAPDU.GetBuffer(), arAPDU.Size(), true));
 	LOG_BLOCK(LEV_INTERPRET, "=> " << arAPDU.ToString());
 	mFragments.push_back(arAPDU);	
 }
 
-APDU MockAsyncAppLayer::Read()
+APDU MockAppLayer::Read()
 {
 	if(mFragments.size() == 0) throw InvalidStateException(LOCATION, "no more fragments");
 	APDU frag = mFragments.front();
@@ -102,7 +102,7 @@ APDU MockAsyncAppLayer::Read()
 	return frag;
 }
 
-FunctionCodes MockAsyncAppLayer::ReadFunction()
+FunctionCodes MockAppLayer::ReadFunction()
 {
 	if(mFragments.size() == 0) throw InvalidStateException(LOCATION, "No more fragments");
 	else
@@ -113,7 +113,7 @@ FunctionCodes MockAsyncAppLayer::ReadFunction()
 	}
 }
 
-void MockAsyncAppLayer::CancelResponse()
+void MockAppLayer::CancelResponse()
 {
 	++mNumCancel;
 }

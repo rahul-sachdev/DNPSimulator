@@ -16,8 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_APP_INTERFACES_H_
-#define __ASYNC_APP_INTERFACES_H_
+#ifndef __APP_INTERFACES_H_
+#define __APP_INTERFACES_H_
 
 
 #include <stddef.h>
@@ -32,7 +32,7 @@ class APDU;
 	for setting the header field of the  APDU, WITH THE EXCEPTION OF THE
 	SEQUENCE #.
 */
-class IAsyncAppLayer
+class IAppLayer
 {
 	public:
 
@@ -112,7 +112,7 @@ enum SequenceInfo
 };
 
 /// Interface for callbacks from an application layer
-class IAsyncAppUser
+class IAppUser
 {
 	public:
 		virtual void OnLowerLayerUp() = 0;					/// The app layer is online

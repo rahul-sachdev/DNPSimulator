@@ -78,7 +78,7 @@ mIsMaster(aIsMaster)
 bool MockAppUser::IsMaster()
 { return mIsMaster; }
 
-// Implement IAsyncAppUser
+// Implement IAppUser
 void MockAppUser::OnLowerLayerUp()
 { ++mState.NumLayerUp; }
 

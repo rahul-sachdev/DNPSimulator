@@ -19,12 +19,12 @@
 #include "UnsolicitedChannel.h"
 
 #include <APL/Logger.h>
-#include "AsyncAppLayer.h"
+#include "AppLayer.h"
 
 namespace apl { namespace dnp {
 
 
-UnsolicitedChannel::UnsolicitedChannel(Logger* apLogger, AsyncAppLayer* apApp, ITimerSource* apTimerSrc, millis_t aTimeout) :
+UnsolicitedChannel::UnsolicitedChannel(Logger* apLogger, AppLayer* apApp, ITimerSource* apTimerSrc, millis_t aTimeout) :
 AppLayerChannel("Unsolicited", apLogger, apApp, apTimerSrc, aTimeout)
 {}
 

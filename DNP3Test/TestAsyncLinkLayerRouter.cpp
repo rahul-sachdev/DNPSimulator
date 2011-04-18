@@ -23,17 +23,17 @@
 #include <APL/Exception.h>
 #include <APL/ToHex.h>
 
-#include "AsyncLinkLayerRouterTest.h"
+#include "LinkLayerRouterTest.h"
 #include "MockFrameSink.h"
 
 using namespace apl;
 using namespace apl::dnp;
 
-BOOST_AUTO_TEST_SUITE(AsyncLinkLayerRouterSuite)
+BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 
 	/// Test the open retry behavior
 	BOOST_AUTO_TEST_CASE(OpenRetryBehavior) {
-		AsyncLinkLayerRouterTest t;
+		LinkLayerRouterTest t;
 		t.router.Start();
 		BOOST_REQUIRE_EQUAL(t.phys.NumOpen(), 1);
 		BOOST_REQUIRE_EQUAL(t.phys.NumOpenSuccess(), 0);
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerRouterSuite)
 	
 	/// Test that send frames from unknown sources are rejected
 	BOOST_AUTO_TEST_CASE(UnknownSourceException) {
-		AsyncLinkLayerRouterTest t;
+		LinkLayerRouterTest t;
 		LinkFrame f;
 		f.FormatAck(true, false, 1, 2);
 		BOOST_REQUIRE_THROW(t.router.Transmit(f), ArgumentException);
@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerRouterSuite)
 
 	/// Test that frames with unknown destinations are correctly logged
 	BOOST_AUTO_TEST_CASE(UnknownDestination){
-		AsyncLinkLayerRouterTest t;
+		LinkLayerRouterTest t;
 		t.router.Start();
 		t.phys.SignalOpenSuccess();
 		t.phys.TriggerRead("05 64 05 C0 01 00 00 04 E9 21");
@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerRouterSuite)
 	
 	/// Test that the router rejects sends until it is online
 	BOOST_AUTO_TEST_CASE(LayerNotOnline){
-		AsyncLinkLayerRouterTest t;
+		LinkLayerRouterTest t;
 		MockFrameSink mfs;
 		t.router.AddContext(&mfs, 1024);
 		LinkFrame f;
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerRouterSuite)
 	
 	/// Test that router is correctly clears the send buffer on close
 	BOOST_AUTO_TEST_CASE(CloseBehavior){
-		AsyncLinkLayerRouterTest t;
+		LinkLayerRouterTest t;
 		MockFrameSink mfs;
 		t.router.AddContext(&mfs, 1024);
 		t.router.Start(); t.phys.SignalOpenSuccess();
@@ -109,12 +109,12 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerRouterSuite)
 	}
 
 	BOOST_AUTO_TEST_CASE(ReentrantCloseWorks){
-		AsyncLinkLayerRouterTest t;
+		LinkLayerRouterTest t;
 		MockFrameSink mfs;
 		t.router.AddContext(&mfs, 1024);
 		t.router.Start(); t.phys.SignalOpenSuccess();
 		BOOST_REQUIRE(mfs.mLowerOnline);
-		mfs.AddAction(boost::bind(&AsyncLinkLayerRouter::Stop, &t.router));
+		mfs.AddAction(boost::bind(&LinkLayerRouter::Stop, &t.router));
 		LinkFrame f; f.FormatAck(true, false, 1024, 2);
 		t.phys.TriggerRead(toHex(f.GetBuffer(), f.GetSize()));
 		BOOST_REQUIRE(t.IsLogErrorFree());
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerRouterSuite)
 	
 	/// Test that the second bind fails when a non-unique address is added
 	BOOST_AUTO_TEST_CASE(MultiAddressBindError){
-		AsyncLinkLayerRouterTest t;
+		LinkLayerRouterTest t;
 		MockFrameSink mfs;
 		t.router.AddContext(&mfs, 1024);
 		BOOST_REQUIRE_THROW(t.router.AddContext(&mfs, 1024), ArgumentException);
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerRouterSuite)
 
 	/// Test that the second bind fails when a non-unique context is added
 	BOOST_AUTO_TEST_CASE(MultiContextBindError){
-		AsyncLinkLayerRouterTest t;
+		LinkLayerRouterTest t;
 		MockFrameSink mfs;
 		t.router.AddContext(&mfs, 1024);
 		BOOST_REQUIRE_THROW(t.router.AddContext(&mfs, 2048), ArgumentException);
@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerRouterSuite)
 
 	/// Test that router correctly buffers and sends frames from multiple contexts
 	BOOST_AUTO_TEST_CASE(MultiContextSend){
-		AsyncLinkLayerRouterTest t;
+		LinkLayerRouterTest t;
 		MockFrameSink mfs1;
 		MockFrameSink mfs2;
 		t.router.AddContext(&mfs1, 1024);

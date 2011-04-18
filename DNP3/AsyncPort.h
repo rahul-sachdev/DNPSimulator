@@ -20,7 +20,7 @@
 #define __ASYNC_PORT_H_
 
 
-#include "AsyncLinkLayerRouter.h"
+#include "LinkLayerRouter.h"
 
 #include <APL/Loggable.h>
 #include <vector>
@@ -80,7 +80,7 @@ class AsyncPort : public Loggable, public IPhysMonitor
 	private:
 
 	std::string mName;
-	AsyncLinkLayerRouter mRouter;
+	LinkLayerRouter mRouter;
 	AsyncTaskGroup* mpGroup;
 	IPhysicalLayerAsync* mpPhys;
 	IPhysMonitor* mpObserver;

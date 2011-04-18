@@ -16,14 +16,14 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_APP_LAYER_H_
-#define __ASYNC_APP_LAYER_H_
+#ifndef __APP_LAYER_H_
+#define __APP_LAYER_H_
 
 #include <queue>
 #include <APL/AsyncLayerInterfaces.h>
 
 #include "APDU.h"
-#include "AsyncAppInterfaces.h"
+#include "AppInterfaces.h"
 #include "AppConfig.h"
 #include "SolicitedChannel.h"
 #include "UnsolicitedChannel.h"
@@ -43,7 +43,7 @@ Implements the sequencing/confirm/response logic for the DNP3 application layer.
 
 Allows for canceling response transactions, as dictated by the spec.
 */
-class AsyncAppLayer : public IUpperLayer, public IAsyncAppLayer
+class AppLayer : public IUpperLayer, public IAppLayer
 {
 	friend class AppLayerChannel;
 	friend class SolicitedChannel;
@@ -51,12 +51,12 @@ class AsyncAppLayer : public IUpperLayer, public IAsyncAppLayer
 
 	public:
 
-		AsyncAppLayer(apl::Logger* apLogger, ITimerSource*, AppConfig aAppCfg);
+		AppLayer(apl::Logger* apLogger, ITimerSource*, AppConfig aAppCfg);
 
-		void SetUser(IAsyncAppUser*);
+		void SetUser(IAppUser*);
 
 		/////////////////////////////////////////////////
-		// Implement IAsyncAppLayer
+		// Implement IAppLayer
 		/////////////////////////////////////////////////
 		void SendUnsolicited(APDU&);
 		void SendResponse(APDU&);
@@ -103,7 +103,7 @@ class AsyncAppLayer : public IUpperLayer, public IAsyncAppLayer
 		bool mConfirmSending;
 		SendQueue mSendQueue;				/// Buffer of send operations
 
-		IAsyncAppUser* mpUser;				/// Interface for dispatching callbacks
+		IAppUser* mpUser;				/// Interface for dispatching callbacks
 
 		SolicitedChannel mSolicited;			/// Channel used for solicited communications
 		UnsolicitedChannel mUnsolicited;		/// Channel used for unsolicited communications

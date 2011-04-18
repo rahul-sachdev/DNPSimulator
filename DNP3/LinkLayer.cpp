@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "AsyncLinkLayer.h"
+#include "LinkLayer.h"
 
 
 #include <assert.h>
@@ -33,7 +33,7 @@ using namespace boost;
 
 namespace apl { namespace dnp {
 
-AsyncLinkLayer::AsyncLinkLayer(apl::Logger* apLogger, ITimerSource* apTimerSrc, const LinkConfig& arConfig) :
+LinkLayer::LinkLayer(apl::Logger* apLogger, ITimerSource* apTimerSrc, const LinkConfig& arConfig) :
 Loggable(apLogger),
 ILowerLayer(apLogger),
 mCONFIG(arConfig),
@@ -48,19 +48,19 @@ mpPriState(PLLS_SecNotReset::Inst()),
 mpSecState(SLLS_NotReset::Inst())
 {}
 
-void AsyncLinkLayer::SetRouter(ILinkRouter* apRouter)
+void LinkLayer::SetRouter(ILinkRouter* apRouter)
 {
 	assert(mpRouter == NULL); assert(apRouter != NULL);
 	mpRouter = apRouter;	
 }
 
-void AsyncLinkLayer::ChangeState(PriStateBase* apState) 
+void LinkLayer::ChangeState(PriStateBase* apState) 
 { mpPriState = apState; }
 
-void AsyncLinkLayer::ChangeState(SecStateBase* apState) 
+void LinkLayer::ChangeState(SecStateBase* apState) 
 { mpSecState = apState; }
 
-bool AsyncLinkLayer::Validate(bool aIsMaster, uint_16_t aSrc, uint_16_t aDest)
+bool LinkLayer::Validate(bool aIsMaster, uint_16_t aSrc, uint_16_t aDest)
 {
 	if(!mIsOnline)
 		throw InvalidStateException(LOCATION, "LowerLayerDown");
@@ -89,7 +89,7 @@ bool AsyncLinkLayer::Validate(bool aIsMaster, uint_16_t aSrc, uint_16_t aDest)
 // ILinkContext
 ////////////////////////////////////////////////
 
-void AsyncLinkLayer::OnLowerLayerUp()
+void LinkLayer::OnLowerLayerUp()
 {
 	if(mIsOnline)
 		throw InvalidStateException(LOCATION, "LowerLayerUp");
@@ -97,7 +97,7 @@ void AsyncLinkLayer::OnLowerLayerUp()
 	if(mpUpperLayer) mpUpperLayer->OnLowerLayerUp();
 }
 
-void AsyncLinkLayer::OnLowerLayerDown()
+void LinkLayer::OnLowerLayerDown()
 {
 	if(!mIsOnline)
 		throw InvalidStateException(LOCATION, "LowerLayerDown");
@@ -110,61 +110,61 @@ void AsyncLinkLayer::OnLowerLayerDown()
 	if(mpUpperLayer) mpUpperLayer->OnLowerLayerDown();
 }
 
-void AsyncLinkLayer::Transmit(const LinkFrame& arFrame)
+void LinkLayer::Transmit(const LinkFrame& arFrame)
 {
 	mpRouter->Transmit(arFrame);
 }
 
-void AsyncLinkLayer::SendAck()
+void LinkLayer::SendAck()
 {
 	mSecFrame.FormatAck(mCONFIG.IsMaster, false, mCONFIG.RemoteAddr, mCONFIG.LocalAddr);
 	this->Transmit(mSecFrame);
 }
 
-void AsyncLinkLayer::SendLinkStatus()
+void LinkLayer::SendLinkStatus()
 {
 	mSecFrame.FormatLinkStatus(mCONFIG.IsMaster, false, mCONFIG.RemoteAddr, mCONFIG.LocalAddr);
 	this->Transmit(mSecFrame);
 }
 
-void AsyncLinkLayer::SendResetLinks()
+void LinkLayer::SendResetLinks()
 {
 	mPriFrame.FormatResetLinkStates(mCONFIG.IsMaster, mCONFIG.RemoteAddr, mCONFIG.LocalAddr);
 	this->Transmit(mPriFrame);
 }
 
-void AsyncLinkLayer::SendUnconfirmedUserData(const byte_t* apData, size_t aLength)
+void LinkLayer::SendUnconfirmedUserData(const byte_t* apData, size_t aLength)
 {
 	mPriFrame.FormatUnconfirmedUserData(mCONFIG.IsMaster, mCONFIG.RemoteAddr, mCONFIG.LocalAddr, apData, aLength);
 	this->Transmit(mPriFrame);
 	this->DoSendSuccess();
 }
 
-void AsyncLinkLayer::SendDelayedUserData(bool aFCB)
+void LinkLayer::SendDelayedUserData(bool aFCB)
 {
 	mDelayedPriFrame.ChangeFCB(aFCB);
 	this->Transmit(mDelayedPriFrame);
 }
 
-void AsyncLinkLayer::StartTimer()
+void LinkLayer::StartTimer()
 {
 	assert(mpTimer == NULL);
-	mpTimer = this->mpTimerSrc->Start(mCONFIG.Timeout, bind(&AsyncLinkLayer::OnTimeout, this));
+	mpTimer = this->mpTimerSrc->Start(mCONFIG.Timeout, bind(&LinkLayer::OnTimeout, this));
 }
 
-void AsyncLinkLayer::CancelTimer()
+void LinkLayer::CancelTimer()
 {
 	assert(mpTimer);
 	mpTimer->Cancel();
 	mpTimer = NULL;
 }
 
-void AsyncLinkLayer::ResetRetry()
+void LinkLayer::ResetRetry()
 {
 	this->mRetryRemaining = mCONFIG.NumRetry;
 }
 
-bool AsyncLinkLayer::Retry()
+bool LinkLayer::Retry()
 {
 	if(mRetryRemaining > 0) {
 		--mRetryRemaining;
@@ -177,55 +177,55 @@ bool AsyncLinkLayer::Retry()
 // IFrameSink
 ////////////////////////////////////////////////
 
-void AsyncLinkLayer::Ack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayer::Ack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
 { 
 	if(this->Validate(aIsMaster, aSrc, aDest)) 
 		mpPriState->Ack(this, aIsRcvBuffFull);
 }
 
-void AsyncLinkLayer::Nack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayer::Nack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
 { 
 	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpPriState->Nack(this, aIsRcvBuffFull);
 }
 
-void AsyncLinkLayer::LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayer::LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
 {
 	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpPriState->LinkStatus(this, aIsRcvBuffFull); 
 }
 
-void AsyncLinkLayer::NotSupported (bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayer::NotSupported (bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
 {
 	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpPriState->NotSupported(this, aIsRcvBuffFull);
 }
 
-void AsyncLinkLayer::TestLinkStatus(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayer::TestLinkStatus(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc)
 {
 	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpSecState->TestLinkStatus(this, aFcb);
 }
 
-void AsyncLinkLayer::ResetLinkStates(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayer::ResetLinkStates(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc)
 { 
 	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpSecState->ResetLinkStates(this);
 }
 
-void AsyncLinkLayer::RequestLinkStatus(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayer::RequestLinkStatus(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc)
 {
 	if(this->Validate(aIsMaster, aSrc, aDest)) 
 		mpSecState->RequestLinkStatus(this);
 }
 
-void AsyncLinkLayer::ConfirmedUserData(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength)
+void LinkLayer::ConfirmedUserData(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength)
 {
 	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpSecState->ConfirmedUserData(this, aFcb, apData, aDataLength);
 }
 
-void AsyncLinkLayer::UnconfirmedUserData(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength)
+void LinkLayer::UnconfirmedUserData(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength)
 {
 	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpSecState->UnconfirmedUserData(this, apData, aDataLength);
@@ -235,7 +235,7 @@ void AsyncLinkLayer::UnconfirmedUserData(bool aIsMaster, uint_16_t aDest, uint_1
 // ILowerLayer
 ////////////////////////////////////////////////
 
-void AsyncLinkLayer::_Send(const apl::byte_t* apData, size_t aDataLength)
+void LinkLayer::_Send(const apl::byte_t* apData, size_t aDataLength)
 {
 	if(!mIsOnline)
 		throw InvalidStateException(LOCATION, "LowerLayerDown");
@@ -243,7 +243,7 @@ void AsyncLinkLayer::_Send(const apl::byte_t* apData, size_t aDataLength)
 	else mpPriState->SendUnconfirmed(this, apData, aDataLength); 
 }
 
-void AsyncLinkLayer::OnTimeout()
+void LinkLayer::OnTimeout()
 {
 	assert(mpTimer);
 	mpTimer = NULL;

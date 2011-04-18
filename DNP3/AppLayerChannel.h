@@ -30,7 +30,7 @@ namespace apl {
 
 namespace apl { namespace dnp {
 
-class AsyncAppLayer;
+class AppLayer;
 class ACS_Base;
 class APDU;
 struct AppControlField;
@@ -55,7 +55,7 @@ class AppLayerChannel : public Loggable
 	friend class ACS_WaitForFinalResponse;
 
 	public:
-	AppLayerChannel(const std::string& arName, Logger*, AsyncAppLayer*, ITimerSource*, millis_t aTimeout);
+	AppLayerChannel(const std::string& arName, Logger*, AppLayer*, ITimerSource*, millis_t aTimeout);
 	virtual ~AppLayerChannel(){}
 
 	/// Resets the channel to the initial state
@@ -90,7 +90,7 @@ class AppLayerChannel : public Loggable
 	void CancelTimer();
 	Logger* GetLogger() { return mpLogger; }
 
-	AsyncAppLayer* mpAppLayer;
+	AppLayer* mpAppLayer;
 	int mSequence;	/// Rotating sequence number for the channel
 	ACS_Base* mpState;
 

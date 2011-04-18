@@ -16,8 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_LINK_LAYER_H_
-#define __ASYNC_LINK_LAYER_H_
+#ifndef __LINK_LAYER_H_
+#define __LINK_LAYER_H_
 
 
 #include <queue>
@@ -35,11 +35,11 @@ namespace apl {  namespace dnp {
 	class SecStateBase;
 
 	///	@section desc Implements the contextual state of DNP3 Data Link Layer
-	class AsyncLinkLayer : public ILowerLayer, public ILinkContext
+	class LinkLayer : public ILowerLayer, public ILinkContext
 	{
 		public:
 
-		AsyncLinkLayer(apl::Logger*, ITimerSource*, const LinkConfig& arConfig);
+		LinkLayer(apl::Logger*, ITimerSource*, const LinkConfig& arConfig);
 
 		void SetRouter(ILinkRouter*);
 

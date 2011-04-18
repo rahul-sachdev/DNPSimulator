@@ -23,7 +23,7 @@
 #include <APL/Singleton.h>
 #include <string>
 
-#include "AsyncLinkLayer.h"
+#include "LinkLayer.h"
 
 namespace apl { namespace dnp {
 
@@ -33,12 +33,12 @@ namespace apl { namespace dnp {
 
 		/* Incoming messages to secondary station */
 
-		void ResetLinkStates(AsyncLinkLayer*);
-		void RequestLinkStatus(AsyncLinkLayer*);
-		void UnconfirmedUserData(AsyncLinkLayer*, const apl::byte_t* apData, size_t aDataLength);
+		void ResetLinkStates(LinkLayer*);
+		void RequestLinkStatus(LinkLayer*);
+		void UnconfirmedUserData(LinkLayer*, const apl::byte_t* apData, size_t aDataLength);
 
-		virtual void TestLinkStatus(AsyncLinkLayer*, bool aFcb) = 0;
-		virtual void ConfirmedUserData(AsyncLinkLayer*, bool aFcb, const apl::byte_t* apData, size_t aDataLength) = 0;
+		virtual void TestLinkStatus(LinkLayer*, bool aFcb) = 0;
+		virtual void ConfirmedUserData(LinkLayer*, bool aFcb, const apl::byte_t* apData, size_t aDataLength) = 0;
 
 
 		//every concrete state implements this for logging purposes
@@ -52,8 +52,8 @@ namespace apl { namespace dnp {
 	{
 		MACRO_STATE_SINGLETON_INSTANCE(SLLS_NotReset);
 
-		void TestLinkStatus(AsyncLinkLayer*, bool aFcb);
-		void ConfirmedUserData(AsyncLinkLayer*, bool aFcb, const apl::byte_t* apData, size_t aDataLength);
+		void TestLinkStatus(LinkLayer*, bool aFcb);
+		void ConfirmedUserData(LinkLayer*, bool aFcb, const apl::byte_t* apData, size_t aDataLength);
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////
@@ -63,8 +63,8 @@ namespace apl { namespace dnp {
 	{
 		MACRO_STATE_SINGLETON_INSTANCE(SLLS_Reset);
 
-		void TestLinkStatus(AsyncLinkLayer*, bool aFcb);
-		void ConfirmedUserData(AsyncLinkLayer*, bool aFcb, const apl::byte_t* apData, size_t aDataLength);
+		void TestLinkStatus(LinkLayer*, bool aFcb);
+		void ConfirmedUserData(LinkLayer*, bool aFcb, const apl::byte_t* apData, size_t aDataLength);
 	};
 
 }} //end namepsace

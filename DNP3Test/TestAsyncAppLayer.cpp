@@ -28,7 +28,7 @@ using namespace apl::dnp;
 
 using namespace boost;
 
-BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
+BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 
 	/// Test the accessible events to demonstrate do not work if the layer is offline
 	BOOST_AUTO_TEST_CASE(InitialState)

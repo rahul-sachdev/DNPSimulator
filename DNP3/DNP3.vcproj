@@ -164,22 +164,6 @@
 				Name="DataLink"
 				>
 				<File
-					RelativePath=".\AsyncLinkLayer.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncLinkLayer.h"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncLinkLayerRouter.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncLinkLayerRouter.h"
-					>
-				</File>
-				<File
 					RelativePath=".\DNPCrc.cpp"
 					>
 				</File>
@@ -220,6 +204,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\LinkLayer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\LinkLayer.h"
+					>
+				</File>
+				<File
 					RelativePath=".\LinkLayerConstants.cpp"
 					>
 				</File>
@@ -233,6 +225,14 @@
 				</File>
 				<File
 					RelativePath=".\LinkLayerReceiver.h"
+					>
+				</File>
+				<File
+					RelativePath=".\LinkLayerRouter.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\LinkLayerRouter.h"
 					>
 				</File>
 				<File
@@ -592,19 +592,19 @@
 					>
 				</File>
 				<File
-					RelativePath=".\AsyncAppInterfaces.cpp"
+					RelativePath=".\AppInterfaces.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\AsyncAppInterfaces.h"
+					RelativePath=".\AppInterfaces.h"
 					>
 				</File>
 				<File
-					RelativePath=".\AsyncAppLayer.cpp"
+					RelativePath=".\AppLayer.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\AsyncAppLayer.h"
+					RelativePath=".\AppLayer.h"
 					>
 				</File>
 				<Filter

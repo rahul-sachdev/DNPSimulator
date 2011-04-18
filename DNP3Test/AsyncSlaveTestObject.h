@@ -28,7 +28,7 @@
 #include <DNP3/DNPCommandMaster.h>
 #include <DNP3/SlaveConfig.h>
 
-#include "MockAsyncAppLayer.h"
+#include "MockAppLayer.h"
 
 namespace apl { namespace dnp {
 
@@ -45,7 +45,7 @@ class AsyncSlaveTestObject : public LogTester
 	//MockTimeSource fake_time;
 	MockTimeManager fakeTime;
 	MockTimerSource mts;
-	MockAsyncAppLayer app;
+	MockAppLayer app;
 	AsyncDatabase db;
 	DNPCommandMaster cmd_master;
 	MockCommandAcceptor cmd_acceptor;

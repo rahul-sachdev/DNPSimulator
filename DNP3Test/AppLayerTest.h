@@ -21,7 +21,7 @@
 #define __APP_LAYER_TEST_H_
 
 #include <APLTestTools/LogTester.h>
-#include <DNP3/AsyncAppLayer.h>
+#include <DNP3/AppLayer.h>
 #include <APLTestTools/MockLowerLayer.h>
 #include <APLTestTools/MockTimerSource.h>
 
@@ -49,7 +49,7 @@ class AppLayerTest : public LogTester
 	MockAppUser user;
 	MockLowerLayer lower;
 	MockTimerSource mts;
-	AsyncAppLayer app;
+	AppLayer app;
 
 	MockAppUser::State state;
 

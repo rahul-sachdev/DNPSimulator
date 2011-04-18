@@ -25,7 +25,7 @@
 #include <APLTestTools/LogTester.h>
 #include <DNP3/AsyncMaster.h>
 
-#include "MockAsyncAppLayer.h"
+#include "MockAppLayer.h"
 
 namespace apl { namespace dnp {
 
@@ -43,7 +43,7 @@ class AsyncMasterTestObject : public LogTester
 	MockTimerSource mts;
 	AsyncTaskScheduler ats;
 	FlexibleDataObserver fdo;
-	MockAsyncAppLayer app;
+	MockAppLayer app;
 	AsyncMaster master;
 	APDU mAPDU;
 };

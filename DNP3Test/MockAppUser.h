@@ -19,14 +19,14 @@
 #ifndef __MOCK_APP_USER_H_
 #define __MOCK_APP_USER_H_
 
-#include <DNP3/AsyncAppInterfaces.h>
+#include <DNP3/AppInterfaces.h>
 
 #include <sstream>
 
 namespace apl { namespace dnp {
 
 /// @section desc Test class for app layer
-class MockAppUser : public IAsyncAppUser
+class MockAppUser : public IAppUser
 {
 	public:
 
@@ -53,7 +53,7 @@ class MockAppUser : public IAsyncAppUser
 
 		MockAppUser(bool aIsMaster);
 
-		// Implement IAsyncAppUser
+		// Implement IAppUser
 		void OnLowerLayerUp();
 		void OnLowerLayerDown();
 

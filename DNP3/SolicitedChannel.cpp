@@ -18,13 +18,13 @@
 // 
 #include "SolicitedChannel.h"
 
-#include "AsyncAppLayer.h"
+#include "AppLayer.h"
 #include "AppChannelStates.h"
 
 namespace apl { namespace dnp {
 
 
-SolicitedChannel::SolicitedChannel(Logger* apLogger, AsyncAppLayer* apApp, ITimerSource* apTimerSrc, millis_t aTimeout) :
+SolicitedChannel::SolicitedChannel(Logger* apLogger, AppLayer* apApp, ITimerSource* apTimerSrc, millis_t aTimeout) :
 AppLayerChannel("Solicited", apLogger, apApp, apTimerSrc, aTimeout)
 {}
 

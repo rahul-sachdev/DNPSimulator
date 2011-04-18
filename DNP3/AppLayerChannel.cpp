@@ -21,14 +21,14 @@
 #include <APL/Logger.h>
 #include <APL/TimerInterfaces.h>
 
-#include "AsyncAppLayer.h"
+#include "AppLayer.h"
 #include "AppChannelStates.h"
 
 #include <boost/bind.hpp>
 
 namespace apl { namespace dnp {
 
-AppLayerChannel::AppLayerChannel(const std::string& arName, Logger* apLogger, AsyncAppLayer* apAppLayer, ITimerSource* apTimerSrc, millis_t aTimeout) :
+AppLayerChannel::AppLayerChannel(const std::string& arName, Logger* apLogger, AppLayer* apAppLayer, ITimerSource* apTimerSrc, millis_t aTimeout) :
 Loggable(apLogger),
 mpAppLayer(apAppLayer),
 mpSendAPDU(NULL),

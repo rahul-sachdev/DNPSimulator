@@ -24,7 +24,7 @@
 #include <APL/TimingTools.h>
 #include <APL/Exception.h>
 #include <DNP3/APDUConstants.h>
-#include <DNP3/AsyncAppInterfaces.h>
+#include <DNP3/AppInterfaces.h>
 #include <map>
 #include <assert.h>
 

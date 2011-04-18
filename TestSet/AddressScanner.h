@@ -24,7 +24,7 @@
 #include <APL/TimerSourceASIO.h>
 #include <APL/Loggable.h>
 
-#include <DNP3/AsyncLinkLayerRouter.h>
+#include <DNP3/LinkLayerRouter.h>
 #include <DNP3/ILinkContext.h>
 #include <DNP3/LinkFrame.h>
 
@@ -69,7 +69,7 @@ class AddressScanner : private Loggable, public ILinkContext
 		std::auto_ptr<boost::asio::io_service> mpService;
 		TimerSourceASIO mTimerSrc;
 		IOServiceThread mThread;
-		dnp::AsyncLinkLayerRouter mRouter;
+		dnp::LinkLayerRouter mRouter;
 		LinkFrame mFrame;
 		ITimer* mpTimer;
 		uint_16_t mMasterAddr;

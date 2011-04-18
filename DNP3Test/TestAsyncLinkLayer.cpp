@@ -23,18 +23,18 @@
 #include <DNP3/DNPConstants.h>
 #include <APLTestTools/BufferHelpers.h>
 
-#include "AsyncLinkLayerTest.h"
+#include "LinkLayerTest.h"
 
 using namespace apl;
 using namespace apl::dnp;
 
-BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
+BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 
 	/// All operations should fail except for OnLowerLayerUp, just a representative
 	/// number of them
 	BOOST_AUTO_TEST_CASE(ClosedState)
 	{
-		AsyncLinkLayerTest t;
+		LinkLayerTest t;
 		BOOST_REQUIRE_THROW(t.upper.SendDown("00"), InvalidStateException);
 		BOOST_REQUIRE_THROW(t.link.OnLowerLayerDown(), InvalidStateException);
 		BOOST_REQUIRE_THROW(t.link.Ack(false, false, 1, 2), InvalidStateException);
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 	/// Prove that the upper layer is notified when the lower layer comes online
 	BOOST_AUTO_TEST_CASE(ForwardsOnLowerLayerUp)
 	{
-		AsyncLinkLayerTest t;
+		LinkLayerTest t;
 		BOOST_REQUIRE_FALSE(t.upper.IsLowerLayerUp());
 		t.link.OnLowerLayerUp();
 		BOOST_REQUIRE(t.upper.IsLowerLayerUp());
@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 	/// Check that once the layer comes up, validation errors can occur
 	BOOST_AUTO_TEST_CASE(ValidatesMasterSlaveBit)
 	{
-		AsyncLinkLayerTest t; t.link.OnLowerLayerUp();
+		LinkLayerTest t; t.link.OnLowerLayerUp();
 		t.link.Ack(true, false, 1, 1024);
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_MASTER_BIT_MATCH);
 	}
@@ -60,16 +60,16 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 	/// Only process frames from your designated remote address
 	BOOST_AUTO_TEST_CASE(ValidatesSourceAddress)
 	{
-		AsyncLinkLayerTest t; t.link.OnLowerLayerUp();
+		LinkLayerTest t; t.link.OnLowerLayerUp();
 		t.link.Ack(false, false, 1, 1023);
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_UNKNOWN_SOURCE);
 	}
 
-	/// This should actually never happen when using the AsyncLinkLayerRouter
+	/// This should actually never happen when using the LinkLayerRouter
 	/// Only process frame addressed to you
 	BOOST_AUTO_TEST_CASE(ValidatesDestinationAddress)
 	{
-		AsyncLinkLayerTest t;  t.link.OnLowerLayerUp();
+		LinkLayerTest t;  t.link.OnLowerLayerUp();
 		t.link.Ack(false, false, 2, 1024);
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_UNKNOWN_DESTINATION);
 	}
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 	/// Show that the base state of idle logs SecToPri frames as errors
 	BOOST_AUTO_TEST_CASE(SecToPriNoContext)
 	{
-		AsyncLinkLayerTest t; t.link.OnLowerLayerUp();
+		LinkLayerTest t; t.link.OnLowerLayerUp();
 		
 		BOOST_REQUIRE(t.IsLogErrorFree());
 		t.link.Ack(false, false, 1, 1024);
@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 	/// Show that the base state of idle forwards unconfirmed user data
 	BOOST_AUTO_TEST_CASE(UnconfirmedDataPassedUpFromIdleUnreset)
 	{
-		AsyncLinkLayerTest t; t.link.OnLowerLayerUp();
+		LinkLayerTest t; t.link.OnLowerLayerUp();
 		ByteStr bs(250, 0);
 		t.link.UnconfirmedUserData(false, 1, 1024, bs, bs.Size());
 		BOOST_REQUIRE(t.IsLogErrorFree());
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 	/// Show that the base state of idle forwards unconfirmed user data
 	BOOST_AUTO_TEST_CASE(ConfirmedDataIgnoredFromIdleUnreset)
 	{
-		AsyncLinkLayerTest t; t.link.OnLowerLayerUp();
+		LinkLayerTest t; t.link.OnLowerLayerUp();
 		ByteStr bs(250, 0);
 		t.link.ConfirmedUserData(false, false, 1, 1024, bs, bs.Size());
 		BOOST_REQUIRE(t.upper.IsBufferEmpty());
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 	/// Secondary Reset Links
 	BOOST_AUTO_TEST_CASE(SecondaryResetLink)
 	{
-		AsyncLinkLayerTest t(AsyncLinkLayerTest::DefaultConfig(), LEV_INTERPRET, true);
+		LinkLayerTest t(LinkLayerTest::DefaultConfig(), LEV_INTERPRET, true);
 		t.link.OnLowerLayerUp();
 		t.link.ResetLinkStates(false, 1, 1024);
 		LinkFrame f; f.FormatAck(true, false, 1024, 1);
@@ -132,10 +132,10 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 
 	BOOST_AUTO_TEST_CASE(SecAckWrongFCB)
 	{
-		LinkConfig cfg = AsyncLinkLayerTest::DefaultConfig();
+		LinkConfig cfg = LinkLayerTest::DefaultConfig();
 		cfg.UseConfirms = true;
 
-		AsyncLinkLayerTest t(cfg);
+		LinkLayerTest t(cfg);
 		t.link.OnLowerLayerUp();
 		t.link.ResetLinkStates(false, 1, 1024);
 		
@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 	/// ACK it and reset the link state
 	BOOST_AUTO_TEST_CASE(SecondaryResetResetLinkStates)
 	{
-		AsyncLinkLayerTest t;
+		LinkLayerTest t;
 		t.link.OnLowerLayerUp();
 		t.link.ResetLinkStates(false, 1, 1024);
 
@@ -166,7 +166,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 
 	BOOST_AUTO_TEST_CASE(SecondaryResetConfirmedUserData)
 	{
-		AsyncLinkLayerTest t;
+		LinkLayerTest t;
 		t.link.OnLowerLayerUp();
 		t.link.ResetLinkStates(false, 1, 1024);			
 
@@ -185,7 +185,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 
 	BOOST_AUTO_TEST_CASE(RequestStatusOfLink)
 	{
-		AsyncLinkLayerTest t;
+		LinkLayerTest t;
 		t.link.OnLowerLayerUp();
 		t.link.RequestLinkStatus(false, 1, 1024); //should be able to request this before the link is reset
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 1);
@@ -201,7 +201,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 
 	BOOST_AUTO_TEST_CASE(TestLinkStates)
 	{
-		AsyncLinkLayerTest t;
+		LinkLayerTest t;
 		t.link.OnLowerLayerUp();
 		t.link.TestLinkStatus(false, false, 1, 1024);
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_UNEXPECTED_FRAME);
@@ -217,7 +217,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 
 	BOOST_AUTO_TEST_CASE(SendUnconfirmed)
 	{
-		AsyncLinkLayerTest t;
+		LinkLayerTest t;
 		t.link.OnLowerLayerUp();
 		
 		ByteStr bytes(250, 0);
@@ -232,7 +232,7 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 
 	BOOST_AUTO_TEST_CASE(CloseBehavior)
 	{
-		AsyncLinkLayerTest t;
+		LinkLayerTest t;
 		t.link.OnLowerLayerUp();
 		
 		ByteStr bytes(250, 0);
@@ -251,10 +251,10 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 
 	BOOST_AUTO_TEST_CASE(ResetLinkTimerExpiration)
 	{
-		LinkConfig cfg = AsyncLinkLayerTest::DefaultConfig();
+		LinkConfig cfg = LinkLayerTest::DefaultConfig();
 		cfg.UseConfirms = true;
 
-		AsyncLinkLayerTest t(cfg);
+		LinkLayerTest t(cfg);
 		t.link.OnLowerLayerUp();
 		
 		ByteStr bytes(250, 0);
@@ -272,11 +272,11 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 
 	BOOST_AUTO_TEST_CASE(ResetLinkTimerExpirationWithRetry)
 	{
-		LinkConfig cfg = AsyncLinkLayerTest::DefaultConfig();
+		LinkConfig cfg = LinkLayerTest::DefaultConfig();
 		cfg.NumRetry = 1;
 		cfg.UseConfirms = true;
 
-		AsyncLinkLayerTest t(cfg);
+		LinkLayerTest t(cfg);
 		t.link.OnLowerLayerUp();
 		
 		ByteStr bytes(250, 0);
@@ -311,11 +311,11 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 	}
 	BOOST_AUTO_TEST_CASE(ResetLinkTimerExpirationWithRetryResetState)
 	{
-		LinkConfig cfg = AsyncLinkLayerTest::DefaultConfig();
+		LinkConfig cfg = LinkLayerTest::DefaultConfig();
 		cfg.NumRetry = 1;
 		cfg.UseConfirms = true;
 
-		AsyncLinkLayerTest t(cfg);
+		LinkLayerTest t(cfg);
 		t.link.OnLowerLayerUp();
 		
 		ByteStr bytes(250, 0);
@@ -348,11 +348,11 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 
 	BOOST_AUTO_TEST_CASE(ConfirmedDataRetry)
 	{
-		LinkConfig cfg = AsyncLinkLayerTest::DefaultConfig();
+		LinkConfig cfg = LinkLayerTest::DefaultConfig();
 		cfg.NumRetry = 1;
 		cfg.UseConfirms = true;
 
-		AsyncLinkLayerTest t(cfg); t.link.OnLowerLayerUp();
+		LinkLayerTest t(cfg); t.link.OnLowerLayerUp();
 		
 		ByteStr bytes(250, 0);
 		t.link.Send(bytes, bytes.Size());
@@ -374,10 +374,10 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 
 	BOOST_AUTO_TEST_CASE(SendDataTimerExpiration)
 	{
-		LinkConfig cfg = AsyncLinkLayerTest::DefaultConfig();
+		LinkConfig cfg = LinkLayerTest::DefaultConfig();
 		cfg.UseConfirms = true;
 
-		AsyncLinkLayerTest t(cfg);
+		LinkLayerTest t(cfg);
 		t.link.OnLowerLayerUp();
 		
 		ByteStr bytes(250, 0);
@@ -394,10 +394,10 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerSuite)
 
 	BOOST_AUTO_TEST_CASE(SendDataSuccess)
 	{
-		LinkConfig cfg = AsyncLinkLayerTest::DefaultConfig();
+		LinkConfig cfg = LinkLayerTest::DefaultConfig();
 		cfg.UseConfirms = true;
 
-		AsyncLinkLayerTest t(cfg);
+		LinkLayerTest t(cfg);
 		t.link.OnLowerLayerUp();
 		
 		ByteStr bytes(250, 0);

@@ -246,27 +246,27 @@
 					Name="TestFramework"
 					>
 					<File
-						RelativePath=".\AsyncLinkLayerRouterTest.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\AsyncLinkLayerRouterTest.h"
-						>
-					</File>
-					<File
-						RelativePath=".\AsyncLinkLayerTest.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\AsyncLinkLayerTest.h"
-						>
-					</File>
-					<File
 						RelativePath=".\DNPHelpers.cpp"
 						>
 					</File>
 					<File
 						RelativePath=".\DNPHelpers.h"
+						>
+					</File>
+					<File
+						RelativePath=".\LinkLayerRouterTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\LinkLayerRouterTest.h"
+						>
+					</File>
+					<File
+						RelativePath=".\LinkLayerTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\LinkLayerTest.h"
 						>
 					</File>
 					<File
@@ -338,11 +338,11 @@
 						>
 					</File>
 					<File
-						RelativePath=".\MockAsyncAppLayer.cpp"
+						RelativePath=".\MockAppLayer.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\MockAsyncAppLayer.h"
+						RelativePath=".\MockAppLayer.h"
 						>
 					</File>
 					<File

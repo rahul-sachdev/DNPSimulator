@@ -28,7 +28,7 @@
 #include <APL/CommandResponseQueue.h>
 #include <APL/CachedLogVariable.h>
 
-#include "AsyncAppInterfaces.h"
+#include "AppInterfaces.h"
 #include "APDU.h"
 #include "AsyncResponseContext.h"
 #include "AsyncSlaveEventBuffer.h"
@@ -60,7 +60,7 @@ class AS_Base;
 	The AsyncSlave is responsible for building all aspects of APDU packet responses except for the application sequence number.
 
 */
-class AsyncSlave : public Loggable, public IAsyncAppUser
+class AsyncSlave : public Loggable, public IAppUser
 {
 	
 	enum CommsStatus
@@ -79,7 +79,7 @@ class AsyncSlave : public Loggable, public IAsyncAppUser
 
 	public:
 
-	AsyncSlave(Logger*, IAsyncAppLayer*, ITimerSource*, ITimeManager* apTime, AsyncDatabase*, IDNPCommandMaster*, const SlaveConfig& arCfg);
+	AsyncSlave(Logger*, IAppLayer*, ITimerSource*, ITimeManager* apTime, AsyncDatabase*, IDNPCommandMaster*, const SlaveConfig& arCfg);
 	virtual ~AsyncSlave() {}
 
 
@@ -87,7 +87,7 @@ class AsyncSlave : public Loggable, public IAsyncAppUser
 	// External events
 	///////////////////////////////////
 
-	/* Implement IAsyncAppUser - callbacks from the app layer */
+	/* Implement IAppUser - callbacks from the app layer */
 	void OnLowerLayerUp();
 	void OnLowerLayerDown();
 
@@ -113,7 +113,7 @@ class AsyncSlave : public Loggable, public IAsyncAppUser
 
 	ChangeBuffer<SigLock> mChangeBuffer;	/// how client code gives us updates
 	PostingNotifierSource mNotifierSource;	/// way to get special notifiers for the change queue / vto
-	IAsyncAppLayer* mpAppLayer;				/// lower application layer
+	IAppLayer* mpAppLayer;					/// lower application layer
 	ITimerSource* mpTimerSrc;				/// used for post and timers
 	AsyncDatabase* mpDatabase;				/// holds static data
 	IDNPCommandMaster* mpCmdMaster;			/// how commands are selected/operated

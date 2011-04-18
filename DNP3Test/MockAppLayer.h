@@ -20,7 +20,7 @@
 #define __MOCK_ASYNC_APP_LAYER_H_
 
 
-#include <DNP3/AsyncAppInterfaces.h>
+#include <DNP3/AppInterfaces.h>
 #include <DNP3/APDUConstants.h>
 #include <DNP3/APDU.h>
 #include <APL/Loggable.h>
@@ -33,14 +33,14 @@ namespace apl {
 namespace apl { namespace dnp {
 
 /**	@section desc Test class to mock async app layer for master/slave */
-class MockAsyncAppLayer : public IAsyncAppLayer, public Loggable
+class MockAppLayer : public IAppLayer, public Loggable
 {
 	public:
-		MockAsyncAppLayer(Logger*);
-		virtual ~MockAsyncAppLayer() {}
+		MockAppLayer(Logger*);
+		virtual ~MockAppLayer() {}
 
 
-		void SetUser(IAsyncAppUser*);
+		void SetUser(IAppUser*);
 
 		void SendResponse(APDU&);
 		void SendUnsolicited(APDU&);
@@ -62,7 +62,7 @@ class MockAsyncAppLayer : public IAsyncAppLayer, public Loggable
 		void DoSendUnsol();
 		void DoSendSol();
 
-		IAsyncAppUser* mpUser;
+		IAppUser* mpUser;
 		bool mAutoSendCallback;
 		bool mIsSuccess;
 		std::deque<APDU> mFragments;

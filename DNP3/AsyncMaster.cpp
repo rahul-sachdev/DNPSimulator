@@ -40,7 +40,7 @@ using namespace boost;
 
 namespace apl { namespace dnp {
 
-AsyncMaster::AsyncMaster(Logger* apLogger, MasterConfig aCfg, IAsyncAppLayer* apAppLayer, IDataObserver* apPublisher, AsyncTaskGroup* apTaskGroup, ITimerSource* apTimerSrc, ITimeSource* apTimeSrc) :
+AsyncMaster::AsyncMaster(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IDataObserver* apPublisher, AsyncTaskGroup* apTaskGroup, ITimerSource* apTimerSrc, ITimeSource* apTimeSrc) :
 Loggable(apLogger),
 mRequest(aCfg.FragSize),
 mpAppLayer(apAppLayer),
@@ -178,7 +178,7 @@ void AsyncMaster::ChangeUnsol(ITask* apTask, bool aEnable, int aClassMask)
 	mpState->StartTask(this, apTask, &mConfigureUnsol);
 }
 
-/* Implement IAsyncAppUser */
+/* Implement IAppUser */
 
 void AsyncMaster::OnLowerLayerUp()
 {

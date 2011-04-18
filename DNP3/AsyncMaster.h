@@ -27,7 +27,7 @@
 #include <APL/CachedLogVariable.h>
 
 #include "APDU.h"
-#include "AsyncAppInterfaces.h"
+#include "AppInterfaces.h"
 #include "ObjectReadIterator.h"
 #include "MasterConfig.h"
 #include "ObjectInterfaces.h"
@@ -58,7 +58,7 @@ class AMS_Base;
 
 	Coordination of tasks is handled by a higher level task scheduler.
 */
-class AsyncMaster : public Loggable, public IAsyncAppUser
+class AsyncMaster : public Loggable, public IAppUser
 {	
 	friend class AMS_Base;
 	friend class AMS_Idle;
@@ -68,12 +68,12 @@ class AsyncMaster : public Loggable, public IAsyncAppUser
 
 	public:
 
-	AsyncMaster(Logger*, MasterConfig aCfg, IAsyncAppLayer*, IDataObserver*, AsyncTaskGroup*, ITimerSource*, ITimeSource* apTimeSrc = TimeSource::Inst());
+	AsyncMaster(Logger*, MasterConfig aCfg, IAppLayer*, IDataObserver*, AsyncTaskGroup*, ITimerSource*, ITimeSource* apTimeSrc = TimeSource::Inst());
 	virtual ~AsyncMaster() {}
 
 	ICommandAcceptor* GetCmdAcceptor() { return &mCommandQueue; }
 
-	/* Implement IAsyncAppUser - callbacks from the app layer */
+	/* Implement IAppUser - callbacks from the app layer */
 
 	void OnLowerLayerUp();
 	void OnLowerLayerDown();
@@ -115,7 +115,7 @@ class AsyncMaster : public Loggable, public IAsyncAppUser
 	
 	APDU mRequest;							/// APDU that gets reused for requests
 
-	IAsyncAppLayer* mpAppLayer;				 /// lower application layer
+	IAppLayer* mpAppLayer;				 /// lower application layer
 	IDataObserver* mpPublisher;				 /// where the measurement are pushed
 	AsyncTaskGroup* mpTaskGroup;			 /// How task execution is controlled
 	ITimerSource* mpTimerSrc;				 /// Controls the posting of events to marshall across threads

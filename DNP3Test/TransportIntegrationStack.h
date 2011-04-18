@@ -19,8 +19,8 @@
 #ifndef __TRANSPORT_INTEGRATION_STACK_H_
 #define __TRANSPORT_INTEGRATION_STACK_H_
 
-#include <DNP3/AsyncLinkLayerRouter.h>
-#include <DNP3/AsyncLinkLayer.h>
+#include <DNP3/LinkLayerRouter.h>
+#include <DNP3/LinkLayer.h>
 #include <DNP3/AsyncTransportLayer.h>
 
 #include <APLTestTools/MockUpperLayer.h>
@@ -40,8 +40,8 @@ class TransportIntegrationStack
 	public:
 		TransportIntegrationStack(Logger*, ITimerSource*, IPhysicalLayerAsync*, LinkConfig);
 
-		AsyncLinkLayerRouter mRouter;
-		AsyncLinkLayer mLink;
+		LinkLayerRouter mRouter;
+		LinkLayer mLink;
 		AsyncTransportLayer mTransport;
 		MockUpperLayer mUpper;
 };

@@ -31,7 +31,7 @@ namespace apl { namespace dnp {
 class UnsolicitedChannel : public AppLayerChannel
 {
 	public:
-	UnsolicitedChannel(Logger* apLogger, AsyncAppLayer* apApp, ITimerSource* apTimerSrc, millis_t aTimeout);
+	UnsolicitedChannel(Logger* apLogger, AppLayer* apApp, ITimerSource* apTimerSrc, millis_t aTimeout);
 	virtual ~UnsolicitedChannel(){}
 
 	void OnUnsol(APDU& arAPDU);

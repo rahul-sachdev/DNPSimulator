@@ -23,27 +23,27 @@
 #include <APL/Singleton.h>
 #include <string>
 
-#include "AsyncLinkLayer.h"
+#include "LinkLayer.h"
 
 namespace apl { namespace dnp {
 
-	class AsyncLinkLayer;
+	class LinkLayer;
 
 	class PriStateBase
 	{
 		public:
 
 		/* Incoming messages for primary station */
-		virtual void Ack(AsyncLinkLayer*, bool aIsRcvBuffFull);
-		virtual void Nack(AsyncLinkLayer*, bool aIsRcvBuffFull);
-		virtual void LinkStatus(AsyncLinkLayer*, bool aIsRcvBuffFull);
-		virtual void NotSupported (AsyncLinkLayer*, bool aIsRcvBuffFull);
+		virtual void Ack(LinkLayer*, bool aIsRcvBuffFull);
+		virtual void Nack(LinkLayer*, bool aIsRcvBuffFull);
+		virtual void LinkStatus(LinkLayer*, bool aIsRcvBuffFull);
+		virtual void NotSupported (LinkLayer*, bool aIsRcvBuffFull);
 
-		virtual void OnTimeout(AsyncLinkLayer*);
+		virtual void OnTimeout(LinkLayer*);
 
 		/*Upper layer events to handle */
-		virtual void SendConfirmed(AsyncLinkLayer*, const apl::byte_t*, size_t);
-		virtual void SendUnconfirmed(AsyncLinkLayer*, const apl::byte_t*, size_t);
+		virtual void SendConfirmed(LinkLayer*, const apl::byte_t*, size_t);
+		virtual void SendUnconfirmed(LinkLayer*, const apl::byte_t*, size_t);
 
 		//every concrete state implements this for logging purposes
 		virtual std::string Name() const = 0;
@@ -53,16 +53,16 @@ namespace apl { namespace dnp {
 	class PLLS_SecNotReset : public PriStateBase
 	{
 		MACRO_STATE_SINGLETON_INSTANCE(PLLS_SecNotReset);
-		void SendUnconfirmed(AsyncLinkLayer*, const apl::byte_t*, size_t);
-		void SendConfirmed(AsyncLinkLayer*, const apl::byte_t*, size_t);
+		void SendUnconfirmed(LinkLayer*, const apl::byte_t*, size_t);
+		void SendConfirmed(LinkLayer*, const apl::byte_t*, size_t);
 	};
 
 	///	@section desc for reset state
 	class PLLS_SecReset : public PriStateBase
 	{
 		MACRO_STATE_SINGLETON_INSTANCE(PLLS_SecReset);
-		void SendUnconfirmed(AsyncLinkLayer*, const apl::byte_t*, size_t);
-		void SendConfirmed(AsyncLinkLayer*, const apl::byte_t*, size_t);
+		void SendUnconfirmed(LinkLayer*, const apl::byte_t*, size_t);
+		void SendConfirmed(LinkLayer*, const apl::byte_t*, size_t);
 	};
 
 	///	@section desc As soon as we get an ACK, send the delayed pri frame
@@ -70,15 +70,15 @@ namespace apl { namespace dnp {
 	{
 		MACRO_STATE_SINGLETON_INSTANCE(PLLS_ResetLinkWait);
 
-		void Ack(AsyncLinkLayer*, bool aIsRcvBuffFull);
-		void Nack(AsyncLinkLayer*  apLL, bool) { Failure(apLL); }
-		void LinkStatus(AsyncLinkLayer* apLL, bool) { Failure(apLL); }
-		void NotSupported (AsyncLinkLayer*  apLL, bool) { Failure(apLL); }
+		void Ack(LinkLayer*, bool aIsRcvBuffFull);
+		void Nack(LinkLayer*  apLL, bool) { Failure(apLL); }
+		void LinkStatus(LinkLayer* apLL, bool) { Failure(apLL); }
+		void NotSupported (LinkLayer*  apLL, bool) { Failure(apLL); }
 
-		void OnTimeout(AsyncLinkLayer*);
+		void OnTimeout(LinkLayer*);
 
 		private:
-		void Failure(AsyncLinkLayer*);
+		void Failure(LinkLayer*);
 	};
 
 	///	@section desc As soon as we get an ACK, send the delayed pri frame
@@ -86,14 +86,14 @@ namespace apl { namespace dnp {
 	{
 		MACRO_STATE_SINGLETON_INSTANCE(PLLS_ConfDataWait);
 
-		void Ack(AsyncLinkLayer*, bool aIsRcvBuffFull);
-		void Nack(AsyncLinkLayer* apLL, bool) { Failure(apLL); }
-		void LinkStatus(AsyncLinkLayer* apLL, bool) { Failure(apLL); }
-		void NotSupported (AsyncLinkLayer* apLL, bool) { Failure(apLL); }
-		void OnTimeout(AsyncLinkLayer*);
+		void Ack(LinkLayer*, bool aIsRcvBuffFull);
+		void Nack(LinkLayer* apLL, bool) { Failure(apLL); }
+		void LinkStatus(LinkLayer* apLL, bool) { Failure(apLL); }
+		void NotSupported (LinkLayer* apLL, bool) { Failure(apLL); }
+		void OnTimeout(LinkLayer*);
 
 		private:
-		void Failure(AsyncLinkLayer*);
+		void Failure(LinkLayer*);
 	};
 
 

@@ -41,11 +41,11 @@ namespace apl { namespace dnp {
 	///	Implements the parsing and de-multiplexing portion of
 	///	of DNP 3 Data Link Layer. AsyncPhysLayerMonitor inherits
 	/// from IHandlerAsync, which inherits from IUpperLayer
-	class AsyncLinkLayerRouter : public AsyncPhysLayerMonitor, public IFrameSink, public ILinkRouter
+	class LinkLayerRouter : public AsyncPhysLayerMonitor, public IFrameSink, public ILinkRouter
 	{
 		public:
 
-		AsyncLinkLayerRouter(apl::Logger*, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);
+		LinkLayerRouter(apl::Logger*, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);
 
 		/// Ties the lower part of the link layer to the upper part
 		void AddContext(ILinkContext*, uint_16_t aAddress);
