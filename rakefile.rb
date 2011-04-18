@@ -1,7 +1,7 @@
 
 $: << './tools/rake_build_system' #make sure this rakefile can see all the build system files
 
-ENV['BOOST_VERSION']='boost_1_43'
+ENV['BOOST_VERSION']='boost_1_46_1'
 
 require 'rake/clean'
 

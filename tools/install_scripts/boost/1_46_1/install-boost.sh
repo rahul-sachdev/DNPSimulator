@@ -1,3 +1,16 @@
+#put all of boost specific defs here to make it easier to upgrade
+
+URL=http://sourceforge.net/projects/boost/files/boost/1.46.1/boost_1_46_1.tar.bz2/download
+BOOST_DIR=boost_1_46_1
+TARBALL=$BOOST_DIR.tar.bz2
+
+TEMP_DIR=$PWD/temp
+DOWNLOAD=$TEMP_DIR/$TARBALL
+INSTALL_DIR=$TOOLS_HOME/boostlib/$BOOST_DIR
+
+echo "Temporary files will be written to $TEMP_DIR"
+echo "Boost will be installed to $INSTALL_DIR"
+
 if [ "`uname -a | grep CYGWIN_NT`" ]; then
   echo "detected cygwin..."
   PLATFORM=pc_cygwin
@@ -15,30 +28,29 @@ else
   echo "TOOLS_HOME set to $TOOLS_HOME"
 fi
 
-TEMP_DIR=$PWD/temp
-echo "Temporary files will be written to $TEMP_DIR"
-INSTALL_DIR=$TOOLS_HOME/boostlib/boost_1_46_1
-echo "Boost will be installed to $INSTALL_DIR"
-
-if [ ! -e $TEMP_DIR/boost_1_46_1.tar.bz2 ]; then
-  wget -P $TEMP_DIR http://sourceforge.net/projects/boost/files/boost/1.46.1/boost_1_46_1.tar.bz2/download
+if [ ! -e $DOWNLOAD ]; then
+  mkdir $TEMP_DIR
+  wget -P $TEMP_DIR $URL -O $DOWNLOAD
 fi
 
 cd $TEMP_DIR
 
-if [ ! -d boost_1_46_1 ]; then
-  tar -xvf boost_1_46_1.tar.bz2
+if [ ! -d $BOOST_DIR ]; then
+  tar -xvf $TARBALL
 fi
 
-cd boost_1_46_1
+cd $BOOST_DIR
 ./bootstrap.sh
-echo "using gcc : arm : $CROSSTOOL ;" >> project-config.jam
+#echo "using gcc : arm : $CROSSTOOL ;" >> project-config.jam
+#echo "using gcc : arm : $CROSSTOOL ;" >> project-config.jam
+
 ./bjam toolset=gcc cxxflags=-fPIC --with-program_options --with-system --with-date_time --with-thread --with-filesystem --with-test --layout=system stage
 mkdir -p $INSTALL_DIR/$PLATFORM/
 mv stage/lib/* $INSTALL_DIR/$PLATFORM/
-./bjam toolset=gcc-arm target-os=linux --with-program_options --with-system --with-date_time --with-thread --with-filesystem --with-test --layout=system stage
-mkdir -p $INSTALL_DIR/pc_linux_arm
-mv stage/lib/* $INSTALL_DIR/pc_linux_arm/
+
+#./bjam toolset=gcc-arm target-os=linux --with-program_options --with-system --with-date_time --with-thread --with-filesystem --with-test --layout=system stage
+#mkdir -p $INSTALL_DIR/pc_linux_arm
+#mv stage/lib/* $INSTALL_DIR/pc_linux_arm/
 
 mkdir -p $INSTALL_DIR/include
 cp -R boost $INSTALL_DIR/include
