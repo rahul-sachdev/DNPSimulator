@@ -19,7 +19,7 @@
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
-#include <DNP3/AsyncEventBufferBase.h>
+#include <DNP3/EventBufferBase.h>
 
 #include <limits>
 #include <set>
@@ -41,15 +41,15 @@ struct SetWrapper
 };
 
 template <class T>
-class SimpleBuffer : public AsyncEventBufferBase<T, SetWrapper<T> >
+class SimpleBuffer : public EventBufferBase<T, SetWrapper<T> >
 {
 public:
 
-	SimpleBuffer(size_t aMaxEvents) : AsyncEventBufferBase<T, SetWrapper<T> >(aMaxEvents)
+	SimpleBuffer(size_t aMaxEvents) : EventBufferBase<T, SetWrapper<T> >(aMaxEvents)
 	{}
 };
 	
-BOOST_AUTO_TEST_SUITE(TestAsyncEventBufferBase)
+BOOST_AUTO_TEST_SUITE(TestEventBufferBase)
 	typedef EventInfo<int> intevt;
 
 	BOOST_AUTO_TEST_CASE(SetInitState)

@@ -191,7 +191,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\TestAsyncAppLayer.cpp"
+					RelativePath=".\TestAppLayer.cpp"
 					>
 				</File>
 				<File
@@ -222,14 +222,6 @@
 			<Filter
 				Name="DataLink"
 				>
-				<File
-					RelativePath=".\TestAsyncLinkLayer.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\TestAsyncLinkLayerRouter.cpp"
-					>
-				</File>
 				<File
 					RelativePath=".\TestCRC.cpp"
 					>
@@ -281,13 +273,21 @@
 						RelativePath=".\MockFrameSink.h"
 						>
 					</File>
+					<File
+						RelativePath=".\TestLinkLayer.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\TestLinkLayerRouter.cpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
 				Name="Integration"
 				>
 				<File
-					RelativePath=".\TestAsyncIntegration.cpp"
+					RelativePath=".\TestIntegration.cpp"
 					>
 				</File>
 				<File
@@ -298,19 +298,19 @@
 					Name="Framework"
 					>
 					<File
-						RelativePath=".\AsyncIntegrationTest.cpp"
+						RelativePath=".\IntegrationTest.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\AsyncIntegrationTest.h"
+						RelativePath=".\IntegrationTest.h"
 						>
 					</File>
 					<File
-						RelativePath=".\AsyncStartupTeardownTest.cpp"
+						RelativePath=".\StartupTeardownTest.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\AsyncStartupTeardownTest.h"
+						RelativePath=".\StartupTeardownTest.h"
 						>
 					</File>
 				</Filter>
@@ -319,7 +319,7 @@
 				Name="Master"
 				>
 				<File
-					RelativePath=".\TestAsyncMaster.cpp"
+					RelativePath=".\TestMaster.cpp"
 					>
 				</File>
 				<File
@@ -330,11 +330,11 @@
 					Name="Framework"
 					>
 					<File
-						RelativePath=".\AsyncMasterTestObject.cpp"
+						RelativePath=".\MasterTestObject.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\AsyncMasterTestObject.h"
+						RelativePath=".\MasterTestObject.h"
 						>
 					</File>
 					<File
@@ -363,38 +363,38 @@
 				Name="Slave"
 				>
 				<File
-					RelativePath=".\TestAsyncDatabase.cpp"
+					RelativePath=".\TestDatabase.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\TestAsyncEventBufferBase.cpp"
+					RelativePath=".\TestEventBufferBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\TestAsyncEventBuffers.cpp"
+					RelativePath=".\TestEventBuffers.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\TestAsyncSlave.cpp"
+					RelativePath=".\TestSlave.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\TestAsyncSlaveEventBuffer.cpp"
+					RelativePath=".\TestSlaveEventBuffer.cpp"
 					>
 				</File>
 				<Filter
 					Name="Framework"
 					>
 					<File
-						RelativePath=".\AsyncDatabaseTestObject.h"
+						RelativePath=".\DatabaseTestObject.h"
 						>
 					</File>
 					<File
-						RelativePath=".\AsyncSlaveTestObject.cpp"
+						RelativePath=".\SlaveTestObject.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\AsyncSlaveTestObject.h"
+						RelativePath=".\SlaveTestObject.h"
 						>
 					</File>
 				</Filter>
@@ -403,15 +403,15 @@
 				Name="Transport"
 				>
 				<File
-					RelativePath=".\TestAsyncTransportLayer.cpp"
+					RelativePath=".\TestTransportLayer.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\TestAsyncTransportLoopback.cpp"
+					RelativePath=".\TestTransportLoopback.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\TestAsyncTransportScalability.cpp"
+					RelativePath=".\TestTransportScalability.cpp"
 					>
 				</File>
 				<Filter

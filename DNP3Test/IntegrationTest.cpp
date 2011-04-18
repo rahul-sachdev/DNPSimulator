@@ -17,7 +17,7 @@
 // under the License.
 // 
 
-#include "AsyncIntegrationTest.h"
+#include "IntegrationTest.h"
 
 #include <sstream>
 
@@ -27,8 +27,8 @@
 #include <DNP3/MasterStackConfig.h>
 #include <DNP3/SlaveStackConfig.h>
 
-#include <DNP3/AsyncMasterStack.h>
-#include <DNP3/AsyncSlaveStack.h>
+#include <DNP3/MasterStack.h>
+#include <DNP3/SlaveStack.h>
 
 #include <boost/asio.hpp>
 #include <boost/foreach.hpp>
@@ -40,24 +40,24 @@ using namespace std;
 
 namespace apl { namespace dnp {
 
-AsyncIntegrationTest::AsyncIntegrationTest(Logger* apLogger, FilterLevel aLevel, uint_16_t aStartPort, size_t aNumPairs, size_t aNumPoints) :
+IntegrationTest::IntegrationTest(Logger* apLogger, FilterLevel aLevel, uint_16_t aStartPort, size_t aNumPairs, size_t aNumPoints) :
 AsyncStackManager(apLogger),
 M_START_PORT(aStartPort),
 mChange(false),
-mNotifier(boost::bind(&AsyncIntegrationTest::RegisterChange, this))
+mNotifier(boost::bind(&IntegrationTest::RegisterChange, this))
 {
 	for(size_t i=0; i<aNumPairs; ++i) AddStackPair(aLevel, aNumPoints);
 	mFanout.Add(&mLocalFDO);
 }
 
-AsyncIntegrationTest::~AsyncIntegrationTest()
+IntegrationTest::~IntegrationTest()
 {
 	BOOST_FOREACH(FlexibleDataObserver* pFDO, mMasterObservers) { delete pFDO; }
 }
 
-void AsyncIntegrationTest::Next() { AsyncTestObject::Next(this->mService.Get(), 10); }
+void IntegrationTest::Next() { AsyncTestObject::Next(this->mService.Get(), 10); }
 
-bool AsyncIntegrationTest::SameData()
+bool IntegrationTest::SameData()
 {
 	if(!mChange) return false;
 	
@@ -71,7 +71,7 @@ bool AsyncIntegrationTest::SameData()
 	return true;
 }
 
-Binary AsyncIntegrationTest::RandomBinary()
+Binary IntegrationTest::RandomBinary()
 {
     boost::uniform_int<> num(0,1);      
 	boost::variate_generator<boost::mt19937&, boost::uniform_int<> > val(rng, num);
@@ -79,7 +79,7 @@ Binary AsyncIntegrationTest::RandomBinary()
 	return v;
 }
 
-Analog AsyncIntegrationTest::RandomAnalog()
+Analog IntegrationTest::RandomAnalog()
 {           
     boost::uniform_int<int_32_t> num;
 	boost::variate_generator<boost::mt19937&, boost::uniform_int<int_32_t> > val(rng, num);
@@ -87,7 +87,7 @@ Analog AsyncIntegrationTest::RandomAnalog()
 	return v;
 }
 
-Counter AsyncIntegrationTest::RandomCounter()
+Counter IntegrationTest::RandomCounter()
 {              
     boost::uniform_int<uint_32_t> num;
 	boost::variate_generator<boost::mt19937&, boost::uniform_int<uint_32_t> > val(rng, num);
@@ -95,7 +95,7 @@ Counter AsyncIntegrationTest::RandomCounter()
 	return v;
 }
 
-void AsyncIntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
+void IntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 {
 	uint_16_t port = M_START_PORT + this->mMasterObservers.size();
 	

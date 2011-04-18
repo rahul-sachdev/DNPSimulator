@@ -27,7 +27,7 @@
 
 #include <DNP3/LinkLayerRouter.h>
 #include <DNP3/LinkLayer.h>
-#include <DNP3/AsyncTransportLayer.h>
+#include <DNP3/TransportLayer.h>
 
 namespace apl { namespace dnp {
 
@@ -61,8 +61,8 @@ class TransportLoopbackTestObject : public LogTester, public AsyncTestObjectASIO
 
 		LinkLayer mLinkA;
 		LinkLayer mLinkB;
-		AsyncTransportLayer mTransA;
-		AsyncTransportLayer mTransB;
+		TransportLayer mTransA;
+		TransportLayer mTransB;
 		LinkLayerRouter mRouter;
 
 	public:

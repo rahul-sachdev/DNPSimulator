@@ -16,42 +16,41 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "AsyncSlaveTestObject.h"
 
-#include <APLTestTools/BufferHelpers.h>
-#include <APL/ToHex.h>
+#include "StartupTeardownTest.h"
 
+#include <DNP3/MasterStack.h>
+#include <APL/PhysicalLayerAsyncTCPClient.h>
+
+#include <boost/asio.hpp>
+#include <boost/foreach.hpp>
 
 namespace apl { namespace dnp {
 
-AsyncSlaveTestObject::AsyncSlaveTestObject(const SlaveConfig& arCfg, FilterLevel aLevel, bool aImmediate) :
-LogTester(aImmediate),
-mts(),
-app(mLog.GetLogger(aLevel, "app")),
-db(mLog.GetLogger(aLevel, "db")),
-cmd_master(10000),
-slave(mLog.GetLogger(aLevel, "slave"), &app, &mts, &fakeTime, &db, &cmd_master, arCfg),
-mpLogger(mLog.GetLogger(aLevel, "test"))
+StartupTeardownTest::StartupTeardownTest(FilterLevel aLevel, bool aAutoStart) :
+mLog(),
+mMgr(mLog.GetLogger(aLevel, "mgr"), aAutoStart)
 {
-	app.SetUser(&slave);
+
 }
 
-void AsyncSlaveTestObject::SendToSlave(const std::string& arData, SequenceInfo aSeq)
+void StartupTeardownTest::CreatePort(const std::string& arName, FilterLevel aLevel)
 {
-	HexSequence hs(arData);
-	mAPDU.Reset();
-	mAPDU.Write(hs, hs.Size());
-	mAPDU.Interpret();
-	LOG_BLOCK(LEV_INTERPRET, "<= " << mAPDU.ToString());
-	slave.OnRequest(mAPDU, aSeq);
+	std::string name = arName + " router";
+	PhysLayerSettings s(aLevel, 1000);
+	mMgr.AddTCPClient(arName, s, "127.0.0.1", 30000);
 }
 
-std::string AsyncSlaveTestObject::Read()
-{
-	mAPDU = app.Read();
-	std::string hex = toHex(mAPDU.GetBuffer(), mAPDU.Size(), true);	
-	return hex;
+void StartupTeardownTest::AddMaster(const std::string& arStackName, const std::string& arPortName, uint_16_t aLocalAddress, FilterLevel aLevel)
+{	
+	MasterStackConfig cfg;
+	cfg.link.LocalAddr = aLocalAddress;
+	mMgr.AddMaster(arPortName, arStackName, aLevel, &mFDO, cfg);
 }
+
+
 
 }}
+
+
 

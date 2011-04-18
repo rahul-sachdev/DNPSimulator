@@ -26,7 +26,7 @@
 
 #include <APLTestTools/MockLowerLayer.h>
 #include <APLTestTools/MockUpperLayer.h>
-#include <DNP3/AsyncTransportLayer.h>
+#include <DNP3/TransportLayer.h>
 #include <APLTestTools/LogTester.h>
 
 namespace apl { namespace dnp {
@@ -45,7 +45,7 @@ class TransportTestObject : public LogTester
 
 	private:
 	Logger* mpLogger;
-	AsyncTransportLayer transport;
+	TransportLayer transport;
 
 	public:
 

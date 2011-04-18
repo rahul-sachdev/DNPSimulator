@@ -16,8 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_INTEGRATION_TEST_H_
-#define __ASYNC_INTEGRATION_TEST_H_
+#ifndef __INTEGRATION_TEST_H_
+#define __INTEGRATION_TEST_H_
 
 #include <vector>
 #include <APL/FlexibleDataObserver.h>
@@ -64,12 +64,12 @@ class ObserverFanout : public IDataObserver
 
 };
 
-class AsyncIntegrationTest : public AsyncTestObject, public AsyncStackManager
+class IntegrationTest : public AsyncTestObject, public AsyncStackManager
 {
 	public:
 
-		AsyncIntegrationTest(Logger* apLogger, FilterLevel aLevel, uint_16_t aStartPort, size_t aNumPairs, size_t aNumPoints);
-		virtual ~AsyncIntegrationTest();
+		IntegrationTest(Logger* apLogger, FilterLevel aLevel, uint_16_t aStartPort, size_t aNumPairs, size_t aNumPoints);
+		virtual ~IntegrationTest();
 
 		IDataObserver* GetFanout() { return &mFanout; }
 

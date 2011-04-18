@@ -21,7 +21,7 @@
 
 #include <DNP3/LinkLayerRouter.h>
 #include <DNP3/LinkLayer.h>
-#include <DNP3/AsyncTransportLayer.h>
+#include <DNP3/TransportLayer.h>
 
 #include <APLTestTools/MockUpperLayer.h>
 
@@ -42,7 +42,7 @@ class TransportIntegrationStack
 
 		LinkLayerRouter mRouter;
 		LinkLayer mLink;
-		AsyncTransportLayer mTransport;
+		TransportLayer mTransport;
 		MockUpperLayer mUpper;
 };
 

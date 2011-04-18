@@ -19,7 +19,7 @@
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
-#include "AsyncDatabaseTestObject.h"
+#include "DatabaseTestObject.h"
 
 #include <limits>
 
@@ -40,7 +40,7 @@ using namespace apl::dnp;
 	}
 
 	template <class T>
-	void TestBufferForEvent(bool aIsEvent, const T& arNewVal, AsyncDatabaseTestObject& test, std::deque< PointInfo <T> >& arQueue)
+	void TestBufferForEvent(bool aIsEvent, const T& arNewVal, DatabaseTestObject& test, std::deque< PointInfo <T> >& arQueue)
 	{
 		Transaction tr(&test.db);
 		test.db.Update(arNewVal, 0);
@@ -56,11 +56,11 @@ using namespace apl::dnp;
 		}
 	}
 
-	BOOST_AUTO_TEST_SUITE(TestAsyncDatabase)		
+	BOOST_AUTO_TEST_SUITE(TestDatabase)		
 		// Show that updating a value with an invalid index throws an exception
 		BOOST_AUTO_TEST_CASE(IndexOutOfBounds)
 		{	
-			AsyncDatabaseTestObject t;
+			DatabaseTestObject t;
 			t.db.Configure(DT_BINARY, 1);
 
 			Transaction tr(&t.db);
@@ -114,10 +114,10 @@ using namespace apl::dnp;
 			TestDataEvent(true, Counter(Counter::MIN_VALUE), Counter(Counter::MAX_VALUE), std::numeric_limits<uint_32_t>::max()-1);
 		}
 
-		// Next 3 tests prove that "no change" doesn't get forwared to IAsyncEventBuffer
+		// Next 3 tests prove that "no change" doesn't get forwared to IEventBuffer
 		BOOST_AUTO_TEST_CASE(BinaryNoChange)
 		{
-			AsyncDatabaseTestObject t;
+			DatabaseTestObject t;
 			t.db.Configure(DT_BINARY, 1);
 			t.db.SetClass(DT_BINARY, 0, PC_CLASS_1);
 			TestBufferForEvent(false, Binary(false), t, t.buffer.mBinaryEvents);
@@ -125,7 +125,7 @@ using namespace apl::dnp;
 
 		BOOST_AUTO_TEST_CASE(AnalogNoChange)
 		{
-			AsyncDatabaseTestObject t;
+			DatabaseTestObject t;
 			t.db.Configure(DT_ANALOG, 1);
 			t.db.SetClass(DT_ANALOG, 0, PC_CLASS_1);
 			TestBufferForEvent(false, Analog(0), t, t.buffer.mAnalogEvents);
@@ -133,7 +133,7 @@ using namespace apl::dnp;
 
 		BOOST_AUTO_TEST_CASE(CounterNoChange)
 		{
-			AsyncDatabaseTestObject t;
+			DatabaseTestObject t;
 			t.db.Configure(DT_COUNTER, 1);
 			t.db.SetClass(DT_COUNTER, 0, PC_CLASS_1);
 			TestBufferForEvent(false, Counter(0), t, t.buffer.mCounterEvents);
@@ -142,7 +142,7 @@ using namespace apl::dnp;
 		// Next 3 tests prove that a change detection will forward to the buffer
 		BOOST_AUTO_TEST_CASE(BinaryChange)
 		{
-			AsyncDatabaseTestObject t;
+			DatabaseTestObject t;
 			t.db.Configure(DT_BINARY, 1);
 			t.db.SetClass(DT_BINARY, 0, PC_CLASS_1);
 			TestBufferForEvent(true, Binary(false, BQ_ONLINE), t, t.buffer.mBinaryEvents);
@@ -150,7 +150,7 @@ using namespace apl::dnp;
 
 		BOOST_AUTO_TEST_CASE(AnalogChange)
 		{
-			AsyncDatabaseTestObject t;
+			DatabaseTestObject t;
 			t.db.Configure(DT_ANALOG, 1);
 			t.db.SetClass(DT_ANALOG, 0, PC_CLASS_1);
 			TestBufferForEvent(true, Analog(0, AQ_ONLINE), t, t.buffer.mAnalogEvents);
@@ -158,7 +158,7 @@ using namespace apl::dnp;
 
 		BOOST_AUTO_TEST_CASE(CounterChange)
 		{
-			AsyncDatabaseTestObject t;
+			DatabaseTestObject t;
 			t.db.Configure(DT_COUNTER, 1);
 			t.db.SetClass(DT_COUNTER, 0, PC_CLASS_1);
 			TestBufferForEvent(true, Counter(0, CQ_ONLINE), t, t.buffer.mCounterEvents);
@@ -167,7 +167,7 @@ using namespace apl::dnp;
 		//show that the last reported change gets recorded correctly and applied correctly for each type
 		BOOST_AUTO_TEST_CASE(AnalogLastReportedChange)
 		{
-			AsyncDatabaseTestObject t;
+			DatabaseTestObject t;
 			t.db.Configure(DT_ANALOG, 1);
 			t.db.SetClass(DT_ANALOG, 0, PC_CLASS_1);
 			t.db.SetDeadband(DT_ANALOG, 0, 5); //value must change by more than 5 before being reported
@@ -181,7 +181,7 @@ using namespace apl::dnp;
 
 		BOOST_AUTO_TEST_CASE(CounterLastReportedChange)
 		{
-			AsyncDatabaseTestObject t;
+			DatabaseTestObject t;
 			t.db.Configure(DT_COUNTER, 1);
 			t.db.SetClass(DT_COUNTER, 0, PC_CLASS_1);
 			t.db.SetDeadband(DT_COUNTER, 0, 5); //value must change by more than 5 before being reported

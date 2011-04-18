@@ -19,7 +19,7 @@
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
-#include <DNP3/AsyncEventBuffers.h>
+#include <DNP3/EventBuffers.h>
 
 #include <limits>
 
@@ -28,10 +28,10 @@ using namespace apl;
 using namespace apl::dnp;
 
 
-	BOOST_AUTO_TEST_SUITE(AsyncSingleEventBufferSuite)		
+	BOOST_AUTO_TEST_SUITE(SingleEventBufferSuite)		
 		BOOST_AUTO_TEST_CASE(SingleIndexSorting)
 		{	
-			AsyncSingleEventBuffer<AnalogEvent> b(3);
+			SingleEventBuffer<AnalogEvent> b(3);
 
 			b.Update(Analog(0), PC_CLASS_1, 0);
 			b.Update(Analog(0), PC_CLASS_1, 1);
@@ -48,14 +48,14 @@ using namespace apl::dnp;
 	BOOST_AUTO_TEST_SUITE_END()
 
 	// index is irrelevant in these tests, only insertion order matters
-	BOOST_AUTO_TEST_SUITE(AsyncInsertionOrderedEventBufferSuite)	
+	BOOST_AUTO_TEST_SUITE(InsertionOrderedEventBufferSuite)	
 		typedef EventInfo<int> intevt;
 
 		BOOST_AUTO_TEST_CASE(InsertionOrderSorting)
 		{	
 			const size_t NUM = 3;
 
-			AsyncInsertionOrderedEventBuffer<intevt> b(NUM);
+			InsertionOrderedEventBuffer<intevt> b(NUM);
 
 			int vals[NUM] = {2, 1, 0};
 
@@ -88,11 +88,11 @@ using namespace apl::dnp;
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 
-	BOOST_AUTO_TEST_SUITE(AsyncTimeOrderedEventBufferSuite)
+	BOOST_AUTO_TEST_SUITE(TimeOrderedEventBufferSuite)
 		BOOST_AUTO_TEST_CASE(TimeBasedSorting)
 		{	
 			const size_t NUM = 3;
-			AsyncTimeOrderedEventBuffer<BinaryEvent> b(NUM);
+			TimeOrderedEventBuffer<BinaryEvent> b(NUM);
 
 			TimeStamp_t times[NUM] = {TimeStamp_t(3), TimeStamp_t(2), TimeStamp_t(1)};
 

@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "AsyncMasterTestObject.h"
+#include "MasterTestObject.h"
 
 #include <memory>
 #include <APLTestTools/BufferHelpers.h>
@@ -26,7 +26,7 @@ using namespace std;
 
 namespace apl { namespace dnp {
 
-AsyncMasterTestObject::AsyncMasterTestObject(MasterConfig cfg, FilterLevel aLevel, bool aImmediate) :
+MasterTestObject::MasterTestObject(MasterConfig cfg, FilterLevel aLevel, bool aImmediate) :
 LogTester(aImmediate),
 fake_time(),
 mts(),
@@ -38,7 +38,7 @@ master(mLog.GetLogger(aLevel,"master"), cfg, &app, &fdo, ats.NewGroup(), &mts, &
 	app.SetUser(&master);
 }
 
-void AsyncMasterTestObject::RespondToMaster(const std::string& arData, bool aFinal)
+void MasterTestObject::RespondToMaster(const std::string& arData, bool aFinal)
 {
 	HexSequence hs(arData);
 	mAPDU.Reset();
@@ -48,7 +48,7 @@ void AsyncMasterTestObject::RespondToMaster(const std::string& arData, bool aFin
 	else master.OnPartialResponse(mAPDU);
 }
 
-std::string AsyncMasterTestObject::Read()
+std::string MasterTestObject::Read()
 {
 	mAPDU = app.Read();
 	std::string hex = toHex(mAPDU.GetBuffer(), mAPDU.Size(), true);	

@@ -16,15 +16,15 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_SLAVE_TEST_OBJECT_H_
-#define __ASYNC_SLAVE_TEST_OBJECT_H_
+#ifndef __SLAVE_TEST_OBJECT_H_
+#define __SLAVE_TEST_OBJECT_H_
 
 #include <APLTestTools/MockTimerSource.h>
 #include <APL/AsyncTaskScheduler.h>
 #include <APLTestTools/LogTester.h>
 #include <APLTestTools/MockCommandAcceptor.h>
-#include <DNP3/AsyncSlave.h>
-#include <DNP3/AsyncDatabase.h>
+#include <DNP3/Slave.h>
+#include <DNP3/Database.h>
 #include <DNP3/DNPCommandMaster.h>
 #include <DNP3/SlaveConfig.h>
 
@@ -32,10 +32,10 @@
 
 namespace apl { namespace dnp {
 
-class AsyncSlaveTestObject : public LogTester
+class SlaveTestObject : public LogTester
 {
 	public:
-	AsyncSlaveTestObject(const SlaveConfig& arCfg, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
+	SlaveTestObject(const SlaveConfig& arCfg, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
 
 	void SendToSlave(const std::string& arData, SequenceInfo aSeq = SI_OTHER);
 	std::string Read();
@@ -46,10 +46,10 @@ class AsyncSlaveTestObject : public LogTester
 	MockTimeManager fakeTime;
 	MockTimerSource mts;
 	MockAppLayer app;
-	AsyncDatabase db;
+	Database db;
 	DNPCommandMaster cmd_master;
 	MockCommandAcceptor cmd_acceptor;
-	AsyncSlave slave;
+	Slave slave;
 	APDU mAPDU;
 	Logger* mpLogger;
 

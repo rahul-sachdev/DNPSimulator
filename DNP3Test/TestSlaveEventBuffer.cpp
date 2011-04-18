@@ -20,7 +20,7 @@
 #include <APLTestTools/TestHelpers.h>
 
 #include <APL/Exception.h>
-#include <DNP3/AsyncSlaveEventBuffer.h>
+#include <DNP3/SlaveEventBuffer.h>
 #include <limits>
 
 using namespace std;
@@ -28,8 +28,8 @@ using namespace apl;
 using namespace apl::dnp;
 
 
-	BOOST_AUTO_TEST_SUITE(AsyncSlaveEventBufferSuite)
-		void PushEvents(AsyncSlaveEventBuffer& b, size_t aNumEvent, size_t aNumIndices)
+	BOOST_AUTO_TEST_SUITE(SlaveEventBufferSuite)
+		void PushEvents(SlaveEventBuffer& b, size_t aNumEvent, size_t aNumIndices)
 		{
 			for(size_t i=0; i<aNumEvent; ++i) {
 				b.Update(Analog(i), PC_CLASS_1, i%aNumIndices);
@@ -39,7 +39,7 @@ using namespace apl::dnp;
 		template <class T>
 		void OverflowTest(const T& first, const T& second)
 		{
-			AsyncSlaveEventBuffer b(1, 1, 1);
+			SlaveEventBuffer b(1, 1, 1);
 			b.Update(first, PC_CLASS_1, 0);
 			BOOST_REQUIRE_FALSE(b.IsOverflow());
 			BOOST_REQUIRE(b.HasEventData());
@@ -53,7 +53,7 @@ using namespace apl::dnp;
 			const size_t NUM_EVENT = 100;
 			const size_t NUM_INDICES = 10;
 
-			AsyncSlaveEventBuffer b(0, NUM_INDICES, 0);
+			SlaveEventBuffer b(0, NUM_INDICES, 0);
 			
 			PushEvents(b, NUM_EVENT, NUM_INDICES); //push lots of events but only 
 			BOOST_REQUIRE_FALSE(b.IsOverflow());
@@ -87,7 +87,7 @@ using namespace apl::dnp;
 
 		BOOST_AUTO_TEST_CASE(ClassSelect)
 		{
-			AsyncSlaveEventBuffer b(10, 10, 10);
+			SlaveEventBuffer b(10, 10, 10);
 			b.Update(Binary(true), PC_CLASS_1, 0);
 			b.Update(Binary(false), PC_CLASS_1, 0);
 			b.Update(Analog(5), PC_CLASS_1, 0);
@@ -118,7 +118,7 @@ using namespace apl::dnp;
 
 		BOOST_AUTO_TEST_CASE(TypeExceptions)
 		{
-			AsyncSlaveEventBuffer b(10, 10, 10);
+			SlaveEventBuffer b(10, 10, 10);
 			BOOST_REQUIRE_THROW(b.NumType(DT_CONTROL_STATUS), ArgumentException);
 			BOOST_REQUIRE_THROW(b.NumSelected(DT_CONTROL_STATUS), ArgumentException);
 		}

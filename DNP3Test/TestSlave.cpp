@@ -19,7 +19,7 @@
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
-#include "AsyncSlaveTestObject.h"
+#include "SlaveTestObject.h"
 
 #include <DNP3/APDU.h>
 #include <DNP3/ObjectReadIterator.h>
@@ -32,12 +32,12 @@ using namespace apl::dnp;
 using namespace boost;
 
 
-BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
+BOOST_AUTO_TEST_SUITE(SlaveSuite)
 
 	BOOST_AUTO_TEST_CASE(InitialState)
 	{
 		SlaveConfig cfg;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 
 		APDU f;
 
@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(TimersCancledOnClose)
 	{
 		SlaveConfig cfg; cfg.mAllowTimeSync = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 		t.slave.OnLowerLayerDown();
 
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(DataPost)
 	{
 		SlaveConfig cfg;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 1);
 
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(DataPostToNonExistent)
 	{
 		SlaveConfig cfg;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 1);
 
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(UnsupportedFunction)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();			
 
 		t.SendToSlave("C0 10"); // func = initialize application (16)
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(WriteIIN)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 02 50 01 00 07 07 00");
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(WriteIINEnabled)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 02 50 01 00 07 07 01");
@@ -142,7 +142,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(WriteIINWrongBit)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 02 50 01 00 04 04 01");
@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(WriteNonWriteObject)
 	{
 		SlaveConfig cfg;  cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 02 02 01 00 07 07 00");
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(DelayMeasure)
 	{
 		SlaveConfig cfg;  cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 17"); //delay measure
@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
 		cfg.mAllowTimeSync = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 02 32 01 07 01 D2 04 00 00 00 00"); //write Grp50Var1, value = 1234 ms after epoch
@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
 		cfg.mAllowTimeSync = false;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 02 32 01 07 01 D2 04 00 00 00 00"); //write Grp50Var1, value = 1234 ms after epoch
@@ -195,7 +195,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
 		cfg.mAllowTimeSync = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 02 32 01 07 02 D2 04 00 00 00 00 D2 04 00 00 00 00"); //write Grp50Var1, value = 1234 ms after epoch
@@ -206,7 +206,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(BlankIntegrityPoll)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 01 3C 01 06"); // Read class 0
@@ -216,7 +216,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(BlankExceptionScan)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 01 3C 02 06"); // Read class 1
@@ -227,7 +227,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
 		cfg.mMaxFragSize = 20; // override to use a fragment length of 20
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.db.Configure(DT_ANALOG, 8);
 		t.slave.OnLowerLayerUp();
 	
@@ -249,7 +249,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(ReadClass1)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		
 		t.db.Configure(DT_ANALOG, 100);
 		t.db.SetClass(DT_ANALOG, 23, PC_CLASS_1);
@@ -274,7 +274,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(NullUnsolOnStartup)
 	{
 		SlaveConfig cfg;  cfg.mAllowTimeSync = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 		
 		// Null UNSOL, FIR, FIN, CON, UNS, w/ restart and need-time IIN
@@ -284,7 +284,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(UnsolRetryDelay)
 	{
 		SlaveConfig cfg;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.app.EnableAutoSendCallback(false); //will respond with failure
 		t.slave.OnLowerLayerUp();
 		
@@ -299,7 +299,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	{
 		SlaveConfig cfg;
 		cfg.mUnsolMask.class1 = true; // this allows the EnableUnsol sequence to be skipped
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 1);
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
 
@@ -328,7 +328,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		cfg.mUnsolMask.class1 = true; // this allows the EnableUnsol sequence to be skipped
 		cfg.mMaxBinaryEvents = 2; // set the max to 3 to max testing easy
 		cfg.mUnsolPackDelay = 0;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 1);
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
 
@@ -360,7 +360,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		SlaveConfig cfg;
 		cfg.mMaxFragSize = 10; //this will cause the unsol response to get fragmented
 		cfg.mUnsolMask.class1 = true; // this allows the EnableUnsol sequence to be skipped
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 2);
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
 
@@ -393,7 +393,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	{
 		SlaveConfig cfg; cfg.mUnsolPackDelay = 0;
 		cfg.mUnsolMask.class1 = true; //allows us to skip this step
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 1);
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
 		t.slave.OnLowerLayerUp();
@@ -421,7 +421,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	{
 		SlaveConfig cfg; cfg.mUnsolPackDelay = 0;
 		cfg.mUnsolMask.class1 = true; //allows us to skip this step
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 1);
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
 		t.slave.OnLowerLayerUp();
@@ -447,7 +447,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	{
 		SlaveConfig cfg; cfg.mUnsolPackDelay = 0;
 		cfg.mUnsolMask.class1 = true; //allows us to skip this step
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 1);
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
 		t.slave.OnLowerLayerUp();
@@ -474,7 +474,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectCROB)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		// Select group 12 Var 1, count = 1, index = 3
@@ -485,7 +485,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
 		cfg.mMaxControls = 1;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_BINARY_OUTPUT, 3, 3, &t.cmd_acceptor);
 		t.cmd_master.BindCommand(CT_BINARY_OUTPUT, 4, 4, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
@@ -498,7 +498,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectOperateCROB)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_BINARY_OUTPUT, 3, 3, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -518,7 +518,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBWrongSequence)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_BINARY_OUTPUT, 3, 3, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -538,7 +538,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBDiffQual)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_BINARY_OUTPUT, 3, 3, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -558,7 +558,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBDiffCode)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_BINARY_OUTPUT, 3, 3, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -578,7 +578,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBDiffCount)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_BINARY_OUTPUT, 3, 3, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -598,7 +598,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBDiffOnTime)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_BINARY_OUTPUT, 3, 3, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -618,7 +618,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBDiffOffTime)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_BINARY_OUTPUT, 3, 3, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -638,7 +638,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBRetry)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_BINARY_OUTPUT, 3, 3, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -663,7 +663,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBRetryDifferent)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_BINARY_OUTPUT, 3, 3, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -688,7 +688,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectDirectOperateFails)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_BINARY_OUTPUT, 3, 3, CM_SBO_ONLY, 5000, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -708,7 +708,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectGroup41Var1)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		// Select group 41 Var 1, count = 1, index = 3
@@ -720,7 +720,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	{
 		SlaveConfig cfg;  cfg.mDisableUnsol = true;
 		cfg.mMaxControls = 1;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_SETPOINT, 3, 3, &t.cmd_acceptor);
 		t.cmd_master.BindCommand(CT_SETPOINT, 4, 4, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
@@ -733,7 +733,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectGroup41Var2)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		// Select group 41 Var 2, count = 1, index = 3
@@ -744,7 +744,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectGroup41Var3)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		// Select group 41 Var 3, count = 1, index = 1, value = 100.0
@@ -755,7 +755,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectGroup41Var4)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		// Select group 41 Var 4, count = 1, index = 1, value = 100.0
@@ -768,7 +768,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectOperateGroup41Var1)
 	{
 		SlaveConfig cfg;  cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_SETPOINT, 3, 3, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -788,7 +788,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectOperateGroup41Var1DiffVal)
 	{
 		SlaveConfig cfg;  cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_SETPOINT, 3, 3, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -808,7 +808,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectOperateGroup41Var2)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_SETPOINT, 3, 3, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -828,7 +828,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectOperateGroup41Var3)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_SETPOINT, 1, 1, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -854,7 +854,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectOperateGroup41Var4)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_SETPOINT, 1, 1, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -880,7 +880,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(DirectOperateGroup41Var1)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_SETPOINT, 3, 3, CM_DO_ONLY, 5000, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -894,7 +894,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(DirectOperateGroup41Var2)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_SETPOINT, 3, 3, CM_DO_ONLY, 5000, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -908,7 +908,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(DirectOperateGroup41Var3)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_SETPOINT, 1, 1, CM_DO_ONLY, 5000, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -922,7 +922,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(DirectOperateGroup41Var4)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.cmd_master.BindCommand(CT_SETPOINT, 1, 1, CM_DO_ONLY, 5000, &t.cmd_acceptor);
 		t.slave.OnLowerLayerUp();
 
@@ -937,7 +937,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(SelectBadObject)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		// Select a binary input
@@ -948,7 +948,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(OperateBadObject)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		// Operate a binary input
@@ -958,7 +958,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(DirectOperateBadObject)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		// Operate a binary input
@@ -969,7 +969,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(UnsolEnable)
 	{
 		SlaveConfig cfg; cfg.mUnsolPackDelay = 0;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 1);
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
 		t.slave.OnLowerLayerUp();
@@ -995,7 +995,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(UnsolEnableBadObject)
 	{
 		SlaveConfig cfg; cfg.mUnsolPackDelay = 0;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 1);
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
 		t.slave.OnLowerLayerUp();
@@ -1018,7 +1018,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(UnsolEnableDisableFailure)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 1);
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
 		t.slave.OnLowerLayerUp();
@@ -1030,7 +1030,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(ReadFuncNotSupported)
 	{			
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 		
 		t.SendToSlave("C0 01 0C 01 06"); //try to read 12/1 (control block)
@@ -1040,7 +1040,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	void TestStaticRead(const std::string& arRequest, const std::string& arResponse)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 1);
 		t.db.Configure(DT_ANALOG, 1);
 		t.db.Configure(DT_COUNTER, 1);
@@ -1058,7 +1058,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	/*BOOST_AUTO_TEST_CASE(ReadGrp1Var1)
 	{	
 		SlaveConfig cfg; cfg.mStaticBinary = GrpVar(1,1);
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 9);
 		t.slave.OnLowerLayerUp();
 
@@ -1095,7 +1095,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	void TestEventRead(const std::string& arRequest, const std::string& arResponse)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 1);
 		t.db.Configure(DT_ANALOG, 1);
 		t.db.Configure(DT_COUNTER, 1);
@@ -1153,7 +1153,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	BOOST_AUTO_TEST_CASE(InvalidObject)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
 
 		t.slave.OnUnknownObject();
@@ -1165,7 +1165,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	{
 		const size_t NUM = 4;
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, NUM);			
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);			
 		t.slave.OnLowerLayerUp();
@@ -1201,7 +1201,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	void TestStaticType(apl::dnp::SlaveConfig& aCfg, apl::dnp::GrpVar& aGrpVar, int aGroup, int aVar, T aVal, const std::string& aRsp)
 	{
 		aGrpVar = GrpVar(aGroup,aVar);
-		AsyncSlaveTestObject t(aCfg);
+		SlaveTestObject t(aCfg);
 		t.db.Configure(PointType::MeasEnum, 1);			
 		t.db.SetClass(PointType::MeasEnum, PC_CLASS_1);			
 		t.slave.OnLowerLayerUp();
@@ -1278,7 +1278,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 	void TestStaticControlStatus(int aVar, T aVal, const std::string& aRsp)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
-		AsyncSlaveTestObject t(cfg);
+		SlaveTestObject t(cfg);
 		t.db.Configure(DT_CONTROL_STATUS, 1);			
 		t.db.SetClass(DT_CONTROL_STATUS, PC_CLASS_1);			
 		t.slave.OnLowerLayerUp();

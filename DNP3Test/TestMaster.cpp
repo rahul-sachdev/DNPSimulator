@@ -23,7 +23,7 @@
 #include <APL/Exception.h>
 #include <APL/CommandResponseQueue.h>
 
-#include "AsyncMasterTestObject.h"
+#include "MasterTestObject.h"
 #include "QueueingMasterObserver.h"
 
 using namespace apl;
@@ -31,14 +31,14 @@ using namespace apl::dnp;
 using namespace boost;
 
 
-	void TestForIntegrityPoll(AsyncMasterTestObject& t, bool aSucceed = true)
+	void TestForIntegrityPoll(MasterTestObject& t, bool aSucceed = true)
 	{
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06");
 		if(aSucceed) t.RespondToMaster("C0 81 00 00");
 		else t.master.OnSolFailure();
 	}
 
-	void DoControlSelect(AsyncMasterTestObject& t, CommandResponseQueue& q)
+	void DoControlSelect(MasterTestObject& t, CommandResponseQueue& q)
 	{
 		TestForIntegrityPoll(t);
 		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); // check that the master sends no more packets
@@ -53,7 +53,7 @@ using namespace boost;
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 03 " + crob);
 	}
 
-	void DoControlSelectOperate(AsyncMasterTestObject& t, CommandResponseQueue& q)
+	void DoControlSelectOperate(MasterTestObject& t, CommandResponseQueue& q)
 	{
 		TestForIntegrityPoll(t);
 		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); // check that the master sends no more packets
@@ -74,7 +74,7 @@ using namespace boost;
 	void TestSetpointExecution(const std::string& setpointhex, T aValue)
 	{
 		MasterConfig master_cfg;
-		AsyncMasterTestObject t(master_cfg);
+		MasterTestObject t(master_cfg);
 		t.master.OnLowerLayerUp();
 
 		TestForIntegrityPoll(t);
@@ -97,12 +97,12 @@ using namespace boost;
 		BOOST_REQUIRE_EQUAL(cr.mResult, CS_SUCCESS);
 	}
 
-	BOOST_AUTO_TEST_SUITE(AsyncMasterSuite)
+	BOOST_AUTO_TEST_SUITE(MasterSuite)
 
 		BOOST_AUTO_TEST_CASE(InitialState)
 		{
 			MasterConfig master_cfg;			
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 
 			APDU f;
 			f.Set(FC_RESPONSE);
@@ -122,7 +122,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(IntegrityOnStartup)
 		{
 			MasterConfig master_cfg;			
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.master.OnLowerLayerUp();
 			
 			TestForIntegrityPoll(t);
@@ -134,7 +134,7 @@ using namespace boost;
 			QueueingMasterObserver obs;
 			MasterConfig cfg; cfg.IntegrityRate = 1000;
 			cfg.mpObserver = &obs;
-			AsyncMasterTestObject t(cfg);
+			MasterTestObject t(cfg);
 			BOOST_REQUIRE_EQUAL(obs.mQueue.size(), 1);
 			BOOST_REQUIRE_EQUAL(obs.mQueue.front(), MS_COMMS_DOWN);
 			obs.mQueue.pop_front();
@@ -173,7 +173,7 @@ using namespace boost;
 		{
 			MasterConfig master_cfg;
 			master_cfg.DoUnsolOnStartup = true;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.master.OnLowerLayerUp();
 
 			// create a generic response packet with no IIN bits set
@@ -196,7 +196,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(RestartAndTimeBits)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.master.OnLowerLayerUp();
 
 			t.fake_time.SetTime(TimeStamp_t(100)); //100 ms since epoch
@@ -223,7 +223,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(RestartFailure)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.master.OnLowerLayerUp();
 
 			t.fake_time.SetTime(TimeStamp_t(100)); //100 ms since epoch
@@ -240,7 +240,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(RestartLayerDown)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.master.OnLowerLayerUp();
 
 			t.fake_time.SetTime(TimeStamp_t(100)); //100 ms since epoch
@@ -259,7 +259,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(DelayMeasLayerDown)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.master.OnLowerLayerUp();
 
 			t.fake_time.SetTime(TimeStamp_t(100)); //100 ms since epoch
@@ -280,7 +280,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(DelayMeasFailure)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.master.OnLowerLayerUp();
 
 			t.fake_time.SetTime(TimeStamp_t(100)); //100 ms since epoch
@@ -300,7 +300,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(RestartBadResponses)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.master.OnLowerLayerUp();
 
 			t.fake_time.SetTime(TimeStamp_t(100)); //100 ms since epoch
@@ -332,7 +332,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(ControlExecutionClosedState)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			
 			ICommandAcceptor* pAcceptor = t.master.GetCmdAcceptor();
 
@@ -348,7 +348,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(ControlExecution)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.master.OnLowerLayerUp();
 
 			TestForIntegrityPoll(t);
@@ -377,7 +377,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(ControlExecutionSelectFailure)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.master.OnLowerLayerUp();
 			CommandResponseQueue rspQueue;
 
@@ -392,7 +392,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(ControlExecutionSelectLayerDown)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.master.OnLowerLayerUp();
 			CommandResponseQueue rspQueue;
 
@@ -408,7 +408,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(ControlExecutionSelectErrorResponse)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.master.OnLowerLayerUp();
 			CommandResponseQueue rspQueue;
 
@@ -423,7 +423,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(ControlExecutionSelectPartialResponse)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.master.OnLowerLayerUp();
 			CommandResponseQueue rspQueue;
 
@@ -443,7 +443,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(ControlExecutionOperateFailure)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.master.OnLowerLayerUp();
 			CommandResponseQueue rspQueue;
 
@@ -458,7 +458,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(ControlExecutionOperateLayerDown)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.master.OnLowerLayerUp();
 			CommandResponseQueue rspQueue;
 
@@ -474,7 +474,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(DeferredControlExecution)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.master.OnLowerLayerUp();
 
 			// check that a read request was made on startup
@@ -524,7 +524,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(SolicitedResponseWithData)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);			
+			MasterTestObject t(master_cfg);			
 			t.master.OnLowerLayerUp();
 
 			BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06"); ;
@@ -536,7 +536,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(SolicitedResponseFailure)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.fake_time.SetTime(TimeStamp_t(0));
 			t.master.OnLowerLayerUp();
 
@@ -550,7 +550,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(SolicitedResponseLayerDown)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
+			MasterTestObject t(master_cfg);
 			t.fake_time.SetTime(TimeStamp_t(0));
 			t.master.OnLowerLayerUp();
 
@@ -563,7 +563,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(SolicitedMultiFragResponse)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);			
+			MasterTestObject t(master_cfg);			
 			t.master.OnLowerLayerUp();
 
 			BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06");
@@ -584,7 +584,7 @@ using namespace boost;
 			master_cfg.mScans.push_back(scan);
 			scan.ClassMask = PC_CLASS_3;
 			master_cfg.mScans.push_back(scan);
-			AsyncMasterTestObject t(master_cfg);			
+			MasterTestObject t(master_cfg);			
 			t.master.OnLowerLayerUp();
 
 			BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06");

@@ -16,8 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __MOCK_ASYNC_APP_LAYER_H_
-#define __MOCK_ASYNC_APP_LAYER_H_
+#ifndef __MOCK_APP_LAYER_H_
+#define __MOCK_APP_LAYER_H_
 
 
 #include <DNP3/AppInterfaces.h>

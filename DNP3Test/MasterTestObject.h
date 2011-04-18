@@ -16,14 +16,14 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_MASTER_TEST_OBJECT_H_
-#define __ASYNC_MASTER_TEST_OBJECT_H_
+#ifndef __MASTER_TEST_OBJECT_H_
+#define __MASTER_TEST_OBJECT_H_
 
 #include <APLTestTools/MockTimerSource.h>
 #include <APL/AsyncTaskScheduler.h>
 #include <APL/FlexibleDataObserver.h>
 #include <APLTestTools/LogTester.h>
-#include <DNP3/AsyncMaster.h>
+#include <DNP3/Master.h>
 
 #include "MockAppLayer.h"
 
@@ -31,10 +31,10 @@ namespace apl { namespace dnp {
 
 struct MasterConfig;
 
-class AsyncMasterTestObject : public LogTester
+class MasterTestObject : public LogTester
 {
 	public:
-	AsyncMasterTestObject(MasterConfig, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
+	MasterTestObject(MasterConfig, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
 
 	void RespondToMaster(const std::string& arData, bool aFinal = true);
 	std::string Read();
@@ -44,7 +44,7 @@ class AsyncMasterTestObject : public LogTester
 	AsyncTaskScheduler ats;
 	FlexibleDataObserver fdo;
 	MockAppLayer app;
-	AsyncMaster master;
+	Master master;
 	APDU mAPDU;
 };
 

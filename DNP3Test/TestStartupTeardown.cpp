@@ -20,7 +20,7 @@
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
-#include "AsyncStartupTeardownTest.h"
+#include "StartupTeardownTest.h"
 
 #include <boost/asio.hpp>
 
@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_SUITE(AsyncIntegrationSuite)
 
 		FilterLevel lev = LEV_WARNING;
 
-		AsyncStartupTeardownTest t(lev, true); //autostart = true
+		StartupTeardownTest t(lev, true); //autostart = true
 	
 		for(size_t i=0; i<NUM_PORTS; ++i) {
 			ostringstream port;

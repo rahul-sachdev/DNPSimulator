@@ -16,20 +16,20 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_DATABASE_TEST_OBJECT_H_
-#define __ASYNC_DATABASE_TEST_OBJECT_H_
+#ifndef __DATABASE_TEST_OBJECT_H_
+#define __DATABASE_TEST_OBJECT_H_
 
 #include <queue>
-#include <DNP3/AsyncDatabase.h>
+#include <DNP3/Database.h>
 #include <APL/Log.h>
 
 namespace apl { namespace dnp {
 
-class MockAsyncEventBuffer : public IAsyncEventBuffer
+class MockEventBuffer : public IEventBuffer
 {
 	public:
 
-	virtual ~MockAsyncEventBuffer() {}
+	virtual ~MockEventBuffer() {}
 
 	void Update(const Binary& arEvent, PointClass aClass, size_t aIndex)
 	{
@@ -54,18 +54,18 @@ class MockAsyncEventBuffer : public IAsyncEventBuffer
 	std::deque<CounterInfo> mCounterEvents;
 };
 
-class AsyncDatabaseTestObject
+class DatabaseTestObject
 {
 	public:
-	AsyncDatabaseTestObject(FilterLevel aLevel = LEV_INFO) :
+	DatabaseTestObject(FilterLevel aLevel = LEV_INFO) :
 	db(log.GetLogger(aLevel, "test"))
 	{
 		db.SetEventBuffer(&buffer);
 	}
 
 	EventLog log;
-	MockAsyncEventBuffer buffer;
-	AsyncDatabase db;
+	MockEventBuffer buffer;
+	Database db;
 };
 
 }}

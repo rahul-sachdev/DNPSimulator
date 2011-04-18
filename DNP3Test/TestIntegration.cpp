@@ -25,12 +25,12 @@
 
 #include <boost/asio.hpp>
 
-#include "AsyncIntegrationTest.h"
+#include "IntegrationTest.h"
 
 using namespace apl;
 using namespace apl::dnp;
 
-BOOST_AUTO_TEST_SUITE(AsyncIntegrationSuite)
+BOOST_AUTO_TEST_SUITE(IntegrationSuite)
 
 	BOOST_AUTO_TEST_CASE(MasterToSlave)
 	{
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_SUITE(AsyncIntegrationSuite)
 
 		EventLog log;
 		//log.AddLogSubscriber(LogToStdio::Inst());
-		AsyncIntegrationTest t(log.GetLogger(LEV_WARNING, "test"), LEV_WARNING
+		IntegrationTest t(log.GetLogger(LEV_WARNING, "test"), LEV_WARNING
 			, port, NUM_PAIRS, NUM_POINTS);	
 		
 		IDataObserver* pObs = t.GetFanout();
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_SUITE(AsyncIntegrationSuite)
 				for(size_t i = 0; i<NUM_POINTS; ++i) pObs->Update(t.RandomCounter(), i);
 			}
 
-			BOOST_REQUIRE(t.ProceedUntil(boost::bind(&AsyncIntegrationTest::SameData, &t)));
+			BOOST_REQUIRE(t.ProceedUntil(boost::bind(&IntegrationTest::SameData, &t)));
 			//std::cout << "***  Finished change set " <<  j << " ***" << std::endl;
 		}
 
