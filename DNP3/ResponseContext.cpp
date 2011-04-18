@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "AsyncResponseContext.h"
+#include "ResponseContext.h"
 
 #include "Objects.h"
 #include "DNPConstants.h"
@@ -36,7 +36,7 @@ case(MACRO_DNP_RADIX(obj,var)): { \
 
 namespace apl { namespace dnp {
 
-AsyncResponseContext::AsyncResponseContext(Logger* apLogger, AsyncDatabase* apDB, SlaveResponseTypes* apRspTypes, size_t aMaxBinary, size_t aMaxAnalog, size_t aMaxCounter) :
+ResponseContext::ResponseContext(Logger* apLogger, Database* apDB, SlaveResponseTypes* apRspTypes, size_t aMaxBinary, size_t aMaxAnalog, size_t aMaxCounter) :
 Loggable(apLogger),
 mBuffer(aMaxBinary, aMaxAnalog, aMaxCounter),
 mMode(UNDEFINED),
@@ -47,7 +47,7 @@ mFIN(false),
 mpRspTypes(apRspTypes)
 {}
 
-void AsyncResponseContext::Reset()
+void ResponseContext::Reset()
 {
 	mFIR = true;
 	mMode = UNDEFINED;
@@ -66,12 +66,12 @@ void AsyncResponseContext::Reset()
 	mBuffer.Deselect();
 }
 
-void AsyncResponseContext::ClearWritten()
+void ResponseContext::ClearWritten()
 {
 	mBuffer.ClearWritten();
 }
 
-void AsyncResponseContext::ClearAndReset()
+void ResponseContext::ClearAndReset()
 {
 	this->ClearWritten();
 	this->Reset();
@@ -88,7 +88,7 @@ inline size_t GetEventCount(const HeaderInfo& arHeader)
 	}
 }
 
-IINField AsyncResponseContext::Configure(const APDU& arRequest)
+IINField ResponseContext::Configure(const APDU& arRequest)
 {
 	this->Reset();
 	mMode = SOLICITED;
@@ -160,7 +160,7 @@ IINField AsyncResponseContext::Configure(const APDU& arRequest)
 	return mTempIIN;
 }
 
-void AsyncResponseContext::SelectEvents(PointClass aClass, size_t aNum)
+void ResponseContext::SelectEvents(PointClass aClass, size_t aNum)
 {
 	size_t remain = aNum;
 
@@ -172,7 +172,7 @@ void AsyncResponseContext::SelectEvents(PointClass aClass, size_t aNum)
 	remain -= this->SelectEvents(aClass, mpRspTypes->mpEventCounter, mCounterEvents, remain);
 }
 
-void AsyncResponseContext::LoadResponse(APDU& arAPDU)
+void ResponseContext::LoadResponse(APDU& arAPDU)
 {
 	//delay the setting of FIR/FIN until we know if it will be multifragmented or not
 	arAPDU.Set(FC_RESPONSE);
@@ -186,7 +186,7 @@ void AsyncResponseContext::LoadResponse(APDU& arAPDU)
 	FinalizeResponse(arAPDU, events, wrote_all);
 }
 
-bool AsyncResponseContext::SelectUnsol(ClassMask m) 
+bool ResponseContext::SelectUnsol(ClassMask m) 
 {
 	if(m.class1) this->SelectEvents(PC_CLASS_1);
 	if(m.class2) this->SelectEvents(PC_CLASS_2);
@@ -195,7 +195,7 @@ bool AsyncResponseContext::SelectUnsol(ClassMask m)
 	return mBuffer.NumSelected() > 0;
 }
 
-bool AsyncResponseContext::HasEvents(ClassMask m)
+bool ResponseContext::HasEvents(ClassMask m)
 {
 	if(m.class1 && mBuffer.HasClassData(PC_CLASS_1)) return true;
 	if(m.class2 && mBuffer.HasClassData(PC_CLASS_2)) return true;
@@ -204,7 +204,7 @@ bool AsyncResponseContext::HasEvents(ClassMask m)
 	return false;
 }
 
-bool AsyncResponseContext::LoadUnsol(APDU& arAPDU, const IINField& arIIN, ClassMask m)
+bool ResponseContext::LoadUnsol(APDU& arAPDU, const IINField& arIIN, ClassMask m)
 {	
 	this->SelectUnsol(m);
 
@@ -214,7 +214,7 @@ bool AsyncResponseContext::LoadUnsol(APDU& arAPDU, const IINField& arIIN, ClassM
 	return events;
 }
 
-bool AsyncResponseContext::LoadStaticData(APDU& arAPDU)
+bool ResponseContext::LoadStaticData(APDU& arAPDU)
 {
 	if(!this->LoadStaticBinaries(arAPDU)) return false;
 	if(!this->LoadStaticCounters(arAPDU)) return false;
@@ -225,7 +225,7 @@ bool AsyncResponseContext::LoadStaticData(APDU& arAPDU)
 	return true;
 }
 
-bool AsyncResponseContext::LoadEventData(APDU& arAPDU, bool& arEventsLoaded)
+bool ResponseContext::LoadEventData(APDU& arAPDU, bool& arEventsLoaded)
 {
 	if(!this->LoadEvents<Binary>(arAPDU, mBinaryEvents, arEventsLoaded)) return false;
 	if(!this->LoadEvents<Analog>(arAPDU, mAnalogEvents, arEventsLoaded)) return false;
@@ -234,25 +234,25 @@ bool AsyncResponseContext::LoadEventData(APDU& arAPDU, bool& arEventsLoaded)
 	return true;
 }
 
-bool AsyncResponseContext::IsEmpty()
+bool ResponseContext::IsEmpty()
 {
 	return this->IsStaticEmpty() && this->IsEventEmpty();
 }
 
-bool AsyncResponseContext::IsStaticEmpty()
+bool ResponseContext::IsStaticEmpty()
 {
 	return this->mStaticBinaries.empty() && this->mStaticCounters.empty() &&
 		   this->mStaticAnalogs.empty() && this->mStaticControls.empty() &&
 		   this->mStaticSetpoints.empty();
 }
 
-bool AsyncResponseContext::IsEventEmpty()
+bool ResponseContext::IsEventEmpty()
 {
 	// are there unwritten events in the selection buffer?
 	return mBuffer.NumSelected() == 0;
 }
 
-void AsyncResponseContext::FinalizeResponse(APDU& arAPDU, bool aHasEventData, bool aFIN)
+void ResponseContext::FinalizeResponse(APDU& arAPDU, bool aHasEventData, bool aFIN)
 {
 	mFIN = aFIN;
 	bool confirm = !aFIN || aHasEventData;
@@ -260,7 +260,7 @@ void AsyncResponseContext::FinalizeResponse(APDU& arAPDU, bool aHasEventData, bo
 	mFIR = false;
 }
 
-bool AsyncResponseContext::LoadStaticBinaries(APDU& arAPDU)
+bool ResponseContext::LoadStaticBinaries(APDU& arAPDU)
 {
 	while(!mStaticBinaries.empty())
 	{
@@ -290,7 +290,7 @@ bool AsyncResponseContext::LoadStaticBinaries(APDU& arAPDU)
 	return true;
 }
 
-bool AsyncResponseContext::LoadStaticAnalogs(APDU& arAPDU)
+bool ResponseContext::LoadStaticAnalogs(APDU& arAPDU)
 {
 	while(!mStaticAnalogs.empty())
 	{
@@ -317,7 +317,7 @@ bool AsyncResponseContext::LoadStaticAnalogs(APDU& arAPDU)
 	return true;	
 }
 
-bool AsyncResponseContext::LoadStaticCounters(APDU& arAPDU)
+bool ResponseContext::LoadStaticCounters(APDU& arAPDU)
 {
 	while(!mStaticCounters.empty())
 	{
@@ -343,7 +343,7 @@ bool AsyncResponseContext::LoadStaticCounters(APDU& arAPDU)
 	return true;
 }
 
-bool AsyncResponseContext::LoadStaticControlStatii(APDU& arAPDU)
+bool ResponseContext::LoadStaticControlStatii(APDU& arAPDU)
 {
 	while(!mStaticControls.empty())
 	{
@@ -366,7 +366,7 @@ bool AsyncResponseContext::LoadStaticControlStatii(APDU& arAPDU)
 }
 
 /*
-bool AsyncResponseContext::WriteCTO(const TimeStamp_t& arTime, APDU& arAPDU)
+bool ResponseContext::WriteCTO(const TimeStamp_t& arTime, APDU& arAPDU)
 {
 	Group51Var1* pObj = Group51Var1::Inst();
 	ObjectWriteIterator owi = arAPDU.WriteContiguous(pObj, 0, 0);
@@ -375,7 +375,7 @@ bool AsyncResponseContext::WriteCTO(const TimeStamp_t& arTime, APDU& arAPDU)
 	return true;
 }*/
 
-bool AsyncResponseContext::LoadStaticSetpointStatii(APDU& arAPDU)
+bool ResponseContext::LoadStaticSetpointStatii(APDU& arAPDU)
 {
 	while(!mStaticSetpoints.empty())
 	{
@@ -400,7 +400,7 @@ bool AsyncResponseContext::LoadStaticSetpointStatii(APDU& arAPDU)
 	return true;
 }
 
-void AsyncResponseContext::AddIntegrityPoll()
+void ResponseContext::AddIntegrityPoll()
 {	
 	this->AddIntegrity(mStaticBinaries, mpRspTypes->mpStaticBinary);
 	this->AddIntegrity(mStaticAnalogs, mpRspTypes->mpStaticAnalog);

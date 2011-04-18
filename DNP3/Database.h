@@ -16,11 +16,11 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_DATABASE_H_
-#define __ASYNC_DATABASE_H_
+#ifndef __DATABASE_H_
+#define __DATABASE_H_
 
 
-#include "AsyncDatabaseInterfaces.h"
+#include "DatabaseInterfaces.h"
 #include "DNPConstants.h"
 
 #include <APL/Exception.h>
@@ -49,13 +49,13 @@ namespace apl { namespace dnp {
 
 	Passes data updates to an associated event buffer for event generation/management.
 	*/
-	class AsyncDatabase : public IDataObserver, public Loggable
+	class Database : public IDataObserver, public Loggable
 	{
 		public:
 
-			AsyncDatabase(Logger* apLogger);
+			Database(Logger* apLogger);
 
-			virtual ~AsyncDatabase();
+			virtual ~Database();
 
 			/* Configuration functions */
 
@@ -68,7 +68,7 @@ namespace apl { namespace dnp {
 			void SetClass(apl::DataTypes aType, size_t aIndex, PointClass aClass);
 			void SetClass(apl::DataTypes aType, PointClass aClass); //set classes for all indices
 
-			void SetEventBuffer(IAsyncEventBuffer*);
+			void SetEventBuffer(IEventBuffer*);
 
 			/* Functions for obtaining iterators */
 
@@ -114,14 +114,14 @@ namespace apl { namespace dnp {
 			std::vector< PointInfo<apl::ControlStatus> > mControlStatusVec;
 			std::vector< PointInfo<apl::SetpointStatus> > mSetpointStatusVec;
 
-			IAsyncEventBuffer* mpEventBuffer;
+			IEventBuffer* mpEventBuffer;
 
 			template <typename T>
 			size_t CalcNumType(const std::vector<T*>& arIdxVec);
 	};
 
 	template <typename T>
-	size_t AsyncDatabase::CalcNumType(const std::vector<T*>& arIdxVec)
+	size_t Database::CalcNumType(const std::vector<T*>& arIdxVec)
 	{
 		std::set<size_t> indexSet;
 
@@ -131,21 +131,21 @@ namespace apl { namespace dnp {
 	}
 
 	template<typename T>
-	inline void AsyncDatabase::SetAllOnline( std::vector< PointInfo<T> >& arVector )
+	inline void Database::SetAllOnline( std::vector< PointInfo<T> >& arVector )
 	{
 		for(size_t i=0; i<arVector.size(); i++)
 		{ arVector[i].mValue.SetQuality(T::ONLINE); }
 	}
 
 	template<typename T>
-	inline void AsyncDatabase::AssignIndices( std::vector< PointInfo<T> >& arVector )
+	inline void Database::AssignIndices( std::vector< PointInfo<T> >& arVector )
 	{
 		for(size_t i=0; i<arVector.size(); i++)
 		{ arVector[i].mIndex = i; }
 	}
 
 	template<typename T>
-	bool AsyncDatabase::UpdateValue(std::vector< PointInfo<T> >& arVec, const T& arValue, size_t aIndex)
+	bool Database::UpdateValue(std::vector< PointInfo<T> >& arVec, const T& arValue, size_t aIndex)
 	{
 		if(aIndex >= arVec.size()) throw apl::IndexOutOfBoundsException(LOCATION);
 

@@ -18,7 +18,7 @@
 // 
 
 #include "AsyncStackManager.h"
-#include "AsyncPort.h"
+#include "Port.h"
 
 #include <boost/asio.hpp>
 #include <boost/foreach.hpp>
@@ -28,8 +28,8 @@
 #include <APL/Exception.h>
 #include <APL/Logger.h>
 
-#include <DNP3/AsyncMasterStack.h>
-#include <DNP3/AsyncSlaveStack.h>
+#include <DNP3/MasterStack.h>
+#include <DNP3/SlaveStack.h>
 #include <DNP3/DeviceTemplate.h>
 
 #include <iostream>
@@ -79,10 +79,10 @@ void AsyncStackManager::AddSerial(const std::string& arName, PhysLayerSettings a
 ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel, IDataObserver* apPublisher,
 											    const MasterStackConfig& arCfg)
 {
-	AsyncPort* pPort = this->AllocatePort(arPortName);
+	Port* pPort = this->AllocatePort(arPortName);
 	Logger* pLogger = mpLogger->GetSubLogger(arStackName, aLevel);
 	pLogger->SetVarName(arStackName);
-	AsyncMasterStack* pMaster = new AsyncMasterStack(pLogger, &mTimerSrc, apPublisher, pPort->GetGroup(), arCfg);	
+	MasterStack* pMaster = new MasterStack(pLogger, &mTimerSrc, apPublisher, pPort->GetGroup(), arCfg);	
 	this->OnAddStack(arStackName, pMaster, pPort, arCfg.link.LocalAddr);
 	return pMaster->mMaster.GetCmdAcceptor();
 }
@@ -90,10 +90,10 @@ ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, c
 IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel, ICommandAcceptor* apCmdAcceptor,
 											const SlaveStackConfig& arCfg)
 {
-	AsyncPort* pPort = this->AllocatePort(arPortName);
+	Port* pPort = this->AllocatePort(arPortName);
 	Logger* pLogger = mpLogger->GetSubLogger(arStackName, aLevel);
 	pLogger->SetVarName(arStackName);
-	AsyncSlaveStack* pSlave = new AsyncSlaveStack(pLogger, &mTimerSrc, apCmdAcceptor, arCfg);	
+	SlaveStack* pSlave = new SlaveStack(pLogger, &mTimerSrc, apCmdAcceptor, arCfg);	
 	this->OnAddStack(arStackName, pSlave, pPort, arCfg.link.LocalAddr);
 	return pSlave->mSlave.GetDataObserver();
 }
@@ -101,13 +101,13 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 /// Remove a port and all associated stacks
 void AsyncStackManager::RemovePort(const std::string& arPortName)
 {	
-	AsyncPort* pPort = this->GetPort(arPortName);
+	Port* pPort = this->GetPort(arPortName);
 	vector<string> stacks = this->StacksOnPort(arPortName);
 	BOOST_FOREACH(string s, stacks) { this->SeverStack(pPort, s); }		
 	mPortToPort.erase(arPortName);
 	
 	mScheduler.Sever(pPort->GetGroup());	// this tells the scheduler that we'll delete the group
-	mTimerSrc.Post(boost::bind(&AsyncPort::Release, pPort));	
+	mTimerSrc.Post(boost::bind(&Port::Release, pPort));	
 		
 	// remove the physical layer from the list
 	// The ports own the layers themselves, so deleting the port will delete the layer
@@ -127,18 +127,18 @@ std::vector<std::string> AsyncStackManager::StacksOnPort(const std::string& arPo
 
 void AsyncStackManager::RemoveStack(const std::string& arStackName)
 {
-	AsyncPort* pPort = this->GetPortByStackName(arStackName);
+	Port* pPort = this->GetPortByStackName(arStackName);
 	this->SeverStack(pPort, arStackName);
 	this->CheckForJoin();
 }
 
-void AsyncStackManager::SeverStack(AsyncPort* apPort, const std::string& arStackName)
+void AsyncStackManager::SeverStack(Port* apPort, const std::string& arStackName)
 {	
-	mTimerSrc.Post(boost::bind(&AsyncPort::Disassociate, apPort, arStackName)); 
+	mTimerSrc.Post(boost::bind(&Port::Disassociate, apPort, arStackName)); 
 	mStackToPort.erase(arStackName);
 }
 
-AsyncPort* AsyncStackManager::GetPortByStackName(const std::string& arStackName)
+Port* AsyncStackManager::GetPortByStackName(const std::string& arStackName)
 {
 	PortMap::iterator i = mStackToPort.find(arStackName);
 	if(i == mStackToPort.end()) throw ArgumentException(LOCATION, "Unknown stack");
@@ -171,9 +171,9 @@ void AsyncStackManager::Start()
 	}
 }
 
-AsyncPort* AsyncStackManager::AllocatePort(const std::string& arName)
+Port* AsyncStackManager::AllocatePort(const std::string& arName)
 {
-	AsyncPort* pPort = this->GetPortPointer(arName);
+	Port* pPort = this->GetPortPointer(arName);
 	if(pPort == NULL) {
 		PhysLayerSettings s = mMgr.GetSettings(arName);
 		IPhysicalLayerAsync* pPhys = mMgr.GetLayer(arName, mService.Get());
@@ -184,23 +184,23 @@ AsyncPort* AsyncStackManager::AllocatePort(const std::string& arName)
 	return pPort;
 }
 
-AsyncPort* AsyncStackManager::GetPort(const std::string& arName)
+Port* AsyncStackManager::GetPort(const std::string& arName)
 {
-	AsyncPort* pPort = this->GetPortPointer(arName);
+	Port* pPort = this->GetPortPointer(arName);
 	if(pPort == NULL) throw ArgumentException(LOCATION, "Port doesn't exist");
 	return pPort;
 }
 
 
-AsyncPort* AsyncStackManager::CreatePort(const std::string& arName, IPhysicalLayerAsync* apPhys, Logger* apLogger, millis_t aOpenDelay, IPhysMonitor* apObserver)
+Port* AsyncStackManager::CreatePort(const std::string& arName, IPhysicalLayerAsync* apPhys, Logger* apLogger, millis_t aOpenDelay, IPhysMonitor* apObserver)
 {
 	if(GetPortPointer(arName) != NULL) throw ArgumentException(LOCATION, "Port already exists");
-	AsyncPort* pPort = new AsyncPort(arName, apLogger, mScheduler.NewGroup(), &mTimerSrc, apPhys, aOpenDelay, apObserver);
+	Port* pPort = new Port(arName, apLogger, mScheduler.NewGroup(), &mTimerSrc, apPhys, aOpenDelay, apObserver);
 	mPortToPort[arName] = pPort;
 	return pPort;
 }
 
-AsyncPort* AsyncStackManager::GetPortPointer(const std::string& arName)
+Port* AsyncStackManager::GetPortPointer(const std::string& arName)
 {
 	PortMap::iterator i = mPortToPort.find(arName);
 	return (i==mPortToPort.end()) ? NULL : i->second;
@@ -223,11 +223,11 @@ void AsyncStackManager::Run()
 	mService.Get()->reset();
 }
 
-void AsyncStackManager::OnAddStack(const std::string& arStackName, AsyncStack* apStack, AsyncPort* apPort, uint_16_t aAddress)
+void AsyncStackManager::OnAddStack(const std::string& arStackName, AsyncStack* apStack, Port* apPort, uint_16_t aAddress)
 {	
 	// marshall the linking to the io_service
 	mStackToPort[arStackName] = apPort; //map the stack to a portname
-	mTimerSrc.Post(boost::bind(&AsyncPort::Associate, apPort, arStackName, apStack, aAddress)); 
+	mTimerSrc.Post(boost::bind(&Port::Associate, apPort, arStackName, apStack, aAddress)); 
 	if(!mRunning && mRunASIO) {
 		mRunning = true;
 		mThread.Start();

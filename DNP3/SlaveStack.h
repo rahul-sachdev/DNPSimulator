@@ -16,12 +16,12 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_SLAVE_STACK_H_
-#define __ASYNC_SLAVE_STACK_H_
+#ifndef __SLAVE_STACK_H_
+#define __SLAVE_STACK_H_
 
-#include "AsyncStack.h"
-#include "AsyncSlave.h"
-#include "AsyncDatabase.h"
+#include "Stack.h"
+#include "Slave.h"
+#include "Database.h"
 #include "DNPCommandMaster.h"
 #include "SlaveStackConfig.h"
 #include <APL/TimeSource.h>
@@ -29,7 +29,7 @@
 namespace apl { namespace dnp {
 
 /** @section desc A stack object for a master */
-class AsyncSlaveStack : public AsyncStack
+class SlaveStack : public AsyncStack
 {
 	public:
 
@@ -39,16 +39,16 @@ class AsyncSlaveStack : public AsyncStack
 		@param apCmdAcceptor	Command acceptor interface used for dispatching commands to the outside world
 		@param arCfg			Configuration struct that holds parameters for the stack
 	*/
-	AsyncSlaveStack(
+	SlaveStack(
 		Logger* apLogger,
 		ITimerSource* apTimerSrc,
 		ICommandAcceptor* apCmdAcceptor,
 		const SlaveStackConfig& arCfg);
 
 	TimeSourceSystemOffset mTimeSource;
-	AsyncDatabase mDB;				/// The database holds static event data and forwards to an event buffer
+	Database mDB;				/// The database holds static event data and forwards to an event buffer
 	DNPCommandMaster mCmdMaster;	/// Controls the execution of commands
-	AsyncSlave mSlave;				/// The dnp3 outstation class
+	Slave mSlave;				/// The dnp3 outstation class
 };
 
 }}

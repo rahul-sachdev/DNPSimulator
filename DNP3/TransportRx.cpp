@@ -18,7 +18,7 @@
 // 
 #include "TransportRx.h"
 
-#include "AsyncTransportLayer.h"
+#include "TransportLayer.h"
 #include "TransportConstants.h"
 #include <APL/Logger.h>
 #include <APL/Exception.h>
@@ -30,7 +30,7 @@ using namespace std;
 
 namespace apl { namespace dnp {
 
-TransportRx::TransportRx(Logger* apLogger, AsyncTransportLayer* apContext, size_t aFragSize) :
+TransportRx::TransportRx(Logger* apLogger, TransportLayer* apContext, size_t aFragSize) :
 Loggable(apLogger),
 mpContext(apContext),
 mBuffer(aFragSize),
@@ -64,7 +64,7 @@ void TransportRx::HandleReceive(const apl::byte_t* apData, size_t aNumBytes)
 	}
 	
 	byte_t hdr = apData[0];
-	LOG_BLOCK(LEV_INTERPRET, "<- " << AsyncTransportLayer::ToString(hdr));
+	LOG_BLOCK(LEV_INTERPRET, "<- " << TransportLayer::ToString(hdr));
 	bool first = (hdr & TL_HDR_FIR) != 0;
 	bool last = (hdr & TL_HDR_FIN) != 0;
 	int seq = hdr & TL_HDR_SEQ;

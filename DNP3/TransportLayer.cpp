@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "AsyncTransportLayer.h"
+#include "TransportLayer.h"
 
 #include <APL/Logger.h>
 #include <APL/Exception.h>
@@ -34,7 +34,7 @@ using namespace std;
 
 namespace apl { namespace dnp {
 
-	AsyncTransportLayer::AsyncTransportLayer(apl::Logger* apLogger, size_t aFragSize) : 
+	TransportLayer::TransportLayer(apl::Logger* apLogger, size_t aFragSize) : 
 	Loggable(apLogger), 
 	IUpperLayer(apLogger),
 	ILowerLayer(apLogger),
@@ -51,56 +51,56 @@ namespace apl { namespace dnp {
 	// Actions
 	//////////////////////////////////////////////////////////
 
-	void AsyncTransportLayer::ThisLayerUp()
+	void TransportLayer::ThisLayerUp()
 	{
 		mThisLayerUp = true;
 		if(mpUpperLayer != NULL) mpUpperLayer->OnLowerLayerUp();
 	}
 
-	void AsyncTransportLayer::ThisLayerDown()
+	void TransportLayer::ThisLayerDown()
 	{
 		mReceiver.Reset();
 		mThisLayerUp = false;
 		if(mpUpperLayer != NULL) mpUpperLayer->OnLowerLayerDown();
 	}
 
-	void AsyncTransportLayer::ChangeState(TLS_Base* apNewState)
+	void TransportLayer::ChangeState(TLS_Base* apNewState)
 	{
 		LOG_BLOCK(LEV_DEBUG, "State Change: " << mpState->Name() << " -> " << apNewState->Name());
 		mpState = apNewState;
 	}
 
-	void AsyncTransportLayer::TransmitAPDU(const byte_t* apData, size_t aNumBytes)
+	void TransportLayer::TransmitAPDU(const byte_t* apData, size_t aNumBytes)
 	{
 		mTransmitter.Send(apData, aNumBytes);
 	}
 
-	void AsyncTransportLayer::TransmitTPDU(const byte_t* apData, size_t aNumBytes)
+	void TransportLayer::TransmitTPDU(const byte_t* apData, size_t aNumBytes)
 	{
 		if(mpLowerLayer != NULL) mpLowerLayer->Send(apData, aNumBytes);
 	}
 
-	void AsyncTransportLayer::ReceiveTPDU(const byte_t* apData, size_t aNumBytes)
+	void TransportLayer::ReceiveTPDU(const byte_t* apData, size_t aNumBytes)
 	{
 		mReceiver.HandleReceive(apData, aNumBytes);
 	}
 
-	void AsyncTransportLayer::ReceiveAPDU(const byte_t* apData, size_t aNumBytes)
+	void TransportLayer::ReceiveAPDU(const byte_t* apData, size_t aNumBytes)
 	{
 		if(mpUpperLayer != NULL) mpUpperLayer->OnReceive(apData, aNumBytes);
 	}
 
-	bool AsyncTransportLayer::ContinueSend()
+	bool TransportLayer::ContinueSend()
 	{
 		return !mTransmitter.SendSuccess();
 	}
 
-	void AsyncTransportLayer::SignalSendSuccess()
+	void TransportLayer::SignalSendSuccess()
 	{
 		if(mpUpperLayer != NULL) mpUpperLayer->OnSendSuccess();
 	}
 
-	void AsyncTransportLayer::SignalSendFailure()
+	void TransportLayer::SignalSendFailure()
 	{
 		if(mpUpperLayer != NULL) mpUpperLayer->OnSendFailure();
 	}
@@ -108,7 +108,7 @@ namespace apl { namespace dnp {
 	//////////////////////////////////////////////////////////
 	// ILayerDown NVII implementations
 	//////////////////////////////////////////////////////////
-	void AsyncTransportLayer::_Send(const apl::byte_t* apData, size_t aNumBytes)
+	void TransportLayer::_Send(const apl::byte_t* apData, size_t aNumBytes)
 	{
 		if(aNumBytes == 0 || aNumBytes > M_FRAG_SIZE)
 		{
@@ -123,27 +123,27 @@ namespace apl { namespace dnp {
 	//////////////////////////////////////////////////////////
 	// ILayerUp NVII implementations
 	//////////////////////////////////////////////////////////
-	void AsyncTransportLayer::_OnReceive(const apl::byte_t* apData, size_t aNumBytes)
+	void TransportLayer::_OnReceive(const apl::byte_t* apData, size_t aNumBytes)
 	{
 		mpState->HandleReceive(apData, aNumBytes, this);
 	}
 	
-	void AsyncTransportLayer::_OnSendSuccess()
+	void TransportLayer::_OnSendSuccess()
 	{
 		mpState->HandleSendSuccess(this);
 	}
 
-	void AsyncTransportLayer::_OnSendFailure()
+	void TransportLayer::_OnSendFailure()
 	{
 		mpState->HandleSendFailure(this);
 	}
 	
-	void AsyncTransportLayer::_OnLowerLayerUp()
+	void TransportLayer::_OnLowerLayerUp()
 	{
 		mpState->LowerLayerUp(this);
 	}
 	
-	void AsyncTransportLayer::_OnLowerLayerDown()
+	void TransportLayer::_OnLowerLayerDown()
 	{
 		mpState->LowerLayerDown(this);
 	}
@@ -152,7 +152,7 @@ namespace apl { namespace dnp {
 	// Helpers
 	//////////////////////////////////////////////////////////
 
-	std::string AsyncTransportLayer::ToString(byte_t aHeader)
+	std::string TransportLayer::ToString(byte_t aHeader)
 	{
 		std::ostringstream oss;
 		oss << "TL: ";

@@ -16,12 +16,12 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_EVENT_BUFFERS_H_
-#define __ASYNC_EVENT_BUFFERS_H_
+#ifndef __EVENT_BUFFERS_H_
+#define __EVENT_BUFFERS_H_
 
 
 #include "BufferSetTypes.h"
-#include "AsyncEventBufferBase.h"
+#include "EventBufferBase.h"
 
 #include <map>
 #include <set>
@@ -36,51 +36,51 @@ namespace apl { namespace dnp {
 		Note: EventType must have the public property mIndex.
 		*/
 	template <class EventType>
-	class AsyncSingleEventBuffer : public AsyncEventBufferBase<EventType, IndexSet< EventType > >
+	class SingleEventBuffer : public EventBufferBase<EventType, IndexSet< EventType > >
 	{
 	public:
 
-		AsyncSingleEventBuffer(size_t aMaxEvents);
+		SingleEventBuffer(size_t aMaxEvents);
 
 		void _Update(const EventType& arEvent);
 	};
 
 	/** Event buffer that stores all changes to all points in the order. */
 	template <class EventType>
-	class AsyncTimeOrderedEventBuffer : public AsyncEventBufferBase<EventType, TimeMultiSet< EventType > >
+	class TimeOrderedEventBuffer : public EventBufferBase<EventType, TimeMultiSet< EventType > >
 	{
 	public:
 
-		AsyncTimeOrderedEventBuffer(size_t aMaxEvents);
+		TimeOrderedEventBuffer(size_t aMaxEvents);
 	};
 
 	/** Event buffer that stores all changes to all points in the order. */
 	template <class EventType>
-	class AsyncInsertionOrderedEventBuffer : public AsyncEventBufferBase<EventType, InsertionOrderSet2< EventType > >
+	class InsertionOrderedEventBuffer : public EventBufferBase<EventType, InsertionOrderSet2< EventType > >
 	{
 	public:
 
-		AsyncInsertionOrderedEventBuffer(size_t aMaxEvents);
+		InsertionOrderedEventBuffer(size_t aMaxEvents);
 	};
 
 
 	template <class EventType>
-	AsyncSingleEventBuffer<EventType> :: AsyncSingleEventBuffer(size_t aMaxEvents) :
-	AsyncEventBufferBase< EventType, IndexSet< EventType > >(aMaxEvents)
+	SingleEventBuffer<EventType> :: SingleEventBuffer(size_t aMaxEvents) :
+	EventBufferBase< EventType, IndexSet< EventType > >(aMaxEvents)
 	{}
 
 	template <class EventType>
-	AsyncTimeOrderedEventBuffer<EventType> :: AsyncTimeOrderedEventBuffer(size_t aMaxEvents) :
-	AsyncEventBufferBase <EventType, TimeMultiSet< EventType > >(aMaxEvents)
+	TimeOrderedEventBuffer<EventType> :: TimeOrderedEventBuffer(size_t aMaxEvents) :
+	EventBufferBase <EventType, TimeMultiSet< EventType > >(aMaxEvents)
 	{}
 
 	template <class EventType>
-	AsyncInsertionOrderedEventBuffer<EventType> :: AsyncInsertionOrderedEventBuffer(size_t aMaxEvents) :
-	AsyncEventBufferBase<EventType, InsertionOrderSet2< EventType > >(aMaxEvents)
+	InsertionOrderedEventBuffer<EventType> :: InsertionOrderedEventBuffer(size_t aMaxEvents) :
+	EventBufferBase<EventType, InsertionOrderSet2< EventType > >(aMaxEvents)
 	{}
 
 	template <class EventType>
-	void AsyncSingleEventBuffer<EventType> :: _Update(const EventType& arEvent)
+	void SingleEventBuffer<EventType> :: _Update(const EventType& arEvent)
 	{
 		typename IndexSet< EventType >::Type::iterator i = this->mEventSet.find(arEvent);
 

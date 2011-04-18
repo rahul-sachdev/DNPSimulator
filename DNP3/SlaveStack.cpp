@@ -16,13 +16,13 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "AsyncSlaveStack.h"
+#include "SlaveStack.h"
 
 
 namespace apl { namespace dnp {
 
 
-AsyncSlaveStack::AsyncSlaveStack(Logger* apLogger, ITimerSource* apTimerSrc, ICommandAcceptor* apCmdAcceptor, const SlaveStackConfig& arCfg) :
+SlaveStack::SlaveStack(Logger* apLogger, ITimerSource* apTimerSrc, ICommandAcceptor* apCmdAcceptor, const SlaveStackConfig& arCfg) :
 AsyncStack(apLogger->GetSubLogger("slave"), apTimerSrc, arCfg.app, arCfg.link),
 mDB(apLogger),
 mCmdMaster(10000),

@@ -16,8 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_EVENT_BUFFER_BASE_H_
-#define __ASYNC_EVENT_BUFFER_BASE_H_
+#ifndef __EVENT_BUFFER_BASE_H_
+#define __EVENT_BUFFER_BASE_H_
 
 
 #include "ClassCounter.h"
@@ -26,17 +26,17 @@
 namespace apl { namespace dnp {
 
 
-	/** Base class for the AsyncEventBuffer classes (with templating and
+	/** Base class for the EventBuffer classes (with templating and
 		virtual function for Update to alter event storage behavior)
 
 		Single-threaded for asynchronous/event-based model.
 	*/
 	template <class EventType, class SetType>
-	class AsyncEventBufferBase
+	class EventBufferBase
 	{
 	public:
-		AsyncEventBufferBase(size_t aMaxEvents, bool aDropFirst = true);
-		virtual ~AsyncEventBufferBase() {}
+		EventBufferBase(size_t aMaxEvents, bool aDropFirst = true);
+		virtual ~EventBufferBase() {}
 
 		/**
 			Adds an event to the buffer, tracking insertion order. Calls
@@ -111,7 +111,7 @@ namespace apl { namespace dnp {
 
 
 	template <class EventType, class SetType>
-	AsyncEventBufferBase <EventType, SetType> :: AsyncEventBufferBase(size_t aMaxEvents, bool aDropFirst) :
+	EventBufferBase <EventType, SetType> :: EventBufferBase(size_t aMaxEvents, bool aDropFirst) :
 	M_MAX_EVENTS(aMaxEvents),
 	mSequence(0),
 	mIsOverflown(false),
@@ -121,7 +121,7 @@ namespace apl { namespace dnp {
 	}
 
 	template <class EventType, class SetType>
-	void AsyncEventBufferBase<EventType,SetType> :: Update(const typename EventType::MeasType& arVal, PointClass aClass, size_t aIndex)
+	void EventBufferBase<EventType,SetType> :: Update(const typename EventType::MeasType& arVal, PointClass aClass, size_t aIndex)
 	{
 		EventType evt(arVal, aClass, aIndex);
 		this->Update(evt, true);
@@ -137,7 +137,7 @@ namespace apl { namespace dnp {
 	}
 
 	template <class EventType, class SetType>
-	void AsyncEventBufferBase<EventType,SetType> :: Update(EventType& arEvent, bool aNewValue)
+	void EventBufferBase<EventType,SetType> :: Update(EventType& arEvent, bool aNewValue)
 	{
 		// prevents numerical overflow of the increasing sequence number
 		if(this->Size() == 0) mSequence = 0;
@@ -148,14 +148,14 @@ namespace apl { namespace dnp {
 	}
 
 	template <class EventType, class SetType>
-	void AsyncEventBufferBase<EventType, SetType> :: _Update(const EventType& arEvent)
+	void EventBufferBase<EventType, SetType> :: _Update(const EventType& arEvent)
 	{
 		this->mCounter.IncrCount(arEvent.mClass);
 		this->mEventSet.insert(arEvent);
 	}
 
 	template <class EventType, class SetType>
-	size_t AsyncEventBufferBase<EventType, SetType> :: Deselect()
+	size_t EventBufferBase<EventType, SetType> :: Deselect()
 	{
 		size_t num = mSelectedEvents.size();
 
@@ -168,7 +168,7 @@ namespace apl { namespace dnp {
 	}
 
 	template <class EventType, class SetType>
-	bool AsyncEventBufferBase <EventType, SetType> :: IsOverflown()
+	bool EventBufferBase <EventType, SetType> :: IsOverflown()
 	{
 		// if the buffer previously overflowed, but is no longer full, reset the flag
 		if(mIsOverflown && this->Size() < M_MAX_EVENTS) mIsOverflown = false;
@@ -177,7 +177,7 @@ namespace apl { namespace dnp {
 	}
 
 	template <class EventType, class SetType>
-	size_t AsyncEventBufferBase<EventType, SetType> :: ClearWrittenEvents()
+	size_t EventBufferBase<EventType, SetType> :: ClearWrittenEvents()
 	{
 		typename std::vector<EventType>::iterator itr = this->mSelectedEvents.begin();
 
@@ -192,13 +192,13 @@ namespace apl { namespace dnp {
 	}
 
 	template <class EventType, class SetType>
-	typename EvtItr< EventType >::Type AsyncEventBufferBase<EventType, SetType> :: Begin()
+	typename EvtItr< EventType >::Type EventBufferBase<EventType, SetType> :: Begin()
 	{
 		return mSelectedEvents.begin();
 	}
 
 	template <class EventType, class SetType>
-	size_t AsyncEventBufferBase <EventType, SetType> :: Select(PointClass aClass, size_t aMaxEvent)
+	size_t EventBufferBase <EventType, SetType> :: Select(PointClass aClass, size_t aMaxEvent)
 	{
 		typename SetType::Type::iterator i = mEventSet.begin();
 

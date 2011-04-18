@@ -43,7 +43,7 @@ namespace apl {
 
 namespace apl { namespace dnp {
 
-class AsyncPort;
+class Port;
 class AsyncStack;
 
 struct SlaveStackConfig;
@@ -127,18 +127,18 @@ class AsyncStackManager : private Threadable, private Loggable
 
 	private:
 
-		AsyncPort* AllocatePort(const std::string& arName);
-		AsyncPort* CreatePort(const std::string& arName, IPhysicalLayerAsync* apPhys, Logger* apLogger, millis_t aOpenDelay, IPhysMonitor* apObserver);
-		AsyncPort* GetPort(const std::string& arName);
-		AsyncPort* GetPortByStackName(const std::string& arStackName);
-		AsyncPort* GetPortPointer(const std::string& arName);
+		Port* AllocatePort(const std::string& arName);
+		Port* CreatePort(const std::string& arName, IPhysicalLayerAsync* apPhys, Logger* apLogger, millis_t aOpenDelay, IPhysMonitor* apObserver);
+		Port* GetPort(const std::string& arName);
+		Port* GetPortByStackName(const std::string& arStackName);
+		Port* GetPortPointer(const std::string& arName);
 
 		void Run();
 
 		/// Remove a stack
-		void SeverStack(AsyncPort* apPort, const std::string& arStackName);
+		void SeverStack(Port* apPort, const std::string& arStackName);
 
-		void OnAddStack(const std::string& arStackName, AsyncStack* apStack, AsyncPort* apPort, uint_16_t aAddress);
+		void OnAddStack(const std::string& arStackName, AsyncStack* apStack, Port* apPort, uint_16_t aAddress);
 		void CheckForJoin();
 
 		bool mRunASIO;
@@ -156,7 +156,7 @@ class AsyncStackManager : private Threadable, private Loggable
 		AsyncTaskScheduler mScheduler;
 		Thread mThread;
 
-		typedef std::map<std::string, AsyncPort*> PortMap;
+		typedef std::map<std::string, Port*> PortMap;
 		PortMap mStackToPort;		/// maps a stack name a port instance
 		PortMap mPortToPort;		/// maps a port name to a port instance
 

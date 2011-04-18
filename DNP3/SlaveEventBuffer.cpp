@@ -16,33 +16,33 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "AsyncSlaveEventBuffer.h"
+#include "SlaveEventBuffer.h"
 
 
 #include <APL/Exception.h>
 
 namespace apl { namespace dnp {
 
-	AsyncSlaveEventBuffer :: AsyncSlaveEventBuffer(size_t aMaxBinary, size_t aMaxAnalog, size_t aMaxCounter)
+	SlaveEventBuffer :: SlaveEventBuffer(size_t aMaxBinary, size_t aMaxAnalog, size_t aMaxCounter)
 		: mBinaryEvents(aMaxBinary), mAnalogEvents(aMaxAnalog), mCounterEvents(aMaxCounter)
 	{	}
 
-	void AsyncSlaveEventBuffer :: Update(const Binary& arEvent, PointClass aClass, size_t aIndex)
+	void SlaveEventBuffer :: Update(const Binary& arEvent, PointClass aClass, size_t aIndex)
 	{
 		mBinaryEvents.Update(arEvent, aClass, aIndex);
 	}
 
-	void AsyncSlaveEventBuffer :: Update(const Analog& arEvent, PointClass aClass, size_t aIndex)
+	void SlaveEventBuffer :: Update(const Analog& arEvent, PointClass aClass, size_t aIndex)
 	{
 		mAnalogEvents.Update(arEvent, aClass, aIndex);
 	}
 
-	void AsyncSlaveEventBuffer :: Update(const Counter& arEvent, PointClass aClass, size_t aIndex)
+	void SlaveEventBuffer :: Update(const Counter& arEvent, PointClass aClass, size_t aIndex)
 	{
 		mCounterEvents.Update(arEvent, aClass, aIndex);
 	}
 
-	size_t AsyncSlaveEventBuffer :: NumSelected(DataTypes aType)
+	size_t SlaveEventBuffer :: NumSelected(DataTypes aType)
 	{
 		switch(aType){
 			case DT_BINARY:
@@ -56,7 +56,7 @@ namespace apl { namespace dnp {
 		}
 	}
 
-	size_t AsyncSlaveEventBuffer :: NumType(DataTypes aType)
+	size_t SlaveEventBuffer :: NumType(DataTypes aType)
 	{
 		switch(aType){
 			case DT_BINARY:
@@ -70,27 +70,27 @@ namespace apl { namespace dnp {
 		}
 	}
 
-	size_t AsyncSlaveEventBuffer :: NumSelected()
+	size_t SlaveEventBuffer :: NumSelected()
 	{
 		return mBinaryEvents.NumSelected() + mAnalogEvents.NumSelected() + mCounterEvents.NumSelected();
 	}
 
-	bool AsyncSlaveEventBuffer :: IsOverflow()
+	bool SlaveEventBuffer :: IsOverflow()
 	{
 		return mBinaryEvents.IsOverflown() || mAnalogEvents.IsOverflown() || mCounterEvents.IsOverflown();
 	}
 
-	bool AsyncSlaveEventBuffer :: HasEventData()
+	bool SlaveEventBuffer :: HasEventData()
 	{
 		return mBinaryEvents.NumUnselected() > 0 || mAnalogEvents.NumUnselected() > 0  || mCounterEvents.NumUnselected() > 0 ;
 	}
 
-	bool AsyncSlaveEventBuffer :: HasClassData(PointClass aClass)
+	bool SlaveEventBuffer :: HasClassData(PointClass aClass)
 	{
 		return mBinaryEvents.HasClassData(aClass) || mAnalogEvents.HasClassData(aClass) || mCounterEvents.HasClassData(aClass);
 	}
 
-	size_t AsyncSlaveEventBuffer :: Select(DataTypes aType, PointClass aClass, size_t aMaxEvent)
+	size_t SlaveEventBuffer :: Select(DataTypes aType, PointClass aClass, size_t aMaxEvent)
 	{
 		switch(aType){
 			case DT_BINARY:
@@ -104,7 +104,7 @@ namespace apl { namespace dnp {
 		}		
 	}
 
-	size_t AsyncSlaveEventBuffer :: Select(PointClass aClass, size_t aMaxEvent)
+	size_t SlaveEventBuffer :: Select(PointClass aClass, size_t aMaxEvent)
 	{
 		size_t left = aMaxEvent;
 		if ( left > 0 )
@@ -116,14 +116,14 @@ namespace apl { namespace dnp {
 		return aMaxEvent - left;
 	}
 
-	void AsyncSlaveEventBuffer :: ClearWritten()
+	void SlaveEventBuffer :: ClearWritten()
 	{
 		mBinaryEvents.ClearWrittenEvents();
 		mAnalogEvents.ClearWrittenEvents();
 		mCounterEvents.ClearWrittenEvents();
 	}
 	
-	void AsyncSlaveEventBuffer :: Deselect()
+	void SlaveEventBuffer :: Deselect()
 	{
 		mBinaryEvents.Deselect();
 		mAnalogEvents.Deselect();

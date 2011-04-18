@@ -16,15 +16,15 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_RESPONSE_CONTEXT_H_
-#define __ASYNC_RESPONSE_CONTEXT_H_
+#ifndef __RESPONSE_CONTEXT_H_
+#define __RESPONSE_CONTEXT_H_
 
 #include <APL/Loggable.h>
 
 #include "DNPDatabaseTypes.h"
 #include "APDU.h"
-#include "AsyncDatabase.h"
-#include "AsyncSlaveEventBuffer.h"
+#include "Database.h"
+#include "SlaveEventBuffer.h"
 #include "ClassMask.h"
 
 #include <queue>
@@ -33,8 +33,8 @@
 
 namespace apl { namespace dnp {
 
-class AsyncDatabase;
-class AsyncSlaveEventBuffer;
+class Database;
+class SlaveEventBuffer;
 class ObjectBase;
 class SlaveResponseTypes;
 
@@ -47,9 +47,9 @@ struct WriteFunc
 /**
  Builds and tracks the state of responses. Interprets FC_READ requests or can be prompted for an unsolicited response fragment.
 
- Coordinates the AsyncDatabase and AsyncSlaveEventBuffer.
+ Coordinates the Database and SlaveEventBuffer.
 */
-class AsyncResponseContext : public Loggable
+class ResponseContext : public Loggable
 {
 	enum Mode {
 		UNDEFINED,
@@ -58,11 +58,11 @@ class AsyncResponseContext : public Loggable
 	};
 
 	public:
-	AsyncResponseContext(Logger*, AsyncDatabase*, SlaveResponseTypes* apRspTypes, size_t aMaxBinary, size_t aMaxAnalog, size_t aMaxCounter);
+	ResponseContext(Logger*, Database*, SlaveResponseTypes* apRspTypes, size_t aMaxBinary, size_t aMaxAnalog, size_t aMaxCounter);
 
 	Mode GetMode() { return mMode; }
 
-	IAsyncEventBuffer* GetBuffer() { return &mBuffer; }
+	IEventBuffer* GetBuffer() { return &mBuffer; }
 
 	/// Setup the response context with a new read request
 	IINField Configure(const APDU& arRequest);
@@ -96,7 +96,7 @@ class AsyncResponseContext : public Loggable
 	bool SelectUnsol(ClassMask aMask);
 
 
-	AsyncSlaveEventBuffer mBuffer;
+	SlaveEventBuffer mBuffer;
 
 	Mode mMode;
 
@@ -120,7 +120,7 @@ class AsyncResponseContext : public Loggable
 
 	//bool WriteCTO(const TimeStamp_t& arTime, APDU& arAPDU);
 
-	AsyncDatabase* mpDB;				/// Pointer to the database for static data
+	Database* mpDB;				/// Pointer to the database for static data
 	bool mFIR;
 	bool mFIN;
 	SlaveResponseTypes* mpRspTypes;
@@ -208,7 +208,7 @@ class AsyncResponseContext : public Loggable
 };
 
 template <class T>
-size_t AsyncResponseContext::SelectEvents(PointClass aClass, const StreamObject<T>* apObj, std::deque< EventRequest<T> >& arQueue, size_t aNum)
+size_t ResponseContext::SelectEvents(PointClass aClass, const StreamObject<T>* apObj, std::deque< EventRequest<T> >& arQueue, size_t aNum)
 {
 	size_t num = mBuffer.Select(T::MeasEnum, aClass, aNum);
 	if(num > 0) {
@@ -220,7 +220,7 @@ size_t AsyncResponseContext::SelectEvents(PointClass aClass, const StreamObject<
 }
 
 template <class T>
-void AsyncResponseContext::AddIntegrity(std::deque< IterRecord<T> >& arQueue, StreamObject<typename T::MeasType>* apObject)
+void ResponseContext::AddIntegrity(std::deque< IterRecord<T> >& arQueue, StreamObject<typename T::MeasType>* apObject)
 {
 	size_t num = mpDB->NumType(T::MeasType::MeasEnum);
 	if(num > 0)
@@ -233,7 +233,7 @@ void AsyncResponseContext::AddIntegrity(std::deque< IterRecord<T> >& arQueue, St
 }
 
 template <class T>
-bool AsyncResponseContext::LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> >& arQueue, bool& arEventsLoaded)
+bool ResponseContext::LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> >& arQueue, bool& arEventsLoaded)
 {
 	typename EvtItr< EventInfo<T> >::Type itr;
 	mBuffer.Begin(itr);
@@ -261,7 +261,7 @@ bool AsyncResponseContext::LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> 
 
 /*
 template <class T>
-bool AsyncResponseContext::IterateContiguous(IterRecord<T>& arIters, APDU& arAPDU, typename WriteFunc<typename T::MeasType>::Type& arWriter)
+bool ResponseContext::IterateContiguous(IterRecord<T>& arIters, APDU& arAPDU, typename WriteFunc<typename T::MeasType>::Type& arWriter)
 {
 	size_t start = arIters.first->mIndex;
 	size_t stop = arIters.last->mIndex;
@@ -280,7 +280,7 @@ bool AsyncResponseContext::IterateContiguous(IterRecord<T>& arIters, APDU& arAPD
 }*/
 
 template <class T>
-bool AsyncResponseContext::IterateContiguous(IterRecord<T>& arIters, APDU& arAPDU)
+bool ResponseContext::IterateContiguous(IterRecord<T>& arIters, APDU& arAPDU)
 {
 	size_t start = arIters.first->mIndex;
 	size_t stop = arIters.last->mIndex;
@@ -304,7 +304,7 @@ bool AsyncResponseContext::IterateContiguous(IterRecord<T>& arIters, APDU& arAPD
 
 // T is the point info type
 template <class T>
-size_t AsyncResponseContext::IterateIndexed(EventRequest<T>& arRequest, typename EvtItr< EventInfo<T> >::Type& arIter, APDU& arAPDU)
+size_t ResponseContext::IterateIndexed(EventRequest<T>& arRequest, typename EvtItr< EventInfo<T> >::Type& arIter, APDU& arAPDU)
 {
 	size_t max_index = mpDB->MaxIndex(T::MeasEnum);
 	IndexedWriteIterator write = arAPDU.WriteIndexed(arRequest.pObj, arRequest.count, max_index);
@@ -324,7 +324,7 @@ size_t AsyncResponseContext::IterateIndexed(EventRequest<T>& arRequest, typename
 }
 
 template <class T>
-size_t AsyncResponseContext::CalcPossibleCTO(typename EvtItr< EventInfo<T> >::Type aIter, size_t aMax)
+size_t ResponseContext::CalcPossibleCTO(typename EvtItr< EventInfo<T> >::Type aIter, size_t aMax)
 {
 	millis_t start = aIter->mValue.GetTime();
 
@@ -340,7 +340,7 @@ size_t AsyncResponseContext::CalcPossibleCTO(typename EvtItr< EventInfo<T> >::Ty
 
 // T is the point info type
 template <class T>
-size_t AsyncResponseContext::IterateCTO(const StreamObject<T>* apObj, size_t aCount, typename EvtItr< EventInfo<T> >::Type& arIter, APDU& arAPDU)
+size_t ResponseContext::IterateCTO(const StreamObject<T>* apObj, size_t aCount, typename EvtItr< EventInfo<T> >::Type& arIter, APDU& arAPDU)
 {
 	size_t max_index = mpDB->MaxIndex(T::MeasEnum);
 

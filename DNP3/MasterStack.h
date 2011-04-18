@@ -16,28 +16,28 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_MASTER_STACK_H_
-#define __ASYNC_MASTER_STACK_H_
+#ifndef __MASTER_STACK_H_
+#define __MASTER_STACK_H_
 
-#include "AsyncStack.h"
-#include "AsyncMaster.h"
+#include "Stack.h"
+#include "Master.h"
 #include "MasterStackConfig.h"
 
 namespace apl { namespace dnp {
 
 /** @section desc A stack object for a master */
-class AsyncMasterStack : public AsyncStack
+class MasterStack : public AsyncStack
 {
 	public:
 
-	AsyncMasterStack(
+	MasterStack(
 		Logger*,
 		ITimerSource* apTimerSrc,
 		IDataObserver* apPublisher,
 		AsyncTaskGroup* apTaskGroup,
 		const MasterStackConfig& arCfg);
 
-	AsyncMaster mMaster;
+	Master mMaster;
 };
 
 }}

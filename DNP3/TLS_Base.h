@@ -27,7 +27,7 @@
 
 namespace apl { namespace dnp {
 
-	class AsyncTransportLayer;
+	class TransportLayer;
 
 
 	/**
@@ -36,15 +36,15 @@ namespace apl { namespace dnp {
 	class TLS_Base
 	{
 		public:
-			virtual void Send(const apl::byte_t*, size_t, AsyncTransportLayer*);
-			virtual void HandleReceive(const apl::byte_t*, size_t, AsyncTransportLayer*);
+			virtual void Send(const apl::byte_t*, size_t, TransportLayer*);
+			virtual void HandleReceive(const apl::byte_t*, size_t, TransportLayer*);
 
 			// TPDU failure/success handlers
-			virtual void HandleSendSuccess(AsyncTransportLayer*);
-			virtual void HandleSendFailure(AsyncTransportLayer*);
+			virtual void HandleSendSuccess(TransportLayer*);
+			virtual void HandleSendFailure(TransportLayer*);
 
-			virtual void LowerLayerUp(AsyncTransportLayer*);
-			virtual void LowerLayerDown(AsyncTransportLayer*);
+			virtual void LowerLayerUp(TransportLayer*);
+			virtual void LowerLayerDown(TransportLayer*);
 
 			virtual std::string Name() const = 0;
 	};

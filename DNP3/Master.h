@@ -16,8 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_MASTER_H_
-#define __ASYNC_MASTER_H_
+#ifndef __MASTER_H_
+#define __MASTER_H_
 
 #include <APL/Loggable.h>
 #include <APL/CommandTypes.h>
@@ -58,7 +58,7 @@ class AMS_Base;
 
 	Coordination of tasks is handled by a higher level task scheduler.
 */
-class AsyncMaster : public Loggable, public IAppUser
+class Master : public Loggable, public IAppUser
 {	
 	friend class AMS_Base;
 	friend class AMS_Idle;
@@ -68,8 +68,8 @@ class AsyncMaster : public Loggable, public IAppUser
 
 	public:
 
-	AsyncMaster(Logger*, MasterConfig aCfg, IAppLayer*, IDataObserver*, AsyncTaskGroup*, ITimerSource*, ITimeSource* apTimeSrc = TimeSource::Inst());
-	virtual ~AsyncMaster() {}
+	Master(Logger*, MasterConfig aCfg, IAppLayer*, IDataObserver*, AsyncTaskGroup*, ITimerSource*, ITimeSource* apTimeSrc = TimeSource::Inst());
+	virtual ~Master() {}
 
 	ICommandAcceptor* GetCmdAcceptor() { return &mCommandQueue; }
 

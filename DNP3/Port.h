@@ -16,8 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_PORT_H_
-#define __ASYNC_PORT_H_
+#ifndef __PORT_H_
+#define __PORT_H_
 
 
 #include "LinkLayerRouter.h"
@@ -46,7 +46,7 @@ static std::vector<U> GetKeys(T& arMap)
 	return ret;
 }
 
-class AsyncPort : public Loggable, public IPhysMonitor
+class Port : public Loggable, public IPhysMonitor
 {
 	struct StackRecord
 	{
@@ -62,8 +62,8 @@ class AsyncPort : public Loggable, public IPhysMonitor
 	};
 
 	public:
-	AsyncPort(const std::string& arName, Logger*, AsyncTaskGroup*, ITimerSource* apTimerSrc, IPhysicalLayerAsync*, millis_t aOpenDelay, IPhysMonitor*);
-	~AsyncPort();
+	Port(const std::string& arName, Logger*, AsyncTaskGroup*, ITimerSource* apTimerSrc, IPhysicalLayerAsync*, millis_t aOpenDelay, IPhysMonitor*);
+	~Port();
 
 
 	AsyncTaskGroup* GetGroup() { return mpGroup; }

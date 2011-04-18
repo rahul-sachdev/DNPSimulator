@@ -16,8 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_DATABASE_INTERFACES_H_
-#define __ASYNC_DATABASE_INTERFACES_H_
+#ifndef __DATABASE_INTERFACES_H_
+#define __DATABASE_INTERFACES_H_
 
 
 #include "DNPDatabaseTypes.h"
@@ -31,11 +31,11 @@ class INotifier;
 namespace apl{ namespace dnp {
 
 /// @section desc Used by the database
-class IAsyncEventBuffer
+class IEventBuffer
 {
 	public:
 
-	virtual ~IAsyncEventBuffer() {}
+	virtual ~IEventBuffer() {}
 
 	/// @return true if the event buffer accepts the event, false otherwise
 	virtual void Update(const Binary& arEvent, PointClass aClass, size_t aIndex) = 0;

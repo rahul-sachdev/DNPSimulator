@@ -16,8 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_SLAVE_STATES_H_
-#define __ASYNC_SLAVE_STATES_H_
+#ifndef __SLAVE_STATES_H_
+#define __SLAVE_STATES_H_
 
 
 #include <string>
@@ -35,7 +35,7 @@ namespace apl
 
 namespace apl { namespace dnp {
 
-class AsyncSlave;
+class Slave;
 class APDU;
 
 /** @section desc
@@ -47,26 +47,26 @@ class AS_Base
 
 	/* Events from application layer */
 
-	virtual void OnLowerLayerUp(AsyncSlave*);
-	virtual void OnLowerLayerDown(AsyncSlave*);
+	virtual void OnLowerLayerUp(Slave*);
+	virtual void OnLowerLayerDown(Slave*);
 
-	virtual void OnSolSendSuccess(AsyncSlave*);
-	virtual void OnSolFailure(AsyncSlave*);
+	virtual void OnSolSendSuccess(Slave*);
+	virtual void OnSolFailure(Slave*);
 
-	virtual void OnUnsolSendSuccess(AsyncSlave*);
-	virtual void OnUnsolFailure(AsyncSlave*);
+	virtual void OnUnsolSendSuccess(Slave*);
+	virtual void OnUnsolFailure(Slave*);
 
-	virtual void OnRequest(AsyncSlave*, const APDU&, SequenceInfo);
+	virtual void OnRequest(Slave*, const APDU&, SequenceInfo);
 
-	virtual void OnUnknown(AsyncSlave*);
+	virtual void OnUnknown(Slave*);
 
 	/* Events produced from the user layer */
 
 	/// Called when a data update is received from the user layer
-	virtual void OnDataUpdate(AsyncSlave*);
+	virtual void OnDataUpdate(Slave*);
 
 	/// Called when a data update is received from the user layer
-	virtual void OnUnsolExpiration(AsyncSlave*);
+	virtual void OnUnsolExpiration(Slave*);
 
 	/// @return The name associated with the state
 	virtual std::string Name() const = 0;
@@ -78,13 +78,13 @@ class AS_Base
 
 	protected:
 
-	void SwitchOnFunction(AsyncSlave*, AS_Base* apNext, const APDU& arRequest, SequenceInfo aSeqInfo);
-	void DoUnsolSuccess(AsyncSlave*);
-	void DoRequest(AsyncSlave* c, AS_Base* apNext, const APDU& arAPDU, SequenceInfo aSeqInfo);
+	void SwitchOnFunction(Slave*, AS_Base* apNext, const APDU& arRequest, SequenceInfo aSeqInfo);
+	void DoUnsolSuccess(Slave*);
+	void DoRequest(Slave* c, AS_Base* apNext, const APDU& arAPDU, SequenceInfo aSeqInfo);
 
 	//Work functions
 
-	void ChangeState(AsyncSlave*, AS_Base*);
+	void ChangeState(Slave*, AS_Base*);
 };
 
 /** @section desc
@@ -94,8 +94,8 @@ class AS_Closed : public AS_Base
 {
 	MACRO_STATE_SINGLETON_INSTANCE(AS_Closed);
 
-	void OnLowerLayerUp(AsyncSlave*);
-	void OnDataUpdate(AsyncSlave*);
+	void OnLowerLayerUp(Slave*);
+	void OnDataUpdate(Slave*);
 
 	bool AcceptsDeferUpdates() { return true; }
 };
@@ -103,7 +103,7 @@ class AS_Closed : public AS_Base
 class AS_OpenBase : public AS_Base
 {
 	public:
-	void OnLowerLayerDown(AsyncSlave*);
+	void OnLowerLayerDown(Slave*);
 };
 
 /** @section desc
@@ -113,10 +113,10 @@ class AS_Idle : public AS_OpenBase
 {
 	MACRO_STATE_SINGLETON_INSTANCE(AS_Idle);
 
-	void OnRequest(AsyncSlave*, const APDU&, SequenceInfo);
-	void OnDataUpdate(AsyncSlave*);
-	void OnUnsolExpiration(AsyncSlave*);
-	void OnUnknown(AsyncSlave*);
+	void OnRequest(Slave*, const APDU&, SequenceInfo);
+	void OnDataUpdate(Slave*);
+	void OnUnsolExpiration(Slave*);
+	void OnUnknown(Slave*);
 
 	bool AcceptsDeferredRequests() { return true; }
 	bool AcceptsDeferredUpdates() { return true; }
@@ -132,9 +132,9 @@ class AS_WaitForRspSuccess : public AS_OpenBase
 {
 	MACRO_STATE_SINGLETON_INSTANCE(AS_WaitForRspSuccess);
 
-	void OnRequest(AsyncSlave*, const APDU&, SequenceInfo);
-	void OnSolFailure(AsyncSlave*);
-	void OnSolSendSuccess(AsyncSlave*);
+	void OnRequest(Slave*, const APDU&, SequenceInfo);
+	void OnSolFailure(Slave*);
+	void OnSolSendSuccess(Slave*);
 };
 
 /** @section desc
@@ -144,9 +144,9 @@ class AS_WaitForUnsolSuccess : public AS_OpenBase
 {
 	MACRO_STATE_SINGLETON_INSTANCE(AS_WaitForUnsolSuccess);
 
-	void OnRequest(AsyncSlave*, const APDU&, SequenceInfo);
-	void OnUnsolFailure(AsyncSlave*);
-	void OnUnsolSendSuccess(AsyncSlave*);
+	void OnRequest(Slave*, const APDU&, SequenceInfo);
+	void OnUnsolFailure(Slave*);
+	void OnUnsolSendSuccess(Slave*);
 };
 
 /** @section desc
@@ -156,11 +156,11 @@ class AS_WaitForSolUnsolSuccess : public AS_OpenBase
 {
 	MACRO_STATE_SINGLETON_INSTANCE(AS_WaitForSolUnsolSuccess);
 
-	void OnRequest(AsyncSlave*, const APDU&, SequenceInfo);
-	void OnSolFailure(AsyncSlave*);
-	void OnSolSendSuccess(AsyncSlave*);
-	void OnUnsolFailure(AsyncSlave*);
-	void OnUnsolSendSuccess(AsyncSlave*);
+	void OnRequest(Slave*, const APDU&, SequenceInfo);
+	void OnSolFailure(Slave*);
+	void OnSolSendSuccess(Slave*);
+	void OnUnsolFailure(Slave*);
+	void OnUnsolSendSuccess(Slave*);
 };
 
 

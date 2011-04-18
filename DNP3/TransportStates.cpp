@@ -18,7 +18,7 @@
 // 
 #include "TransportStates.h"
 
-#include "AsyncTransportLayer.h"
+#include "TransportLayer.h"
 
 namespace apl { namespace dnp {
 
@@ -27,7 +27,7 @@ namespace apl { namespace dnp {
 	/////////////////////////////////////////////////////////////////////////////////
 	TLS_Closed TLS_Closed::mInstance;
 
-	void TLS_Closed::LowerLayerUp(AsyncTransportLayer* apContext)
+	void TLS_Closed::LowerLayerUp(TransportLayer* apContext)
 	{
 		apContext->ChangeState(TLS_Ready::Inst());
 		apContext->ThisLayerUp();
@@ -38,19 +38,19 @@ namespace apl { namespace dnp {
 	/////////////////////////////////////////////////////////////////////////////////
 	TLS_Ready TLS_Ready::mInstance;
 
-	void TLS_Ready::Send(const byte_t* apData, size_t aNumBytes, AsyncTransportLayer* apContext)
+	void TLS_Ready::Send(const byte_t* apData, size_t aNumBytes, TransportLayer* apContext)
 	{
 		apContext->ChangeState(TLS_Sending::Inst());
 		apContext->TransmitAPDU(apData, aNumBytes);
 	}
 
-	void TLS_Ready::LowerLayerDown(AsyncTransportLayer* apContext)
+	void TLS_Ready::LowerLayerDown(TransportLayer* apContext)
 	{
 		apContext->ChangeState(TLS_Closed::Inst());
 		apContext->ThisLayerDown();
 	}
 
-	void TLS_Ready::HandleReceive(const apl::byte_t* apData, size_t aNumBytes, AsyncTransportLayer* apContext)
+	void TLS_Ready::HandleReceive(const apl::byte_t* apData, size_t aNumBytes, TransportLayer* apContext)
 	{
 		apContext->ReceiveTPDU(apData, aNumBytes);
 	}
@@ -60,12 +60,12 @@ namespace apl { namespace dnp {
 	/////////////////////////////////////////////////////////////////////////////////
 	TLS_Sending TLS_Sending::mInstance;
 
-	void TLS_Sending::HandleReceive(const apl::byte_t* apData, size_t aNumBytes, AsyncTransportLayer* apContext)
+	void TLS_Sending::HandleReceive(const apl::byte_t* apData, size_t aNumBytes, TransportLayer* apContext)
 	{
 		apContext->ReceiveTPDU(apData, aNumBytes);
 	}
 
-	void TLS_Sending::HandleSendSuccess(AsyncTransportLayer* apContext)
+	void TLS_Sending::HandleSendSuccess(TransportLayer* apContext)
 	{
 		if(!apContext->ContinueSend())
 		{
@@ -74,13 +74,13 @@ namespace apl { namespace dnp {
 		}
 	}
 	
-	void TLS_Sending::LowerLayerDown(AsyncTransportLayer* apContext)
+	void TLS_Sending::LowerLayerDown(TransportLayer* apContext)
 	{
 		apContext->ChangeState(TLS_Closed::Inst());
 		apContext->ThisLayerDown();
 	}
 
-	void TLS_Sending::HandleSendFailure(AsyncTransportLayer* apContext)
+	void TLS_Sending::HandleSendFailure(TransportLayer* apContext)
 	{
 		apContext->ChangeState(TLS_Ready::Inst());
 		apContext->SignalSendFailure();

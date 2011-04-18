@@ -31,7 +31,7 @@ namespace apl { namespace dnp {
 	{
 		MACRO_STATE_SINGLETON_INSTANCE(TLS_Closed);
 
-		void LowerLayerUp(AsyncTransportLayer*);
+		void LowerLayerUp(TransportLayer*);
 	};
 
 	/** Represents the ready state
@@ -40,9 +40,9 @@ namespace apl { namespace dnp {
 	{
 		MACRO_STATE_SINGLETON_INSTANCE(TLS_Ready);
 
-		void Send(const byte_t*, size_t, AsyncTransportLayer*);
-		void HandleReceive(const apl::byte_t*, size_t, AsyncTransportLayer*);
-		void LowerLayerDown(AsyncTransportLayer*);
+		void Send(const byte_t*, size_t, TransportLayer*);
+		void HandleReceive(const apl::byte_t*, size_t, TransportLayer*);
+		void LowerLayerDown(TransportLayer*);
 	};
 
 	/** Represents the sending state
@@ -51,10 +51,10 @@ namespace apl { namespace dnp {
 	{
 		MACRO_STATE_SINGLETON_INSTANCE(TLS_Sending);
 
-		void HandleReceive(const apl::byte_t*, size_t, AsyncTransportLayer*);
-		void HandleSendSuccess(AsyncTransportLayer*);
-		void HandleSendFailure(AsyncTransportLayer*);
-		void LowerLayerDown(AsyncTransportLayer*);
+		void HandleReceive(const apl::byte_t*, size_t, TransportLayer*);
+		void HandleSendSuccess(TransportLayer*);
+		void HandleSendFailure(TransportLayer*);
+		void LowerLayerDown(TransportLayer*);
 	};
 
 }} //end namepsace

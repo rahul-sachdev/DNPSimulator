@@ -16,9 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "AsyncMaster.h"
+#include "Master.h"
 
-#include "AsyncMasterStates.h"
+#include "MasterStates.h"
 #include "ObjectReadIterator.h"
 #include "ResponseLoader.h"
 
@@ -40,7 +40,7 @@ using namespace boost;
 
 namespace apl { namespace dnp {
 
-AsyncMaster::AsyncMaster(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IDataObserver* apPublisher, AsyncTaskGroup* apTaskGroup, ITimerSource* apTimerSrc, ITimeSource* apTimeSrc) :
+Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IDataObserver* apPublisher, AsyncTaskGroup* apTaskGroup, ITimerSource* apTimerSrc, ITimeSource* apTimeSrc) :
 Loggable(apLogger),
 mRequest(aCfg.FragSize),
 mpAppLayer(apAppLayer),
@@ -65,7 +65,7 @@ mExecuteSP(apLogger)
 	this->UpdateState(MS_COMMS_DOWN);
 }
 
-void AsyncMaster::UpdateState(MasterStates aState)
+void Master::UpdateState(MasterStates aState)
 {
 	if(mState != aState) {
 		mState = aState;
@@ -73,7 +73,7 @@ void AsyncMaster::UpdateState(MasterStates aState)
 	}
 }
 
-void AsyncMaster::ProcessIIN(const IINField& arIIN)
+void Master::ProcessIIN(const IINField& arIIN)
 {
 	bool check_state = false;
 
@@ -99,7 +99,7 @@ void AsyncMaster::ProcessIIN(const IINField& arIIN)
 	if(check_state) mpTaskGroup->CheckState();
 }
 
-void AsyncMaster::ProcessCommand(ITask* apTask)
+void Master::ProcessCommand(ITask* apTask)
 {
 	CommandData info;
 
@@ -133,7 +133,7 @@ void AsyncMaster::ProcessCommand(ITask* apTask)
 	}
 }
 
-void AsyncMaster::StartTask(MasterTaskBase* apMasterTask, bool aInit)
+void Master::StartTask(MasterTaskBase* apMasterTask, bool aInit)
 {
 	if(aInit) apMasterTask->Init();
 	apMasterTask->ConfigureRequest(mRequest);
@@ -142,7 +142,7 @@ void AsyncMaster::StartTask(MasterTaskBase* apMasterTask, bool aInit)
 
 /* Tasks */
 
-void AsyncMaster::SyncTime(ITask* apTask)
+void Master::SyncTime(ITask* apTask)
 {
 	if(mLastIIN.GetNeedTime())
 	{
@@ -151,7 +151,7 @@ void AsyncMaster::SyncTime(ITask* apTask)
 	else apTask->Disable();
 }
 
-void AsyncMaster::WriteIIN(ITask* apTask)
+void Master::WriteIIN(ITask* apTask)
 {
 	if(mLastIIN.GetDeviceRestart()) 
 	{
@@ -160,19 +160,19 @@ void AsyncMaster::WriteIIN(ITask* apTask)
 	else apTask->Disable();
 }
 
-void AsyncMaster::IntegrityPoll(ITask* apTask)
+void Master::IntegrityPoll(ITask* apTask)
 {
 	mClassPoll.Set(PC_CLASS_0);
 	mpState->StartTask(this, apTask, &mClassPoll);
 }
 
-void AsyncMaster::EventPoll(ITask* apTask, int aClassMask)
+void Master::EventPoll(ITask* apTask, int aClassMask)
 {
 	mClassPoll.Set(aClassMask);
 	mpState->StartTask(this, apTask, &mClassPoll);
 }
 
-void AsyncMaster::ChangeUnsol(ITask* apTask, bool aEnable, int aClassMask)
+void Master::ChangeUnsol(ITask* apTask, bool aEnable, int aClassMask)
 {
 	mConfigureUnsol.Set(aEnable, aClassMask);
 	mpState->StartTask(this, apTask, &mConfigureUnsol);
@@ -180,48 +180,48 @@ void AsyncMaster::ChangeUnsol(ITask* apTask, bool aEnable, int aClassMask)
 
 /* Implement IAppUser */
 
-void AsyncMaster::OnLowerLayerUp()
+void Master::OnLowerLayerUp()
 {
 	mpState->OnLowerLayerUp(this);
 	mSchedule.EnableOnlineTasks();
 }
 
-void AsyncMaster::OnLowerLayerDown()
+void Master::OnLowerLayerDown()
 {
 	mpState->OnLowerLayerDown(this);
 	mSchedule.DisableOnlineTasks();
 	this->UpdateState(MS_COMMS_DOWN);
 }
 
-void AsyncMaster::OnSolSendSuccess()
+void Master::OnSolSendSuccess()
 {
 	mpState->OnSendSuccess(this);
 }
 
-void AsyncMaster::OnSolFailure()
+void Master::OnSolFailure()
 {
 	this->UpdateState(MS_COMMS_DOWN);
 	mpState->OnFailure(this);
 }
 
-void AsyncMaster::OnUnsolSendSuccess()
+void Master::OnUnsolSendSuccess()
 {
 	throw InvalidStateException(LOCATION, "Master can't send unsol");
 }
 
-void AsyncMaster::OnUnsolFailure()
+void Master::OnUnsolFailure()
 {
 	throw InvalidStateException(LOCATION, "Master can't send unsol");
 }
 
-void AsyncMaster::OnPartialResponse(const APDU& arAPDU)
+void Master::OnPartialResponse(const APDU& arAPDU)
 {	
 	mLastIIN = arAPDU.GetIIN();
 	this->ProcessIIN(mLastIIN);
 	mpState->OnPartialResponse(this, arAPDU);	
 }
 
-void AsyncMaster::OnFinalResponse(const APDU& arAPDU)
+void Master::OnFinalResponse(const APDU& arAPDU)
 {
 	this->UpdateState(MS_COMMS_UP);
 	mLastIIN = arAPDU.GetIIN();
@@ -229,7 +229,7 @@ void AsyncMaster::OnFinalResponse(const APDU& arAPDU)
 	mpState->OnFinalResponse(this, arAPDU);	
 }
 
-void AsyncMaster::OnUnsolResponse(const APDU& arAPDU)
+void Master::OnUnsolResponse(const APDU& arAPDU)
 {	
 	mLastIIN = arAPDU.GetIIN();
 	this->ProcessIIN(mLastIIN);
@@ -238,7 +238,7 @@ void AsyncMaster::OnUnsolResponse(const APDU& arAPDU)
 
 /* Private functions */
 
-void AsyncMaster::ProcessDataResponse(const APDU& arResponse)
+void Master::ProcessDataResponse(const APDU& arResponse)
 {
 	try {
 		ResponseLoader loader(mpLogger, mpPublisher);

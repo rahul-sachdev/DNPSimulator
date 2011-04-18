@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "AsyncDatabase.h"
+#include "Database.h"
 
 #include <assert.h>
 #include <iostream>
@@ -29,20 +29,20 @@
 
 namespace apl { namespace dnp {
 
-	AsyncDatabase::AsyncDatabase(Logger* apLogger) :
+	Database::Database(Logger* apLogger) :
 	Loggable(apLogger),
 	mpEventBuffer(NULL)
 	{
 	
 	}
 
-	AsyncDatabase::~AsyncDatabase(){}
+	Database::~Database(){}
 
 	//////////////////////////////////////////////////////////////////////////////
 	// Public functions
 	//////////////////////////////////////////////////////////////////////////////
 
-	void AsyncDatabase::Configure(DataTypes aType, size_t aNumPoints, bool aStartOnline)
+	void Database::Configure(DataTypes aType, size_t aNumPoints, bool aStartOnline)
 	{
 		switch(aType)
 		{
@@ -79,7 +79,7 @@ namespace apl { namespace dnp {
 		}
 	}
 
-	void AsyncDatabase::Configure(const DeviceTemplate& arTmp)
+	void Database::Configure(const DeviceTemplate& arTmp)
 	{
 		size_t numBinary = arTmp.mBinary.size();
 		size_t numAnalog = arTmp.mAnalog.size();
@@ -113,7 +113,7 @@ namespace apl { namespace dnp {
 		{ this->SetClass(DT_SETPOINT_STATUS, i, arTmp.mSetpointStatus[i].EventClass); }*/
 	}
 
-	void AsyncDatabase::SetClass(DataTypes aType, PointClass aClass)
+	void Database::SetClass(DataTypes aType, PointClass aClass)
 	{
 		switch(aType)
 		{
@@ -138,7 +138,7 @@ namespace apl { namespace dnp {
 		}	
 	}
 
-	void AsyncDatabase::SetClass(apl::DataTypes aType, size_t aIndex, PointClass aClass)
+	void Database::SetClass(apl::DataTypes aType, size_t aIndex, PointClass aClass)
 	{
 		switch(aType)
 		{
@@ -167,7 +167,7 @@ namespace apl { namespace dnp {
 		}
 	}
 
-	void AsyncDatabase::SetDeadband(apl::DataTypes aType, size_t aIndex, double aDeadband)
+	void Database::SetDeadband(apl::DataTypes aType, size_t aIndex, double aDeadband)
 	{
 		switch(aType)
 		{
@@ -184,7 +184,7 @@ namespace apl { namespace dnp {
 		}
 	}
 
-	void AsyncDatabase::SetEventBuffer(IAsyncEventBuffer* apEventBuffer)
+	void Database::SetEventBuffer(IEventBuffer* apEventBuffer)
 	{
 		assert(apEventBuffer != NULL);
 		assert(mpEventBuffer == NULL);
@@ -195,7 +195,7 @@ namespace apl { namespace dnp {
 	// IDataObserver interfae - Private NVII functions - 
 	//////////////////////////////////////////////////////////////////////////////
 
-	void AsyncDatabase::_Update(const apl::Binary& arPoint, size_t aIndex)
+	void Database::_Update(const apl::Binary& arPoint, size_t aIndex)
 	{
 		if(UpdateValue<apl::Binary>(mBinaryVec, arPoint, aIndex))
 		{
@@ -205,7 +205,7 @@ namespace apl { namespace dnp {
 		}
 	}
 
-	void AsyncDatabase::_Update(const apl::Analog& arPoint, size_t aIndex)
+	void Database::_Update(const apl::Analog& arPoint, size_t aIndex)
 	{
 		if(UpdateValue<apl::Analog>(mAnalogVec, arPoint, aIndex))
 		{
@@ -216,7 +216,7 @@ namespace apl { namespace dnp {
 		}
 	}
 	
-	void AsyncDatabase::_Update(const apl::Counter& arPoint, size_t aIndex)
+	void Database::_Update(const apl::Counter& arPoint, size_t aIndex)
 	{
 		if(UpdateValue<apl::Counter>(mCounterVec, arPoint, aIndex))
 		{
@@ -227,12 +227,12 @@ namespace apl { namespace dnp {
 		}
 	}
 
-	void AsyncDatabase::_Update(const apl::ControlStatus& arPoint, size_t aIndex)
+	void Database::_Update(const apl::ControlStatus& arPoint, size_t aIndex)
 	{
 		UpdateValue<apl::ControlStatus>(mControlStatusVec, arPoint, aIndex); 
 	}
 
-	void AsyncDatabase::_Update(const apl::SetpointStatus& arPoint, size_t aIndex)
+	void Database::_Update(const apl::SetpointStatus& arPoint, size_t aIndex)
 	{
 		UpdateValue<apl::SetpointStatus>(mSetpointStatusVec, arPoint, aIndex); 
 	}
@@ -241,14 +241,14 @@ namespace apl { namespace dnp {
 	// misc public functions
 	//////////////////////////////////////////////////////////////////////////////
 
-	size_t AsyncDatabase::MaxIndex(DataTypes aType)
+	size_t Database::MaxIndex(DataTypes aType)
 	{
 		size_t num = NumType(aType);
 		if(num == 0) throw ArgumentException(LOCATION, "No points for datatype");
 		else return (num-1);
 	}
 
-	size_t AsyncDatabase::NumType(DataTypes aType)
+	size_t Database::NumType(DataTypes aType)
 	{
 		switch(aType)
 		{

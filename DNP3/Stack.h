@@ -16,11 +16,11 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_STACK_H_
-#define __ASYNC_STACK_H_
+#ifndef __STACK_H_
+#define __STACK_H_
 
 #include "LinkLayer.h"
-#include "AsyncTransportLayer.h"
+#include "TransportLayer.h"
 #include "AppLayer.h"
 
 namespace apl {
@@ -37,7 +37,7 @@ class AsyncStack
 	virtual ~AsyncStack() {}
 
 	LinkLayer mLink;
-	AsyncTransportLayer mTransport;
+	TransportLayer mTransport;
 	AppLayer mApplication;
 };
 

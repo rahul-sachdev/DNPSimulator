@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "AsyncMasterStates.h"
+#include "MasterStates.h"
 
 #include <APL/Configure.h>
 #include <APL/Exception.h>
@@ -24,7 +24,7 @@
 #include <APL/AsyncTaskInterfaces.h>
 #include <APL/AsyncTaskGroup.h>
 
-#include "AsyncMaster.h"
+#include "Master.h"
 #include <boost/bind.hpp>
 
 
@@ -32,37 +32,37 @@ namespace apl { namespace dnp {
 
 /* AMS_Base */
 
-void AMS_Base::StartTask(AsyncMaster*, ITask*, MasterTaskBase*)
+void AMS_Base::StartTask(Master*, ITask*, MasterTaskBase*)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void AMS_Base::OnLowerLayerUp(AsyncMaster*)
+void AMS_Base::OnLowerLayerUp(Master*)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void AMS_Base::OnLowerLayerDown(AsyncMaster*)
+void AMS_Base::OnLowerLayerDown(Master*)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void AMS_Base::OnSendSuccess(AsyncMaster*)
+void AMS_Base::OnSendSuccess(Master*)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void AMS_Base::OnFailure(AsyncMaster*)
+void AMS_Base::OnFailure(Master*)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void AMS_Base::OnPartialResponse(AsyncMaster*, const APDU&)
+void AMS_Base::OnPartialResponse(Master*, const APDU&)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void AMS_Base::OnFinalResponse(AsyncMaster*, const APDU&)
+void AMS_Base::OnFinalResponse(Master*, const APDU&)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void AMS_Base::OnUnsolResponse(AsyncMaster*, const APDU&)
+void AMS_Base::OnUnsolResponse(Master*, const APDU&)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
 
-void AMS_Base::ChangeState(AsyncMaster* c, AMS_Base* apState)
+void AMS_Base::ChangeState(Master* c, AMS_Base* apState)
 {
 	c->mpState = apState;
 }
 
-void AMS_Base::ChangeTask(AsyncMaster* c, MasterTaskBase* apTask)
+void AMS_Base::ChangeTask(Master* c, MasterTaskBase* apTask)
 {
 	c->mpTask = apTask;
 }
@@ -71,19 +71,19 @@ void AMS_Base::ChangeTask(AsyncMaster* c, MasterTaskBase* apTask)
 
 AMS_Closed AMS_Closed::mInstance;
 
-void AMS_Closed::OnLowerLayerUp(AsyncMaster* c)
+void AMS_Closed::OnLowerLayerUp(Master* c)
 {
 	ChangeState(c, AMS_Idle::Inst());
 }
 
 /* AMS_OpenBase */
 
-void AMS_OpenBase::OnUnsolResponse(AsyncMaster* c, const APDU& arAPDU)
+void AMS_OpenBase::OnUnsolResponse(Master* c, const APDU& arAPDU)
 {
 	c->ProcessDataResponse(arAPDU);
 }
 
-void AMS_OpenBase::OnLowerLayerDown(AsyncMaster* c)
+void AMS_OpenBase::OnLowerLayerDown(Master* c)
 {
 	ChangeState(c, AMS_Closed::Inst());
 }
@@ -92,7 +92,7 @@ void AMS_OpenBase::OnLowerLayerDown(AsyncMaster* c)
 
 AMS_Idle AMS_Idle::mInstance;
 
-void AMS_Idle::StartTask(AsyncMaster* c, ITask* apScheTask, MasterTaskBase* apMasterTask)
+void AMS_Idle::StartTask(Master* c, ITask* apScheTask, MasterTaskBase* apMasterTask)
 {
 	this->ChangeState(c, AMS_Waiting::Inst());
 	this->ChangeTask(c, apMasterTask);
@@ -105,20 +105,20 @@ void AMS_Idle::StartTask(AsyncMaster* c, ITask* apScheTask, MasterTaskBase* apMa
 
 AMS_Waiting AMS_Waiting::mInstance;
 
-void AMS_Waiting::OnLowerLayerDown(AsyncMaster* c)
+void AMS_Waiting::OnLowerLayerDown(Master* c)
 {
 	ChangeState(c, AMS_Closed::Inst());
 	c->mpTask->OnFailure();
 }
 
-void AMS_Waiting::OnFailure(AsyncMaster* c)
+void AMS_Waiting::OnFailure(Master* c)
 {	
 	this->ChangeState(c, AMS_Idle::Inst());
 	c->mpTask->OnFailure();
 	c->mpScheduledTask->OnComplete(false);	
 }
 
-void AMS_Waiting::OnPartialResponse(AsyncMaster* c, const APDU& arAPDU)
+void AMS_Waiting::OnPartialResponse(Master* c, const APDU& arAPDU)
 {
 	switch(c->mpTask->OnPartialResponse(arAPDU)) {		
 		case(TR_FAIL):
@@ -133,7 +133,7 @@ void AMS_Waiting::OnPartialResponse(AsyncMaster* c, const APDU& arAPDU)
 	}
 }
 
-void AMS_Waiting::OnFinalResponse(AsyncMaster* c, const APDU& arAPDU)
+void AMS_Waiting::OnFinalResponse(Master* c, const APDU& arAPDU)
 {
 	switch(c->mpTask->OnFinalResponse(arAPDU)) {		
 		case(TR_FAIL):

@@ -29,7 +29,7 @@ namespace apl {
 
 namespace apl { namespace dnp {
 
-class AsyncMaster;
+class Master;
 
 /// Create all the tasks required for the master from the
 /// TaskGroup. Defines the types and the dependencies between them.
@@ -51,7 +51,7 @@ class MasterSchedule
 	void ResetStartupTasks();
 
 	/// Returns a configured MasterSchedule
-	static MasterSchedule GetSchedule(MasterConfig aCfg, AsyncMaster*, AsyncTaskGroup*);
+	static MasterSchedule GetSchedule(MasterConfig aCfg, Master*, AsyncTaskGroup*);
 
 	private:
 
@@ -59,7 +59,7 @@ class MasterSchedule
 	
 	AsyncTaskGroup* mpGroup;
 
-	enum AsyncMasterPriority
+	enum MasterPriority
 	{
 		AMP_POLL,
 		AMP_TIME_SYNC,

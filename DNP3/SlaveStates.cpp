@@ -16,9 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "AsyncSlaveStates.h"
+#include "SlaveStates.h"
 
-#include "AsyncSlave.h"
+#include "Slave.h"
 #include "DNPExceptions.h"
 
 #include <APL/AsyncTaskContinuous.h>
@@ -29,45 +29,45 @@
 
 namespace apl { namespace dnp {
 
-void AS_Base::OnLowerLayerUp(AsyncSlave*)
+void AS_Base::OnLowerLayerUp(Slave*)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void AS_Base::OnLowerLayerDown(AsyncSlave*)
+void AS_Base::OnLowerLayerDown(Slave*)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void AS_Base::OnSolSendSuccess(AsyncSlave*)
+void AS_Base::OnSolSendSuccess(Slave*)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void AS_Base::OnSolFailure(AsyncSlave*)
+void AS_Base::OnSolFailure(Slave*)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void AS_Base::OnUnsolSendSuccess(AsyncSlave*)
+void AS_Base::OnUnsolSendSuccess(Slave*)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void AS_Base::OnUnsolFailure(AsyncSlave*)
+void AS_Base::OnUnsolFailure(Slave*)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void AS_Base::OnRequest(AsyncSlave*, const APDU&, SequenceInfo)
+void AS_Base::OnRequest(Slave*, const APDU&, SequenceInfo)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void AS_Base::OnUnknown(AsyncSlave* c)
+void AS_Base::OnUnknown(Slave* c)
 { 
 	c->mDeferredUnknown = true;
 }
 
 /// by default, the data update event is Deferred until we enter a state that can handle it
-void AS_Base::OnDataUpdate(AsyncSlave* c)
+void AS_Base::OnDataUpdate(Slave* c)
 {
 	c->mDeferredUpdate = true;
 }
 
 /// by default, the unsol timer expiration is deferd until it can be handled
-void AS_Base::OnUnsolExpiration(AsyncSlave* c)
+void AS_Base::OnUnsolExpiration(Slave* c)
 {
 	c->mDeferredUnsol = true;
 }
 
-void AS_Base::SwitchOnFunction(AsyncSlave* c, AS_Base* apNext, const APDU& arRequest, SequenceInfo aSeqInfo)
+void AS_Base::SwitchOnFunction(Slave* c, AS_Base* apNext, const APDU& arRequest, SequenceInfo aSeqInfo)
 {	
 	switch(arRequest.GetFunction())
 	{
@@ -127,7 +127,7 @@ void AS_Base::SwitchOnFunction(AsyncSlave* c, AS_Base* apNext, const APDU& arReq
 	}
 }
 
-void AS_Base::DoRequest(AsyncSlave* c, AS_Base* apNext, const APDU& arAPDU, SequenceInfo aSeqInfo)
+void AS_Base::DoRequest(Slave* c, AS_Base* apNext, const APDU& arAPDU, SequenceInfo aSeqInfo)
 {
 	c->mRspIIN.Zero();
 
@@ -156,7 +156,7 @@ void AS_Base::DoRequest(AsyncSlave* c, AS_Base* apNext, const APDU& arAPDU, Sequ
 
 // Work functions
 
-void AS_Base::ChangeState(AsyncSlave* c, AS_Base* apState)
+void AS_Base::ChangeState(Slave* c, AS_Base* apState)
 {
 	if(apState == AS_Closed::Inst()) {
 		if(c->mpTimeTimer) {
@@ -168,7 +168,7 @@ void AS_Base::ChangeState(AsyncSlave* c, AS_Base* apState)
 	c->mpState = apState;
 }
 
-void AS_Base::DoUnsolSuccess(AsyncSlave* c)
+void AS_Base::DoUnsolSuccess(Slave* c)
 {
 	if(!c->mStartupNullUnsol) c->mStartupNullUnsol = true; //it was a null unsol packet
 	c->mRspContext.ClearAndReset();
@@ -182,7 +182,7 @@ void AS_Base::DoUnsolSuccess(AsyncSlave* c)
 
 AS_Closed AS_Closed::mInstance;
 
-void AS_Closed::OnLowerLayerUp(AsyncSlave* c)
+void AS_Closed::OnLowerLayerUp(Slave* c)
 {
 	// this is implemented as a simple timer because it can run if the slave is connected/disconnected etc
 	if(c->mConfig.mAllowTimeSync) c->ResetTimeIIN();
@@ -190,14 +190,14 @@ void AS_Closed::OnLowerLayerUp(AsyncSlave* c)
 	ChangeState(c, AS_Idle::Inst());
 }
 
-void AS_Closed::OnDataUpdate(AsyncSlave* c)
+void AS_Closed::OnDataUpdate(Slave* c)
 {
 	c->FlushUpdates();
 }
 
 /* AS_OpenBase */
 
-void AS_OpenBase::OnLowerLayerDown(AsyncSlave* c)
+void AS_OpenBase::OnLowerLayerDown(Slave* c)
 {
 	ChangeState(c, AS_Closed::Inst());
 }
@@ -206,12 +206,12 @@ void AS_OpenBase::OnLowerLayerDown(AsyncSlave* c)
 
 AS_Idle AS_Idle::mInstance;
 
-void AS_Idle::OnRequest(AsyncSlave* c, const APDU& arAPDU, SequenceInfo aSeqInfo)
+void AS_Idle::OnRequest(Slave* c, const APDU& arAPDU, SequenceInfo aSeqInfo)
 {
 	this->DoRequest(c, AS_WaitForRspSuccess::Inst(), arAPDU, aSeqInfo);
 }
 
-void AS_Idle::OnDataUpdate(AsyncSlave* c)
+void AS_Idle::OnDataUpdate(Slave* c)
 {
 	c->FlushUpdates();
 
@@ -229,7 +229,7 @@ void AS_Idle::OnDataUpdate(AsyncSlave* c)
 	}
 }
 
-void AS_Idle::OnUnsolExpiration(AsyncSlave* c)
+void AS_Idle::OnUnsolExpiration(Slave* c)
 {
 	if(c->mStartupNullUnsol) { 
 		if(c->mRspContext.HasEvents(c->mConfig.mUnsolMask)) {
@@ -245,7 +245,7 @@ void AS_Idle::OnUnsolExpiration(AsyncSlave* c)
 	}
 }
 
-void AS_Idle::OnUnknown(AsyncSlave* c)
+void AS_Idle::OnUnknown(Slave* c)
 {
 	c->HandleUnknown();
 	ChangeState(c, AS_WaitForRspSuccess::Inst());
@@ -256,13 +256,13 @@ void AS_Idle::OnUnknown(AsyncSlave* c)
 
 AS_WaitForRspSuccess AS_WaitForRspSuccess::mInstance;
 
-void AS_WaitForRspSuccess::OnSolFailure(AsyncSlave* c)
+void AS_WaitForRspSuccess::OnSolFailure(Slave* c)
 {
 	ChangeState(c, AS_Idle::Inst());
 	c->mRspContext.Reset();	
 }
 
-void AS_WaitForRspSuccess::OnSolSendSuccess(AsyncSlave* c)
+void AS_WaitForRspSuccess::OnSolSendSuccess(Slave* c)
 {
 	c->mRspContext.ClearWritten();
 	
@@ -279,7 +279,7 @@ void AS_WaitForRspSuccess::OnSolSendSuccess(AsyncSlave* c)
 /// immediately handle the new request. We implement this behavior asynchronously, by
 /// canceling the response transaction, and waiting for an OnFailure callback.
 /// The callback may still succeed if 
-void AS_WaitForRspSuccess::OnRequest(AsyncSlave* c, const APDU& arAPDU, SequenceInfo aSeqInfo)
+void AS_WaitForRspSuccess::OnRequest(Slave* c, const APDU& arAPDU, SequenceInfo aSeqInfo)
 {
 	c->mpAppLayer->CancelResponse();
 	c->mRequest = arAPDU;
@@ -291,7 +291,7 @@ void AS_WaitForRspSuccess::OnRequest(AsyncSlave* c, const APDU& arAPDU, Sequence
 
 AS_WaitForUnsolSuccess AS_WaitForUnsolSuccess::mInstance;
 
-void AS_WaitForUnsolSuccess::OnUnsolFailure(AsyncSlave* c)
+void AS_WaitForUnsolSuccess::OnUnsolFailure(Slave* c)
 {
 	// if any unsol transaction fails, we re-enable the timer with the unsol retry delay
 	ChangeState(c, AS_Idle::Inst());
@@ -299,13 +299,13 @@ void AS_WaitForUnsolSuccess::OnUnsolFailure(AsyncSlave* c)
 	c->StartUnsolTimer(c->mConfig.mUnsolRetryDelay);
 }
 
-void AS_WaitForUnsolSuccess::OnUnsolSendSuccess(AsyncSlave* c)
+void AS_WaitForUnsolSuccess::OnUnsolSendSuccess(Slave* c)
 {
 	ChangeState(c, AS_Idle::Inst());	// transition to the idle state
 	this->DoUnsolSuccess(c);	
 }
 
-void AS_WaitForUnsolSuccess::OnRequest(AsyncSlave* c, const APDU& arAPDU, SequenceInfo aSeqInfo)
+void AS_WaitForUnsolSuccess::OnRequest(Slave* c, const APDU& arAPDU, SequenceInfo aSeqInfo)
 {
 	if(arAPDU.GetFunction() == FC_READ) { //read requests should be defered until after the unsol
 		c->mRequest = arAPDU;
@@ -322,7 +322,7 @@ void AS_WaitForUnsolSuccess::OnRequest(AsyncSlave* c, const APDU& arAPDU, Sequen
 
 AS_WaitForSolUnsolSuccess AS_WaitForSolUnsolSuccess::mInstance;
 
-void AS_WaitForSolUnsolSuccess::OnRequest(AsyncSlave* c, const APDU& arAPDU, SequenceInfo aSeqInfo)
+void AS_WaitForSolUnsolSuccess::OnRequest(Slave* c, const APDU& arAPDU, SequenceInfo aSeqInfo)
 {
 	// Both channels are busy... buffer the request
 	c->mRequest = arAPDU;
@@ -330,17 +330,17 @@ void AS_WaitForSolUnsolSuccess::OnRequest(AsyncSlave* c, const APDU& arAPDU, Seq
 	c->mDeferredRequest = true;
 }
 
-void AS_WaitForSolUnsolSuccess::OnSolFailure(AsyncSlave* c)
+void AS_WaitForSolUnsolSuccess::OnSolFailure(Slave* c)
 {
 	ChangeState(c, AS_WaitForUnsolSuccess::Inst());
 }
 
-void AS_WaitForSolUnsolSuccess::OnSolSendSuccess(AsyncSlave* c)
+void AS_WaitForSolUnsolSuccess::OnSolSendSuccess(Slave* c)
 {
 	ChangeState(c, AS_WaitForUnsolSuccess::Inst());
 }
 
-void AS_WaitForSolUnsolSuccess::OnUnsolFailure(AsyncSlave* c)
+void AS_WaitForSolUnsolSuccess::OnUnsolFailure(Slave* c)
 {
 	ChangeState(c, AS_WaitForRspSuccess::Inst());
 	c->mRspContext.Reset();
@@ -350,7 +350,7 @@ void AS_WaitForSolUnsolSuccess::OnUnsolFailure(AsyncSlave* c)
 		c->OnUnsolTimerExpiration();
 }
 
-void AS_WaitForSolUnsolSuccess::OnUnsolSendSuccess(AsyncSlave* c)
+void AS_WaitForSolUnsolSuccess::OnUnsolSendSuccess(Slave* c)
 {
 	ChangeState(c, AS_WaitForRspSuccess::Inst());
 	this->DoUnsolSuccess(c);

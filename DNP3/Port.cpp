@@ -16,9 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "AsyncPort.h"
+#include "Port.h"
 
-#include "AsyncStack.h"
+#include "Stack.h"
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
@@ -28,7 +28,7 @@
 
 namespace apl { namespace dnp {
 
-AsyncPort::AsyncPort(const std::string& arName, Logger* apLogger, AsyncTaskGroup* apGroup, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, millis_t aOpenDelay, IPhysMonitor* apObserver) :
+Port::Port(const std::string& arName, Logger* apLogger, AsyncTaskGroup* apGroup, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, millis_t aOpenDelay, IPhysMonitor* apObserver) :
 Loggable(apLogger->GetSubLogger("port")),
 mName(arName),
 mRouter(apLogger, apPhys, apTimerSrc, aOpenDelay),
@@ -41,7 +41,7 @@ mRelease(false)
 }
 
 //ports own their physical layers
-AsyncPort::~AsyncPort()
+Port::~Port()
 {
 	delete mpPhys;
 	delete mpGroup;
@@ -49,7 +49,7 @@ AsyncPort::~AsyncPort()
 }
 
 //Once we're sure the router is done with 
-void AsyncPort::Release() //do nothing right now
+void Port::Release() //do nothing right now
 {
 	if(mRouter.IsRunning()) mRelease = true;
 	else { 
@@ -57,7 +57,7 @@ void AsyncPort::Release() //do nothing right now
 	}
 }
 
-void AsyncPort::OnStateChange(IPhysMonitor::State aState)
+void Port::OnStateChange(IPhysMonitor::State aState)
 {
 	if(mpObserver != NULL) mpObserver->OnStateChange(aState);
 
@@ -65,7 +65,7 @@ void AsyncPort::OnStateChange(IPhysMonitor::State aState)
 	if((aState == IPhysMonitor::Stopped) && mRelease) delete this;
 }
 
-void AsyncPort::Associate(const std::string& arStackName, AsyncStack* apStack, uint_16_t aLocalAddress)
+void Port::Associate(const std::string& arStackName, AsyncStack* apStack, uint_16_t aLocalAddress)
 {
 	LOG_BLOCK(LEV_DEBUG, "Linking stack to port: " << aLocalAddress);	
 	mStackMap[arStackName] = StackRecord(apStack, aLocalAddress);	
@@ -77,7 +77,7 @@ void AsyncPort::Associate(const std::string& arStackName, AsyncStack* apStack, u
 	}
 }
 
-void AsyncPort::Disassociate(const std::string& arStackName)
+void Port::Disassociate(const std::string& arStackName)
 {	
 	StackMap::iterator i = mStackMap.find(arStackName);	
 	StackRecord r = i->second;

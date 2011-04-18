@@ -16,13 +16,13 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "AsyncMasterStack.h"
+#include "MasterStack.h"
 
 #include <APL/Logger.h>
 
 namespace apl { namespace dnp {
 
-AsyncMasterStack::AsyncMasterStack(
+MasterStack::MasterStack(
 
 Logger* apLogger, 
 ITimerSource* apTimerSrc,

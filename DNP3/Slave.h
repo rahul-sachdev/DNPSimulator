@@ -16,8 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_SLAVE_H_
-#define __ASYNC_SLAVE_H_
+#ifndef __SLAVE_H_
+#define __SLAVE_H_
 
 #include <APL/Loggable.h>
 #include <APL/Logger.h>
@@ -30,8 +30,8 @@
 
 #include "AppInterfaces.h"
 #include "APDU.h"
-#include "AsyncResponseContext.h"
-#include "AsyncSlaveEventBuffer.h"
+#include "ResponseContext.h"
+#include "SlaveEventBuffer.h"
 #include "SlaveConfig.h"
 #include "SlaveResponseTypes.h"
 #include "ObjectReadIterator.h"
@@ -50,17 +50,17 @@ class AS_Base;
 
 	Manages a state machine that handles events from the user layer and the application layer to provide DNP outstation services.
 
-	ResponseContext and AsyncSlaveEventBuffer objects manage data/event responses to master requests, and the IDNPCommandMaster
+	ResponseContext and SlaveEventBuffer objects manage data/event responses to master requests, and the IDNPCommandMaster
 	implementation verifies control/setpoint behavior and passes valid commands to the user code.
 
-	SlaveConfig structure represents the slave behavioral configuration, the AsyncDatabase is in charge of the data model itself.
+	SlaveConfig structure represents the slave behavioral configuration, the Database is in charge of the data model itself.
 
 	Global IIN state is maintained and combined with request-specific information to form response IINs.
 
-	The AsyncSlave is responsible for building all aspects of APDU packet responses except for the application sequence number.
+	The Slave is responsible for building all aspects of APDU packet responses except for the application sequence number.
 
 */
-class AsyncSlave : public Loggable, public IAppUser
+class Slave : public Loggable, public IAppUser
 {
 	
 	enum CommsStatus
@@ -79,8 +79,8 @@ class AsyncSlave : public Loggable, public IAppUser
 
 	public:
 
-	AsyncSlave(Logger*, IAppLayer*, ITimerSource*, ITimeManager* apTime, AsyncDatabase*, IDNPCommandMaster*, const SlaveConfig& arCfg);
-	virtual ~AsyncSlave() {}
+	Slave(Logger*, IAppLayer*, ITimerSource*, ITimeManager* apTime, Database*, IDNPCommandMaster*, const SlaveConfig& arCfg);
+	virtual ~Slave() {}
 
 
 	///////////////////////////////////
@@ -115,7 +115,7 @@ class AsyncSlave : public Loggable, public IAppUser
 	PostingNotifierSource mNotifierSource;	/// way to get special notifiers for the change queue / vto
 	IAppLayer* mpAppLayer;					/// lower application layer
 	ITimerSource* mpTimerSrc;				/// used for post and timers
-	AsyncDatabase* mpDatabase;				/// holds static data
+	Database* mpDatabase;				/// holds static data
 	IDNPCommandMaster* mpCmdMaster;			/// how commands are selected/operated
 	int mSequence;							/// control sequence
 	CommandResponseQueue mRspQueue;			/// how command responses are received
@@ -131,7 +131,7 @@ class AsyncSlave : public Loggable, public IAppUser
 	APDU mRequest;							/// APDU used to save Deferred requests
 	SequenceInfo mSeqInfo;
 	APDU mUnsol;							/// APDY used to form unsol respones
-	AsyncResponseContext mRspContext;		/// Used to track and construct response fragments
+	ResponseContext mRspContext;		/// Used to track and construct response fragments
 
 	bool mHaveLastRequest;
 	APDU mLastRequest;						/// APDU used to form responses
@@ -206,7 +206,7 @@ class AsyncSlave : public Loggable, public IAppUser
 };
 
 template<class T>
-void AsyncSlave::RespondToCommands(const StreamObject<T>* apObj, ObjectReadIterator& arIter, typename CommandFunc<T>::Type arFunc)
+void Slave::RespondToCommands(const StreamObject<T>* apObj, ObjectReadIterator& arIter, typename CommandFunc<T>::Type arFunc)
 {
 	IndexedWriteIterator i = mResponse.WriteIndexed(apObj, arIter.Count(), arIter.Header().GetQualifier());
 	size_t count = 1;
@@ -227,7 +227,7 @@ void AsyncSlave::RespondToCommands(const StreamObject<T>* apObj, ObjectReadItera
 }
 
 template <class T>
-CommandStatus AsyncSlave::Select(T& arCmd, size_t aIndex, const HeaderInfo& aHdr, SequenceInfo aSeqInfo, int aAPDUSequence)
+CommandStatus Slave::Select(T& arCmd, size_t aIndex, const HeaderInfo& aHdr, SequenceInfo aSeqInfo, int aAPDUSequence)
 {
 	CommandStatus res = mpCmdMaster->Select(CommandRequestInfo<T>(arCmd, aHdr.GetObjectType(), aHdr.GetVariation(), aHdr.GetQualifier(), aSeqInfo, aAPDUSequence), aIndex) ? CS_SUCCESS : CS_NOT_SUPPORTED;
 	LOG_BLOCK(LEV_INFO, "Selecting " << arCmd.ToString() << " Index: " << aIndex << " Result: " << ToString(res));
@@ -239,7 +239,7 @@ CommandStatus AsyncSlave::Select(T& arCmd, size_t aIndex, const HeaderInfo& aHdr
 }
 
 template <class T>
-CommandStatus AsyncSlave::Operate(T& arCmd, size_t aIndex, bool aDirect, const HeaderInfo& aHdr, SequenceInfo aSeqInfo, int aAPDUSequence)
+CommandStatus Slave::Operate(T& arCmd, size_t aIndex, bool aDirect, const HeaderInfo& aHdr, SequenceInfo aSeqInfo, int aAPDUSequence)
 {
 	++mSequence;
 	CommandStatus res;

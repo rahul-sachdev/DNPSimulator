@@ -19,7 +19,7 @@
 #include "TransportTx.h"
 
 
-#include "AsyncTransportLayer.h"
+#include "TransportLayer.h"
 #include <APL/Exception.h>
 #include <APL/Logger.h>
 
@@ -31,7 +31,7 @@ using namespace std;
 
 namespace apl { namespace dnp {
 
-TransportTx::TransportTx(Logger* apLogger, AsyncTransportLayer* apContext, size_t aFragSize) : 
+TransportTx::TransportTx(Logger* apLogger, TransportLayer* apContext, size_t aFragSize) : 
 Loggable(apLogger),
 mpContext(apContext),
 mBufferAPDU(aFragSize),
@@ -67,7 +67,7 @@ bool TransportTx::CheckForSend()
 		bool fin = (mNumBytesSent == mNumBytesToSend);
 		
 		mBufferTPDU[0] = GetHeader(fir, fin, mSeq);
-		LOG_BLOCK(LEV_INTERPRET, "-> " << AsyncTransportLayer::ToString(mBufferTPDU[0]));
+		LOG_BLOCK(LEV_INTERPRET, "-> " << TransportLayer::ToString(mBufferTPDU[0]));
 		mpContext->TransmitTPDU(mBufferTPDU, num_to_send + 1);
 		return false;
 	}

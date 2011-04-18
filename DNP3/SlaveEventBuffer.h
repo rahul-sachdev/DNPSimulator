@@ -16,13 +16,13 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_SLAVE_EVENT_BUFFER_H_
-#define __ASYNC_SLAVE_EVENT_BUFFER_H_
+#ifndef __SLAVE_EVENT_BUFFER_H_
+#define __SLAVE_EVENT_BUFFER_H_
 
 #include <APL/DataTypes.h>
-#include "AsyncEventBuffers.h"
+#include "EventBuffers.h"
 #include "DNPDatabaseTypes.h"
-#include "AsyncDatabaseInterfaces.h"
+#include "DatabaseInterfaces.h"
 
 namespace apl { namespace dnp {
 
@@ -33,10 +33,10 @@ namespace apl { namespace dnp {
 
 	All selections can be limited by a desired event count.
 	*/
-class AsyncSlaveEventBuffer : public IAsyncEventBuffer
+class SlaveEventBuffer : public IEventBuffer
 {
 	public:
-		AsyncSlaveEventBuffer(size_t aMaxBinary, size_t aMaxAnalog, size_t aMaxCounter);
+		SlaveEventBuffer(size_t aMaxBinary, size_t aMaxAnalog, size_t aMaxCounter);
 
 		void Update(const Binary& arEvent, PointClass aClass, size_t aIndex);
 		void Update(const Analog& arEvent, PointClass aClass, size_t aIndex);
@@ -64,9 +64,9 @@ class AsyncSlaveEventBuffer : public IAsyncEventBuffer
 
 	private:
 
-		AsyncTimeOrderedEventBuffer<BinaryEvent>		mBinaryEvents;	/// Multiple events for the same time, ordered by time of occurrence
-		AsyncSingleEventBuffer<AnalogEvent>				mAnalogEvents;	/// Single event per point, previous events overridden
-		AsyncSingleEventBuffer<CounterEvent>			mCounterEvents; /// Single event per point, previous events overridden
+		TimeOrderedEventBuffer<BinaryEvent>		mBinaryEvents;	/// Multiple events for the same time, ordered by time of occurrence
+		SingleEventBuffer<AnalogEvent>			mAnalogEvents;	/// Single event per point, previous events overridden
+		SingleEventBuffer<CounterEvent>			mCounterEvents; /// Single event per point, previous events overridden
 
 		bool mChange;
 };

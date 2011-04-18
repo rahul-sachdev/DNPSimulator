@@ -28,7 +28,7 @@
 
 namespace apl { namespace dnp {
 
-class AsyncTransportLayer;
+class TransportLayer;
 
 /**
 State/validation for the DNP3 transport layer's send channel.
@@ -36,7 +36,7 @@ State/validation for the DNP3 transport layer's send channel.
 class TransportTx : public Loggable
 {
 	public:
-		TransportTx(Logger*, AsyncTransportLayer*, size_t aFragSize);
+		TransportTx(Logger*, TransportLayer*, size_t aFragSize);
 
 
 		void Send(const apl::byte_t*, size_t); // A fresh call to Send() will reset the state
@@ -49,7 +49,7 @@ class TransportTx : public Loggable
 
 		bool CheckForSend();
 
-		AsyncTransportLayer* mpContext;
+		TransportLayer* mpContext;
 
 		CopyableBuffer mBufferAPDU;
 		CopyableBuffer mBufferTPDU;

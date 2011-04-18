@@ -264,58 +264,6 @@
 				Name="Slave"
 				>
 				<File
-					RelativePath=".\AsyncDatabase.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncDatabase.h"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncDatabaseInterfaces.h"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncEventBufferBase.h"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncEventBuffers.h"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncResponseContext.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncResponseContext.h"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncSlave.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncSlave.h"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncSlaveEventBuffer.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncSlaveEventBuffer.h"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncSlaveStates.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncSlaveStates.h"
-					>
-				</File>
-				<File
 					RelativePath=".\BufferSetTypes.h"
 					>
 				</File>
@@ -329,6 +277,18 @@
 				</File>
 				<File
 					RelativePath=".\ClassMask.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Database.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Database.h"
+					>
+				</File>
+				<File
+					RelativePath=".\DatabaseInterfaces.h"
 					>
 				</File>
 				<File
@@ -356,6 +316,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\EventBufferBase.h"
+					>
+				</File>
+				<File
+					RelativePath=".\EventBuffers.h"
+					>
+				</File>
+				<File
 					RelativePath=".\EventTypes.h"
 					>
 				</File>
@@ -368,11 +336,35 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ResponseContext.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ResponseContext.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Slave.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Slave.h"
+					>
+				</File>
+				<File
 					RelativePath=".\SlaveConfig.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\SlaveConfig.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SlaveEventBuffer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\SlaveEventBuffer.h"
 					>
 				</File>
 				<File
@@ -383,32 +375,40 @@
 					RelativePath=".\SlaveResponseTypes.h"
 					>
 				</File>
+				<File
+					RelativePath=".\SlaveStates.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\SlaveStates.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Stack"
 				>
 				<File
-					RelativePath=".\AsyncMasterStack.cpp"
+					RelativePath=".\MasterStack.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\AsyncMasterStack.h"
+					RelativePath=".\MasterStack.h"
 					>
 				</File>
 				<File
-					RelativePath=".\AsyncSlaveStack.cpp"
+					RelativePath=".\SlaveStack.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\AsyncSlaveStack.h"
+					RelativePath=".\SlaveStack.h"
 					>
 				</File>
 				<File
-					RelativePath=".\AsyncStack.cpp"
+					RelativePath=".\Stack.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\AsyncStack.h"
+					RelativePath=".\Stack.h"
 					>
 				</File>
 			</Filter>
@@ -416,23 +416,15 @@
 				Name="SubMaster"
 				>
 				<File
-					RelativePath=".\AsyncMaster.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncMaster.h"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncMasterStates.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncMasterStates.h"
-					>
-				</File>
-				<File
 					RelativePath=".\CTOHistory.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Master.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Master.h"
 					>
 				</File>
 				<File
@@ -449,6 +441,14 @@
 				</File>
 				<File
 					RelativePath=".\MasterSchedule.h"
+					>
+				</File>
+				<File
+					RelativePath=".\MasterStates.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\MasterStates.h"
 					>
 				</File>
 				<File
@@ -500,14 +500,6 @@
 				Name="Transport"
 				>
 				<File
-					RelativePath=".\AsyncTransportLayer.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncTransportLayer.h"
-					>
-				</File>
-				<File
 					RelativePath=".\TLS_Base.cpp"
 					>
 				</File>
@@ -517,6 +509,14 @@
 				</File>
 				<File
 					RelativePath=".\TransportConstants.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TransportLayer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TransportLayer.h"
 					>
 				</File>
 				<File
@@ -548,14 +548,6 @@
 				Name="User"
 				>
 				<File
-					RelativePath=".\AsyncPort.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\AsyncPort.h"
-					>
-				</File>
-				<File
 					RelativePath=".\AsyncStackManager.cpp"
 					>
 				</File>
@@ -569,6 +561,14 @@
 				</File>
 				<File
 					RelativePath=".\MasterStackConfig.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Port.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Port.h"
 					>
 				</File>
 				<File

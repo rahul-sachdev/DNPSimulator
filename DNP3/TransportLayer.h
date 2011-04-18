@@ -16,8 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_TRANSPORT_LAYER_H_
-#define __ASYNC_TRANSPORT_LAYER_H_
+#ifndef __TRANSPORT_LAYER_H_
+#define __TRANSPORT_LAYER_H_
 
 
 
@@ -35,12 +35,12 @@ namespace apl { namespace dnp {
 	/** Implements the DNP3 transport layer as a generic
 	asynchronous protocol stack layer
 	*/
-	class AsyncTransportLayer : public IUpperLayer, public ILowerLayer
+	class TransportLayer : public IUpperLayer, public ILowerLayer
 	{
 		public:
 
-		AsyncTransportLayer(apl::Logger* apLogger, size_t aFragSize = DEFAULT_FRAG_SIZE);
-		virtual ~AsyncTransportLayer(){}
+		TransportLayer(apl::Logger* apLogger, size_t aFragSize = DEFAULT_FRAG_SIZE);
+		virtual ~TransportLayer(){}
 
 		/* Actions - Taken by the states/transmitter/receiver in response to events */
 

@@ -16,8 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_LINK_LAYER_ROUTER_H_
-#define __ASYNC_LINK_LAYER_ROUTER_H_
+#ifndef __LINK_LAYER_ROUTER_H_
+#define __LINK_LAYER_ROUTER_H_
 
 
 #include <map>

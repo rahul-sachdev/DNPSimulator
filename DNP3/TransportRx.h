@@ -28,7 +28,7 @@
 
 namespace apl { namespace dnp {
 
-class AsyncTransportLayer;
+class TransportLayer;
 
 /**
 State/validation for the DNP3 transport layer's receive channel.
@@ -36,7 +36,7 @@ State/validation for the DNP3 transport layer's receive channel.
 class TransportRx : public Loggable
 {
 	public:
-		TransportRx(Logger*, AsyncTransportLayer*, size_t aFragSize);
+		TransportRx(Logger*, TransportLayer*, size_t aFragSize);
 
 		void HandleReceive(const apl::byte_t*, size_t);
 
@@ -46,7 +46,7 @@ class TransportRx : public Loggable
 
 		bool ValidateHeader(bool aFir, bool aFin, int aSeq, size_t aPayloadSize);
 
-		AsyncTransportLayer* mpContext;
+		TransportLayer* mpContext;
 
 		CopyableBuffer mBuffer;
 		size_t mNumBytesRead;
