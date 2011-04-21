@@ -40,7 +40,6 @@ namespace apl {
 		typedef std::deque< Change<Counter> > CounterQueue;
 		typedef std::deque< Change<ControlStatus> > ControlStatusQueue;
 		typedef std::deque< Change<SetpointStatus> > SetpointStatusQueue;
-		typedef std::deque< Change<VtoData> > VtoDataQueue;
 
 	public:
 
@@ -71,8 +70,6 @@ namespace apl {
 		{ mControlStatusQueue.push_back(Change<ControlStatus>(arPoint, aIndex)); }
 		void _Update(const SetpointStatus& arPoint, size_t aIndex)
 		{ mSetpointStatusQueue.push_back(Change<SetpointStatus>(arPoint, aIndex)); }
-		void _Update(const VtoData& arPoint, size_t aIndex)
-		{ mVtoDataQueue.push_back(Change<VtoData>(arPoint, aIndex)); }
 
 
 		size_t FlushUpdates(apl::IDataObserver* apObserver, bool aClear = true);
@@ -92,7 +89,6 @@ namespace apl {
 			mCounterQueue.clear();
 			mControlStatusQueue.clear();
 			mSetpointStatusQueue.clear();
-			mVtoDataQueue.clear();
 		}
 
 		bool HasChanges()
@@ -101,8 +97,7 @@ namespace apl {
 				 mAnalogQueue.size() > 0 ||
 				 mCounterQueue.size() > 0 ||
 				 mControlStatusQueue.size() > 0 ||
-				 mSetpointStatusQueue.size() > 0 ||
-				 mVtoDataQueue.size() > 0;
+				 mSetpointStatusQueue.size() > 0;
 		}
 
 		template<class T>
@@ -114,7 +109,6 @@ namespace apl {
 		CounterQueue mCounterQueue;
 		ControlStatusQueue mControlStatusQueue;
 		SetpointStatusQueue mSetpointStatusQueue;
-		VtoDataQueue mVtoDataQueue;
 
 		LockType mLock;
 	};
@@ -134,7 +128,6 @@ namespace apl {
 			count += this->FlushUpdates(mCounterQueue, apObserver);
 			count += this->FlushUpdates(mControlStatusQueue, apObserver);
 			count += this->FlushUpdates(mSetpointStatusQueue, apObserver);
-			count += this->FlushUpdates(mVtoDataQueue, apObserver);
 			mMidFlush = false;
 		}
 

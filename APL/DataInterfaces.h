@@ -155,7 +155,6 @@ class IDataObserver : public ITransactable
 	void Update(const Counter&, size_t aIndex);			//!< push a change to the owner of the database, must have transaction started
 	void Update(const ControlStatus&, size_t aIndex);	//!< push a change to the owner of the database, must have transaction started
 	void Update(const SetpointStatus&, size_t aIndex);	//!< push a change to the owner of the database, must have transaction started
-	void Update(const VtoData&, size_t aIndex);			//!< push a change to the owner of the database, must have transaction started
 
 	protected:
 
@@ -165,7 +164,6 @@ class IDataObserver : public ITransactable
 	virtual void _Update(const Counter& arPoint, size_t) = 0;
 	virtual void _Update(const ControlStatus& arPoint, size_t) = 0;
 	virtual void _Update(const SetpointStatus& arPoint, size_t) = 0;
-	virtual void _Update(const VtoData& arPoint, size_t) = 0;
 
 
 };
@@ -180,8 +178,6 @@ inline void IDataObserver::Update(const Counter& arPoint, size_t aIndex)
 inline void IDataObserver::Update(const ControlStatus& arPoint, size_t aIndex)
 { assert(this->InProgress()); this->_Update(arPoint, aIndex); }
 inline void IDataObserver::Update(const SetpointStatus& arPoint, size_t aIndex)
-{ assert(this->InProgress()); this->_Update(arPoint, aIndex); }
-inline void IDataObserver::Update(const VtoData& arPoint, size_t aIndex)
 { assert(this->InProgress()); this->_Update(arPoint, aIndex); }
 
 

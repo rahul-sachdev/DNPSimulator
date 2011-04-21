@@ -86,8 +86,6 @@ namespace apl { namespace dnp {
 			/// The number of counter events the slave will buffer before overflowing
 			size_t mMaxCounterEvents;
 
-			/// The number of VTO events the slave will buffer before overflowing
-			size_t mMaxVtoDataEvents;
 
 			// default static response types
 
@@ -103,8 +101,6 @@ namespace apl { namespace dnp {
 			/// The default group/variation to use for static setpoint status responses
 			GrpVar mStaticSetpointStatus;
 
-			/// The default group/variation to use for static VTO responses
-			GrpVar mStaticVtoData;
 
 			// default event response types
 
@@ -116,9 +112,6 @@ namespace apl { namespace dnp {
 
 			/// The default group/variation to use for counter event responses
 			GrpVar mEventCounter;
-
-			/// The default group/variation to use for VTO responses
-			GrpVar mEventVtoData;
 	};
 
 }}

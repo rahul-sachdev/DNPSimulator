@@ -40,7 +40,6 @@ namespace apl { namespace dnp {
 	mMaxBinaryEvents(1000),
 	mMaxAnalogEvents(1000),
 	mMaxCounterEvents(1000),
-	mMaxVtoDataEvents(1000),
 
 	mStaticBinary(GrpVar(1,2)), 
 	mStaticAnalog(GrpVar(30,1)),
@@ -49,7 +48,6 @@ namespace apl { namespace dnp {
 	mEventBinary(GrpVar(2,1)),
 	mEventAnalog(GrpVar(32,1)),
 	mEventCounter(GrpVar(22,1))
-	mEventVtoData(GrpVar(113,0))
 	{
 		
 	}

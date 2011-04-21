@@ -57,7 +57,6 @@ class ObserverFanout : public IDataObserver
 	void _Update(const Counter& arPoint, size_t aIndex) { mBuffer.Update(arPoint, aIndex); }
 	void _Update(const ControlStatus& arPoint, size_t aIndex) { mBuffer.Update(arPoint, aIndex); }
 	void _Update(const SetpointStatus& arPoint, size_t aIndex) { mBuffer.Update(arPoint, aIndex); }
-	void _Update(const VtoData& arPoint, size_t aIndex) { mBuffer.Update(arPoint, aIndex); }
 
 	private:
 	ChangeBuffer<NullLock> mBuffer;

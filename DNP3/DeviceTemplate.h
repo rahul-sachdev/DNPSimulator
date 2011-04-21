@@ -42,8 +42,7 @@ struct DeviceTemplate
 					size_t aNumControlStatus = 0,
 					size_t aNumSetpointStatus = 0,
 					size_t aNumSetpoints = 0,
-					size_t aNumControls = 0,
-					size_t aNumVtoData = 0);
+					size_t aNumControls = 0);
 
 	//Measurements
 	std::vector<EventPointRecord> mBinary;		/// list of binary point properties
@@ -51,7 +50,6 @@ struct DeviceTemplate
 	std::vector<DeadbandPointRecord> mAnalog;	/// list of analog point properties
 	std::vector<PointRecord> mControlStatus;	/// list of control status point properties
 	std::vector<PointRecord> mSetpointStatus;	/// list of control status point properties
-	std::vector<PointRecord> mVtoData;			/// list of VTO point properties
 
 	//Controls
 	std::vector<ControlRecord> mControls;		/// list of binary output properties
