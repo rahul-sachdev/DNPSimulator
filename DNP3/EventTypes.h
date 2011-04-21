@@ -43,9 +43,10 @@ struct EventInfo : public PointInfoBase<T>
 	bool mWritten;		/// true if the event has been written
 };
 
-typedef EventInfo<apl::Binary> BinaryEvent;
-typedef EventInfo<apl::Analog> AnalogEvent;
-typedef EventInfo<apl::Counter> CounterEvent;
+typedef EventInfo<apl::Binary>				BinaryEvent;
+typedef EventInfo<apl::Analog>				AnalogEvent;
+typedef EventInfo<apl::Counter>				CounterEvent;
+typedef EventInfo<apl::VtoData>				VtoDataEvent;
 
 template <typename EventType>
 struct EvtItr
@@ -56,6 +57,7 @@ struct EvtItr
 typedef EvtItr<BinaryEvent>::Type			BinaryEventIter;
 typedef EvtItr<AnalogEvent>::Type			AnalogEventIter;
 typedef EvtItr<CounterEvent>::Type			CounterEventIter;
+typedef EvtItr<VtoDataEvent>::Type			VtoDataEventIter;
 
 }} //end namespace
 

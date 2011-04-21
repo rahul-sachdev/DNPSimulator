@@ -35,6 +35,7 @@ namespace apl
 		mCounterMap.clear();
 		mControlStatusMap.clear();
 		mSetpointStatusMap.clear();
+		mVtoDataMap.clear();
 	}
 
 	/// The RHS is a strict subset of the LHS... i.e. everything in the RHS can be found in the LHS
@@ -45,6 +46,7 @@ namespace apl
 		if(! StrictEquality(arLHS.mCounterMap, arRHS.mCounterMap) ) return false;
 		if(! StrictEquality(arLHS.mControlStatusMap, arRHS.mControlStatusMap) ) return false;
 		if(! StrictEquality(arLHS.mSetpointStatusMap, arRHS.mSetpointStatusMap) ) return false;
+		if(! StrictEquality(arLHS.mVtoDataMap, arRHS.mVtoDataMap) ) return false;
 
 		return true;
 	}
@@ -57,6 +59,7 @@ namespace apl
 		if(! IsSubsetOf(arLHS.mCounterMap, arRHS.mCounterMap) ) return false;
 		if(! IsSubsetOf(arLHS.mControlStatusMap, arRHS.mControlStatusMap) ) return false;
 		if(! IsSubsetOf(arLHS.mSetpointStatusMap, arRHS.mSetpointStatusMap) ) return false;
+		if(! IsSubsetOf(arLHS.mVtoDataMap, arRHS.mVtoDataMap) ) return false;
 
 		return true;
 	}
@@ -79,6 +82,9 @@ namespace apl
 
 		std::cout << "--- Setpoint Status ---" << std::endl;
 		this->Print<SetpointStatus>(mSetpointStatusMap);
+
+		std::cout << "--- VTO Data ---" << std::endl;
+		this->Print<VtoData>(mVtoDataMap);
 	}
 
 	template<class T>

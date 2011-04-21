@@ -23,8 +23,8 @@
 
 namespace apl { namespace dnp {
 
-	SlaveEventBuffer :: SlaveEventBuffer(size_t aMaxBinary, size_t aMaxAnalog, size_t aMaxCounter)
-		: mBinaryEvents(aMaxBinary), mAnalogEvents(aMaxAnalog), mCounterEvents(aMaxCounter)
+	SlaveEventBuffer :: SlaveEventBuffer(size_t aMaxBinary, size_t aMaxAnalog, size_t aMaxCounter, size_t aMaxVtoData)
+		: mBinaryEvents(aMaxBinary), mAnalogEvents(aMaxAnalog), mCounterEvents(aMaxCounter), mVtoDataEvents(aMaxVtoData)
 	{	}
 
 	void SlaveEventBuffer :: Update(const Binary& arEvent, PointClass aClass, size_t aIndex)
@@ -42,6 +42,11 @@ namespace apl { namespace dnp {
 		mCounterEvents.Update(arEvent, aClass, aIndex);
 	}
 
+	void SlaveEventBuffer :: Update(const VtoData& arEvent, PointClass aClass, size_t aIndex)
+	{
+		mVtoDataEvents.Update(arEvent, aClass, aIndex);
+	}
+
 	size_t SlaveEventBuffer :: NumSelected(DataTypes aType)
 	{
 		switch(aType){
@@ -51,6 +56,8 @@ namespace apl { namespace dnp {
 				return mAnalogEvents.NumSelected();
 			case DT_COUNTER:
 				return mCounterEvents.NumSelected();
+			case DT_VTO_DATA:
+				return mVtoDataEvents.NumSelected();
 			default:
 				throw ArgumentException(LOCATION, "Invalid event type");
 		}
@@ -65,6 +72,8 @@ namespace apl { namespace dnp {
 				return mAnalogEvents.Size();
 			case DT_COUNTER:
 				return mCounterEvents.Size();
+			case DT_VTO_DATA:
+				return mVtoDataEvents.Size();
 			default:
 				throw ArgumentException(LOCATION, "Invalid event type");
 		}
@@ -72,22 +81,22 @@ namespace apl { namespace dnp {
 
 	size_t SlaveEventBuffer :: NumSelected()
 	{
-		return mBinaryEvents.NumSelected() + mAnalogEvents.NumSelected() + mCounterEvents.NumSelected();
+		return mBinaryEvents.NumSelected() + mAnalogEvents.NumSelected() + mCounterEvents.NumSelected() + mVtoDataEvents.NumSelected();
 	}
 
 	bool SlaveEventBuffer :: IsOverflow()
 	{
-		return mBinaryEvents.IsOverflown() || mAnalogEvents.IsOverflown() || mCounterEvents.IsOverflown();
+		return mBinaryEvents.IsOverflown() || mAnalogEvents.IsOverflown() || mCounterEvents.IsOverflown() || mVtoDataEvents.IsOverflown();
 	}
 
 	bool SlaveEventBuffer :: HasEventData()
 	{
-		return mBinaryEvents.NumUnselected() > 0 || mAnalogEvents.NumUnselected() > 0  || mCounterEvents.NumUnselected() > 0 ;
+		return mBinaryEvents.NumUnselected() > 0 || mAnalogEvents.NumUnselected() > 0  || mCounterEvents.NumUnselected() > 0 || mVtoDataEvents.NumUnselected() > 0 ;
 	}
 
 	bool SlaveEventBuffer :: HasClassData(PointClass aClass)
 	{
-		return mBinaryEvents.HasClassData(aClass) || mAnalogEvents.HasClassData(aClass) || mCounterEvents.HasClassData(aClass);
+		return mBinaryEvents.HasClassData(aClass) || mAnalogEvents.HasClassData(aClass) || mCounterEvents.HasClassData(aClass) || mVtoDataEvents.HasClassData(aClass);
 	}
 
 	size_t SlaveEventBuffer :: Select(DataTypes aType, PointClass aClass, size_t aMaxEvent)
@@ -99,6 +108,8 @@ namespace apl { namespace dnp {
 				return mAnalogEvents.Select(aClass, aMaxEvent);
 			case DT_COUNTER:
 				return mCounterEvents.Select(aClass, aMaxEvent);
+			case DT_VTO_DATA:
+				return mVtoDataEvents.Select(aClass, aMaxEvent);
 			default:
 				throw ArgumentException(LOCATION, "Invalid event type");
 		}		
@@ -113,6 +124,8 @@ namespace apl { namespace dnp {
 			left -= mAnalogEvents.Select(aClass, left);
 		if ( left > 0 )
 			left -= mCounterEvents.Select(aClass, left);
+		if ( left > 0 )
+			left -= mVtoDataEvents.Select(aClass, left);
 		return aMaxEvent - left;
 	}
 
@@ -121,6 +134,7 @@ namespace apl { namespace dnp {
 		mBinaryEvents.ClearWrittenEvents();
 		mAnalogEvents.ClearWrittenEvents();
 		mCounterEvents.ClearWrittenEvents();
+		mVtoDataEvents.ClearWrittenEvents();
 	}
 	
 	void SlaveEventBuffer :: Deselect()
@@ -128,6 +142,7 @@ namespace apl { namespace dnp {
 		mBinaryEvents.Deselect();
 		mAnalogEvents.Deselect();
 		mCounterEvents.Deselect();
+		mVtoDataEvents.Deselect();
 	}
 
 }} //end NS

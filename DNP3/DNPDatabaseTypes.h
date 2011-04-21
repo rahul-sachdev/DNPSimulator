@@ -70,6 +70,7 @@ struct PointInfo : public PointInfoBase<T>
 
 	double mDeadband;						/// deadband associated with measurement (optional)
 	typename T::ValueType mLastEventValue;	/// the last value that was reported
+	size_t mSequence;
 };
 
 template <class DataInfoType>
@@ -78,11 +79,12 @@ struct StaticIter
 	typedef typename std::vector< DataInfoType >::const_iterator Type;
 };
 
-typedef PointInfo<apl::Binary> BinaryInfo;
-typedef PointInfo<apl::Analog> AnalogInfo;
-typedef PointInfo<apl::Counter> CounterInfo;
-typedef PointInfo<apl::ControlStatus> ControlStatusInfo;
-typedef PointInfo<apl::SetpointStatus> SetpointStatusInfo;
+typedef PointInfo<apl::Binary>					BinaryInfo;
+typedef PointInfo<apl::Analog>					AnalogInfo;
+typedef PointInfo<apl::Counter>					CounterInfo;
+typedef PointInfo<apl::ControlStatus>			ControlStatusInfo;
+typedef PointInfo<apl::SetpointStatus>			SetpointStatusInfo;
+typedef PointInfo<apl::VtoData>					VtoDataInfo;
 
 
 typedef StaticIter<BinaryInfo>::Type			BinaryIterator;
@@ -90,6 +92,7 @@ typedef StaticIter<AnalogInfo>::Type			AnalogIterator;
 typedef StaticIter<CounterInfo>::Type			CounterIterator;
 typedef StaticIter<ControlStatusInfo>::Type		ControlIterator;
 typedef StaticIter<SetpointStatusInfo>::Type	SetpointIterator;
+typedef StaticIter<VtoDataInfo>::Type			VtoDataIterator;
 
 
 

@@ -32,10 +32,12 @@ namespace apl { namespace dnp {
 		mpStaticCounter = GetStaticCounter(arCfg.mStaticCounter);
 		mpStaticControlStatus = Group10Var2::Inst();
 		mpStaticSetpointStatus = GetStaticSetpointStatus(arCfg.mStaticSetpointStatus);
+		mpStaticVtoData = GetStaticVtoData(arCfg.mStaticVtoData);
 
 		mpEventBinary = GetEventBinary(arCfg.mEventBinary);
 		mpEventAnalog = GetEventAnalog(arCfg.mEventAnalog);
 		mpEventCounter = GetEventCounter(arCfg.mEventCounter);
+		mpEventVtoData = GetEventVtoData(arCfg.mEventVtoData);
 	}	
 
 	StreamObject<Binary>* SlaveResponseTypes::GetStaticBinary(GrpVar gv)
@@ -103,6 +105,19 @@ namespace apl { namespace dnp {
 		throw ArgumentException(LOCATION, "Invalid setpoint status");
 	}
 
+	StreamObject<VtoData>* SlaveResponseTypes::GetStaticVtoData(GrpVar gv)
+	{
+		switch(gv.Grp) {
+			case(112):
+				switch(gv.Var) {
+					case(0): return Group112Var0::Inst();
+				}
+				break;
+		}
+
+		throw ArgumentException(LOCATION, "Invalid static VTO data");
+	}
+
 	StreamObject<Binary>* SlaveResponseTypes::GetEventBinary(GrpVar gv)
 	{
 		switch(gv.Grp) {
@@ -147,6 +162,19 @@ namespace apl { namespace dnp {
 					case(2): return Group22Var2::Inst();
 					case(5): return Group22Var5::Inst();
 					case(6): return Group22Var6::Inst();
+				}
+				break;
+		}
+
+		throw ArgumentException(LOCATION, "Invalid event counter");
+	}
+
+	StreamObject<VtoData>* SlaveResponseTypes::GetEventVtoData(GrpVar gv)
+	{
+		switch(gv.Grp) {
+			case(112):
+				switch(gv.Var) {
+					case(0): return Group112Var0::Inst();
 				}
 				break;
 		}

@@ -27,7 +27,8 @@ namespace apl { namespace dnp {
 									size_t aNumControlStatus,
 									size_t aNumSetpointStatus,
 									size_t aNumControls,
-									size_t aNumSetpoints)
+									size_t aNumSetpoints,
+									size_t aNumVtoData)
 		: mStartOnline(false)
 	{
 		this->mBinary.resize(aNumBinary);	this->InitNames("Binary", mBinary);
@@ -36,7 +37,8 @@ namespace apl { namespace dnp {
 		this->mControlStatus.resize(aNumControlStatus); this->InitNames("ControlStatus", mControlStatus);
 		this->mSetpointStatus.resize(aNumSetpointStatus); this->InitNames("SetpointStatus", mSetpointStatus);
 		this->mControls.resize(aNumControls); this->InitNames("Control", mControls);
-		this->mSetpoints.resize(aNumSetpoints); this->InitNames("Setpoint", mSetpoints);;
+		this->mSetpoints.resize(aNumSetpoints); this->InitNames("Setpoint", mSetpoints);
+		this->mVtoData.resize(aNumVtoData); this->InitNames("VtoData", mVtoData);
 	}
 
 	void DeviceTemplate::Publish(IDataObserver* apObs)
@@ -46,7 +48,8 @@ namespace apl { namespace dnp {
 		InitObserver<Analog>(apObs, mAnalog.size());
 		InitObserver<Counter>(apObs, mCounter.size());
 		InitObserver<ControlStatus>(apObs, mControlStatus.size());
-		InitObserver<SetpointStatus>(apObs, mSetpointStatus.size());		
+		InitObserver<SetpointStatus>(apObs, mSetpointStatus.size());
+		InitObserver<VtoData>(apObs, mVtoData.size());
 	}
 	
 }}

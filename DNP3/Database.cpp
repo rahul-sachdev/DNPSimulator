@@ -76,6 +76,12 @@ namespace apl { namespace dnp {
 				if ( aStartOnline )
 					this->SetAllOnline(mSetpointStatusVec);
 				break;			
+			case(DT_VTO_DATA):
+				this->mVtoDataVec.resize(aNumPoints);
+				this->AssignIndices(mVtoDataVec);
+				if ( aStartOnline )
+					this->SetAllOnline(mVtoDataVec);
+				break;			
 		}
 	}
 
@@ -86,6 +92,7 @@ namespace apl { namespace dnp {
 		size_t numCounter = arTmp.mCounter.size();
 		size_t numControlStatus = arTmp.mControlStatus.size();
 		size_t numSetpointStatus = arTmp.mSetpointStatus.size();
+		size_t numVtoData = arTmp.mVtoData.size();
 
 		//configure the database for these objects
 		this->Configure(DT_BINARY, numBinary, arTmp.mStartOnline);
@@ -93,6 +100,7 @@ namespace apl { namespace dnp {
 		this->Configure(DT_COUNTER, numCounter, arTmp.mStartOnline);
 		this->Configure(DT_CONTROL_STATUS, numControlStatus, arTmp.mStartOnline);
 		this->Configure(DT_SETPOINT_STATUS, numSetpointStatus, arTmp.mStartOnline);
+		this->Configure(DT_VTO_DATA, numVtoData, arTmp.mStartOnline);
 		
 		for(size_t i=0; i<arTmp.mBinary.size(); ++i)
 		{ this->SetClass(DT_BINARY, i, arTmp.mBinary[i].EventClass); }
@@ -132,6 +140,9 @@ namespace apl { namespace dnp {
 			case(DT_SETPOINT_STATUS):
 				for(size_t i=0; i<mSetpointStatusVec.size(); ++i) mSetpointStatusVec[i].mClass = aClass;
 				break;
+			case(DT_VTO_DATA):
+				for(size_t i=0; i<mVtoDataVec.size(); ++i) mVtoDataVec[i].mClass = aClass;
+				break;
 			default:
 				throw ArgumentException(LOCATION, "Class cannot be assigned for this type");
 				break;
@@ -161,6 +172,10 @@ namespace apl { namespace dnp {
 			case(DT_SETPOINT_STATUS):
 				if(aIndex >= mSetpointStatusVec.size()) throw Exception(LOCATION, "", ERR_INDEX_OUT_OF_BOUNDS);
 				mSetpointStatusVec[aIndex].mClass = aClass;
+				break;
+			case(DT_VTO_DATA):
+				if(aIndex >= mVtoDataVec.size()) throw Exception(LOCATION, "", ERR_INDEX_OUT_OF_BOUNDS);
+				mVtoDataVec[aIndex].mClass = aClass;
 				break;
 			default:
 				throw ArgumentException(LOCATION, "Class cannot be assigned for this type");
@@ -236,6 +251,11 @@ namespace apl { namespace dnp {
 	{
 		UpdateValue<apl::SetpointStatus>(mSetpointStatusVec, arPoint, aIndex); 
 	}
+
+	void Database::_Update(const apl::VtoData& arPoint, size_t aIndex)
+	{
+		UpdateValue<apl::VtoData>(mVtoDataVec, arPoint, aIndex); 
+	}
 	
 	//////////////////////////////////////////////////////////////////////////////
 	// misc public functions
@@ -262,6 +282,8 @@ namespace apl { namespace dnp {
 				return mControlStatusVec.size();
 			case(DT_SETPOINT_STATUS):
 				return mSetpointStatusVec.size();
+			case(DT_VTO_DATA):
+				return mVtoDataVec.size();
 		}
 
 		return 0;

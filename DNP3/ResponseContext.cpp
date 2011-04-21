@@ -154,6 +154,8 @@ IINField ResponseContext::Configure(const APDU& arRequest)
 				LOG_BLOCK(LEV_WARNING, "READ for obj " << hdr->GetGroup() << " var " << hdr->GetVariation() << " not supported.");
 				this->mTempIIN.SetFuncNotSupported(true);
 				break;
+
+			/* TODO - need to add objects here? */
 		}
 	}
 

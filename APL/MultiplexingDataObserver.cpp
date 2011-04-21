@@ -68,6 +68,7 @@ namespace apl{
 	void MultiplexingDataObserver :: _Update(const Counter& arPoint, size_t aIndex) { PassThrough<Counter>(arPoint, aIndex); }
 	void MultiplexingDataObserver :: _Update(const ControlStatus& arPoint, size_t aIndex) { PassThrough<ControlStatus>(arPoint, aIndex); }
 	void MultiplexingDataObserver :: _Update(const SetpointStatus& arPoint, size_t aIndex) { PassThrough<SetpointStatus>(arPoint, aIndex); }
+	void MultiplexingDataObserver :: _Update(const VtoData& arPoint, size_t aIndex) { PassThrough<VtoData>(arPoint, aIndex); }
 
 	template <typename T>
 	void MultiplexingDataObserver :: PassThrough(const T& arPoint, size_t aIndex)

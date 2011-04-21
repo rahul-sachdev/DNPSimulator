@@ -42,6 +42,7 @@ typedef QualityInfo<AnalogQuality, 7> AnalogQualInfo;
 typedef QualityInfo<CounterQuality, 7> CounterQualInfo;
 typedef QualityInfo<ControlQuality, 5> ControlQualInfo;
 typedef QualityInfo<SetpointQuality, 4> SetpointQualInfo;
+typedef QualityInfo<VtoQuality, 4> VtoQualInfo;					/* TODO - what is the proper N value? */
 
 template <class T>
 class QualityConverter

@@ -55,6 +55,7 @@ namespace apl
 			void _Update(const Counter& arPoint, size_t aIndex);
 			void _Update(const ControlStatus& arPoint, size_t aIndex);
 			void _Update(const SetpointStatus& arPoint, size_t aIndex);
+			void _Update(const VtoData& arPoint, size_t aIndex);
 
 			template <typename T>
 			void PassThrough(const T& arPoint, size_t aIndex);

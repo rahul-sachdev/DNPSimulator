@@ -41,6 +41,7 @@ class SlaveEventBuffer : public IEventBuffer
 		void Update(const Binary& arEvent, PointClass aClass, size_t aIndex);
 		void Update(const Analog& arEvent, PointClass aClass, size_t aIndex);
 		void Update(const Counter& arEvent, PointClass aClass, size_t aIndex);
+		void Update(const VtoData& arEvent, PointClass aClass, size_t aIndex);
 
 		size_t NumSelected(DataTypes aType);
 		size_t NumSelected();
@@ -50,6 +51,7 @@ class SlaveEventBuffer : public IEventBuffer
 		void Begin(BinaryEventIter& arIter)		{ arIter = mBinaryEvents.Begin(); }
 		void Begin(AnalogEventIter& arIter)		{ arIter = mAnalogEvents.Begin(); }
 		void Begin(CounterEventIter& arIter)	{ arIter = mCounterEvents.Begin(); }
+		void Begin(VtoDataEventIter& arIter)	{ arIter = mVtoDataEvents.Begin(); }
 
 		bool IsOverflow();
 		bool HasClassData(PointClass aClass);
@@ -64,9 +66,10 @@ class SlaveEventBuffer : public IEventBuffer
 
 	private:
 
-		TimeOrderedEventBuffer<BinaryEvent>		mBinaryEvents;	/// Multiple events for the same time, ordered by time of occurrence
-		SingleEventBuffer<AnalogEvent>			mAnalogEvents;	/// Single event per point, previous events overridden
-		SingleEventBuffer<CounterEvent>			mCounterEvents; /// Single event per point, previous events overridden
+		TimeOrderedEventBuffer<BinaryEvent>			mBinaryEvents;	/// Multiple events for the same time, ordered by time of occurrence
+		SingleEventBuffer<AnalogEvent>				mAnalogEvents;	/// Single event per point, previous events overridden
+		SingleEventBuffer<CounterEvent>				mCounterEvents; /// Single event per point, previous events overridden
+		InsertionOrderedEventBuffer<VtoDataEvent>	mVtoDataEvents; /// Multiple events, ordered by insertion
 
 		bool mChange;
 };

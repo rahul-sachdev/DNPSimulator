@@ -77,6 +77,7 @@ namespace apl { namespace dnp {
 			void Begin(CounterIterator& arIter)		{ arIter = mCounterVec.begin(); }
 			void Begin(ControlIterator& arIter)		{ arIter = mControlStatusVec.begin(); }
 			void Begin(SetpointIterator& arIter)	{ arIter = mSetpointStatusVec.begin(); }
+			void Begin(VtoDataIterator& arIter)		{ arIter = mVtoDataVec.begin(); }
 
 
 		private:
@@ -91,6 +92,7 @@ namespace apl { namespace dnp {
 			void _Update(const apl::Counter& arPoint, size_t);
 			void _Update(const apl::ControlStatus& arPoint, size_t);
 			void _Update(const apl::SetpointStatus& arPoint, size_t);
+			void _Update(const apl::VtoData& arPoint, size_t);
 
 			template<typename T>
 			void AssignIndices( std::vector< PointInfo<T> >& arVector );
@@ -113,6 +115,7 @@ namespace apl { namespace dnp {
 			std::vector< PointInfo<apl::Counter> > mCounterVec;
 			std::vector< PointInfo<apl::ControlStatus> > mControlStatusVec;
 			std::vector< PointInfo<apl::SetpointStatus> > mSetpointStatusVec;
+			std::vector< PointInfo<apl::VtoData> > mVtoDataVec;
 
 			IEventBuffer* mpEventBuffer;
 

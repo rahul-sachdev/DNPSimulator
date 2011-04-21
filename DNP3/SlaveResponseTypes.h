@@ -39,10 +39,12 @@ class SlaveResponseTypes
 	StreamObject<Counter>* mpStaticCounter;
 	StreamObject<ControlStatus>* mpStaticControlStatus;
 	StreamObject<SetpointStatus>* mpStaticSetpointStatus;
+	StreamObject<VtoData>* mpStaticVtoData;
 
 	StreamObject<Binary>* mpEventBinary;
 	StreamObject<Analog>* mpEventAnalog;
 	StreamObject<Counter>* mpEventCounter;
+	StreamObject<VtoData>* mpEventVtoData;
 
 	private:
 
@@ -50,10 +52,12 @@ class SlaveResponseTypes
 	static StreamObject<Analog>* GetStaticAnalog(GrpVar);
 	static StreamObject<Counter>* GetStaticCounter(GrpVar);
 	static StreamObject<SetpointStatus>* GetStaticSetpointStatus(GrpVar);
+	static StreamObject<VtoData>* GetStaticVtoData(GrpVar);
 
 	static StreamObject<Binary>* GetEventBinary(GrpVar);
 	static StreamObject<Analog>* GetEventAnalog(GrpVar);
 	static StreamObject<Counter>* GetEventCounter(GrpVar);
+	static StreamObject<VtoData>* GetEventVtoData(GrpVar);
 
 };
 

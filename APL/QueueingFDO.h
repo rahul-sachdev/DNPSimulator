@@ -51,6 +51,7 @@ namespace apl {
 		virtual void _Update(const Counter& arPoint, size_t aIndex) { OnUpdate(arPoint, mCounterMap,  aIndex); }
 		virtual void _Update(const ControlStatus& arPoint, size_t aIndex) { OnUpdate(arPoint, mControlStatusMap, aIndex); }
 		virtual void _Update(const SetpointStatus& arPoint, size_t aIndex) { OnUpdate(arPoint, mSetpointStatusMap, aIndex); }
+		virtual void _Update(const VtoData& arPoint, size_t aIndex) { OnUpdate(arPoint, mVtoDataMap, aIndex); }
 
 		const size_t M_MAX_VAL;
 

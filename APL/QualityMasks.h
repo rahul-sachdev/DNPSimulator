@@ -99,7 +99,7 @@ namespace apl {
 	/**
 		Bitmasks that make make up the quality field for vto data. See BinaryQuality for common (unlabeled) bitmasks.
 	 */
-	enum VTOQuality
+	enum VtoQuality
 	{
 		VQ_ONLINE = 0x01,
 		VQ_RESTART = 0x02,

@@ -28,7 +28,7 @@ $projects = {
 :aplxml => {:dir => 'APLXML'},
 :terminal => {:dir => 'Terminal'},
 :terminaltest => {:dir => 'TerminalTest'},
-:dnp3java => {:dir => 'DNP3Java'},
+#:dnp3java => {:dir => 'DNP3Java'},
 }
 
 add_projects($projects) #removes projects that are not valid for $hw_os

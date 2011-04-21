@@ -41,4 +41,8 @@ namespace apl {
 	template<> const std::string SetpointQualInfo::names[] = {"Online", "Restart", "CommsLost", "RemoteForced"};
 	template<> const char SetpointQualInfo::symbols[] = {'O', 'R', 'C', 'F'};
 
+	template<> const byte_t VtoQualInfo::masks[] = {VQ_ONLINE, VQ_RESTART, VQ_COMM_LOST, VQ_REMOTE_FORCED_DATA};
+	template<> const std::string VtoQualInfo::names[] = {"Online", "Restart", "CommsLost", "RemoteForced"};
+	template<> const char VtoQualInfo::symbols[] = {'O', 'R', 'C', 'F'};
+
 }

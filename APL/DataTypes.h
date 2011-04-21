@@ -28,6 +28,8 @@
 #include <ostream>
 #include <limits>
 #include <math.h>
+#include <strings.h>
+#include <string.h>
 
 #ifdef max
 #undef max
@@ -73,7 +75,8 @@ namespace apl
 		DT_ANALOG,
 		DT_COUNTER,
 		DT_CONTROL_STATUS,
-		DT_SETPOINT_STATUS
+		DT_SETPOINT_STATUS,
+		DT_VTO_DATA
 	};
 
 	std::string GetDataTypeName(DataTypes aType);
@@ -382,7 +385,7 @@ namespace apl
 	};
 
 	/**
-		Descibes the last set value of the setpoint. Like the ControlStatus data type it is not
+		Describes the last set value of the setpoint. Like the ControlStatus data type it is not
 		well supportted and its generally better practice to use an explict analog.
 	*/
 	class SetpointStatus : public TypedDataPoint<double>
@@ -405,6 +408,60 @@ namespace apl
 
 		operator ValueType() const { return this->GetValue(); }
 		ValueType operator=(ValueType aValue) { this->SetValue(aValue); return GetValue(); }
+	};
+
+	/**
+		Describes the last set value of the setpoint. Like the ControlStatus data type it is not
+		well supportted and its generally better practice to use an explict analog.
+	*/
+	class VtoData : public DataPoint
+	{
+		public:
+		VtoData() : DataPoint(VQ_RESTART, DT_VTO_DATA), mSize(0)
+		{
+			bzero(this->mData, 255);
+		}
+
+		typedef byte_t * ValueType;
+		typedef VtoQuality QualityType;
+		typedef QualityConverter<VtoQualInfo> QualConverter;
+
+		static const int ONLINE = VQ_ONLINE;
+
+		static const DataTypes MeasEnum = DT_VTO_DATA;
+
+		bool ShouldGenerateEvent(const VtoData& arRHS, double aDeadband, byte_t *aLastReportedVal) const { return true; }
+
+		/* TODO - what to do here? */
+		//operator ValueType() const { return this->GetValue(); }
+		//ValueType operator=(ValueType aValue) { this->SetValue(aValue); return GetValue(); }
+
+		bool operator==(const VtoData& rhs) const
+		{
+			return GetValue() == rhs.GetValue() && GetQuality() == rhs.GetQuality();
+		}
+
+		bool operator!=(const VtoData& rhs) const
+		{
+			return GetValue() != rhs.GetValue() || GetQuality() != rhs.GetQuality();
+		}
+
+		std::string ToString() const { return "VtoData"; /* TODO */ }
+
+		size_t GetSize() const { return this->mSize; }
+
+		const byte_t *GetValue() const { return this->mData; }
+
+		void SetValue(const byte_t *aValue, size_t aSize)
+		{
+			bzero(this->mData, 255);
+			memcpy(this->mData, aValue, aSize);
+			this->mSize = aSize;
+		}
+
+		private:
+		byte_t mData[255];
+		size_t mSize;
 	};
 
 }
