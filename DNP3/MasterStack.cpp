@@ -30,7 +30,7 @@ IDataObserver* apPublisher,
 AsyncTaskGroup* apTaskGroup,
 const MasterStackConfig& arCfg) :
 
-AsyncStack(apLogger, apTimerSrc, arCfg.app, arCfg.link),
+Stack(apLogger, apTimerSrc, arCfg.app, arCfg.link),
 mMaster(apLogger->GetSubLogger("master"), arCfg.master, &mApplication, apPublisher, apTaskGroup, apTimerSrc)
 {
 	mApplication.SetUser(&mMaster);

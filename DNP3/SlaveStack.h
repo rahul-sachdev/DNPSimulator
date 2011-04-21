@@ -29,7 +29,7 @@
 namespace apl { namespace dnp {
 
 /** @section desc A stack object for a master */
-class SlaveStack : public AsyncStack
+class SlaveStack : public Stack
 {
 	public:
 

@@ -55,27 +55,12 @@ namespace apl { namespace dnp {
 
 		typedef std::multiset<T, LessThanByTime > Type;
 	};
-
+	
 	/** Sorts events by the order in which they are inserted.
 		The last event value has been hijacked here for use with VTO.
 	*/
 	template <class T>
 	struct InsertionOrderSet
-	{
-		struct InsertionOrder
-		{
-			bool operator()(const T& a, const T& b) const
-			{ return a.mLastEventValue < b.mLastEventValue; }
-		};
-
-		typedef std::multiset<T, InsertionOrder > Type;
-	};
-
-	/** Sorts events by the order in which they are inserted.
-		The last event value has been hijacked here for use with VTO.
-	*/
-	template <class T>
-	struct InsertionOrderSet2
 	{
 		struct InsertionOrder
 		{
