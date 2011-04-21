@@ -50,9 +50,10 @@ struct SlaveStackConfig;
 struct MasterStackConfig;
 
 /**
-	The interface for C++ projects for dnp3. Provides aninterface for starting/stopping
-	master/slave protocol stacks. Any method may be called while the system is running.
-	Methods should only be called from a single thread at at a time.
+	The interface for C++ projects for dnp3. Provides an interface for
+	starting/stopping master/slave protocol stacks. Any method may be
+	called while the system is running.  Methods should only be called
+	from a single thread at at a time.
 */
 class AsyncStackManager : private Threadable, private Loggable
 {
@@ -83,7 +84,7 @@ class AsyncStackManager : private Threadable, private Loggable
 			@param aLevel		Log filter level to use
 			@param apPublisher	Interface to callback with measurements. The callback comes from an unknown network thread and should not be blocked.
 			@param arCfg		Configuration data for the master stack
-			@return				Threadsafe interface to use for dispatching commands to the master.
+			@return				Thread-safe interface to use for dispatching commands to the master.
 		*/
 		ICommandAcceptor* AddMaster(const std::string& arPortName,
 									const std::string& arStackName,
@@ -99,7 +100,7 @@ class AsyncStackManager : private Threadable, private Loggable
 			@param aLevel			Log filter level to use
 			@param apCmdAcceptor	Interface to callback with measurements. The callback comes from an unknown network thread and should not be blocked.
 			@param arCfg			Configuration data for the slave stack
-			@return					Threadsafe interface to use for writing new measurement values to the slave
+			@return					Thread-safe interface to use for writing new measurement values to the slave.
 		*/
 		IDataObserver* AddSlave(const std::string& arPortName,
 								const std::string& arStackName,
