@@ -30,11 +30,11 @@ class ITimerSource;
 
 namespace apl { namespace dnp {
 
-class AsyncStack
+class Stack
 {
 	public:
-	AsyncStack(Logger*, ITimerSource* apTimerSrc, AppConfig aAppCfg, LinkConfig aCfg);
-	virtual ~AsyncStack() {}
+	Stack(Logger*, ITimerSource* apTimerSrc, AppConfig aAppCfg, LinkConfig aCfg);
+	virtual ~Stack() {}
 
 	LinkLayer mLink;
 	TransportLayer mTransport;

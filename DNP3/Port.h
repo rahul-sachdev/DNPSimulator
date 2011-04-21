@@ -34,7 +34,7 @@ namespace apl {
 
 namespace apl { namespace dnp {
 
-class AsyncStack;
+class Stack;
 class AsyncStackManager;
 
 
@@ -53,11 +53,11 @@ class Port : public Loggable, public IPhysMonitor
 		StackRecord() : pStack(NULL), mLocalAddress(0)
 		{}
 
-		StackRecord(AsyncStack* apStack, uint_16_t aLocalAddress) :
+		StackRecord(Stack* apStack, uint_16_t aLocalAddress) :
 		pStack(apStack) , mLocalAddress(aLocalAddress)
 		{}
 
-		AsyncStack* pStack;
+		Stack* pStack;
 		uint_16_t mLocalAddress;
 	};
 
@@ -67,7 +67,7 @@ class Port : public Loggable, public IPhysMonitor
 
 
 	AsyncTaskGroup* GetGroup() { return mpGroup; }
-	void Associate(const std::string& arStackName, AsyncStack* apStack, uint_16_t aLocalAddress);
+	void Associate(const std::string& arStackName, Stack* apStack, uint_16_t aLocalAddress);
 	void Disassociate(const std::string& arStackName);
 
 	std::string Name() { return mName; }
