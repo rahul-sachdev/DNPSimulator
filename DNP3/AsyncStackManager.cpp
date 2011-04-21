@@ -98,6 +98,22 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 	return pSlave->mSlave.GetDataObserver();
 }
 
+IVtoMasterWriter* AddMasterVtoChannel(const std::string& arStackName,
+				IVtoMasterReader* apOnDataCallback,
+				size_t reservedOctetCount =	0)
+{
+	/* TODO - need to fill inthe body here */
+	return NULL;
+}
+
+IVtoSlaveWriter* AddSlaveVtoChannel(const std::string& arStackName,
+				IVtoSlaveReader* apOnDataCallback,
+				size_t reservedOctetCount = 0)
+{
+	/* TODO - need to fill inthe body here */
+	return NULL;
+}
+
 /// Remove a port and all associated stacks
 void AsyncStackManager::RemovePort(const std::string& arPortName)
 {	
