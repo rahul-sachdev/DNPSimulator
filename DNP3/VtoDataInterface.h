@@ -19,12 +19,11 @@
 #ifndef __VTO_DATA_INTERFACES_H_
 #define	__VTO_DATA_INTERFACES_H_
 
-#include "DataTypes.h"
+#include <APL/DataTypes.h>
 
 #include <assert.h>
 
-namespace apl
-{
+namespace apl { namespace dnp {
 
 /**
 	The base class for all VTO interface handlers.
@@ -175,6 +174,6 @@ class IVtoSlaveReader : protected IVtoReaderBase
 		void Recv(const byte_t& data, size_t length);
 };
 
-} /* end namespace apl */
+}} //end namespaces
 
 #endif

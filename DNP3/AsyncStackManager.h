@@ -33,7 +33,6 @@
 #include <APL/AsyncTaskScheduler.h>
 #include <APL/Lock.h>
 #include <APL/IOService.h>
-#include <APL/VtoDataInterface.h>
 
 namespace apl {
 	class IPhysicalLayerAsync;
@@ -49,6 +48,11 @@ class Stack;
 
 struct SlaveStackConfig;
 struct MasterStackConfig;
+
+class IVtoMasterWriter;
+class IVtoMasterReader;
+class IVtoSlaveWriter;
+class IVtoSlaveReader;
 
 /**
 	The interface for C++ projects for dnp3. Provides an interface for

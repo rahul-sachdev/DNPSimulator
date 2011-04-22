@@ -30,9 +30,9 @@
 #include <math.h>
 #include <string.h>
 
-// from http://pubs.opengroup.org/onlinepubs/009695399/functions/bzero.html
+// from http://pubs.opengroup.org/onlinepubs/009695399/functions/MACRO_BZERO.html
 // recommendation is replace with this for portability
-#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)
+#define MACRO_BZERO(b,len) (memset((b), '\0', (len)), (void) 0)
 
 #ifdef max
 #undef max
@@ -422,7 +422,7 @@ namespace apl
 		public:
 		VtoData() : DataPoint(VQ_RESTART, DT_VTO_DATA), mSize(0)
 		{
-			bzero(this->mData, 255);
+			MACRO_BZERO(this->mData, 255);
 		}
 
 		typedef byte_t * ValueType;
@@ -457,7 +457,7 @@ namespace apl
 
 		void SetValue(const byte_t *aValue, size_t aSize)
 		{
-			bzero(this->mData, 255);
+			MACRO_BZERO(this->mData, 255);
 			memcpy(this->mData, aValue, aSize);
 			this->mSize = aSize;
 		}

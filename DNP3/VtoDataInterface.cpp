@@ -19,8 +19,8 @@
 
 #include "VtoDataInterface.h"
 
-namespace apl
-{
+namespace apl { namespace dnp {
+
 	size_t IVtoMasterWriter::Send(const byte_t& data, size_t length, bool block)
 	{
 		/* TODO - fill in the body */
@@ -42,4 +42,5 @@ namespace apl
 	{
 		/* TODO - fill in the body */
 	}
-}
+
+}} //end namespaces

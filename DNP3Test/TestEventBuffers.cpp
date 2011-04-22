@@ -90,11 +90,11 @@ using namespace apl::dnp;
 
 		BOOST_AUTO_TEST_CASE(ResetEventsProperlyOnFailure)
 		{
-			const size_t NUM = 100;
+			const byte_t NUM = 100;
 
-			const size_t dataSize = 255;
+			const byte_t dataSize = 255;
 
-			const size_t numEvents = NUM;
+			const byte_t numEvents = NUM;
 
 			InsertionOrderedEventBuffer<VtoDataEvent> b(NUM);
 
@@ -104,10 +104,10 @@ using namespace apl::dnp;
 
 			VtoDataEventIter itr;
 
-			for (size_t i = 0; i < numEvents; i++)
+			for (byte_t i = 0; i < numEvents; i++)
 			{
 				byte_t trash[dataSize];
-				size_t j;
+				byte_t j;
 				for (j = 0; j < dataSize; ++j)
 					trash[j] = i;
 
