@@ -115,6 +115,7 @@ class AsyncStackManager : private Threadable, private Loggable
 			Adds a VTO channel to a prexisting stack (master or slave)
 
 			@param arStackName			Unique name of the stack.
+			@param aVtoChannelId		Unique channel ID for the VTO circuit.
 			@param apOnDataCallback		Interface to callback with received
 										data.  The callback comes from an
 										unknown network thread, and should not
@@ -122,53 +123,50 @@ class AsyncStackManager : private Threadable, private Loggable
 			@param aReservedOctetCount	The minimum number of octets to reserve
 										in the DNP3 application layer for VTO
 										data related to this virtual channel.
+
 			@return						Interface to use for writing
 										new VTO data from the master to the
 										slave.
 
-			@throw ArgumentException	if arStackName doesn't exist or Vto 
-										address is already bound for that stack
+			@throw ArgumentException	if arStackName doesn't exist or if the
+										VTO channel ID is already bound for that
+										stack
 		 */
 		IVtoWriter* AddVtoChannel(const std::string& arStackName,
+						byte_t aVtoChannelId,
 						IVtoCallbacks* apOnDataCallback,
 						size_t aReservedOctetCount = 0);
 
 		/**
 			Removes an existing VTO channel, stopping callbacks.
 
-			@param apOnDataCallback Callback interface previously registered in AddVtoChannel()
+			@param apOnDataCallback		Callback interface previously registered in
+										AddVtoChannel()
 
 			@throw ArgumentException if apOnDataCallback doesn't exist
 		*/
 		void RemoveVtoChannel(IVtoCallbacks* apOnDataCallback);
 
 		/**
-			Binds a VTO router to a prexisting stack using pre-defined physical layer.
-			
-			@param arStackName			Unique name of the stack.
-			@param arPortName			Named physical layer to use.
-			@param aReservedOctetCount	The minimum number of octets to reserve
-										in the DNP3 application layer for VTO
-										data related to this virtual channel.
-			
+			Starts the VtoRouter associated with the specified stack.  Any VTO
+			channel IDs that are added after the VtoRouter is started will be
+			automatically started.
 
-			@throw ArgumentException	if arStackName doesn't exist or Vto 
-										address is already bound for that stack
+			@param arStackName			Unique name of the stack.
+
+			@throw ArgumentException	if arStackName doesn't exist.
 		 */
-		void StartVtoRouter(const std::string& arStackName, 
-						const std::string& arPortName,
-						size_t aReservedOctetCount,
-						byte_t aVtoChannelId);
+		void StartVtoRouter(const std::string& arStackName);
 
 		/**
 			Shutdown a VtoRouter.
 
-			@param arPortName			Unique name of the associated physical layer
+			@param arStackName			Unique name of the stack.
 
-			@throw ArgumentException	if arPortName doesn't exist or not currently bound to VtoRouter
-
+			@throw ArgumentException	if arPortName doesn't exist or not
+										currently bound to VtoRouter
 		*/
-		void StopVtoRouter(const std::string& arPortName);
+		void StopVtoRouter(const std::string& arStackName);
 
 		/// Remove a port and all associated stacks
 		void RemovePort(const std::string& arPortName);
