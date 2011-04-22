@@ -23,6 +23,8 @@
 
 #include <assert.h>
 
+#include "ObjectInterfaces.h"
+
 namespace apl { namespace dnp {
 
 /**
@@ -70,7 +72,6 @@ class IVtoWriter : protected IVtoBase
 								the buffer has insufficient space.
 		 */
 		size_t Write(const byte_t& arData, size_t aLength);
-						
 
 		/**
 			Returns the minimum number of octets that are to be reserved in the
@@ -80,7 +81,19 @@ class IVtoWriter : protected IVtoBase
 		{
 			return this->mReservedOctetCount;
 		}
-		
+
+	protected:
+
+		/**
+			Returns the appropriate DNP3 Object Group instance for the
+			IVtoWriter instance.  For example, VtoMasterWriter should most
+			likely return Group112Var0; VtoSlaveWriter should most likely
+			return Group113Var0.
+
+			@returns			the appropriate ObjectBase instance needed
+								during the Write() operation.
+		 */
+		virtual ObjectBase *GetObjectGroupInstance() = 0;
 
 	private:
 		
@@ -89,6 +102,50 @@ class IVtoWriter : protected IVtoBase
 			Application Layer message for VTO data from this stream.
 		  */
 		size_t mReservedOctetCount;
+};
+
+/**
+	Implements the writer interface needed for a Master implementing the DNP3
+	VTO feature.
+ */
+class VtoMasterWriter : protected IVtoWriter
+{
+	public:
+
+		VtoMasterWriter(byte_t aChannelId, size_t aReservedOctetCount = 0) :
+				IVtoWriter(aChannelId, aReservedOctetCount) {}
+
+	protected:
+
+		/**
+			Returns a Group112Var0 object instance.
+		 */
+		ObjectBase *GetObjectGroupInstance()
+		{
+			throw NotImplementedException(LOCATION);
+		}
+};
+
+/**
+	Implements the writer interface needed for a Slave implementing the DNP3
+	VTO feature.
+ */
+class VtoSlaveWriter : protected IVtoWriter
+{
+	public:
+
+		VtoSlaveWriter(byte_t aChannelId, size_t aReservedOctetCount = 0) :
+				IVtoWriter(aChannelId, aReservedOctetCount) {}
+
+	protected:
+
+		/**
+			Returns a Group113Var0 object instance.
+		 */
+		ObjectBase *GetObjectGroupInstance()
+		{
+			throw NotImplementedException(LOCATION);
+		}
 };
 
 /**
