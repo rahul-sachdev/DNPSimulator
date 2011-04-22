@@ -34,6 +34,8 @@
 #include <APL/Lock.h>
 #include <APL/IOService.h>
 
+#include "VtoDataInterface.h"
+
 namespace apl {
 	class IPhysicalLayerAsync;
 	class Logger;
@@ -49,10 +51,6 @@ class Stack;
 struct SlaveStackConfig;
 struct MasterStackConfig;
 
-class IVtoMasterWriter;
-class IVtoMasterReader;
-class IVtoSlaveWriter;
-class IVtoSlaveReader;
 
 /**
 	The interface for C++ projects for dnp3. Provides an interface for
@@ -114,8 +112,7 @@ class AsyncStackManager : private Threadable, private Loggable
 								const SlaveStackConfig&);
 
 		/**
-			Adds a VTO channel for a Master - Stack will automatically start
-			running if Start() has been called or aAutoRun == true.
+			Adds a VTO channel to a prexisting stack (master or slave)
 
 			@param arStackName			Unique name of the stack.
 			@param apOnDataCallback		Interface to callback with received
@@ -128,31 +125,12 @@ class AsyncStackManager : private Threadable, private Loggable
 			@return						Thread-safe interface to use for writing
 										new VTO data from the master to the
 										slave.
-			@throw ArgumentException	if arStackName already exists.
-		 */
-		IVtoMasterWriter* AddMasterVtoChannel(const std::string& arStackName,
-						IVtoMasterReader* apOnDataCallback,
-						size_t reservedOctetCount = 0);
 
-		/**
-			Adds a VTO channel for a Slave - Stack will automatically start
-			running if Start() has been called or aAutoRun == true.
-
-			@param arStackName			Unique name of the stack.
-			@param apOnDataCallback		Interface to callback with received
-										data.  The callback comes from an
-										unknown network thread, and should not
-										be blocked.
-			@param reservedOctetCount	The minimum number of octets to reserve
-										in the DNP3 application layer for VTO
-										data related to this virtual channel.
-			@return						Thread-safe interface to use for writing
-										new VTO data from the slave to the
-										master.
-			@throw ArgumentException	if arStackName already exists.
+			@throw ArgumentException	if arStackName doesn't exist or the reader 
+										address is already bound
 		 */
-		IVtoSlaveWriter* AddSlaveVtoChannel(const std::string& arStackName,
-						IVtoSlaveReader* apOnDataCallback,
+		IVtoWriter* AddVtoChannel(const std::string& arStackName,
+						IVtoCallbacks* apOnDataCallback,
 						size_t reservedOctetCount = 0);
 
 		/// Remove a port and all associated stacks
