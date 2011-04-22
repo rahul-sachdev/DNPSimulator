@@ -119,19 +119,56 @@ class AsyncStackManager : private Threadable, private Loggable
 										data.  The callback comes from an
 										unknown network thread, and should not
 										be blocked.
-			@param reservedOctetCount	The minimum number of octets to reserve
+			@param aReservedOctetCount	The minimum number of octets to reserve
 										in the DNP3 application layer for VTO
 										data related to this virtual channel.
-			@return						Thread-safe interface to use for writing
+			@return						Interface to use for writing
 										new VTO data from the master to the
 										slave.
 
-			@throw ArgumentException	if arStackName doesn't exist or the reader 
-										address is already bound
+			@throw ArgumentException	if arStackName doesn't exist or Vto 
+										address is already bound for that stack
 		 */
 		IVtoWriter* AddVtoChannel(const std::string& arStackName,
 						IVtoCallbacks* apOnDataCallback,
-						size_t reservedOctetCount = 0);
+						size_t aReservedOctetCount = 0);
+
+		/**
+			Removes an existing VTO channel, stopping callbacks.
+
+			@param apOnDataCallback Callback interface previously registered in AddVtoChannel()
+
+			@throw ArgumentException if apOnDataCallback doesn't exist
+		*/
+		void RemoveVtoChannel(IVtoCallbacks* apOnDataCallback);
+
+		/**
+			Binds a VTO router to a prexisting stack using pre-defined physical layer.
+			
+			@param arStackName			Unique name of the stack.
+			@param arPortName			Named physical layer to use.
+			@param aReservedOctetCount	The minimum number of octets to reserve
+										in the DNP3 application layer for VTO
+										data related to this virtual channel.
+			
+
+			@throw ArgumentException	if arStackName doesn't exist or Vto 
+										address is already bound for that stack
+		 */
+		void StartVtoRouter(const std::string& arStackName, 
+						const std::string& arPortName,
+						size_t aReservedOctetCount,
+						byte_t aVtoChannelId);
+
+		/**
+			Shutdown a VtoRouter.
+
+			@param arPortName			Unique name of the associated physical layer
+
+			@throw ArgumentException	if arPortName doesn't exist or not currently bound to VtoRouter
+
+		*/
+		void StopVtoRouter(const std::string& arPortName);
 
 		/// Remove a port and all associated stacks
 		void RemovePort(const std::string& arPortName);

@@ -103,7 +103,27 @@ IVtoWriter* AsyncStackManager::AddVtoChannel(const std::string& arStackName,
 				size_t reservedOctetCount)
 {
 	/* TODO - need to fill inthe body here */
-	throw NotImplementedException("AddVtoChannel not implemented");
+	throw NotImplementedException(LOCATION);
+}
+
+void AsyncStackManager::RemoveVtoChannel(IVtoCallbacks* apOnDataCallback)
+{
+	/* TODO - need to fill inthe body here */
+	throw NotImplementedException(LOCATION);
+}
+
+void AsyncStackManager::StartVtoRouter(const std::string& arStackName, 
+						const std::string& arPortName,
+						size_t aReservedOctetCount,
+						byte_t aVtoChannelId)
+{
+	throw NotImplementedException(LOCATION);
+}
+
+		
+void AsyncStackManager::StopVtoRouter(const std::string& arPortName)
+{
+	throw NotImplementedException(LOCATION);
 }
 
 /// Remove a port and all associated stacks
