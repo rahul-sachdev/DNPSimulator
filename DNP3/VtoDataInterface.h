@@ -32,11 +32,7 @@ class IVtoBase
 {
 	public:
 		
-		IVtoBase(byte_t aChannelId) : mChannelId(aChannelId)
-		{
-		}
-
-		//~IVtoBase() { }
+		IVtoBase(byte_t aChannelId) : mChannelId(aChannelId) {}
 
 		byte_t GetChannelId()
 		{
@@ -50,19 +46,17 @@ class IVtoBase
 
 /**
 	IVTOWriter is returned by the stack for write operations to a Vto stream.
-	The Write() function should be used in conjunction with the OnBufferAvailable()
-	callback on the IVTOCallbacks interface provided to the stack.
+	The Write() function should be used in conjunction with the
+	OnBufferAvailable() callback on the IVTOCallbacks interface provided to the
+	stack.
  */
 class IVtoWriter : protected IVtoBase
 {
 	public:
 		
-		IVtoWriter(byte_t aChannelId, size_t aReservedOctetCount = 0) :  
-		  IVtoBase(aChannelId),
-		  mReservedOctetCount(aReservedOctetCount)
-		{			
-			
-		}
+		IVtoWriter(byte_t aChannelId, size_t aReservedOctetCount = 0) :
+				IVtoBase(aChannelId),
+				mReservedOctetCount(aReservedOctetCount) {}
 
 		/**
 			Writes a stream of data to the remote VTO endpoint.
@@ -71,12 +65,11 @@ class IVtoWriter : protected IVtoBase
 			@param aLength		The length of the data to write (in bytes).
 			
 			@return				The number of bytes that were successfully
-								queued into the VTO transmission queue. 
-								This number may be less than the length request
-								if the buffer has insufficient space.
-			
+								queued into the VTO transmission queue.  This
+								number may be less than the length request if
+								the buffer has insufficient space.
 		 */
-		virtual size_t Write(const byte_t& arData, size_t aLength) = 0;
+		size_t Write(const byte_t& arData, size_t aLength) = 0;
 						
 
 		/**
@@ -106,9 +99,7 @@ class IVtoCallbacks : protected IVtoBase
 {
 	public:
 
-		IVtoCallbacks(byte_t aChannelId) : IVtoBase(aChannelId)
-		{
-		}
+		IVtoCallbacks(byte_t aChannelId) : IVtoBase(aChannelId) {}
 
 		/**
 			Called when data arrives from stack and needs to be handled.
@@ -119,7 +110,8 @@ class IVtoCallbacks : protected IVtoBase
 		virtual void OnDataReceived(const byte_t& arData, size_t aLength) = 0;
 
 		/**
-			Called when the Vto data buffer size changes (startup and successuly transmission)
+			Called when the Vto data buffer size changes (startup and successuly
+			transmission)
 			
 			@param aSize			Available space in the buffer in bytes
 		*/
