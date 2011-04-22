@@ -22,7 +22,6 @@
 #include "DataTypes.h"
 
 #include <assert.h>
-#include <stdint.h>
 
 namespace apl
 {
@@ -34,26 +33,26 @@ class IVtoBase
 {
 	public:
 		IVtoBase() { }
-		IVtoBase(uint8_t channelId)
+		IVtoBase(byte_t channelId)
 		{
 			SetChannelId(channelId);
 		}
 
 		~IVtoBase() { }
 
-		uint8_t GetChannelId()
+		byte_t GetChannelId()
 		{
 			return this->channelId;
 		}
 
 	protected:
-		void SetChannelId(uint8_t channelId)
+		void SetChannelId(byte_t channelId)
 		{
 			this->channelId = channelId;
 		}
 
 	private:
-		uint8_t channelId;
+		byte_t channelId;
 };
 
 /**
@@ -63,7 +62,7 @@ class IVtoWriterBase : protected IVtoBase
 {
 	public:
 		IVtoWriterBase() { }
-		IVtoWriterBase(uint8_t channelId, size_t reservedOctetCount = 0)
+		IVtoWriterBase(byte_t channelId, size_t reservedOctetCount = 0)
 		{
 			SetChannelId(channelId);
 			SetReservedOctetCount(reservedOctetCount);
@@ -121,7 +120,7 @@ class IVtoReaderBase : protected IVtoBase
 {
 	public:
 		IVtoReaderBase() { }
-		IVtoReaderBase(uint8_t channelId)
+		IVtoReaderBase(byte_t channelId)
 		{
 			SetChannelId(channelId);
 		}
@@ -136,7 +135,7 @@ class IVtoReaderBase : protected IVtoBase
 
 class IVtoMasterWriter : protected IVtoWriterBase
 {
-		IVtoMasterWriter(uint8_t channelId, size_t reservedOctetCount = 0)
+		IVtoMasterWriter(byte_t channelId, size_t reservedOctetCount = 0)
 		{
 			SetChannelId(channelId);
 			SetReservedOctetCount(reservedOctetCount);
@@ -147,7 +146,7 @@ class IVtoMasterWriter : protected IVtoWriterBase
 
 class IVtoSlaveWriter : protected IVtoWriterBase
 {
-		IVtoSlaveWriter(uint8_t channelId, size_t reservedOctetCount = 0)
+		IVtoSlaveWriter(byte_t channelId, size_t reservedOctetCount = 0)
 		{
 			SetChannelId(channelId);
 			SetReservedOctetCount(reservedOctetCount);
@@ -158,7 +157,7 @@ class IVtoSlaveWriter : protected IVtoWriterBase
 
 class IVtoMasterReader : protected IVtoReaderBase
 {
-		IVtoMasterReader(uint8_t channelId)
+		IVtoMasterReader(byte_t channelId)
 		{
 			SetChannelId(channelId);
 		}
@@ -168,7 +167,7 @@ class IVtoMasterReader : protected IVtoReaderBase
 
 class IVtoSlaveReader : protected IVtoReaderBase
 {
-		IVtoSlaveReader(uint8_t channelId)
+		IVtoSlaveReader(byte_t channelId)
 		{
 			SetChannelId(channelId);
 		}

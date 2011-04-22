@@ -28,8 +28,11 @@
 #include <ostream>
 #include <limits>
 #include <math.h>
-#include <strings.h>
 #include <string.h>
+
+// from http://pubs.opengroup.org/onlinepubs/009695399/functions/bzero.html
+// recommendation is replace with this for portability
+#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)
 
 #ifdef max
 #undef max
