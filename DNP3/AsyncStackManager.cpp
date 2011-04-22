@@ -99,6 +99,7 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 }
 
 IVtoWriter* AsyncStackManager::AddVtoChannel(const std::string& arStackName,
+				byte_t aVtoChannelId,
 				IVtoCallbacks* apOnDataCallback,
 				size_t reservedOctetCount)
 {
@@ -112,16 +113,13 @@ void AsyncStackManager::RemoveVtoChannel(IVtoCallbacks* apOnDataCallback)
 	throw NotImplementedException(LOCATION);
 }
 
-void AsyncStackManager::StartVtoRouter(const std::string& arStackName, 
-						const std::string& arPortName,
-						size_t aReservedOctetCount,
-						byte_t aVtoChannelId)
+void AsyncStackManager::StartVtoRouter(const std::string& arStackName)
 {
 	throw NotImplementedException(LOCATION);
 }
 
 		
-void AsyncStackManager::StopVtoRouter(const std::string& arPortName)
+void AsyncStackManager::StopVtoRouter(const std::string& arStackName)
 {
 	throw NotImplementedException(LOCATION);
 }

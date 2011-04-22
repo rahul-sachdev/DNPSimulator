@@ -69,7 +69,7 @@ class IVtoWriter : protected IVtoBase
 								number may be less than the length request if
 								the buffer has insufficient space.
 		 */
-		size_t Write(const byte_t& arData, size_t aLength) = 0;
+		size_t Write(const byte_t& arData, size_t aLength);
 						
 
 		/**
