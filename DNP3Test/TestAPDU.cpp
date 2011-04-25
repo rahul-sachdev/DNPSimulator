@@ -455,10 +455,9 @@ BOOST_AUTO_TEST_SUITE(APDUReading)
 		pObj->Read(*j, i->GetVariation(), buff);
 
 		BOOST_REQUIRE_EQUAL("hello", std::string(reinterpret_cast<const char*>(buff), 5));
-
 	}
 
-	BOOST_AUTO_TEST_CASE(VtoObjectBadWriteMultipleIndices)
+	BOOST_AUTO_TEST_CASE(VtoObjectWriteMultipleIndices)
 	{
 		APDU frag;
 
@@ -508,7 +507,7 @@ BOOST_AUTO_TEST_SUITE(APDUReading)
 		//      Range Specifier Code = 0x7 (1-octet count of objects)
 		//
 		// Range Field (RF):
-		//      Count = 0x02
+		//      Count = 0x43
 		//
 		// Object Prefix Index (IX):
 		//      Prefix = 0x00
@@ -521,16 +520,44 @@ BOOST_AUTO_TEST_SUITE(APDUReading)
 		//      d = 0x
 		//
 		//              AC FC GP VR QF RF IX h  e  l  l  o  GP VR QF RF IX w  o  r  l  d
-		HexSequence hs("C2 02 70 05 17 01 00 68 65 6C 6C 6F 70 05 17 02 00 77 6F 72 6C 64");
+		HexSequence hs("C2 02 70 05 17 01 00 68 65 6C 6C 6F 70 05 17 43 00 77 6F 72 6C 64");
 
 		frag.Write(hs, hs.Size());
+		frag.Interpret();
 
-		int code = -1;
-		try {
-			frag.Interpret();
-		} catch (Exception ex) {
-			code = ex.ErrorCode();
-		}
-		BOOST_REQUIRE_EQUAL(code, ALERR_TOO_MANY_VARIABLE_OBJECTS_IN_HEADER);
+		/* First object */
+		HeaderReadIterator i = frag.BeginRead();
+		BOOST_REQUIRE_EQUAL(i.Count(), 2);
+
+		BOOST_REQUIRE_EQUAL(i->GetGroup(), 112);
+		BOOST_REQUIRE_EQUAL(i->GetVariation(), 5);
+
+		ObjectReadIterator j = i.BeginRead();
+		BOOST_REQUIRE_EQUAL(j.Count(),1);
+		BOOST_REQUIRE(j.HasData());
+
+		const VariableByVariationObject* pObj = static_cast<const VariableByVariationObject*>(i->GetBaseObject());
+
+		byte_t buff[100];
+		pObj->Read(*j, i->GetVariation(), buff);
+
+		BOOST_REQUIRE_EQUAL("hello", std::string(reinterpret_cast<const char*>(buff), 5));
+
+		/* Second object */
+		++i;
+		BOOST_REQUIRE_EQUAL(i.Count(), 2);
+
+		BOOST_REQUIRE_EQUAL(i->GetGroup(), 112);
+		BOOST_REQUIRE_EQUAL(i->GetVariation(), 5);
+
+		j = i.BeginRead();
+		BOOST_REQUIRE_EQUAL(j.Count(), 67);
+		BOOST_REQUIRE(j.HasData());
+
+		pObj = static_cast<const VariableByVariationObject*>(i->GetBaseObject());
+
+		pObj->Read(*j, i->GetVariation(), buff);
+
+		BOOST_REQUIRE_EQUAL("world", std::string(reinterpret_cast<const char*>(buff), 5));
 	}
 BOOST_AUTO_TEST_SUITE_END()
