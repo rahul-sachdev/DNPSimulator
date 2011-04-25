@@ -48,70 +48,75 @@ namespace apl { namespace dnp {
 	*/
 	struct SlaveConfig
 	{
-			SlaveConfig();
+		SlaveConfig();
 
 
-			/// The maximum number of controls the slave will attempt to process from a single APDU
-			size_t mMaxControls;
+		/// The maximum number of controls the slave will attempt to process from a single APDU
+		size_t mMaxControls;
 
-			/// if true, fully disables unsolicited mode as if the slave didn't support it
-			bool mDisableUnsol;
+		/// if true, fully disables unsolicited mode as if the slave didn't support it
+		bool mDisableUnsol;
 
-			/// controls what unsol classes are enabled
-			ClassMask mUnsolMask;
+		/// controls what unsol classes are enabled
+		ClassMask mUnsolMask;
 
-			/// if true, the slave will request time synchronization on an interval
-			bool mAllowTimeSync;
-
-
-			/// The period of time sync interval in milliseconds
-			millis_t mTimeSyncPeriod;
-
-			/// The amount of time the slave will wait before sending new unsolicited data ( <= 0 == immediate)
-			millis_t mUnsolPackDelay;
-
-			/// How long the slave will wait before retrying an unsuccessful unsol response
-			millis_t mUnsolRetryDelay;
+		/// if true, the slave will request time synchronization on an interval
+		bool mAllowTimeSync;
 
 
-			/// The maximum fragment size the slave will use for data it sends
-			size_t mMaxFragSize;
+		/// The period of time sync interval in milliseconds
+		millis_t mTimeSyncPeriod;
 
-			/// The number of binary events the slave will buffer before overflowing
-			size_t mMaxBinaryEvents;
+		/// The amount of time the slave will wait before sending new unsolicited data ( <= 0 == immediate)
+		millis_t mUnsolPackDelay;
 
-			/// The number of analog events the slave will buffer before overflowing
-			size_t mMaxAnalogEvents;
-
-			/// The number of counter events the slave will buffer before overflowing
-			size_t mMaxCounterEvents;
+		/// How long the slave will wait before retrying an unsuccessful unsol response
+		millis_t mUnsolRetryDelay;
 
 
-			// default static response types
+		/// The maximum fragment size the slave will use for data it sends
+		size_t mMaxFragSize;
 
-			/// The default group/variation to use for static binary responses
-			GrpVar mStaticBinary;
+		/// The number of binary events the slave will buffer before overflowing
+		size_t mMaxBinaryEvents;
 
-			/// The default group/variation to use for static analog responses
-			GrpVar mStaticAnalog;
+		/// The number of analog events the slave will buffer before overflowing
+		size_t mMaxAnalogEvents;
 
-			/// The default group/variation to use for static counter responses
-			GrpVar mStaticCounter;
-
-			/// The default group/variation to use for static setpoint status responses
-			GrpVar mStaticSetpointStatus;
+		/// The number of counter events the slave will buffer before overflowing
+		size_t mMaxCounterEvents;
 
 
-			// default event response types
+		// default static response types
 
-			/// The default group/variation to use for binary event responses
-			GrpVar mEventBinary;
+		/// The default group/variation to use for static binary responses
+		GrpVar mStaticBinary;
 
-			/// The default group/variation to use for analog event responses
-			GrpVar mEventAnalog;
+		/// The default group/variation to use for static analog responses
+		GrpVar mStaticAnalog;
 
-			/// The default group/variation to use for counter event responses
-			GrpVar mEventCounter;
+		/// The default group/variation to use for static counter responses
+		GrpVar mStaticCounter;
+
+		/// The default group/variation to use for static setpoint status responses
+		GrpVar mStaticSetpointStatus;
+
+
+		// default event response types
+
+		/// The default group/variation to use for binary event responses
+		GrpVar mEventBinary;
+
+		/// The default group/variation to use for analog event responses
+		GrpVar mEventAnalog;
+
+		/// The default group/variation to use for counter event responses
+		GrpVar mEventCounter;
+
+
+		/// The minimum number of octets to reserve in the DNP3 application
+		/// layer for VTO data related to this stack.
+		size_t VtoReservedOctetCount;
 	};
 
 }}

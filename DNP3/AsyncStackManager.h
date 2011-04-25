@@ -125,9 +125,6 @@ class AsyncStackManager : private Threadable, private Loggable
 										data.  The callback comes from an
 										unknown network thread, and should not
 										be blocked.
-			@param aReservedOctetCount	The minimum number of octets to reserve
-										in the DNP3 application layer for VTO
-										data related to this virtual channel.
 
 			@return						Interface to use for writing
 										new VTO data from the master to the
@@ -139,8 +136,7 @@ class AsyncStackManager : private Threadable, private Loggable
 		 */
 		IVtoWriter* AddVtoChannel(const std::string& arStackName,
 						byte_t aVtoChannelId,
-						IVtoCallbacks* apOnDataCallback,
-						size_t aReservedOctetCount = 0);
+						IVtoCallbacks* apOnDataCallback);
 
 		/**
 			Removes an existing VTO channel that was created using
@@ -169,9 +165,6 @@ class AsyncStackManager : private Threadable, private Loggable
 										data.  The callback comes from an
 										unknown network thread, and should not
 										be blocked.
-			@param aReservedOctetCount	The minimum number of octets to reserve
-										in the DNP3 application layer for VTO
-										data related to this virtual channel.
 
 			@return						Interface to use for writing
 										new VTO data from the master to the
@@ -183,8 +176,7 @@ class AsyncStackManager : private Threadable, private Loggable
 		 */
 		void StartVtoRouter(const std::string& arPortName,
 						const std::string& arStackName,
-						byte_t aVtoChannelId,
-						size_t aReservedOctetCount = 0);
+						byte_t aVtoChannelId);
 
 		/**
 			Shutdown a VtoRouter for the VTO channel on the specified stack.

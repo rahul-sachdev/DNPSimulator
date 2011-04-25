@@ -43,7 +43,8 @@ struct MasterConfig
 	UnsolClassMask(PC_ALL_EVENTS),
 	IntegrityRate(5000),
 	TaskRetryRate(5000),
-	mpObserver(NULL)
+	mpObserver(NULL),
+	VtoReservedOctetCount(0)
 	{}
 
 	/** Adds a periodic exception scan to the configuration
@@ -83,6 +84,10 @@ struct MasterConfig
 
 	/// Observer class for notifying outside world what the master is doing
 	IMasterObserver* mpObserver;
+
+	/// The minimum number of octets to reserve in the DNP3 application layer
+	/// for VTO data related to this stack.
+	size_t VtoReservedOctetCount;
 };
 
 }}

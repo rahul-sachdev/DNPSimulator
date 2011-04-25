@@ -56,9 +56,8 @@ class IVtoWriter : protected IVtoBase
 {
 	public:
 		
-		IVtoWriter(byte_t aChannelId, size_t aReservedOctetCount = 0) :
-				IVtoBase(aChannelId),
-				mReservedOctetCount(aReservedOctetCount) {}
+		IVtoWriter(byte_t aChannelId) :
+				IVtoBase(aChannelId) {}
 
 		/**
 			Writes a stream of data to the remote VTO endpoint.
@@ -73,15 +72,6 @@ class IVtoWriter : protected IVtoBase
 		 */
 		size_t Write(const byte_t& arData, size_t aLength);
 
-		/**
-			Returns the minimum number of octets that are to be reserved in the
-			DNP3 Application Layer message for VTO data from this stream.
-		  */
-		size_t GetReservedOctetCount()
-		{
-			return this->mReservedOctetCount;
-		}
-
 	protected:
 
 		/**
@@ -95,13 +85,6 @@ class IVtoWriter : protected IVtoBase
 		 */
 		virtual ObjectBase *GetObjectGroupInstance() = 0;
 
-	private:
-		
-		/**
-			The minimum number of octets that are to be reserved in the DNP3
-			Application Layer message for VTO data from this stream.
-		  */
-		size_t mReservedOctetCount;
 };
 
 /**
@@ -112,8 +95,8 @@ class VtoMasterWriter : protected IVtoWriter
 {
 	public:
 
-		VtoMasterWriter(byte_t aChannelId, size_t aReservedOctetCount = 0) :
-				IVtoWriter(aChannelId, aReservedOctetCount) {}
+		VtoMasterWriter(byte_t aChannelId) :
+				IVtoWriter(aChannelId) {}
 
 	protected:
 
@@ -134,8 +117,8 @@ class VtoSlaveWriter : protected IVtoWriter
 {
 	public:
 
-		VtoSlaveWriter(byte_t aChannelId, size_t aReservedOctetCount = 0) :
-				IVtoWriter(aChannelId, aReservedOctetCount) {}
+		VtoSlaveWriter(byte_t aChannelId) :
+				IVtoWriter(aChannelId) {}
 
 	protected:
 
