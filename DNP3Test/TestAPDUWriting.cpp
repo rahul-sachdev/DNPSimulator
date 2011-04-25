@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
@@ -49,14 +49,14 @@ BOOST_AUTO_TEST_SUITE(APDUWriting)
 	BOOST_AUTO_TEST_CASE(WriteIIN)
 	{
 		HexSequence hs("C4 02 50 01 00 07 07 00");
-		
+
 		APDU frag;
 		frag.SetFunction(FC_WRITE);
 		frag.SetControl(true, true, false, false, 4);
-		
+
 		Group80Var1* pObj = Group80Var1::Inst();
 		ObjectWriteIterator i = frag.WriteContiguous(pObj, 7, 7);
-		
+
 		pObj->Write(*i, 7, 7, false);
 		++i;
 
@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_SUITE(APDUWriting)
 	BOOST_AUTO_TEST_CASE(ResponseWithDataAndFlags)
 	{
 		HexSequence hs("E3 81 96 00 02 01 28 01 00 00 00 01 02 01 28 01 00 01 00 01 02 01 28 01 00 02 00 01 02 01 28 01 00 03 00 01 20 02 28 01 00 00 00 01 00 00 20 02 28 01 00 01 00 01 00 00 01 01 01 00 00 03 00 00 1E 02 01 00 00 01 00 01 00 00 01 00 00");
-		
+
 		APDU frag;
 		frag.SetFunction(FC_RESPONSE);
 		frag.SetControl(true, true, true, false, 3);
@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_SUITE(APDUWriting)
 			pObj->mFlag.Set(*i, BQ_ONLINE);
 			++i;
 			BOOST_REQUIRE(i.IsEnd());
-			
+
 			BOOST_REQUIRE_EQUAL(frag.Size(), 28);
 
 			i = frag.WriteIndexed(pObj, 1, QC_2B_CNT_2B_INDEX);
@@ -150,15 +150,15 @@ BOOST_AUTO_TEST_SUITE(APDUWriting)
 			pObj->Write(*i, 0, 0, false);
 			++i;
 			BOOST_REQUIRE_FALSE(i.IsEnd());
-			
+
 			pObj->Write(*i, 0, 1, false);
 			++i;
 			BOOST_REQUIRE_FALSE(i.IsEnd());
-			
+
 			pObj->Write(*i, 0, 2, false);
 			++i;
 			BOOST_REQUIRE_FALSE(i.IsEnd());
-			
+
 			pObj->Write(*i, 0, 3, false);
 			++i;
 			BOOST_REQUIRE(i.IsEnd());
@@ -172,12 +172,12 @@ BOOST_AUTO_TEST_SUITE(APDUWriting)
 		{
 			Group30Var2* pObj = Group30Var2::Inst();
 			ObjectWriteIterator i = frag.WriteContiguous(pObj, 0, 1, QC_2B_START_STOP);
-			
+
 			pObj->mFlag.Set(*i, AQ_ONLINE);
 			pObj->mValue.Set(*i, 0);
 			++i;
 			BOOST_REQUIRE_FALSE(i.IsEnd());
-			
+
 			pObj->mFlag.Set(*i, AQ_ONLINE);
 			pObj->mValue.Set(*i, 0);
 			++i;
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_SUITE(APDUWriting)
 
 		BitfieldObject* pObj = Group1Var1::Inst();
 		ObjectWriteIterator owi = frag.WriteContiguous(Group1Var1::Inst(), 0, 5);//, BWM_AUTO, true);
-		
+
 		for(int i=0; i<6; ++i) {
 			pObj->Write(*owi, 0, i, (i%2)==1);
 			++owi;
@@ -220,13 +220,13 @@ BOOST_AUTO_TEST_SUITE(APDUWriting)
 
 		IndexedWriteIterator itr = frag.WriteIndexed(Group41Var3::Inst(), 1, QC_1B_CNT_1B_INDEX);
 		Setpoint s(100.0);
-		
+
 		itr.SetIndex(1);
 		Group41Var3::Inst()->Write(*itr, s);
 		string rsp = toHex(frag.GetBuffer(), frag.Size(), true);
 
 		// group 41 var 4, count = 1, index = 0, value = 100.0, status = CS_SUCCESS
-		BOOST_REQUIRE_EQUAL("C0 81 00 00 29 03 17 01 01 00 00 C8 42 00", rsp);			
+		BOOST_REQUIRE_EQUAL("C0 81 00 00 29 03 17 01 01 00 00 C8 42 00", rsp);
 	}
 
 	BOOST_AUTO_TEST_CASE(DoubleSetpoint)
@@ -241,14 +241,14 @@ BOOST_AUTO_TEST_SUITE(APDUWriting)
 		Setpoint s(100.0);
 
 		itr.SetIndex(1);
-	
+
 		Group41Var4::Inst()->Write(*itr, s);
 		string rsp = toHex(frag.GetBuffer(), frag.Size(), true);
 
 		// group 41 var 4, count = 1, index = 0, value = 100.0, status = CS_SUCCESS
 		BOOST_REQUIRE_EQUAL("C0 81 00 00 29 04 17 01 01 00 00 00 00 00 00 59 40 00", rsp);
 	}
-	
+
 	BOOST_AUTO_TEST_CASE(ClassPollRequest)
 	{
 		HexSequence hs("C3 01 3C 02 06 3C 03 06 3C 04 06 3C 01 06");
@@ -271,15 +271,15 @@ BOOST_AUTO_TEST_SUITE(APDUWriting)
 		BOOST_REQUIRE_EQUAL(frag.Size(), hs.Size());
 		BOOST_REQUIRE(AreBuffersEqual(frag.GetBuffer(), hs, hs.Size()));
 	}
-	
+
 	BOOST_AUTO_TEST_CASE(Confirm)
 	{
 		HexSequence hs("C3 00");
-		
+
 		APDU frag;
 		frag.SetFunction(FC_CONFIRM);
 		frag.SetControl(true, true, false, false, 3);
-		
+
 		BOOST_REQUIRE_EQUAL(frag.Size(), hs.Size());
 		BOOST_REQUIRE(AreBuffersEqual(frag.GetBuffer(), hs, hs.Size()));
 	}
@@ -292,13 +292,13 @@ BOOST_AUTO_TEST_SUITE(APDUWriting)
 		frag.SetFunction(FC_READ);
 		frag.SetControl(true, true);
 		IndexedWriteIterator i = frag.WriteIndexed(Group1Var2::Inst(), 3, 255);
-		
+
 		i.SetIndex(1); ++i;
 		i.SetIndex(3); ++i;
 		i.SetIndex(5); ++i;
 
 		BOOST_REQUIRE(i.IsEnd());
-		
+
 		BOOST_REQUIRE_EQUAL(frag.Size(), hs.Size());
 		BOOST_REQUIRE(AreBuffersEqual(frag.GetBuffer(), hs, hs.Size()));
 	}
@@ -306,14 +306,13 @@ BOOST_AUTO_TEST_SUITE(APDUWriting)
 	BOOST_AUTO_TEST_CASE(Sequence15Correct)
 	{
 		HexSequence hs("CF 00");
-		
+
 		APDU frag;
 		frag.SetFunction(FC_CONFIRM);
 		frag.SetControl(true, true, false, false, 15);
-		
+
 		BOOST_REQUIRE_EQUAL(frag.Size(), hs.Size());
 		BOOST_REQUIRE(AreBuffersEqual(frag.GetBuffer(), hs, hs.Size()));
-		
 	}
 
 	BOOST_AUTO_TEST_CASE(VirtualTerminalWrite)
@@ -321,7 +320,7 @@ BOOST_AUTO_TEST_SUITE(APDUWriting)
 		APDU frag;
 		frag.SetFunction(FC_WRITE);
 		frag.SetControl(true, true, false, false, 2);
-		
+
 		std::string str("hello");
 		size_t outSize = str.size();
 		int index = 0;
