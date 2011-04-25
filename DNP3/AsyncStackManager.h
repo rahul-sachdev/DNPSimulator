@@ -112,8 +112,15 @@ class AsyncStackManager : private Threadable, private Loggable
 								const SlaveStackConfig&);
 
 		/**
-			Adds a VTO channel to a prexisting stack (master or slave)
+			Adds a VTO channel to a prexisting stack (master or slave).
+			This function should be used for advanced control of a VTO channel,
+			where the implementer wants to control the end VTO stream as a byte
+			array.  Otherwise, the implementer should look at
+			AsyncStackManager::StartVtoRouter() as a simpler way of connecting a
+			port (such as a local TCP service) to the VTO stream.
 
+			@param arPortName			Unique name of the port to which the
+										router should associate.
 			@param arStackName			Unique name of the stack.
 			@param aVtoChannelId		Unique channel ID for the VTO circuit.
 			@param apOnDataCallback		Interface to callback with received
@@ -128,45 +135,85 @@ class AsyncStackManager : private Threadable, private Loggable
 										new VTO data from the master to the
 										slave.
 
-			@throw ArgumentException	if arStackName doesn't exist or if the
-										VTO channel ID is already bound for that
-										stack
+			@throw ArgumentException	if arPortName/arStackName doesn't exist
+										or if the VTO channel ID is already
+										bound for that stack
 		 */
-		IVtoWriter* AddVtoChannel(const std::string& arStackName,
+		IVtoWriter* AddVtoChannel(const std::string& arPortName,
+						const std::string& arStackName,
 						byte_t aVtoChannelId,
 						IVtoCallbacks* apOnDataCallback,
 						size_t aReservedOctetCount = 0);
 
 		/**
-			Removes an existing VTO channel, stopping callbacks.
+			Removes an existing VTO channel that was created using
+			AsyncStackManager::AddVtoChannel(), stopping callbacks.
 
-			@param apOnDataCallback		Callback interface previously registered in
-										AddVtoChannel()
+			@param apOnDataCallback		Callback interface previously registered
+										in AddVtoChannel()
 
 			@throw ArgumentException if apOnDataCallback doesn't exist
 		*/
 		void RemoveVtoChannel(IVtoCallbacks* apOnDataCallback);
 
 		/**
-			Starts the VtoRouter associated with the specified stack.  Any VTO
-			channel IDs that are added after the VtoRouter is started will be
-			automatically started.
+			Starts the VtoRouter for the specified port and stack.
+			A VtoRouter acts as a conduit, where the VTO stream is funneled
+			between the arStackName (which also defines a master/slave port) and
+			the arPortName (such as a TCP/IP daemon).  If the implementer wants
+			to terminate the VTO stream in the application itself, he/she should
+			look at the AsyncStackManager::AddVtoChannel() routine.
 
+			@param arPortName			Unique name of the port to which the
+										router should associate.
 			@param arStackName			Unique name of the stack.
+			@param aVtoChannelId		Unique channel ID for the VTO circuit.
+			@param apOnDataCallback		Interface to callback with received
+										data.  The callback comes from an
+										unknown network thread, and should not
+										be blocked.
+			@param aReservedOctetCount	The minimum number of octets to reserve
+										in the DNP3 application layer for VTO
+										data related to this virtual channel.
 
-			@throw ArgumentException	if arStackName doesn't exist.
+			@return						Interface to use for writing
+										new VTO data from the master to the
+										slave.
+
+			@throw ArgumentException	if arPortName/arStackName doesn't exist
+										or if the VTO channel ID is already
+										bound for that stack
 		 */
-		void StartVtoRouter(const std::string& arStackName);
+		void StartVtoRouter(const std::string& arPortName,
+						const std::string& arStackName,
+						byte_t aVtoChannelId,
+						size_t aReservedOctetCount = 0);
 
 		/**
-			Shutdown a VtoRouter.
+			Shutdown a VtoRouter on the specified port, stack, and VTO channel.
 
+			@param arPortName			Unique name of the port.
 			@param arStackName			Unique name of the stack.
 
-			@throw ArgumentException	if arPortName doesn't exist or not
-										currently bound to VtoRouter
+			@throw ArgumentException	if arPortName/arStackName doesn't exist
 		*/
-		void StopVtoRouter(const std::string& arStackName);
+		void StopVtoRouter(const std::string& arPortName,
+						const std::string& arStackName,
+						byte_t aVtoChannelId);
+
+		/**
+			Shutdown all VtoRouter instances on the specified port and stack.
+
+			@param arPortName			Unique name of the port.
+			@param arStackName			Unique name of the stack.
+			@param aVtoChannelId		Unique channel ID for the VTO circuit.
+
+			@throw ArgumentException	if arPortName/arStackName doesn't exist
+										or if the VTO channel ID is already
+										bound for that stack
+		*/
+		void StopVtoRouter(const std::string& arPortName,
+						const std::string& arStackName);
 
 		/// Remove a port and all associated stacks
 		void RemovePort(const std::string& arPortName);
