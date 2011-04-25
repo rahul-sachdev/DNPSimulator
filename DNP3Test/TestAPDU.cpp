@@ -400,7 +400,44 @@ using namespace apl::dnp;
 		BOOST_AUTO_TEST_CASE(VirtualTerminalObjectWrite)
 		{
 			APDU frag;
+
+			// Application Control (AC):
+			//      First Fragment (FIR) = 1
+			//      Final Fragment (FIN) = 1
+			//      Confirmation Required (CON) = 0
+			//      Unsolicited Response (UNS) = 0
+			//      Sequence (SEQ) = 0x2
+			//
+			// Function Control (FC):
+			//      Request / WRITE = 0x02
+			//
+			// Group (GP):
+			//      Object Group 112 = 0x70
+			//
+			// Variation (VR):
+			//      Length = 0x05
+			//
+			// Qualified Field (QF):
+			//      RES = 0
+			//      Object Prefix Code = 0x1 (prefixed with a 1-octet index)
+			//      Range Specifier Code = 0x7 (1-octet count of objects)
+			//
+			// Range Field (RF):
+			//      Count = 0x01
+			//
+			// Object Prefix Index (IX):
+			//      Prefix = 0x00
+			//
+			// Data Field:
+			//      h = 0x68
+			//      e = 0x65
+			//      l = 0x6C
+			//      l = 0x6C
+			//      o = 0x6F
+			//
+			//              AC FC GP VR QF RF IX h  e  l  l  o
 			HexSequence hs("C2 02 70 05 17 01 00 68 65 6C 6C 6F"); 
+
 			frag.Write(hs, hs.Size());
 			frag.Interpret();
 			
@@ -421,6 +458,81 @@ using namespace apl::dnp;
 
 			BOOST_REQUIRE_EQUAL("hello", std::string(reinterpret_cast<const char*>(buff), 5));
 
+		}
+
+		BOOST_AUTO_TEST_CASE(VtoObjectBadWriteMultipleIndices)
+		{
+			APDU frag;
+
+			// Application Control (AC):
+			//      First Fragment (FIR) = 1
+			//      Final Fragment (FIN) = 1
+			//      Confirmation Required (CON) = 0
+			//      Unsolicited Response (UNS) = 0
+			//      Sequence (SEQ) = 0x2
+			//
+			// Function Control (FC):
+			//      Request / WRITE = 0x02
+			//
+			// Group (GP):
+			//      Object Group 112 = 0x70
+			//
+			// Variation (VR):
+			//      Length = 0x05
+			//
+			// Qualified Field (QF):
+			//      RES = 0
+			//      Object Prefix Code = 0x1 (prefixed with a 1-octet index)
+			//      Range Specifier Code = 0x7 (1-octet count of objects)
+			//
+			// Range Field (RF):
+			//      Count = 0x01
+			//
+			// Object Prefix Index (IX):
+			//      Prefix = 0x00
+			//
+			// Data Field:
+			//      h = 0x68
+			//      e = 0x65
+			//      l = 0x6C
+			//      l = 0x6C
+			//      o = 0x6F
+			//
+			// Group (GP):
+			//      Object Group 112 = 0x70
+			//
+			// Variation (VR):
+			//      Length = 0x05
+			//
+			// Qualified Field (QF):
+			//      RES = 0
+			//      Object Prefix Code = 0x1 (prefixed with a 1-octet index)
+			//      Range Specifier Code = 0x7 (1-octet count of objects)
+			//
+			// Range Field (RF):
+			//      Count = 0x02
+			//
+			// Object Prefix Index (IX):
+			//      Prefix = 0x00
+			//
+			// Data Field:
+			//      w = 0x
+			//      o = 0x
+			//      r = 0x
+			//      l = 0x6C
+			//      d = 0x
+			//
+			//              AC FC GP VR QF RF IX h  e  l  l  o  GP VR QF RF IX w  o  r  l  d
+			HexSequence hs("C2 02 70 05 17 01 00 68 65 6C 6C 6F 70 05 17 02 00 77 6F 72 6C 64"); 
+			frag.Write(hs, hs.Size());
+
+			int code = -1;
+			try {
+				frag.Interpret();
+			} catch (Exception ex) {
+				code = ex.ErrorCode();
+			}
+			BOOST_REQUIRE_EQUAL(code, ALERR_TOO_MANY_VARIABLE_OBJECTS_IN_HEADER);
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 
