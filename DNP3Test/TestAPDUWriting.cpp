@@ -333,4 +333,32 @@ BOOST_AUTO_TEST_SUITE(APDUWriting)
 		std::string output  = toHex(frag.GetBuffer(), frag.Size(), true);
 		BOOST_REQUIRE_EQUAL(output, "C2 02 70 05 17 01 00 68 65 6C 6C 6F");
 	}
+
+	BOOST_AUTO_TEST_CASE(VirtualTerminalWriteMultipleIndices)
+	{
+		APDU frag;
+		frag.SetFunction(FC_WRITE);
+		frag.SetControl(true, true, false, false, 2);
+
+		// Write the first object
+		std::string hello("hello");
+		size_t outSize = hello.size();
+		int index = 0;
+
+		IndexedWriteIterator i = frag.WriteIndexed(Group112Var0::Inst(), outSize, index);
+		i.SetIndex(index);
+		const byte_t* ptr = reinterpret_cast<const byte_t*>(hello.c_str());
+		Group112Var0::Inst()->Write(*i, outSize, ptr);
+
+		// Write the second object
+		std::string world("world");
+		++i;
+		i = frag.WriteIndexed(Group112Var0::Inst(), outSize, index);
+		i.SetIndex(index);
+		ptr = reinterpret_cast<const byte_t*>(world.c_str());
+		Group112Var0::Inst()->Write(*i, outSize, ptr);
+
+		std::string output  = toHex(frag.GetBuffer(), frag.Size(), true);
+		BOOST_REQUIRE_EQUAL(output, "C2 02 70 05 17 01 00 68 65 6C 6C 6F 70 05 17 01 00 77 6F 72 6C 64");
+	}
 BOOST_AUTO_TEST_SUITE_END()
