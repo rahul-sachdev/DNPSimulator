@@ -39,7 +39,7 @@ namespace apl { namespace dnp {
 
 	/**
 		A class that represents a DNP3 Application Layer message, providing
-		interfaces to read and write the Application Protocol Data Unit (APDU).
+		interfaces to read and write the Application Data Unit (APDU).
 		Interpret method and read iterators form the read interface, while Set
 		method and object write iterators form the write interface.
 	*/
@@ -336,7 +336,7 @@ namespace apl { namespace dnp {
 
 				@code
 				FIR: 0, FIN: 1, CON: 0, UNS: 1, SEQ: 13, Func: Write HdrCount: 5, Header: (Grp: 112, Var: 24, Qual: 6, Count: 1), Size: 37
-				@encode
+				@endcode
 
 				@return				a string representation of the APDU object
 			 */
