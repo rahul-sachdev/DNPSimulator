@@ -161,10 +161,6 @@ class AsyncStackManager : private Threadable, private Loggable
 										router should associate.
 			@param arStackName			Unique name of the stack.
 			@param aVtoChannelId		Unique channel ID for the VTO circuit.
-			@param apOnDataCallback		Interface to callback with received
-										data.  The callback comes from an
-										unknown network thread, and should not
-										be blocked.
 
 			@return						Interface to use for writing
 										new VTO data from the master to the
