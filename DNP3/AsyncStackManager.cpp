@@ -98,17 +98,15 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 	return pSlave->mSlave.GetDataObserver();
 }
 
-IVtoWriter* AsyncStackManager::AddVtoChannel(const std::string& arPortName,
-				const std::string& arStackName, byte_t aVtoChannelId,
-				IVtoCallbacks* apOnDataCallback, size_t aReservedOctetCount)
+IVtoWriter* AsyncStackManager::AddVtoChannel(const std::string& arStackName,
+				byte_t aVtoChannelId, IVtoCallbacks* apOnDataCallback,
+				size_t aReservedOctetCount)
 {
-	/* TODO - need to fill inthe body here */
 	throw NotImplementedException(LOCATION);
 }
 
 void AsyncStackManager::RemoveVtoChannel(IVtoCallbacks* apOnDataCallback)
 {
-	/* TODO - need to fill inthe body here */
 	throw NotImplementedException(LOCATION);
 }
 
@@ -119,14 +117,13 @@ void AsyncStackManager::StartVtoRouter(const std::string& arPortName,
 	throw NotImplementedException(LOCATION);
 }
 		
-void AsyncStackManager::StopVtoRouter(const std::string& arPortName,
-				const std::string& arStackName, byte_t aVtoChannelId)
+void AsyncStackManager::StopVtoRouter(const std::string& arStackName,
+				byte_t aVtoChannelId)
 {
 	throw NotImplementedException(LOCATION);
 }
 		
-void AsyncStackManager::StopVtoRouter(const std::string& arPortName,
-				const std::string& arStackName)
+void AsyncStackManager::StopVtoRouter(const std::string& arStackName)
 {
 	throw NotImplementedException(LOCATION);
 }
