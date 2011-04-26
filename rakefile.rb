@@ -4,6 +4,7 @@ $: << './tools/rake_build_system' #make sure this rakefile can see all the build
 ENV['BOOST_VERSION']='boost_1_46_1'
 
 require 'rake/clean'
+CLOBBER.include('doc')					# remove any doxygen-generated files
 
 require 'rake.environment.rb'           # this sets up a slew of environment constants
 require 'plugins/rake.cpp.rb'           # this provides the facilities for declaring C++ style builds
