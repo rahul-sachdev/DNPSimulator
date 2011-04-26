@@ -103,10 +103,7 @@ class VtoMasterWriter : protected IVtoWriter
 		/**
 			Returns a Group112Var0 object instance.
 		 */
-		SizeByVariationObject *GetObjectGroupInstance()
-		{
-			throw NotImplementedException(LOCATION);
-		}
+		SizeByVariationObject *GetObjectGroupInstance();
 };
 
 /**
@@ -125,10 +122,7 @@ class VtoSlaveWriter : protected IVtoWriter
 		/**
 			Returns a Group113Var0 object instance.
 		 */
-		SizeByVariationObject *GetObjectGroupInstance()
-		{
-			throw NotImplementedException(LOCATION);
-		}
+		SizeByVariationObject *GetObjectGroupInstance();		
 };
 
 /**
