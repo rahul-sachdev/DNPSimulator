@@ -98,6 +98,34 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 	return pSlave->mSlave.GetDataObserver();
 }
 
+IVtoWriter* AsyncStackManager::AddVtoChannel(const std::string& arStackName,
+				byte_t aVtoChannelId, IVtoCallbacks* apOnDataCallback)
+{
+	throw NotImplementedException(LOCATION);
+}
+
+void AsyncStackManager::RemoveVtoChannel(IVtoCallbacks* apOnDataCallback)
+{
+	throw NotImplementedException(LOCATION);
+}
+
+void AsyncStackManager::StartVtoRouter(const std::string& arPortName,
+				const std::string& arStackName, byte_t aVtoChannelId)
+{
+	throw NotImplementedException(LOCATION);
+}
+		
+void AsyncStackManager::StopVtoRouter(const std::string& arStackName,
+				byte_t aVtoChannelId)
+{
+	throw NotImplementedException(LOCATION);
+}
+		
+void AsyncStackManager::StopVtoRouter(const std::string& arStackName)
+{
+	throw NotImplementedException(LOCATION);
+}
+
 /// Remove a port and all associated stacks
 void AsyncStackManager::RemovePort(const std::string& arPortName)
 {	

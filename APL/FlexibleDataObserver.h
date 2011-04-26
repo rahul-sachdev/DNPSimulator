@@ -51,15 +51,15 @@ namespace apl
 			PointMap<Counter>::Type mCounterMap;
 			PointMap<ControlStatus>::Type mControlStatusMap;
 			PointMap<SetpointStatus>::Type mSetpointStatusMap;
+			PointMap<VtoData>::Type mVtoDataMap;
 
-			bool Check(bool aValue, BinaryQuality aQuality, size_t aIndex)
-			{
-				byte_t qual = aQuality;
-				if(aValue) qual |= BQ_STATE;
-				return Check<Binary, bool>(mBinaryMap, aValue, qual, aIndex);
-			}
+			/*
+			 * Analog
+			 */
 			bool Check(int_32_t aValue, AnalogQuality aQuality, size_t aIndex)
-			{ return Check<Analog, int_32_t>(mAnalogMap, aValue, aQuality, aIndex); }
+			{
+				return Check<Analog, int_32_t>(mAnalogMap, aValue, aQuality, aIndex);
+			}
 
 			bool Check(double aValue, AnalogQuality aQuality, size_t aIndex)
 			{
@@ -69,17 +69,60 @@ namespace apl
 				return apl::FloatEqual(aValue, i->second.GetValue());
 			}
 
+			bool Check(int_32_t aValue, AnalogQuality aQuality, size_t aIndex, TimeStamp_t aTime)
+			{
+				return Check<Analog, int_32_t>(mAnalogMap, aValue, aQuality,  aTime, aIndex);
+			}
 
+			/*
+			 * Counter
+			 */
 			bool Check(uint_32_t aValue, CounterQuality aQuality, size_t aIndex)
-			{ return Check<Counter, uint_32_t>(mCounterMap, aValue, aQuality, aIndex); }
+			{
+				return Check<Counter, uint_32_t>(mCounterMap, aValue, aQuality, aIndex);
+			}
+
 			bool Check(bool aValue, ControlQuality aQuality, size_t aIndex)
 			{
 				byte_t qual = aQuality;
 				if(aValue) qual |= TQ_STATE;
 				return Check<ControlStatus, bool>(mControlStatusMap, aValue, qual, aIndex);
 			}
+
+			bool Check(uint_32_t aValue, CounterQuality aQuality, size_t aIndex, TimeStamp_t aTime)
+			{
+				return Check<Counter, uint_32_t>(mCounterMap, aValue, aQuality,  aTime, aIndex);
+			}
+
+			bool Check(bool aValue, ControlQuality aQuality, size_t aIndex, TimeStamp_t aTime)
+			{
+				byte_t qual = aQuality;
+				if(aValue) qual |= TQ_STATE;
+				return Check<ControlStatus, bool>(mControlStatusMap, aValue, qual,  aTime, aIndex);
+			}
+
+			/*
+			 * Setpoint
+			 */
 			bool Check(int_32_t aValue, SetpointQuality aQuality, size_t aIndex)
-			{ return Check<SetpointStatus, int_32_t>(mSetpointStatusMap, aValue, aQuality, aIndex); }
+			{
+				return Check<SetpointStatus, int_32_t>(mSetpointStatusMap, aValue, aQuality, aIndex);
+			}
+
+			bool Check(int_32_t aValue, SetpointQuality aQuality, size_t aIndex, TimeStamp_t aTime)
+			{
+				return Check<SetpointStatus, int_32_t>(mSetpointStatusMap, aValue, aQuality, aTime, aIndex);
+			}
+
+			/*
+			 * Binary
+			 */
+			bool Check(bool aValue, BinaryQuality aQuality, size_t aIndex)
+			{
+				byte_t qual = aQuality;
+				if(aValue) qual |= BQ_STATE;
+				return Check<Binary, bool>(mBinaryMap, aValue, qual, aIndex);
+			}
 
 			bool Check(bool aValue, BinaryQuality aQuality, size_t aIndex, TimeStamp_t aTime)
 			{
@@ -87,30 +130,26 @@ namespace apl
 				if(aValue) qual |= BQ_STATE;
 				return Check<Binary, bool>(mBinaryMap, aValue, qual, aTime, aIndex);
 			}
-			bool Check(int_32_t aValue, AnalogQuality aQuality, size_t aIndex, TimeStamp_t aTime)
-			{ return Check<Analog, int_32_t>(mAnalogMap, aValue, aQuality,  aTime, aIndex); }
-			bool Check(uint_32_t aValue, CounterQuality aQuality, size_t aIndex, TimeStamp_t aTime)
-			{ return Check<Counter, uint_32_t>(mCounterMap, aValue, aQuality,  aTime, aIndex); }
-			bool Check(bool aValue, ControlQuality aQuality, size_t aIndex, TimeStamp_t aTime)
-			{
-				byte_t qual = aQuality;
-				if(aValue) qual |= TQ_STATE;
-				return Check<ControlStatus, bool>(mControlStatusMap, aValue, qual,  aTime, aIndex);
-			}
-			bool Check(int_32_t aValue, SetpointQuality aQuality, size_t aIndex, TimeStamp_t aTime)
-			{ return Check<SetpointStatus, int_32_t>(mSetpointStatusMap, aValue, aQuality, aTime, aIndex); }
 
 			bool CheckQual(BinaryQuality aQuality, size_t aIndex){return CheckQual<Binary>(mBinaryMap, aQuality, aIndex);}
 			bool CheckQual(AnalogQuality aQuality, size_t aIndex){return CheckQual<Analog>(mAnalogMap, aQuality, aIndex);}
 			bool CheckQual(CounterQuality aQuality, size_t aIndex){return CheckQual<Counter>(mCounterMap, aQuality, aIndex);}
 			bool CheckQual(ControlQuality aQuality, size_t aIndex){return CheckQual<ControlStatus>(mControlStatusMap, aQuality, aIndex);}
 			bool CheckQual(SetpointQuality aQuality, size_t aIndex){return CheckQual<SetpointStatus>(mSetpointStatusMap, aQuality, aIndex);}
+			bool CheckQual(VtoQuality aQuality, size_t aIndex){return CheckQual<VtoData>(mVtoDataMap, aQuality, aIndex);}
 
 			void Print();
 			void Clear();
 
 			size_t GetTotalCount()
-			{ return mBinaryMap.size() + mAnalogMap.size() + mCounterMap.size() + mControlStatusMap.size() + mSetpointStatusMap.size(); }
+			{
+				return mBinaryMap.size() +
+					mAnalogMap.size() +
+				       	mCounterMap.size() +
+				       	mControlStatusMap.size() +
+				       	mSetpointStatusMap.size() +
+					mVtoDataMap.size();
+			}
 
 			/// The two data observers have the exact same contents
 			static bool StrictEquality(const FlexibleDataObserver& arLHS, const FlexibleDataObserver& arRHS);
@@ -144,6 +183,7 @@ namespace apl
 			virtual void _Update(const Counter& arPoint, size_t aIndex) { Load(arPoint, mCounterMap, aIndex); }
 			virtual void _Update(const ControlStatus& arPoint, size_t aIndex) { Load(arPoint, mControlStatusMap, aIndex); }
 			virtual void _Update(const SetpointStatus& arPoint, size_t aIndex) { Load(arPoint, mSetpointStatusMap, aIndex); }
+			virtual void _Update(const VtoData& arPoint, size_t aIndex) { Load(arPoint, mVtoDataMap, aIndex); }
 
 
 			template <class T, class U>

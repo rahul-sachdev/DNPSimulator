@@ -64,9 +64,9 @@ class SlaveEventBuffer : public IEventBuffer
 
 	private:
 
-		TimeOrderedEventBuffer<BinaryEvent>		mBinaryEvents;	/// Multiple events for the same time, ordered by time of occurrence
-		SingleEventBuffer<AnalogEvent>			mAnalogEvents;	/// Single event per point, previous events overridden
-		SingleEventBuffer<CounterEvent>			mCounterEvents; /// Single event per point, previous events overridden
+		TimeOrderedEventBuffer<BinaryEvent>			mBinaryEvents;	/// Multiple events for the same time, ordered by time of occurrence
+		SingleEventBuffer<AnalogEvent>				mAnalogEvents;	/// Single event per point, previous events overridden
+		SingleEventBuffer<CounterEvent>				mCounterEvents; /// Single event per point, previous events overridden
 
 		bool mChange;
 };

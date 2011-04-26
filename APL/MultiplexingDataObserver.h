@@ -60,7 +60,6 @@ namespace apl
 			void PassThrough(const T& arPoint, size_t aIndex);
 	};
 
-
 }
 
 #endif

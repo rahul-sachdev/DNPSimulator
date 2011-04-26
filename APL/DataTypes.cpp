@@ -40,6 +40,8 @@ namespace apl
 				return "ControlStatus";
 			case(DT_SETPOINT_STATUS):
 				return "SetpointStatus";
+			case(DT_VTO_DATA):
+				return "VtoData";
 			default:
 				return "Unknown";
 		}

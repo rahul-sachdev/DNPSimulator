@@ -36,7 +36,7 @@ namespace apl { namespace dnp {
 		this->mControlStatus.resize(aNumControlStatus); this->InitNames("ControlStatus", mControlStatus);
 		this->mSetpointStatus.resize(aNumSetpointStatus); this->InitNames("SetpointStatus", mSetpointStatus);
 		this->mControls.resize(aNumControls); this->InitNames("Control", mControls);
-		this->mSetpoints.resize(aNumSetpoints); this->InitNames("Setpoint", mSetpoints);;
+		this->mSetpoints.resize(aNumSetpoints); this->InitNames("Setpoint", mSetpoints);
 	}
 
 	void DeviceTemplate::Publish(IDataObserver* apObs)
@@ -46,7 +46,7 @@ namespace apl { namespace dnp {
 		InitObserver<Analog>(apObs, mAnalog.size());
 		InitObserver<Counter>(apObs, mCounter.size());
 		InitObserver<ControlStatus>(apObs, mControlStatus.size());
-		InitObserver<SetpointStatus>(apObs, mSetpointStatus.size());		
+		InitObserver<SetpointStatus>(apObs, mSetpointStatus.size());
 	}
 	
 }}

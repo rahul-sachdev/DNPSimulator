@@ -34,6 +34,8 @@
 #include <APL/Lock.h>
 #include <APL/IOService.h>
 
+#include "VtoDataInterface.h"
+
 namespace apl {
 	class IPhysicalLayerAsync;
 	class Logger;
@@ -49,10 +51,12 @@ class Stack;
 struct SlaveStackConfig;
 struct MasterStackConfig;
 
+
 /**
-	The interface for C++ projects for dnp3. Provides aninterface for starting/stopping
-	master/slave protocol stacks. Any method may be called while the system is running.
-	Methods should only be called from a single thread at at a time.
+	The interface for C++ projects for dnp3. Provides an interface for
+	starting/stopping master/slave protocol stacks. Any method may be
+	called while the system is running.  Methods should only be called
+	from a single thread at at a time.
 */
 class AsyncStackManager : private Threadable, private Loggable
 {
@@ -83,7 +87,7 @@ class AsyncStackManager : private Threadable, private Loggable
 			@param aLevel		Log filter level to use
 			@param apPublisher	Interface to callback with measurements. The callback comes from an unknown network thread and should not be blocked.
 			@param arCfg		Configuration data for the master stack
-			@return				Threadsafe interface to use for dispatching commands to the master.
+			@return				Thread-safe interface to use for dispatching commands to the master.
 		*/
 		ICommandAcceptor* AddMaster(const std::string& arPortName,
 									const std::string& arStackName,
@@ -99,13 +103,97 @@ class AsyncStackManager : private Threadable, private Loggable
 			@param aLevel			Log filter level to use
 			@param apCmdAcceptor	Interface to callback with measurements. The callback comes from an unknown network thread and should not be blocked.
 			@param arCfg			Configuration data for the slave stack
-			@return					Threadsafe interface to use for writing new measurement values to the slave
+			@return					Thread-safe interface to use for writing new measurement values to the slave.
 		*/
 		IDataObserver* AddSlave(const std::string& arPortName,
 								const std::string& arStackName,
 								FilterLevel aLevel,
 								ICommandAcceptor* apCmdAcceptor,
 								const SlaveStackConfig&);
+
+		/**
+			Adds a VTO channel to a prexisting stack (master or slave).
+			This function should be used for advanced control of a VTO channel,
+			where the implementer wants to control the end VTO stream as a byte
+			array.  Otherwise, the implementer should look at
+			AsyncStackManager::StartVtoRouter() as a simpler way of connecting a
+			port (such as a local TCP service) to the VTO stream.
+
+			@param arStackName			Unique name of the stack.
+			@param aVtoChannelId		Unique channel ID for the VTO circuit.
+			@param apOnDataCallback		Interface to callback with received
+										data.  The callback comes from an
+										unknown network thread, and should not
+										be blocked.
+
+			@return						Interface to use for writing
+										new VTO data from the master to the
+										slave.
+
+			@throw ArgumentException	if arPortName/arStackName doesn't exist
+										or if the VTO channel ID is already
+										bound for that stack
+		 */
+		IVtoWriter* AddVtoChannel(const std::string& arStackName,
+						byte_t aVtoChannelId,
+						IVtoCallbacks* apOnDataCallback);
+
+		/**
+			Removes an existing VTO channel that was created using
+			AsyncStackManager::AddVtoChannel(), stopping callbacks.
+
+			@param apOnDataCallback		Callback interface previously registered
+										in AddVtoChannel()
+
+			@throw ArgumentException if apOnDataCallback doesn't exist
+		*/
+		void RemoveVtoChannel(IVtoCallbacks* apOnDataCallback);
+
+		/**
+			Starts the VtoRouter for the specified port and stack.
+			A VtoRouter acts as a conduit, where the VTO stream is funneled
+			between the arStackName (which also defines a master/slave port) and
+			the arPortName (such as a TCP/IP daemon).  If the implementer wants
+			to terminate the VTO stream in the application itself, he/she should
+			look at the AsyncStackManager::AddVtoChannel() routine.
+
+			@param arPortName			Unique name of the port to which the
+										router should associate.
+			@param arStackName			Unique name of the stack.
+			@param aVtoChannelId		Unique channel ID for the VTO circuit.
+
+			@return						Interface to use for writing
+										new VTO data from the master to the
+										slave.
+
+			@throw ArgumentException	if arPortName/arStackName doesn't exist
+										or if the VTO channel ID is already
+										bound for that stack
+		 */
+		void StartVtoRouter(const std::string& arPortName,
+						const std::string& arStackName,
+						byte_t aVtoChannelId);
+
+		/**
+			Shutdown a VtoRouter for the VTO channel on the specified stack.
+
+			@param arStackName			Unique name of the stack.
+			@param aVtoChannelId		Unique channel ID for the VTO circuit.
+
+			@throw ArgumentException	if arStackName or the VTO channel ID
+										does not exist
+		*/
+		void StopVtoRouter(const std::string& arStackName,
+						byte_t aVtoChannelId);
+
+		/**
+			Shutdown all VtoRouter instances on the specified stack.
+
+			@param arStackName			Unique name of the stack.
+
+			@throw ArgumentException	if arStackName doesn't exist
+		*/
+		void StopVtoRouter(const std::string& arStackName);
 
 		/// Remove a port and all associated stacks
 		void RemovePort(const std::string& arPortName);

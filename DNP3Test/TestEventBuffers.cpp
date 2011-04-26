@@ -21,6 +21,7 @@
 
 #include <DNP3/EventBuffers.h>
 
+#include <iostream>
 #include <limits>
 
 using namespace std;
@@ -85,6 +86,61 @@ using namespace apl::dnp;
 				}
 			}
 				
+		}
+
+		BOOST_AUTO_TEST_CASE(ResetEventsProperlyOnFailure)
+		{
+			const byte_t NUM = 100;
+
+			const byte_t dataSize = 255;
+
+			const byte_t numEvents = NUM;
+
+			InsertionOrderedEventBuffer<VtoDataEvent> b(NUM);
+
+			VtoData info;
+
+			size_t numResults;
+
+			VtoDataEventIter itr;
+
+			for (byte_t i = 0; i < numEvents; i++)
+			{
+				byte_t trash[dataSize];
+				byte_t j;
+				for (j = 0; j < dataSize; ++j)
+					trash[j] = i;
+
+				info.SetValue(trash, dataSize);
+				b.Update(info, PC_CLASS_1, dataSize);
+			}
+
+			numResults = b.Size();
+			BOOST_REQUIRE_EQUAL(numResults, numEvents);
+
+			numResults = b.Select(PC_CLASS_1);
+			BOOST_REQUIRE_EQUAL(numResults, numEvents);
+
+			itr = b.Begin();
+			for (size_t i = 0; i < b.NumSelected(); ++i) {
+				const byte_t *value = itr->mValue.GetValue();
+				for (size_t j = 0; j < dataSize; ++j)
+					BOOST_REQUIRE_EQUAL(value[j], i);
+				++itr;
+			}
+			b.Deselect();
+
+			numResults = b.Select(PC_CLASS_1);
+			BOOST_REQUIRE_EQUAL(numResults, numEvents);
+
+			itr = b.Begin();
+			for (size_t i = 0; i < b.NumSelected(); ++i) {
+				const byte_t *value = itr->mValue.GetValue();
+				for (size_t j = 0; j < dataSize; ++j)
+					BOOST_REQUIRE_EQUAL(value[j], i);
+				++itr;
+			}
+			b.Deselect();
 		}
 	BOOST_AUTO_TEST_SUITE_END()
 

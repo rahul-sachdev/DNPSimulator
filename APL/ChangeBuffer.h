@@ -34,7 +34,8 @@ namespace apl {
 	template <class LockType>
 	class ChangeBuffer : public IDataObserver, public SubjectBase<NullLock>
 	{
-		typedef std::deque< Change<Binary> >BinaryQueue;
+
+		typedef std::deque< Change<Binary> > BinaryQueue;
 		typedef std::deque< Change<Analog> > AnalogQueue;
 		typedef std::deque< Change<Counter> > CounterQueue;
 		typedef std::deque< Change<ControlStatus> > ControlStatusQueue;

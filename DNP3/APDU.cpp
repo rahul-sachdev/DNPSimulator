@@ -250,8 +250,6 @@ namespace apl { namespace dnp {
 			case(OT_VARIABLE_BY_VARIATION):
 				data_size = prefixSize;
 				data_size += has_data ? hdrData.Variation : 0;
-
-				if(objCount > 1) throw Exception(LOCATION, "Can't have more than one OT_VARIABLE_BY_VARIATION object in a header");
 				break;
 			default:
 				throw Exception(LOCATION, "Unknown object type");

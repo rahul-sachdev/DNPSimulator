@@ -47,7 +47,9 @@ namespace apl { namespace dnp {
 	mStaticSetpointStatus(GrpVar(40,1)),
 	mEventBinary(GrpVar(2,1)),
 	mEventAnalog(GrpVar(32,1)),
-	mEventCounter(GrpVar(22,1))
+	mEventCounter(GrpVar(22,1)),
+
+	VtoReservedOctetCount(0)
 	{
 		
 	}

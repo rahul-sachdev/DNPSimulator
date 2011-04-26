@@ -82,7 +82,7 @@ namespace apl { namespace dnp {
 
 	bool SlaveEventBuffer :: HasEventData()
 	{
-		return mBinaryEvents.NumUnselected() > 0 || mAnalogEvents.NumUnselected() > 0  || mCounterEvents.NumUnselected() > 0 ;
+		return mBinaryEvents.NumUnselected() > 0 || mAnalogEvents.NumUnselected() > 0  || mCounterEvents.NumUnselected() > 0;
 	}
 
 	bool SlaveEventBuffer :: HasClassData(PointClass aClass)

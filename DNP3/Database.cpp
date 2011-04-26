@@ -75,7 +75,9 @@ namespace apl { namespace dnp {
 				this->AssignIndices(mSetpointStatusVec);
 				if ( aStartOnline )
 					this->SetAllOnline(mSetpointStatusVec);
-				break;			
+				break;
+			case(DT_VTO_DATA):
+				break;
 		}
 	}
 
@@ -236,7 +238,7 @@ namespace apl { namespace dnp {
 	{
 		UpdateValue<apl::SetpointStatus>(mSetpointStatusVec, arPoint, aIndex); 
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////////////
 	// misc public functions
 	//////////////////////////////////////////////////////////////////////////////
@@ -262,6 +264,8 @@ namespace apl { namespace dnp {
 				return mControlStatusVec.size();
 			case(DT_SETPOINT_STATUS):
 				return mSetpointStatusVec.size();
+			case(DT_VTO_DATA):
+				break;
 		}
 
 		return 0;

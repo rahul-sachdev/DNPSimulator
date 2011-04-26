@@ -48,8 +48,8 @@ struct DeviceTemplate
 	std::vector<EventPointRecord> mBinary;		/// list of binary point properties
 	std::vector<EventPointRecord> mCounter;		/// list of counter point properties
 	std::vector<DeadbandPointRecord> mAnalog;	/// list of analog point properties
-	std::vector<PointRecord> mControlStatus;		/// list of control status point properties
-	std::vector<PointRecord> mSetpointStatus;		/// list of control status point properties
+	std::vector<PointRecord> mControlStatus;	/// list of control status point properties
+	std::vector<PointRecord> mSetpointStatus;	/// list of control status point properties
 
 	//Controls
 	std::vector<ControlRecord> mControls;		/// list of binary output properties

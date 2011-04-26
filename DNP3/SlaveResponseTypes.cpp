@@ -154,7 +154,5 @@ namespace apl { namespace dnp {
 		throw ArgumentException(LOCATION, "Invalid event counter");
 	}
 
-	
-
 }}
 
