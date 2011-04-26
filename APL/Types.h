@@ -19,7 +19,7 @@
 #ifndef __TYPES_H_
 #define __TYPES_H_
 
-#include <boost/cstdint.h>
+#include <boost/cstdint.hpp>
 
 namespace apl
 {
