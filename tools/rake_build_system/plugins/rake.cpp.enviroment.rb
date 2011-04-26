@@ -54,7 +54,7 @@ $WINSOCK_LIBS = case $hw_os
 end
 
 #By default, the build is set to debug
-$WARN_FLAGS   = ['-Wall']
+$WARN_FLAGS   = ['-Wall -Wno-strict-aliasing']
 $RELEASE_TYPE = ENV['debug'] ? 'debug' : (ENV['coverage'] ? 'coverage' : 'release')
 $CC_FLAGS     = case $RELEASE_TYPE
   when 'release'
