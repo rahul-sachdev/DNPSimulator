@@ -19,22 +19,44 @@
 #ifndef __TYPES_H_
 #define __TYPES_H_
 
+#if defined(_MSC_VER)
+	/* Windows platform, MSVC compiler */
+
+	typedef __int8				int8_t;
+	typedef unsigned __int8		uint8_t;
+
+	typedef __int16				int16_t;
+	typedef unsigned __int16	uint16_t;
+
+	typedef __int32				int32_t;
+	typedef unsigned __int32	uint32_t;
+
+	typedef __int64				int64_t;
+	typedef unsigned __int64	uint64_t;
+#else
+	/* C99 compliant platform -- gcc on Linux or MinGW on Windows probably */
+
+	#define __STDC_CONSTANT_MACROS
+	#define __STDC_LIMIT_MACROS
+	#include <stdint.h>
+#endif
+
 namespace apl
 {
 	//byte types
-	typedef unsigned char byte_t;
+	typedef uint8_t		byte_t;
 
 	//16 bit types
-	typedef signed short int_16_t;
-	typedef unsigned short uint_16_t;
+	typedef int16_t		int_16_t;
+	typedef uint16_t	uint_16_t;
 
 	//32 bit types
-	typedef signed int int_32_t;
-	typedef unsigned int uint_32_t;
+	typedef int32_t		int_32_t;
+	typedef uint32_t	uint_32_t;
 
 	//64 bit types
-	typedef long long int_64_t;
-	typedef unsigned long long uint_64_t;
+	typedef int64_t		int_64_t;
+	typedef uint64_t	uint_64_t;
 
 #ifndef SIZE_MAX
 	#define SIZE_MAX ~0
