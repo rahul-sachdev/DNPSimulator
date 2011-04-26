@@ -449,7 +449,7 @@ BOOST_AUTO_TEST_SUITE(APDUReading)
 		BOOST_REQUIRE_EQUAL(j.Count(),1);
 		BOOST_REQUIRE(j.HasData());
 
-		const VariableByVariationObject* pObj = static_cast<const VariableByVariationObject*>(i->GetBaseObject());
+		const SizeByVariationObject* pObj = static_cast<const SizeByVariationObject*>(i->GetBaseObject());
 
 		byte_t buff[100];
 		pObj->Read(*j, i->GetVariation(), buff);
@@ -536,7 +536,7 @@ BOOST_AUTO_TEST_SUITE(APDUReading)
 		BOOST_REQUIRE_EQUAL(j.Count(),1);
 		BOOST_REQUIRE(j.HasData());
 
-		const VariableByVariationObject* pObj = static_cast<const VariableByVariationObject*>(i->GetBaseObject());
+		const SizeByVariationObject* pObj = static_cast<const SizeByVariationObject*>(i->GetBaseObject());
 
 		byte_t buff[100];
 		pObj->Read(*j, i->GetVariation(), buff);
@@ -554,7 +554,7 @@ BOOST_AUTO_TEST_SUITE(APDUReading)
 		BOOST_REQUIRE_EQUAL(j.Count(), 67);
 		BOOST_REQUIRE(j.HasData());
 
-		pObj = static_cast<const VariableByVariationObject*>(i->GetBaseObject());
+		pObj = static_cast<const SizeByVariationObject*>(i->GetBaseObject());
 
 		pObj->Read(*j, i->GetVariation(), buff);
 

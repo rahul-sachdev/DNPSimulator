@@ -290,7 +290,7 @@ namespace apl { namespace dnp {
 
 				@return				an Iterator to the object data
 			 */
-			IndexedWriteIterator WriteIndexed(const VariableByVariationObject* apObj, size_t aSize, size_t aIndex);
+			IndexedWriteIterator WriteIndexed(const SizeByVariationObject* apObj, size_t aSize, size_t aIndex);
 
 			/**
 				Writes a block of indexed data, where the Variation field in the
@@ -305,7 +305,7 @@ namespace apl { namespace dnp {
 
 				@return				an Iterator to the object data
 			 */
-			IndexedWriteIterator WriteIndexed(const VariableByVariationObject* apObj, size_t aSize, QualifierCode aCode);
+			IndexedWriteIterator WriteIndexed(const SizeByVariationObject* apObj, size_t aSize, QualifierCode aCode);
 
 			/**
 				Performs a write of the provided object data for objects small

@@ -83,7 +83,7 @@ class IVtoWriter : protected IVtoBase
 			@returns			the appropriate ObjectBase instance needed
 								during the Write() operation.
 		 */
-		virtual ObjectBase *GetObjectGroupInstance() = 0;
+		virtual SizeByVariationObject *GetObjectGroupInstance() = 0;
 
 };
 
@@ -103,7 +103,7 @@ class VtoMasterWriter : protected IVtoWriter
 		/**
 			Returns a Group112Var0 object instance.
 		 */
-		ObjectBase *GetObjectGroupInstance()
+		SizeByVariationObject *GetObjectGroupInstance()
 		{
 			throw NotImplementedException(LOCATION);
 		}
@@ -125,7 +125,7 @@ class VtoSlaveWriter : protected IVtoWriter
 		/**
 			Returns a Group113Var0 object instance.
 		 */
-		ObjectBase *GetObjectGroupInstance()
+		SizeByVariationObject *GetObjectGroupInstance()
 		{
 			throw NotImplementedException(LOCATION);
 		}

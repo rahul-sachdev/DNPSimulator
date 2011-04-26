@@ -41,7 +41,7 @@ namespace apl {
 	ObjectBase -|--- IndexedObject -----|
 				|						|-- BitFieldObject
 				|___ VariableObject		|
-										|__ VariableByVariationObject
+										|__ SizeByVariationObject
 
 */
 namespace apl { namespace dnp {
@@ -53,7 +53,7 @@ namespace apl { namespace dnp {
 		OT_FIXED,
 		OT_BITFIELD,
 		OT_VARIABLE,
-		OT_VARIABLE_BY_VARIATION
+		OT_SIZE_BY_VARIATION
 	};
 
 	class ObjectBase
@@ -156,10 +156,13 @@ namespace apl { namespace dnp {
 			}
 	};
 
-	class VariableByVariationObject : public IndexedObject
+	/**
+		Represents a byte stream object whose size is encoded by it's variation
+	*/
+	class SizeByVariationObject : public IndexedObject
 	{
 		public:
-			virtual ObjectTypes GetType() const { return OT_VARIABLE_BY_VARIATION; }
+			virtual ObjectTypes GetType() const { return OT_SIZE_BY_VARIATION; }
 
 			bool Read(const apl::byte_t* apPos, size_t aVariation, apl::byte_t* apOut) const
 			{

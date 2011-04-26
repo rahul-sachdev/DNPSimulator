@@ -247,7 +247,7 @@ namespace apl { namespace dnp {
 			case(OT_BITFIELD):
 				data_size = has_data ? static_cast<BitfieldObject*>(pObj)->GetSize(objCount) : 0;
 				break;
-			case(OT_VARIABLE_BY_VARIATION):
+			case(OT_SIZE_BY_VARIATION):
 				data_size = prefixSize;
 				data_size += has_data ? hdrData.Variation : 0;
 				break;
@@ -353,9 +353,9 @@ namespace apl { namespace dnp {
 			case(MACRO_QUAL_OBJ_RADIX(QC_1B_CNT_1B_INDEX, OT_FIXED)):	return 1;
 			case(MACRO_QUAL_OBJ_RADIX(QC_2B_CNT_2B_INDEX, OT_FIXED)):	return 2;
 			case(MACRO_QUAL_OBJ_RADIX(QC_4B_CNT_4B_INDEX, OT_FIXED)):	return 4;
-			case(MACRO_QUAL_OBJ_RADIX(QC_1B_CNT_1B_INDEX, OT_VARIABLE_BY_VARIATION)):	return 1;
-			case(MACRO_QUAL_OBJ_RADIX(QC_2B_CNT_2B_INDEX, OT_VARIABLE_BY_VARIATION)):	return 2;
-			case(MACRO_QUAL_OBJ_RADIX(QC_4B_CNT_4B_INDEX, OT_VARIABLE_BY_VARIATION)):	return 4;
+			case(MACRO_QUAL_OBJ_RADIX(QC_1B_CNT_1B_INDEX, OT_SIZE_BY_VARIATION)):	return 1;
+			case(MACRO_QUAL_OBJ_RADIX(QC_2B_CNT_2B_INDEX, OT_SIZE_BY_VARIATION)):	return 2;
+			case(MACRO_QUAL_OBJ_RADIX(QC_4B_CNT_4B_INDEX, OT_SIZE_BY_VARIATION)):	return 4;
 			
 			// Objects prefixed with a size must be of variable length type
 			case(MACRO_QUAL_OBJ_RADIX(QC_1B_VCNT_1B_SIZE, OT_VARIABLE)): return 1;
@@ -472,7 +472,7 @@ namespace apl { namespace dnp {
 		}
 	}
 
-	IndexedWriteIterator APDU::WriteIndexed(const VariableByVariationObject* apObj, size_t aSize, size_t aIndex)
+	IndexedWriteIterator APDU::WriteIndexed(const SizeByVariationObject* apObj, size_t aSize, size_t aIndex)
 	{
 		return WriteIndexed(apObj, aSize, GetIndexedQualifier(aIndex, 1));
 	}
@@ -482,7 +482,7 @@ namespace apl { namespace dnp {
 		return WriteIndexed(apObj, aCount, GetIndexedQualifier(aMaxIndex, aCount));
 	}
 
-	IndexedWriteIterator APDU::WriteIndexed(const VariableByVariationObject* apObj, size_t aSize, QualifierCode aCode)
+	IndexedWriteIterator APDU::WriteIndexed(const SizeByVariationObject* apObj, size_t aSize, QualifierCode aCode)
 	{
 		this->CheckWriteState(apObj);
 		

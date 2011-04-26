@@ -1026,25 +1026,25 @@ namespace apl { namespace dnp {
 		MACRO_GROUP_VAR_FUNC(80, 1)
 	};
 
-	struct Group110Var0 : public VariableByVariationObject
+	struct Group110Var0 : public SizeByVariationObject
 	{
 		MACRO_NAME_SINGLETON_INSTANCE(Group110Var0)
 		MACRO_GROUP_VAR_FUNC(110, 0)
 	};
 
-	struct Group111Var0 : public VariableByVariationObject
+	struct Group111Var0 : public SizeByVariationObject
 	{
 		MACRO_NAME_SINGLETON_INSTANCE(Group111Var0)
 		MACRO_GROUP_VAR_FUNC(111, 0)
 	};
 
-	struct Group112Var0 : public VariableByVariationObject
+	struct Group112Var0 : public SizeByVariationObject
 	{
 		MACRO_NAME_SINGLETON_INSTANCE(Group112Var0)
 		MACRO_GROUP_VAR_FUNC(112, 0)
 	};
 
-	struct Group113Var0 : public VariableByVariationObject
+	struct Group113Var0 : public SizeByVariationObject
 	{
 		MACRO_NAME_SINGLETON_INSTANCE(Group113Var0)
 		MACRO_GROUP_VAR_FUNC(113, 0)
