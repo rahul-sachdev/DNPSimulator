@@ -26,15 +26,15 @@ namespace apl
 		
 	}
 
-	void TimeBase::SetTo(int_64_t aTimeMS)
+	void TimeBase::SetTo(millis_t aTimeMS)
 	{
 		mSec = static_cast<size_t>(aTimeMS/1000);
 		mUsec = static_cast<size_t>((aTimeMS%1000)*1000);
 	}
 
-	void TimeBase::AddMS(int_64_t aAddMS)
+	void TimeBase::AddMS(millis_t aAddMS)
 	{
-		int_64_t time = this->GetValueMS();
+		millis_t time = this->GetValueMS();
 
 		time += aAddMS;
 
@@ -46,18 +46,18 @@ namespace apl
 		return static_cast<int_64_t>(this->mSec)*1000 + this->mUsec/1000;
 	}
 
-	int_64_t TimeBase::CalcDeltaMS(const TimeBase& aTime1, const TimeBase& aTime2)
+	millis_t TimeBase::CalcDeltaMS(const TimeBase& aTime1, const TimeBase& aTime2)
 	{
-		int_64_t seconds1 = aTime1.GetSecSinceEpoch();
-		int_64_t seconds2 = aTime2.GetSecSinceEpoch();
-		int_64_t uSeconds1 = aTime1.GetUsecSinceEpoch();
-		int_64_t uSeconds2 = aTime2.GetUsecSinceEpoch();
-		int_64_t totalSeconds = seconds1 - seconds2;
-		int_64_t totalUSecs = uSeconds1 - uSeconds2;
+		millis_t seconds1 = aTime1.GetSecSinceEpoch();
+		millis_t seconds2 = aTime2.GetSecSinceEpoch();
+		millis_t uSeconds1 = aTime1.GetUsecSinceEpoch();
+		millis_t uSeconds2 = aTime2.GetUsecSinceEpoch();
+		millis_t totalSeconds = seconds1 - seconds2;
+		millis_t totalUSecs = uSeconds1 - uSeconds2;
 
 		//on g++ this ended up with odd values
-		//int_64_t totalSeconds = aTime1.GetSecSinceEpoch() - aTime2.GetSecSinceEpoch();
-		//int_64_t totalUSecs = aTime1.GetUsecSinceEpoch() - aTime2.GetUsecSinceEpoch();
+		//millis_t totalSeconds = aTime1.GetSecSinceEpoch() - aTime2.GetSecSinceEpoch();
+		//millis_t totalUSecs = aTime1.GetUsecSinceEpoch() - aTime2.GetUsecSinceEpoch();
 		return totalSeconds*1000 + totalUSecs/1000;
 	}
 

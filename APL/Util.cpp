@@ -41,6 +41,11 @@ using namespace boost::posix_time;
 #include <iostream>
 #include <iomanip>
 
+#ifdef APL_PLATFORM_WIN
+	#define CLEAR_CMD		"cls"
+#else
+	#define CLEAR_CMD		"clear"
+#endif
 
 namespace apl{
 
@@ -84,11 +89,12 @@ namespace apl{
 
 	void ClearScreen()
 	{
-		#ifdef APL_PLATFORM_WIN
-		system("cls");
-		#else
-		system("clear");
-		#endif
+		/*
+		 * Capture the return value, but ignore it.  This prevents a minor
+		 * compiler warning on gcc.
+		 */
+		int err;
+		err = system(CLEAR_CMD);
 	}
 
 	double SafeCastInt64ToDouble(int_64_t aInput){

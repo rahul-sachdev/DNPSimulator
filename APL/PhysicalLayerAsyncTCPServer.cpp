@@ -34,7 +34,7 @@ using namespace std;
 
 namespace apl {
 
-PhysicalLayerAsyncTCPServer::PhysicalLayerAsyncTCPServer(Logger* apLogger, io_service* apIOService, const std::string& arEndpoint, uint_16_t aPort) :
+PhysicalLayerAsyncTCPServer::PhysicalLayerAsyncTCPServer(Logger* apLogger, boost::asio::io_service* apIOService, const std::string& arEndpoint, uint_16_t aPort) :
 PhysicalLayerAsyncBaseTCP(apLogger, apIOService),
 mEndpoint(ip::tcp::v4(), aPort),
 mAcceptor(*apIOService)

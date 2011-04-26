@@ -35,7 +35,7 @@ namespace apl{
 		SetToNow();
 	}
 
-	TimeBoost::TimeBoost(int_64_t aTimeMS)
+	TimeBoost::TimeBoost(millis_t aTimeMS)
 	{
 		this->SetTo(aTimeMS);
 	}
@@ -67,17 +67,17 @@ namespace apl{
 	{
 		return apl::ToNormalizedString(mTime);
 	}
-	void TimeBoost::SetTo(int_64_t aTimeMS)
+	void TimeBoost::SetTo(millis_t aTimeMS)
 	{
 		mTime = GetPTimeFromMS(aTimeMS);
 	}
 
-	void TimeBoost::AddMS(int_64_t aAddMS)
+	void TimeBoost::AddMS(millis_t aAddMS)
 	{
 		mTime += milliseconds(aAddMS);
 	}
 
-	int_64_t TimeBoost::GetValueMS() const
+	millis_t TimeBoost::GetValueMS() const
 	{
 		return (mTime-msEpoch).total_milliseconds();
 	}

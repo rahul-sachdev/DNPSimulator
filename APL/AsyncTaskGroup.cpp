@@ -160,7 +160,7 @@ void AsyncTaskGroup::Update(const boost::posix_time::ptime& arTime)
 	BOOST_FOREACH(AsyncTaskBase* p, mTaskVec) { p->UpdateTime(arTime); }
 }
 
-void AsyncTaskGroup::RestartTimer(const ptime& arTime)
+void AsyncTaskGroup::RestartTimer(const boost::posix_time::ptime& arTime)
 {
 	if(mpTimer != NULL) {
 		if(mpTimer->ExpiresAt() != arTime) {
