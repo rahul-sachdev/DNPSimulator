@@ -22,21 +22,21 @@
 #include <boost/cstdint.hpp>
 
 namespace apl
-{
+{	
 	//byte types
-	typedef uint8_t		byte_t;
+	typedef boost::uint8_t	byte_t;
 
 	//16 bit types
-	typedef int16_t		int_16_t;
-	typedef uint16_t	uint_16_t;
+	typedef boost::int16_t	int_16_t;
+	typedef boost::uint16_t	uint_16_t;
 
 	//32 bit types
-	typedef int32_t		int_32_t;
-	typedef uint32_t	uint_32_t;
+	typedef boost::int32_t	int_32_t;
+	typedef boost::uint32_t	uint_32_t;
 
 	//64 bit types
-	typedef int64_t		int_64_t;
-	typedef uint64_t	uint_64_t;
+	typedef boost::int64_t	int_64_t;
+	typedef boost::uint64_t	uint_64_t;
 
 #ifndef SIZE_MAX
 	#define SIZE_MAX ~0
