@@ -71,6 +71,12 @@ BOOST_AUTO_TEST_CASE(MasterToSlave)
 
 	for (size_t j = 0; j < numChanges; ++j)
 	{
+		/*
+		 * Resource Acquisition Is Initialization (RAII) Pattern.
+		 * When the Transaction instance is created, it acquires the resource.
+		 * When it is destroyed, it releases the resource.  The scoping using
+		 * the {} block implements this pattern.
+		 */
 		{
 			Transaction tr(pObs);
 		
