@@ -18,11 +18,10 @@
 #ifndef __VTO_DATA_INTERFACE_H_
 #define __VTO_DATA_INTERFACE_H_
 
-#include <APL/DataTypes.h>
-
 #include <assert.h>
 
-#include "ObjectInterfaces.h"
+#include "APL/DataTypes.h"
+#include "DNP3/ObjectInterfaces.h"
 
 namespace apl {
 	namespace dnp {

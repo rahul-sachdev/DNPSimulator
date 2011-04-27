@@ -15,10 +15,10 @@
  * under the License.
  */
 
-#include <DNP3/APDU.h>
-#include <DNP3/DNPConstants.h>
-#include <DNP3/Objects.h>
-#include <DNP3/VtoDataInterface.h>
+#include "DNP3/APDU.h"
+#include "DNP3/DNPConstants.h"
+#include "DNP3/Objects.h"
+#include "DNP3/VtoDataInterface.h"
 
 using namespace apl;
 using namespace apl::dnp;
