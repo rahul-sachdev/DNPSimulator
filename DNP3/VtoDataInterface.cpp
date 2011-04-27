@@ -27,8 +27,6 @@ using namespace std;
 namespace apl {
 	namespace dnp {
 
-		class APDU;
-
 		SizeByVariationObject* VtoMasterWriter::GetObjectGroupInstance()
 		{
 			return Group112Var0::Inst();
