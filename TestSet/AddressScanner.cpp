@@ -27,7 +27,7 @@
 
 namespace apl { namespace dnp {
 
-AddressScanner::AddressScanner(Logger * apLogger, const APLXML_MTS::MasterTestSet_t& cfg, uint_16_t start, uint_16_t stop) : 
+AddressScanner::AddressScanner(Logger * apLogger, const APLXML_MTS::MasterTestSet_t& cfg, boost::uint16_t start, boost::uint16_t stop) : 
 Loggable(apLogger),
 manager(apLogger, &cfg.PhysicalLayerList, xml::Convert(cfg.Log.Filter)),
 mpService(new boost::asio::io_service()),
@@ -72,22 +72,22 @@ void AddressScanner::NextFrame()
 	}
 }
 
-void AddressScanner::Ack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
+void AddressScanner::Ack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	LOG_BLOCK(LEV_EVENT, "Received acknowledgement from address: " << aSrc);
 	mRouter.Stop();
 	if(mpTimer != NULL) mpTimer->Cancel();
 }
 
-void AddressScanner::Nack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc) {}
-void AddressScanner::LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc) {}
-void AddressScanner::NotSupported (bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc) {}
+void AddressScanner::Nack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc) {}
+void AddressScanner::LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc) {}
+void AddressScanner::NotSupported (bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc) {}
 
-void AddressScanner::TestLinkStatus(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc) {}
-void AddressScanner::ResetLinkStates(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc) {}
-void AddressScanner::RequestLinkStatus(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc) {}
-void AddressScanner::ConfirmedUserData(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength) {}
-void AddressScanner::UnconfirmedUserData(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength) {}
+void AddressScanner::TestLinkStatus(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc) {}
+void AddressScanner::ResetLinkStates(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc) {}
+void AddressScanner::RequestLinkStatus(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc) {}
+void AddressScanner::ConfirmedUserData(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength) {}
+void AddressScanner::UnconfirmedUserData(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength) {}
 
 void AddressScanner::Run()
 {	

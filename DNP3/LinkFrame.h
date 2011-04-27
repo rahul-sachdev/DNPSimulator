@@ -41,8 +41,8 @@ class LinkFrame
 	~LinkFrame();
 
 	/* implement pure virtual functions from base class */
-	apl::byte_t* GetBuffer() { return mpBuffer; }
-	const apl::byte_t* GetBuffer() const { return mpBuffer; }
+	boost::uint8_t* GetBuffer() { return mpBuffer; }
+	const boost::uint8_t* GetBuffer() const { return mpBuffer; }
 	size_t  GetSize() const { return mSize; }
 
 	bool IsComplete() const { return mIsComplete; }
@@ -53,37 +53,37 @@ class LinkFrame
 	// Helpers for extracting data
 	inline bool Valid_0564() const { return mpBuffer[LI_START_05] == 0x05 && mpBuffer[LI_START_64] == 0x64; }
 
-	inline apl::byte_t	GetLength() const { return mHeader.GetLength(); }
+	inline boost::uint8_t	GetLength() const { return mHeader.GetLength(); }
 	inline FuncCodes	GetFunc() const { return mHeader.GetFuncEnum(); }
 
-	inline uint_16_t  GetDest() const { return mHeader.GetDest(); }
-	inline uint_16_t GetSrc() const { return mHeader.GetSrc(); }
+	inline boost::uint16_t  GetDest() const { return mHeader.GetDest(); }
+	inline boost::uint16_t GetSrc() const { return mHeader.GetSrc(); }
 
 	inline bool IsFromMaster() const { return mHeader.IsFromMaster(); }
 	inline bool IsPriToSec() const { return mHeader.IsPriToSec(); }
 	inline bool IsFcbSet() const { return mHeader.IsFcbSet(); }
 	inline bool IsFcvDfcSet() const { return mHeader.IsFcvDfcSet(); }
 
-	size_t ReadUserData(apl::byte_t* apBuffer) const;
+	size_t ReadUserData(boost::uint8_t* apBuffer) const;
 
 	////////////////////////////////////////////////////////////////////////
 	//	Functions for formatting outgoing Sec to Pri frames
 	////////////////////////////////////////////////////////////////////////
 
-	void FormatAck(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc);
-	void FormatNack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc);
-	void FormatLinkStatus(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc);
-	void FormatNotSupported (bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc);
+	void FormatAck(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void FormatNack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void FormatLinkStatus(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void FormatNotSupported (bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
 
 	////////////////////////////////////////////////////////////////////////
 	//	Functions for formatting outgoing Pri to Sec frames
 	////////////////////////////////////////////////////////////////////////
 
-	void FormatTestLinkStatus(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc);
-	void FormatResetLinkStates(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc);
-	void FormatRequestLinkStatus(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc);
-	void FormatConfirmedUserData(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength);
-	void FormatUnconfirmedUserData(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength);
+	void FormatTestLinkStatus(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void FormatResetLinkStates(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void FormatRequestLinkStatus(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void FormatConfirmedUserData(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength);
+	void FormatUnconfirmedUserData(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength);
 
 	void ChangeFCB(bool aFCB);
 
@@ -101,14 +101,14 @@ class LinkFrame
 		@param apBody Beginning of the FT3 user data
 		@param aLength Number of user bytes to verify, not user + crc.
 		@return True if the body CRC is correct */
-	static bool ValidateBodyCRC(const byte_t* apBody, size_t aLength);
+	static bool ValidateBodyCRC(const boost::uint8_t* apBody, size_t aLength);
 
 	/** Reads data from src to dest removing 2 byte CRC checks every 16 data bytes
 		@param apSrc Source buffer with crc checks. Must begin at data, not header
 		@param apDest Destination buffer to which the data is extracted
 		@param aLength Length of user data to read to the dest buffer. The source buffer must be larger b/c of crc bytes.
 	*/
-	static void ReadUserData(const byte_t* apSrc, byte_t* apDest, size_t aLength);
+	static void ReadUserData(const boost::uint8_t* apSrc,boost::uint8_t* apDest, size_t aLength);
 
 	private:
 
@@ -117,15 +117,15 @@ class LinkFrame
 		@param apDest Destination buffer where the data + CRC is written
 		@param aLength Number of user data bytes
 	*/
-	static void WriteUserData(const byte_t* apSrc, byte_t* apDest, size_t aLength);
+	static void WriteUserData(const boost::uint8_t* apSrc,boost::uint8_t* apDest, size_t aLength);
 
 	/** Write 10 header bytes to to buffer including 0x0564, all fields, and CRC */
-	void FormatHeader(size_t aDataLength, bool aIsMaster, bool aFcb, bool aFcvDfc, FuncCodes aCode, uint_16_t aDest, uint_16_t aSrc);
+	void FormatHeader(size_t aDataLength, bool aIsMaster, bool aFcb, bool aFcvDfc, FuncCodes aCode, boost::uint16_t aDest, boost::uint16_t aSrc);
 
 	bool mIsComplete;
 	size_t mSize;
 	LinkHeader mHeader;
-	apl::byte_t mpBuffer[LS_MAX_FRAME_SIZE];
+	boost::uint8_t mpBuffer[LS_MAX_FRAME_SIZE];
 
 };
 

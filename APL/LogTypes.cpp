@@ -89,7 +89,7 @@ std::string LogTypes::GetFilterString(int aLevel)
 	oss << "{";
 
 	for(size_t i=0; i<LogTypes::NUM_FILTER; ++i) {
-		oss << static_cast<byte_t>((aLevel & filters[i].lev) ? filters[i].id : ' ');
+		oss << static_cast<boost::uint8_t>((aLevel & filters[i].lev) ? filters[i].id : ' ');
 	}
 	
 	oss << "}";

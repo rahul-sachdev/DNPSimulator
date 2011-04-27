@@ -56,9 +56,9 @@ namespace apl
 			/*
 			 * Analog
 			 */
-			bool Check(int_32_t aValue, AnalogQuality aQuality, size_t aIndex)
+			bool Check(boost::int32_t aValue, AnalogQuality aQuality, size_t aIndex)
 			{
-				return Check<Analog, int_32_t>(mAnalogMap, aValue, aQuality, aIndex);
+				return Check<Analog, boost::int32_t>(mAnalogMap, aValue, aQuality, aIndex);
 			}
 
 			bool Check(double aValue, AnalogQuality aQuality, size_t aIndex)
@@ -69,34 +69,34 @@ namespace apl
 				return apl::FloatEqual(aValue, i->second.GetValue());
 			}
 
-			bool Check(int_32_t aValue, AnalogQuality aQuality, size_t aIndex, TimeStamp_t aTime)
+			bool Check(boost::int32_t aValue, AnalogQuality aQuality, size_t aIndex, TimeStamp_t aTime)
 			{
-				return Check<Analog, int_32_t>(mAnalogMap, aValue, aQuality,  aTime, aIndex);
+				return Check<Analog, boost::int32_t>(mAnalogMap, aValue, aQuality,  aTime, aIndex);
 			}
 
 			/*
 			 * Counter
 			 */
-			bool Check(uint_32_t aValue, CounterQuality aQuality, size_t aIndex)
+			bool Check(boost::uint32_t aValue, CounterQuality aQuality, size_t aIndex)
 			{
-				return Check<Counter, uint_32_t>(mCounterMap, aValue, aQuality, aIndex);
+				return Check<Counter, boost::uint8_t>(mCounterMap, aValue, aQuality, aIndex);
 			}
 
 			bool Check(bool aValue, ControlQuality aQuality, size_t aIndex)
 			{
-				byte_t qual = aQuality;
+				boost::uint8_t qual = aQuality;
 				if(aValue) qual |= TQ_STATE;
 				return Check<ControlStatus, bool>(mControlStatusMap, aValue, qual, aIndex);
 			}
 
-			bool Check(uint_32_t aValue, CounterQuality aQuality, size_t aIndex, TimeStamp_t aTime)
+			bool Check(boost::uint32_t aValue, CounterQuality aQuality, size_t aIndex, TimeStamp_t aTime)
 			{
-				return Check<Counter, uint_32_t>(mCounterMap, aValue, aQuality,  aTime, aIndex);
+				return Check<Counter, boost::uint8_t>(mCounterMap, aValue, aQuality,  aTime, aIndex);
 			}
 
 			bool Check(bool aValue, ControlQuality aQuality, size_t aIndex, TimeStamp_t aTime)
 			{
-				byte_t qual = aQuality;
+				boost::uint8_t qual = aQuality;
 				if(aValue) qual |= TQ_STATE;
 				return Check<ControlStatus, bool>(mControlStatusMap, aValue, qual,  aTime, aIndex);
 			}
@@ -104,14 +104,14 @@ namespace apl
 			/*
 			 * Setpoint
 			 */
-			bool Check(int_32_t aValue, SetpointQuality aQuality, size_t aIndex)
+			bool Check(boost::int32_t aValue, SetpointQuality aQuality, size_t aIndex)
 			{
-				return Check<SetpointStatus, int_32_t>(mSetpointStatusMap, aValue, aQuality, aIndex);
+				return Check<SetpointStatus, boost::int32_t>(mSetpointStatusMap, aValue, aQuality, aIndex);
 			}
 
-			bool Check(int_32_t aValue, SetpointQuality aQuality, size_t aIndex, TimeStamp_t aTime)
+			bool Check(boost::int32_t aValue, SetpointQuality aQuality, size_t aIndex, TimeStamp_t aTime)
 			{
-				return Check<SetpointStatus, int_32_t>(mSetpointStatusMap, aValue, aQuality, aTime, aIndex);
+				return Check<SetpointStatus, boost::int32_t>(mSetpointStatusMap, aValue, aQuality, aTime, aIndex);
 			}
 
 			/*
@@ -119,14 +119,14 @@ namespace apl
 			 */
 			bool Check(bool aValue, BinaryQuality aQuality, size_t aIndex)
 			{
-				byte_t qual = aQuality;
+				boost::uint8_t qual = aQuality;
 				if(aValue) qual |= BQ_STATE;
 				return Check<Binary, bool>(mBinaryMap, aValue, qual, aIndex);
 			}
 
 			bool Check(bool aValue, BinaryQuality aQuality, size_t aIndex, TimeStamp_t aTime)
 			{
-				byte_t qual = aQuality;
+				boost::uint8_t qual = aQuality;
 				if(aValue) qual |= BQ_STATE;
 				return Check<Binary, bool>(mBinaryMap, aValue, qual, aTime, aIndex);
 			}
@@ -187,16 +187,16 @@ namespace apl
 
 
 			template <class T, class U>
-			bool Check(typename PointMap<T>::Type& arMap, U aValue, byte_t aQual, size_t aIndex);
+			bool Check(typename PointMap<T>::Type& arMap, U aValue,boost::uint8_t aQual, size_t aIndex);
 
 			template <class T, class U>
-			bool Check(typename PointMap<T>::Type& arMap, U aValue, byte_t aQual, TimeStamp_t aTime, size_t aIndex);
+			bool Check(typename PointMap<T>::Type& arMap, U aValue,boost::uint8_t aQual, TimeStamp_t aTime, size_t aIndex);
 
 			template <class T>
-			bool CheckQual(typename PointMap<T>::Type& arMap, byte_t aQual, size_t aIndex);
+			bool CheckQual(typename PointMap<T>::Type& arMap,boost::uint8_t aQual, size_t aIndex);
 
 			template <class T>
-			void SetQuality(byte_t aQuality, typename PointMap<T>::Type& arMap);
+			void SetQuality(boost::uint8_t aQuality, typename PointMap<T>::Type& arMap);
 
 			template <class T>
 			void Print(typename PointMap<T>::Type& arMap);
@@ -211,7 +211,7 @@ namespace apl
 	};
 
 	template <class T, class U>
-	bool FlexibleDataObserver::Check(typename PointMap<T>::Type& arMap, U aValue, byte_t aQual, size_t aIndex)
+	bool FlexibleDataObserver::Check(typename PointMap<T>::Type& arMap, U aValue,boost::uint8_t aQual, size_t aIndex)
 	{
 		typename PointMap<T>::Type::iterator i = arMap.find(aIndex);
 		if(i == arMap.end()) return false;
@@ -219,7 +219,7 @@ namespace apl
 	}
 
 	template <class T, class U>
-	bool FlexibleDataObserver::Check(typename PointMap<T>::Type& arMap, U aValue, byte_t aQual, TimeStamp_t aTime, size_t aIndex)
+	bool FlexibleDataObserver::Check(typename PointMap<T>::Type& arMap, U aValue,boost::uint8_t aQual, TimeStamp_t aTime, size_t aIndex)
 	{
 		typename PointMap<T>::Type::iterator i = arMap.find(aIndex);
 		if(i == arMap.end()) return false;
@@ -227,7 +227,7 @@ namespace apl
 	}
 
 	template <class T>
-	bool FlexibleDataObserver::CheckQual(typename PointMap<T>::Type& arMap, byte_t aQual, size_t aIndex)
+	bool FlexibleDataObserver::CheckQual(typename PointMap<T>::Type& arMap,boost::uint8_t aQual, size_t aIndex)
 	{
 		typename PointMap<T>::Type::iterator i = arMap.find(aIndex);
 		if(i == arMap.end()) return false;
@@ -235,7 +235,7 @@ namespace apl
 	}
 
 	template <class T>
-	void FlexibleDataObserver::SetQuality(byte_t aQuality, typename PointMap<T>::Type& arMap)
+	void FlexibleDataObserver::SetQuality(boost::uint8_t aQuality, typename PointMap<T>::Type& arMap)
 	{
 		typename PointMap<T>::Type::iterator i = arMap.begin();
 		for(; i!=arMap.end(); ++i) i->second.SetQuality(aQuality);

@@ -29,49 +29,49 @@ struct LinkHeader
 {
 	LinkHeader();
 
-	LinkHeader(byte_t aLen, uint_16_t aSrc, uint_16_t aDest, bool aFromMaster, bool aFcvDfc, bool aFcb, FuncCodes aCode);
+	LinkHeader(boost::uint8_t aLen, boost::uint16_t aSrc, boost::uint16_t aDest, bool aFromMaster, bool aFcvDfc, bool aFcb, FuncCodes aCode);
 
 	/** @param apBuff Buffer of at least 10 bytes*/
-	LinkHeader(const byte_t* apBuff);
+	LinkHeader(const boost::uint8_t* apBuff);
 
 	/// Setter
 
-	void Set(byte_t aLen, uint_16_t aSrc, uint_16_t aDest, bool aFromMaster, bool aFcvDfc, bool aFcb, FuncCodes aCode);
+	void Set(boost::uint8_t aLen, boost::uint16_t aSrc, boost::uint16_t aDest, bool aFromMaster, bool aFcvDfc, bool aFcb, FuncCodes aCode);
 
 	void ChangeFCB(bool aFCB);
 
 	// Getters
-	byte_t GetLength() const { return length; }
-	uint_16_t GetDest() const { return dest; }
-	uint_16_t GetSrc() const { return src; }
+	boost::uint8_t GetLength() const { return length; }
+	boost::uint16_t GetDest() const { return dest; }
+	boost::uint16_t GetSrc() const { return src; }
 	bool IsFromMaster() const { return (ctrl & MASK_DIR) != 0; }
 	bool IsPriToSec() const { return (ctrl & MASK_PRM) != 0; }
 	bool IsFcbSet() const { return (ctrl & MASK_FCB) != 0; }
 	bool IsFcvDfcSet() const { return (ctrl & MASK_FCV) != 0; }
-	byte_t GetFuncByte() const { return ctrl & MASK_FUNC; }
+	boost::uint8_t GetFuncByte() const { return ctrl & MASK_FUNC; }
 	FuncCodes GetFuncEnum() const { return ByteToFuncCode(ctrl & MASK_FUNC_OR_PRM); }
 
 	bool ValidLength() { return length > 4; }
 
 	/** Reads the header, setting all the fields. Does NOT validate 0x0564 or CRC
 	@param apBuff Buffer of at least 10 bytes */
-	void Read(const byte_t* apBuff);
+	void Read(const boost::uint8_t* apBuff);
 
 	/** Writes header to buffer including, 0x0564 and CRC
 	@param apBuff Buffer of at least 10 bytes */
-	void Write(byte_t* apBuff) const;
+	void Write(boost::uint8_t* apBuff) const;
 
 	std::string ToString() const;
 
-	static byte_t ControlByte(bool aIsMaster, bool aFcb, bool aFcvDfc, FuncCodes aFunc);
+	static boost::uint8_t ControlByte(bool aIsMaster, bool aFcb, bool aFcvDfc, FuncCodes aFunc);
 
 	private:
 
 	// Fields read directly from the header
-	byte_t length;	/// Length of field, range [5,255] valid
-	uint_16_t src;	/// Where the frame originated
-	uint_16_t dest;	/// Where the frame is going
-	byte_t ctrl;	/// Control octet, individual fields accessed using accessors below
+	boost::uint8_t length;	/// Length of field, range [5,255] valid
+	boost::uint16_t src;	/// Where the frame originated
+	boost::uint16_t dest;	/// Where the frame is going
+	boost::uint8_t ctrl;	/// Control octet, individual fields accessed using accessors below
 };
 
 

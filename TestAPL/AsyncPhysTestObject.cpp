@@ -55,7 +55,7 @@ void AsyncLoopback::StartRead()
 	mpPhys->AsyncRead(mRead, mRead.Size());
 }
 
-void AsyncLoopback::_OnReceive(const apl::byte_t* apData, size_t aNumBytes)
+void AsyncLoopback::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
 {	
 	if(mpPhys->CanWrite()) {
 		memcpy(mWrite, mRead, aNumBytes);

@@ -60,7 +60,7 @@ namespace apl
 		CS_UNDEFINED = 127		//!< 10 to 126 are currently reserved
 	};
 
-	CommandStatus ByteToCommandStatus(byte_t aField);
+	CommandStatus ByteToCommandStatus(boost::uint8_t aField);
 	std::string ToString(CommandStatus aType);
 
 	/**
@@ -81,7 +81,7 @@ namespace apl
 		CC_UNDEFINED = 0xFF		//!< undefined command (used by DNP standard)
 	};
 
-	ControlCode ByteToControlCode(byte_t aField);
+	ControlCode ByteToControlCode(boost::uint8_t aField);
 	std::string ToString(ControlCode aType);
 	std::string ToString(CommandTypes aType);
 
@@ -112,14 +112,14 @@ namespace apl
 
 		BinaryOutput();
 
-		BinaryOutput(ControlCode aCode, byte_t aCount = 1, uint_32_t aOnTime = 100, uint_32_t aOffTime = 100);
+		BinaryOutput(ControlCode aCode,boost::uint8_t aCount = 1, boost::uint8_t aOnTime = 100, boost::uint8_t aOffTime = 100);
 
 		ControlCode GetCode() const;
 
-		byte_t mRawCode; // allows matching of exact code
-		byte_t mCount;
-		uint_32_t mOnTimeMS;
-		uint_32_t mOffTimeMS;
+		boost::uint8_t mRawCode; // allows matching of exact code
+		boost::uint8_t mCount;
+		boost::uint32_t mOnTimeMS;
+		boost::uint32_t mOffTimeMS;
 
 		std::string ToString() const;
 
@@ -157,8 +157,8 @@ namespace apl
 	class Setpoint : public CommandRequest
 	{
 	public:
-		Setpoint(int_16_t aValue); // this constructor is necessary to stop the compiler from having to guess which upcast to use
-		Setpoint(int_32_t aValue);
+		Setpoint(boost::int16_t aValue); // this constructor is necessary to stop the compiler from having to guess which upcast to use
+		Setpoint(boost::int32_t aValue);
 
 		Setpoint(double aValue);
 
@@ -173,11 +173,11 @@ namespace apl
 
 		static const CommandTypes EnumType = CT_SETPOINT;
 
-		int_32_t GetIntValue() const { return static_cast<int_32_t>(GetValue()); }
+		boost::int32_t GetIntValue() const { return static_cast<boost::int32_t>(GetValue()); }
 		double GetValue() const;
 
 		void SetValue(double aValue);
-		void SetValue(int_32_t aValue);
+		void SetValue(boost::int32_t aValue);
 
 		SetpointEncodingType GetOptimalEncodingType() const;
 

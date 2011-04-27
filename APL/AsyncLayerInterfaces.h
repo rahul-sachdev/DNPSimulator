@@ -65,7 +65,7 @@ class IUpperLayer : public IUpDown, protected virtual Loggable
 		virtual ~IUpperLayer(){}
 
 		/// Called by 'layer down' when data arrives
-		void OnReceive(const apl::byte_t*, size_t);
+		void OnReceive(const boost::uint8_t*, size_t);
 
 		/// Called by 'layer down' when a previously requested send operation succeeds
 		/// Layers can only have 1 outstanding send operation. The callback is guaranteed
@@ -83,7 +83,7 @@ class IUpperLayer : public IUpDown, protected virtual Loggable
 		ILowerLayer* mpLowerLayer;
 
 		//these are the NVII delegates
-		virtual void _OnReceive(const apl::byte_t*, size_t) = 0;
+		virtual void _OnReceive(const boost::uint8_t*, size_t) = 0;
 		virtual void _OnSendSuccess() = 0;
 		virtual void _OnSendFailure() = 0;
 		virtual bool LogReceive() { return true; }
@@ -99,7 +99,7 @@ class ILowerLayer : protected virtual Loggable
 		ILowerLayer(Logger*);
 		virtual ~ILowerLayer(){}
 
-		void Send(const apl::byte_t*, size_t);
+		void Send(const boost::uint8_t*, size_t);
 
 		void SetUpperLayer(IUpperLayer*);
 
@@ -109,7 +109,7 @@ class ILowerLayer : protected virtual Loggable
 
 	private:
 
-		virtual void _Send(const apl::byte_t*, size_t) = 0;
+		virtual void _Send(const boost::uint8_t*, size_t) = 0;
 
 		// override this descriptor, it's use in the Hex log messages
 		virtual std::string SendString() const { return "->"; }

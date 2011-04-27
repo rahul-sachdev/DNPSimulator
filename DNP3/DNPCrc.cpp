@@ -29,12 +29,12 @@ namespace apl { namespace dnp {
 	//initialize the table
 	bool DNPCrc::mIsInitialized = DNPCrc::InitCrcTable();
 
-	unsigned int DNPCrc::CalcCrc(const byte_t* aInput, size_t aLength)
+	unsigned int DNPCrc::CalcCrc(const boost::uint8_t* aInput, size_t aLength)
 	{
 		return CRC::CalcCRC(aInput, aLength, mpCrcTable, 0x0000, true);
 	}
 
-	void DNPCrc::AddCrc(byte_t* aInput, size_t aLength)
+	void DNPCrc::AddCrc(boost::uint8_t* aInput, size_t aLength)
 	{
 		unsigned int crc = DNPCrc::CalcCrc(aInput, aLength);
 
@@ -42,7 +42,7 @@ namespace apl { namespace dnp {
 		aInput[aLength+1] = (crc >> 8) & 0xFF; //set the MSB
 	}
 
-	bool DNPCrc::IsCorrectCRC(const apl::byte_t* aInput, size_t aLength)
+	bool DNPCrc::IsCorrectCRC(const boost::uint8_t* aInput, size_t aLength)
 	{
 		return CalcCrc(aInput, aLength) == UInt16LE::Read(aInput+aLength);
 	}

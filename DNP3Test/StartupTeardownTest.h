@@ -39,7 +39,7 @@ class StartupTeardownTest
 		StartupTeardownTest(FilterLevel aLevel, bool aAutoStart);
 
 		void CreatePort(const std::string& arName, FilterLevel aLevel);
-		void AddMaster(const std::string& arName, const std::string& arPortName, uint_16_t aLocalAddress, FilterLevel aLevel);
+		void AddMaster(const std::string& arName, const std::string& arPortName, boost::uint16_t aLocalAddress, FilterLevel aLevel);
 
 		void StartService() { mMgr.Start(); }
 

@@ -24,7 +24,7 @@
 
 namespace apl { namespace dnp {
 
-	ObjectReadIterator::ObjectReadIterator(const HeaderInfo& arInfo, const byte_t* apBuffer, bool aHasData) : 
+	ObjectReadIterator::ObjectReadIterator(const HeaderInfo& arInfo, const boost::uint8_t* apBuffer, bool aHasData) : 
 	mHeaderInfo(arInfo),
 	mCurrentObjectNum(0),
 	mpPrefixPos(NULL),
@@ -53,7 +53,7 @@ namespace apl { namespace dnp {
 		mInfo.mIndex = this->CalcIndex();
 	}
 
-	size_t ObjectReadIterator::CalcObjSize(const byte_t* apPrefixPos)
+	size_t ObjectReadIterator::CalcObjSize(const boost::uint8_t* apPrefixPos)
 	{
 		if(!mHasData) return 0;
 
@@ -115,7 +115,7 @@ namespace apl { namespace dnp {
 		return index;
 	}
 
-	size_t ObjectReadIterator::CalcCountIndex(QualifierCode aCode, const byte_t* apPrefixPos)
+	size_t ObjectReadIterator::CalcCountIndex(QualifierCode aCode, const boost::uint8_t* apPrefixPos)
 	{
 		switch(aCode)
 		{

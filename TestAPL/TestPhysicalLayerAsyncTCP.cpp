@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_SUITE(PhysicalLayerAsyncTCPSuite)
 	{
 		AsyncPhysTestObject t(LEV_INFO, false);
 
-		byte_t buff[100];
+		uint8_t buff[100];
 
 		// Test that reads/writes of length 0 throw ArgumentException
 		BOOST_REQUIRE_THROW(t.mTCPClient.AsyncWrite(buff,0), ArgumentException);

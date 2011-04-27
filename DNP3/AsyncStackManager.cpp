@@ -61,12 +61,12 @@ AsyncStackManager::~AsyncStackManager()
 std::vector<std::string> AsyncStackManager::GetStackNames() { return GetKeys<PortMap, string>(mStackToPort); }
 std::vector<std::string> AsyncStackManager::GetPortNames()  {  return GetKeys<PortMap, string>(mPortToPort); }
 
-void AsyncStackManager::AddTCPClient(const std::string& arName, PhysLayerSettings aSettings, const std::string& arAddr, uint_16_t aPort)
+void AsyncStackManager::AddTCPClient(const std::string& arName, PhysLayerSettings aSettings, const std::string& arAddr, boost::uint16_t aPort)
 {	
 	mMgr.AddTCPClient(arName, aSettings, arAddr, aPort);
 }
 
-void AsyncStackManager::AddTCPServer(const std::string& arName, PhysLayerSettings aSettings, const std::string& arEndpoint, uint_16_t aPort)
+void AsyncStackManager::AddTCPServer(const std::string& arName, PhysLayerSettings aSettings, const std::string& arEndpoint, boost::uint16_t aPort)
 {	
 	mMgr.AddTCPServer(arName, aSettings, arEndpoint, aPort);
 }
@@ -99,7 +99,7 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 }
 
 IVtoWriter* AsyncStackManager::AddVtoChannel(const std::string& arStackName,
-				byte_t aVtoChannelId, IVtoCallbacks* apOnDataCallback)
+				boost::uint8_t aVtoChannelId, IVtoCallbacks* apOnDataCallback)
 {
 	throw NotImplementedException(LOCATION);
 }
@@ -110,13 +110,13 @@ void AsyncStackManager::RemoveVtoChannel(IVtoCallbacks* apOnDataCallback)
 }
 
 void AsyncStackManager::StartVtoRouter(const std::string& arPortName,
-				const std::string& arStackName, byte_t aVtoChannelId)
+				const std::string& arStackName, boost::uint8_t aVtoChannelId)
 {
 	throw NotImplementedException(LOCATION);
 }
 		
 void AsyncStackManager::StopVtoRouter(const std::string& arStackName,
-				byte_t aVtoChannelId)
+				boost::uint8_t aVtoChannelId)
 {
 	throw NotImplementedException(LOCATION);
 }
@@ -251,7 +251,7 @@ void AsyncStackManager::Run()
 	mService.Get()->reset();
 }
 
-void AsyncStackManager::OnAddStack(const std::string& arStackName, Stack* apStack, Port* apPort, uint_16_t aAddress)
+void AsyncStackManager::OnAddStack(const std::string& arStackName, Stack* apStack, Port* apPort, boost::uint16_t aAddress)
 {	
 	// marshall the linking to the io_service
 	mStackToPort[arStackName] = apPort; //map the stack to a portname

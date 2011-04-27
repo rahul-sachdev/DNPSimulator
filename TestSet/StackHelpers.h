@@ -48,7 +48,7 @@ namespace apl { namespace dnp {
 class StackBase
 {
 public:
-	StackBase(const APLXML_Base::PhysicalLayerList_t&, FilterLevel aLevel, const std::string& arLogFile = "-", bool aRemote = false, apl::uint_16_t aRemotePort = 4998);
+	StackBase(const APLXML_Base::PhysicalLayerList_t&, FilterLevel aLevel, const std::string& arLogFile = "-", bool aRemote = false, boost::uint16_t aRemotePort = 4998);
 
 	void Run();
 

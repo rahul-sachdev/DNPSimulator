@@ -63,7 +63,7 @@ namespace apl {
 		
 	}
 	
-	void PhysicalLayerSyncProxy::DoAsyncRead(byte_t* apData, size_t aLength)
+	void PhysicalLayerSyncProxy::DoAsyncRead(boost::uint8_t* apData, size_t aLength)
 	{
 		CriticalSection cs(&mWaitLock);
 		mpBuffer = apData;
@@ -73,7 +73,7 @@ namespace apl {
 		if(mReading) cs.Signal(); //wake up the thread to go and get more data from stdin
 	}
 	
-	void PhysicalLayerSyncProxy::DoAsyncWrite(const byte_t* apData, size_t aLength)
+	void PhysicalLayerSyncProxy::DoAsyncWrite(const boost::uint8_t* apData, size_t aLength)
 	{
 		const char* pBuff = reinterpret_cast<const char*>(apData);
 		string s(pBuff, aLength);

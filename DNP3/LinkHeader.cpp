@@ -29,7 +29,7 @@ namespace apl { namespace dnp {
 
 LinkHeader::LinkHeader(){}
 
-LinkHeader::LinkHeader(byte_t aLen, uint_16_t aSrc, uint_16_t aDest, bool aMaster, bool aFcvDfc, bool aFcb, FuncCodes aCode) :
+LinkHeader::LinkHeader(boost::uint8_t aLen, boost::uint16_t aSrc, boost::uint16_t aDest, bool aMaster, bool aFcvDfc, bool aFcb, FuncCodes aCode) :
 length(aLen),
 src(aSrc),
 dest(aDest),
@@ -38,12 +38,12 @@ ctrl(ControlByte(aMaster, aFcb, aFcvDfc, aCode))
 	
 }
 
-LinkHeader::LinkHeader(const byte_t* apBuff)
+LinkHeader::LinkHeader(const boost::uint8_t* apBuff)
 {
 	this->Read(apBuff);
 }
 
-void LinkHeader::Set(byte_t aLen, uint_16_t aSrc, uint_16_t aDest, bool aFromMaster, bool aFcvDfc, bool aFcb, FuncCodes aCode)
+void LinkHeader::Set(boost::uint8_t aLen, boost::uint16_t aSrc, boost::uint16_t aDest, bool aFromMaster, bool aFcvDfc, bool aFcb, FuncCodes aCode)
 {
 	length = aLen;
 	src = aSrc;
@@ -57,9 +57,9 @@ void LinkHeader::ChangeFCB(bool aFCB)
 	else ctrl &= ~MASK_FCB;
 }
 
-byte_t LinkHeader::ControlByte(bool aIsMaster, bool aFcb, bool aFcvDfc, FuncCodes aFunc)
+boost::uint8_t LinkHeader::ControlByte(bool aIsMaster, bool aFcb, bool aFcvDfc, FuncCodes aFunc)
 {
-	byte_t ret = aFunc;
+	boost::uint8_t ret = aFunc;
 
 	if(aIsMaster) ret |= MASK_DIR;
 	if(aFcb) ret |= MASK_FCB;
@@ -68,7 +68,7 @@ byte_t LinkHeader::ControlByte(bool aIsMaster, bool aFcb, bool aFcvDfc, FuncCode
 	return ret;
 }
 
-void LinkHeader::Read(const byte_t* apBuff)
+void LinkHeader::Read(const boost::uint8_t* apBuff)
 {
 	length = apBuff[LI_LENGTH];
 	dest = UInt16LE::Read(apBuff + LI_DESTINATION);
@@ -76,7 +76,7 @@ void LinkHeader::Read(const byte_t* apBuff)
 	ctrl = apBuff[LI_CONTROL];
 }
 
-void LinkHeader::Write(byte_t* apBuff) const
+void LinkHeader::Write(boost::uint8_t* apBuff) const
 {
 	apBuff[LI_START_05] = 0x05; 
 	apBuff[LI_START_64]= 0x64;

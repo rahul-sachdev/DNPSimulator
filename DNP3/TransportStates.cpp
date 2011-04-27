@@ -38,7 +38,7 @@ namespace apl { namespace dnp {
 	/////////////////////////////////////////////////////////////////////////////////
 	TLS_Ready TLS_Ready::mInstance;
 
-	void TLS_Ready::Send(const byte_t* apData, size_t aNumBytes, TransportLayer* apContext)
+	void TLS_Ready::Send(const boost::uint8_t* apData, size_t aNumBytes, TransportLayer* apContext)
 	{
 		apContext->ChangeState(TLS_Sending::Inst());
 		apContext->TransmitAPDU(apData, aNumBytes);
@@ -50,7 +50,7 @@ namespace apl { namespace dnp {
 		apContext->ThisLayerDown();
 	}
 
-	void TLS_Ready::HandleReceive(const apl::byte_t* apData, size_t aNumBytes, TransportLayer* apContext)
+	void TLS_Ready::HandleReceive(const boost::uint8_t* apData, size_t aNumBytes, TransportLayer* apContext)
 	{
 		apContext->ReceiveTPDU(apData, aNumBytes);
 	}
@@ -60,7 +60,7 @@ namespace apl { namespace dnp {
 	/////////////////////////////////////////////////////////////////////////////////
 	TLS_Sending TLS_Sending::mInstance;
 
-	void TLS_Sending::HandleReceive(const apl::byte_t* apData, size_t aNumBytes, TransportLayer* apContext)
+	void TLS_Sending::HandleReceive(const boost::uint8_t* apData, size_t aNumBytes, TransportLayer* apContext)
 	{
 		apContext->ReceiveTPDU(apData, aNumBytes);
 	}

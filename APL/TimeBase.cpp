@@ -41,9 +41,9 @@ namespace apl
 		this->SetTo(time);
 	}
 
-	int_64_t TimeBase::GetValueMS() const
+	boost::int64_t TimeBase::GetValueMS() const
 	{
-		return static_cast<int_64_t>(this->mSec)*1000 + this->mUsec/1000;
+		return static_cast<boost::int64_t>(this->mSec)*1000 + this->mUsec/1000;
 	}
 
 	millis_t TimeBase::CalcDeltaMS(const TimeBase& aTime1, const TimeBase& aTime2)

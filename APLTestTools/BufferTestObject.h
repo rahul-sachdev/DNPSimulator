@@ -34,7 +34,7 @@ class BufferTestObject
 		BufferTestObject();
 		~BufferTestObject();
 
-		bool BufferEquals(const byte_t*, size_t);
+		bool BufferEquals(const boost::uint8_t*, size_t);
 		bool BufferEquals(const std::string& arData);
 		bool BufferEqualsString(const std::string& arData);
 		bool BufferContains(const std::string& arData);
@@ -45,11 +45,11 @@ class BufferTestObject
 		size_t NumWrites() { return mNumWrites; }
 
 	protected:
-		void WriteToBuffer(const byte_t*, size_t);
+		void WriteToBuffer(const boost::uint8_t*, size_t);
 
 	private:
 		size_t mNumWrites;
-		std::vector<byte_t> mBuffer;
+		std::vector<boost::uint8_t> mBuffer;
 };
 
 }

@@ -30,7 +30,7 @@ class MockUpperLayer : public IUpperLayer, public BufferTestObject
 {
 	public:
 
-		typedef boost::function<void (const apl::byte_t*, size_t)> OnReceiveHandler;
+		typedef boost::function<void (const boost::uint8_t*, size_t)> OnReceiveHandler;
 
 		struct State
 		{
@@ -52,7 +52,7 @@ class MockUpperLayer : public IUpperLayer, public BufferTestObject
 		virtual ~MockUpperLayer(){}
 
 		void SendDown(const std::string&);
-		void SendDown(const byte_t* apData, size_t aNumBytes);
+		void SendDown(const boost::uint8_t* apData, size_t aNumBytes);
 
 		bool CountersEqual(size_t success, size_t failure)
 		{
@@ -80,7 +80,7 @@ class MockUpperLayer : public IUpperLayer, public BufferTestObject
 		State mState;
 
 		//these are the NVII delegates
-		void _OnReceive(const apl::byte_t*, size_t);
+		void _OnReceive(const boost::uint8_t*, size_t);
 		void _OnSendSuccess();
 		void _OnSendFailure();
 		void _OnLowerLayerUp();

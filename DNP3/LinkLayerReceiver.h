@@ -60,7 +60,7 @@ class LinkLayerReceiver : public Loggable
 		*/
 
 		size_t NumWriteBytes() const { return mBuffer.NumWriteBytes(); }
-		byte_t* WriteBuff() const { return mBuffer.WriteBuff(); }
+		boost::uint8_t* WriteBuff() const { return mBuffer.WriteBuff(); }
 
 		//size_t NumReadBytes() const { return mBuffer.NumReadBytes(); }
 
@@ -85,13 +85,13 @@ class LinkLayerReceiver : public Loggable
 
 		LinkHeader mHeader;
 		size_t mFrameSize;
-		static const byte_t M_SYNC_PATTERN[2];
+		static const boost::uint8_t M_SYNC_PATTERN[2];
 
 		IFrameSink* mpSink;  /// pointer to interface to push complete frames
 		LRS_Base* mpState;
 
 		/// Buffer to which user data is extracted, this is necessary since CRC checks are interlaced
-		byte_t mpUserData[LS_MAX_USER_DATA_SIZE];
+		boost::uint8_t mpUserData[LS_MAX_USER_DATA_SIZE];
 		ShiftableBuffer mBuffer; ///Buffer used to cache frames data as it arrives
 		LogCounter mCrcFailures;
 };

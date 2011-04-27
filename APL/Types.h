@@ -23,26 +23,12 @@
 
 namespace apl
 {	
-	//byte types
-	typedef boost::uint8_t	byte_t;
-
-	//16 bit types
-	typedef boost::int16_t	int_16_t;
-	typedef boost::uint16_t	uint_16_t;
-
-	//32 bit types
-	typedef boost::int32_t	int_32_t;
-	typedef boost::uint32_t	uint_32_t;
-
-	//64 bit types
-	typedef boost::int64_t	int_64_t;
-	typedef boost::uint64_t	uint_64_t;
-
+	
 #ifndef SIZE_MAX
 	#define SIZE_MAX ~0
 #endif
 
-	typedef int_64_t millis_t;
+	typedef boost::int64_t millis_t;
 
 #ifdef _DEBUG
 //#define STRONGLY_TYPED_TIMESTAMPS

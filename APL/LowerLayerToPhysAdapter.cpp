@@ -40,7 +40,9 @@ LowerLayerToPhysAdapter::~LowerLayerToPhysAdapter()
 }
 
 void LowerLayerToPhysAdapter::StartRead()
-{ mpPhys->AsyncRead(mpBuff, BUFFER_SIZE); }
+{ 
+	mpPhys->AsyncRead(mpBuff, BUFFER_SIZE);
+}
 
 /* Implement IAsyncHandler */
 void LowerLayerToPhysAdapter::_OnOpenFailure() 
@@ -49,7 +51,7 @@ void LowerLayerToPhysAdapter::_OnOpenFailure()
 }
 
 /* Implement IUpperLayer */
-void LowerLayerToPhysAdapter::_OnReceive(const apl::byte_t* apData, size_t aNumBytes)
+void LowerLayerToPhysAdapter::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
 { 
 	// process the data into another buffer *before* kicking off another call,
 	// otherwise you have a potential race condition
@@ -84,7 +86,7 @@ void LowerLayerToPhysAdapter::_OnLowerLayerShutdown()
 }
 
 /* Implement ILowerLayer */
-void LowerLayerToPhysAdapter::_Send(const byte_t* apData, size_t aNumBytes)
+void LowerLayerToPhysAdapter::_Send(const boost::uint8_t* apData, size_t aNumBytes)
 {
 	mpPhys->AsyncWrite(apData, aNumBytes);
 }

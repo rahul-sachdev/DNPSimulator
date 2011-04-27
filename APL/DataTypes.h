@@ -100,10 +100,10 @@ namespace apl
 		DataTypes GetType() const;
 		TimeStamp_t GetTime() const;
 
-		virtual byte_t GetQuality() const;
-		bool CheckQualityBit(byte_t aQualMask) const;
+		virtual boost::uint8_t GetQuality() const;
+		bool CheckQualityBit(boost::uint8_t aQualMask) const;
 
-		virtual void SetQuality(byte_t aQuality);
+		virtual void SetQuality(boost::uint8_t aQuality);
 		void SetTime(const TimeStamp_t arTime);
 		void SetToNow();
 
@@ -112,9 +112,9 @@ namespace apl
 		protected:
 
 		//These constructors can only be invoked by super classes
-		DataPoint(byte_t aQuality, DataTypes aType);
+		DataPoint(boost::uint8_t aQuality, DataTypes aType);
 
-		byte_t mQuality;	//	bitfield that stores type specific quality information
+		boost::uint8_t mQuality;	//	bitfield that stores type specific quality information
 		TimeStamp_t mTime;		//	the time that the measurement was made
 
 		private:
@@ -125,10 +125,10 @@ namespace apl
 	// Inlined definitions from DataPoint
 	inline DataTypes DataPoint::GetType() const { return mType; }
 	inline TimeStamp_t DataPoint::GetTime() const { return mTime; }
-	inline byte_t  DataPoint::GetQuality() const { return mQuality; }
-	inline bool DataPoint::CheckQualityBit(byte_t aQualMask) const{ return (aQualMask & mQuality) != 0; }
+	inline boost::uint8_t  DataPoint::GetQuality() const { return mQuality; }
+	inline bool DataPoint::CheckQualityBit(boost::uint8_t aQualMask) const{ return (aQualMask & mQuality) != 0; }
 	inline void DataPoint::SetTime(const TimeStamp_t arTime) { mTime = arTime; }
-	inline void DataPoint::SetQuality(byte_t aQuality) { mQuality = aQuality; }
+	inline void DataPoint::SetQuality(boost::uint8_t aQuality) { mQuality = aQuality; }
 
 	/**
        Base class for Binary and ControlStatus data types, shouldn't be used directly.
@@ -140,12 +140,12 @@ namespace apl
 		bool GetValue() const;
 		void SetValue(bool aValue);
 
-		byte_t GetQuality() const;
-		void SetQuality(byte_t aQuality);
+		boost::uint8_t GetQuality() const;
+		void SetQuality(boost::uint8_t aQuality);
 
-		void SetQualityValue(byte_t aFlag);
+		void SetQualityValue(boost::uint8_t aFlag);
 
-		bool ShouldGenerateEvent(const BoolDataPoint& arRHS, double aDeadband, uint_32_t aLastReportedVal) const;
+		bool ShouldGenerateEvent(const BoolDataPoint& arRHS, double aDeadband, boost::uint32_t aLastReportedVal) const;
 
 		std::string ToString() const;
 
@@ -154,12 +154,12 @@ namespace apl
 
 		protected:
 		//BoolDataPoint(const BoolDataPoint& arRHS);
-		BoolDataPoint(byte_t aQuality, DataTypes aType, byte_t aValueMask);
+		BoolDataPoint(boost::uint8_t aQuality, DataTypes aType, boost::uint8_t aValueMask);
 
 		private:
 		BoolDataPoint();
 		// bool data points store their value as a bit in the quality field
-		byte_t mValueMask;
+		boost::uint8_t mValueMask;
 	};
 
 	inline void BoolDataPoint::SetValue(bool aValue)
@@ -168,20 +168,20 @@ namespace apl
 	}
 	inline bool BoolDataPoint::GetValue() const { return (mQuality&mValueMask) != 0; }
 
-	inline byte_t BoolDataPoint::GetQuality() const { return mQuality; }
+	inline boost::uint8_t BoolDataPoint::GetQuality() const { return mQuality; }
 
-	inline void BoolDataPoint::SetQualityValue(byte_t aFlag)
+	inline void BoolDataPoint::SetQualityValue(boost::uint8_t aFlag)
 	{
 		mQuality = aFlag;
 	}
 
-	inline void BoolDataPoint::SetQuality(byte_t aQuality)
+	inline void BoolDataPoint::SetQuality(boost::uint8_t aQuality)
 	{
 		mQuality = (mQuality & (mValueMask));
 		mQuality |= aQuality;
 	}
 
-	inline bool BoolDataPoint::ShouldGenerateEvent(const BoolDataPoint& arRHS, double /*aDeadband*/, uint_32_t /*aLastReportedVal*/) const
+	inline bool BoolDataPoint::ShouldGenerateEvent(const BoolDataPoint& arRHS, double /*aDeadband*/, boost::uint32_t /*aLastReportedVal*/) const
 	{ return mQuality != arRHS.mQuality; }
 
 	template <class T>
@@ -189,7 +189,7 @@ namespace apl
 	{
 		//T can be unsigned data type so std::abs won't work since it only directly supports signed data types
 		//If one uses std::abs and T is unsigned one will get an ambiguous override error.
-		uint_32_t diff;
+		boost::uint32_t diff;
 
 		if (val1 < val2){
 			diff = val2 - val1;
@@ -225,9 +225,8 @@ namespace apl
 		{ return GetValue() == rhs.GetValue() && GetQuality() == rhs.GetQuality(); }
 
 		protected:
-		// IntDataPoints have seperate fields for quality and value
-		//IntDataPoint(const IntDataPoint& arRHS);
-		TypedDataPoint(byte_t aQuality, DataTypes aType);
+		// IntDataPoints have seperate fields for quality and value		
+		TypedDataPoint(boost::uint8_t aQuality, DataTypes aType);
 		T mValue;
 
 		private:
@@ -241,7 +240,7 @@ namespace apl
 	const T TypedDataPoint<T>::MIN_VALUE = MaxMinWrapper<T>::Min();
 
 	template <class T>
-	TypedDataPoint<T>::TypedDataPoint(byte_t aQuality, DataTypes aType) :
+	TypedDataPoint<T>::TypedDataPoint(boost::uint8_t aQuality, DataTypes aType) :
 	DataPoint(aQuality, aType),
 	mValue(0)
 	{
@@ -266,7 +265,7 @@ namespace apl
 
 #ifdef SWIG
 %template(DoublePoint) apl::TypedDataPoint<double>;
-%template(UnsignedPoint) apl::TypedDataPoint<apl::uint_32_t>;
+%template(UnsignedPoint) apl::TypedDataPoint<apl::uint32_t>;
 #endif
 
 	///////////////////////////////////////////////////////////////////
@@ -281,7 +280,7 @@ namespace apl
 	class Binary : public BoolDataPoint
 	{
 		public:
-		Binary(bool aValue, byte_t aQuality = BQ_RESTART) : BoolDataPoint(BQ_RESTART, DT_BINARY, BQ_STATE)
+		Binary(bool aValue, boost::uint8_t aQuality = BQ_RESTART) : BoolDataPoint(BQ_RESTART, DT_BINARY, BQ_STATE)
 		{
 			SetValue(aValue);
 			SetQuality(aQuality);
@@ -310,7 +309,7 @@ namespace apl
 	{
 		public:
 
-		ControlStatus(bool aValue, byte_t aQuality = TQ_RESTART) : BoolDataPoint(TQ_RESTART, DT_CONTROL_STATUS, TQ_STATE)
+		ControlStatus(bool aValue, boost::uint8_t aQuality = TQ_RESTART) : BoolDataPoint(TQ_RESTART, DT_CONTROL_STATUS, TQ_STATE)
 		{
 			SetValue(aValue);
 			SetQuality(aQuality);
@@ -340,7 +339,7 @@ namespace apl
 		public:
 		Analog() : TypedDataPoint<double>(AQ_RESTART, DT_ANALOG) {}
 
-		Analog(double aVal, byte_t aQuality = AQ_RESTART) : TypedDataPoint<double>(AQ_RESTART, DT_ANALOG)
+		Analog(double aVal, boost::uint8_t aQuality = AQ_RESTART) : TypedDataPoint<double>(AQ_RESTART, DT_ANALOG)
 		{
 			SetValue(aVal);
 			SetQuality(aQuality);
@@ -365,17 +364,17 @@ namespace apl
 		Counters are used for describing generally increasing values (non-negative!). Good examples are
 		total power consumed, max voltage. Think odometer on a car.
 	*/
-	class Counter : public TypedDataPoint<uint_32_t>
+	class Counter : public TypedDataPoint<boost::uint32_t>
 	{
 		public:
-		Counter() : TypedDataPoint<uint_32_t>(CQ_RESTART, DT_COUNTER) {}
-		Counter(uint_32_t aVal, byte_t aQuality = CQ_RESTART) : TypedDataPoint<uint_32_t>(CQ_RESTART, DT_COUNTER)
+		Counter() : TypedDataPoint<boost::uint32_t>(CQ_RESTART, DT_COUNTER) {}
+		Counter(boost::uint32_t aVal, boost::uint8_t aQuality = CQ_RESTART) : TypedDataPoint<boost::uint32_t>(CQ_RESTART, DT_COUNTER)
 		{
 			SetValue(aVal);
 			SetQuality(aQuality);
 		}
 
-		typedef uint_32_t ValueType;
+		typedef boost::uint8_t ValueType;
 		typedef CounterQuality QualityType;
 		typedef QualityConverter<CounterQualInfo> QualConverter;
 
@@ -395,7 +394,7 @@ namespace apl
 	{
 		public:
 		SetpointStatus() : TypedDataPoint<double>(PQ_RESTART, DT_SETPOINT_STATUS) {}
-		SetpointStatus(double aVal, byte_t aQuality = PQ_RESTART) : TypedDataPoint<double>(PQ_RESTART, DT_SETPOINT_STATUS)
+		SetpointStatus(double aVal, boost::uint8_t aQuality = PQ_RESTART) : TypedDataPoint<double>(PQ_RESTART, DT_SETPOINT_STATUS)
 		{
 			SetValue(aVal);
 			SetQuality(aQuality);
@@ -425,7 +424,7 @@ namespace apl
 			MACRO_BZERO(this->mData, 255);
 		}
 
-		typedef byte_t * ValueType;
+		typedef boost::uint8_t * ValueType;
 		typedef VtoQuality QualityType;
 		typedef QualityConverter<VtoQualInfo> QualConverter;
 
@@ -433,7 +432,7 @@ namespace apl
 
 		static const DataTypes MeasEnum = DT_VTO_DATA;
 
-		bool ShouldGenerateEvent(const VtoData& arRHS, double aDeadband, byte_t *aLastReportedVal) const { return true; }
+		bool ShouldGenerateEvent(const VtoData& arRHS, double aDeadband, boost::uint8_t* aLastReportedVal) const { return true; }
 
 		/* TODO - what to do here? */
 		//operator ValueType() const { return this->GetValue(); }
@@ -453,9 +452,9 @@ namespace apl
 
 		size_t GetSize() const { return this->mSize; }
 
-		const byte_t *GetValue() const { return this->mData; }
+		const boost::uint8_t *GetValue() const { return this->mData; }
 
-		void SetValue(const byte_t *aValue, size_t aSize)
+		void SetValue(const boost::uint8_t *aValue, size_t aSize)
 		{
 			MACRO_BZERO(this->mData, 255);
 			memcpy(this->mData, aValue, aSize);
@@ -463,7 +462,7 @@ namespace apl
 		}
 
 		private:
-		byte_t mData[255];
+		boost::uint8_t mData[255];
 		size_t mSize;
 	};
 

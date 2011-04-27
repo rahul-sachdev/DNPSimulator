@@ -104,8 +104,8 @@ using namespace apl;
 			string mThreadName;
 			Thread* mpThread;
 		};
-		void AddCount(int_64_t aEvent, int *aCounts, int aSlots){
-			int_64_t m = 1;
+		void AddCount(boost::int64_t aEvent, int *aCounts, int aSlots){
+			boost::int64_t m = 1;
 			int bit;
 			for(bit=0; bit < aSlots; bit++){
 				if(aEvent == (m << bit))break;
@@ -137,7 +137,7 @@ using namespace apl;
 			bool notFifo = false;
 			//create the bit mask which is what the event counter should 
 			//look like when all the threads have fired
-			int_64_t allThreadsMask = 1;
+			boost::int64_t allThreadsMask = 1;
 			allThreadsMask = (allThreadsMask<<numThreads) -1;
 
 			//"main" lock we are going to be checking the FiFo nature
@@ -187,9 +187,9 @@ using namespace apl;
 				}
 				pLogger->Log(LEV_DEBUG,testName,"Master got woken");
 				//calculate the mask the current thread should have.
-				int_64_t mask = EventLock::Get64BitMask(mod);
+				boost::int64_t mask = EventLock::Get64BitMask(mod);
 				//get the value of the event counter.
-				int_64_t count = ec->GetEvents();
+				boost::int64_t count = ec->GetEvents();
 				AddCount(count, counts, numThreads);
 				//make sure we got what we expected
 				if(count != mask){

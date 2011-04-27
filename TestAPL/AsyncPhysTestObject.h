@@ -60,7 +60,7 @@ namespace apl {
 			CopyableBuffer mRead;
 			CopyableBuffer mWrite;
 
-			void _OnReceive(const apl::byte_t *,size_t);
+			void _OnReceive(const boost::uint8_t *,size_t);
 			void _OnSendSuccess(void){}
 			void _OnSendFailure(void){}
 

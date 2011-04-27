@@ -36,7 +36,7 @@ IndexedWriteIterator::IndexedWriteIterator() :
 
 }
 	
-IndexedWriteIterator::IndexedWriteIterator(apl::byte_t* apPos, size_t aCount, QualifierCode aCode, size_t aObjectSize) :
+IndexedWriteIterator::IndexedWriteIterator(boost::uint8_t* apPos, size_t aCount, QualifierCode aCode, size_t aObjectSize) :
 	mpPos(apPos),
 	mIndexMode(GetIndexMode(aCode)),
 	mIndex(0),
@@ -47,7 +47,7 @@ IndexedWriteIterator::IndexedWriteIterator(apl::byte_t* apPos, size_t aCount, Qu
 
 }
 
-apl::byte_t* IndexedWriteIterator::operator*() const
+boost::uint8_t* IndexedWriteIterator::operator*() const
 {
 	if(!mIndexSet) throw InvalidStateException(LOCATION, "Index has not been written");
 	return mpPos + mIndexMode;
@@ -80,15 +80,15 @@ void IndexedWriteIterator::SetIndex(size_t aIndex)
 	{
 		case(IM_1B):
 			if(aIndex > UInt8::Max) throw ArgumentException(LOCATION);
-			UInt8::Write(mpPos, static_cast<byte_t>(aIndex));
+			UInt8::Write(mpPos, static_cast<boost::uint8_t>(aIndex));
 			break;
 		case(IM_2B):
 			if(aIndex > UInt16LE::Max) throw ArgumentException(LOCATION);
-			UInt16LE::Write(mpPos, static_cast<uint_16_t>(aIndex));
+			UInt16LE::Write(mpPos, static_cast<boost::uint16_t>(aIndex));
 			break;
 		case(IM_4B):
 			if(aIndex > UInt32LE::Max) throw ArgumentException(LOCATION);
-			UInt32LE::Write(mpPos, static_cast<uint_32_t>(aIndex));
+			UInt32LE::Write(mpPos, static_cast<boost::uint32_t>(aIndex));
 			break;
 		default:
 			break;

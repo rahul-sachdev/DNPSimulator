@@ -46,22 +46,22 @@ BOOST_AUTO_TEST_SUITE(TestTypes)
 
 	BOOST_AUTO_TEST_CASE( UByte )
 	{ 
-		TestType<byte_t>(0,255,1);
+		TestType<boost::uint8_t>(0,255,1);
 	}
 
 	BOOST_AUTO_TEST_CASE( Int16 )
-	{ TestType<int_16_t>(-32768, 32767, 2); }
+	{ TestType<boost::int16_t>(-32768, 32767, 2); }
 
 	BOOST_AUTO_TEST_CASE( UInt16 )
-	{ TestType<uint_16_t>(0,65535,2); }
+	{ TestType<boost::uint16_t>(0,65535,2); }
 
 	BOOST_AUTO_TEST_CASE( Int32 )
-	{ TestType<int_32_t>(0x80000000, 2147483647L, 4); }
+	{ TestType<boost::int32_t>(0x80000000, 2147483647L, 4); }
 
 	BOOST_AUTO_TEST_CASE( UInt32 )
-	{ TestType<uint_32_t>(0, 4294967295UL, 4); }
+	{ TestType<boost::uint32_t>(0, 4294967295UL, 4); }
 
 	BOOST_AUTO_TEST_CASE( Int64)
-	{ TestType<int_64_t>(0x8000000000000000LL, 9223372036854775807LL, 8); }
+	{ TestType<boost::int64_t>(0x8000000000000000LL, 9223372036854775807LL, 8); }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -40,7 +40,7 @@ namespace apl { namespace dnp {
 
 		const IndexedWriteIterator& operator++();
 		const IndexedWriteIterator operator++(int);
-		apl::byte_t* operator*() const;
+		boost::uint8_t* operator*() const;
 
 		void SetIndex(size_t aIndex);
 		bool IsEnd() { return mIndex >= mCount; }
@@ -48,7 +48,7 @@ namespace apl { namespace dnp {
 
 		private:
 
-		IndexedWriteIterator(apl::byte_t* apPos, size_t aCount, QualifierCode aCode, size_t aObjectSize);
+		IndexedWriteIterator(boost::uint8_t* apPos, size_t aCount, QualifierCode aCode, size_t aObjectSize);
 
 		enum IndexMode
 		{
@@ -61,7 +61,7 @@ namespace apl { namespace dnp {
 		static IndexMode GetIndexMode(QualifierCode aCode);
 		static size_t GetPrefixSize(IndexMode);
 
-		apl::byte_t* mpPos;
+		boost::uint8_t* mpPos;
 		IndexMode mIndexMode;
 		size_t mIndex;
 		size_t mCount;

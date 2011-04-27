@@ -23,7 +23,7 @@ namespace apl { namespace dnp {
 
 #define MACRO_ENUM_CASE(name) case(name): return name;
 
-	FuncCodes ByteToFuncCode(byte_t aCode)
+	FuncCodes ByteToFuncCode(boost::uint8_t aCode)
 	{
 		switch(aCode){
 			MACRO_ENUM_CASE(FC_PRI_RESET_LINK_STATES)

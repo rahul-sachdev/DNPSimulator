@@ -15,7 +15,7 @@ using namespace boost;
 
 namespace apl
 {
-	typedef boost::function<std::string(byte_t)> QualityFunctor;
+	typedef boost::function<std::string(boost::uint8_t)> QualityFunctor;
 
 	void ControlTerminalExtension::_BindToTerminal(ITerminal* apTerminal)
 	{
@@ -66,7 +66,7 @@ namespace apl
 		if(arArgs[1].find('.') == std::string::npos){
 			int iValue;
 			if(!Parsing::Get(arArgs[1], iValue)) return BAD_ARGUMENTS;
-			st.SetValue(static_cast<int_32_t>(iValue));
+			st.SetValue(static_cast<int32_t>(iValue));
 		}else{
 			double dValue;
 			if(!Parsing::Get(arArgs[1], dValue)) return BAD_ARGUMENTS;
@@ -95,10 +95,10 @@ namespace apl
 		if(arArgs.size() < 2) return BAD_ARGUMENTS;
 		
 		BinaryOutput b; b.mOnTimeMS = 100; b.mOffTimeMS = 100; b.mCount = 1;
-		uint_32_t index;
+		uint32_t index;
 		if(!Parsing::Get(arArgs[0], index)) return BAD_ARGUMENTS;
 
-		b.mRawCode = static_cast<byte_t>(ParseControlCode(arArgs[1]));
+		b.mRawCode = static_cast<boost::uint8_t>(ParseControlCode(arArgs[1]));
 		switch(b.mRawCode) {
 			case(CC_PULSE):
 			case(CC_PULSE_CLOSE):

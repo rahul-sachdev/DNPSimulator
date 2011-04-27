@@ -35,10 +35,10 @@ namespace apl { namespace dnp {
 
 		void ResetLinkStates(LinkLayer*);
 		void RequestLinkStatus(LinkLayer*);
-		void UnconfirmedUserData(LinkLayer*, const apl::byte_t* apData, size_t aDataLength);
+		void UnconfirmedUserData(LinkLayer*, const boost::uint8_t* apData, size_t aDataLength);
 
 		virtual void TestLinkStatus(LinkLayer*, bool aFcb) = 0;
-		virtual void ConfirmedUserData(LinkLayer*, bool aFcb, const apl::byte_t* apData, size_t aDataLength) = 0;
+		virtual void ConfirmedUserData(LinkLayer*, bool aFcb, const boost::uint8_t* apData, size_t aDataLength) = 0;
 
 
 		//every concrete state implements this for logging purposes
@@ -53,7 +53,7 @@ namespace apl { namespace dnp {
 		MACRO_STATE_SINGLETON_INSTANCE(SLLS_NotReset);
 
 		void TestLinkStatus(LinkLayer*, bool aFcb);
-		void ConfirmedUserData(LinkLayer*, bool aFcb, const apl::byte_t* apData, size_t aDataLength);
+		void ConfirmedUserData(LinkLayer*, bool aFcb, const boost::uint8_t* apData, size_t aDataLength);
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////
@@ -64,7 +64,7 @@ namespace apl { namespace dnp {
 		MACRO_STATE_SINGLETON_INSTANCE(SLLS_Reset);
 
 		void TestLinkStatus(LinkLayer*, bool aFcb);
-		void ConfirmedUserData(LinkLayer*, bool aFcb, const apl::byte_t* apData, size_t aDataLength);
+		void ConfirmedUserData(LinkLayer*, bool aFcb, const boost::uint8_t* apData, size_t aDataLength);
 	};
 
 }} //end namepsace

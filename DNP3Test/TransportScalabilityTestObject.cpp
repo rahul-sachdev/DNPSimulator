@@ -31,8 +31,8 @@ namespace apl { namespace dnp {
 TransportScalabilityTestObject::TransportScalabilityTestObject(
 	LinkConfig aClientCfg,
 	LinkConfig aServerCfg,
-	uint_16_t aPortStart,
-	uint_16_t aNumPair,
+	boost::uint16_t aPortStart,
+	boost::uint16_t aNumPair,
 	FilterLevel aLevel,
 	bool aImmediate) :
 
@@ -41,10 +41,10 @@ AsyncTestObjectASIO(),
 mpLogger(mLog.GetLogger(aLevel, "test")),
 mTimerSource(this->GetService())
 {
-	const uint_16_t START = aPortStart;
-	const uint_16_t STOP = START + aNumPair;
+	const boost::uint16_t START = aPortStart;
+	const boost::uint16_t STOP = START + aNumPair;
 
-	for(uint_16_t port = START; port < STOP; ++port) {
+	for(boost::uint16_t port = START; port < STOP; ++port) {
 		ostringstream oss;
 		oss << "pair" << port;
 		Logger* pLogger = mpLogger->GetSubLogger(oss.str());
@@ -67,7 +67,7 @@ bool TransportScalabilityTestObject::AllLayersUp()
 	return true;
 }
 
-bool TransportScalabilityTestObject::AllLayerEqual(const byte_t* apData, size_t aNumBytes)
+bool TransportScalabilityTestObject::AllLayerEqual(const boost::uint8_t* apData, size_t aNumBytes)
 {
 	BOOST_FOREACH(TransportStackPair* pPair, mPairs) { 
 		if(! pPair->mServerStack.mUpper.BufferEquals(apData, aNumBytes)) return false;
@@ -87,7 +87,7 @@ bool TransportScalabilityTestObject::AllLayerReceived(size_t aNumBytes)
 	return true;
 }
 
-void TransportScalabilityTestObject::SendToAll(const byte_t* apData, size_t aNumBytes)
+void TransportScalabilityTestObject::SendToAll(const boost::uint8_t* apData, size_t aNumBytes)
 {
 	BOOST_FOREACH(TransportStackPair* pPair, mPairs) {
 		pPair->mClientStack.mUpper.SendDown(apData, aNumBytes);

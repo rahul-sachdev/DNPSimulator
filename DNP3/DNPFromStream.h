@@ -46,33 +46,33 @@ namespace apl { namespace dnp {
 		public:
 
 			template <typename T, typename PayloadType, SetpointEncodingType EncodingType>
-			static Setpoint ReadSetpoint(const apl::byte_t*, const T*);
+			static Setpoint ReadSetpoint(const boost::uint8_t*, const T*);
 
 			//templated conversion functions
 			template <typename T>
-			static typename T::DataType ReadQ(const apl::byte_t* apPos, const T* apObj);
+			static typename T::DataType ReadQ(const boost::uint8_t* apPos, const T* apObj);
 
 			template <typename T>
-			static typename T::DataType ReadQT(const apl::byte_t* apPos, const T* apObj);
+			static typename T::DataType ReadQT(const boost::uint8_t* apPos, const T* apObj);
 
 			template <typename T>
-			static typename T::DataType ReadV(const apl::byte_t* apPos, const T* apObj);
+			static typename T::DataType ReadV(const boost::uint8_t* apPos, const T* apObj);
 
 			template <typename T>
-			static typename T::DataType ReadQV(const apl::byte_t* apPos, const T* apObj);
+			static typename T::DataType ReadQV(const boost::uint8_t* apPos, const T* apObj);
 
 			template <typename T>
-			static typename T::DataType ReadBinaryQV(const apl::byte_t* apPos, const T* apObj);
+			static typename T::DataType ReadBinaryQV(const boost::uint8_t* apPos, const T* apObj);
 
 			template <typename T>
-			static typename T::DataType ReadBinaryQVT(const apl::byte_t* apPos, const T* apObj);
+			static typename T::DataType ReadBinaryQVT(const boost::uint8_t* apPos, const T* apObj);
 
 			template <typename T>
-			static typename T::DataType ReadQVT(const apl::byte_t* apPos, const T* apObj);
+			static typename T::DataType ReadQVT(const boost::uint8_t* apPos, const T* apObj);
 	};
 
 	template <typename T, typename PayloadType, apl::SetpointEncodingType EncodingType>
-	inline Setpoint DNPFromStream::ReadSetpoint(const apl::byte_t* apPos, const T* apObj)
+	inline Setpoint DNPFromStream::ReadSetpoint(const boost::uint8_t* apPos, const T* apObj)
 	{
 		Setpoint sp(static_cast<PayloadType>(apObj->mValue.Get(apPos)));
 		sp.mStatus = ByteToCommandStatus(apObj->mStatus.Get(apPos));
@@ -81,7 +81,7 @@ namespace apl { namespace dnp {
 	}
 
 	template <typename T>
-	inline typename T::DataType DNPFromStream::ReadQ(const apl::byte_t* apPos, const T* apObj)
+	inline typename T::DataType DNPFromStream::ReadQ(const boost::uint8_t* apPos, const T* apObj)
 	{
 		typename T::DataType ret;
 		ret.SetQuality(apObj->mFlag.Get(apPos));
@@ -89,7 +89,7 @@ namespace apl { namespace dnp {
 	}
 
 	template <typename T>
-	inline typename T::DataType DNPFromStream::ReadBinaryQV(const apl::byte_t* apPos, const T* apObj)
+	inline typename T::DataType DNPFromStream::ReadBinaryQV(const boost::uint8_t* apPos, const T* apObj)
 	{
 		typename T::DataType ret;
 		ret.SetQualityValue(apObj->mFlag.Get(apPos));
@@ -97,7 +97,7 @@ namespace apl { namespace dnp {
 	}
 
 	template <typename T>
-	inline typename T::DataType DNPFromStream::ReadBinaryQVT(const apl::byte_t* apPos, const T* apObj)
+	inline typename T::DataType DNPFromStream::ReadBinaryQVT(const boost::uint8_t* apPos, const T* apObj)
 	{
 		typename T::DataType ret;
 		ret.SetQualityValue(apObj->mFlag.Get(apPos));
@@ -106,7 +106,7 @@ namespace apl { namespace dnp {
 	}
 
 	template <typename T>
-	inline typename T::DataType DNPFromStream::ReadQT(const apl::byte_t* apPos, const T* apObj)
+	inline typename T::DataType DNPFromStream::ReadQT(const boost::uint8_t* apPos, const T* apObj)
 	{
 		typename T::DataType ret;
 		ret.SetQuality(apObj->mFlag.Get(apPos));
@@ -115,7 +115,7 @@ namespace apl { namespace dnp {
 	}
 
 	template <typename T>
-	inline typename T::DataType DNPFromStream::ReadV(const apl::byte_t* apPos, const T* apObj)
+	inline typename T::DataType DNPFromStream::ReadV(const boost::uint8_t* apPos, const T* apObj)
 	{
 		typename T::DataType ret;
 		ret.SetValue(apObj->mValue.Get(apPos));
@@ -123,7 +123,7 @@ namespace apl { namespace dnp {
 	}
 
 	template <typename T>
-	inline typename T::DataType DNPFromStream::ReadQV(const apl::byte_t* apPos, const T* apObj)
+	inline typename T::DataType DNPFromStream::ReadQV(const boost::uint8_t* apPos, const T* apObj)
 	{
 		typename T::DataType ret;
 		ret.SetQuality(apObj->mFlag.Get(apPos));
@@ -132,7 +132,7 @@ namespace apl { namespace dnp {
 	}
 
 	template <typename T>
-	inline typename T::DataType DNPFromStream::ReadQVT(const apl::byte_t* apPos, const T* apObj)
+	inline typename T::DataType DNPFromStream::ReadQVT(const boost::uint8_t* apPos, const T* apObj)
 	{
 		typename T::DataType ret;
 		ret.SetQuality(apObj->mFlag.Get(apPos));

@@ -84,7 +84,7 @@ using namespace apl;
 			Time t; //default value is NOW
 			int sleepTime = 2000;
 			Thread::SleepFor(sleepTime,true); 	//let's sleep for a few seconds
-			int_64_t elapsed = t.GetElapsedMS(); //now let's verify that close to this amount of time has elapsed
+			boost::int64_t elapsed = t.GetElapsedMS(); //now let's verify that close to this amount of time has elapsed
 
 			BOOST_REQUIRE(elapsed >= sleepTime);
 		}
@@ -92,7 +92,7 @@ using namespace apl;
 		{
 			Time t;
 			
-			int_64_t diff = t.GetElapsedMS();
+			boost::int64_t diff = t.GetElapsedMS();
 
 			BOOST_REQUIRE_EQUAL( diff , 0 );
 		}
@@ -100,8 +100,8 @@ using namespace apl;
 		{
 			//check that subsequent calls to GetElapsed() allways return increasing numbers
 			Time t; 
-			int_64_t lastElapsed = t.GetElapsedMS();
-			int_64_t elapsed;
+			boost::int64_t lastElapsed = t.GetElapsedMS();
+			boost::int64_t elapsed;
 
 			for(int i =0; i < 200; i++){
 				for(int j=0; j < 1000; j++){
@@ -121,7 +121,7 @@ using namespace apl;
 		BOOST_AUTO_TEST_CASE(SetTime)
 		{
 			Time t;
-			int_64_t time = t.GetValueMS();
+			boost::int64_t time = t.GetValueMS();
 			t.SetTo(t.GetValueMS()+5000); //set to five seconds in the future
 
 			time = t.GetValueMS() - time;
@@ -132,7 +132,7 @@ using namespace apl;
 		BOOST_AUTO_TEST_CASE(AddTime)
 		{
 			Time t;
-			int_64_t time = t.GetValueMS();
+			boost::int64_t time = t.GetValueMS();
 			t.AddMS(5000);
 
 			time = t.GetValueMS() - time;

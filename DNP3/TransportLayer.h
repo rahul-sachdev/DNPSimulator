@@ -48,23 +48,23 @@ namespace apl { namespace dnp {
 		void ThisLayerDown();
 		void ChangeState(TLS_Base* apNewState);
 
-		void TransmitAPDU(const byte_t* apData, size_t aNumBytes);
-		void TransmitTPDU(const byte_t* apData, size_t aNumBytes);
-		void ReceiveAPDU(const byte_t* apData, size_t aNumBytes);
-		void ReceiveTPDU(const byte_t* apData, size_t aNumBytes);
+		void TransmitAPDU(const boost::uint8_t* apData, size_t aNumBytes);
+		void TransmitTPDU(const boost::uint8_t* apData, size_t aNumBytes);
+		void ReceiveAPDU(const boost::uint8_t* apData, size_t aNumBytes);
+		void ReceiveTPDU(const boost::uint8_t* apData, size_t aNumBytes);
 
 		bool ContinueSend(); /// return true if
 		void SignalSendSuccess();
 		void SignalSendFailure();
 
 		/* Events - NVII delegates from ILayerUp/ILayerDown and Events produced internally */
-		static std::string ToString(byte_t aHeader);
+		static std::string ToString(boost::uint8_t aHeader);
 
 		private:
 
 		//delegated to the states
-		void _Send(const apl::byte_t*, size_t); //Implement ILowerLayer
-		void _OnReceive(const apl::byte_t*, size_t); //Implement IUpperLayer
+		void _Send(const boost::uint8_t*, size_t); //Implement ILowerLayer
+		void _OnReceive(const boost::uint8_t*, size_t); //Implement IUpperLayer
 		void _OnLowerLayerUp();
 		void _OnLowerLayerDown();
 		void _OnSendSuccess();

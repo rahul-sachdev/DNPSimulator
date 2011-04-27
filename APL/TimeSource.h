@@ -66,7 +66,7 @@ namespace apl
 		millis_t GetTime();
 		void SetTime(millis_t aTime);
 	private:
-		int_64_t mOffset;
+		boost::int64_t mOffset;
 	};
 
 	class MockTimeManager : public ITimeManager

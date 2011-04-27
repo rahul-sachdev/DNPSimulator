@@ -43,7 +43,7 @@ namespace apl
 	}
 
 
-	double SafeCastInt64ToDouble(int_64_t aInput);
+	double SafeCastInt64ToDouble(boost::int64_t aInput);
 
 	void toUpperCase(std::string& aStr);
 	void toLowerCase(std::string& aStr);

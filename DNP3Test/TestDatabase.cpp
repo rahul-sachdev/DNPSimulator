@@ -104,14 +104,14 @@ using namespace apl::dnp;
 
 		BOOST_AUTO_TEST_CASE(CounterMaxRangeNoEvent)
 		{
-			TestDataEvent(false, Counter(Counter::MAX_VALUE), Counter(Counter::MIN_VALUE), std::numeric_limits<uint_32_t>::max());
-			TestDataEvent(false, Counter(Counter::MIN_VALUE), Counter(Counter::MAX_VALUE), std::numeric_limits<uint_32_t>::max());
+			TestDataEvent(false, Counter(Counter::MAX_VALUE), Counter(Counter::MIN_VALUE), std::numeric_limits<boost::uint32_t>::max());
+			TestDataEvent(false, Counter(Counter::MIN_VALUE), Counter(Counter::MAX_VALUE), std::numeric_limits<boost::uint32_t>::max());
 		}
 
 		BOOST_AUTO_TEST_CASE(CounterMaxRangeEvent)
 		{
-			TestDataEvent(true, Counter(Counter::MAX_VALUE), Counter(Counter::MIN_VALUE), std::numeric_limits<uint_32_t>::max()-1);
-			TestDataEvent(true, Counter(Counter::MIN_VALUE), Counter(Counter::MAX_VALUE), std::numeric_limits<uint_32_t>::max()-1);
+			TestDataEvent(true, Counter(Counter::MAX_VALUE), Counter(Counter::MIN_VALUE), std::numeric_limits<boost::uint32_t>::max()-1);
+			TestDataEvent(true, Counter(Counter::MIN_VALUE), Counter(Counter::MAX_VALUE), std::numeric_limits<boost::uint32_t>::max()-1);
 		}
 
 		// Next 3 tests prove that "no change" doesn't get forwared to IEventBuffer

@@ -71,7 +71,7 @@ class AppLayer : public IUpperLayer, public IAppLayer
 
 		/// Parse the header of the incoming APDU and direct to the appropriate
 		/// internal event handler
-		void _OnReceive(const apl::byte_t*, size_t);
+		void _OnReceive(const boost::uint8_t*, size_t);
 
 		void _OnLowerLayerUp();
 		void _OnLowerLayerDown();

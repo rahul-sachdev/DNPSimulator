@@ -48,15 +48,15 @@ namespace apl {  namespace dnp {
 		void OnLowerLayerDown();
 
 		// IFrameSink interface
-		void Ack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc);
-		void Nack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc);
-		void LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc);
-		void NotSupported (bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc);
-		void TestLinkStatus(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc);
-		void ResetLinkStates(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc);
-		void RequestLinkStatus(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc);
-		void ConfirmedUserData(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength);
-		void UnconfirmedUserData(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength);
+		void Ack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
+		void Nack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
+		void LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
+		void NotSupported (bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
+		void TestLinkStatus(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc);
+		void ResetLinkStates(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc);
+		void RequestLinkStatus(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc);
+		void ConfirmedUserData(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength);
+		void UnconfirmedUserData(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength);
 
 		// Functions called by the primary and secondary station states
 		void ChangeState(PriStateBase*);
@@ -64,7 +64,7 @@ namespace apl {  namespace dnp {
 
 		Logger* GetLogger() { return mpLogger; }
 
-		void DoDataUp(const byte_t* apData, size_t aLength)
+		void DoDataUp(const boost::uint8_t* apData, size_t aLength)
 		{ if(mpUpperLayer) mpUpperLayer->OnReceive(apData, aLength); }
 
 		void DoSendSuccess()
@@ -85,7 +85,7 @@ namespace apl {  namespace dnp {
 		void SendAck();
 		void SendLinkStatus();
 		void SendResetLinks();
-		void SendUnconfirmedUserData(const byte_t* apData, size_t aLength);
+		void SendUnconfirmedUserData(const boost::uint8_t* apData, size_t aLength);
 		void SendDelayedUserData(bool aFCB);
 
 		void StartTimer();
@@ -118,10 +118,10 @@ namespace apl {  namespace dnp {
 		bool mNextWriteFCB;
 		bool mIsOnline;
 
-		bool Validate(bool aIsMaster, uint_16_t aSrc, uint_16_t aDest);
+		bool Validate(bool aIsMaster, boost::uint16_t aSrc, boost::uint16_t aDest);
 
 		/* Events - NVII delegates from ILayerDown and Events produced internally */
-		void _Send(const apl::byte_t*, size_t);
+		void _Send(const boost::uint8_t*, size_t);
 
 		std::string SendString() { return "~>"; }
 

@@ -36,7 +36,7 @@ class CopyableBuffer
 		CopyableBuffer();
 		/// Construct based on starting size of buffer
 		CopyableBuffer(size_t aSize);
-		CopyableBuffer(const byte_t*, size_t aSize);
+		CopyableBuffer(const boost::uint8_t*, size_t aSize);
 		CopyableBuffer(const CopyableBuffer&);
 		CopyableBuffer& operator=(const CopyableBuffer&);
 		~CopyableBuffer();
@@ -44,16 +44,16 @@ class CopyableBuffer
 		bool operator==( const CopyableBuffer& other) const;
 		bool operator!=( const CopyableBuffer& other) const { return ! (*this == other); }
 
-		const byte_t* Buffer() const { return mpBuff; }
-		byte_t* WriteBuffer() const { return mpBuff; }
-		operator const byte_t* () const { return mpBuff; }
-		operator byte_t* () { return mpBuff; }
+		const boost::uint8_t* Buffer() const { return mpBuff; }
+		const boost::uint8_t* WriteBuffer() const { return mpBuff; }
+		operator const boost::uint8_t* () const { return mpBuff; }
+		operator boost::uint8_t* () { return mpBuff; }
 
 		size_t Size() const { return mSize; }
 		void Zero();
 
 	protected:
-		byte_t* mpBuff;
+		boost::uint8_t* mpBuff;
 
 	private:
 		size_t mSize;

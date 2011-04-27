@@ -29,7 +29,7 @@ namespace apl { namespace dnp {
 
 #define MACRO_CASE_DEFINE(enm) case(enm): return enm;
 
-	QualifierCode IObjectHeader::ByteToQualifierCode(byte_t aCode)
+	QualifierCode IObjectHeader::ByteToQualifierCode(boost::uint8_t aCode)
 	{
 		switch(aCode)
 		{
@@ -57,14 +57,14 @@ namespace apl { namespace dnp {
 	}
 
 
-	void IObjectHeader::Get(const byte_t* apStart, ObjectHeaderField& arData) const
+	void IObjectHeader::Get(const boost::uint8_t* apStart, ObjectHeaderField& arData) const
 	{
 		arData.Group = *(apStart);
 		arData.Variation = *(++apStart);
 		arData.Qualifier = IObjectHeader::ByteToQualifierCode(*(++apStart));
 	}
 
-	void IObjectHeader::Set(apl::byte_t* apStart, byte_t aGrp, byte_t aVar, QualifierCode aQual) const
+	void IObjectHeader::Set(boost::uint8_t* apStart,boost::uint8_t aGrp,boost::uint8_t aVar, QualifierCode aQual) const
 	{
 		*(apStart) = aGrp;
 		*(++apStart) = aVar;

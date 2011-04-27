@@ -35,7 +35,7 @@ mStop(0),
 mObjectSize(0)
 {}
 
-ObjectWriteIterator::ObjectWriteIterator(apl::byte_t* apPos, size_t aStart, size_t aStop, size_t aObjectSize) :
+ObjectWriteIterator::ObjectWriteIterator(boost::uint8_t* apPos, size_t aStart, size_t aStop, size_t aObjectSize) :
 mpPos(apPos),
 mIndex(aStart),
 mStart(aStart),

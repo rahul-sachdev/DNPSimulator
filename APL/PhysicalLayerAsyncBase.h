@@ -69,8 +69,8 @@ namespace apl {
 			/* Implement IPhysicalLayerAsync - Events from the outside */
 			void AsyncOpen();
 			void AsyncClose();
-			void AsyncWrite(const apl::byte_t*, size_t);
-			void AsyncRead(apl::byte_t*, size_t);
+			void AsyncWrite(const boost::uint8_t*, size_t);
+			void AsyncRead(boost::uint8_t*, size_t);
 
 			// Not an event delegated to the states
 			void SetHandler(IHandlerAsync* apHandler);
@@ -80,8 +80,8 @@ namespace apl {
 			virtual void DoOpen() = 0;
 			virtual void DoClose() = 0;
 			virtual void DoOpeningClose() { DoClose(); } //optionally override this action
-			virtual void DoAsyncRead(byte_t*, size_t) = 0;
-			virtual void DoAsyncWrite(const byte_t*, size_t) = 0;
+			virtual void DoAsyncRead(boost::uint8_t*, size_t) = 0;
+			virtual void DoAsyncWrite(const boost::uint8_t*, size_t) = 0;
 
 			// These can be optionally overriden to do something more interesting, i.e. specific logging
 			virtual void DoOpenSuccess() {}
@@ -89,7 +89,7 @@ namespace apl {
 
 			void DoWriteSuccess();
 			void DoThisLayerDown();
-			void DoReadCallback(byte_t*, size_t);
+			void DoReadCallback(boost::uint8_t*, size_t);
 
 			//Error reporting function(s)
 			Logger* GetLogger() { return mpLogger; }
@@ -98,7 +98,7 @@ namespace apl {
 
 			//Internally produced events
 			void OnOpenCallback(const boost::system::error_code& arError);
-			void OnReadCallback(const boost::system::error_code& arError, byte_t*, size_t aSize);
+			void OnReadCallback(const boost::system::error_code& arError,boost::uint8_t*, size_t aSize);
 			void OnWriteCallback(const boost::system::error_code& arError, size_t aSize);
 
 			/// "user" object that recieves the callbacks

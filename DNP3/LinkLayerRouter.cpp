@@ -39,7 +39,7 @@ mReceiver(apLogger, this),
 mTransmitting(false)
 {}
 
-void LinkLayerRouter::AddContext(ILinkContext* apContext, uint_16_t aAddress)
+void LinkLayerRouter::AddContext(ILinkContext* apContext, boost::uint16_t aAddress)
 {
 	assert(apContext != NULL);
 
@@ -61,7 +61,7 @@ void LinkLayerRouter::AddContext(ILinkContext* apContext, uint_16_t aAddress)
 	if(this->IsOpen()) apContext->OnLowerLayerUp();
 }
 
-void LinkLayerRouter::RemoveContext(uint_16_t aAddress)
+void LinkLayerRouter::RemoveContext(boost::uint16_t aAddress)
 {
 	AddressMap::iterator i = mAddressMap.find(aAddress);	
 	if(i != mAddressMap.end()) { 
@@ -72,14 +72,14 @@ void LinkLayerRouter::RemoveContext(uint_16_t aAddress)
 }
 
 
-ILinkContext* LinkLayerRouter::GetContext(uint_16_t aDest)
+ILinkContext* LinkLayerRouter::GetContext(boost::uint16_t aDest)
 {
 	AddressMap::iterator i = mAddressMap.find(aDest);
 	return (i == mAddressMap.end()) ? NULL : i->second;
 }
 
 
-ILinkContext* LinkLayerRouter::GetDestination(uint_16_t aDest)
+ILinkContext* LinkLayerRouter::GetDestination(boost::uint16_t aDest)
 {
 	ILinkContext* pDest = GetContext(aDest);
 	
@@ -94,53 +94,53 @@ ILinkContext* LinkLayerRouter::GetDestination(uint_16_t aDest)
 // IFrameSink Implementation
 ////////////////////////////////////////////////////////////////////////////////
 
-void LinkLayerRouter::Ack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayerRouter::Ack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	ILinkContext* pDest = GetDestination(aDest);
 	if(pDest) pDest->Ack(aIsMaster, aIsRcvBuffFull, aDest, aSrc);
 }
-void LinkLayerRouter::Nack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayerRouter::Nack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	ILinkContext* pDest = GetDestination(aDest);
 	if(pDest) pDest->Nack(aIsMaster, aIsRcvBuffFull, aDest, aSrc);
 }
-void LinkLayerRouter::LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayerRouter::LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	ILinkContext* pDest = GetDestination(aDest);
 	if(pDest) pDest->LinkStatus(aIsMaster, aIsRcvBuffFull, aDest, aSrc);
 }
-void LinkLayerRouter::NotSupported (bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayerRouter::NotSupported (bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	ILinkContext* pDest = GetDestination(aDest);
 	if(pDest) pDest->NotSupported(aIsMaster, aIsRcvBuffFull, aDest, aSrc);
 }
-void LinkLayerRouter::TestLinkStatus(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayerRouter::TestLinkStatus(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	ILinkContext* pDest = GetDestination(aDest);
 	if(pDest) pDest->TestLinkStatus(aIsMaster, aFcb, aDest, aSrc);
 }
-void LinkLayerRouter::ResetLinkStates(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayerRouter::ResetLinkStates(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	ILinkContext* pDest = GetDestination(aDest);
 	if(pDest) pDest->ResetLinkStates(aIsMaster, aDest, aSrc);
 }
-void LinkLayerRouter::RequestLinkStatus(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayerRouter::RequestLinkStatus(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	ILinkContext* pDest = GetDestination(aDest);
 	if(pDest) pDest->RequestLinkStatus(aIsMaster, aDest, aSrc);
 }
-void LinkLayerRouter::ConfirmedUserData(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength)
+void LinkLayerRouter::ConfirmedUserData(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength)
 {
 	ILinkContext* pDest = GetDestination(aDest);
 	if(pDest) pDest->ConfirmedUserData(aIsMaster, aFcb, aDest, aSrc, apData, aDataLength);
 }
-void LinkLayerRouter::UnconfirmedUserData(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength)
+void LinkLayerRouter::UnconfirmedUserData(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength)
 {
 	ILinkContext* pDest = GetDestination(aDest);
 	if(pDest) pDest->UnconfirmedUserData(aIsMaster, aDest, aSrc, apData, aDataLength);
 }
 
-void LinkLayerRouter::_OnReceive(const apl::byte_t*, size_t aNumBytes)
+void LinkLayerRouter::_OnReceive(const boost::uint8_t*, size_t aNumBytes)
 {	
 	// The order is important here. You must let the receiver process the byte or another read could write
 	// over the buffer before it is processed

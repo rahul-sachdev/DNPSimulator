@@ -28,7 +28,7 @@ namespace apl
 
 #define MACRO_CASE_DECLARE(type) case(type): return type;
 
-	CommandStatus ByteToCommandStatus(byte_t aField)
+	CommandStatus ByteToCommandStatus(boost::uint8_t aField)
 	{
 		switch(aField)
 		{
@@ -49,7 +49,7 @@ namespace apl
 
 	}
 
-	ControlCode ByteToControlCode(byte_t aField)
+	ControlCode ByteToControlCode(boost::uint8_t aField)
 	{
 		switch(aField)
 		{
@@ -135,7 +135,7 @@ namespace apl
 	
 	}
 
-	BinaryOutput::BinaryOutput(ControlCode aCode, byte_t aCount, uint_32_t aOnTime, uint_32_t aOffTime) :
+	BinaryOutput::BinaryOutput(ControlCode aCode,boost::uint8_t aCount, boost::uint8_t aOnTime, boost::uint8_t aOffTime) :
 	CommandRequest(CT_BINARY_OUTPUT),
 	mRawCode(aCode),
 	mCount(aCount),
@@ -157,13 +157,13 @@ namespace apl
 
 	Setpoint::Setpoint() : CommandRequest(CT_SETPOINT), mEncodingType(SPET_UNSET) {}
 
-	Setpoint::Setpoint(int_16_t aValue) : 
+	Setpoint::Setpoint(boost::int16_t aValue) : 
 	CommandRequest(CT_SETPOINT),
 	mValue(aValue),
 	mEncodingType(SPET_AUTO_INT) 
 	{}
 
-	Setpoint::Setpoint(int_32_t aValue) : 
+	Setpoint::Setpoint(boost::int32_t aValue) : 
 	CommandRequest(CT_SETPOINT),
 	mValue(aValue),
 	mEncodingType(SPET_AUTO_INT) 
@@ -189,7 +189,7 @@ namespace apl
 			mEncodingType = SPET_AUTO_DOUBLE;
 		}
 	}
-	void Setpoint::SetValue(int_32_t aValue)
+	void Setpoint::SetValue(boost::int32_t aValue)
 	{ 
 		mValue = static_cast<double>(aValue); 
 		if(mEncodingType == SPET_UNSET){

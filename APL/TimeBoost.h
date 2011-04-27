@@ -51,7 +51,7 @@ namespace apl{
 			void SetTo(millis_t aTimeMS);
 
 			void AddMS(millis_t aAddMS);
-			int_64_t GetValueMS() const;
+			boost::int64_t GetValueMS() const;
 
 			static millis_t CalcDeltaMS(const TimeBoost& now, const TimeBoost& start);
 			static ptime GetPTimeFromMS(millis_t aTimeMS);

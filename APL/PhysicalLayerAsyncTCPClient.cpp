@@ -37,7 +37,7 @@ PhysicalLayerAsyncTCPClient::PhysicalLayerAsyncTCPClient(
 	Logger* apLogger,
 	boost::asio::io_service* apIOService,
 	const std::string& arAddress,
-	uint_16_t aPort) :
+	uint16_t aPort) :
 	
 	PhysicalLayerAsyncBaseTCP(apLogger, apIOService),
 	mAddr(arAddress),

@@ -43,10 +43,10 @@ void PriStateBase::NotSupported (LinkLayer* apLL, bool aIsRcvBuffFull)
 void PriStateBase::OnTimeout(LinkLayer* apLL)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void PriStateBase::SendConfirmed(LinkLayer*, const apl::byte_t*, size_t)
+void PriStateBase::SendConfirmed(LinkLayer*, const boost::uint8_t*, size_t)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
-void PriStateBase::SendUnconfirmed(LinkLayer*, const apl::byte_t*, size_t)
+void PriStateBase::SendUnconfirmed(LinkLayer*, const boost::uint8_t*, size_t)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -55,13 +55,13 @@ void PriStateBase::SendUnconfirmed(LinkLayer*, const apl::byte_t*, size_t)
 
 PLLS_SecNotReset PLLS_SecNotReset::mInstance;
 
-void PLLS_SecNotReset::SendUnconfirmed(LinkLayer* apLL, const apl::byte_t* apData, size_t aLength)
+void PLLS_SecNotReset::SendUnconfirmed(LinkLayer* apLL, const boost::uint8_t* apData, size_t aLength)
 {	
 	apLL->SendUnconfirmedUserData(apData, aLength);
 
 }
 
-void PLLS_SecNotReset::SendConfirmed(LinkLayer* apLL, const apl::byte_t* apData, size_t aLength)
+void PLLS_SecNotReset::SendConfirmed(LinkLayer* apLL, const boost::uint8_t* apData, size_t aLength)
 {
 	apLL->ResetRetry();
 	apLL->StartTimer();
@@ -78,12 +78,12 @@ void PLLS_SecNotReset::SendConfirmed(LinkLayer* apLL, const apl::byte_t* apData,
 
 PLLS_SecReset PLLS_SecReset::mInstance;
 
-void PLLS_SecReset::SendUnconfirmed(LinkLayer* apLL, const apl::byte_t* apData, size_t aLength)
+void PLLS_SecReset::SendUnconfirmed(LinkLayer* apLL, const boost::uint8_t* apData, size_t aLength)
 {	
 	apLL->SendUnconfirmedUserData(apData, aLength);
 }
 
-void PLLS_SecReset::SendConfirmed(LinkLayer* apLL, const apl::byte_t* apData, size_t aLength)
+void PLLS_SecReset::SendConfirmed(LinkLayer* apLL, const boost::uint8_t* apData, size_t aLength)
 {
 	apLL->ResetRetry();
 	apLL->StartTimer();

@@ -134,7 +134,7 @@ class DoubleLocker : public Threadable
 			ec.Lock();
 			// test that before any events have been signaled the value is all bits set
 			// this forces client code to check all sources at least once
-			BOOST_REQUIRE_EQUAL(ec.GetEvents(),static_cast<int_64_t>(~0));
+			BOOST_REQUIRE_EQUAL(ec.GetEvents(),static_cast<boost::int64_t>(~0));
 			ec.Unlock();
 
 			//test that a signal registers the correct event

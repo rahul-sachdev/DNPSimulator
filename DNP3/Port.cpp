@@ -65,7 +65,7 @@ void Port::OnStateChange(IPhysMonitor::State aState)
 	if((aState == IPhysMonitor::Stopped) && mRelease) delete this;
 }
 
-void Port::Associate(const std::string& arStackName, Stack* apStack, uint_16_t aLocalAddress)
+void Port::Associate(const std::string& arStackName, Stack* apStack, boost::uint16_t aLocalAddress)
 {
 	LOG_BLOCK(LEV_DEBUG, "Linking stack to port: " << aLocalAddress);	
 	mStackMap[arStackName] = StackRecord(apStack, aLocalAddress);	

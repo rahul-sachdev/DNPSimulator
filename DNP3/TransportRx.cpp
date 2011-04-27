@@ -46,7 +46,7 @@ void TransportRx::Reset()
 	mSeq = 0;
 }
 
-void TransportRx::HandleReceive(const apl::byte_t* apData, size_t aNumBytes)
+void TransportRx::HandleReceive(const boost::uint8_t* apData, size_t aNumBytes)
 {
 	switch(aNumBytes) {
 		case(1):
@@ -63,7 +63,7 @@ void TransportRx::HandleReceive(const apl::byte_t* apData, size_t aNumBytes)
 		}	
 	}
 	
-	byte_t hdr = apData[0];
+	boost::uint8_t hdr = apData[0];
 	LOG_BLOCK(LEV_INTERPRET, "<- " << TransportLayer::ToString(hdr));
 	bool first = (hdr & TL_HDR_FIR) != 0;
 	bool last = (hdr & TL_HDR_FIN) != 0;

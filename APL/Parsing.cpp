@@ -38,12 +38,12 @@ namespace apl {
 		}
 	}
 
-	bool Parsing::Get(const std::string& aArg, byte_t& arValue)
+	bool Parsing::Get(const std::string& aArg,boost::uint8_t& arValue)
 	{
 		int value;
 		if(Parsing::Get(aArg, value)) {
 			try {
-				arValue = boost::numeric::converter<byte_t,int>::convert(value);
+				arValue = boost::numeric::converter<boost::uint8_t,int>::convert(value);
 			}
 			catch(...) {
 				return false;

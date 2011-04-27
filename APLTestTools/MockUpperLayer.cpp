@@ -31,7 +31,7 @@ Loggable(apLogger),
 IUpperLayer(apLogger)
 {}
 
-void MockUpperLayer::_OnReceive(const apl::byte_t* apData, size_t aLength) 
+void MockUpperLayer::_OnReceive(const boost::uint8_t* apData, size_t aLength) 
 {
 	this->WriteToBuffer(apData, aLength);
 	if(mOnReceiveHandler) mOnReceiveHandler(apData, aLength);
@@ -61,7 +61,7 @@ void MockUpperLayer::_OnLowerLayerDown()
 	++mState.mNumLayerDown;
 }
 
-void MockUpperLayer::SendDown(const byte_t* apData, size_t aNumBytes)
+void MockUpperLayer::SendDown(const boost::uint8_t* apData, size_t aNumBytes)
 {
 	if(this->mpLowerLayer) mpLowerLayer->Send(apData, aNumBytes);
 }

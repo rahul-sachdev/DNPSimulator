@@ -90,7 +90,7 @@ void AppLayer::CancelResponse()
 // External events
 /////////////////////////////
 
-void AppLayer::_OnReceive(const apl::byte_t* apBuffer, size_t aSize)
+void AppLayer::_OnReceive(const boost::uint8_t* apBuffer, size_t aSize)
 {
 	if(!this->IsLowerLayerUp())
 		throw InvalidStateException(LOCATION, "LowerLaterDown");

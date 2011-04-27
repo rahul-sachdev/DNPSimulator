@@ -81,7 +81,7 @@ namespace apl { namespace dnp {
 
 	/** @param aByte Any byte
 		@return Returns FC_INVALID if byte is not a valid function code */
-	FuncCodes ByteToFuncCode(byte_t aByte);
+	FuncCodes ByteToFuncCode(boost::uint8_t aByte);
 
 	/** @param aCode Any function code
 		@return Returns string representation */

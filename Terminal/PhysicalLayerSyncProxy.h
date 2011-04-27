@@ -27,8 +27,8 @@ class Logger;
 
 			void DoOpen();
 			void DoClose();
-			void DoAsyncRead(byte_t*, size_t);
-			void DoAsyncWrite(const byte_t*, size_t);
+			void DoAsyncRead(boost::uint8_t*, size_t);
+			void DoAsyncWrite(const boost::uint8_t*, size_t);
 
 			static const boost::system::error_code mSuccessCode;
 			static const boost::system::error_code mErrorCode;
@@ -55,7 +55,7 @@ class Logger;
 
 			bool mReading;
 			size_t mNumToRead;
-			byte_t* mpBuffer;
+			boost::uint8_t* mpBuffer;
 
 			SigLock mWaitLock;
 			std::deque<std::string> mLineQueue;

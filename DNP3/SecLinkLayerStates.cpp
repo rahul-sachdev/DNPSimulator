@@ -43,7 +43,7 @@ void SecStateBase::RequestLinkStatus(LinkLayer* apLL)
 	apLL->SendLinkStatus();
 }
 
-void SecStateBase::UnconfirmedUserData(LinkLayer* apLL, const apl::byte_t* apData, size_t aDataLength)
+void SecStateBase::UnconfirmedUserData(LinkLayer* apLL, const boost::uint8_t* apData, size_t aDataLength)
 { 
 	apLL->DoDataUp(apData, aDataLength);
 }
@@ -58,7 +58,7 @@ void SLLS_NotReset::TestLinkStatus(LinkLayer* apLL, bool aFcb)
 	ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "TestLinkStatus ignored", DLERR_UNEXPECTED_FRAME);	
 }
 
-void SLLS_NotReset::ConfirmedUserData(LinkLayer* apLL, bool aFcb, const apl::byte_t* apData, size_t aDataLength)
+void SLLS_NotReset::ConfirmedUserData(LinkLayer* apLL, bool aFcb, const boost::uint8_t* apData, size_t aDataLength)
 {	
 	ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "ConfirmedUserData ignored", DLERR_UNEXPECTED_FRAME);
 }
@@ -81,7 +81,7 @@ void SLLS_Reset::TestLinkStatus(LinkLayer* apLL, bool aFcb)
 	}
 }
 
-void SLLS_Reset::ConfirmedUserData(LinkLayer* apLL, bool aFcb, const apl::byte_t* apData, size_t aDataLength)
+void SLLS_Reset::ConfirmedUserData(LinkLayer* apLL, bool aFcb, const boost::uint8_t* apData, size_t aDataLength)
 {	
 	apLL->SendAck();
 

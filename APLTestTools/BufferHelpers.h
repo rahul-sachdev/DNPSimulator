@@ -30,8 +30,8 @@ class ByteStr : public CopyableBuffer
 
 	public:
 		ByteStr(size_t aLength);
-		ByteStr(size_t aLength, byte_t aSeed);
-		ByteStr(const byte_t* apData, size_t aLength);
+		ByteStr(size_t aLength,boost::uint8_t aSeed);
+		ByteStr(const boost::uint8_t* apData, size_t aLength);
 		ByteStr(const std::string& aChars);
 		bool operator==(const ByteStr& arRHS) const;
 };

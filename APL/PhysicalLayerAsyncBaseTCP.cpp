@@ -57,13 +57,13 @@ void PhysicalLayerAsyncBaseTCP::DoOpenSuccess()
 	LOG_BLOCK(LEV_INFO, "Successful conneciton");
 }
 
-void PhysicalLayerAsyncBaseTCP::DoAsyncRead(byte_t* apBuffer, size_t aMaxBytes)
+void PhysicalLayerAsyncBaseTCP::DoAsyncRead(boost::uint8_t* apBuffer, size_t aMaxBytes)
 {
 	mSocket.async_read_some(buffer(apBuffer, aMaxBytes),
 		boost::bind(&PhysicalLayerAsyncBaseTCP::OnReadCallback, this, placeholders::error, apBuffer, placeholders::bytes_transferred));
 }
 
-void PhysicalLayerAsyncBaseTCP::DoAsyncWrite(const byte_t* apBuffer, size_t aNumBytes)
+void PhysicalLayerAsyncBaseTCP::DoAsyncWrite(const boost::uint8_t* apBuffer, size_t aNumBytes)
 {
 	async_write(mSocket, buffer(apBuffer, aNumBytes), 
 		boost::bind(&PhysicalLayerAsyncBaseTCP::OnWriteCallback, this, placeholders::error, aNumBytes));
