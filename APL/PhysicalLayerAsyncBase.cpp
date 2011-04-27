@@ -45,7 +45,7 @@ bool PhysicalLayerAsyncBase::State::CanOpen()
 { return !(mOpen || mOpening || mClosing); }
 
 bool PhysicalLayerAsyncBase::State::CanClose()
-{ return mOpen || mOpening && !mClosing; }
+{ return (mOpen || mOpening) && !mClosing; }
 
 bool PhysicalLayerAsyncBase::State::CanRead()
 { return mOpen && !mClosing && !mReading; }
