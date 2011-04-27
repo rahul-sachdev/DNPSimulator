@@ -36,7 +36,7 @@ mWriteBuffer(1024)
 	this->Reset();
 }
 
-void MockPhysicalLayerAsyncTS::WriteToLayer(const byte_t* apData, size_t aNumBytes)
+void MockPhysicalLayerAsyncTS::WriteToLayer(const boost::uint8_t* apData, size_t aNumBytes)
 {	
 	memcpy(mWriteBuffer.WriteBuff(), apData, aNumBytes);
 	mWriteBuffer.AdvanceWrite(aNumBytes);
@@ -87,14 +87,14 @@ void MockPhysicalLayerAsyncTS::DoOpenSuccess()
 
 void MockPhysicalLayerAsyncTS::DoOpenFailure() {}
 
-void MockPhysicalLayerAsyncTS::DoAsyncRead(byte_t* apBuff, size_t aNumBytes)
+void MockPhysicalLayerAsyncTS::DoAsyncRead(boost::uint8_t* apBuff, size_t aNumBytes)
 {
 	mpBuff = apBuff;
 	mNumBytes = aNumBytes;
 	mpTimerSrc->Post(boost::bind(&MockPhysicalLayerAsyncTS::CheckForRead, this));
 }
 
-void MockPhysicalLayerAsyncTS::DoAsyncWrite(const byte_t* apData, size_t aNumBytes)
+void MockPhysicalLayerAsyncTS::DoAsyncWrite(const boost::uint8_t* apData, size_t aNumBytes)
 {
 	this->WriteToBuffer(apData, aNumBytes); //record to BufferTestObject
 	mpTimerSrc->Post(boost::bind(&MockPhysicalLayerAsyncTS::OnWriteCallback, this, mSuccessCode, aNumBytes));

@@ -131,7 +131,7 @@ namespace apl { namespace dnp {
 		mObjectHeaders.clear();
 	}
 
-	void APDU::Write(const byte_t* apData, size_t aLength)
+	void APDU::Write(const boost::uint8_t* apData, size_t aLength)
 	{	
 		if(aLength > mBuffer.Size()) {
 			ostringstream oss;
@@ -194,7 +194,7 @@ namespace apl { namespace dnp {
 	size_t APDU::ReadObjectHeader(size_t aOffset, size_t aRemainder)
 	{
 		
-		const byte_t* pStart = mBuffer.Buffer() + aOffset;
+		const boost::uint8_t* pStart = mBuffer.Buffer() + aOffset;
 		IObjectHeader* pHdr = AllObjectsHeader::Inst(); //Start by interpreting using the smallest possible header
 		ObjectHeaderField hdrData;
 		
@@ -294,7 +294,7 @@ namespace apl { namespace dnp {
 		}
 	}
 
-	size_t APDU::GetNumObjects(const IObjectHeader* apHeader, const byte_t* apStart)
+	size_t APDU::GetNumObjects(const IObjectHeader* apHeader, const boost::uint8_t* apStart)
 	{
 		switch(apHeader->GetType())
 		{
@@ -403,9 +403,9 @@ namespace apl { namespace dnp {
 		size_t stop = aStart+count-1;
 
 		//we're commited to writing some data, so proceed
-		byte_t* pHeaderPos = mBuffer+mFragmentSize;
+		boost::uint8_t* pHeaderPos = mBuffer+mFragmentSize;
 		pHdr->Set(pHeaderPos, apObj->GetGroup(), apObj->GetVariation(), aCode);
-		byte_t* pPos = pHeaderPos+pHdr->GetSize();
+		boost::uint8_t* pPos = pHeaderPos+pHdr->GetSize();
 		this->WriteContiguousHeader(pHdr, pHeaderPos, aStart, stop);
 
 		mFragmentSize += pHdr->GetSize();
@@ -435,9 +435,9 @@ namespace apl { namespace dnp {
 		size_t stop = aStart+count-1;
 
 		//we're commited to writing some data, so proceed
-		byte_t* pHeaderPos = mBuffer+mFragmentSize;
+		boost::uint8_t* pHeaderPos = mBuffer+mFragmentSize;
 		pHdr->Set(pHeaderPos, apObj->GetGroup(), apObj->GetVariation(), aCode);
-		byte_t* pPos = pHeaderPos+pHdr->GetSize();
+		boost::uint8_t* pPos = pHeaderPos+pHdr->GetSize();
 		apObj->Zero(pPos, count);
 
 		this->WriteContiguousHeader(pHdr, pHeaderPos, aStart, stop);
@@ -450,7 +450,7 @@ namespace apl { namespace dnp {
 		return ObjectWriteIterator(pPos, aStart, stop, 0);	
 	}
 
-	void APDU::WriteContiguousHeader(IObjectHeader* apHdr, byte_t* apPos, size_t aStart, size_t aStop)
+	void APDU::WriteContiguousHeader(IObjectHeader* apHdr,boost::uint8_t* apPos, size_t aStart, size_t aStop)
 	{
 		switch(apHdr->GetType())
 		{
@@ -487,7 +487,7 @@ namespace apl { namespace dnp {
 		this->CheckWriteState(apObj);
 		
 		// This object type encodes the size in the variation field, the prefix is used to encode something else
-		byte_t variation = boost::numeric::converter<byte_t,size_t>::convert(aSize);
+		boost::uint8_t variation = boost::numeric::converter<boost::uint8_t,size_t>::convert(aSize);
 		size_t obj_size = APDU::HasData(this->GetFunction()) ? aSize : 0;
 		size_t prefix_size = this->GetPrefixSizeAndValidate(aCode, apObj->GetType());
 
@@ -504,7 +504,7 @@ namespace apl { namespace dnp {
 		return WriteCountHeader(obj_size, prefix_size, apObj->GetGroup(), apObj->GetVariation(), aCount, aCode);
 	}
 
-	IndexedWriteIterator APDU::WriteCountHeader(size_t aObjectSize, size_t aPrefixSize, byte_t aGrp, byte_t aVar, size_t aCount, QualifierCode aQual)
+	IndexedWriteIterator APDU::WriteCountHeader(size_t aObjectSize, size_t aPrefixSize,boost::uint8_t aGrp,boost::uint8_t aVar, size_t aCount, QualifierCode aQual)
 	{
 		ICountHeader* pHdr = this->GetCountHeader(aQual); //Get the count header		
 		if(pHdr->GetSize() > this->Remainder()) return IndexedWriteIterator();
@@ -520,13 +520,13 @@ namespace apl { namespace dnp {
 		//how many will we write?
 		size_t count = (aCount < max_num) ? aCount : max_num;
 		size_t data_size = count*obj_plus_prefix_size;
-		byte_t* pHeaderPos = mBuffer+mFragmentSize;
+		boost::uint8_t* pHeaderPos = mBuffer+mFragmentSize;
 
 		//commited to writing at this point, so set the header
 		pHdr->Set(pHeaderPos, aGrp, aVar, aQual);
 		pHdr->SetCount(pHeaderPos, count);
 		mFragmentSize += pHdr->GetSize();
-		byte_t* pObjectPos = mBuffer+mFragmentSize;
+		boost::uint8_t* pObjectPos = mBuffer+mFragmentSize;
 		mFragmentSize += data_size;
 
 		return IndexedWriteIterator(pObjectPos, count, aQual, aObjectSize);

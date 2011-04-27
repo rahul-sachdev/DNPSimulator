@@ -29,23 +29,23 @@ namespace apl
 
 /** Uses a 64-bit mask implementation of EventLockBase
 */
-class EventLock : public EventLockBase<int_64_t>
+class EventLock : public EventLockBase<boost::int64_t>
 {
 	public:
 	EventLock();
 
 	//needs to be used only when we are allready locked on the object
-	int_64_t GetEvents(bool aClearSentEvents = true);
+	boost::int64_t GetEvents(bool aClearSentEvents = true);
 
-	static int_64_t Get64BitMask(size_t aShift);
+	static boost::int64_t Get64BitMask(size_t aShift);
 
 	protected:
 
-	int_64_t mEvents; //the bitfield that holds the events.
+	boost::int64_t mEvents; //the bitfield that holds the events.
 
 	private:
 
-	void RecordEventCode(const apl::int_64_t& arEvent);
+	void RecordEventCode(const boost::int64_t& arEvent);
 };
 
 

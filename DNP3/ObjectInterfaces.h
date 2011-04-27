@@ -95,8 +95,8 @@ namespace apl { namespace dnp {
 	class StreamObject : public FixedObject
 	{
 		public:
-			virtual void Write(apl::byte_t*, const T&) const = 0;
-			virtual T Read(const apl::byte_t*) const = 0;
+			virtual void Write(boost::uint8_t*, const T&) const = 0;
+			virtual T Read(const boost::uint8_t*) const = 0;
 			
 			virtual bool HasQuality() const { return false; }
 
@@ -107,7 +107,7 @@ namespace apl { namespace dnp {
 	class CommandObject : public StreamObject<T>
 	{
 		public:
-			virtual apl::CopyableBuffer GetValueBytes(const apl::byte_t*) const = 0;
+			virtual apl::CopyableBuffer GetValueBytes(const boost::uint8_t*) const = 0;
 	};
 
 	class BitfieldObject : public IndexedObject
@@ -122,7 +122,7 @@ namespace apl { namespace dnp {
 				return ret;
 			}
 
-			void Zero(apl::byte_t* apPos, size_t aNumValues) const
+			void Zero(boost::uint8_t* apPos, size_t aNumValues) const
 			{
 				size_t num_bytes = GetSize(aNumValues);
 				for(size_t i=0; i<num_bytes; i++)
@@ -131,13 +131,13 @@ namespace apl { namespace dnp {
 				}
 			}
 
-			bool Read(const apl::byte_t* apPos,size_t aStartIndex, size_t aIndex) const
+			bool Read(const boost::uint8_t* apPos,size_t aStartIndex, size_t aIndex) const
 			{ return StaticRead(apPos, aStartIndex, aIndex); }
 
-			void Write(apl::byte_t* apPos, size_t aStartIndex, size_t aIndex, bool aValue) const
+			void Write(boost::uint8_t* apPos, size_t aStartIndex, size_t aIndex, bool aValue) const
 			{ StaticWrite(apPos, aStartIndex, aIndex, aValue); }
 
-			static bool StaticRead(const apl::byte_t* apPos,size_t aStartIndex, size_t aIndex)
+			static bool StaticRead(const boost::uint8_t* apPos,size_t aStartIndex, size_t aIndex)
 			{
 				assert(aIndex >= aStartIndex);
 				size_t pos =  aIndex - aStartIndex;
@@ -145,7 +145,7 @@ namespace apl { namespace dnp {
 				return ((*apPos) & (1 << (pos & 0x07))) != 0;
 			}
 
-			static void StaticWrite(apl::byte_t* apPos, size_t aStartIndex, size_t aIndex, bool aValue)
+			static void StaticWrite(boost::uint8_t* apPos, size_t aStartIndex, size_t aIndex, bool aValue)
 			{
 				assert(aIndex >= aStartIndex);
 				size_t pos =  aIndex - aStartIndex;
@@ -164,14 +164,14 @@ namespace apl { namespace dnp {
 		public:
 			virtual ObjectTypes GetType() const { return OT_SIZE_BY_VARIATION; }
 
-			bool Read(const apl::byte_t* apPos, size_t aVariation, apl::byte_t* apOut) const
+			bool Read(const boost::uint8_t* apPos, size_t aVariation, boost::uint8_t* apOut) const
 			{
 				assert(aVariation <= 255);
 				memcpy(apOut, apPos, aVariation);
 				return true;
 			}
 
-			void Write(apl::byte_t* apPos, size_t aVariation, const apl::byte_t* apIn) const
+			void Write(boost::uint8_t* apPos, size_t aVariation, const boost::uint8_t* apIn) const
 			{
 				assert(aVariation <= 255);
 				memcpy(apPos, apIn, aVariation);

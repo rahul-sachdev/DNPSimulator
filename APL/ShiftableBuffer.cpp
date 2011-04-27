@@ -25,7 +25,7 @@
 namespace apl {
 
 ShiftableBuffer::ShiftableBuffer(size_t aSize) :
-mpBuffer(new byte_t[aSize]),
+mpBuffer(new boost::uint8_t[aSize]),
 M_SIZE(aSize),
 mWritePos(0),
 mReadPos(0)
@@ -33,8 +33,8 @@ mReadPos(0)
 }
 
 
-ShiftableBuffer::ShiftableBuffer( const byte_t * aBuffer, size_t aSize) :
-mpBuffer(new byte_t[aSize]),
+ShiftableBuffer::ShiftableBuffer( const boost::uint8_t * aBuffer, size_t aSize) :
+mpBuffer(new boost::uint8_t[aSize]),
 M_SIZE(aSize),
 mWritePos(0),
 mReadPos(0)
@@ -75,7 +75,7 @@ void ShiftableBuffer::AdvanceWrite(size_t aNumBytes)
 	mWritePos += aNumBytes;
 }
 
-bool ShiftableBuffer::Sync(const byte_t* apPattern, size_t aNumBytes)
+bool ShiftableBuffer::Sync(const boost::uint8_t* apPattern, size_t aNumBytes)
 {
 	if(aNumBytes < 1) throw ArgumentException(LOCATION, "Pattern must be at least 1 byte");
 
@@ -86,12 +86,12 @@ bool ShiftableBuffer::Sync(const byte_t* apPattern, size_t aNumBytes)
 	return res;
 }
 
-size_t ShiftableBuffer::SyncSubsequence(const byte_t* apPattern, size_t aNumPatternBytes, size_t aOffset)
+size_t ShiftableBuffer::SyncSubsequence(const boost::uint8_t* apPattern, size_t aNumPatternBytes, size_t aOffset)
 {
 	size_t read_bytes = this->NumReadBytes() - aOffset;
 	if(aNumPatternBytes > read_bytes) aNumPatternBytes = read_bytes;
 
-	const byte_t* pRead = this->ReadBuff() + aOffset;
+	const boost::uint8_t* pRead = this->ReadBuff() + aOffset;
 
 	for(size_t i=0; i<aNumPatternBytes; ++i) {
 		if(apPattern[i] != pRead[i])

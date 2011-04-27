@@ -33,8 +33,8 @@ class TransportScalabilityTestObject : public LogTester, public AsyncTestObjectA
 		TransportScalabilityTestObject(
 			LinkConfig aClientCfg,
 			LinkConfig aServerCfg,
-			uint_16_t aPortStart,
-			uint_16_t aNumPair,
+			boost::uint16_t aPortStart,
+			boost::uint16_t aNumPair,
 			FilterLevel aLevel = LEV_INFO,
 			bool aImmediate = false);
 
@@ -46,9 +46,9 @@ class TransportScalabilityTestObject : public LogTester, public AsyncTestObjectA
 		// Test helpers
 		bool AllLayersUp();
 		bool AllLayerReceived(size_t aNumBytes);
-		bool AllLayerEqual(const byte_t*, size_t);
+		bool AllLayerEqual(const boost::uint8_t*, size_t);
 
-		void SendToAll(const byte_t*, size_t);
+		void SendToAll(const boost::uint8_t*, size_t);
 
 	public:
 		Logger* mpLogger;

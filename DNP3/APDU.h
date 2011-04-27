@@ -84,7 +84,7 @@ namespace apl { namespace dnp {
 				
 				@return		a pointer to the current byte buffer
 			 */
-			const apl::byte_t* GetBuffer() const { return mBuffer; }
+			const boost::uint8_t* GetBuffer() const { return mBuffer; }
 
 			/**
 				Returns the maximum possible size of the fragment (in bytes).
@@ -108,7 +108,7 @@ namespace apl { namespace dnp {
 
 				@throw ArgumentException	if aLength exceeds MaxSize()
 			 */
-			void Write(const apl::byte_t* apStart, size_t aLength);
+			void Write(const boost::uint8_t* apStart, size_t aLength);
 
 			/**
 				Returns the Function Code (FC) field from the DNP3 Application
@@ -352,8 +352,8 @@ namespace apl { namespace dnp {
 			IAppHeader* ParseHeader() const;
 			size_t Remainder() { return mBuffer.Size() - mFragmentSize; }
 
-			IndexedWriteIterator WriteCountHeader(size_t aObjectSize, size_t aPrefixSize, byte_t aGrp, byte_t aVar, size_t aCount, QualifierCode aQual);
-			void WriteContiguousHeader(IObjectHeader* apHdr, byte_t* apPos, size_t aStart, size_t aStop);
+			IndexedWriteIterator WriteCountHeader(size_t aObjectSize, size_t aPrefixSize,boost::uint8_t aGrp,boost::uint8_t aVar, size_t aCount, QualifierCode aQual);
+			void WriteContiguousHeader(IObjectHeader* apHdr,boost::uint8_t* apPos, size_t aStart, size_t aStop);
 
 			// Interpreted Information
 			bool mIsInterpreted;
@@ -377,7 +377,7 @@ namespace apl { namespace dnp {
 			size_t ReadObjectHeader(size_t aOffset, size_t aRemainder);
 
 			size_t GetPrefixSizeAndValidate(QualifierCode aCode, ObjectTypes aType);
-			size_t GetNumObjects(const IObjectHeader* apHeader, const apl::byte_t* pStart);
+			size_t GetNumObjects(const IObjectHeader* apHeader, const boost::uint8_t* pStart);
 
 			std::string GetSizeString(size_t aSize) const
 			{

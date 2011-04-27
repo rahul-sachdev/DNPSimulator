@@ -25,10 +25,10 @@
 
 namespace apl { namespace dnp {
 
-	void TLS_Base::Send(const apl::byte_t*, size_t, TransportLayer*)
+	void TLS_Base::Send(const boost::uint8_t*, size_t, TransportLayer*)
 	{ throw InvalidStateException(LOCATION, this->Name() ); }
 
-	void TLS_Base::HandleReceive(const apl::byte_t*, size_t, TransportLayer*)
+	void TLS_Base::HandleReceive(const boost::uint8_t*, size_t, TransportLayer*)
 	{ throw InvalidStateException(LOCATION, this->Name() ); }
 
 	void TLS_Base::HandleSendSuccess(TransportLayer*)

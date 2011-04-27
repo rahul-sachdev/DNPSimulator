@@ -49,8 +49,8 @@ class StackManager
 		StackManager(bool aAutoStart);
 		~StackManager();
 
-		void AddTCPClient(const std::string& arName, PhysLayerSettings aPhys, const std::string& arAddr, uint_16_t aPort);
-		void AddTCPServer(const std::string& arName, PhysLayerSettings  aPhys, const std::string& arEndpoint, uint_16_t aPort);
+		void AddTCPClient(const std::string& arName, PhysLayerSettings aPhys, const std::string& arAddr, boost::uint16_t aPort);
+		void AddTCPServer(const std::string& arName, PhysLayerSettings  aPhys, const std::string& arEndpoint, boost::uint16_t aPort);
 		void AddSerial(const std::string& arName, PhysLayerSettings aPhys, SerialSettings aSerial);
 
 		ICommandAcceptor* AddMaster(const std::string& arPortName,

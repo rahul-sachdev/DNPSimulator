@@ -50,14 +50,14 @@ namespace apl {
 			void DoClose() { ++mNumClose; }
 			void DoOpenSuccess() { ++mNumOpenSuccess; }
 			void DoOpenFailure() { ++mNumOpenFailure; }
-			void DoAsyncRead(byte_t* apBuff, size_t aNumBytes) { mpWriteBuff = apBuff; mNumToRead = aNumBytes; }
-			void DoAsyncWrite(const byte_t* apData, size_t aNumBytes) {
+			void DoAsyncRead(boost::uint8_t* apBuff, size_t aNumBytes) { mpWriteBuff = apBuff; mNumToRead = aNumBytes; }
+			void DoAsyncWrite(const boost::uint8_t* apData, size_t aNumBytes) {
 				mNumToWrite = aNumBytes;
 				++mNumWrites;
 				WriteToBuffer(apData, aNumBytes);
 			}
 
-			byte_t* mpWriteBuff;
+			boost::uint8_t* mpWriteBuff;
 			size_t mNumToRead;
 			size_t mNumToWrite;
 			size_t mNumWrites;

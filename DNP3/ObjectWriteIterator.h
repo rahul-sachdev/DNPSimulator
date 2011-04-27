@@ -46,13 +46,13 @@ namespace apl { namespace dnp {
 		const ObjectWriteIterator operator++(int);
 		bool IsEnd() const { return mIndex > mStop; };
 
-		apl::byte_t* operator*() const;
+		boost::uint8_t* operator*() const;
 
 		private:
 
-		ObjectWriteIterator(apl::byte_t* apPos, size_t aStart, size_t aStop, size_t aObjectSize);
+		ObjectWriteIterator(boost::uint8_t* apPos, size_t aStart, size_t aStop, size_t aObjectSize);
 
-		apl::byte_t* mpPos;
+		boost::uint8_t* mpPos;
 
 		size_t mIndex;
 		size_t mStart;
@@ -60,7 +60,7 @@ namespace apl { namespace dnp {
 		size_t mObjectSize;
 	};
 
-	inline apl::byte_t* ObjectWriteIterator::operator*() const
+	inline boost::uint8_t* ObjectWriteIterator::operator*() const
 	{
 		if(this->IsEnd()) throw InvalidStateException(LOCATION, "End of iteration");
 		return mpPos;

@@ -57,7 +57,7 @@ bool LinkFrame::operator==(const LinkFrame& arRHS) const
 	return true;
 }
 
-size_t LinkFrame::ReadUserData(byte_t* apBuffer) const
+size_t LinkFrame::ReadUserData(boost::uint8_t* apBuffer) const
 {
 	assert(this->mIsComplete);
 	size_t user_bytes = mHeader.GetLength() - LS_MIN_LENGTH;
@@ -65,7 +65,7 @@ size_t LinkFrame::ReadUserData(byte_t* apBuffer) const
 	return user_bytes;
 }
 
-void LinkFrame::ReadUserData(const byte_t* apSrc, byte_t* apDest, size_t aLength)
+void LinkFrame::ReadUserData(const boost::uint8_t* apSrc,boost::uint8_t* apDest, size_t aLength)
 {
 	if(aLength == 0) return;	//base case of recursion
 	size_t max = LS_DATA_BLOCK_SIZE;
@@ -85,7 +85,7 @@ bool LinkFrame::ValidateBodyCRC() const
 	return ValidateBodyCRC(mpBuffer+LS_HEADER_SIZE, mHeader.GetLength()-LS_MIN_LENGTH);
 }
 
-bool LinkFrame::ValidateBodyCRC(const byte_t* apBody, size_t aLength)
+bool LinkFrame::ValidateBodyCRC(const boost::uint8_t* apBody, size_t aLength)
 {
 	if(aLength == 0) return true;	//base case of recursion
 	size_t max = LS_DATA_BLOCK_SIZE ;
@@ -115,22 +115,22 @@ size_t LinkFrame::CalcFrameSize(size_t aDataLength)
 //
 ////////////////////////////////////////////////////////////////////////
 
-void LinkFrame::FormatAck(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
+void LinkFrame::FormatAck(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	this->FormatHeader(0, aIsMaster, false, aIsRcvBuffFull, FC_SEC_ACK, aDest, aSrc);
 }
 
-void LinkFrame::FormatNack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
+void LinkFrame::FormatNack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	this->FormatHeader(0, aIsMaster, false, aIsRcvBuffFull, FC_SEC_NACK, aDest, aSrc);
 }
 
-void LinkFrame::FormatLinkStatus(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
+void LinkFrame::FormatLinkStatus(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	this->FormatHeader(0, aIsMaster, false, aIsRcvBuffFull, FC_SEC_LINK_STATUS, aDest, aSrc);
 }
 
-void LinkFrame::FormatNotSupported(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
+void LinkFrame::FormatNotSupported(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	this->FormatHeader(0, aIsMaster, false, aIsRcvBuffFull, FC_SEC_NOT_SUPPORTED, aDest, aSrc);
 }
@@ -141,22 +141,22 @@ void LinkFrame::FormatNotSupported(bool aIsMaster, bool aIsRcvBuffFull, uint_16_
 //
 ////////////////////////////////////////////////////////////////////////
 
-void LinkFrame::FormatResetLinkStates(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc)
+void LinkFrame::FormatResetLinkStates(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	this->FormatHeader(0, aIsMaster, false, false, FC_PRI_RESET_LINK_STATES, aDest, aSrc); 
 }
 
-void LinkFrame::FormatRequestLinkStatus(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc)
+void LinkFrame::FormatRequestLinkStatus(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	this->FormatHeader(0, aIsMaster, false, false, FC_PRI_REQUEST_LINK_STATUS, aDest, aSrc);
 }
 
-void LinkFrame::FormatTestLinkStatus(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc)
+void LinkFrame::FormatTestLinkStatus(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	this->FormatHeader(0, aIsMaster, aFcb, true, FC_PRI_TEST_LINK_STATES, aDest, aSrc);
 }
 
-void LinkFrame::FormatConfirmedUserData(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength)
+void LinkFrame::FormatConfirmedUserData(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength)
 {
 	assert(aDataLength > 0);
 	assert(aDataLength <= 250);
@@ -164,7 +164,7 @@ void LinkFrame::FormatConfirmedUserData(bool aIsMaster, bool aFcb, uint_16_t aDe
 	WriteUserData(apData, mpBuffer + LS_HEADER_SIZE, aDataLength);
 }
 
-void LinkFrame::FormatUnconfirmedUserData(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc, const byte_t* apData, size_t aDataLength)
+void LinkFrame::FormatUnconfirmedUserData(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength)
 {
 	assert(aDataLength > 0);
 	assert(aDataLength <= 250);
@@ -181,17 +181,17 @@ void LinkFrame::ChangeFCB(bool aFCB)
 
 }
 
-void LinkFrame::FormatHeader(size_t aDataLength, bool aIsMaster, bool aFcb, bool aFcvDfc, FuncCodes aFuncCode, uint_16_t aDest, uint_16_t aSrc)
+void LinkFrame::FormatHeader(size_t aDataLength, bool aIsMaster, bool aFcb, bool aFcvDfc, FuncCodes aFuncCode, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	mSize = this->CalcFrameSize(aDataLength);
 
-	mHeader.Set(static_cast<byte_t>(aDataLength+LS_MIN_LENGTH), aSrc, aDest, aIsMaster, aFcvDfc, aFcb, aFuncCode);
+	mHeader.Set(static_cast<boost::uint8_t>(aDataLength+LS_MIN_LENGTH), aSrc, aDest, aIsMaster, aFcvDfc, aFcb, aFuncCode);
 	mHeader.Write(mpBuffer);
 
 	mIsComplete = true;
 }
 
-void LinkFrame::WriteUserData(const apl::byte_t* apSrc, byte_t* apDest, size_t aLength)
+void LinkFrame::WriteUserData(const boost::uint8_t* apSrc,boost::uint8_t* apDest, size_t aLength)
 {
 	if(aLength == 0) return;
 	size_t max = LS_DATA_BLOCK_SIZE;

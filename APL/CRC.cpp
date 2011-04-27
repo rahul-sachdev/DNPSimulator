@@ -20,7 +20,7 @@
 
 namespace apl
 {
-	unsigned int CRC::CalcCRC(const apl::byte_t* aInput, size_t aLength, const unsigned int* apTable, unsigned int aStart, bool aInvert)
+	unsigned int CRC::CalcCRC(const boost::uint8_t* aInput, size_t aLength, const unsigned int* apTable, unsigned int aStart, bool aInvert)
 	{
 		unsigned int CRC, index;
 

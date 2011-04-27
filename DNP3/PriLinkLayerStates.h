@@ -42,8 +42,8 @@ namespace apl { namespace dnp {
 		virtual void OnTimeout(LinkLayer*);
 
 		/*Upper layer events to handle */
-		virtual void SendConfirmed(LinkLayer*, const apl::byte_t*, size_t);
-		virtual void SendUnconfirmed(LinkLayer*, const apl::byte_t*, size_t);
+		virtual void SendConfirmed(LinkLayer*, const boost::uint8_t*, size_t);
+		virtual void SendUnconfirmed(LinkLayer*, const boost::uint8_t*, size_t);
 
 		//every concrete state implements this for logging purposes
 		virtual std::string Name() const = 0;
@@ -53,16 +53,16 @@ namespace apl { namespace dnp {
 	class PLLS_SecNotReset : public PriStateBase
 	{
 		MACRO_STATE_SINGLETON_INSTANCE(PLLS_SecNotReset);
-		void SendUnconfirmed(LinkLayer*, const apl::byte_t*, size_t);
-		void SendConfirmed(LinkLayer*, const apl::byte_t*, size_t);
+		void SendUnconfirmed(LinkLayer*, const boost::uint8_t*, size_t);
+		void SendConfirmed(LinkLayer*, const boost::uint8_t*, size_t);
 	};
 
 	///	@section desc for reset state
 	class PLLS_SecReset : public PriStateBase
 	{
 		MACRO_STATE_SINGLETON_INSTANCE(PLLS_SecReset);
-		void SendUnconfirmed(LinkLayer*, const apl::byte_t*, size_t);
-		void SendConfirmed(LinkLayer*, const apl::byte_t*, size_t);
+		void SendUnconfirmed(LinkLayer*, const boost::uint8_t*, size_t);
+		void SendConfirmed(LinkLayer*, const boost::uint8_t*, size_t);
 	};
 
 	///	@section desc As soon as we get an ACK, send the delayed pri frame

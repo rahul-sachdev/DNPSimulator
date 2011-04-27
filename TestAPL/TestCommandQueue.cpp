@@ -85,12 +85,12 @@ using namespace apl;
 				if(type == 0){
 					BinaryOutput bo;
 					bo.mRawCode = (i%2 == 0) ? CC_LATCH_ON : CC_LATCH_OFF;
-					bo.mCount = (byte_t)i%255;
+					bo.mCount = (boost::uint8_t)i%255;
 					cq.AcceptCommand(bo,i,seq, NULL);
 				}
 				else{
 					Setpoint st;
-					st.SetValue(static_cast<int_32_t>(i));
+					st.SetValue(static_cast<boost::int32_t>(i));
 					cq.AcceptCommand(st,i,seq, NULL);
 				}
 			}

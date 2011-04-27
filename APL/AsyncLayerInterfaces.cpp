@@ -54,7 +54,7 @@ mpLowerLayer(NULL)
 
 }
 
-void IUpperLayer::OnReceive(const apl::byte_t* apData, size_t aNumBytes)
+void IUpperLayer::OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
 {
 	if(this->LogReceive()) {
 		LOG_BLOCK(LEV_COMM, RecvString() << " " << toHex(apData, aNumBytes, true));
@@ -89,7 +89,7 @@ mpUpperLayer(NULL)
 
 }
 
-void ILowerLayer::Send(const apl::byte_t* apData, size_t aNumBytes)
+void ILowerLayer::Send(const boost::uint8_t* apData, size_t aNumBytes)
 {
 	LOG_BLOCK(LEV_COMM, SendString() << " " << toHex(apData, aNumBytes, true));
 	this->_Send(apData, aNumBytes);

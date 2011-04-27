@@ -60,7 +60,7 @@ void LinkLayer::ChangeState(PriStateBase* apState)
 void LinkLayer::ChangeState(SecStateBase* apState) 
 { mpSecState = apState; }
 
-bool LinkLayer::Validate(bool aIsMaster, uint_16_t aSrc, uint_16_t aDest)
+bool LinkLayer::Validate(bool aIsMaster, boost::uint16_t aSrc, boost::uint16_t aDest)
 {
 	if(!mIsOnline)
 		throw InvalidStateException(LOCATION, "LowerLayerDown");
@@ -133,7 +133,7 @@ void LinkLayer::SendResetLinks()
 	this->Transmit(mPriFrame);
 }
 
-void LinkLayer::SendUnconfirmedUserData(const byte_t* apData, size_t aLength)
+void LinkLayer::SendUnconfirmedUserData(const boost::uint8_t* apData, size_t aLength)
 {
 	mPriFrame.FormatUnconfirmedUserData(mCONFIG.IsMaster, mCONFIG.RemoteAddr, mCONFIG.LocalAddr, apData, aLength);
 	this->Transmit(mPriFrame);
@@ -177,55 +177,55 @@ bool LinkLayer::Retry()
 // IFrameSink
 ////////////////////////////////////////////////
 
-void LinkLayer::Ack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayer::Ack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
 { 
 	if(this->Validate(aIsMaster, aSrc, aDest)) 
 		mpPriState->Ack(this, aIsRcvBuffFull);
 }
 
-void LinkLayer::Nack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayer::Nack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
 { 
 	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpPriState->Nack(this, aIsRcvBuffFull);
 }
 
-void LinkLayer::LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayer::LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpPriState->LinkStatus(this, aIsRcvBuffFull); 
 }
 
-void LinkLayer::NotSupported (bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayer::NotSupported (bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpPriState->NotSupported(this, aIsRcvBuffFull);
 }
 
-void LinkLayer::TestLinkStatus(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayer::TestLinkStatus(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpSecState->TestLinkStatus(this, aFcb);
 }
 
-void LinkLayer::ResetLinkStates(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayer::ResetLinkStates(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc)
 { 
 	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpSecState->ResetLinkStates(this);
 }
 
-void LinkLayer::RequestLinkStatus(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc)
+void LinkLayer::RequestLinkStatus(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	if(this->Validate(aIsMaster, aSrc, aDest)) 
 		mpSecState->RequestLinkStatus(this);
 }
 
-void LinkLayer::ConfirmedUserData(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength)
+void LinkLayer::ConfirmedUserData(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength)
 {
 	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpSecState->ConfirmedUserData(this, aFcb, apData, aDataLength);
 }
 
-void LinkLayer::UnconfirmedUserData(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength)
+void LinkLayer::UnconfirmedUserData(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength)
 {
 	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpSecState->UnconfirmedUserData(this, apData, aDataLength);
@@ -235,7 +235,7 @@ void LinkLayer::UnconfirmedUserData(bool aIsMaster, uint_16_t aDest, uint_16_t a
 // ILowerLayer
 ////////////////////////////////////////////////
 
-void LinkLayer::_Send(const apl::byte_t* apData, size_t aDataLength)
+void LinkLayer::_Send(const boost::uint8_t* apData, size_t aDataLength)
 {
 	if(!mIsOnline)
 		throw InvalidStateException(LOCATION, "LowerLayerDown");

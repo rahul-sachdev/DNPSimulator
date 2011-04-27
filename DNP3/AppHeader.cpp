@@ -116,7 +116,7 @@ namespace apl { namespace dnp {
 		return oss.str();
 	}
 
-	void IAppHeader::SetControl(apl::byte_t* apStart, const AppControlField& arControl) const
+	void IAppHeader::SetControl(boost::uint8_t* apStart, const AppControlField& arControl) const
 	{
 		(*apStart) = 0;
 		if(arControl.FIR) (*apStart) |= ACM_FIR;
@@ -127,7 +127,7 @@ namespace apl { namespace dnp {
 		(*apStart) |= (arControl.SEQ % 16);
 	}
 	
-	AppControlField IAppHeader::GetControl(const byte_t* apStart) const
+	AppControlField IAppHeader::GetControl(const boost::uint8_t* apStart) const
 	{
 		AppControlField f;
 
@@ -142,11 +142,11 @@ namespace apl { namespace dnp {
 
 	
 
-	IINField ResponseHeader::GetIIN(const byte_t* apStart) const
+	IINField ResponseHeader::GetIIN(const boost::uint8_t* apStart) const
 	{
 		IINField f;
 
-		const byte_t* pByte = apStart+2; //start w/ LSB
+		const boost::uint8_t* pByte = apStart+2; //start w/ LSB
 
 		f.SetLSB(*pByte);
 		f.SetMSB(*(++pByte));
@@ -154,9 +154,9 @@ namespace apl { namespace dnp {
 		return f;
 	}
 
-	void ResponseHeader::SetIIN(apl::byte_t* apStart, const IINField& arIIN) const
+	void ResponseHeader::SetIIN(boost::uint8_t* apStart, const IINField& arIIN) const
 	{
-		byte_t* pByte = apStart+2; //start w/ LSB
+		boost::uint8_t* pByte = apStart+2; //start w/ LSB
 		
 		*pByte = arIIN.GetLSB();
 		*(++pByte) = arIIN.GetMSB();

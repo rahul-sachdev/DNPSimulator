@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_SUITE(APDUReading)
 	BOOST_AUTO_TEST_CASE(WriteTooMuch)
 	{
 		APDU frag(100);
-		byte_t buff[101];
+		boost::uint8_t buff[101];
 
 		BOOST_REQUIRE_THROW(frag.Write(buff, 101), ArgumentException);
 	}
@@ -451,7 +451,7 @@ BOOST_AUTO_TEST_SUITE(APDUReading)
 
 		const SizeByVariationObject* pObj = static_cast<const SizeByVariationObject*>(i->GetBaseObject());
 
-		byte_t buff[100];
+		boost::uint8_t buff[100];
 		pObj->Read(*j, i->GetVariation(), buff);
 
 		BOOST_REQUIRE_EQUAL("hello", std::string(reinterpret_cast<const char*>(buff), 5));
@@ -538,7 +538,7 @@ BOOST_AUTO_TEST_SUITE(APDUReading)
 
 		const SizeByVariationObject* pObj = static_cast<const SizeByVariationObject*>(i->GetBaseObject());
 
-		byte_t buff[100];
+		boost::uint8_t buff[100];
 		pObj->Read(*j, i->GetVariation(), buff);
 
 		BOOST_REQUIRE_EQUAL("hello", std::string(reinterpret_cast<const char*>(buff), 5));

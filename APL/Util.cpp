@@ -76,7 +76,7 @@ namespace apl{
 		int year = arTime.date().year();
 		int month = arTime.date().month();
 		int day = arTime.date().day();
-		int_64_t millisec = tod.fractional_seconds()/1000;
+		millis_t millisec = tod.fractional_seconds()/1000;
 		oss.precision(2);
 		oss << year << "-" << Month(month) << "-";
 		oss << setw(2) << setfill('0') << day << " ";
@@ -97,7 +97,7 @@ namespace apl{
 		err = system(CLEAR_CMD);
 	}
 
-	double SafeCastInt64ToDouble(int_64_t aInput){
+	double SafeCastInt64ToDouble(boost::int64_t aInput){
 		// fix for arm compiler bug
 #ifdef ARM
 		long upper =  (aInput & 0xFFFFFFFF00000000LL) >> 32;

@@ -41,7 +41,7 @@ mNumBytesToSend(0),
 mSeq(0)
 {}
 
-void TransportTx::Send(const apl::byte_t* apData, size_t aNumBytes)
+void TransportTx::Send(const boost::uint8_t* apData, size_t aNumBytes)
 {
 	assert(aNumBytes > 0);
 	assert(aNumBytes <= mBufferAPDU.Size());
@@ -85,9 +85,9 @@ bool TransportTx::SendSuccess()
 	return this->CheckForSend();
 }
 
-byte_t TransportTx::GetHeader(bool aFir, bool aFin, int aSeq)
+boost::uint8_t TransportTx::GetHeader(bool aFir, bool aFin, int aSeq)
 {
-	byte_t hdr = 0;
+	boost::uint8_t hdr = 0;
 	if(aFir) hdr |= TL_HDR_FIR;
 	if(aFin) hdr |= TL_HDR_FIN;
 

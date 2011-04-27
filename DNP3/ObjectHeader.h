@@ -47,14 +47,14 @@ namespace apl { namespace dnp {
 	struct ObjectHeaderField
 	{
 		ObjectHeaderField(){};
-		ObjectHeaderField(apl::byte_t aGroup, apl::byte_t aVariation, QualifierCode aQualifier) :
+		ObjectHeaderField(boost::uint8_t aGroup, boost::uint8_t aVariation, QualifierCode aQualifier) :
 		Group(aGroup),
 		Variation(aVariation),
 		Qualifier(aQualifier)
 		{}
 
-		apl::byte_t Group;
-		apl::byte_t Variation;
+		boost::uint8_t Group;
+		boost::uint8_t Variation;
 		QualifierCode Qualifier;
 	};
 
@@ -76,10 +76,10 @@ namespace apl { namespace dnp {
 			virtual size_t GetSize() const = 0; // depends on the subtype, default size is 3
 			virtual ObjectHeaderTypes GetType() const = 0;
 
-			void Get(const apl::byte_t* apStart, ObjectHeaderField& arData) const;
-			void Set(apl::byte_t* apStart, byte_t aGrp, byte_t aVar, QualifierCode aQual) const;
+			void Get(const boost::uint8_t* apStart, ObjectHeaderField& arData) const;
+			void Set(boost::uint8_t* apStart,boost::uint8_t aGrp,boost::uint8_t aVar, QualifierCode aQual) const;
 
-			static QualifierCode ByteToQualifierCode(apl::byte_t aCode);
+			static QualifierCode ByteToQualifierCode(boost::uint8_t aCode);
 	};
 
 	struct RangeInfo
@@ -91,15 +91,15 @@ namespace apl { namespace dnp {
 	class IRangeHeader : public IObjectHeader
 	{
 		public:
-			virtual void GetRange(const apl::byte_t* apStart, RangeInfo& arInfo) const = 0;
-			virtual void SetRange(apl::byte_t* apStart, const RangeInfo& arInfo) const = 0;
+			virtual void GetRange(const boost::uint8_t* apStart, RangeInfo& arInfo) const = 0;
+			virtual void SetRange(boost::uint8_t* apStart, const RangeInfo& arInfo) const = 0;
 	};
 
 	class ICountHeader : public IObjectHeader
 	{
 		public:
-			virtual size_t GetCount(const apl::byte_t* apStart) const = 0;
-			virtual void SetCount(apl::byte_t* apStart, size_t aCount) const = 0;
+			virtual size_t GetCount(const boost::uint8_t* apStart) const = 0;
+			virtual void SetCount(boost::uint8_t* apStart, size_t aCount) const = 0;
 	};
 
 	class AllObjectsHeader : public IObjectHeader
@@ -118,13 +118,13 @@ namespace apl { namespace dnp {
 		size_t GetSize() const { return Size; }
 		ObjectHeaderTypes GetType() const { return U; }
 
-		void GetRange(const apl::byte_t* apStart, RangeInfo& arInfo) const
+		void GetRange(const boost::uint8_t* apStart, RangeInfo& arInfo) const
 		{
 			arInfo.Start = T::Read(apStart+3);
 			arInfo.Stop = T::Read(apStart+3+T::Size);
 		}
 
-		void SetRange(apl::byte_t* apStart, const RangeInfo& arInfo) const
+		void SetRange(boost::uint8_t* apStart, const RangeInfo& arInfo) const
 		{
 			if(arInfo.Start > arInfo.Stop) throw ArgumentException(LOCATION, "stop > start");
 			if(arInfo.Stop > T::Max) throw ArgumentException(LOCATION, "stop > max");
@@ -150,10 +150,10 @@ namespace apl { namespace dnp {
 		size_t GetSize() const { return Size; }
 		ObjectHeaderTypes GetType() const { return U; }
 
-		size_t GetCount(const apl::byte_t* apStart) const
+		size_t GetCount(const boost::uint8_t* apStart) const
 		{ return T::Read(apStart+3); }
 
-		void SetCount(apl::byte_t* apStart, size_t aCount) const
+		void SetCount(boost::uint8_t* apStart, size_t aCount) const
 		{
 			if(aCount > T::Max) throw ArgumentException(LOCATION);
 			T::Write(apStart+3, static_cast<typename T::Type>(aCount));

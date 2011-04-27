@@ -34,9 +34,9 @@ using namespace std;
 template <class T>
 bool TestReadWrite(typename T::Type aValue)
 {
-	byte_t data[2*T::Size];
+	boost::uint8_t data[2*T::Size];
 	for(size_t i=0; i<T::Size; ++i) {
-		byte_t* pos = data+i;
+		boost::uint8_t* pos = data+i;
 		T::Write(pos, aValue);
 		typename T::Type r = T::Read(pos);
 		if(aValue != r) return false;
@@ -50,7 +50,7 @@ bool TestReadWriteDouble(typename T::Type aValue)
 	ByteStr data(2*T::Size);
 
 	for(size_t i=0; i<T::Size; ++i) {
-		byte_t* pos = data+i;
+		boost::uint8_t* pos = data+i;
 		T::Write(pos, aValue);
 		typename T::Type r = T::Read(pos);
 		if(!apl::FloatEqual(aValue, r)) return false;

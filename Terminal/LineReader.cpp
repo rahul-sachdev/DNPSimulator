@@ -38,7 +38,7 @@ namespace apl
 		mpPhys->AsyncRead(mBuffer + mNumBytes, mBuffer.Size()-mNumBytes);	
 	}
 
-	void LineReader::_OnReceive(const apl::byte_t*, size_t aNum)
+	void LineReader::_OnReceive(const boost::uint8_t*, size_t aNum)
 	{
 		mNumBytes += aNum;
 		assert(mNumBytes <= mBuffer.Size());		

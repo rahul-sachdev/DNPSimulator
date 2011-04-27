@@ -71,10 +71,10 @@ class AsyncStackManager : private Threadable, private Loggable
 		// All the io_service marshalling now occurs here. It's now safe to add/remove while the manager is running.
 
 		/// Adds a TCPClient port, excepts if the port already exists
-		void AddTCPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, uint_16_t aPort);
+		void AddTCPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort);
 
 		/// Adds a TCPServer port, excepts if the port already exists
-		void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, uint_16_t aPort);
+		void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
 
 		/// Adds a Serial port, excepts if the port already exists
 		void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
@@ -135,7 +135,7 @@ class AsyncStackManager : private Threadable, private Loggable
 										bound for that stack
 		 */
 		IVtoWriter* AddVtoChannel(const std::string& arStackName,
-						byte_t aVtoChannelId,
+						boost::uint8_t aVtoChannelId,
 						IVtoCallbacks* apOnDataCallback);
 
 		/**
@@ -172,7 +172,7 @@ class AsyncStackManager : private Threadable, private Loggable
 		 */
 		void StartVtoRouter(const std::string& arPortName,
 						const std::string& arStackName,
-						byte_t aVtoChannelId);
+						boost::uint8_t aVtoChannelId);
 
 		/**
 			Shutdown a VtoRouter for the VTO channel on the specified stack.
@@ -184,7 +184,7 @@ class AsyncStackManager : private Threadable, private Loggable
 										does not exist
 		*/
 		void StopVtoRouter(const std::string& arStackName,
-						byte_t aVtoChannelId);
+						boost::uint8_t aVtoChannelId);
 
 		/**
 			Shutdown all VtoRouter instances on the specified stack.
@@ -226,7 +226,7 @@ class AsyncStackManager : private Threadable, private Loggable
 		/// Remove a stack
 		void SeverStack(Port* apPort, const std::string& arStackName);
 
-		void OnAddStack(const std::string& arStackName, Stack* apStack, Port* apPort, uint_16_t aAddress);
+		void OnAddStack(const std::string& arStackName, Stack* apStack, Port* apPort, boost::uint16_t aAddress);
 		void CheckForJoin();
 
 		bool mRunASIO;

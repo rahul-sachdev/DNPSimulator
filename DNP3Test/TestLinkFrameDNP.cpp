@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_SUITE(DNPLinkFrame)
 	{
 		LinkFrame a;
 		for(size_t i=0; i<a.GetSize(); i++) 
-			a.GetBuffer()[i] = static_cast<byte_t>(i);
+			a.GetBuffer()[i] = static_cast<boost::uint8_t>(i);
 
 		LinkFrame b(a);
 

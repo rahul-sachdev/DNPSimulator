@@ -39,25 +39,25 @@ namespace apl { namespace dnp {
 
 			// Templates for writing to stream
 			template <typename T, typename U>
-			static void WriteQ(apl::byte_t* apPos, const T* apObj, const U& arObj);
+			static void WriteQ(boost::uint8_t* apPos, const T* apObj, const U& arObj);
 
 			template <typename T, typename U>
-			static void WriteQV(apl::byte_t* apPos, const T* apObj, const U& arObj);
+			static void WriteQV(boost::uint8_t* apPos, const T* apObj, const U& arObj);
 
 			template <typename T, typename U>
-			static void WriteQT(apl::byte_t* apPos, const T* apObj, const U& arObj);
+			static void WriteQT(boost::uint8_t* apPos, const T* apObj, const U& arObj);
 
 			template <typename T, typename U>
-			static void WriteCheckRangeQV(apl::byte_t* apPos, const T* apObj, const U&  arObj);
+			static void WriteCheckRangeQV(boost::uint8_t* apPos, const T* apObj, const U&  arObj);
 
 			template <typename T, typename U>
-			static void WriteV(apl::byte_t* apPos, const T* apObj, const U&  arObj);
+			static void WriteV(boost::uint8_t* apPos, const T* apObj, const U&  arObj);
 
 			template<typename T, typename U>
-			static void WriteQVT(apl::byte_t* apPos, const T* apObj, const U&  arObj);
+			static void WriteQVT(boost::uint8_t* apPos, const T* apObj, const U&  arObj);
 
 			template<typename T, typename U>
-			static void WriteCheckRangeQVT(apl::byte_t* apPos, const T* apObj, const U&  arObj);
+			static void WriteCheckRangeQVT(boost::uint8_t* apPos, const T* apObj, const U&  arObj);
 	};
 
 	template <class T, class U>
@@ -78,13 +78,13 @@ namespace apl { namespace dnp {
 	};
 
 	template <typename T, typename U>
-	inline void DNPToStream::WriteQ(apl::byte_t* apPos, const T* apObj, const U& arObj)
+	inline void DNPToStream::WriteQ(boost::uint8_t* apPos, const T* apObj, const U& arObj)
 	{
 		apObj->mFlag.Set(apPos, arObj.GetQuality());
 	}
 
 	template <typename T, typename U>
-	inline void DNPToStream::WriteQT(apl::byte_t* apPos, const T* apObj, const U& arObj)
+	inline void DNPToStream::WriteQT(boost::uint8_t* apPos, const T* apObj, const U& arObj)
 	{
 		apObj->mFlag.Set(apPos, arObj.GetQuality());
 		apObj->mTime.Set(apPos, arObj.GetTime());
@@ -92,9 +92,9 @@ namespace apl { namespace dnp {
 
 	// Templates for writing to stream
 	template <typename T, typename U>
-	void DNPToStream::WriteCheckRangeQV(apl::byte_t* apPos, const T* apObj, const U& arObj)
+	void DNPToStream::WriteCheckRangeQV(boost::uint8_t* apPos, const T* apObj, const U& arObj)
 	{
-		apl::byte_t qual = arObj.GetQuality();
+		boost::uint8_t qual = arObj.GetQuality();
 
 		typename U::Type val = arObj.GetValue();
 		if(val > apObj->mValue.Max())
@@ -108,7 +108,7 @@ namespace apl { namespace dnp {
 
 	// Templates for writing to stream
 	template <typename T, typename U>
-	void DNPToStream::WriteV(apl::byte_t* apPos, const T* apObj, const U& arObj)
+	void DNPToStream::WriteV(boost::uint8_t* apPos, const T* apObj, const U& arObj)
 	{
 		typename U::Type val = arObj.GetValue();
 		if(val > apObj->mValue.Max())
@@ -121,21 +121,21 @@ namespace apl { namespace dnp {
 
 	// Templates for writing to stream
 	template <typename T, typename U>
-	inline void DNPToStream::WriteQV(apl::byte_t* apPos, const T* apObj, const U& arObj)
+	inline void DNPToStream::WriteQV(boost::uint8_t* apPos, const T* apObj, const U& arObj)
 	{
 		apObj->mFlag.Set(apPos, arObj.GetQuality());
 		WriteV<T,U>(apPos, apObj, arObj);
 	}
 
 	template<typename T, typename U>
-	void DNPToStream::WriteQVT(apl::byte_t* apPos, const T* apObj, const U&  arObj)
+	void DNPToStream::WriteQVT(boost::uint8_t* apPos, const T* apObj, const U&  arObj)
 	{
 		WriteQV<T,U>(apPos, apObj, arObj);
 		apObj->mTime.Set(apPos, arObj.GetTime());
 	}
 
 	template<typename T, typename U>
-	inline void DNPToStream::WriteCheckRangeQVT(apl::byte_t* apPos, const T* apObj, const U& arObj)
+	inline void DNPToStream::WriteCheckRangeQVT(boost::uint8_t* apPos, const T* apObj, const U& arObj)
 	{
 		WriteCheckRangeQV<T,U>(apPos, apObj, arObj);
 		apObj->mTime.Set(apPos, arObj.GetTime());

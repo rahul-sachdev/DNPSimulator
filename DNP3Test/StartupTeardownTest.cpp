@@ -41,7 +41,7 @@ void StartupTeardownTest::CreatePort(const std::string& arName, FilterLevel aLev
 	mMgr.AddTCPClient(arName, s, "127.0.0.1", 30000);
 }
 
-void StartupTeardownTest::AddMaster(const std::string& arStackName, const std::string& arPortName, uint_16_t aLocalAddress, FilterLevel aLevel)
+void StartupTeardownTest::AddMaster(const std::string& arStackName, const std::string& arPortName, boost::uint16_t aLocalAddress, FilterLevel aLevel)
 {	
 	MasterStackConfig cfg;
 	cfg.link.LocalAddr = aLocalAddress;

@@ -38,7 +38,7 @@ class TransportRx : public Loggable
 	public:
 		TransportRx(Logger*, TransportLayer*, size_t aFragSize);
 
-		void HandleReceive(const apl::byte_t*, size_t);
+		void HandleReceive(const boost::uint8_t*, size_t);
 
 		void Reset();
 

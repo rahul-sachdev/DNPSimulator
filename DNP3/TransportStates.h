@@ -40,8 +40,8 @@ namespace apl { namespace dnp {
 	{
 		MACRO_STATE_SINGLETON_INSTANCE(TLS_Ready);
 
-		void Send(const byte_t*, size_t, TransportLayer*);
-		void HandleReceive(const apl::byte_t*, size_t, TransportLayer*);
+		void Send(const boost::uint8_t*, size_t, TransportLayer*);
+		void HandleReceive(const boost::uint8_t*, size_t, TransportLayer*);
 		void LowerLayerDown(TransportLayer*);
 	};
 
@@ -51,7 +51,7 @@ namespace apl { namespace dnp {
 	{
 		MACRO_STATE_SINGLETON_INSTANCE(TLS_Sending);
 
-		void HandleReceive(const apl::byte_t*, size_t, TransportLayer*);
+		void HandleReceive(const boost::uint8_t*, size_t, TransportLayer*);
 		void HandleSendSuccess(TransportLayer*);
 		void HandleSendFailure(TransportLayer*);
 		void LowerLayerDown(TransportLayer*);

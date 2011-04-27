@@ -26,7 +26,7 @@
 
 namespace apl { namespace dnp {
 
-const byte_t LinkLayerReceiver::M_SYNC_PATTERN[2] = {0x05, 0x64};
+const boost::uint8_t LinkLayerReceiver::M_SYNC_PATTERN[2] = {0x05, 0x64};
 
 LinkLayerReceiver::LinkLayerReceiver(Logger* apLogger, IFrameSink* apSink) : 
 Loggable(apLogger),
@@ -140,7 +140,7 @@ bool LinkLayerReceiver::ValidateHeader()
 	//Now make sure that the function code is known and that the FCV is appropriate
 	if(!this->ValidateFunctionCode()) return false;
 
-	byte_t user_data_length = mHeader.GetLength() - LS_MIN_LENGTH;
+	boost::uint8_t user_data_length = mHeader.GetLength() - LS_MIN_LENGTH;
 	mFrameSize = LinkFrame::CalcFrameSize(user_data_length);
 	FuncCodes func = mHeader.GetFuncEnum();
 

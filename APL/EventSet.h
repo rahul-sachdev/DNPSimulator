@@ -30,9 +30,9 @@ namespace apl
 	{
 		public:
 
-		EventSet(apl::int_64_t aEventFlags)
+		EventSet(boost::int64_t aEventFlags)
 		{
-			const int_64_t ONE = static_cast<apl::int_64_t>(1);
+			const int64_t ONE = static_cast<boost::int64_t>(1);
 
 			for(size_t i = 0; i < 64; i++)
 			{

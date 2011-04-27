@@ -39,11 +39,11 @@ class TransportTx : public Loggable
 		TransportTx(Logger*, TransportLayer*, size_t aFragSize);
 
 
-		void Send(const apl::byte_t*, size_t); // A fresh call to Send() will reset the state
+		void Send(const boost::uint8_t*, size_t); // A fresh call to Send() will reset the state
 		bool SendSuccess();
 
 
-		static byte_t GetHeader(bool aFir, bool aFin, int aSeq);
+		static boost::uint8_t GetHeader(bool aFir, bool aFin, int aSeq);
 
 	private:
 

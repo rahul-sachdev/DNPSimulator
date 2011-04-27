@@ -90,11 +90,11 @@ using namespace apl::dnp;
 
 		BOOST_AUTO_TEST_CASE(ResetEventsProperlyOnFailure)
 		{
-			const byte_t NUM = 100;
+			const boost::uint8_t NUM = 100;
 
-			const byte_t dataSize = 255;
+			const boost::uint8_t dataSize = 255;
 
-			const byte_t numEvents = NUM;
+			const boost::uint8_t numEvents = NUM;
 
 			InsertionOrderedEventBuffer<VtoDataEvent> b(NUM);
 
@@ -104,10 +104,10 @@ using namespace apl::dnp;
 
 			VtoDataEventIter itr;
 
-			for (byte_t i = 0; i < numEvents; i++)
+			for (boost::uint8_t i = 0; i < numEvents; i++)
 			{
-				byte_t trash[dataSize];
-				byte_t j;
+				boost::uint8_t trash[dataSize];
+				boost::uint8_t j;
 				for (j = 0; j < dataSize; ++j)
 					trash[j] = i;
 
@@ -123,7 +123,7 @@ using namespace apl::dnp;
 
 			itr = b.Begin();
 			for (size_t i = 0; i < b.NumSelected(); ++i) {
-				const byte_t *value = itr->mValue.GetValue();
+				const boost::uint8_t *value = itr->mValue.GetValue();
 				for (size_t j = 0; j < dataSize; ++j)
 					BOOST_REQUIRE_EQUAL(value[j], i);
 				++itr;
@@ -135,7 +135,7 @@ using namespace apl::dnp;
 
 			itr = b.Begin();
 			for (size_t i = 0; i < b.NumSelected(); ++i) {
-				const byte_t *value = itr->mValue.GetValue();
+				const boost::uint8_t *value = itr->mValue.GetValue();
 				for (size_t j = 0; j < dataSize; ++j)
 					BOOST_REQUIRE_EQUAL(value[j], i);
 				++itr;

@@ -31,7 +31,7 @@ class MockLowerLayer : public ILowerLayer, public BufferTestObject
 		MockLowerLayer(Logger*);
 		virtual ~MockLowerLayer(){}
 
-		void SendUp(const byte_t*, size_t);
+		void SendUp(const boost::uint8_t*, size_t);
 		void SendUp(const std::string&);
 		void SendSuccess();
 		void SendFailure();
@@ -49,7 +49,7 @@ class MockLowerLayer : public ILowerLayer, public BufferTestObject
 		virtual std::string SendString() const { return " MockLowerLayer ->"; }
 
 		//these are the NVII delegates
-		void _Send(const apl::byte_t*, size_t);
+		void _Send(const boost::uint8_t*, size_t);
 };
 
 }

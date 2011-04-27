@@ -81,22 +81,22 @@ using namespace apl;
 		//of an operation can be different if the casting is done and the
 		//result is stored to memory or if the value stays in a register 
 		//(as an intermediate calculation value), very nasty.
-		CHECK_CAST(double,int_64_t,1003.0,1003);
+		CHECK_CAST(double,boost::int64_t,1003.0,1003);
 
-		CHECK_CAST(int_64_t,double,1004,1004.0);
+		CHECK_CAST(boost::int64_t,double,1004,1004.0);
 
 		CHECK_CAST(double,float,1012.0,1012.0f);
-		CHECK_CAST(int_64_t,double,1006,1006.0);
+		CHECK_CAST(boost::int64_t,double,1006,1006.0);
 
 		CHECK_CAST(int,double,1007,1007.0);
 		CHECK_CAST(long,double,1008,1008.0);
 		CHECK_CAST(int,float,1009,1009.0f);
 
-		CHECK_CAST(float,int_64_t,1010.0f,1010);
+		CHECK_CAST(float,boost::int64_t,1010.0f,1010);
 		CHECK_CAST(float,int,1011.0f,1011);
 
-		CHECK_CAST(int_64_t,double,4294967296LL,4294967296.0);
-		CHECK_CAST(double,int_64_t,4294967296.0,4294967296LL);
+		CHECK_CAST(boost::int64_t,double,4294967296LL,4294967296.0);
+		CHECK_CAST(double,boost::int64_t,4294967296.0,4294967296LL);
 
 	}
 

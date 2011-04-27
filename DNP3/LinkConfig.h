@@ -32,8 +32,8 @@ struct LinkConfig
 		bool aIsMaster,
 		bool aUseConfirms,
 		size_t aNumRetry,
-		uint_16_t aLocalAddr,
-		uint_16_t aRemoteAddr,
+		boost::uint16_t aLocalAddr,
+		boost::uint16_t aRemoteAddr,
 		millis_t aTimeout) :
 
 	IsMaster(aIsMaster),
@@ -66,10 +66,10 @@ struct LinkConfig
 	size_t NumRetry;
 
 	/// dnp3 address of the local device
-	uint_16_t LocalAddr;
+	boost::uint16_t LocalAddr;
 
 	/// dnp3 address of the remote device
-	uint_16_t RemoteAddr;
+	boost::uint16_t RemoteAddr;
 
 	/// the response timeout in milliseconds for confirmed requests
 	millis_t Timeout;

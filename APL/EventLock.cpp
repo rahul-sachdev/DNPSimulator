@@ -28,25 +28,25 @@ namespace apl
 //////////////////////////////////////////////////////////
 
 EventLock::EventLock() : 
-EventLockBase<int_64_t>(), 
-mEvents(~static_cast<int_64_t>(0))
+EventLockBase<boost::int64_t>(), 
+mEvents(~static_cast<boost::int64_t>(0))
 {} //set all events by default so we don't miss anything
 
 
-void EventLock::RecordEventCode(const apl::int_64_t& arEvent) 
+void EventLock::RecordEventCode(const boost::int64_t& arEvent) 
 { this->mEvents |= arEvent; }
 
 
 //needs to be used only when we are allready locked on the object
-int_64_t EventLock::GetEvents(bool aClearSentEvents){
-	int_64_t temp = mEvents;
+boost::int64_t EventLock::GetEvents(bool aClearSentEvents){
+	boost::int64_t temp = mEvents;
 	if(aClearSentEvents) mEvents = 0;
 	return temp;
 }
 
-int_64_t EventLock::Get64BitMask(size_t aShift)
+boost::int64_t EventLock::Get64BitMask(size_t aShift)
 {
-	int_64_t m = 1;
+	boost::int64_t m = 1;
 	m = m << aShift;
 	return m;
 }

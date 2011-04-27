@@ -48,8 +48,8 @@
 		typedef packer::Type Type;
 
 #define MACRO_DECLARE_STREAM_TYPE(datatype) \
-		void Write(apl::byte_t*, const datatype&) const;\
-		datatype Read(const apl::byte_t*) const;
+		void Write(boost::uint8_t*, const datatype&) const;\
+		datatype Read(const boost::uint8_t*) const;
 
 #define MACRO_DECLARE_QUALITY(packer, position) \
 		Pack<packer,position> mFlag; \
@@ -177,7 +177,7 @@ namespace apl { namespace dnp {
 		Pack<UInt32LE, 6>	mOffTime;
 		Pack<UInt8, 10>		mStatus;
 
-		apl::CopyableBuffer GetValueBytes(const apl::byte_t*) const;
+		apl::CopyableBuffer GetValueBytes(const boost::uint8_t*) const;
 	};
 
 	struct Group12Var2 : public FixedObject
@@ -905,7 +905,7 @@ namespace apl { namespace dnp {
 		Pack<UInt8, 4> mStatus;
 		MACRO_DECLARE_STREAM_TYPE(Setpoint)
 
-		apl::CopyableBuffer GetValueBytes(const apl::byte_t*) const;
+		apl::CopyableBuffer GetValueBytes(const boost::uint8_t*) const;
 	};
 
 	struct Group41Var2 : public CommandObject<Setpoint>
@@ -916,7 +916,7 @@ namespace apl { namespace dnp {
 		Pack<UInt8, 2>		mStatus;
 		MACRO_DECLARE_STREAM_TYPE(Setpoint)
 
-		apl::CopyableBuffer GetValueBytes(const apl::byte_t*) const;
+		apl::CopyableBuffer GetValueBytes(const boost::uint8_t*) const;
 	};
 
 	struct Group41Var3 : public CommandObject<Setpoint>
@@ -927,7 +927,7 @@ namespace apl { namespace dnp {
 		Pack<UInt8, 4>		mStatus;
 		MACRO_DECLARE_STREAM_TYPE(Setpoint)
 
-		apl::CopyableBuffer GetValueBytes(const apl::byte_t*) const;
+		apl::CopyableBuffer GetValueBytes(const boost::uint8_t*) const;
 	};
 
 	struct Group41Var4 : public CommandObject<Setpoint>
@@ -938,7 +938,7 @@ namespace apl { namespace dnp {
 		Pack<UInt8, 8>		mStatus;
 		MACRO_DECLARE_STREAM_TYPE(Setpoint)
 
-		apl::CopyableBuffer GetValueBytes(const apl::byte_t*) const;
+		apl::CopyableBuffer GetValueBytes(const boost::uint8_t*) const;
 	};
 
 	//////////////////////////////////////////////

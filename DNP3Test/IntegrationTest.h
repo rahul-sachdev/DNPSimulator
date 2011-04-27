@@ -68,7 +68,7 @@ class IntegrationTest : public AsyncTestObject, public AsyncStackManager
 {
 	public:
 
-		IntegrationTest(Logger* apLogger, FilterLevel aLevel, uint_16_t aStartPort, size_t aNumPairs, size_t aNumPoints);
+		IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints);
 		virtual ~IntegrationTest();
 
 		IDataObserver* GetFanout() { return &mFanout; }
@@ -86,7 +86,7 @@ class IntegrationTest : public AsyncTestObject, public AsyncStackManager
 		void Next();
 
 		ObserverFanout mFanout;
-		const uint_16_t M_START_PORT;
+		const boost::uint16_t M_START_PORT;
 		Logger* mpLogger;
 
 		bool mChange;

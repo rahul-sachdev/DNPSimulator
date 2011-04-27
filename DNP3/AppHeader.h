@@ -55,7 +55,7 @@ namespace apl { namespace dnp {
 	{
 		public:
 
-		IINField(apl::byte_t aLSB = 0, apl::byte_t aMSB = 0) : 	mLSB(aLSB), mMSB(aMSB)
+		IINField(boost::uint8_t aLSB = 0, boost::uint8_t aMSB = 0) : 	mLSB(aLSB), mMSB(aMSB)
 		{
 
 		}
@@ -105,10 +105,10 @@ namespace apl { namespace dnp {
 
 		bool operator==(const IINField& arRHS) const;
 
-		apl::byte_t GetLSB() const { return mLSB; }
-		apl::byte_t GetMSB() const { return mMSB; }
-		void SetLSB(apl::byte_t aLSB) { mLSB = aLSB; }
-		void SetMSB(apl::byte_t aMSB) { mMSB = aMSB; }
+		boost::uint8_t GetLSB() const { return mLSB; }
+		boost::uint8_t GetMSB() const { return mMSB; }
+		void SetLSB(boost::uint8_t aLSB) { mLSB = aLSB; }
+		void SetMSB(boost::uint8_t aMSB) { mMSB = aMSB; }
 
 		void Zero()
 		{ mLSB = mMSB = 0; }
@@ -119,8 +119,8 @@ namespace apl { namespace dnp {
 		std::string ToString() const;
 
 		private:
-		apl::byte_t mLSB;
-		apl::byte_t mMSB;
+		boost::uint8_t mLSB;
+		boost::uint8_t mMSB;
 	};
 
 	enum AppHeaderTypes
@@ -136,11 +136,11 @@ namespace apl { namespace dnp {
 			virtual AppHeaderTypes GetType() const = 0;
 			virtual size_t GetSize() const = 0;
 
-			void SetControl(apl::byte_t* apStart, const AppControlField& arControl) const;
-			AppControlField GetControl(const apl::byte_t* apStart) const;
+			void SetControl(boost::uint8_t* apStart, const AppControlField& arControl) const;
+			AppControlField GetControl(const boost::uint8_t* apStart) const;
 
-			void SetFunction(apl::byte_t* apStart, FunctionCodes aCode) const { *(++apStart) = aCode; }
-			FunctionCodes GetFunction(const apl::byte_t* apStart) const { return IntToFunction(*(++apStart)); }
+			void SetFunction(boost::uint8_t* apStart, FunctionCodes aCode) const { *(++apStart) = aCode; }
+			FunctionCodes GetFunction(const boost::uint8_t* apStart) const { return IntToFunction(*(++apStart)); }
 
 	};
 
@@ -159,8 +159,8 @@ namespace apl { namespace dnp {
 		AppHeaderTypes GetType() const { return AHT_RESPONSE; }
 		size_t GetSize() const { return 4; }
 
-		void SetIIN(apl::byte_t* apStart, const IINField& arIIN) const;
-		IINField GetIIN(const apl::byte_t* apStart) const;
+		void SetIIN(boost::uint8_t* apStart, const IINField& arIIN) const;
+		IINField GetIIN(const boost::uint8_t* apStart) const;
 	};
 
 }}

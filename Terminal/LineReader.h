@@ -32,7 +32,7 @@ class LineReader : public AsyncPhysLayerMonitor, private Uncopyable
 		void Down();
 		void Reset();
 
-		void _OnReceive(const apl::byte_t*, size_t aNum);
+		void _OnReceive(const boost::uint8_t*, size_t aNum);
 		void ReadBuffer();
 };
 

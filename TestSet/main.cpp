@@ -86,7 +86,7 @@ void RunStack(const std::string& arConfigFile)
 	stack.Run();	
 }
 
-void Scan(const std::string& arConfigFile, uint_16_t start, uint_16_t stop)
+void Scan(const std::string& arConfigFile, boost::uint16_t start, boost::uint16_t stop)
 {
 	if(stop < start) throw ArgumentException(LOCATION, "Start must be < stop");	
 
@@ -110,8 +110,8 @@ int main(int argc, char* argv[])
 		("generate,G", "Generate a new default config file and exit")
 		("gen_on_no_exist,E", "Generate the specified config file automatically if it doesn't exist")		
 		("slave,S", "Use slave test set")
-	    ("scan_start,A", po::value<uint_16_t>(), "Start address for a link layer address scan")
-		("scan_stop,B", po::value<uint_16_t>(), "Stop address for a link layer address scan");
+	    ("scan_start,A", po::value<boost::uint16_t>(), "Start address for a link layer address scan")
+		("scan_stop,B", po::value<boost::uint16_t>(), "Stop address for a link layer address scan");
 
 	po::variables_map vm;
 	try {
@@ -145,8 +145,8 @@ int main(int argc, char* argv[])
 
 		if(vm.count("scan_start") > 0 && vm.count("scan_stop"))
 		{
-			uint_16_t start = vm["scan_start"].as<uint_16_t>();
-			uint_16_t stop = vm["scan_stop"].as<uint_16_t>();
+			boost::uint16_t start = vm["scan_start"].as<boost::uint16_t>();
+			boost::uint16_t stop = vm["scan_stop"].as<boost::uint16_t>();
 
 			Scan(xmlFilename, start, stop);
 		}

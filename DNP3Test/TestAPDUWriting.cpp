@@ -35,7 +35,7 @@ using namespace apl::dnp;
 using namespace std;
 
 
-bool AreBuffersEqual(const byte_t* ap1, const byte_t* ap2, size_t aNumBytes)
+bool AreBuffersEqual(const boost::uint8_t* ap1, const boost::uint8_t* ap2, size_t aNumBytes)
 {
 	for(size_t i=0; i<aNumBytes; i++)
 	{
@@ -327,7 +327,7 @@ BOOST_AUTO_TEST_SUITE(APDUWriting)
 
 		IndexedWriteIterator i = frag.WriteIndexed(Group112Var0::Inst(), outSize, index);
 		i.SetIndex(index);
-		const byte_t* ptr = reinterpret_cast<const byte_t*>(str.c_str());
+		const boost::uint8_t* ptr = reinterpret_cast<const boost::uint8_t*>(str.c_str());
 		Group112Var0::Inst()->Write(*i, outSize, ptr);
 
 		std::string output  = toHex(frag.GetBuffer(), frag.Size(), true);
@@ -347,7 +347,7 @@ BOOST_AUTO_TEST_SUITE(APDUWriting)
 
 		IndexedWriteIterator i = frag.WriteIndexed(Group112Var0::Inst(), outSize, index);
 		i.SetIndex(index);
-		const byte_t* ptr = reinterpret_cast<const byte_t*>(hello.c_str());
+		const boost::uint8_t* ptr = reinterpret_cast<const boost::uint8_t*>(hello.c_str());
 		Group112Var0::Inst()->Write(*i, outSize, ptr);
 
 		// Write the second object
@@ -355,7 +355,7 @@ BOOST_AUTO_TEST_SUITE(APDUWriting)
 		++i;
 		i = frag.WriteIndexed(Group112Var0::Inst(), outSize, index);
 		i.SetIndex(index);
-		ptr = reinterpret_cast<const byte_t*>(world.c_str());
+		ptr = reinterpret_cast<const boost::uint8_t*>(world.c_str());
 		Group112Var0::Inst()->Write(*i, outSize, ptr);
 
 		std::string output  = toHex(frag.GetBuffer(), frag.Size(), true);

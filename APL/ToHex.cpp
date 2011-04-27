@@ -28,7 +28,7 @@ char toHex(char c)
 	return '0' + c;
 }
 
-std::string ByteToHex(byte_t b)
+std::string ByteToHex(boost::uint8_t b)
 {
 	std::ostringstream oss;
 	oss << toHex((b&0xf0)>>4) << toHex(b&0xf);

@@ -17,7 +17,7 @@ using namespace boost;
 
 namespace apl { namespace dnp {
 
-	typedef boost::function<std::string(byte_t)> QualityFunctor;
+	typedef boost::function<std::string(boost::uint8_t)> QualityFunctor;
 
 	FlexibleObserverTerminalExtension::FlexibleObserverTerminalExtension(QueueingFDO* apObserver)
 		:mpObserver(apObserver),mLongestName(0)

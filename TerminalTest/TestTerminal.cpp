@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_SUITE(UISuite)
 bool SendAndTest(MockPhysicalLayerAsyncTS* apLayer, std::string aCmd, std::string aSearchString)
 {	
 	aCmd.append("\r\n");
-	apLayer->WriteToLayer(reinterpret_cast<const byte_t*>(aCmd.c_str()), aCmd.length());
+	apLayer->WriteToLayer(reinterpret_cast<const boost::uint8_t*>(aCmd.c_str()), aCmd.length());
 	apLayer->Advance();
 	return apLayer->BufferContains(aSearchString);	
 }
@@ -49,7 +49,7 @@ void TestCommandParsing(MockPhysicalLayerAsyncTS* apLayer){
 	BOOST_REQUIRE(SendAndTest(apLayer, "help\r\nhelp log", "Flushes"));
 
 	//generate a big long string that should flood the Readline() buffer.
-	byte_t tooBigBuff[1100];
+	uint8_t tooBigBuff[1100];
 	for(int i=0; i < 1100; ++i) tooBigBuff[i] = '0' + (i%10);
 	string tooBigString((char*)tooBigBuff, 1100);
 	//add onto the end of the string a valid command we can check the output of

@@ -55,7 +55,7 @@ using namespace apl;
 		BOOST_AUTO_TEST_CASE(TestNotification)
 		{
 			EventLock el;
-			Notifier<int_64_t> n(4, &el);
+			Notifier<boost::int64_t> n(4, &el);
 			SyncVar<int> val(0);
 			val.AddObserver(&n);
 

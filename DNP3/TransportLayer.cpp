@@ -70,22 +70,22 @@ namespace apl { namespace dnp {
 		mpState = apNewState;
 	}
 
-	void TransportLayer::TransmitAPDU(const byte_t* apData, size_t aNumBytes)
+	void TransportLayer::TransmitAPDU(const boost::uint8_t* apData, size_t aNumBytes)
 	{
 		mTransmitter.Send(apData, aNumBytes);
 	}
 
-	void TransportLayer::TransmitTPDU(const byte_t* apData, size_t aNumBytes)
+	void TransportLayer::TransmitTPDU(const boost::uint8_t* apData, size_t aNumBytes)
 	{
 		if(mpLowerLayer != NULL) mpLowerLayer->Send(apData, aNumBytes);
 	}
 
-	void TransportLayer::ReceiveTPDU(const byte_t* apData, size_t aNumBytes)
+	void TransportLayer::ReceiveTPDU(const boost::uint8_t* apData, size_t aNumBytes)
 	{
 		mReceiver.HandleReceive(apData, aNumBytes);
 	}
 
-	void TransportLayer::ReceiveAPDU(const byte_t* apData, size_t aNumBytes)
+	void TransportLayer::ReceiveAPDU(const boost::uint8_t* apData, size_t aNumBytes)
 	{
 		if(mpUpperLayer != NULL) mpUpperLayer->OnReceive(apData, aNumBytes);
 	}
@@ -108,7 +108,7 @@ namespace apl { namespace dnp {
 	//////////////////////////////////////////////////////////
 	// ILayerDown NVII implementations
 	//////////////////////////////////////////////////////////
-	void TransportLayer::_Send(const apl::byte_t* apData, size_t aNumBytes)
+	void TransportLayer::_Send(const boost::uint8_t* apData, size_t aNumBytes)
 	{
 		if(aNumBytes == 0 || aNumBytes > M_FRAG_SIZE)
 		{
@@ -123,7 +123,7 @@ namespace apl { namespace dnp {
 	//////////////////////////////////////////////////////////
 	// ILayerUp NVII implementations
 	//////////////////////////////////////////////////////////
-	void TransportLayer::_OnReceive(const apl::byte_t* apData, size_t aNumBytes)
+	void TransportLayer::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
 	{
 		mpState->HandleReceive(apData, aNumBytes, this);
 	}
@@ -152,7 +152,7 @@ namespace apl { namespace dnp {
 	// Helpers
 	//////////////////////////////////////////////////////////
 
-	std::string TransportLayer::ToString(byte_t aHeader)
+	std::string TransportLayer::ToString(boost::uint8_t aHeader)
 	{
 		std::ostringstream oss;
 		oss << "TL: ";

@@ -28,11 +28,11 @@ namespace apl { namespace dnp {
 	{
 		public:
 
-			static unsigned int CalcCrc(const apl::byte_t* aInput, size_t length);
+			static unsigned int CalcCrc(const boost::uint8_t* aInput, size_t length);
 
-			static void AddCrc(apl::byte_t* aInput, size_t aLength);
+			static void AddCrc(boost::uint8_t* aInput, size_t aLength);
 
-			static bool IsCorrectCRC(const apl::byte_t* aInput, size_t aLength);
+			static bool IsCorrectCRC(const boost::uint8_t* aInput, size_t aLength);
 
 		private:
 

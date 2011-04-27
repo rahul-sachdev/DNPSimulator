@@ -45,7 +45,7 @@ void BufferTestObject::ClearBuffer()
 	mBuffer.clear(); 
 }
 
-bool BufferTestObject::BufferEquals(const byte_t* apData, size_t aNumBytes)
+bool BufferTestObject::BufferEquals(const boost::uint8_t* apData, size_t aNumBytes)
 {
 
 	if(aNumBytes != mBuffer.size()) return false;
@@ -82,7 +82,7 @@ bool BufferTestObject::BufferEqualsString(const std::string& arData)
 	return true;
 }
 
-void BufferTestObject::WriteToBuffer(const byte_t* apData, size_t aNumBytes)
+void BufferTestObject::WriteToBuffer(const boost::uint8_t* apData, size_t aNumBytes)
 {
 	if( (mBuffer.size() + aNumBytes) > MAX_SIZE ) throw Exception(LOCATION, "Max size exceeded");
 	++mNumWrites;

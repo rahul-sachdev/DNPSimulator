@@ -40,7 +40,7 @@ class ShiftableBuffer
 	 * @param aBuffer    The content to initialize this ShiftableBuffer to.
 	 * @param aSize      The size of aBuffer and the max size of this ShiftableBuffer.
 	 */
-	ShiftableBuffer( const byte_t * aBuffer, size_t aSize);
+	ShiftableBuffer( const boost::uint8_t * aBuffer, size_t aSize);
 	~ShiftableBuffer();
 
 	/////////////////////////////////////////////////////////////////
@@ -51,10 +51,10 @@ class ShiftableBuffer
 	size_t NumReadBytes() const;
 
 	/** @return the value of the ith byte in read subsequence of the buffer */
-	const byte_t& operator[](size_t index) const;
+	const boost::uint8_t& operator[](size_t index) const;
 
 	/** @return Pointer to the next byte to be read in the buffer */
-	const byte_t* ReadBuff() const;
+	const boost::uint8_t* ReadBuff() const;
 
 	/** Signal that some bytes don't have to be stored any longer. They'll be recovered during the next shift operation. */
 	void AdvanceRead(size_t aNumBytes);
@@ -70,7 +70,7 @@ class ShiftableBuffer
 	/** @return Bytes of available for writing */
 	size_t NumWriteBytes() const;
 	/** @return Pointer to the position in the buffer available for writing */
-	byte_t* WriteBuff() const;
+	boost::uint8_t* WriteBuff() const;
 	/** Signal to the buffer bytes were written to the current write position */
 	void AdvanceWrite(size_t aNumBytes);
 
@@ -92,27 +92,27 @@ class ShiftableBuffer
 		@return true if the full pattern was found in the buffer
 
 	*/
-	bool Sync(const byte_t* apPattern, size_t aNumBytes);
+	bool Sync(const boost::uint8_t* apPattern, size_t aNumBytes);
 
 	private:
 
 	/// Recursive function called by Sync
-	size_t SyncSubsequence(const byte_t* apPattern, size_t aNumPatternBytes, size_t aOffset);
+	size_t SyncSubsequence(const boost::uint8_t* apPattern, size_t aNumPatternBytes, size_t aOffset);
 
 
 
-	byte_t* mpBuffer;
+	boost::uint8_t* mpBuffer;
 	const size_t M_SIZE;
 	size_t mWritePos;
 	size_t mReadPos;
 };
 
-inline const byte_t& ShiftableBuffer::operator[](size_t i) const { return ReadBuff()[i]; }
-inline const byte_t* ShiftableBuffer::ReadBuff() const { return mpBuffer + mReadPos; }
+inline const boost::uint8_t& ShiftableBuffer::operator[](size_t i) const { return ReadBuff()[i]; }
+inline const boost::uint8_t* ShiftableBuffer::ReadBuff() const { return mpBuffer + mReadPos; }
 inline size_t ShiftableBuffer::NumReadBytes() const { return mWritePos - mReadPos; }
 
 inline size_t ShiftableBuffer::NumWriteBytes() const { return M_SIZE - mWritePos; }
-inline byte_t* ShiftableBuffer::WriteBuff() const { return mpBuffer + mWritePos; }
+inline boost::uint8_t* ShiftableBuffer::WriteBuff() const { return mpBuffer + mWritePos; }
 
 
 }

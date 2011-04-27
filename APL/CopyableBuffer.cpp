@@ -30,21 +30,21 @@ mSize(0)
 }
 
 CopyableBuffer::CopyableBuffer(size_t aSize) :
-mpBuff(new byte_t[aSize]),
+mpBuff(new boost::uint8_t[aSize]),
 mSize(aSize)
 {
 	this->Zero();
 }
 
-CopyableBuffer::CopyableBuffer(const byte_t* apData, size_t aSize) :
-mpBuff(new byte_t[aSize]),
+CopyableBuffer::CopyableBuffer(const boost::uint8_t* apData, size_t aSize) :
+mpBuff(new boost::uint8_t[aSize]),
 mSize(aSize)
 {
 	memcpy(mpBuff, apData, mSize);
 }
 
 CopyableBuffer::CopyableBuffer(const CopyableBuffer& arBuffer) :
-mpBuff(new byte_t[arBuffer.Size()]),
+mpBuff(new boost::uint8_t[arBuffer.Size()]),
 mSize(arBuffer.Size())
 {
 	memcpy(mpBuff, arBuffer, mSize);
@@ -63,7 +63,7 @@ CopyableBuffer& CopyableBuffer::operator=(const CopyableBuffer& arRHS)
 	if(arRHS.Size() != mSize) {
 		mSize = arRHS.Size();
 		delete mpBuff; 
-		mpBuff = new byte_t[mSize];
+		mpBuff = new boost::uint8_t[mSize];
 	}
 
 	memcpy(mpBuff, arRHS, mSize);

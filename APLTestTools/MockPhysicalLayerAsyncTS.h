@@ -38,7 +38,7 @@ namespace apl {
 		public:
 			MockPhysicalLayerAsyncTS(Logger*, MockTimerSource*);
 
-			void WriteToLayer(const byte_t* apData, size_t aNumBytes);
+			void WriteToLayer(const boost::uint8_t* apData, size_t aNumBytes);
 			void Advance();
 
 		private:
@@ -48,8 +48,8 @@ namespace apl {
 			void DoOpeningClose();
 			void DoOpenSuccess();
 			void DoOpenFailure();
-			void DoAsyncRead(byte_t* apBuff, size_t aNumBytes);
-			void DoAsyncWrite(const byte_t* apData, size_t aNumBytes);
+			void DoAsyncRead(boost::uint8_t* apBuff, size_t aNumBytes);
+			void DoAsyncWrite(const boost::uint8_t* apData, size_t aNumBytes);
 
 			void Reset();
 			void CheckForRead();
@@ -58,7 +58,7 @@ namespace apl {
 			ITimer* mpOpenTimer;
 			boost::system::error_code mSuccessCode;
 			boost::system::error_code mErrorCode;
-			byte_t* mpBuff;
+			boost::uint8_t* mpBuff;
 			size_t mNumBytes;
 			ShiftableBuffer mWriteBuffer;
 	};

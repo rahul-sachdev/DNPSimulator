@@ -41,7 +41,7 @@ class SlaveResponseTypes;
 template <class T>
 struct WriteFunc
 {
-	typedef boost::function<void (byte_t*, const T& arValue, size_t aIndex)> Type;
+	typedef boost::function<void (boost::uint8_t*, const T& arValue, size_t aIndex)> Type;
 };
 
 /**

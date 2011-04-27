@@ -26,7 +26,7 @@
 namespace apl {
 
 	char toHex(char c);
-	std::string ByteToHex(byte_t b);
+	std::string ByteToHex(boost::uint8_t b);
 
 	template<typename T>
 	std::string toHex(T aBuff, size_t aLength, bool spaced = false)
@@ -44,7 +44,7 @@ namespace apl {
 	template<class T>
 	std::string TypeToHex(T x)
 	{
-		return toHex(reinterpret_cast<byte_t*>(&x), sizeof(T), true);
+		return toHex(reinterpret_cast<boost::uint8_t*>(&x), sizeof(T), true);
 	}
 }
 

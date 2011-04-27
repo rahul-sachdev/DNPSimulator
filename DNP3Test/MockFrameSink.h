@@ -38,33 +38,33 @@ class MockFrameSink : public ILinkContext, public BufferTestObject
 	void OnLowerLayerDown();
 
 	//	Sec to Pri
-	void Ack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc);
-	void Nack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc);
-	void LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc);
-	void NotSupported (bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc);
+	void Ack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void Nack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void NotSupported (bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
 
 	//	Pri to Sec
 
-	void TestLinkStatus(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc);
-	void ResetLinkStates(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc);
-	void RequestLinkStatus(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc);
-	void ConfirmedUserData(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength);
-	void UnconfirmedUserData(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength);
+	void TestLinkStatus(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void ResetLinkStates(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void RequestLinkStatus(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void ConfirmedUserData(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength);
+	void UnconfirmedUserData(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength);
 
 	void Reset();
 
 	size_t mNumFrames;
 
-	bool CheckLast(FuncCodes aCode, bool aIsMaster, uint_16_t aDest, uint_16_t aSrc);
-	bool CheckLastWithFCB(FuncCodes aCode, bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc);
-	bool CheckLastWithDFC(FuncCodes aCode, bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc);
+	bool CheckLast(FuncCodes aCode, bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc);
+	bool CheckLastWithFCB(FuncCodes aCode, bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc);
+	bool CheckLastWithDFC(FuncCodes aCode, bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
 
 	// Last frame information
 	FuncCodes mCode;
 	bool mIsMaster;
 	bool mIsRcvBuffFull;
-	uint_16_t mSrc;
-	uint_16_t mDest;
+	boost::uint16_t mSrc;
+	boost::uint16_t mDest;
 	bool mFcb;
 
 	bool mLowerOnline;
@@ -80,7 +80,7 @@ class MockFrameSink : public ILinkContext, public BufferTestObject
 
 	std::deque< boost::function<void ()> > mActions;
 
-	void Update(FuncCodes aCode, bool aIsMaster, uint_16_t aSrc, uint_16_t aDest);
+	void Update(FuncCodes aCode, bool aIsMaster, boost::uint16_t aSrc, boost::uint16_t aDest);
 };
 
 }}

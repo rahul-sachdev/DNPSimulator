@@ -41,10 +41,10 @@ upper(mpLogger)
 	if(aOpenOnStart) lower.ThisLayerUp();
 }
 
-std::string TransportTestObject::GetData(const std::string& arHdr, byte_t aSeed, size_t aLength)
+std::string TransportTestObject::GetData(const std::string& arHdr,boost::uint8_t aSeed, size_t aLength)
 {
 	ByteStr buff(aLength);
-	byte_t val = aSeed;
+	boost::uint8_t val = aSeed;
 	for(size_t i=0; i<aLength; ++i){ buff[i] = val; ++val; }
 
 	ostringstream oss;
@@ -62,7 +62,7 @@ std::string TransportTestObject::GeneratePacketSequence(vector< std::string >& a
 		bool fin = i==(aNumPackets-1);
 		int seq = static_cast<int>(i%64);
 		size_t len = fin ? aLastPacketLength : TL_MAX_TPDU_PAYLOAD;
-		byte_t hdr = TransportTx::GetHeader(fir, fin, seq);
+		boost::uint8_t hdr = TransportTx::GetHeader(fir, fin, seq);
 		std::string data = this->GetData("", 0, len); //raw data with no header
 		oss << ((i==0) ? "" : " ") << data; //cache the data in the string stream		
 		arVec.push_back(toHex(&hdr, 1, true) + " " + data);

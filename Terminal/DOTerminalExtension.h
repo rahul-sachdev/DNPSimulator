@@ -50,7 +50,7 @@ namespace apl
 		aQuality = 0;
 		for ( std::string::const_iterator itr = aStr.begin(); itr != aStr.end(); itr++ )
 		{
-			byte_t m = T::QualConverter::GetMask(*itr);
+			boost::uint8_t m = T::QualConverter::GetMask(*itr);
 			if (m == 0)
 			{
 				aQuality = T::ONLINE;
@@ -68,7 +68,7 @@ namespace apl
 	{
 		size_t index;
 		typename T::ValueType value;
-		size_t quality = AQ_ONLINE; // byte_t is interpreted as a '1' instead of 0x01
+		size_t quality = AQ_ONLINE; //boost::uint8_t is interpreted as a '1' instead of 0x01
 
 		switch(arArgs.size()) {
 			case(3):
@@ -85,7 +85,7 @@ namespace apl
 				return BAD_ARGUMENTS;
 		}
 
-		T p(value, static_cast<byte_t>(quality));
+		T p(value, static_cast<boost::uint8_t>(quality));
 		p.SetToNow();
 		Transaction tr(&mBuffer);
 		mBuffer.Update(p, index);

@@ -42,17 +42,17 @@ namespace apl {
 			void DoOpen();
 			void DoClose();
 			void DoOpenSuccess();
-			void DoAsyncRead(byte_t* apBuff, size_t aNumBytes);
-			void DoAsyncWrite(const byte_t*, size_t aNumBytes);
+			void DoAsyncRead(boost::uint8_t* apBuff, size_t aNumBytes);
+			void DoAsyncWrite(const boost::uint8_t*, size_t aNumBytes);
 
 
 			void CheckForReadDispatch();
 
 			boost::asio::io_service* mpService;
-			std::deque<byte_t> mWritten;
+			std::deque<boost::uint8_t> mWritten;
 
 			size_t mReadSize;
-			byte_t* mpReadBuff;
+			boost::uint8_t* mpReadBuff;
 	};
 }
 

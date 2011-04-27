@@ -32,13 +32,13 @@ using namespace APLXML_Base;
 
 namespace apl { namespace dnp {
 
-IPhysicalLayerAsync* FGetTerminalPhys(Logger* apLogger, boost::asio::io_service* apSrv, bool aRemote, apl::uint_16_t aRemotePort)
+IPhysicalLayerAsync* FGetTerminalPhys(Logger* apLogger, boost::asio::io_service* apSrv, bool aRemote, boost::uint16_t aRemotePort)
 {
 	if (aRemote) return PhysicalLayerFactory::FGetTCPServerAsync("0.0.0.0", aRemotePort, apSrv, apLogger);
 	else return new PhysicalLayerIOStreamAsync(apLogger, apSrv);
 }
 
-StackBase::StackBase(const APLXML_Base::PhysicalLayerList_t& arList, FilterLevel aLevel, const std::string& arLogFile, bool aRemote, apl::uint_16_t aRemotePort) :
+StackBase::StackBase(const APLXML_Base::PhysicalLayerList_t& arList, FilterLevel aLevel, const std::string& arLogFile, bool aRemote, boost::uint16_t aRemotePort) :
 	log(),
 	logToFile(&log, arLogFile),
 	pTermLogger(log.GetLogger(aLevel, "terminal")),

@@ -44,7 +44,7 @@ void MockLowerLayer::DisableAutoSendCallback()
 	mAutoSendCallback = false;
 }
 
-void MockLowerLayer::_Send(const apl::byte_t* apData, size_t aNumBytes) 
+void MockLowerLayer::_Send(const boost::uint8_t* apData, size_t aNumBytes) 
 {
 	this->WriteToBuffer(apData, aNumBytes);
 	if(mAutoSendCallback && mpUpperLayer != NULL) {
@@ -53,7 +53,7 @@ void MockLowerLayer::_Send(const apl::byte_t* apData, size_t aNumBytes)
 	}
 }
 
-void MockLowerLayer::SendUp(const byte_t* apData, size_t aNumBytes)
+void MockLowerLayer::SendUp(const boost::uint8_t* apData, size_t aNumBytes)
 {
 	if(this->mpUpperLayer != NULL)
 		mpUpperLayer->OnReceive(apData, aNumBytes);

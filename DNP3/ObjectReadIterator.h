@@ -36,7 +36,7 @@ namespace apl { namespace dnp {
 		friend class ObjectReadIterator;
 
 		public:
-		//const apl::byte_t* Position() const { return mpPosition; }
+		//const boost::uint8_t* Position() const { return mpPosition; }
 		size_t Index() const { return mIndex; }
 		size_t Start() const { return mStart; }
 
@@ -57,7 +57,7 @@ namespace apl { namespace dnp {
 		public:
 			bool HasData() { return mHasData; }
 			const ObjectInfo* operator->() const;
-			const apl::byte_t* operator*() const;
+			const boost::uint8_t* operator*() const;
 
 			const ObjectReadIterator& operator++();   //prefix version
 			const ObjectReadIterator operator++(int); //postfix version
@@ -67,13 +67,13 @@ namespace apl { namespace dnp {
 			bool IsEnd() const { return mCurrentObjectNum >= Count(); }
 
 		private:
-			ObjectReadIterator(const HeaderInfo& arInfo, const byte_t* apBuffer, bool aHasData);
+			ObjectReadIterator(const HeaderInfo& arInfo, const boost::uint8_t* apBuffer, bool aHasData);
 			HeaderInfo mHeaderInfo;
 			size_t mCurrentObjectNum;
 			ObjectInfo mInfo;
-			const apl::byte_t* mpPrefixPos;
-			const apl::byte_t* mpPosition;
-			const byte_t* mpBuffer;
+			const boost::uint8_t* mpPrefixPos;
+			const boost::uint8_t* mpPosition;
+			const boost::uint8_t* mpBuffer;
 			bool mHasData;
 
 
@@ -81,8 +81,8 @@ namespace apl { namespace dnp {
 
 			//private helpers
 			size_t CalcIndex();
-			size_t CalcCountIndex(QualifierCode aCode, const apl::byte_t* apPrefixPos);
-			size_t CalcObjSize(const apl::byte_t* apPrefixPos);
+			size_t CalcCountIndex(QualifierCode aCode, const boost::uint8_t* apPrefixPos);
+			size_t CalcObjSize(const boost::uint8_t* apPrefixPos);
 	};
 
 	inline const ObjectInfo* ObjectReadIterator::operator->() const
@@ -91,7 +91,7 @@ namespace apl { namespace dnp {
 		return &mInfo;
 	}
 
-	inline const apl::byte_t* ObjectReadIterator::operator*() const
+	inline const boost::uint8_t* ObjectReadIterator::operator*() const
 	{
 		if(this->IsEnd()) throw apl::Exception(LOCATION, "", ALERR_ITERATOR_OUT_OF_BOUNDS);
 		if(!mHasData) throw apl::Exception(LOCATION, "", ALERR_ITERATOR_NO_DATA);

@@ -74,13 +74,13 @@ void PhysicalLayerAsyncSerial::DoOpenSuccess()
 	LOG_BLOCK(LEV_INFO, "Port successfully opened");
 }
 
-void PhysicalLayerAsyncSerial::DoAsyncRead(byte_t* apBuffer, size_t aMaxBytes)
+void PhysicalLayerAsyncSerial::DoAsyncRead(boost::uint8_t* apBuffer, size_t aMaxBytes)
 {
 	mPort.async_read_some(buffer(apBuffer, aMaxBytes),
 		boost::bind(&PhysicalLayerAsyncSerial::OnReadCallback, this, placeholders::error, apBuffer, placeholders::bytes_transferred));
 }
 
-void PhysicalLayerAsyncSerial::DoAsyncWrite(const byte_t* apBuffer, size_t aNumBytes)
+void PhysicalLayerAsyncSerial::DoAsyncWrite(const boost::uint8_t* apBuffer, size_t aNumBytes)
 {
 	async_write(mPort, buffer(apBuffer, aNumBytes), 
 		boost::bind(&PhysicalLayerAsyncSerial::OnWriteCallback, this, placeholders::error, aNumBytes));

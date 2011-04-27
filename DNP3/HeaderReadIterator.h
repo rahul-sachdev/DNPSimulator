@@ -82,7 +82,7 @@ namespace apl { namespace dnp {
 		public:
 
 		const HeaderInfo* operator->() const;
-		const apl::byte_t* operator*() const;
+		const boost::uint8_t* operator*() const;
 		const HeaderReadIterator& operator++();
 		const HeaderReadIterator operator++(int);
 		const HeaderInfo& info() const;
@@ -93,9 +93,9 @@ namespace apl { namespace dnp {
 
 		private:
 
-		HeaderReadIterator(const std::vector<HeaderInfo>* apHeaders, const byte_t* apBuffer, bool aHasData);
+		HeaderReadIterator(const std::vector<HeaderInfo>* apHeaders, const boost::uint8_t* apBuffer, bool aHasData);
 		const std::vector<HeaderInfo>* mpHeaders;
-		const byte_t* mpBuffer;
+		const boost::uint8_t* mpBuffer;
 		bool mHasData;
 		size_t mIndex;
 	};
@@ -107,7 +107,7 @@ namespace apl { namespace dnp {
 		return (*mpHeaders)[mIndex];
 	}
 
-	inline const apl::byte_t* HeaderReadIterator::operator*() const
+	inline const boost::uint8_t* HeaderReadIterator::operator*() const
 	{
 		if(mIndex >= mpHeaders->size())
 		{ throw apl::Exception(LOCATION, "Iter out of bounds", ALERR_ITERATOR_OUT_OF_BOUNDS); }

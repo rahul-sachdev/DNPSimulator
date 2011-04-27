@@ -27,6 +27,9 @@ using namespace apl;
 
 
 	BOOST_AUTO_TEST_SUITE(ShiftableBufferSuite)
+
+		const static boost::uint8_t SYNC[] = {0x05, 0x64};
+
 		BOOST_AUTO_TEST_CASE(ConstructDestruct)
 		{
 			ShiftableBuffer b(100);
@@ -89,11 +92,10 @@ using namespace apl;
 		{
 			ShiftableBuffer b(100);
 			for(size_t i=0; i<b.NumWriteBytes(); ++i) b.WriteBuff()[i] = 0;
-
-			byte_t pattern[] = {0x05, 0x64};
+			
 			b.AdvanceWrite(100);
 
-			BOOST_REQUIRE_FALSE(b.Sync(pattern, 2));
+			BOOST_REQUIRE_FALSE(b.Sync(SYNC, 2));
 			BOOST_REQUIRE_EQUAL(b.NumReadBytes(), 0);
 			BOOST_REQUIRE_EQUAL(b.NumWriteBytes(), 0);
 		}
@@ -102,12 +104,11 @@ using namespace apl;
 		{
 			ShiftableBuffer b(100);
 			for(size_t i=0; i<b.NumWriteBytes(); ++i) b.WriteBuff()[i] = 0;
-
-			byte_t pattern[] = {0x05, 0x64};
-			memcpy(b.WriteBuff(), pattern, 2);
+			
+			memcpy(b.WriteBuff(), SYNC, 2);
 			b.AdvanceWrite(100);
 
-			BOOST_REQUIRE(b.Sync(pattern, 2));
+			BOOST_REQUIRE(b.Sync(SYNC, 2));
 			BOOST_REQUIRE_EQUAL(b.NumReadBytes(), 100);
 			BOOST_REQUIRE_EQUAL(b.NumWriteBytes(), 0);
 
@@ -119,17 +120,17 @@ using namespace apl;
 
 			//initialize buffer to all zeros
 			for(size_t i=0; i<b.NumWriteBytes(); ++i) b.WriteBuff()[i] = 0;
-			byte_t pattern[] = {0x05, 0x64};
+			boost::uint8_t pattern[] = {0x05, 0x64};
 			memcpy(b.WriteBuff()+50, pattern, 2); //copy the pattern into the buffer
 			b.AdvanceWrite(100);
 
-			BOOST_REQUIRE(b.Sync(pattern, 2));
+			BOOST_REQUIRE(b.Sync(SYNC, 2));
 			BOOST_REQUIRE_EQUAL(b.NumReadBytes(), 50);
 			BOOST_REQUIRE_EQUAL(b.NumWriteBytes(), 0);
 
 			// Check that the sync operation correctly advanced the reader
-			BOOST_REQUIRE_EQUAL(b[0],pattern[0]);
-			BOOST_REQUIRE_EQUAL(b[1],pattern[1]);
+			BOOST_REQUIRE_EQUAL(b[0],SYNC[0]);
+			BOOST_REQUIRE_EQUAL(b[1],SYNC[1]);
 		}
 
 		BOOST_AUTO_TEST_CASE(SyncPartialPattern)
@@ -138,16 +139,16 @@ using namespace apl;
 
 			//initialize buffer to all zeros
 			for(size_t i=0; i<b.NumWriteBytes(); ++i) b.WriteBuff()[i] = 0;
-			byte_t pattern[] = {0x05, 0x64};
+			
 			b.WriteBuff()[97] = 0x05;
 			b.AdvanceWrite(98);
 
-			BOOST_REQUIRE_FALSE(b.Sync(pattern, 2));
+			BOOST_REQUIRE_FALSE(b.Sync(SYNC, 2));
 			BOOST_REQUIRE_EQUAL(b.NumReadBytes(), 1);
 			BOOST_REQUIRE_EQUAL(b.NumWriteBytes(), 2);
 
 			// Check that the sync operation correctly advanced the reader
-			BOOST_REQUIRE_EQUAL(b[0],pattern[0]);
+			BOOST_REQUIRE_EQUAL(b[0],SYNC[0]);
 		}
 
 	BOOST_AUTO_TEST_SUITE_END()

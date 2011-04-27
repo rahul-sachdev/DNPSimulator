@@ -35,7 +35,7 @@ bool IsFrameEqual(LinkFrame& frame, const std::string& arData) {
 
 	HexSequence hs(arData);
 	if(frame.GetSize() != hs.Size()) return false;
-	byte_t* buff = frame.GetBuffer();
+	boost::uint8_t* buff = frame.GetBuffer();
 
 	for(size_t i=0; i<hs.Size(); i++) {
 		if(buff[i] != hs[i]) return false;
@@ -64,7 +64,7 @@ std::string RepairCRC(const std::string& arData)
 	//repair the header crc
 	DNPCrc::AddCrc(hs, 8);
 
-	byte_t* ptr = hs + 10;
+	boost::uint8_t* ptr = hs + 10;
 
 	// repair the full blocks
 	for(size_t i=0; i < full_blocks; i++) {

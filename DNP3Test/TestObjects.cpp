@@ -38,7 +38,7 @@ using namespace apl::dnp;
 			assert( stop >= start );
 			assert( (stop - start + 1) <= (T*8) );
 
-			byte_t data[T];
+			boost::uint8_t data[T];
 			for(size_t i=0; i<T; i++) data[i] = 0;
 
 			//check that all bits can be set
@@ -55,7 +55,7 @@ using namespace apl::dnp;
 
 			for(size_t i=start; i <= stop; i++)
 			{
-				byte_t* pPos = data + (i-start)/8; //the byte you are on
+				boost::uint8_t* pPos = data + (i-start)/8; //the byte you are on
 				size_t bit = (i-start)%8;
 				pObj->Write(data, start, i, true);
 				BOOST_REQUIRE_EQUAL(*pPos, 1 << bit);

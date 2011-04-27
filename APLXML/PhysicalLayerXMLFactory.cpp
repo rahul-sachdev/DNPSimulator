@@ -47,13 +47,13 @@ namespace apl{ namespace xml{
 
 	IPhysicalLayerAsyncFactory PhysicalLayerXMLFactory :: GetAsync(const APLXML_Base::TCPClient_t* apCfg)
 	{
-		uint_16_t port = boost::numeric::converter<uint_16_t, int>::convert(apCfg->Port);
+		boost::uint16_t port = boost::numeric::converter<boost::uint16_t, int>::convert(apCfg->Port);
 		return PhysicalLayerFactory::GetTCPClientAsync(apCfg->Address, port);
 	}
 
 	IPhysicalLayerAsyncFactory PhysicalLayerXMLFactory :: GetAsync(const APLXML_Base::TCPServer_t* apCfg)
 	{
-		uint_16_t port = boost::numeric::converter<uint_16_t, int>::convert(apCfg->Port);
+		boost::uint16_t port = boost::numeric::converter<boost::uint16_t, int>::convert(apCfg->Port);
 		return PhysicalLayerFactory::GetTCPServerAsync(apCfg->Endpoint, port);
 	}
 	

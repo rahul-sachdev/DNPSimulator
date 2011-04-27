@@ -120,7 +120,7 @@ void PhysicalLayerAsyncBase::StartClose()
 	else throw InvalidStateException(LOCATION, "StartClose: " + mState.ToString());
 }
 
-void PhysicalLayerAsyncBase::AsyncWrite(const apl::byte_t* apBuff, size_t aNumBytes)
+void PhysicalLayerAsyncBase::AsyncWrite(const boost::uint8_t* apBuff, size_t aNumBytes)
 {
 	if(aNumBytes < 1) throw ArgumentException(LOCATION, "aNumBytes must be > 0");
 
@@ -131,7 +131,7 @@ void PhysicalLayerAsyncBase::AsyncWrite(const apl::byte_t* apBuff, size_t aNumBy
 	else throw InvalidStateException(LOCATION, "AsyncWrite: " + mState.ToString());
 }
 
-void PhysicalLayerAsyncBase::AsyncRead(apl::byte_t* apBuff, size_t aMaxBytes)
+void PhysicalLayerAsyncBase::AsyncRead(boost::uint8_t* apBuff, size_t aMaxBytes)
 {
 	if(aMaxBytes < 1) throw ArgumentException(LOCATION, "aMaxBytes must be > 0");
 
@@ -166,7 +166,7 @@ void PhysicalLayerAsyncBase::OnOpenCallback(const boost::system::error_code& arE
 	else throw InvalidStateException(LOCATION, "OnOpenCallback: " + mState.ToString());
 }
 
-void PhysicalLayerAsyncBase::OnReadCallback(const boost::system::error_code& arErr, byte_t* apBuff, size_t aSize)
+void PhysicalLayerAsyncBase::OnReadCallback(const boost::system::error_code& arErr,boost::uint8_t* apBuff, size_t aSize)
 {
 	if(mState.mReading) {
 		mState.mReading = false;
@@ -226,7 +226,7 @@ void PhysicalLayerAsyncBase::DoThisLayerDown()
 	if(mpHandler) mpHandler->OnLowerLayerDown();
 }
 
-void PhysicalLayerAsyncBase::DoReadCallback(byte_t* apBuff, size_t aNumBytes)
+void PhysicalLayerAsyncBase::DoReadCallback(boost::uint8_t* apBuff, size_t aNumBytes)
 {
 	if(mpHandler) mpHandler->OnReceive(apBuff, aNumBytes);
 }

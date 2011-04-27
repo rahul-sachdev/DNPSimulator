@@ -35,10 +35,10 @@ BOOST_AUTO_TEST_SUITE(IntegrationSuite)
 	BOOST_AUTO_TEST_CASE(MasterToSlave)
 	{
 		#ifdef WIN32
-		uint_16_t port = 50000;
+		boost::uint16_t port = 50000;
 		size_t NUM_PAIRS = 10;
 		#else
-			uint_16_t port = 30000;	
+			uint16_t port = 30000;	
 			#ifdef ARM
 				size_t NUM_PAIRS = 10;				
 			#else

@@ -37,8 +37,8 @@ namespace apl {
 			/* Implement the shared client/server actions */
 			void DoClose();
 			void DoOpenSuccess();
-			void DoAsyncRead(byte_t*, size_t);
-			void DoAsyncWrite(const byte_t*, size_t);
+			void DoAsyncRead(boost::uint8_t*, size_t);
+			void DoAsyncWrite(const boost::uint8_t*, size_t);
 
 			void DoOpen();
 

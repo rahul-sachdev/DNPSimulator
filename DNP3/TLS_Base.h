@@ -36,8 +36,8 @@ namespace apl { namespace dnp {
 	class TLS_Base
 	{
 		public:
-			virtual void Send(const apl::byte_t*, size_t, TransportLayer*);
-			virtual void HandleReceive(const apl::byte_t*, size_t, TransportLayer*);
+			virtual void Send(const boost::uint8_t*, size_t, TransportLayer*);
+			virtual void HandleReceive(const boost::uint8_t*, size_t, TransportLayer*);
 
 			// TPDU failure/success handlers
 			virtual void HandleSendSuccess(TransportLayer*);

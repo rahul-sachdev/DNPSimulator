@@ -41,7 +41,7 @@ class TransportTestObject : public LogTester
 	std::string GeneratePacketSequence(std::vector<std::string>&, size_t aNumPackets, size_t aLastPacketLength);
 
 	/// Get a Sequence of data w/ optional header
-	std::string GetData(const std::string& arHdr, byte_t aSeed = 0, size_t aLength = TL_MAX_TPDU_PAYLOAD);
+	std::string GetData(const std::string& arHdr,boost::uint8_t aSeed = 0, size_t aLength = TL_MAX_TPDU_PAYLOAD);
 
 	private:
 	Logger* mpLogger;

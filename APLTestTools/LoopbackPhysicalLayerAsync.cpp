@@ -62,7 +62,7 @@ void LoopbackPhysicalLayerAsync::DoClose()
 	}
 }
 
-void LoopbackPhysicalLayerAsync::DoAsyncRead(byte_t* apBuff, size_t aNumBytes)
+void LoopbackPhysicalLayerAsync::DoAsyncRead(boost::uint8_t* apBuff, size_t aNumBytes)
 {
 	assert(mReadSize == 0);
 	mReadSize = aNumBytes;
@@ -71,7 +71,7 @@ void LoopbackPhysicalLayerAsync::DoAsyncRead(byte_t* apBuff, size_t aNumBytes)
 	this->CheckForReadDispatch();
 }
 
-void LoopbackPhysicalLayerAsync::DoAsyncWrite(const byte_t* apData, size_t aNumBytes)
+void LoopbackPhysicalLayerAsync::DoAsyncWrite(const boost::uint8_t* apData, size_t aNumBytes)
 {
 	for(size_t i=0; i<aNumBytes; ++i) mWritten.push_back(apData[i]);
 	

@@ -63,16 +63,16 @@ namespace apl{
 								buffer must remain available until the write callback or close occurs.
 			    @param aLength	Number of bytes to write. Callback occurs after ALL bytes have been written.
 				*/
-			virtual void AsyncWrite(const byte_t* apBuffer, size_t aLength) = 0;
+			virtual void AsyncWrite(const boost::uint8_t* apBuffer, size_t aLength) = 0;
 
 			/** Starts a read operation. Use SetHandler to provide a callback that is called by
-			    OnReceive(const byte_t*, size_t) or a failure will result in the layer closing.
+			    OnReceive(const boost::uint8_t*, size_t) or a failure will result in the layer closing.
 
 				@param apBuffer	The buffer the read operation will fill. This
 								buffer must remain available until the read callback or close occurs.
 			    @param aMaxLength	Maximum number of bytes to read. Callback occurs after any bytes are available.
 				*/
-			virtual void AsyncRead(byte_t* apBuffer, size_t aMaxLength) = 0;
+			virtual void AsyncRead(boost::uint8_t* apBuffer, size_t aMaxLength) = 0;
 
 			/** Set the handler interface for callbacks. A read interface has been added
 				so the max size is no longer required

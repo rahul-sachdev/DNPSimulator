@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_SUITE(AsyncIntegrationSuite)
 				ostringstream stack;
 				stack << port.str() << " - stack" << i;
 				
-				t.AddMaster(stack.str(), port.str(), static_cast<uint_16_t>(i), LEV_WARNING);	
+				t.AddMaster(stack.str(), port.str(), static_cast<boost::uint16_t>(i), LEV_WARNING);	
 			}
 		}
 			

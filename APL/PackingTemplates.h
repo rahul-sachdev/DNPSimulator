@@ -29,10 +29,10 @@ namespace apl
 	class Pack
 	{
 		public:
-			typename T::Type Get(const byte_t* apBuffer) const
+			typename T::Type Get(const boost::uint8_t* apBuffer) const
 			{ return T::Read(apBuffer+U); }
 
-			void Set(byte_t* apBuffer, typename T::Type aValue) const
+			void Set(boost::uint8_t* apBuffer, typename T::Type aValue) const
 			{ T::Write(apBuffer+U, aValue); }
 
 			typename T::Type Max() const
@@ -42,11 +42,11 @@ namespace apl
 			{ return T::Min; }
 	};
 
-	template <class T, int U, byte_t V>
+	template <class T, int U, boost::uint8_t V>
 	class PackOverRange : public Pack<T,U>
 	{
 		public:
-		byte_t OverRangeMask() const
+		boost::uint8_t OverRangeMask() const
 		{ return V; }
 	};
 
@@ -60,14 +60,14 @@ namespace apl
 			return ret;
 		}
 
-		void Zero(apl::byte_t* apPos, size_t aNumValues) const
+		void Zero(boost::uint8_t* apPos, size_t aNumValues) const
 		{
 			size_t num_bytes = GetSize(aNumValues);
 			for(size_t i=0; i<num_bytes; i++)
 				*(apPos++) = 0;
 		}
 
-		bool Read(const apl::byte_t* apPos,size_t aStartIndex, size_t aIndex) const
+		bool Read(const boost::uint8_t* apPos,size_t aStartIndex, size_t aIndex) const
 		{
 			assert(aIndex >= aStartIndex);
 			size_t pos =  aIndex - aStartIndex;
@@ -75,7 +75,7 @@ namespace apl
 			return ((*apPos) & (1 << (pos & 0x07))) != 0;
 		}
 
-		void Write(apl::byte_t* apPos, size_t aStartIndex, size_t aIndex, bool aValue) const
+		void Write(boost::uint8_t* apPos, size_t aStartIndex, size_t aIndex, bool aValue) const
 		{
 			assert(aIndex >= aStartIndex);
 			size_t pos =  aIndex - aStartIndex;

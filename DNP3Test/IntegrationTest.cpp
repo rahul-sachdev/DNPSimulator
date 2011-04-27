@@ -40,7 +40,7 @@ using namespace std;
 
 namespace apl { namespace dnp {
 
-IntegrationTest::IntegrationTest(Logger* apLogger, FilterLevel aLevel, uint_16_t aStartPort, size_t aNumPairs, size_t aNumPoints) :
+IntegrationTest::IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints) :
 AsyncStackManager(apLogger),
 M_START_PORT(aStartPort),
 mChange(false),
@@ -81,23 +81,23 @@ Binary IntegrationTest::RandomBinary()
 
 Analog IntegrationTest::RandomAnalog()
 {           
-    boost::uniform_int<int_32_t> num;
-	boost::variate_generator<boost::mt19937&, boost::uniform_int<int_32_t> > val(rng, num);
+    boost::uniform_int<boost::int32_t> num;
+	boost::variate_generator<boost::mt19937&, boost::uniform_int<boost::int32_t> > val(rng, num);
 	Analog v(val(), AQ_ONLINE);
 	return v;
 }
 
 Counter IntegrationTest::RandomCounter()
 {              
-    boost::uniform_int<uint_32_t> num;
-	boost::variate_generator<boost::mt19937&, boost::uniform_int<uint_32_t> > val(rng, num);
+    boost::uniform_int<boost::uint32_t> num;
+	boost::variate_generator<boost::mt19937&, boost::uniform_int<boost::uint32_t> > val(rng, num);
 	Counter v(val(), CQ_ONLINE);
 	return v;
 }
 
 void IntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 {
-	uint_16_t port = M_START_PORT + this->mMasterObservers.size();
+	boost::uint16_t port = M_START_PORT + this->mMasterObservers.size();
 	
 	FlexibleDataObserver* pMasterFDO = new FlexibleDataObserver(); mMasterObservers.push_back(pMasterFDO);
 	pMasterFDO->AddObserver(&mNotifier);

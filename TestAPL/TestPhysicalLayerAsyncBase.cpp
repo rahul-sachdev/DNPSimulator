@@ -30,7 +30,7 @@ using namespace apl;
 	BOOST_AUTO_TEST_SUITE(PhysicalLayerAsyncBaseSuite)
 		BOOST_AUTO_TEST_CASE(ClosedState) {
 			AsyncPhysBaseTest t;
-			byte_t buff;
+			boost::uint8_t buff;
 			
 			BOOST_REQUIRE_THROW(t.phys.AsyncClose(), InvalidStateException);
 			BOOST_REQUIRE_THROW(t.upper.SendDown("00"), InvalidStateException);

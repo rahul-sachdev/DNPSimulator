@@ -52,7 +52,7 @@ namespace apl
 	// DataPoint
 	
 
-	DataPoint::DataPoint(byte_t aQuality, DataTypes aType) : 
+	DataPoint::DataPoint(boost::uint8_t aQuality, DataTypes aType) : 
 	mQuality(aQuality), mTime(0),
 	mType(aType)
 	{}
@@ -63,7 +63,7 @@ namespace apl
 	// BoolDataPoint
 	
 
-	BoolDataPoint::BoolDataPoint(byte_t aQuality, DataTypes aType, byte_t aValueMask) :
+	BoolDataPoint::BoolDataPoint(boost::uint8_t aQuality, DataTypes aType,boost::uint8_t aValueMask) :
 	DataPoint(aQuality, aType),
 	mValueMask(aValueMask)
 	{}

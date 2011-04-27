@@ -28,7 +28,7 @@ using namespace apl;
 
 	BOOST_AUTO_TEST_SUITE(UtilSuite)
 		template <int N>
-		void TestHex(const std::string& aHex, byte_t* aCompareBytes, size_t aCount)
+		void TestHex(const std::string& aHex,boost::uint8_t* aCompareBytes, size_t aCount)
 		{
 			HexSequence hs(aHex);
 			
@@ -41,40 +41,26 @@ using namespace apl;
 
 		BOOST_AUTO_TEST_CASE(HexToBytes2TestSmall)
 		{
-			byte_t values[] = { 0xAF, 0x23 };
+			boost::uint8_t values[] = { 0xAF, 0x23 };
 			TestHex<2>( "AF23", values, 2 );
 		}
 		BOOST_AUTO_TEST_CASE(HexToBytes2Test64)
 		{
-			byte_t values[] = { 0x13, 0xA2, 0x00, 0x40, 0x56, 0x1D, 0x08 };
+			boost::uint8_t values[] = { 0x13, 0xA2, 0x00, 0x40, 0x56, 0x1D, 0x08 };
 			TestHex<7>( "13A20040561D08", values, 7 );
 		}
 		
 		BOOST_AUTO_TEST_CASE(HexToBytes2Test64TooBig)
 		{
-			byte_t values[] = { 0x13, 0xA2, 0x00, 0x40, 0x56, 0x1D, 0x08 };
+			boost::uint8_t values[] = { 0x13, 0xA2, 0x00, 0x40, 0x56, 0x1D, 0x08 };
 			TestHex<8>( "13A20040561D08", values, 7 );
 		}
 
 		
 		BOOST_AUTO_TEST_CASE(HexToBytes2Test64Hole)
 		{
-			byte_t values[] = { 0x13, 0xA2, 0x00, 0x40, 0x56, 0x1D, 0x08 };
+			boost::uint8_t values[] = { 0x13, 0xA2, 0x00, 0x40, 0x56, 0x1D, 0x08 };
 			TestHex<8>( "13A200 40561   D08", values, 7 );
-		}
-
-		/*
-		BOOST_AUTO_TEST_CASE(HexToUInt64)
-		{
-			uint_64_t val = apl::HexToUInt64( "13A20040561D08" );
-			BOOST_REQUIRE_EQUAL( val, 5526146520587528ULL );
-		}
-
-		BOOST_AUTO_TEST_CASE(HexToUInt64null)
-		{
-			uint_64_t val = apl::HexToUInt64( "" );
-			BOOST_REQUIRE_EQUAL( val, 0 );
-		}
-		*/
+		}		
 
 	BOOST_AUTO_TEST_SUITE_END()

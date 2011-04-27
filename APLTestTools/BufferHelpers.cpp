@@ -32,12 +32,12 @@ namespace apl {
 	ByteStr::ByteStr(size_t aLength) : CopyableBuffer(aLength)
 	{}
 
-	ByteStr::ByteStr(size_t aLength, byte_t aSeed) : CopyableBuffer(aLength)
+	ByteStr::ByteStr(size_t aLength,boost::uint8_t aSeed) : CopyableBuffer(aLength)
 	{		
-		for(size_t i=0; i<aLength; ++i) mpBuff[i] = static_cast<byte_t>((i+aSeed)%256);
+		for(size_t i=0; i<aLength; ++i) mpBuff[i] = static_cast<boost::uint8_t>((i+aSeed)%256);
 	}
 
-	ByteStr::ByteStr(const byte_t* apData, size_t aLength) : CopyableBuffer(aLength)
+	ByteStr::ByteStr(const boost::uint8_t* apData, size_t aLength) : CopyableBuffer(aLength)
 	{
 		memcpy(mpBuff, apData, aLength);
 	}
@@ -64,13 +64,13 @@ namespace apl {
 
 		size_t size = s.size();
 		for(size_t index = 0, pos = 0; pos < size; ++index, pos+=2) {
-			uint_32_t val;   
+			boost::uint32_t val;   
 			std::stringstream ss;
 			ss << std::hex << s.substr(pos,2);
 			if((ss >> val).fail()) {
 				throw ArgumentException(LOCATION, aSequence);
 			}
-			mpBuff[index] = static_cast<byte_t>(val);
+			mpBuff[index] = static_cast<boost::uint8_t>(val);
 		}
 	}
 

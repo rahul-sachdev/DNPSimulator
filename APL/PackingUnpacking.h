@@ -38,23 +38,23 @@ namespace apl
 	class UInt8
 	{
 		public:
-		static apl::byte_t Read(const apl::byte_t* apStart)
+		static boost::uint8_t Read(const boost::uint8_t* apStart)
 		{ return (*apStart); }
-		static void Write(apl::byte_t* apStart, apl::byte_t aValue)
+		static void Write(boost::uint8_t* apStart, boost::uint8_t aValue)
 		{ *(apStart) = aValue; }
 
 		const static size_t Size = 1;
-		const static byte_t Max;
-		const static byte_t Min;
+		const static boost::uint8_t Max;
+		const static boost::uint8_t Min;
 
-		typedef byte_t Type;
+		typedef boost::uint8_t Type;
 	};
 
 	template <class T>
 	class BytesBE
 	{
 	public:
-		static T Read( const apl::byte_t* apStart )
+		static T Read( const boost::uint8_t* apStart )
 		{
 			T ret = 0;
 			for ( size_t i = 0; i < Size; i++ )
@@ -63,11 +63,11 @@ namespace apl
 			}
 			return ret;
 		}
-		static void Write( apl::byte_t* apStart, T aValue )
+		static void Write( boost::uint8_t* apStart, T aValue )
 		{
 			for ( size_t i = 0; i < Size; i++ )
 			{
-				apStart[i] = static_cast<byte_t>((aValue >> 8*(Size-1-i)) & 0xFF);
+				apStart[i] = static_cast<boost::uint8_t>((aValue >> 8*(Size-1-i)) & 0xFF);
 			}
 		}
 
@@ -87,17 +87,17 @@ namespace apl
 	class Bit16LE
 	{
 		public:
-		static T Read(const apl::byte_t* apStart)
+		static T Read(const boost::uint8_t* apStart)
 		{
 			T ret = *(apStart);
 			ret |= *(++apStart) << 8;
 			return ret;
 		}
 
-		static void Write(apl::byte_t* apStart, T aValue)
+		static void Write(boost::uint8_t* apStart, T aValue)
 		{
-			*(apStart) = static_cast<byte_t>(aValue & 0xFF);
-			*(++apStart) = static_cast<byte_t>((aValue >> 8) & 0xFF);
+			*(apStart) = static_cast<boost::uint8_t>(aValue & 0xFF);
+			*(++apStart) = static_cast<boost::uint8_t>((aValue >> 8) & 0xFF);
 		}
 
 		typedef T Type;
@@ -117,7 +117,7 @@ namespace apl
 	class Bit32LE
 	{
 		public:
-		static T Read(const apl::byte_t* apStart)
+		static T Read(const boost::uint8_t* apStart)
 		{
 			T  ret = *(apStart);
 			ret |= *(++apStart) << 8;
@@ -125,12 +125,12 @@ namespace apl
 			ret |= *(++apStart) << 24;
 			return ret;
 		}
-		static void Write(apl::byte_t* apStart, T aValue)
+		static void Write(boost::uint8_t* apStart, T aValue)
 		{
-			*(apStart) = static_cast<byte_t>(aValue & 0xFF);
-			*(++apStart) = static_cast<byte_t>((aValue >> 8) & 0xFF);
-			*(++apStart) = static_cast<byte_t>((aValue >> 16) & 0xFF);
-			*(++apStart) = static_cast<byte_t>((aValue >> 24) & 0xFF);
+			*(apStart) = static_cast<boost::uint8_t>(aValue & 0xFF);
+			*(++apStart) = static_cast<boost::uint8_t>((aValue >> 8) & 0xFF);
+			*(++apStart) = static_cast<boost::uint8_t>((aValue >> 16) & 0xFF);
+			*(++apStart) = static_cast<boost::uint8_t>((aValue >> 24) & 0xFF);
 		}
 
 		typedef T Type;
@@ -148,52 +148,52 @@ namespace apl
 
 
 
-	typedef Bit16LE<int_16_t> Int16LE;
-	typedef Bit16LE<uint_16_t> UInt16LE;
-	typedef Bit32LE<int_32_t> Int32LE;
-	typedef Bit32LE<uint_32_t> UInt32LE;
+	typedef Bit16LE<boost::int16_t> Int16LE;
+	typedef Bit16LE<boost::uint16_t> UInt16LE;
+	typedef Bit32LE<boost::int32_t> Int32LE;
+	typedef Bit32LE<boost::uint32_t> UInt32LE;
 
-	typedef BytesBE<uint_16_t> UInt16BE;
-	typedef BytesBE<int_16_t> Int16BE;
-	typedef BytesBE<uint_32_t> UInt32BE;
-	typedef BytesBE<int_32_t> Int32BE;
+	typedef BytesBE<boost::uint16_t> UInt16BE;
+	typedef BytesBE<boost::int16_t> Int16BE;
+	typedef BytesBE<boost::uint32_t> UInt32BE;
+	typedef BytesBE<boost::int32_t> Int32BE;
 
-	typedef BytesBE<uint_64_t> UInt64BE;
-	typedef BytesBE<int_64_t> Int64BE;
+	typedef BytesBE<boost::uint64_t> UInt64BE;
+	typedef BytesBE<boost::int64_t> Int64BE;
 
 	class UInt48LE
 	{
 		public:
-		static int_64_t Read(const apl::byte_t* apStart)
+		static boost::int64_t Read(const boost::uint8_t* apStart)
 		{
 
-			apl::int_64_t  ret = *(apStart);
-			ret |= static_cast<int_64_t>(*(++apStart)) << 8;
-			ret |= static_cast<int_64_t>(*(++apStart)) << 16;
-			ret |= static_cast<int_64_t>(*(++apStart)) << 24;
-			ret |= static_cast<int_64_t>(*(++apStart)) << 32;
-			ret |= static_cast<int_64_t>(*(++apStart)) << 40;
+			boost::int64_t  ret = *(apStart);
+			ret |= static_cast<boost::int64_t>(*(++apStart)) << 8;
+			ret |= static_cast<boost::int64_t>(*(++apStart)) << 16;
+			ret |= static_cast<boost::int64_t>(*(++apStart)) << 24;
+			ret |= static_cast<boost::int64_t>(*(++apStart)) << 32;
+			ret |= static_cast<boost::int64_t>(*(++apStart)) << 40;
 
 			return ret;
 		}
 
-		static void Write(apl::byte_t* apStart, int_64_t aValue)
+		static void Write(boost::uint8_t* apStart, boost::int64_t aValue)
 		{
 			if(aValue > MAX) aValue = MAX;
 
-			*(apStart) = static_cast<byte_t>(aValue & 0xFF);
-			*(++apStart) = static_cast<byte_t>((aValue >> 8) & 0xFF);
-			*(++apStart) = static_cast<byte_t>((aValue >> 16) & 0xFF);
-			*(++apStart) = static_cast<byte_t>((aValue >> 24) & 0xFF);
-			*(++apStart) = static_cast<byte_t>((aValue >> 32) & 0xFF);
-			*(++apStart) = static_cast<byte_t>((aValue >> 40) & 0xFF);
+			*(apStart) = static_cast<boost::uint8_t>(aValue & 0xFF);
+			*(++apStart) = static_cast<boost::uint8_t>((aValue >> 8) & 0xFF);
+			*(++apStart) = static_cast<boost::uint8_t>((aValue >> 16) & 0xFF);
+			*(++apStart) = static_cast<boost::uint8_t>((aValue >> 24) & 0xFF);
+			*(++apStart) = static_cast<boost::uint8_t>((aValue >> 32) & 0xFF);
+			*(++apStart) = static_cast<boost::uint8_t>((aValue >> 40) & 0xFF);
 		}
 
-		const static int_64_t MAX = 281474976710655ULL; // 2^48 -1
+		const static boost::int64_t MAX = 281474976710655ULL; // 2^48 -1
 
 		const static size_t Size = 6;
 
-		typedef int_64_t Type;
+		typedef boost::int64_t Type;
 	};
 
 	template <class T>
@@ -208,17 +208,13 @@ namespace apl
 
 		protected:
 
-		static T NaiveRead(const apl::byte_t* apStart)
+		static T NaiveRead(const boost::uint8_t* apStart)
 		{ return *reinterpret_cast<const T*>(apStart); }
 
 
-		static void NaiveWrite(apl::byte_t* apStart, T aValue)
-		{
-			//for(size_t i=0; i<sizeof(T); ++i) { apStart[i] = 0xAB; }
-			*reinterpret_cast<T*>(apStart) = aValue;
-
-
-			//*
+		static void NaiveWrite(boost::uint8_t* apStart, T aValue)
+		{			
+			*reinterpret_cast<T*>(apStart) = aValue;			
 		}
 	};
 
@@ -231,16 +227,16 @@ namespace apl
 	class SingleFloat : public Float<float>
 	{
 		public:
-		static float Read(const apl::byte_t* apStart);
+		static float Read(const boost::uint8_t* apStart);
 
-		static void Write(apl::byte_t* apStart, float aValue);
+		static void Write(boost::uint8_t* apStart, float aValue);
 	};
 
 	class DoubleFloat : public Float<double>
 	{
 		public:
-		static double Read(const apl::byte_t* apStart);
-		static void Write(apl::byte_t* apStart, double aValue);
+		static double Read(const boost::uint8_t* apStart);
+		static void Write(boost::uint8_t* apStart, double aValue);
 
 		private:
 

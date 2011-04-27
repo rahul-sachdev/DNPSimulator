@@ -43,14 +43,14 @@ namespace apl {
 				 *
 				 * @return				the new IVtoBase instance
 				 */
-				IVtoBase(byte_t aChannelId) : mChannelId(aChannelId) {}
+				IVtoBase(boost::uint8_t aChannelId) : mChannelId(aChannelId) {}
 
 				/**
 				 * Returns the Virtual Terminal channel id for the object.
 				 *
 				 * @return the DNP3 Virtual Terminal port (channel id)
 				 */
-				byte_t GetChannelId()
+				boost::uint8_t GetChannelId()
 				{
 					return this->mChannelId;
 				}
@@ -60,14 +60,14 @@ namespace apl {
 				/**
 				 * A hidden default constructor.
 				 *
-				 * @deprecated			Use IVtoBase(byte_t) instead.
+				 * @deprecated			Use IVtoBase(boost::uint8_t) instead.
 				 */
 				IVtoBase() {}
 
 				/**
 				 * The DNP3 Virtual Terminal port (channel id) for this object.
 				 */
-				byte_t mChannelId;
+				boost::uint8_t mChannelId;
 		};
 
 		/**
@@ -89,7 +89,7 @@ namespace apl {
 				 *
 				 * @return				the new IVtoWriter instance
 				 */
-				IVtoWriter(byte_t aChannelId) : IVtoBase(aChannelId) {}
+				IVtoWriter(boost::uint8_t aChannelId) : IVtoBase(aChannelId) {}
 
 				/**
 				 * Writes a stream of data to the remote VTO endpoint.
@@ -104,7 +104,7 @@ namespace apl {
 				 *                      less than the length request if the
 				 *                      buffer has insufficient space.
 				 */
-				size_t Write(const byte_t& arData, size_t aLength);
+				size_t Write(const boost::uint8_t& arData, size_t aLength);
 
 			protected:
 
@@ -138,7 +138,7 @@ namespace apl {
 				 *
 				 * @return				the new VtoMasterWriter instance
 				 */
-				VtoMasterWriter(byte_t aChannelId) : IVtoWriter(aChannelId) {}
+				VtoMasterWriter(boost::uint8_t aChannelId) : IVtoWriter(aChannelId) {}
 
 			protected:
 
@@ -165,7 +165,7 @@ namespace apl {
 				 *
 				 * @return				the new VtoSlaveWriter instance
 				 */
-				VtoSlaveWriter(byte_t aChannelId) : IVtoWriter(aChannelId) {}
+				VtoSlaveWriter(boost::uint8_t aChannelId) : IVtoWriter(aChannelId) {}
 
 			protected:
 
@@ -195,7 +195,7 @@ namespace apl {
 				 *
 				 * @return				the new IVtoCallbacks instance
 				 */
-				IVtoCallbacks(byte_t aChannelId) : IVtoBase(aChannelId) {}
+				IVtoCallbacks(boost::uint8_t aChannelId) : IVtoBase(aChannelId) {}
 
 				/**
 				 * Called when data arrives from stack and needs to be handled.
@@ -204,7 +204,7 @@ namespace apl {
 				 * @param aLength		The length of the data received (in
 				 *						bytes).
 				 */
-				virtual void OnDataReceived(const byte_t& arData,
+				virtual void OnDataReceived(const boost::uint8_t& arData,
 				                            size_t aLength) = 0;
 
 				/**

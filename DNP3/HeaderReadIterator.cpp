@@ -22,7 +22,7 @@
 
 namespace apl { namespace dnp {
 
-	HeaderReadIterator::HeaderReadIterator(const std::vector<HeaderInfo>* apHeaders, const byte_t* apBuffer, bool aHasData) : 
+	HeaderReadIterator::HeaderReadIterator(const std::vector<HeaderInfo>* apHeaders, const boost::uint8_t* apBuffer, bool aHasData) : 
 	mpHeaders(apHeaders),
 	mpBuffer(apBuffer),
 	mHasData(aHasData),

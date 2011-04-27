@@ -94,8 +94,8 @@ namespace apl { namespace dnp {
 	{
 		LinkConfig cfg(arLink.IsMaster, arLink.UseConfirmations);
 		cfg.IsMaster = arLink.IsMaster;
-		cfg.LocalAddr = boost::numeric::converter<int,uint_16_t>::convert(arLink.LocalAddress);
-		cfg.RemoteAddr = boost::numeric::converter<int,uint_16_t>::convert(arLink.RemoteAddress);
+		cfg.LocalAddr = boost::numeric::converter<int,boost::uint16_t>::convert(arLink.LocalAddress);
+		cfg.RemoteAddr = boost::numeric::converter<int,boost::uint16_t>::convert(arLink.RemoteAddress);
 		cfg.Timeout = arLink.AckTimeoutMS;
 		cfg.UseConfirms = arLink.UseConfirmations;
 		cfg.NumRetry = boost::numeric::converter<int,size_t>::convert(arLink.NumRetries);
