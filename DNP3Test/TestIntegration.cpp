@@ -71,19 +71,20 @@ BOOST_AUTO_TEST_CASE(MasterToSlave)
 
 	for (size_t j = 0; j < numChanges; ++j)
 	{
-		Transaction tr(pObs);
+		{
+			Transaction tr(pObs);
 		
-		for (size_t i = 0; i < numPoints; ++i)
-			pObs->Update(t.RandomBinary(), i);
+			for (size_t i = 0; i < numPoints; ++i)
+				pObs->Update(t.RandomBinary(), i);
 		
-		for (size_t i = 0; i < numPoints; ++i)
-			pObs->Update(t.RandomAnalog(), i);
+			for (size_t i = 0; i < numPoints; ++i)
+				pObs->Update(t.RandomAnalog(), i);
 		
-		for (size_t i = 0; i < numPoints; ++i)
-			pObs->Update(t.RandomCounter(), i);
+			for (size_t i = 0; i < numPoints; ++i)
+				pObs->Update(t.RandomCounter(), i);
+		}
 
-		BOOST_REQUIRE(t.ProceedUntil(boost::bind(&IntegrationTest::SameData,
-						&t)));
+		BOOST_REQUIRE(t.ProceedUntil(boost::bind(&IntegrationTest::SameData, &t)));
 
 		if (EXTRA_DEBUG)
 			cout << "***  Finished change set " <<  j << " ***" << endl;
