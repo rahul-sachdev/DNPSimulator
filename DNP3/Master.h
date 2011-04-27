@@ -54,7 +54,9 @@ namespace apl { namespace dnp {
 
 class AMS_Base;
 
-/** DNP3 master. The tasks functions can perform all the various things that a master might need to do.
+/**
+	DNP3 master. The tasks functions can perform all the various things that a
+	master might need to do.
 
 	Coordination of tasks is handled by a higher level task scheduler.
 */

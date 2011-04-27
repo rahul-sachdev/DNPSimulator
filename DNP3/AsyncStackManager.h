@@ -80,14 +80,24 @@ class AsyncStackManager : private Threadable, private Loggable
 		void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
 
 		/**
-			Adds a master stack - Stack will automatically start running if Start() has been called or aAutoRun == true
+			Adds a master stack - Stack will automatically start running if
+			Start() has been called or aAutoRun is true.
 
-			@param arPortName	Unique name of the port to with which to associate the stack. Will except if port doesn't exist
-			@param arStackName	Unique name of the stack. Will except if the name already exists
-			@param aLevel		Log filter level to use
-			@param apPublisher	Interface to callback with measurements. The callback comes from an unknown network thread and should not be blocked.
-			@param arCfg		Configuration data for the master stack
-			@return				Thread-safe interface to use for dispatching commands to the master.
+			@param arPortName			Unique name of the port with which to
+										associate the stack.
+			@param arStackName			Unique name of the stack.
+			@param aLevel				Log filter level to use.
+			@param apPublisher			Interface to callback with measurements.
+										The callback comes from an unknown
+										network thread and should not be
+										blocked.
+			@param arCfg				Configuration data for the master stack
+
+			@return						Thread-safe interface to use for
+										dispatching commands to the master.
+
+			@throw ArgumentException	if arPortName doesn't exist or if
+										arStackName already exists
 		*/
 		ICommandAcceptor* AddMaster(const std::string& arPortName,
 									const std::string& arStackName,
@@ -96,14 +106,25 @@ class AsyncStackManager : private Threadable, private Loggable
 									const MasterStackConfig& arCfg);
 
 		/**
-			Adds a slave stack - Stack will automatically start running if Start() has been called or aAutoRun == true
+			Adds a slave stack - Stack will automatically start running if
+			Start() has been called or aAutoRun is true.
 
-			@param arPortName		Unique name of the port to with which to associate the stack. Will except if port doesn't exist
-			@param arStackName		Unique name of the stack. Will except if the name already exists
-			@param aLevel			Log filter level to use
-			@param apCmdAcceptor	Interface to callback with measurements. The callback comes from an unknown network thread and should not be blocked.
-			@param arCfg			Configuration data for the slave stack
-			@return					Thread-safe interface to use for writing new measurement values to the slave.
+			@param arPortName			Unique name of the port with which to
+										associate the stack.
+			@param arStackName			Unique name of the stack.
+			@param aLevel				Log filter level to use.
+			@param apCmdAcceptor		Interface to callback with measurements.
+										The callback comes from an unknown
+										network thread and should not be
+										blocked.
+			@param arCfg				Configuration data for the master stack
+
+			@return						Thread-safe interface to use for
+										writing new measurement values to the
+										slave
+
+			@throw ArgumentException	if arPortName doesn't exist or if
+										arStackName already exists
 		*/
 		IDataObserver* AddSlave(const std::string& arPortName,
 								const std::string& arStackName,

@@ -104,7 +104,7 @@ namespace apl {
 				 *                      less than the length request if the
 				 *                      buffer has insufficient space.
 				 */
-				size_t Write(const byte_t& arData, size_t aLength);
+				size_t Write(const byte_t* arData, size_t aLength);
 
 			protected:
 
