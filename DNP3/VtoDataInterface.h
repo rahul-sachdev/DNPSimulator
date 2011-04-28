@@ -18,11 +18,10 @@
 #ifndef __VTO_DATA_INTERFACE_H_
 #define __VTO_DATA_INTERFACE_H_
 
-#include <APL/DataTypes.h>
-
 #include <assert.h>
 
-#include "ObjectInterfaces.h"
+#include "APL/DataTypes.h"
+#include "DNP3/ObjectInterfaces.h"
 
 namespace apl {
 	namespace dnp {
@@ -94,7 +93,7 @@ namespace apl {
 				/**
 				 * Writes a stream of data to the remote VTO endpoint.
 				 *
-				 * @param arData		The data to write to the VTO stream.
+				 * @param apData		The data to write to the VTO stream.
 				 * @param aLength		The length of the data to write (in
 				 *						bytes).
 				 *
@@ -104,7 +103,8 @@ namespace apl {
 				 *                      less than the length request if the
 				 *                      buffer has insufficient space.
 				 */
-				size_t Write(const boost::uint8_t& arData, size_t aLength);
+				size_t Write(const boost::uint8_t* apData, size_t aLength);
+
 
 			protected:
 
