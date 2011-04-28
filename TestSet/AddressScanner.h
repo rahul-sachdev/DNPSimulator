@@ -22,6 +22,7 @@
 #include <APLXML/PhysicalLayerManagerXML.h>
 #include <APL/IOServiceThread.h>
 #include <APL/TimerSourceASIO.h>
+#include <APL/IOService.h>
 #include <APL/Loggable.h>
 
 #include <DNP3/LinkLayerRouter.h>
@@ -66,7 +67,7 @@ class AddressScanner : private Loggable, public ILinkContext
 		void NextFrame();
 		
 		apl::xml::PhysicalLayerManagerXML manager;		
-		std::auto_ptr<boost::asio::io_service> mpService;
+		apl::IOService mService;
 		TimerSourceASIO mTimerSrc;
 		IOServiceThread mThread;
 		dnp::LinkLayerRouter mRouter;
