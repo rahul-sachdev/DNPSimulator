@@ -70,7 +70,7 @@ namespace apl {
 		};
 
 		/**
-		 * IVTOWriter is returned by the stack for write operations to a Vto
+		 * VTOWriterBase is returned by the stack for write operations to a Vto
 		 * stream.  The Write() function should be used in conjunction with the
 		 * OnBufferAvailable() callback on the IVTOCallbacks interface provided
 		 * to the stack.
@@ -117,7 +117,10 @@ namespace apl {
 				 *						needed during the Write() operation.
 				 */
 				virtual SizeByVariationObject* GetObjectGroupInstance() = 0;
+			
+			private:
 
+				
 		};
 
 		/**

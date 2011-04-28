@@ -20,6 +20,8 @@
 #include <APLTestTools/TestHelpers.h>
 
 #include <DNP3/EventBuffers.h>
+#include <DNP3/EventTypes.h>
+#include <DNP3/VtoData.h>
 
 #include <iostream>
 #include <limits>
@@ -96,7 +98,7 @@ using namespace apl::dnp;
 
 			const boost::uint8_t numEvents = NUM;
 
-			InsertionOrderedEventBuffer<VtoDataEvent> b(NUM);
+			InsertionOrderedEventBuffer<VtoEvent> b(NUM);
 
 			VtoData info;
 
@@ -111,7 +113,7 @@ using namespace apl::dnp;
 				for (j = 0; j < dataSize; ++j)
 					trash[j] = i;
 
-				info.SetValue(trash, dataSize);
+				info.Copy(trash, dataSize);
 				b.Update(info, PC_CLASS_1, dataSize);
 			}
 
@@ -123,7 +125,7 @@ using namespace apl::dnp;
 
 			itr = b.Begin();
 			for (size_t i = 0; i < b.NumSelected(); ++i) {
-				const boost::uint8_t *value = itr->mValue.GetValue();
+				const boost::uint8_t* value = itr->mValue.GetData();
 				for (size_t j = 0; j < dataSize; ++j)
 					BOOST_REQUIRE_EQUAL(value[j], i);
 				++itr;
@@ -135,7 +137,7 @@ using namespace apl::dnp;
 
 			itr = b.Begin();
 			for (size_t i = 0; i < b.NumSelected(); ++i) {
-				const boost::uint8_t *value = itr->mValue.GetValue();
+				const boost::uint8_t *value = itr->mValue.GetData();
 				for (size_t j = 0; j < dataSize; ++j)
 					BOOST_REQUIRE_EQUAL(value[j], i);
 				++itr;

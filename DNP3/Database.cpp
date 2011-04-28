@@ -75,9 +75,7 @@ namespace apl { namespace dnp {
 				this->AssignIndices(mSetpointStatusVec);
 				if ( aStartOnline )
 					this->SetAllOnline(mSetpointStatusVec);
-				break;
-			case(DT_VTO_DATA):
-				break;
+				break;			
 		}
 	}
 
@@ -263,9 +261,7 @@ namespace apl { namespace dnp {
 			case(DT_CONTROL_STATUS):
 				return mControlStatusVec.size();
 			case(DT_SETPOINT_STATUS):
-				return mSetpointStatusVec.size();
-			case(DT_VTO_DATA):
-				break;
+				return mSetpointStatusVec.size();			
 		}
 
 		return 0;

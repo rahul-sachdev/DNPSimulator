@@ -181,17 +181,6 @@ inline void IDataObserver::Update(const SetpointStatus& arPoint, size_t aIndex)
 { assert(this->InProgress()); this->_Update(arPoint, aIndex); }
 
 
-/*
-/
-	Adds the ability to for a master/data source to globally notify that
-	comms have been lost, etc.
-class IDataObserver : public IDataObserver
-{
-	public:
-	virtual void SetCommsLost() = 0;	//!< called to indicate that the connection has been lost to the slave
-};
-*/
-
 }
 
 #endif

@@ -583,14 +583,22 @@
 					RelativePath=".\StackManager.h"
 					>
 				</File>
-				<File
-					RelativePath=".\VtoDataInterface.cpp"
+				<Filter
+					Name="VTO"
 					>
-				</File>
-				<File
-					RelativePath=".\VtoDataInterface.h"
-					>
-				</File>
+					<File
+						RelativePath=".\VtoData.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VtoDataInterface.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VtoDataInterface.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Application"
