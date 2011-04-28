@@ -50,8 +50,7 @@ namespace apl
 			PointMap<Analog>::Type mAnalogMap;
 			PointMap<Counter>::Type mCounterMap;
 			PointMap<ControlStatus>::Type mControlStatusMap;
-			PointMap<SetpointStatus>::Type mSetpointStatusMap;
-			PointMap<VtoData>::Type mVtoDataMap;
+			PointMap<SetpointStatus>::Type mSetpointStatusMap;			
 
 			/*
 			 * Analog
@@ -135,8 +134,7 @@ namespace apl
 			bool CheckQual(AnalogQuality aQuality, size_t aIndex){return CheckQual<Analog>(mAnalogMap, aQuality, aIndex);}
 			bool CheckQual(CounterQuality aQuality, size_t aIndex){return CheckQual<Counter>(mCounterMap, aQuality, aIndex);}
 			bool CheckQual(ControlQuality aQuality, size_t aIndex){return CheckQual<ControlStatus>(mControlStatusMap, aQuality, aIndex);}
-			bool CheckQual(SetpointQuality aQuality, size_t aIndex){return CheckQual<SetpointStatus>(mSetpointStatusMap, aQuality, aIndex);}
-			bool CheckQual(VtoQuality aQuality, size_t aIndex){return CheckQual<VtoData>(mVtoDataMap, aQuality, aIndex);}
+			bool CheckQual(SetpointQuality aQuality, size_t aIndex){return CheckQual<SetpointStatus>(mSetpointStatusMap, aQuality, aIndex);}			
 
 			void Print();
 			void Clear();
@@ -147,8 +145,7 @@ namespace apl
 					mAnalogMap.size() +
 				       	mCounterMap.size() +
 				       	mControlStatusMap.size() +
-				       	mSetpointStatusMap.size() +
-					mVtoDataMap.size();
+				       	mSetpointStatusMap.size();					
 			}
 
 			/// The two data observers have the exact same contents
@@ -182,9 +179,7 @@ namespace apl
 			virtual void _Update(const Analog& arPoint, size_t aIndex) { Load(arPoint, mAnalogMap, aIndex); }
 			virtual void _Update(const Counter& arPoint, size_t aIndex) { Load(arPoint, mCounterMap, aIndex); }
 			virtual void _Update(const ControlStatus& arPoint, size_t aIndex) { Load(arPoint, mControlStatusMap, aIndex); }
-			virtual void _Update(const SetpointStatus& arPoint, size_t aIndex) { Load(arPoint, mSetpointStatusMap, aIndex); }
-			virtual void _Update(const VtoData& arPoint, size_t aIndex) { Load(arPoint, mVtoDataMap, aIndex); }
-
+			virtual void _Update(const SetpointStatus& arPoint, size_t aIndex) { Load(arPoint, mSetpointStatusMap, aIndex); }			
 
 			template <class T, class U>
 			bool Check(typename PointMap<T>::Type& arMap, U aValue,boost::uint8_t aQual, size_t aIndex);

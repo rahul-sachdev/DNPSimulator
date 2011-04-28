@@ -85,16 +85,12 @@ typedef PointInfo<apl::Analog>					AnalogInfo;
 typedef PointInfo<apl::Counter>					CounterInfo;
 typedef PointInfo<apl::ControlStatus>			ControlStatusInfo;
 typedef PointInfo<apl::SetpointStatus>			SetpointStatusInfo;
-typedef PointInfo<apl::VtoData>					VtoDataInfo;
-
 
 typedef StaticIter<BinaryInfo>::Type			BinaryIterator;
 typedef StaticIter<AnalogInfo>::Type			AnalogIterator;
 typedef StaticIter<CounterInfo>::Type			CounterIterator;
 typedef StaticIter<ControlStatusInfo>::Type		ControlIterator;
 typedef StaticIter<SetpointStatusInfo>::Type	SetpointIterator;
-typedef StaticIter<VtoDataInfo>::Type			VtoDataIterator;
-
 
 
 }} //end namespace

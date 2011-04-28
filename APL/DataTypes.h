@@ -30,10 +30,6 @@
 #include <math.h>
 #include <string.h>
 
-// from http://pubs.opengroup.org/onlinepubs/009695399/functions/MACRO_BZERO.html
-// recommendation is replace with this for portability
-#define MACRO_BZERO(b,len) (memset((b), '\0', (len)), (void) 0)
-
 #ifdef max
 #undef max
 #endif
@@ -78,8 +74,7 @@ namespace apl
 		DT_ANALOG,
 		DT_COUNTER,
 		DT_CONTROL_STATUS,
-		DT_SETPOINT_STATUS,
-		DT_VTO_DATA
+		DT_SETPOINT_STATUS		
 	};
 
 	std::string GetDataTypeName(DataTypes aType);
@@ -410,60 +405,6 @@ namespace apl
 
 		operator ValueType() const { return this->GetValue(); }
 		ValueType operator=(ValueType aValue) { this->SetValue(aValue); return GetValue(); }
-	};
-
-	/**
-		Describes the last set value of the setpoint. Like the ControlStatus data type it is not
-		well supportted and its generally better practice to use an explict analog.
-	*/
-	class VtoData : public DataPoint
-	{
-		public:
-		VtoData() : DataPoint(VQ_RESTART, DT_VTO_DATA), mSize(0)
-		{
-			MACRO_BZERO(this->mData, 255);
-		}
-
-		typedef boost::uint8_t * ValueType;
-		typedef VtoQuality QualityType;
-		typedef QualityConverter<VtoQualInfo> QualConverter;
-
-		static const int ONLINE = VQ_ONLINE;
-
-		static const DataTypes MeasEnum = DT_VTO_DATA;
-
-		bool ShouldGenerateEvent(const VtoData& arRHS, double aDeadband, boost::uint8_t* aLastReportedVal) const { return true; }
-
-		/* TODO - what to do here? */
-		//operator ValueType() const { return this->GetValue(); }
-		//ValueType operator=(ValueType aValue) { this->SetValue(aValue); return GetValue(); }
-
-		bool operator==(const VtoData& rhs) const
-		{
-			return GetValue() == rhs.GetValue() && GetQuality() == rhs.GetQuality();
-		}
-
-		bool operator!=(const VtoData& rhs) const
-		{
-			return GetValue() != rhs.GetValue() || GetQuality() != rhs.GetQuality();
-		}
-
-		std::string ToString() const { return "VtoData"; /* TODO */ }
-
-		size_t GetSize() const { return this->mSize; }
-
-		const boost::uint8_t *GetValue() const { return this->mData; }
-
-		void SetValue(const boost::uint8_t *aValue, size_t aSize)
-		{
-			MACRO_BZERO(this->mData, 255);
-			memcpy(this->mData, aValue, aSize);
-			this->mSize = aSize;
-		}
-
-		private:
-		boost::uint8_t mData[255];
-		size_t mSize;
 	};
 
 }

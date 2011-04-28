@@ -20,6 +20,7 @@
 #define __EVENT_TYPES_H_
 
 #include "DNPDatabaseTypes.h"
+#include "VtoData.h"
 
 //using namespace dnp;
 namespace apl { namespace dnp {
@@ -46,7 +47,7 @@ struct EventInfo : public PointInfoBase<T>
 typedef EventInfo<apl::Binary>				BinaryEvent;
 typedef EventInfo<apl::Analog>				AnalogEvent;
 typedef EventInfo<apl::Counter>				CounterEvent;
-typedef EventInfo<apl::VtoData>				VtoDataEvent;
+typedef EventInfo<apl::dnp::VtoData>		VtoEvent;
 
 template <typename EventType>
 struct EvtItr
@@ -57,7 +58,7 @@ struct EvtItr
 typedef EvtItr<BinaryEvent>::Type			BinaryEventIter;
 typedef EvtItr<AnalogEvent>::Type			AnalogEventIter;
 typedef EvtItr<CounterEvent>::Type			CounterEventIter;
-typedef EvtItr<VtoDataEvent>::Type			VtoDataEventIter;
+typedef EvtItr<VtoEvent>::Type				VtoDataEventIter;
 
 }} //end namespace
 
