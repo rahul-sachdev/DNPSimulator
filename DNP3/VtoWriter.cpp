@@ -15,18 +15,18 @@
  * under the License.
  */
 
-#include "VtoQueue.h"
+#include "VtoWriter.h"
 
 #include <APL/Util.h>
 
 namespace apl {
 	namespace dnp {
 
-		VtoQueue::VtoQueue(size_t aMaxVtoChunks) : 			
+		VtoWriter::VtoWriter(size_t aMaxVtoChunks) : 			
 			mMaxVtoChunks(aMaxVtoChunks)
 		{}
 		
-		size_t VtoQueue::Write(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId)
+		size_t VtoWriter::Write(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId)
 		{
 			CriticalSection cs(&mLock); // thread safe section begins
 			
@@ -39,19 +39,17 @@ namespace apl {
 			return num;
 		}
 
-		void VtoQueue::_Start()
+		void VtoWriter::_Start()
 		{
 			mLock.Lock();
 		}
 		
-		void VtoQueue::_End()
-		{
-			
-			mLock.Unlock();
-			
+		void VtoWriter::_End()
+		{						
+			mLock.Unlock();			
 		}
 
-		void VtoQueue::Commit(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId)
+		void VtoWriter::Commit(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId)
 		{
 			size_t complete = aLength / VtoData::MAX_SIZE;
 			size_t partial = aLength % VtoData::MAX_SIZE;
@@ -66,19 +64,19 @@ namespace apl {
 			if(partial > 0) QueueVtoObject(pLocation, partial, aChannelId);				
 		}
 
-		void VtoQueue::QueueVtoObject(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId)
+		void VtoWriter::QueueVtoObject(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId)
 		{
 			VtoData vto(apData, aLength);	
 			VtoEvent evt(vto, PC_CLASS_1, aChannelId);
 			mQueue.push(evt);
 		}
 
-		size_t VtoQueue::NumChunksAvailable()
+		size_t VtoWriter::NumChunksAvailable()
 		{
 			return mMaxVtoChunks - mQueue.size();
 		}
 
-		size_t VtoQueue::NumBytesAvailable()
+		size_t VtoWriter::NumBytesAvailable()
 		{
 			return this->NumChunksAvailable()*VtoData::MAX_SIZE;
 		}

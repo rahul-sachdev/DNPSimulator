@@ -17,7 +17,7 @@
 // under the License.
 //
 
-#include "VtoEnabledStack.h"
+#include "VtoReader.h"
 
 #include <APL/Exception.h>
 
@@ -26,7 +26,7 @@
 namespace apl { 
 	namespace dnp {
 
-	IVtoWriter* VtoEnabledStack::AddChannel(IVtoCallbacks* apCallbacks)
+	void VtoReader::AddVtoChannel(IVtoCallbacks* apCallbacks)
 	{
 		CriticalSection cs(&mLock);
 
@@ -39,28 +39,45 @@ namespace apl {
 		else
 		{
 			throw new ArgumentException(LOCATION, "Channel already registered: " + id);
-		}
-
-		return &mQueue;
+		}		
 	}
 	
-	void VtoEnabledStack::RemoveChannel(IVtoCallbacks* apCallbacks)
+	void VtoReader::RemoveVtoChannel(IVtoCallbacks* apCallbacks)
 	{
 		CriticalSection cs(&mLock);
 
 		boost::uint8_t id = apCallbacks->GetChannelId();
 
 		if(mChannelMap.erase(id) == 0)
-			throw new ArgumentException(LOCATION, "Channel not registered: " + id);
-		
+			throw new ArgumentException(LOCATION, "Channel not registered: " + id);		
 	}
 
-	void VtoEnabledStack::NotifyOfSpace()
+	void VtoReader::Update(const VtoEvent& arEvent)
 	{
+		assert(this->InProgress());
+
+		// TODO - process the VTO event comparing the index to the map and preparing the data for delivery
+	}
+
+	void VtoReader::_Start()
+	{
+		mLock.Lock();
+	}
+	
+	void VtoReader::_End()
+	{
+		// TODO - flush recombined streams to output channels here
+
+		mLock.Unlock();		
+	}
+
+	void VtoReader::Notify(size_t aAvailableBytes)
+	{		
 		CriticalSection cs(&mLock);
+
 		for(ChannelMap::iterator i = mChannelMap.begin(); i != mChannelMap.end(); ++i)
 		{
-			i->second->OnBufferAvailable(mQueue.NumBytesAvailable());
+			i->second->OnBufferAvailable(aAvailableBytes);
 		}
 	}
 	
