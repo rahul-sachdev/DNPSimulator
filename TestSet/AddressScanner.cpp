@@ -23,17 +23,16 @@
 #include <XMLBindings/APLXML_MTS.h>
 
 #include <boost/bind.hpp>
-#include <boost/asio.hpp>
 
 namespace apl { namespace dnp {
 
 AddressScanner::AddressScanner(Logger * apLogger, const APLXML_MTS::MasterTestSet_t& cfg, boost::uint16_t start, boost::uint16_t stop) : 
 Loggable(apLogger),
 manager(apLogger, &cfg.PhysicalLayerList, xml::Convert(cfg.Log.Filter)),
-mpService(new boost::asio::io_service()),
-mTimerSrc(mpService.get()),
-mThread(mpService.get()),
-mRouter(apLogger, manager.GetLayer(cfg.PhysicalLayer, mpService.get()), &mTimerSrc, 1000),
+mService(),
+mTimerSrc(mService.Get()),
+mThread(mService.Get()),
+mRouter(apLogger, manager.GetLayer(cfg.PhysicalLayer, mService.Get()), &mTimerSrc, 1000),
 mpTimer(NULL),
 mMasterAddr(cfg.Master.Stack.LinkLayer.LocalAddress),
 mScanTimeout(cfg.Master.Stack.LinkLayer.AckTimeoutMS),
