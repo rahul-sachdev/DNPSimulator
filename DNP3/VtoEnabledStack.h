@@ -16,54 +16,38 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef _UTIL_H_
-#define _UTIL_H_
 
-#include <string>
-#include <sstream>
-#include <assert.h>
-#include <stdlib.h>
-#include <memory.h>
+#ifndef __VTO_ENABLED_STACK_H_
+#define __VTO_ENABLED_STACK_H_
 
-#include "Types.h"
-#include "Configure.h"
+#include <map>
 
-namespace boost { namespace posix_time { class ptime; } }
+#include <APL/Lock.h>
 
-namespace apl
-{
-	void ClearScreen();
+#include "VtoQueue.h"
 
-	template <class T>
-	inline T Min(T a, T b)
+namespace apl { 
+	namespace dnp {
+
+	class VtoEnabledStack
 	{
-		return (a < b) ? a : b;
-	}
+		public:
 
-	template <class T>
-	inline T Max(T a, T b)
-	{
-		return (a > b) ? a : b;
-	}
+		IVtoWriter* AddChannel(IVtoCallbacks*);
+		void RemoveChannel(IVtoCallbacks*);
 
-	template <class T>
-	bool FloatEqual(T a, T b, T eapllon = 1e-6)
-	{
-		T diff = a - b;
-		if(diff < 0) diff = -diff;
-		return diff <= eapllon;
-	}
+		protected:
+		
+		void NotifyOfSpace();
+	
+		VtoQueue mQueue;
 
+		private:
+		SigLock mLock;
+		typedef std::map<boost::uint8_t, IVtoCallbacks*> ChannelMap;
+		ChannelMap mChannelMap;
+	};
 
-	double SafeCastInt64ToDouble(boost::int64_t aInput);
-
-	void toUpperCase(std::string& aStr);
-	void toLowerCase(std::string& aStr);
-
-
-	std::string ToNormalizedString(const boost::posix_time::ptime& arTime);
-
-
-}
+}}
 
 #endif

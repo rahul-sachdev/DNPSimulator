@@ -29,7 +29,7 @@ namespace apl {
 		/**
 		 * The abstract base class for all VTO interface handlers.
 		 */
-		class IVtoBase
+		class IVtoChannel
 		{
 			public:
 
@@ -42,7 +42,7 @@ namespace apl {
 				 *
 				 * @return				the new IVtoBase instance
 				 */
-				IVtoBase(boost::uint8_t aChannelId) : mChannelId(aChannelId) {}
+				IVtoChannel(boost::uint8_t aChannelId) : mChannelId(aChannelId) {}
 
 				/**
 				 * Returns the Virtual Terminal channel id for the object.
@@ -59,9 +59,9 @@ namespace apl {
 				/**
 				 * A hidden default constructor.
 				 *
-				 * @deprecated			Use IVtoBase(boost::uint8_t) instead.
+				 * @deprecated			Use IVtoChannel(boost::uint8_t) instead.
 				 */
-				IVtoBase() {}
+				IVtoChannel() {}
 
 				/**
 				 * The DNP3 Virtual Terminal port (channel id) for this object.
@@ -70,32 +70,22 @@ namespace apl {
 		};
 
 		/**
-		 * VTOWriterBase is returned by the stack for write operations to a Vto
+		 * IVTOWriter is returned by the stack for write operations to a Vto
 		 * stream.  The Write() function should be used in conjunction with the
 		 * OnBufferAvailable() callback on the IVTOCallbacks interface provided
 		 * to the stack.
 		 */
-		class IVtoWriter : protected IVtoBase
+		class IVtoWriter
 		{
 			public:
-
-				/**
-				 * Creates a new IVtoWriter instance configured for Virtual
-				 * Terminal channel id matching aChannelId.
-				 *
-				 * @param aChannelId	the DNP3 Virtual Terminal port (channel
-				 *						id)
-				 *
-				 * @return				the new IVtoWriter instance
-				 */
-				IVtoWriter(boost::uint8_t aChannelId) : IVtoBase(aChannelId) {}
-
+				
 				/**
 				 * Writes a stream of data to the remote VTO endpoint.
 				 *
 				 * @param arData		The data to write to the VTO stream.
 				 * @param aLength		The length of the data to write (in
 				 *						bytes).
+				 * @param aChannelId	The channel id for the vto stream
 				 *
 				 * @return				The number of bytes that were
 				 *                      successfully queued into the VTO
@@ -103,80 +93,9 @@ namespace apl {
 				 *                      less than the length request if the
 				 *                      buffer has insufficient space.
 				 */
-				size_t Write(const boost::uint8_t& arData, size_t aLength);
-
-			protected:
-
-				/**
-				 * Returns the appropriate DNP3 Object Group instance for the
-				 * IVtoWriter instance.  For example, VtoMasterWriter should
-				 * most likely return Group112Var0; VtoSlaveWriter should most
-				 * likely return Group113Var0.
-				 *
-				 * @returns				the appropriate ObjectBase instance
-				 *						needed during the Write() operation.
-				 */
-				virtual SizeByVariationObject* GetObjectGroupInstance() = 0;
-			
-			private:
-
-				
+				virtual size_t Write(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId) = 0;
 		};
-
-		/**
-		 * Implements the writer interface needed for a Master implementing the
-		 * DNP3 VTO feature.
-		 */
-		class VtoMasterWriter : protected IVtoWriter
-		{
-			public:
-
-				/**
-				 * Creates a new VtoMasterWriter instance configured for Virtual
-				 * Terminal channel id matching aChannelId.
-				 *
-				 * @param aChannelId	the DNP3 Virtual Terminal port (channel
-				 *						id)
-				 *
-				 * @return				the new VtoMasterWriter instance
-				 */
-				VtoMasterWriter(boost::uint8_t aChannelId) : IVtoWriter(aChannelId) {}
-
-			protected:
-
-				/**
-				 * Returns a Group112Var0 object instance.
-				 */
-				SizeByVariationObject* GetObjectGroupInstance();
-		};
-
-		/**
-		 * Implements the writer interface needed for a Slave implementing the
-		 * DNP3 VTO feature.
-		 */
-		class VtoSlaveWriter : protected IVtoWriter
-		{
-			public:
-
-				/**
-				 * Creates a new VtoSlaveWriter instance configured for Virtual
-				 * Terminal channel id matching aChannelId.
-				 *
-				 * @param aChannelId	the DNP3 Virtual Terminal port (channel
-				 *						id)
-				 *
-				 * @return				the new VtoSlaveWriter instance
-				 */
-				VtoSlaveWriter(boost::uint8_t aChannelId) : IVtoWriter(aChannelId) {}
-
-			protected:
-
-				/**
-				 * Returns a Group113Var0 object instance.
-				 */
-				SizeByVariationObject* GetObjectGroupInstance();
-		};
-
+		
 		/**
 		 * Receives data from the stack for a particular channel and is notified
 		 * when buffer space becomes available.  Applications that wish to use
@@ -184,7 +103,7 @@ namespace apl {
 		 * subclass of this class and register an instance of that subclass
 		 * during the function call.
 		 */
-		class IVtoCallbacks : protected IVtoBase
+		class IVtoCallbacks : public IVtoChannel
 		{
 			public:
 
@@ -197,7 +116,7 @@ namespace apl {
 				 *
 				 * @return				the new IVtoCallbacks instance
 				 */
-				IVtoCallbacks(boost::uint8_t aChannelId) : IVtoBase(aChannelId) {}
+				IVtoCallbacks(boost::uint8_t aChannelId) : IVtoChannel(aChannelId) {}
 
 				/**
 				 * Called when data arrives from stack and needs to be handled.

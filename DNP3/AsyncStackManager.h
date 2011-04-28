@@ -140,8 +140,7 @@ class AsyncStackManager : private Threadable, private Loggable
 			AsyncStackManager::StartVtoRouter() as a simpler way of connecting a
 			port (such as a local TCP service) to the VTO stream.
 
-			@param arStackName			Unique name of the stack.
-			@param aVtoChannelId		Unique channel ID for the VTO circuit.
+			@param arStackName			Unique name of the stack.			
 			@param apOnDataCallback		Interface to callback with received
 										data.  The callback comes from an
 										unknown network thread, and should not
@@ -155,8 +154,7 @@ class AsyncStackManager : private Threadable, private Loggable
 										or if the VTO channel ID is already
 										bound for that stack
 		 */
-		IVtoWriter* AddVtoChannel(const std::string& arStackName,
-						boost::uint8_t aVtoChannelId,
+		IVtoWriter* AddVtoChannel(const std::string& arStackName,						
 						IVtoCallbacks* apOnDataCallback);
 
 		/**
