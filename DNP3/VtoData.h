@@ -58,7 +58,7 @@ namespace apl {
 												
 			size_t GetSize() const { return this->mSize; }
 
-			const boost::uint8_t* GetData() { return mData; }
+			const boost::uint8_t* GetData() const { return mData; }
 
 			void Copy(const boost::uint8_t* aValue, size_t aSize)
 			{	

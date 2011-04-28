@@ -20,6 +20,7 @@
 #include "VtoReader.h"
 
 #include <APL/Exception.h>
+#include <APL/Logger.h>
 
 #include <boost/foreach.hpp>
 
@@ -52,22 +53,29 @@ namespace apl {
 			throw new ArgumentException(LOCATION, "Channel not registered: " + id);		
 	}
 
-	void VtoReader::Update(const VtoEvent& arEvent)
+	void VtoReader::Update(const VtoData& arData, boost::uint8_t aChannelId)	
 	{
 		assert(this->InProgress());
 
-		// TODO - process the VTO event comparing the index to the map and preparing the data for delivery
+		// lookup and notify the correct channel callback
+		ChannelMap::iterator i = mChannelMap.find(aChannelId);
+		
+		if(i == mChannelMap.end()) {
+			LOG_BLOCK(LEV_ERROR, "Received data for unknown VTO channel id: " + aChannelId);
+		}
+		else {			
+			i->second->OnDataReceived(arData.GetData(), arData.GetSize());
+		}
 	}
 
 	void VtoReader::_Start()
-	{
+	{		
 		mLock.Lock();
 	}
-	
-	void VtoReader::_End()
-	{
-		// TODO - flush recombined streams to output channels here
 
+		
+	void VtoReader::_End()
+	{		
 		mLock.Unlock();		
 	}
 
