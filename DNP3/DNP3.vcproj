@@ -411,6 +411,14 @@
 					RelativePath=".\Stack.h"
 					>
 				</File>
+				<File
+					RelativePath=".\VtoEnabledStack.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\VtoEnabledStack.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="SubMaster"
@@ -591,11 +599,15 @@
 						>
 					</File>
 					<File
-						RelativePath=".\VtoDataInterface.cpp"
+						RelativePath=".\VtoDataInterface.h"
 						>
 					</File>
 					<File
-						RelativePath=".\VtoDataInterface.h"
+						RelativePath=".\VtoQueue.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VtoQueue.h"
 						>
 					</File>
 				</Filter>

@@ -99,7 +99,7 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 }
 
 IVtoWriter* AsyncStackManager::AddVtoChannel(const std::string& arStackName,
-				boost::uint8_t aVtoChannelId, IVtoCallbacks* apOnDataCallback)
+				IVtoCallbacks* apOnDataCallback)
 {
 	throw NotImplementedException(LOCATION);
 }
