@@ -21,5 +21,6 @@ $options = {
 :target => 'dnp3test.exe',
 :project_libs => [:dnp3, :apltesttools, :apl],
 :includes => [Boost::get_includes_dir, DEFAULT_INCLUDES],
+:warn_flags => ['-Wno-sign-compare'],
 :libs => $PLATFORM_LIBS + Boost::get_static_libs
 }

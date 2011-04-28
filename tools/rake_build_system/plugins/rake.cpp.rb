@@ -28,10 +28,11 @@ def make_dep_file(source, dep_file, includes)
   sh "g++ -M #{source} #{inc} #{$CC_PREPROCESSOR} > #{dep_file}"
 end
 
-def make_obj_file(source, obj_file, includes, cc_flags)
+def make_obj_file(source, obj_file, includes, cc_flags, warn_flags)
   inc = include_string(includes)
-  puts "compiling #{source} with #{$CC} #{cc_flags}"
-  sh "#{$CC} #{cc_flags} #{$WARN_FLAGS} -c -o #{obj_file} #{source} #{inc} #{$CC_PREPROCESSOR}"
+  warn = warn_flags.join(' ')
+  puts "compiling #{source} with #{$CC} #{cc_flags} #{warn}"
+  sh "#{$CC} #{cc_flags} #{warn} -c -o #{obj_file} #{source} #{inc} #{$CC_PREPROCESSOR}"
 end
 
 def make_library(lib, obj)
@@ -104,12 +105,16 @@ def add_cpp_based_target(name, options)
 
     cc_flags = (ENV['debug'] || options[:cc_release_flags].nil?) ? $CC_FLAGS : options[:cc_release_flags]
 
+    warn_flags = []
+    warn_flags.concat($WARN_FLAGS)
+    warn_flags.concat(options[:warn_flags]) if options[:warn_flags]
+
     #explicitly declare dependencies between .o and source files
     obj_to_src.each do |obj, src|
       dep_file = obj.ext('dep')
       file obj => src do |t|
         make_dep_file src, dep_file, includes
-        make_obj_file src, t.name, includes, cc_flags
+        make_obj_file src, t.name, includes, cc_flags, warn_flags
       end
     end
 
