@@ -26,9 +26,10 @@
 #include <APL/Loggable.h>
 #include <APL/DataInterfaces.h>
 
-#include "VtoDataInterface.h"
-#include "EventTypes.h"
+//#include <boost/cstdint.hpp>
 
+#include "VtoDataInterface.h"
+#include "VtoData.h"
 
 namespace apl { 
 	namespace dnp {
@@ -59,7 +60,7 @@ namespace apl {
 		*   Adds a VTOEvent object to be delivered back to user code.
 		*   Must be called from within a transaction block.
 		*/
-		void Update(const VtoEvent& arEvent);
+		void Update(const VtoData& arData, boost::uint8_t aChannelId);
 								
 		private:
 
