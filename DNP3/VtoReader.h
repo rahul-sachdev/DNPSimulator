@@ -17,32 +17,57 @@
 // under the License.
 //
 
-#ifndef __VTO_ENABLED_STACK_H_
-#define __VTO_ENABLED_STACK_H_
+#ifndef __VTO_READER_H_
+#define __VTO_READER_H_
 
 #include <map>
 
 #include <APL/Lock.h>
+#include <APL/Loggable.h>
+#include <APL/DataInterfaces.h>
 
-#include "VtoQueue.h"
+#include "VtoDataInterface.h"
+#include "EventTypes.h"
+
 
 namespace apl { 
 	namespace dnp {
 
-	class VtoEnabledStack
+	/**
+	*  Class used to track registered VTO Channels,
+	*  assemble VtoData objects back into contigous streams,
+	*  and deliver to the correct channel
+	*/
+	class VtoReader : private Loggable, public ITransactable
 	{
 		public:
 
-		IVtoWriter* AddChannel(IVtoCallbacks*);
-		void RemoveChannel(IVtoCallbacks*);
+		VtoReader(Logger* apLogger) : 		
+			Loggable(apLogger)
+		{}
 
-		protected:
 		
-		void NotifyOfSpace();
-	
-		VtoQueue mQueue;
+		void AddVtoChannel(IVtoCallbacks*);
 
+		void RemoveVtoChannel(IVtoCallbacks*);
+
+		/**  Notifies all registered IVTOCallbacks that space is available
+		*/
+		void Notify(size_t aAvailableBytes);
+
+		/**
+		*   Adds a VTOEvent object to be delivered back to user code.
+		*   Must be called from within a transaction block.
+		*/
+		void Update(const VtoEvent& arEvent);
+								
 		private:
+
+		//Implement start and end from ITransaction.
+
+		void _Start();
+		void _End();
+		
 		SigLock mLock;
 		typedef std::map<boost::uint8_t, IVtoCallbacks*> ChannelMap;
 		ChannelMap mChannelMap;

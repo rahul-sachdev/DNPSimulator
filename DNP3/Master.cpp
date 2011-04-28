@@ -62,7 +62,7 @@ mExecuteBO(apLogger),
 mExecuteSP(apLogger)
 {
 	mCommandQueue.SetNotifier(mNotifierSource.Get(boost::bind(&AsyncTaskBase::Enable, mSchedule.mpCommandTask), mpTimerSrc));	
-	this->UpdateState(MS_COMMS_DOWN);
+	this->UpdateState(MS_COMMS_DOWN);	
 }
 
 void Master::UpdateState(MasterStates aState)

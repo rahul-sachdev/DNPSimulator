@@ -411,17 +411,9 @@
 					RelativePath=".\Stack.h"
 					>
 				</File>
-				<File
-					RelativePath=".\VtoEnabledStack.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VtoEnabledStack.h"
-					>
-				</File>
 			</Filter>
 			<Filter
-				Name="SubMaster"
+				Name="Master"
 				>
 				<File
 					RelativePath=".\CTOHistory.h"
@@ -603,11 +595,19 @@
 						>
 					</File>
 					<File
-						RelativePath=".\VtoQueue.cpp"
+						RelativePath=".\VtoReader.cpp"
 						>
 					</File>
 					<File
-						RelativePath=".\VtoQueue.h"
+						RelativePath=".\VtoReader.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VtoWriter.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VtoWriter.h"
 						>
 					</File>
 				</Filter>

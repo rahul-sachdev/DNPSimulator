@@ -15,8 +15,8 @@
  * under the License.
  */
 
-#ifndef __VTO_QUEUE_H_
-#define __VTO_QUEUE_H_
+#ifndef __VTO_WRITER_H_
+#define __VTO_WRITER_H_
 
 #include <queue>
 
@@ -34,7 +34,7 @@ namespace apl {
 		 * Implements the IVTOWriter interface that is handed out by the stack
 		 * Responsible for UserCode -> Stack thread marshalling and stream decomposition.
 		 */
-		class VtoQueue : public IVtoWriter, public ITransactable, public SubjectBase<NullLock>
+		class VtoWriter : public IVtoWriter, public ITransactable, public SubjectBase<NullLock>
 		{
 			public:
 
@@ -46,26 +46,29 @@ namespace apl {
 				 *
 				 * @return				the new VtoQueue instance
 				 */
-				VtoQueue(size_t aMaxVtoChunks = 10);
+				VtoWriter(size_t aMaxVtoChunks);
 				
 				/// Implements IVtoWriter::Write
 				size_t Write(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId);
 
 				size_t NumBytesAvailable();
+
+			protected:
+				
+				SigLock mLock;				
 				
 			private:
 
 				// concrete classes will define these functions
 				void _Start();
 				void _End();
-				
+								
 				size_t NumChunksAvailable();
 				
 				void Commit(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId);
 				
 				void QueueVtoObject(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId);
-
-				SigLock mLock;
+				
 				const size_t mMaxVtoChunks;
 				std::queue<VtoEvent> mQueue;				
 		};
