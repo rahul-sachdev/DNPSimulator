@@ -13,7 +13,7 @@ if ENV['arm']
   $hw_os = 'pc_linux_arm'
 end
 
-# defaults for compiler, arhiver, and indexer
+# defaults for compiler, archiver, and indexer
 $CC = ENV['ccache'] ? 'ccache g++' : 'g++'
 
 $AR = 'ar cruv'
