@@ -23,9 +23,9 @@
 // recommendation is replace with this for portability
 #define MACRO_BZERO(b,len) (memset((b), '\0', (len)), (void) 0)
 
-#include <boost/cstdint.hpp>
+#include <APL/Types.h>
 
-namespace apl { 
+namespace apl {
 	namespace dnp {
 
 		/**
@@ -51,20 +51,20 @@ namespace apl {
 				this->Copy(arRhs.mData, arRhs.mSize);
 			}
 			*/
-												
+
 			size_t GetSize() const { return this->mSize; }
 
 			const boost::uint8_t* GetData() const { return mData; }
 
 			void Copy(const boost::uint8_t* aValue, size_t aSize)
-			{	
+			{
 				assert(aSize <= MAX_SIZE);
 				memcpy(this->mData, aValue, aSize);
 				this->mSize = aSize;
 			}
-						
+
 			private:
-			
+
 			boost::uint8_t mData[MAX_SIZE];
 			size_t mSize;
 		};

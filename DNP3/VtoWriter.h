@@ -26,6 +26,7 @@
 
 #include "EventTypes.h"
 #include "VtoDataInterface.h"
+#include "VtoData.h"
 
 namespace apl {
 	namespace dnp {
