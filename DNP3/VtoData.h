@@ -38,14 +38,10 @@ namespace apl {
 
 			const static size_t MAX_SIZE = 255;
 
-			VtoData() : mSize(0)
-			{
-				MACRO_BZERO(this->mData, MAX_SIZE);
-			}
+			VtoData() : mSize(0) {}
 
 			VtoData(const boost::uint8_t* aValue, size_t aSize)
 			{
-				MACRO_BZERO(this->mData, MAX_SIZE);
 				this->Copy(aValue, aSize);
 			}
 
