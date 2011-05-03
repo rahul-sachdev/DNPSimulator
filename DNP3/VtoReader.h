@@ -42,30 +42,69 @@ namespace apl {
 
 			VtoReader(Logger* apLogger) : Loggable(apLogger) {}
 
-			void AddVtoChannel(IVtoCallbacks*);
-
-			void RemoveVtoChannel(IVtoCallbacks*);
+			/**
+			 * Register an IVtoCallbacks instance with the VtoReader instance.
+			 * The IVtoCallbacks instance is self-aware of its channel id.
+			 *
+			 * @param apCallbacks		The callback handler for the channel
+			 *
+			 * @throw ArgumentException	if the channel id is already registered
+			 * 							with this reader
+			 */
+			void AddVtoChannel(IVtoCallbacks* apCallbacks);
 
 			/**
-			 * Notifies all registered IVTOCallbacks that space is available.
+			 * Unregister an IVtoCallbacks instance with the VtoReader
+			 * instance.
+			 *
+			 * @param apCallbacks		The callback handler to unregister
+			 *
+			 * @throw ArgumentException	if the channel id is not registered
+			 * 							with this reader
+			 */
+			void RemoveVtoChannel(IVtoCallbacks* apCallbacks);
+
+			/**
+			 * Notifies all registered IVtoCallbacks that space is available.
+			 *
+			 * @param aAvailableBytes	the number of bytes available for
+			 * 							reading.
 			 */
 			void Notify(size_t aAvailableBytes);
 
 			/**
-			 * Adds a VTOEvent object to be delivered back to user code.  Must be
-			 * called from within a transaction block.
+			 * Adds a VtoEvent object to be delivered back to user code.  Must
+			 * be called from within a transaction block.  If a callback
+			 * handler is not registered for the channel id, a log message will
+			 * be recorded.
+			 *
+			 * @param arData			the data waiting to be delivered
+			 * @param aChannelId		the channel id on which the data was
+			 * 							received
 			 */
 			void Update(const VtoData& arData, boost::uint8_t aChannelId);
 
+			protected:
+
+			/**
+			 * The ITransactable transaction lock.
+			 */
+			SigLock mLock;
+
 			private:
 
-			//Implement start and end from ITransaction.
-
+			/**
+			 * Starts the ITransactable transaction lock.
+			 */
 			void _Start();
+
+			/**
+			 * Ends the ITransactable transaction lock.
+			 */
 			void _End();
 
-			SigLock mLock;
 			typedef std::map<boost::uint8_t, IVtoCallbacks*> ChannelMap;
+
 			ChannelMap mChannelMap;
 		};
 

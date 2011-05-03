@@ -53,13 +53,13 @@ BOOST_AUTO_TEST_SUITE(IntegrationSuite)
 
 BOOST_AUTO_TEST_CASE(MasterToSlave)
 {
-	uint_16_t port = PORT_VALUE;
+	uint16_t port = PORT_VALUE;
 	size_t numPairs = NUM_PAIRS;
-	
+
 	StopWatch sw;
 	size_t numPoints = 500;
 	size_t numChanges = 10;
-	
+
 	EventLog log;
 	if (EXTRA_DEBUG)
 		log.AddLogSubscriber(LogToStdio::Inst());
@@ -79,13 +79,13 @@ BOOST_AUTO_TEST_CASE(MasterToSlave)
 		 */
 		{
 			Transaction tr(pObs);
-		
+
 			for (size_t i = 0; i < numPoints; ++i)
 				pObs->Update(t.RandomBinary(), i);
-		
+
 			for (size_t i = 0; i < numPoints; ++i)
 				pObs->Update(t.RandomAnalog(), i);
-		
+
 			for (size_t i = 0; i < numPoints; ++i)
 				pObs->Update(t.RandomCounter(), i);
 		}

@@ -27,68 +27,88 @@
 namespace apl {
 	namespace dnp {
 
-	void VtoReader::AddVtoChannel(IVtoCallbacks* apCallbacks)
-	{
-		CriticalSection cs(&mLock);
-
-		boost::uint8_t id = apCallbacks->GetChannelId();
-
-		if(mChannelMap.find(id) == mChannelMap.end())
+		void VtoReader::AddVtoChannel(IVtoCallbacks* apCallbacks)
 		{
+			/*
+			 * The whole function is thread-safe, from start to finish.
+			 */
+			CriticalSection cs(&mLock);
+
+			boost::uint8_t id = apCallbacks->GetChannelId();
+
+			/* Has this channel id already been registered? */
+			if (mChannelMap.find(id) != mChannelMap.end())
+			{
+				throw new ArgumentException(LOCATION,
+						"Channel already registered: " + id);
+			}
+
+			/* Register the callbacks for the channel id */
 			mChannelMap[id] = apCallbacks;
 		}
-		else
+
+		void VtoReader::RemoveVtoChannel(IVtoCallbacks* apCallbacks)
 		{
-			throw new ArgumentException(LOCATION, "Channel already registered: " + id);
+			/*
+			 * The whole function is thread-safe, from start to finish.
+			 */
+			CriticalSection cs(&mLock);
+
+			boost::uint8_t id = apCallbacks->GetChannelId();
+
+			if (mChannelMap.erase(id) == 0)
+				throw new ArgumentException(LOCATION,
+						"Channel not registered: " + id);
 		}
-	}
 
-	void VtoReader::RemoveVtoChannel(IVtoCallbacks* apCallbacks)
-	{
-		CriticalSection cs(&mLock);
-
-		boost::uint8_t id = apCallbacks->GetChannelId();
-
-		if(mChannelMap.erase(id) == 0)
-			throw new ArgumentException(LOCATION, "Channel not registered: " + id);
-	}
-
-	void VtoReader::Update(const VtoData& arData, boost::uint8_t aChannelId)
-	{
-		assert(this->InProgress());
-
-		// lookup and notify the correct channel callback
-		ChannelMap::iterator i = mChannelMap.find(aChannelId);
-
-		if(i == mChannelMap.end()) {
-			LOG_BLOCK(LEV_ERROR, "Received data for unknown VTO channel id: " + aChannelId);
-		}
-		else {
-			i->second->OnDataReceived(arData.GetData(), arData.GetSize());
-		}
-	}
-
-	void VtoReader::_Start()
-	{
-		mLock.Lock();
-	}
-
-
-	void VtoReader::_End()
-	{
-		mLock.Unlock();
-	}
-
-	void VtoReader::Notify(size_t aAvailableBytes)
-	{
-		CriticalSection cs(&mLock);
-
-		for(ChannelMap::iterator i = mChannelMap.begin(); i != mChannelMap.end(); ++i)
+		void VtoReader::Update(const VtoData& arData, boost::uint8_t aChannelId)
 		{
-			i->second->OnBufferAvailable(aAvailableBytes);
+			assert(this->InProgress());
+
+			/*
+			 * Lookup the callback object for the channel id.  If it doesn't
+			 * exist, register an error.  Otherwise, notify the callback
+			 * object.
+			 */
+
+			ChannelMap::iterator i = mChannelMap.find(aChannelId);
+
+			if (i == mChannelMap.end())
+			{
+				LOG_BLOCK(LEV_ERROR,
+						"No registered callback handler for received data "
+						"on VTO channel id: " + aChannelId);
+			}
+			else
+			{
+				i->second->OnDataReceived(arData.GetData(), arData.GetSize());
+			}
+		}
+
+		void VtoReader::_Start()
+		{
+			mLock.Lock();
+		}
+
+
+		void VtoReader::_End()
+		{
+			mLock.Unlock();
+		}
+
+		void VtoReader::Notify(size_t aAvailableBytes)
+		{
+			/*
+			 * The whole function is thread-safe, from start to finish.
+			 */
+			CriticalSection cs(&mLock);
+
+			for (ChannelMap::iterator i = mChannelMap.begin(); i != mChannelMap.end(); ++i)
+			{
+				i->second->OnBufferAvailable(aAvailableBytes);
+			}
 		}
 	}
-
-}}
+}
 
 /* vim: set ts=4 sw=4: */
