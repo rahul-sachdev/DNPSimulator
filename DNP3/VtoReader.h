@@ -26,54 +26,52 @@
 #include <APL/Loggable.h>
 #include <APL/DataInterfaces.h>
 
-//#include <boost/cstdint.hpp>
-
 #include "VtoDataInterface.h"
 #include "VtoData.h"
 
-namespace apl { 
+namespace apl {
 	namespace dnp {
 
-	/**
-	*  Class used to track registered VTO Channels,
-	*  assemble VtoData objects back into contigous streams,
-	*  and deliver to the correct channel
-	*/
-	class VtoReader : private Loggable, public ITransactable
-	{
-		public:
-
-		VtoReader(Logger* apLogger) : 		
-			Loggable(apLogger)
-		{}
-
-		
-		void AddVtoChannel(IVtoCallbacks*);
-
-		void RemoveVtoChannel(IVtoCallbacks*);
-
-		/**  Notifies all registered IVTOCallbacks that space is available
-		*/
-		void Notify(size_t aAvailableBytes);
-
 		/**
-		*   Adds a VTOEvent object to be delivered back to user code.
-		*   Must be called from within a transaction block.
-		*/
-		void Update(const VtoData& arData, boost::uint8_t aChannelId);
-								
-		private:
+		 *  Class used to track registered VTO Channels, assemble VtoData objects
+		 *  back into contigous streams, and deliver to the correct channel
+		 */
+		class VtoReader : private Loggable, public ITransactable
+		{
+			public:
 
-		//Implement start and end from ITransaction.
+			VtoReader(Logger* apLogger) : Loggable(apLogger) {}
 
-		void _Start();
-		void _End();
-		
-		SigLock mLock;
-		typedef std::map<boost::uint8_t, IVtoCallbacks*> ChannelMap;
-		ChannelMap mChannelMap;
-	};
+			void AddVtoChannel(IVtoCallbacks*);
 
-}}
+			void RemoveVtoChannel(IVtoCallbacks*);
+
+			/**
+			 * Notifies all registered IVTOCallbacks that space is available.
+			 */
+			void Notify(size_t aAvailableBytes);
+
+			/**
+			 * Adds a VTOEvent object to be delivered back to user code.  Must be
+			 * called from within a transaction block.
+			 */
+			void Update(const VtoData& arData, boost::uint8_t aChannelId);
+
+			private:
+
+			//Implement start and end from ITransaction.
+
+			void _Start();
+			void _End();
+
+			SigLock mLock;
+			typedef std::map<boost::uint8_t, IVtoCallbacks*> ChannelMap;
+			ChannelMap mChannelMap;
+		};
+
+	}
+}
+
+/* vim: set ts=4 sw=4: */
 
 #endif

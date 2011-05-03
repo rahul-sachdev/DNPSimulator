@@ -31,8 +31,9 @@ namespace apl {
 	namespace dnp {
 
 		/**
-		 * Implements the IVTOWriter interface that is handed out by the stack
-		 * Responsible for UserCode -> Stack thread marshalling and stream decomposition.
+		 * Implements the IVTOWriter interface that is handed out by the
+		 * stack.  Responsible for UserCode -> Stack thread marshalling and
+		 * stream decomposition.
 		 */
 		class VtoWriter : public IVtoWriter, public ITransactable, public SubjectBase<NullLock>
 		{
@@ -42,37 +43,66 @@ namespace apl {
 				 * Creates a new VtoQueue instance configured for Virtual
 				 * Terminal channel id matching aChannelId.
 				 *
-				 * @param aMaxVtoChunks	Maximum number of 255 byte blocks that can be stored at a time
+				 * @param aMaxVtoChunks	Maximum number of 255 byte blocks that
+				 * 						can be stored at a time
 				 *
 				 * @return				the new VtoQueue instance
 				 */
 				VtoWriter(size_t aMaxVtoChunks);
-				
-				/// Implements IVtoWriter::Write
+
+				/**
+				 * Implements IVtoWriter::Write().
+				 */
 				size_t Write(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId);
 
+				/**
+				 * Returns the number of bytes available to the user
+				 * application.  This is a sliding window, so the user
+				 * application must manage the data length when calling
+				 * VtoWriter::Write().
+				 *
+				 * @returns				the number of bytes free in the
+				 * 						transmission queue
+				 */
 				size_t NumBytesAvailable();
 
 			protected:
-				
-				SigLock mLock;				
-				
+
+				/**
+				 * The ITransactable transaction lock.
+				 */
+				SigLock mLock;
+
 			private:
 
-				// concrete classes will define these functions
+				/**
+				 * Starts the ITransactable transaction lock.
+				 */
 				void _Start();
-				void _End();
-								
-				size_t NumChunksAvailable();
-				
-				void Commit(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId);
-				
-				void QueueVtoObject(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId);
-				
-				const size_t mMaxVtoChunks;
-				std::queue<VtoEvent> mQueue;				
-		};
 
-}}
+				/**
+				 * Ends the ITransactable transaction lock.
+				 */
+				void _End();
+
+				/**
+				 * Returns the number of object chunks available in the
+				 * transmission queue.
+				 *
+				 * @return			the free space available in the queue
+				 */
+				size_t NumChunksAvailable();
+
+				void Commit(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId);
+
+				void QueueVtoObject(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId);
+
+				const size_t mMaxVtoChunks;
+				std::queue<VtoEvent> mQueue;
+		};
+	}
+}
+
+/* vim: set ts=4 sw=4: */
 
 #endif

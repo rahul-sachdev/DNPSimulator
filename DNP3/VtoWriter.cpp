@@ -22,20 +22,34 @@
 namespace apl {
 	namespace dnp {
 
-		VtoWriter::VtoWriter(size_t aMaxVtoChunks) : 			
+		VtoWriter::VtoWriter(size_t aMaxVtoChunks) :
 			mMaxVtoChunks(aMaxVtoChunks)
 		{}
-		
+
 		size_t VtoWriter::Write(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId)
 		{
-			CriticalSection cs(&mLock); // thread safe section begins
-			
+			/*
+			 * The whole function is thread-safe, from start to finish.
+			 */
+			CriticalSection cs(&mLock);
+
+			/*
+			 * Only write the maximum amount available or requested.  If the
+			 * requested data size is larger than the available buffer space,
+			 * only send what will fit.
+			 */
 			size_t num = Min<size_t>(this->NumBytesAvailable(), aLength);
 
+			/*
+			 * Chop up the data into Max(255) segments and add it to the queue.
+			 */
 			this->Commit(apData, num, aChannelId);
 
-			if(num > 0) this->NotifyAll(); // calls notifiers that the queue has data to be read
+			/* Tell any listeners that the queue has new data to be read. */
+			if (num > 0)
+				this->NotifyAll();
 
+			/* Return the number of bytes from apData that were queued. */
 			return num;
 		}
 
@@ -43,30 +57,42 @@ namespace apl {
 		{
 			mLock.Lock();
 		}
-		
+
 		void VtoWriter::_End()
-		{						
-			mLock.Unlock();			
+		{
+			mLock.Unlock();
 		}
 
 		void VtoWriter::Commit(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId)
 		{
+			/*
+			 * The data is segmented into N number of chunks, each of MAX_SIZE
+			 * bytes, and 1 chunk containing the remainder of the data that is
+			 * less than MAX_SIZE bytes.  We pre-calculate the chunk size to
+			 * avoid the constant comparison overhead in the loop itself.
+			 */
 			size_t complete = aLength / VtoData::MAX_SIZE;
 			size_t partial = aLength % VtoData::MAX_SIZE;
 
-			const boost::uint8_t* pLocation = apData;
-
-			for(size_t i=0; i<complete; ++i) {				
-				QueueVtoObject(pLocation, VtoData::MAX_SIZE, aChannelId);				
-				pLocation += VtoData::MAX_SIZE;
+			/* First, write the full-sized blocks */
+			for (size_t i = 0; i < complete; ++i)
+			{
+				QueueVtoObject(apData, VtoData::MAX_SIZE, aChannelId);
+				apData += VtoData::MAX_SIZE;
 			}
 
-			if(partial > 0) QueueVtoObject(pLocation, partial, aChannelId);				
+			/* Next, write the remaining data at the end of the stream */
+			if (partial > 0)
+				QueueVtoObject(apData, partial, aChannelId);
 		}
 
 		void VtoWriter::QueueVtoObject(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId)
 		{
-			VtoData vto(apData, aLength);	
+			/*
+			 * Create a new VtoData instance, set the event data associated
+			 * with it, and then push the object onto the transmission queue.
+			 */
+			VtoData vto(apData, aLength);
 			VtoEvent evt(vto, PC_CLASS_1, aChannelId);
 			mQueue.push(evt);
 		}
@@ -78,9 +104,14 @@ namespace apl {
 
 		size_t VtoWriter::NumBytesAvailable()
 		{
-			return this->NumChunksAvailable()*VtoData::MAX_SIZE;
+			/*
+			 * TODO - Do we need to take out any space for the object
+			 * headers?
+			 */
+			return this->NumChunksAvailable() * VtoData::MAX_SIZE;
 		}
-		
-		
-}}
 
+	}
+}
+
+/* vim: set ts=4 sw=4: */

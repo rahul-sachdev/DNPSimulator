@@ -24,7 +24,7 @@
 
 #include <boost/foreach.hpp>
 
-namespace apl { 
+namespace apl {
 	namespace dnp {
 
 	void VtoReader::AddVtoChannel(IVtoCallbacks* apCallbacks)
@@ -35,14 +35,14 @@ namespace apl {
 
 		if(mChannelMap.find(id) == mChannelMap.end())
 		{
-			mChannelMap[id] = apCallbacks;			
+			mChannelMap[id] = apCallbacks;
 		}
 		else
 		{
 			throw new ArgumentException(LOCATION, "Channel already registered: " + id);
-		}		
+		}
 	}
-	
+
 	void VtoReader::RemoveVtoChannel(IVtoCallbacks* apCallbacks)
 	{
 		CriticalSection cs(&mLock);
@@ -50,37 +50,37 @@ namespace apl {
 		boost::uint8_t id = apCallbacks->GetChannelId();
 
 		if(mChannelMap.erase(id) == 0)
-			throw new ArgumentException(LOCATION, "Channel not registered: " + id);		
+			throw new ArgumentException(LOCATION, "Channel not registered: " + id);
 	}
 
-	void VtoReader::Update(const VtoData& arData, boost::uint8_t aChannelId)	
+	void VtoReader::Update(const VtoData& arData, boost::uint8_t aChannelId)
 	{
 		assert(this->InProgress());
 
 		// lookup and notify the correct channel callback
 		ChannelMap::iterator i = mChannelMap.find(aChannelId);
-		
+
 		if(i == mChannelMap.end()) {
 			LOG_BLOCK(LEV_ERROR, "Received data for unknown VTO channel id: " + aChannelId);
 		}
-		else {			
+		else {
 			i->second->OnDataReceived(arData.GetData(), arData.GetSize());
 		}
 	}
 
 	void VtoReader::_Start()
-	{		
+	{
 		mLock.Lock();
 	}
 
-		
+
 	void VtoReader::_End()
-	{		
-		mLock.Unlock();		
+	{
+		mLock.Unlock();
 	}
 
 	void VtoReader::Notify(size_t aAvailableBytes)
-	{		
+	{
 		CriticalSection cs(&mLock);
 
 		for(ChannelMap::iterator i = mChannelMap.begin(); i != mChannelMap.end(); ++i)
@@ -88,7 +88,7 @@ namespace apl {
 			i->second->OnBufferAvailable(aAvailableBytes);
 		}
 	}
-	
+
 }}
 
-
+/* vim: set ts=4 sw=4: */
