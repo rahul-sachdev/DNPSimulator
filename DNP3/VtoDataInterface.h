@@ -78,11 +78,11 @@ namespace apl {
 		class IVtoWriter
 		{
 			public:
-				
+
 				/**
 				 * Writes a stream of data to the remote VTO endpoint.
 				 *
-				 * @param arData		The data to write to the VTO stream.
+				 * @param apData		The data to write to the VTO stream.
 				 * @param aLength		The length of the data to write (in
 				 *						bytes).
 				 * @param aChannelId	The channel id for the vto stream
@@ -95,7 +95,7 @@ namespace apl {
 				 */
 				virtual size_t Write(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId) = 0;
 		};
-		
+
 		/**
 		 * Receives data from the stack for a particular channel and is notified
 		 * when buffer space becomes available.  Applications that wish to use
