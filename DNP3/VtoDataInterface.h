@@ -121,7 +121,7 @@ namespace apl {
 				/**
 				 * Called when data arrives from stack and needs to be handled.
 				 *
-				 * @param arData		The data received from the VTO stream.
+				 * @param apData		The data received from the VTO stream.
 				 * @param aLength		The length of the data received (in
 				 *						bytes).
 				 */
