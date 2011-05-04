@@ -36,7 +36,8 @@ namespace apl {
 		 * stack.  Responsible for UserCode -> Stack thread marshalling and
 		 * stream decomposition.
 		 */
-		class VtoWriter : public IVtoWriter, public ITransactable, public SubjectBase<NullLock>
+		class VtoWriter : public IVtoWriter, public ITransactable,
+			public SubjectBase<NullLock>
 		{
 			public:
 
@@ -45,7 +46,7 @@ namespace apl {
 				 * Terminal channel id matching aChannelId.
 				 *
 				 * @param aMaxVtoChunks	Maximum number of 255 byte blocks that
-				 * 						can be stored at a time
+				 *                      can be stored at a time
 				 *
 				 * @return				the new VtoQueue instance
 				 */
@@ -54,7 +55,9 @@ namespace apl {
 				/**
 				 * Implements IVtoWriter::Write().
 				 */
-				size_t Write(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId);
+				size_t Write(const boost::uint8_t* apData,
+				             size_t aLength,
+				             boost::uint8_t aChannelId);
 
 				/**
 				 * Returns the number of bytes available to the user
@@ -63,7 +66,7 @@ namespace apl {
 				 * VtoWriter::Write().
 				 *
 				 * @returns				the number of bytes free in the
-				 * 						transmission queue
+				 *                      transmission queue
 				 */
 				size_t NumBytesAvailable();
 
@@ -94,9 +97,13 @@ namespace apl {
 				 */
 				size_t NumChunksAvailable();
 
-				void Commit(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId);
+				void Commit(const boost::uint8_t* apData,
+				            size_t aLength,
+				            boost::uint8_t aChannelId);
 
-				void QueueVtoObject(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId);
+				void QueueVtoObject(const boost::uint8_t* apData,
+				                    size_t aLength,
+				                    boost::uint8_t aChannelId);
 
 				const size_t mMaxVtoChunks;
 				std::queue<VtoEvent> mQueue;
@@ -107,3 +114,4 @@ namespace apl {
 /* vim: set ts=4 sw=4: */
 
 #endif
+

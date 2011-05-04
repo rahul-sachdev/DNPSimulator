@@ -22,11 +22,13 @@
 namespace apl {
 	namespace dnp {
 
-		VtoWriter::VtoWriter(size_t aMaxVtoChunks) :
-			mMaxVtoChunks(aMaxVtoChunks)
+		VtoWriter::VtoWriter(size_t aMaxVtoChunks) : mMaxVtoChunks(
+				aMaxVtoChunks)
 		{}
 
-		size_t VtoWriter::Write(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId)
+		size_t VtoWriter::Write(const boost::uint8_t* apData,
+		                        size_t aLength,
+		                        boost::uint8_t aChannelId)
 		{
 			/*
 			 * The whole function is thread-safe, from start to finish.
@@ -63,7 +65,9 @@ namespace apl {
 			mLock.Unlock();
 		}
 
-		void VtoWriter::Commit(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId)
+		void VtoWriter::Commit(const boost::uint8_t* apData,
+		                       size_t aLength,
+		                       boost::uint8_t aChannelId)
 		{
 			/*
 			 * The data is segmented into N number of chunks, each of MAX_SIZE
@@ -86,7 +90,9 @@ namespace apl {
 				QueueVtoObject(apData, partial, aChannelId);
 		}
 
-		void VtoWriter::QueueVtoObject(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId)
+		void VtoWriter::QueueVtoObject(const boost::uint8_t* apData,
+		                               size_t aLength,
+		                               boost::uint8_t aChannelId)
 		{
 			/*
 			 * Create a new VtoData instance, set the event data associated
@@ -104,10 +110,6 @@ namespace apl {
 
 		size_t VtoWriter::NumBytesAvailable()
 		{
-			/*
-			 * TODO - Do we need to take out any space for the object
-			 * headers?
-			 */
 			return this->NumChunksAvailable() * VtoData::MAX_SIZE;
 		}
 
@@ -115,3 +117,4 @@ namespace apl {
 }
 
 /* vim: set ts=4 sw=4: */
+
