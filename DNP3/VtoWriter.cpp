@@ -103,6 +103,11 @@ namespace apl {
 			mQueue.push(evt);
 		}
 
+		size_t VtoWriter::Size()
+		{
+			return mQueue.size();
+		}
+
 		size_t VtoWriter::NumChunksAvailable()
 		{
 			return mMaxVtoChunks - mQueue.size();

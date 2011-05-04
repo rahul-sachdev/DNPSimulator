@@ -112,13 +112,10 @@ namespace apl { namespace dnp {
 
 		/// The default group/variation to use for counter event responses
 		GrpVar mEventCounter;
-
-
-		/// The minimum number of octets to reserve in the DNP3 application
-		/// layer for VTO data related to this stack.
-		size_t VtoReservedOctetCount;
 	};
 
 }}
+
+/* vim: set ts=4 sw=4: */
 
 #endif

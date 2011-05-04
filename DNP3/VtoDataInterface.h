@@ -94,6 +94,15 @@ namespace apl {
 				 *                      buffer has insufficient space.
 				 */
 				virtual size_t Write(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId) = 0;
+
+				/**
+				 * Returns the number of objects in the queue that are ready
+				 * to be sent.
+				 *
+				 * @return				the number of objects in the
+				 *						transmission queue
+				 */
+				virtual size_t Size() = 0;
 		};
 
 		/**

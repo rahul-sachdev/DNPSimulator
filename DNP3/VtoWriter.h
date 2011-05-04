@@ -60,6 +60,11 @@ namespace apl {
 				             boost::uint8_t aChannelId);
 
 				/**
+				 * Implements IVtoWriter::Size().
+				 */
+				size_t Size();
+
+				/**
 				 * Returns the number of bytes available to the user
 				 * application.  This is a sliding window, so the user
 				 * application must manage the data length when calling
