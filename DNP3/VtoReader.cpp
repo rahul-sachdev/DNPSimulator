@@ -39,8 +39,11 @@ namespace apl {
 			/* Has this channel id already been registered? */
 			if (mChannelMap.find(id) != mChannelMap.end())
 			{
-				throw new ArgumentException(LOCATION,
-						"Channel already registered: " + id);
+				std::stringstream out;
+				out << (int)id;
+
+				throw ArgumentException(LOCATION,
+						"Channel already registered: " + out.str());
 			}
 
 			/* Register the callbacks for the channel id */
@@ -57,12 +60,18 @@ namespace apl {
 			boost::uint8_t id = apCallbacks->GetChannelId();
 
 			if (mChannelMap.erase(id) == 0)
-				throw new ArgumentException(LOCATION,
-						"Channel not registered: " + id);
+			{
+				std::stringstream out;
+				out << (int)id;
+
+				throw ArgumentException(LOCATION,
+						"Channel not registered: " + out.str());
+			}
 		}
 
 		void VtoReader::Update(const VtoData& arData, boost::uint8_t aChannelId)
 		{
+			/* Make sure we are part of the larger DNP3 transaction */
 			assert(this->InProgress());
 
 			/*

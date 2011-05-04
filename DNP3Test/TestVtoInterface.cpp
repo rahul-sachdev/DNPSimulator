@@ -18,22 +18,77 @@
 //
 
 #include <boost/test/unit_test.hpp>
+
+#include <APL/DataInterfaces.h>
+#include <APL/DataTypes.h>
+#include <APL/Exception.h>
+#include <APL/Log.h>
+#include <APL/LogToStdio.h>
+
+#include <APLTestTools/BufferHelpers.h>
 #include <APLTestTools/TestHelpers.h>
 
+#include <DNP3/DNPConstants.h>
 #include <DNP3/VtoData.h>
 #include <DNP3/VtoDataInterface.h>
 #include <DNP3/VtoReader.h>
 #include <DNP3/VtoWriter.h>
-
-#include <DNP3/DNPConstants.h>
-#include <APL/DataTypes.h>
-#include <APLTestTools/BufferHelpers.h>
 
 using namespace std;
 using namespace apl;
 using namespace apl::dnp;
 
 #define MAX_SIZE					(255)
+
+#define MACRO_BZERO(b,len) (memset((b), '\0', (len)), (void) 0)
+
+class VtoCallbackTest : public IVtoCallbacks
+{
+	public:
+		VtoCallbackTest(boost::uint8_t aChannelId) : IVtoCallbacks(aChannelId)
+		{
+			this->Reset();
+		}
+
+		void OnDataReceived(const boost::uint8_t* apData, size_t aLength);
+		void OnBufferAvailable(size_t aSize);
+
+		void Reset() {
+			this->numOnDataReceived = 0;
+			this->numOnBufferAvailable = 0;
+
+			this->lastOnDataReceived = 0;
+			this->lastOnBufferAvailable = 0;
+
+			MACRO_BZERO(this->received, 1024);
+			this->size = 0;
+		}
+
+		size_t numOnDataReceived;
+		size_t numOnBufferAvailable;
+
+		size_t lastOnDataReceived;
+		size_t lastOnBufferAvailable;
+
+		boost::uint8_t received[4096];
+		size_t size;
+};
+
+void VtoCallbackTest::OnDataReceived(const boost::uint8_t* apData, size_t aLength)
+{
+	assert(this->size + aLength <= sizeof(received));
+	memcpy(&this->received[this->size], apData, aLength);
+	this->size += aLength;
+
+	this->lastOnDataReceived = aLength;
+	++this->numOnDataReceived;
+}
+
+void VtoCallbackTest::OnBufferAvailable(size_t aSize)
+{
+	this->lastOnBufferAvailable = aSize;
+	++this->numOnBufferAvailable;
+}
 
 BOOST_AUTO_TEST_SUITE(VtoInterfaceTests)
 	BOOST_AUTO_TEST_CASE(VtoWriteSeveral)
@@ -96,6 +151,47 @@ BOOST_AUTO_TEST_SUITE(VtoInterfaceTests)
 		BOOST_REQUIRE_EQUAL(len, emptySize);
 		BOOST_REQUIRE(len != dataSize);
 		BOOST_REQUIRE_EQUAL(writer.NumBytesAvailable(), 0);
+	}
+
+	BOOST_AUTO_TEST_CASE(VtoReaderRegisterChannels)
+	{
+		EventLog log;
+		VtoReader reader(log.GetLogger(LEV_WARNING, "test"));
+
+		VtoCallbackTest realChannel(1);
+		VtoCallbackTest* channel = &realChannel;
+
+		/* Register a new channel */
+		BOOST_REQUIRE_NO_THROW(reader.AddVtoChannel(channel));
+
+		/* Register a duplicate channel */
+		BOOST_REQUIRE_THROW(reader.AddVtoChannel(channel), ArgumentException);
+
+		/* Unregister a channel*/
+		BOOST_REQUIRE_NO_THROW(reader.RemoveVtoChannel(channel));
+
+		/* Unregister a bad channel */
+		BOOST_REQUIRE_THROW(reader.RemoveVtoChannel(channel), ArgumentException);
+	}
+
+	BOOST_AUTO_TEST_CASE(VtoReaderUpdate)
+	{
+		EventLog log;
+		VtoReader reader(log.GetLogger(LEV_WARNING, "test"));
+		VtoData data;
+
+		VtoCallbackTest* channel1 = new VtoCallbackTest(1);
+		VtoCallbackTest* channel2 = new VtoCallbackTest(2);
+
+		/* Register a new channel */
+		BOOST_REQUIRE_NO_THROW(reader.AddVtoChannel(channel1));
+		BOOST_REQUIRE_NO_THROW(reader.AddVtoChannel(channel2));
+
+		/* Check that data for an unregistered channel is ignored */
+		{
+			Transaction tr(reader);
+			reader.Update(data, 1); /* TODO - how do I check this? */
+		}
 	}
 BOOST_AUTO_TEST_SUITE_END()
 
