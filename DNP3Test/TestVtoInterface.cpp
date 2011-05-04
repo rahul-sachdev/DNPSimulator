@@ -158,39 +158,143 @@ BOOST_AUTO_TEST_SUITE(VtoInterfaceTests)
 		EventLog log;
 		VtoReader reader(log.GetLogger(LEV_WARNING, "test"));
 
-		VtoCallbackTest realChannel(1);
-		VtoCallbackTest* channel = &realChannel;
+		VtoCallbackTest channel(1);
 
 		/* Register a new channel */
-		BOOST_REQUIRE_NO_THROW(reader.AddVtoChannel(channel));
+		BOOST_REQUIRE_NO_THROW(reader.AddVtoChannel(&channel));
 
 		/* Register a duplicate channel */
-		BOOST_REQUIRE_THROW(reader.AddVtoChannel(channel), ArgumentException);
+		BOOST_REQUIRE_THROW(reader.AddVtoChannel(&channel), ArgumentException);
 
 		/* Unregister a channel*/
-		BOOST_REQUIRE_NO_THROW(reader.RemoveVtoChannel(channel));
+		BOOST_REQUIRE_NO_THROW(reader.RemoveVtoChannel(&channel));
 
 		/* Unregister a bad channel */
-		BOOST_REQUIRE_THROW(reader.RemoveVtoChannel(channel), ArgumentException);
+		BOOST_REQUIRE_THROW(reader.RemoveVtoChannel(&channel), ArgumentException);
 	}
 
 	BOOST_AUTO_TEST_CASE(VtoReaderUpdate)
 	{
 		EventLog log;
+
 		VtoReader reader(log.GetLogger(LEV_WARNING, "test"));
+
+		const size_t size = 6;
+		uint8_t buffer[size];
+
 		VtoData data;
 
-		VtoCallbackTest* channel1 = new VtoCallbackTest(1);
-		VtoCallbackTest* channel2 = new VtoCallbackTest(2);
+		VtoCallbackTest channel1(1);
+		VtoCallbackTest channel2(2);
+
+		/*
+		 * Create a data sequence of "abcdef" that will be used for all of the
+		 * tests below.
+		 */
+		for (size_t i = 0; i < size; i++)
+		{
+			buffer[i] = 'a' + i;
+		}
+
+		data.Copy(buffer, size);
 
 		/* Register a new channel */
-		BOOST_REQUIRE_NO_THROW(reader.AddVtoChannel(channel1));
-		BOOST_REQUIRE_NO_THROW(reader.AddVtoChannel(channel2));
+		BOOST_REQUIRE_NO_THROW(reader.AddVtoChannel(&channel1));
+		BOOST_REQUIRE_NO_THROW(reader.AddVtoChannel(&channel2));
 
 		/* Check that data for an unregistered channel is ignored */
+		channel1.Reset();
+		channel2.Reset();
 		{
 			Transaction tr(reader);
-			reader.Update(data, 1); /* TODO - how do I check this? */
+			reader.Update(data, 3);
+		}
+
+		BOOST_REQUIRE_EQUAL(channel1.numOnDataReceived, 0);
+		BOOST_REQUIRE_EQUAL(channel1.lastOnDataReceived, 0);
+		BOOST_REQUIRE_EQUAL(channel1.size, 0);
+
+		BOOST_REQUIRE_EQUAL(channel2.numOnDataReceived, 0);
+		BOOST_REQUIRE_EQUAL(channel2.lastOnDataReceived, 0);
+		BOOST_REQUIRE_EQUAL(channel2.size, 0);
+
+		/* Check that data for a registered channel is stored */
+		channel1.Reset();
+		channel2.Reset();
+		{
+			Transaction tr(reader);
+			reader.Update(data, 1);
+		}
+
+		BOOST_REQUIRE_EQUAL(channel1.numOnDataReceived, 1);
+		BOOST_REQUIRE_EQUAL(channel1.lastOnDataReceived, size);
+		BOOST_REQUIRE_EQUAL(channel1.size, size);
+
+		BOOST_REQUIRE_EQUAL(channel2.numOnDataReceived, 0);
+		BOOST_REQUIRE_EQUAL(channel2.lastOnDataReceived, 0);
+		BOOST_REQUIRE_EQUAL(channel2.size, 0);
+
+		/* Check a sequence of data stores */
+		{
+			channel1.Reset();
+			channel2.Reset();
+
+			/* Check that data for a registered channel is stored */
+			{
+				Transaction tr(reader);
+				reader.Update(data, 1);
+			}
+
+			BOOST_REQUIRE_EQUAL(channel1.numOnDataReceived, 1);
+			BOOST_REQUIRE_EQUAL(channel1.lastOnDataReceived, size);
+			BOOST_REQUIRE_EQUAL(channel1.size, size);
+
+			BOOST_REQUIRE_EQUAL(channel2.numOnDataReceived, 0);
+			BOOST_REQUIRE_EQUAL(channel2.lastOnDataReceived, 0);
+			BOOST_REQUIRE_EQUAL(channel2.size, 0);
+
+			/* Check that data for different channels are stored */
+			data.Copy(buffer, size / 2);
+			{
+				Transaction tr(reader);
+				reader.Update(data, 2);
+			}
+
+			BOOST_REQUIRE_EQUAL(channel1.numOnDataReceived, 1);
+			BOOST_REQUIRE_EQUAL(channel1.lastOnDataReceived, size);
+			BOOST_REQUIRE_EQUAL(channel1.size, size);
+
+			BOOST_REQUIRE_EQUAL(channel2.numOnDataReceived, 1);
+			BOOST_REQUIRE_EQUAL(channel2.lastOnDataReceived, size / 2);
+			BOOST_REQUIRE_EQUAL(channel2.size, size / 2);
+
+			/* Check that multiple data for a channel is stored */
+			data.Copy(buffer, size / 2);
+			{
+				Transaction tr(reader);
+				reader.Update(data, 1);
+			}
+
+			BOOST_REQUIRE_EQUAL(channel1.numOnDataReceived, 2);
+			BOOST_REQUIRE_EQUAL(channel1.lastOnDataReceived, size / 2);
+			BOOST_REQUIRE_EQUAL(channel1.size, size + (size / 2));
+
+			BOOST_REQUIRE_EQUAL(channel2.numOnDataReceived, 1);
+			BOOST_REQUIRE_EQUAL(channel2.lastOnDataReceived, size / 2);
+			BOOST_REQUIRE_EQUAL(channel2.size, size / 2);
+
+			/* Make sure the final received buffer stream looks proper */
+			char ch1Data[] = "abcdefabc";
+			for (size_t i = 0; i < channel1.size; ++i)
+			{
+				BOOST_REQUIRE_EQUAL(channel1.received[i], ch1Data[i]);
+			}
+
+			char ch2Data[] = "abc";
+			for (size_t i = 0; i < channel2.size; ++i)
+			{
+				BOOST_REQUIRE_EQUAL(channel2.received[i], ch2Data[i]);
+			}
 		}
 	}
 BOOST_AUTO_TEST_SUITE_END()
