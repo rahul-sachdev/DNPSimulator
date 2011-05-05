@@ -60,6 +60,11 @@ namespace apl {
 				             boost::uint8_t aChannelId);
 
 				/**
+				 * Implements IVtoWriter::Read().
+				 */
+				bool Read(VtoEvent& arEvent);
+
+				/**
 				 * Implements IVtoWriter::Size().
 				 */
 				size_t Size();

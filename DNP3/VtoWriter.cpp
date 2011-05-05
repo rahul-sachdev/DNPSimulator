@@ -103,8 +103,39 @@ namespace apl {
 			mQueue.push(evt);
 		}
 
+		bool VtoWriter::Read(VtoEvent& arEvent)
+		{
+			/*
+			 * The whole function is thread-safe, from start to finish.
+			 */
+			CriticalSection cs(&mLock);
+
+			/*
+			 * If there is no data on the queue, return false.  This allows
+			 * the function to be used in the conditional block of a loop
+			 * construct.
+			 */
+			if (this->mQueue.size() == 0)
+			{
+				return false;
+			}
+
+			/*
+			 * The queue has data, so pop off the front item, store it in
+			 * arEvent, and return true.
+			 */
+			arEvent = this->mQueue.front();
+			this->mQueue.pop();
+			return true;
+		}
+
 		size_t VtoWriter::Size()
 		{
+			/*
+			 * The whole function is thread-safe, from start to finish.
+			 */
+			CriticalSection cs(&mLock);
+
 			return mQueue.size();
 		}
 
