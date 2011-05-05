@@ -103,4 +103,6 @@ namespace apl { namespace dnp {
 
 }}
 
+/* vim: set ts=4 sw=4: */
+
 #endif

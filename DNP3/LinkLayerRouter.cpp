@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "LinkLayerRouter.h"
 
 
@@ -63,8 +63,8 @@ void LinkLayerRouter::AddContext(ILinkContext* apContext, boost::uint16_t aAddre
 
 void LinkLayerRouter::RemoveContext(boost::uint16_t aAddress)
 {
-	AddressMap::iterator i = mAddressMap.find(aAddress);	
-	if(i != mAddressMap.end()) { 
+	AddressMap::iterator i = mAddressMap.find(aAddress);
+	if(i != mAddressMap.end()) {
 		ILinkContext* pContext = i->second;
 		mAddressMap.erase(i);
 		if(this->IsOpen()) pContext->OnLowerLayerDown();
@@ -82,11 +82,16 @@ ILinkContext* LinkLayerRouter::GetContext(boost::uint16_t aDest)
 ILinkContext* LinkLayerRouter::GetDestination(boost::uint16_t aDest)
 {
 	ILinkContext* pDest = GetContext(aDest);
-	
+
+	/*
+	 * TODO - If we receive a frame from an unknown destination, should we
+	 * trigger a callback hook to allow a user-defined handler to register the
+	 * new destination (if desired)?
+	 */
 	if(pDest == NULL) {
 		ERROR_BLOCK(LEV_WARNING, "Frame for unknown destination: " << aDest, DLERR_UNKNOWN_DESTINATION);
 	}
-	
+
 	return pDest;
 }
 
@@ -141,19 +146,19 @@ void LinkLayerRouter::UnconfirmedUserData(bool aIsMaster, boost::uint16_t aDest,
 }
 
 void LinkLayerRouter::_OnReceive(const boost::uint8_t*, size_t aNumBytes)
-{	
+{
 	// The order is important here. You must let the receiver process the byte or another read could write
 	// over the buffer before it is processed
-	mReceiver.OnRead(aNumBytes); //this may trigger callbacks to the local ILinkContext interface	
+	mReceiver.OnRead(aNumBytes); //this may trigger callbacks to the local ILinkContext interface
 	if(mpPhys->CanRead()) { // this is required because the call above could trigger the layer to be closed
 		mpPhys->AsyncRead(mReceiver.WriteBuff(), mReceiver.NumWriteBytes()); //start another read
 	}
 }
 
 void LinkLayerRouter::Transmit(const LinkFrame& arFrame)
-{	
+{
 	if(this->GetContext(arFrame.GetSrc())) {
-		if(!this->IsLowerLayerUp()) 
+		if(!this->IsLowerLayerUp())
 			throw InvalidStateException(LOCATION, "LowerLayerDown");
 		this->mTransmitQueue.push_back(arFrame);
 		this->CheckForSend();
@@ -162,7 +167,7 @@ void LinkLayerRouter::Transmit(const LinkFrame& arFrame)
 		ostringstream oss;
 		oss << "Unassociated context w/ address: " << arFrame.GetSrc();
 		throw ArgumentException(LOCATION, oss.str());
-	}	
+	}
 }
 
 void LinkLayerRouter::_OnSendSuccess()
@@ -171,13 +176,13 @@ void LinkLayerRouter::_OnSendSuccess()
 	assert(mTransmitting);
 	ILinkContext* pContext = this->GetContext(mTransmitQueue.front().GetSrc());
 	assert(pContext != NULL);
-	mTransmitting = false;	
+	mTransmitting = false;
 	mTransmitQueue.pop_front();
-	this->CheckForSend();	
+	this->CheckForSend();
 }
 
 void LinkLayerRouter::_OnSendFailure()
-{	
+{
 	LOG_BLOCK(LEV_ERROR, "Unexpected _OnSendFailure");
 	mTransmitting = false;
 	this->CheckForSend();
@@ -203,10 +208,12 @@ void LinkLayerRouter::Down()
 {
 	mTransmitting = false;
 	mTransmitQueue.erase(mTransmitQueue.begin(), mTransmitQueue.end());
-	for(AddressMap::iterator i = mAddressMap.begin(); i != mAddressMap.end(); ++i) {		
+	for(AddressMap::iterator i = mAddressMap.begin(); i != mAddressMap.end(); ++i) {
 		i->second->OnLowerLayerDown();
 	}
-	
+
 }
 
 }}
+
+/* vim: set ts=4 sw=4: */
