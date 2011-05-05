@@ -37,6 +37,7 @@ struct MasterConfig
 	/// Default constructor
 	MasterConfig() :
 	FragSize(DEFAULT_FRAG_SIZE),
+	VtoWriterQueueSize(DEFAULT_VTO_WRITER_QUEUE_SIZE),
 	AllowTimeSync(true),
 	DoUnsolOnStartup(false),
 	EnableUnsol(true),
@@ -59,6 +60,9 @@ struct MasterConfig
 
 	/// Maximum fragment size to use for requests
 	size_t FragSize;
+
+	/// The number of objects to store in the VtoWriter queue.
+	size_t VtoWriterQueueSize;
 
 	/// If true, the master will do time syncs when it sees the time IIN bit from the slave
 	bool AllowTimeSync;

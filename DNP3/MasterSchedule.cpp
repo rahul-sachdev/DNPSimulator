@@ -27,8 +27,8 @@
 namespace apl {
 	namespace dnp {
 
-		MasterSchedule::MasterSchedule(AsyncTaskGroup* apGroup) : mpGroup(
-				apGroup)
+		MasterSchedule::MasterSchedule(AsyncTaskGroup* apGroup) :
+			mpGroup(apGroup)
 		{}
 
 		void MasterSchedule::EnableOnlineTasks()
@@ -137,6 +137,11 @@ namespace apl {
 					AMP_CLEAR_RESTART,
 					boost::bind(&Master::WriteIIN, apMaster, _1),
 					"Clear IIN");
+
+			schedule.mpVtoWriterToBufferTask = apGroup->AddContinuous(
+					AMP_VTO_BUFFERING,
+					boost::bind(&Master::BufferVtoData, apMaster, _1),
+					"Buffer VTO Data");
 
 			schedule.mpTimeTask->SetFlags(ONLINE_ONLY_TASKS);
 			schedule.mpClearRestartTask->SetFlags(ONLINE_ONLY_TASKS);

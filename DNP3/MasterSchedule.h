@@ -39,12 +39,27 @@ class MasterSchedule
 {
 	public:
 
-	AsyncTaskBase* mpCommandTask;		// Task to read the command queue
+	/**
+	 * A task to read the Master::mCommandQueue and pass objects to
+	 * Master::ProcessControl.
+	 */
+	AsyncTaskBase* mpCommandTask;
 
-	AsyncTaskBase* mpTimeTask;			// Task to synchronize the time on
-										// outstation
+	/**
+	 * A task to synchronize time on the outstation.
+	 */
+	AsyncTaskBase* mpTimeTask;
 
-	AsyncTaskBase* mpClearRestartTask;	// Task to clear the restart IIN bit
+	/**
+	 * A task to clear the restart IIN bit.
+	 */
+	AsyncTaskBase* mpClearRestartTask;
+
+	/**
+	 * A task to read the Master::mVtoWriter queue and double-buffer it into
+	 * the Master::mVtoTransmitBuffer queue.
+	 */
+	AsyncTaskBase* mpVtoWriterToBufferTask;
 
 	/// Enables all of the tasks that run when the layer is Open
 	void EnableOnlineTasks();
@@ -70,7 +85,9 @@ class MasterSchedule
 		AMP_TIME_SYNC,
 		AMP_CLEAR_RESTART,
 		AMP_UNSOL_CHANGE,
-		AMP_COMMAND
+		AMP_COMMAND,
+		AMP_VTO_TRANSMIT,
+		AMP_VTO_BUFFERING
 	};
 
 	enum TaskTypes

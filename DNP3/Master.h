@@ -33,11 +33,13 @@
 #include "ObjectInterfaces.h"
 #include "MasterSchedule.h"
 #include "MasterObserver.h"
+#include "VtoWriter.h"
 
 // includes for tasks
 #include "StartupTasks.h"
 #include "DataPoll.h"
 #include "ControlTasks.h"
+#include "VtoWriterToBufferTask.h"
 
 namespace apl {
 	class IDataObserver;
@@ -105,6 +107,7 @@ class Master : public Loggable, public IAppUser
 	void ChangeUnsol(ITask* apTask, bool aEnable, int aClassMask);
 	void SyncTime(ITask* apTask);
 	void ProcessCommand(ITask* apTask);
+	void BufferVtoData(ITask* apTask);
 
 	IINField mLastIIN;						/// last IIN received from the outstation
 
@@ -114,6 +117,8 @@ class Master : public Loggable, public IAppUser
 
 	PostingNotifierSource mNotifierSource;	/// way to get special notifiers for the command queue / VTO
 	CommandQueue mCommandQueue;				/// Threadsafe queue for buffering command requests
+
+	VtoWriter mVtoWriter;					/// Thread-safe queue for buffering VTO data from userspace
 
 	APDU mRequest;							/// APDU that gets reused for requests
 
@@ -139,6 +144,7 @@ class Master : public Loggable, public IAppUser
 	TimeSync mTimeSync;						/// performs time sync on the outstation
 	BinaryOutputTask mExecuteBO;			/// task for executing binary output
 	SetpointTask mExecuteSP;				/// task for executing setpoint
+	VtoWriterToBufferTask mVtoBufferTask;	/// buffers from mVtoWriter to mVtoTransmitBuffer
 
 };
 

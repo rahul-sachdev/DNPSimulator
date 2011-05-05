@@ -43,6 +43,7 @@ namespace apl { namespace dnp {
 
 Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IDataObserver* apPublisher, AsyncTaskGroup* apTaskGroup, ITimerSource* apTimerSrc, ITimeSource* apTimeSrc) :
 Loggable(apLogger),
+mVtoWriter(aCfg.VtoWriterQueueSize),
 mRequest(aCfg.FragSize),
 mpAppLayer(apAppLayer),
 mpPublisher(apPublisher),
@@ -60,8 +61,14 @@ mClearRestart(apLogger),
 mConfigureUnsol(apLogger),
 mTimeSync(apLogger, apTimeSrc),
 mExecuteBO(apLogger),
-mExecuteSP(apLogger)
+mExecuteSP(apLogger),
+mVtoBufferTask(apLogger)
 {
+	/*
+	 * Establish a link between the mCommandQueue and the
+	 * mSchedule.mpCommandTask.  When new data is written to mCommandQueue,
+	 * wake up mpCommandTask to process the data.
+	 */
 	mCommandQueue.SetNotifier(
 			mNotifierSource.Get(
 					boost::bind(
@@ -72,6 +79,24 @@ mExecuteSP(apLogger)
 			)
 	);
 
+	/*
+	 * Establish a link between the mVtoWriter and the
+	 * mSchedule.mpVtoWriterToBufferTask.  When new data is written to
+	 * mVtoWriter, wake up the mSchedule.mpVtoWriterToBufferTask.
+	 */
+	mVtoWriter.AddObserver(
+			mNotifierSource.Get(
+					boost::bind(
+							&AsyncTaskBase::Enable,
+							mSchedule.mpVtoWriterToBufferTask
+					),
+					mpTimerSrc
+			)
+	);
+
+	/*
+	 * Set the initial state of the communication link.
+	 */
 	this->UpdateState(MS_COMMS_DOWN);
 }
 
@@ -186,6 +211,11 @@ void Master::ChangeUnsol(ITask* apTask, bool aEnable, int aClassMask)
 {
 	mConfigureUnsol.Set(aEnable, aClassMask);
 	mpState->StartTask(this, apTask, &mConfigureUnsol);
+}
+
+void Master::BufferVtoData(ITask* apTask)
+{
+	mpState->StartTask(this, apTask, &mVtoBufferTask);
 }
 
 /* Implement IAppUser */
