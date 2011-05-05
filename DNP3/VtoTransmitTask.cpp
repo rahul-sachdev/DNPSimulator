@@ -28,7 +28,18 @@ namespace apl {
 
 		void VtoTransmitTask::ConfigureRequest(APDU& arAPDU)
 		{
+			/*
+			 * For now, VTO packets are only sent as a single fragment.  We
+			 * also will require the receiver to confirm receipt, because I
+			 * don't want to have to code reliable delivery into the higher
+			 * level protocol.
+			 */
+			arAPDU.Set(FC_WRITE, true, true, true, false);
 
+			/*
+			 * TODO - Need to figure out how to take from Master::mVtoWriter
+			 * and place into the APDU message.
+			 */
 		}
 
 		TaskResult VtoTransmitTask::_OnPartialResponse(const APDU& arAPDU)
