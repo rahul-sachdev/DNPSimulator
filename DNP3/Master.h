@@ -39,7 +39,7 @@
 #include "StartupTasks.h"
 #include "DataPoll.h"
 #include "ControlTasks.h"
-#include "VtoWriterToBufferTask.h"
+#include "VtoTransmitTask.h"
 
 namespace apl {
 	class IDataObserver;
@@ -57,11 +57,11 @@ namespace apl { namespace dnp {
 class AMS_Base;
 
 /**
-	DNP3 master. The tasks functions can perform all the various things that a
-	master might need to do.
-
-	Coordination of tasks is handled by a higher level task scheduler.
-*/
+ * Represents a DNP3 Master endpoint. The tasks functions can perform all the
+ * various things that a Master might need to do.
+ *
+ * Coordination of tasks is handled by a higher level task scheduler.
+ */
 class Master : public Loggable, public IAppUser
 {
 	friend class AMS_Base;
@@ -107,7 +107,7 @@ class Master : public Loggable, public IAppUser
 	void ChangeUnsol(ITask* apTask, bool aEnable, int aClassMask);
 	void SyncTime(ITask* apTask);
 	void ProcessCommand(ITask* apTask);
-	void BufferVtoData(ITask* apTask);
+	void TransmitVtoData(ITask* apTask);
 
 	IINField mLastIIN;						/// last IIN received from the outstation
 
@@ -144,7 +144,7 @@ class Master : public Loggable, public IAppUser
 	TimeSync mTimeSync;						/// performs time sync on the outstation
 	BinaryOutputTask mExecuteBO;			/// task for executing binary output
 	SetpointTask mExecuteSP;				/// task for executing setpoint
-	VtoWriterToBufferTask mVtoBufferTask;	/// buffers from mVtoWriter to mVtoTransmitBuffer
+	VtoTransmitTask mVtoTransmitTask;		/// used to transmit VTO data in mVtoWriter
 
 };
 

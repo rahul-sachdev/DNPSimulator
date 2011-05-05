@@ -56,10 +56,9 @@ class MasterSchedule
 	AsyncTaskBase* mpClearRestartTask;
 
 	/**
-	 * A task to read the Master::mVtoWriter queue and double-buffer it into
-	 * the Master::mVtoTransmitBuffer queue.
+	 * A task to transmit data from the Master::mVtoWriter queue.
 	 */
-	AsyncTaskBase* mpVtoWriterToBufferTask;
+	AsyncTaskBase* mpVtoTransmitTask;
 
 	/// Enables all of the tasks that run when the layer is Open
 	void EnableOnlineTasks();
@@ -86,8 +85,7 @@ class MasterSchedule
 		AMP_CLEAR_RESTART,
 		AMP_UNSOL_CHANGE,
 		AMP_COMMAND,
-		AMP_VTO_TRANSMIT,
-		AMP_VTO_BUFFERING
+		AMP_VTO_TRANSMIT
 	};
 
 	enum TaskTypes

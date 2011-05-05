@@ -15,44 +15,48 @@
  * under the License.
  */
 
-#include <APL/Logger.h>
+#ifndef __VTO_WRITER_TO_BUFFER_TASK_H_
+#define __VTO_WRITER_TO_BUFFER_TASK_H_
 
-#include "APDU.h"
-#include "VtoWriterToBufferTask.h"
+#include <boost/function.hpp>
+
+#include "MasterTaskBase.h"
 
 using namespace apl;
-using namespace apl::dnp;
 
 namespace apl {
 	namespace dnp {
 
-		void VtoWriterToBufferTask::ConfigureRequest(APDU& arAPDU)
+		/**
+		 * A task to pull data off the VtoWriter queue and transmit it as an
+		 * APDU.  The actual work is done by Master::TransmitVtoData().
+		 */
+		class VtoTransmitTask : public MasterTaskBase
 		{
+			public:
 
-		}
+				VtoTransmitTask(Logger* log) : MasterTaskBase(log)
+				{}
 
-		TaskResult VtoWriterToBufferTask::_OnPartialResponse(const APDU& arAPDU)
-		{
-			LOG_BLOCK(LEV_WARNING,
-					"Ignoring non-FIN response to task: "
-					<< this->Name());
+				virtual ~VtoTransmitTask() {}
 
-			return TR_FAIL;
-		}
+				void ConfigureRequest(APDU& arAPDU);
 
-		TaskResult VtoWriterToBufferTask::_OnFinalResponse(const APDU& arAPDU)
-		{
-			if (arAPDU.BeginRead().Count() == 0)
-			{
-				LOG_BLOCK(LEV_WARNING,
-						"Unexpected object headers in response: "
-						<< this->Name());
-			}
+				std::string Name() const
+				{
+					return "VtoTransmitTask";
+				}
 
-			return TR_SUCCESS;
-		}
+			protected:
+
+				TaskResult _OnPartialResponse(const APDU& arAPDU);
+
+				TaskResult _OnFinalResponse(const APDU& arAPDU);
+		};
 
 	}
 }
 
 /* vim: set ts=4 sw=4: */
+
+#endif

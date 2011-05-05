@@ -138,9 +138,9 @@ namespace apl {
 					boost::bind(&Master::WriteIIN, apMaster, _1),
 					"Clear IIN");
 
-			schedule.mpVtoWriterToBufferTask = apGroup->AddContinuous(
-					AMP_VTO_BUFFERING,
-					boost::bind(&Master::BufferVtoData, apMaster, _1),
+			schedule.mpVtoTransmitTask = apGroup->AddContinuous(
+					AMP_VTO_TRANSMIT,
+					boost::bind(&Master::TransmitVtoData, apMaster, _1),
 					"Buffer VTO Data");
 
 			schedule.mpTimeTask->SetFlags(ONLINE_ONLY_TASKS);

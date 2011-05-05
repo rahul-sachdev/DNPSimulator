@@ -62,7 +62,7 @@ mConfigureUnsol(apLogger),
 mTimeSync(apLogger, apTimeSrc),
 mExecuteBO(apLogger),
 mExecuteSP(apLogger),
-mVtoBufferTask(apLogger)
+mVtoTransmitTask(apLogger)
 {
 	/*
 	 * Establish a link between the mCommandQueue and the
@@ -81,14 +81,14 @@ mVtoBufferTask(apLogger)
 
 	/*
 	 * Establish a link between the mVtoWriter and the
-	 * mSchedule.mpVtoWriterToBufferTask.  When new data is written to
-	 * mVtoWriter, wake up the mSchedule.mpVtoWriterToBufferTask.
+	 * mSchedule.mpVtoTransmitTask.  When new data is written to
+	 * mVtoWriter, wake up the mSchedule.mpVtoTransmitTask.
 	 */
 	mVtoWriter.AddObserver(
 			mNotifierSource.Get(
 					boost::bind(
 							&AsyncTaskBase::Enable,
-							mSchedule.mpVtoWriterToBufferTask
+							mSchedule.mpVtoTransmitTask
 					),
 					mpTimerSrc
 			)
@@ -213,9 +213,9 @@ void Master::ChangeUnsol(ITask* apTask, bool aEnable, int aClassMask)
 	mpState->StartTask(this, apTask, &mConfigureUnsol);
 }
 
-void Master::BufferVtoData(ITask* apTask)
+void Master::TransmitVtoData(ITask* apTask)
 {
-	mpState->StartTask(this, apTask, &mVtoBufferTask);
+	mpState->StartTask(this, apTask, &mVtoTransmitTask);
 }
 
 /* Implement IAppUser */
