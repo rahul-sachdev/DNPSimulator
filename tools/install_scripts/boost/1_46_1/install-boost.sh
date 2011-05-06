@@ -29,33 +29,51 @@ else
 fi
 
 if [ ! -e $DOWNLOAD ]; then
+  echo "Downloading ${TARBALL} to ${TEMP_DIR}"
   mkdir $TEMP_DIR
   wget -P $TEMP_DIR $URL -O $DOWNLOAD
+else
+  echo "${TARBALL} already downloaded to ${TEMP_DIR}"
 fi
 
 cd $TEMP_DIR
 
 if [ ! -d $BOOST_DIR ]; then
+  echo "Extracting ${TARBALL} to ${BOOST_DIR}"
   tar -xvf $TARBALL
+else
+  echo "${TARBALL} already extracted to ${BOOST_DIR}"
 fi
 
+echo "Running Boost boostrap.sh script"
 cd $BOOST_DIR
 ./bootstrap.sh
 #echo "using gcc : arm : $CROSSTOOL ;" >> project-config.jam
 #echo "using gcc : arm : $CROSSTOOL ;" >> project-config.jam
 
+echo "Running bjam"
 ./bjam toolset=gcc cxxflags=-fPIC --with-program_options --with-system --with-date_time --with-thread --with-filesystem --with-test --layout=system stage
+
+echo "Creating directory: ${INSTALL_DIR}/${PLATFORM}"
 mkdir -p $INSTALL_DIR/$PLATFORM/
+
+echo "Moving Boost libraries to ${INSTALL_DIR}/${PLATFORM}"
 mv stage/lib/* $INSTALL_DIR/$PLATFORM/
 
 #./bjam toolset=gcc-arm target-os=linux --with-program_options --with-system --with-date_time --with-thread --with-filesystem --with-test --layout=system stage
 #mkdir -p $INSTALL_DIR/pc_linux_arm
 #mv stage/lib/* $INSTALL_DIR/pc_linux_arm/
 
+echo "Creating directory: ${INSTALL_DIR}/include"
 mkdir -p $INSTALL_DIR/include
+
+echo "Copying ${BOOST_DIR}/boost to ${INSTALL_DIR}/include"
 cp -R boost $INSTALL_DIR/include
 
 if [ $DO_LD_CONFIG ]
 then
+  echo "Running ldconfig"
   sudo ldconfig $INSTALL_DIR/$PLATFORM
+else
+  echo "Not running ldconfig"
 fi
