@@ -35,13 +35,38 @@ namespace apl {
 		{
 			public:
 
+				/**
+				 * Creates a new VtoTransmitTask instance.
+				 *
+				 * @param log		the Logger that the task should use for
+				 * 					message reporting
+				 *
+				 * @return			a new VtoTransmitTask instance
+				 */
 				VtoTransmitTask(Logger* log) : MasterTaskBase(log)
 				{}
 
+				/**
+				 * A default destructor for the VtoTransmitTask.
+				 */
 				virtual ~VtoTransmitTask() {}
 
+				/**
+				 * Configures the APDU provided for use with DNP3 Virtual
+				 * Terminal Objects.  Data is pulled out of the
+				 * InsertionOrderedEventBuffer<VtoEvent> instance and is
+				 * placed into the APDU.
+				 *
+				 * @param arAPDU	the DNP3 message container that will
+				 * 					contain the DNP3 Virtual Terminal Objects
+				 */
 				void ConfigureRequest(APDU& arAPDU);
 
+				/**
+				 * Returns the name of the task, as a string.
+				 *
+				 * @return			the name of the task
+				 */
 				std::string Name() const
 				{
 					return "VtoTransmitTask";
@@ -49,8 +74,14 @@ namespace apl {
 
 			protected:
 
+				/**
+				 * TODO - Any special behavior on a partial response?
+				 */
 				TaskResult _OnPartialResponse(const APDU& arAPDU);
 
+				/**
+				 * TODO - Any special behavior on a final response?
+				 */
 				TaskResult _OnFinalResponse(const APDU& arAPDU);
 		};
 
