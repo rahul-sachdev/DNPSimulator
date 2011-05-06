@@ -37,9 +37,45 @@ namespace apl {
 			arAPDU.Set(FC_WRITE, true, true, true, false);
 
 			/*
-			 * TODO - Need to figure out how to take from Master::mVtoWriter
-			 * and place into the APDU message.
+			 * Only grab from the buffer that which will fit into a single APDU
+			 * message.  VTO is considered a 'low-priority' traffic flow, so we
+			 * don't want to hog the bandwidth with multiple fragments.
 			 */
+			size_t numObjects = this->mBuffer.Select(
+					PC_ALL_EVENTS,
+					(arAPDU.Size() - 2) / 300
+			);
+
+			/*
+			 * If there are no objects to write, skip the remainder.
+			 */
+			if (numObjects < 0)
+				return;
+
+			/*
+			 * Loop through the selected data and add corresponding objects to
+			 * the arAPDU instance.
+			 */
+			VtoDataEventIter itr = this->mBuffer.Begin();
+			for (size_t i = 0; i < numObjects; ++i, ++itr)
+			{
+				/* Insert a new object into the APDU message. */
+				IndexedWriteIterator obj = arAPDU.WriteIndexed(
+						Group112Var0::Inst(),
+						itr->mValue.GetSize(),
+						itr->mIndex
+				);
+
+				/* Set the object index */
+				obj.SetIndex(itr->mIndex);
+
+				/* Write the data to the APDU message */
+				Group112Var0::Inst()->Write(
+						*obj,
+						itr->mValue.GetSize(),
+						itr->mValue.GetData()
+				);
+			}
 		}
 
 		TaskResult VtoTransmitTask::_OnPartialResponse(const APDU& arAPDU)

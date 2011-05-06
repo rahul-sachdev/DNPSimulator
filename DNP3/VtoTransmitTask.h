@@ -37,32 +37,9 @@ namespace apl {
 			public:
 
 				/**
-				 * Creates a new VtoTransmitTask instance.  The size of
-				 * VtoTransmitTask::mBuffer is calculated based on the size of
-				 * one fragment consisting of:
-				 *
-				 *     1  Application Request Header   2 bytes
-				 *
-				 *    'N' Virtual Terminal objects   300 bytes each
-				 *          Object Type                   2 bytes
-				 *          Qualifier                     1 byte
-				 *          Range                         1 byte
-				 *          Object Prefix Index           1 byte
-				 *          Data Octets                   255 bytes
-				 *
-				 * The resulting equation is:
-				 *
-				 * @code
-				 * Fragment Size = 2 + N*[2 + 1 + 1 + 1 + 255]
-				 * Fragment Size = 2 + 300*N
-				 * @endcode
-				 *
-				 * Therefore, the number of Virtual Terminal objects that can
-				 * fit in a single DNP3 fragment is equal to:
-				 *
-				 * @code
-				 * N = (Fragment Size - 2) / 300
-				 * @endcode
+				 * Creates a new VtoTransmitTask instance.  The internal buffer
+				 * size is set to be an order of magnitude larger than a single
+				 * fragment size, to prevent back-ups in the user application.
 				 *
 				 * @param log		the Logger that the task should use for
 				 * 					message reporting
@@ -72,7 +49,7 @@ namespace apl {
 				 */
 				VtoTransmitTask(Logger* log, size_t fragSize) :
 					MasterTaskBase(log),
-					mBuffer((fragSize - 2) / 300)
+					mBuffer(fragSize * 10)
 				{}
 
 				/**
@@ -85,6 +62,35 @@ namespace apl {
 				 * Terminal Objects.  Data is pulled out of the
 				 * InsertionOrderedEventBuffer<VtoEvent> instance and is
 				 * placed into the APDU.
+				 *
+				 * The number of Virtual Terminal Objects that are packed into
+				 * a single message is calculated based on the size of one
+				 * fragment consisting of:
+				 *
+				 * @code
+				 *     1  Application Request Header   2 bytes
+				 *
+				 *    'N' Virtual Terminal objects   300 bytes each
+				 *          Object Type                   2 bytes
+				 *          Qualifier                     1 byte
+				 *          Range                         1 byte
+				 *          Object Prefix Index           1 byte
+				 *          Data Octets                   255 bytes
+				 * @endcode
+				 *
+				 * The resulting equation is:
+				 *
+				 * @code
+				 *    Fragment Size = 2 + ( N * [2 + 1 + 1 + 1 + 255] )
+				 *    Fragment Size = 2 + ( 300 * N )
+				 * @endcode
+				 *
+				 * Therefore, the number of Virtual Terminal objects that can
+				 * fit in a single DNP3 fragment is equal to:
+				 *
+				 * @code
+				 * N = (Fragment Size - 2) / 300
+				 * @endcode
 				 *
 				 * @param arAPDU	the DNP3 message container that will
 				 * 					contain the DNP3 Virtual Terminal Objects

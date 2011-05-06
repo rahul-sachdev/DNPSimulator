@@ -223,8 +223,17 @@ void Master::TransmitVtoData(ITask* apTask)
 		mVtoTransmitTask.mBuffer.Update(info);
 	}
 
-	/* Start the mVtoTransmitTask */
-	mpState->StartTask(this, apTask, &mVtoTransmitTask);
+	/* Any data to transmit? */
+	if (mVtoTransmitTask.mBuffer.Size() > 0)
+	{
+		/* Start the mVtoTransmitTask */
+		mpState->StartTask(this, apTask, &mVtoTransmitTask);
+	}
+	else
+	{
+		/* Stop the mVtoTransmitTask */
+		apTask->Disable();
+	}
 }
 
 /* Implement IAppUser */
