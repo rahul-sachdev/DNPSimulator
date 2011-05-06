@@ -42,27 +42,27 @@ using namespace boost;
 namespace apl { namespace dnp {
 
 Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IDataObserver* apPublisher, AsyncTaskGroup* apTaskGroup, ITimerSource* apTimerSrc, ITimeSource* apTimeSrc) :
-Loggable(apLogger),
-mVtoWriter(aCfg.VtoWriterQueueSize),
-mRequest(aCfg.FragSize),
-mpAppLayer(apAppLayer),
-mpPublisher(apPublisher),
-mpTaskGroup(apTaskGroup),
-mpTimerSrc(apTimerSrc),
-mpTimeSrc(apTimeSrc),
-mpState(AMS_Closed::Inst()),
-mpTask(NULL),
-mpScheduledTask(NULL),
-mpObserver(aCfg.mpObserver),
-mState(MS_UNKNOWN),
-mSchedule(MasterSchedule::GetSchedule(aCfg, this, apTaskGroup)),
-mClassPoll(apLogger, apPublisher),
-mClearRestart(apLogger),
-mConfigureUnsol(apLogger),
-mTimeSync(apLogger, apTimeSrc),
-mExecuteBO(apLogger),
-mExecuteSP(apLogger),
-mVtoTransmitTask(apLogger)
+	Loggable(apLogger),
+	mVtoWriter(aCfg.VtoWriterQueueSize),
+	mRequest(aCfg.FragSize),
+	mpAppLayer(apAppLayer),
+	mpPublisher(apPublisher),
+	mpTaskGroup(apTaskGroup),
+	mpTimerSrc(apTimerSrc),
+	mpTimeSrc(apTimeSrc),
+	mpState(AMS_Closed::Inst()),
+	mpTask(NULL),
+	mpScheduledTask(NULL),
+	mpObserver(aCfg.mpObserver),
+	mState(MS_UNKNOWN),
+	mSchedule(MasterSchedule::GetSchedule(aCfg, this, apTaskGroup)),
+	mClassPoll(apLogger, apPublisher),
+	mClearRestart(apLogger),
+	mConfigureUnsol(apLogger),
+	mTimeSync(apLogger, apTimeSrc),
+	mExecuteBO(apLogger),
+	mExecuteSP(apLogger),
+	mVtoTransmitTask(apLogger, aCfg.FragSize)
 {
 	/*
 	 * Establish a link between the mCommandQueue and the
@@ -215,6 +215,15 @@ void Master::ChangeUnsol(ITask* apTask, bool aEnable, int aClassMask)
 
 void Master::TransmitVtoData(ITask* apTask)
 {
+	VtoEvent info;
+
+	/* Take out of the mVtoWriter and put into the mVtoTransmitTask */
+	while (!mVtoTransmitTask.mBuffer.IsFull() && mVtoWriter.Read(info))
+	{
+		mVtoTransmitTask.mBuffer.Update(info);
+	}
+
+	/* Start the mVtoTransmitTask */
 	mpState->StartTask(this, apTask, &mVtoTransmitTask);
 }
 
