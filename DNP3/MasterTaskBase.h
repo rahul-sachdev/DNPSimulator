@@ -81,7 +81,7 @@ class MasterTaskBase : public Loggable
 		 *
 		 * @return			true if a valid response, false otherwise
 		 */
-		TaskResult OnFinalResponse(const APDU&);
+		TaskResult OnFinalResponse(const APDU& arAPDU);
 
 		/**
 		 * Overridable handler for timeouts, layer closes, etc.  Subclasses
@@ -107,7 +107,7 @@ class MasterTaskBase : public Loggable
 		 *
 		 * @return			a TaskResult value as a response
 		 */
-		virtual TaskResult _OnPartialResponse(const APDU&) = 0;
+		virtual TaskResult _OnPartialResponse(const APDU& arAPDU) = 0;
 		
 		/**
 		 * Handler for FIN responses.  Subclasses should override this
@@ -117,7 +117,7 @@ class MasterTaskBase : public Loggable
 		 *
 		 * @return			a TaskResult value as a response
 		 */
-		virtual TaskResult _OnFinalResponse(const APDU&) = 0;
+		virtual TaskResult _OnFinalResponse(const APDU& arAPDU) = 0;
 		
 	private:
 
