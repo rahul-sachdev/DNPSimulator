@@ -37,14 +37,14 @@ struct MasterConfig
 	/// Default constructor
 	MasterConfig() :
 	FragSize(DEFAULT_FRAG_SIZE),
+	VtoWriterQueueSize(DEFAULT_VTO_WRITER_QUEUE_SIZE),
 	AllowTimeSync(true),
 	DoUnsolOnStartup(false),
 	EnableUnsol(true),
 	UnsolClassMask(PC_ALL_EVENTS),
 	IntegrityRate(5000),
 	TaskRetryRate(5000),
-	mpObserver(NULL),
-	VtoReservedOctetCount(0)
+	mpObserver(NULL)
 	{}
 
 	/** Adds a periodic exception scan to the configuration
@@ -60,6 +60,9 @@ struct MasterConfig
 
 	/// Maximum fragment size to use for requests
 	size_t FragSize;
+
+	/// The number of objects to store in the VtoWriter queue.
+	size_t VtoWriterQueueSize;
 
 	/// If true, the master will do time syncs when it sees the time IIN bit from the slave
 	bool AllowTimeSync;
@@ -84,10 +87,6 @@ struct MasterConfig
 
 	/// Observer class for notifying outside world what the master is doing
 	IMasterObserver* mpObserver;
-
-	/// The minimum number of octets to reserve in the DNP3 application layer
-	/// for VTO data related to this stack.
-	size_t VtoReservedOctetCount;
 };
 
 }}

@@ -39,9 +39,9 @@ template<typename T>
 struct PointInfoBase
 {
 	PointInfoBase(const T& arValue, PointClass aClass, size_t aIndex) :
-	mValue(arValue),
-	mClass(aClass),
-	mIndex(aIndex)
+		mValue(arValue),
+		mClass(aClass),
+		mIndex(aIndex)
 	{}
 
 	PointInfoBase() : mClass(PC_CLASS_0) {}
@@ -95,6 +95,6 @@ typedef StaticIter<SetpointStatusInfo>::Type	SetpointIterator;
 
 }} //end namespace
 
+/* vim: set ts=4 sw=4: */
 
 #endif
-

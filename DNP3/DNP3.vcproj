@@ -494,6 +494,14 @@
 						RelativePath=".\StartupTasks.h"
 						>
 					</File>
+					<File
+						RelativePath=".\VtoTransmitTask.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VtoTransmitTask.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter

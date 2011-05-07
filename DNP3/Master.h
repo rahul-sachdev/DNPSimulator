@@ -33,11 +33,13 @@
 #include "ObjectInterfaces.h"
 #include "MasterSchedule.h"
 #include "MasterObserver.h"
+#include "VtoWriter.h"
 
 // includes for tasks
 #include "StartupTasks.h"
 #include "DataPoll.h"
 #include "ControlTasks.h"
+#include "VtoTransmitTask.h"
 
 namespace apl {
 	class IDataObserver;
@@ -55,13 +57,13 @@ namespace apl { namespace dnp {
 class AMS_Base;
 
 /**
-	DNP3 master. The tasks functions can perform all the various things that a
-	master might need to do.
-
-	Coordination of tasks is handled by a higher level task scheduler.
-*/
+ * Represents a DNP3 Master endpoint. The tasks functions can perform all the
+ * various things that a Master might need to do.
+ *
+ * Coordination of tasks is handled by a higher level task scheduler.
+ */
 class Master : public Loggable, public IAppUser
-{	
+{
 	friend class AMS_Base;
 	friend class AMS_Idle;
 	friend class AMS_OpenBase;
@@ -105,45 +107,49 @@ class Master : public Loggable, public IAppUser
 	void ChangeUnsol(ITask* apTask, bool aEnable, int aClassMask);
 	void SyncTime(ITask* apTask);
 	void ProcessCommand(ITask* apTask);
+	void TransmitVtoData(ITask* apTask);
 
 	IINField mLastIIN;						/// last IIN received from the outstation
 
 	void ProcessIIN(const IINField& arIIN);	/// Analyze IIN bits and react accordingly
 	void ProcessDataResponse(const APDU&);	/// Read data output of solicited or unsolicited response and publish
-	void StartTask(MasterTaskBase*, bool aInit);		/// Starts a task running
+	void StartTask(MasterTaskBase*, bool aInit);	/// Starts a task running
 
-	PostingNotifierSource mNotifierSource;	/// way to get special notifiers for the command queue / vto
+	PostingNotifierSource mNotifierSource;	/// way to get special notifiers for the command queue / VTO
 	CommandQueue mCommandQueue;				/// Threadsafe queue for buffering command requests
-	
+
+	VtoWriter mVtoWriter;					/// Thread-safe queue for buffering VTO data from userspace
+
 	APDU mRequest;							/// APDU that gets reused for requests
 
-	IAppLayer* mpAppLayer;				 /// lower application layer
-	IDataObserver* mpPublisher;				 /// where the measurement are pushed
-	AsyncTaskGroup* mpTaskGroup;			 /// How task execution is controlled
-	ITimerSource* mpTimerSrc;				 /// Controls the posting of events to marshall across threads
-	ITimeSource* mpTimeSrc;					 /// Access to UTC, normally system time but can be a mock for testing
+	IAppLayer* mpAppLayer;					/// lower application layer
+	IDataObserver* mpPublisher;				/// where the measurement are pushed
+	AsyncTaskGroup* mpTaskGroup;			/// How task execution is controlled
+	ITimerSource* mpTimerSrc;				/// Controls the posting of events to marshall across threads
+	ITimeSource* mpTimeSrc;					/// Access to UTC, normally system time but can be a mock for testing
 
-	AMS_Base* mpState;						 /// Pointer to active state, start in TLS_Closed
-	MasterTaskBase* mpTask;					 /// The current master task
-	ITask* mpScheduledTask;					 /// The current scheduled task
-	IMasterObserver* mpObserver;		     /// Callback for master state enumeration
-	MasterStates mState;					 /// Current state of the master
+	AMS_Base* mpState;						/// Pointer to active state, start in TLS_Closed
+	MasterTaskBase* mpTask;					/// The current master task
+	ITask* mpScheduledTask;					/// The current scheduled task
+	IMasterObserver* mpObserver;		    /// Callback for master state enumeration
+	MasterStates mState;					/// Current state of the master
 
 	/* --- Task plumbing --- */
 
-	MasterSchedule mSchedule;				 /// The machinery needed for scheduling
-		
-	ClassPoll mClassPoll;					 /// used to perform integrity/exception scans
-	ClearRestartIIN mClearRestart;			 /// used to clear the restart 
-	ConfigureUnsol mConfigureUnsol;			 /// manipulates how the outstation does unsolictied reporting
-	TimeSync mTimeSync;						 /// performs time sync on the outstation
-	BinaryOutputTask mExecuteBO;			 /// task for executing binary output
-	SetpointTask mExecuteSP;				 /// task for executing setpoint
+	MasterSchedule mSchedule;				/// The machinery needed for scheduling
 
-	
+	ClassPoll mClassPoll;					/// used to perform integrity/exception scans
+	ClearRestartIIN mClearRestart;			/// used to clear the restart
+	ConfigureUnsol mConfigureUnsol;			/// manipulates how the outstation does unsolictied reporting
+	TimeSync mTimeSync;						/// performs time sync on the outstation
+	BinaryOutputTask mExecuteBO;			/// task for executing binary output
+	SetpointTask mExecuteSP;				/// task for executing setpoint
+	VtoTransmitTask mVtoTransmitTask;		/// used to transmit VTO data in mVtoWriter
+
 };
 
-
 }}
+
+/* vim: set ts=4 sw=4: */
 
 #endif

@@ -26,16 +26,16 @@
 namespace apl { namespace dnp {
 
 /**
-Structure for holding event data information. Adds a sequence number and a written
-flag to the data member.
-*/
+ * Structure for holding event data information. Adds a sequence number and a
+ * written flag to the data member.
+ */
 template<typename T>
 struct EventInfo : public PointInfoBase<T>
 {
 	EventInfo(const T& arValue, PointClass aClass, size_t aIndex) :
-	PointInfoBase<T>(arValue, aClass, aIndex),
-	mSequence(0),
-	mWritten(false)
+		PointInfoBase<T>(arValue, aClass, aIndex),
+		mSequence(0),
+		mWritten(false)
 	{}
 
 	EventInfo() : mSequence(0), mWritten(false) {}
@@ -62,6 +62,6 @@ typedef EvtItr<VtoEvent>::Type				VtoDataEventIter;
 
 }} //end namespace
 
+/* vim: set ts=4 sw=4: */
 
 #endif
-

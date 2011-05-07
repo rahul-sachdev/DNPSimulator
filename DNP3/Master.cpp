@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,17 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
+
 #include "Master.h"
 
 #include "MasterStates.h"
@@ -41,28 +42,62 @@ using namespace boost;
 namespace apl { namespace dnp {
 
 Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IDataObserver* apPublisher, AsyncTaskGroup* apTaskGroup, ITimerSource* apTimerSrc, ITimeSource* apTimeSrc) :
-Loggable(apLogger),
-mRequest(aCfg.FragSize),
-mpAppLayer(apAppLayer),
-mpPublisher(apPublisher),
-mpTaskGroup(apTaskGroup),
-mpTimerSrc(apTimerSrc),
-mpTimeSrc(apTimeSrc),
-mpState(AMS_Closed::Inst()),
-mpTask(NULL),
-mpScheduledTask(NULL),
-mpObserver(aCfg.mpObserver),
-mState(MS_UNKNOWN),
-mSchedule(MasterSchedule::GetSchedule(aCfg, this, apTaskGroup)),
-mClassPoll(apLogger, apPublisher),
-mClearRestart(apLogger),
-mConfigureUnsol(apLogger),
-mTimeSync(apLogger, apTimeSrc),
-mExecuteBO(apLogger),
-mExecuteSP(apLogger)
+	Loggable(apLogger),
+	mVtoWriter(aCfg.VtoWriterQueueSize),
+	mRequest(aCfg.FragSize),
+	mpAppLayer(apAppLayer),
+	mpPublisher(apPublisher),
+	mpTaskGroup(apTaskGroup),
+	mpTimerSrc(apTimerSrc),
+	mpTimeSrc(apTimeSrc),
+	mpState(AMS_Closed::Inst()),
+	mpTask(NULL),
+	mpScheduledTask(NULL),
+	mpObserver(aCfg.mpObserver),
+	mState(MS_UNKNOWN),
+	mSchedule(MasterSchedule::GetSchedule(aCfg, this, apTaskGroup)),
+	mClassPoll(apLogger, apPublisher),
+	mClearRestart(apLogger),
+	mConfigureUnsol(apLogger),
+	mTimeSync(apLogger, apTimeSrc),
+	mExecuteBO(apLogger),
+	mExecuteSP(apLogger),
+	mVtoTransmitTask(apLogger, aCfg.FragSize)
 {
-	mCommandQueue.SetNotifier(mNotifierSource.Get(boost::bind(&AsyncTaskBase::Enable, mSchedule.mpCommandTask), mpTimerSrc));	
-	this->UpdateState(MS_COMMS_DOWN);	
+	/*
+	 * Establish a link between the mCommandQueue and the
+	 * mSchedule.mpCommandTask.  When new data is written to mCommandQueue,
+	 * wake up mpCommandTask to process the data.
+	 */
+	mCommandQueue.SetNotifier(
+			mNotifierSource.Get(
+					boost::bind(
+							&AsyncTaskBase::Enable,
+							mSchedule.mpCommandTask
+					),
+					mpTimerSrc
+			)
+	);
+
+	/*
+	 * Establish a link between the mVtoWriter and the
+	 * mSchedule.mpVtoTransmitTask.  When new data is written to
+	 * mVtoWriter, wake up the mSchedule.mpVtoTransmitTask.
+	 */
+	mVtoWriter.AddObserver(
+			mNotifierSource.Get(
+					boost::bind(
+							&AsyncTaskBase::Enable,
+							mSchedule.mpVtoTransmitTask
+					),
+					mpTimerSrc
+			)
+	);
+
+	/*
+	 * Set the initial state of the communication link.
+	 */
+	this->UpdateState(MS_COMMS_DOWN);
 }
 
 void Master::UpdateState(MasterStates aState)
@@ -108,9 +143,9 @@ void Master::ProcessCommand(ITask* apTask)
 	}
 	else {
 
-		switch(mCommandQueue.Next()) 
+		switch(mCommandQueue.Next())
 		{
-			case(apl::CT_BINARY_OUTPUT): 
+			case(apl::CT_BINARY_OUTPUT):
 			{
 				apl::BinaryOutput cmd;
 				mCommandQueue.Read(cmd, info);
@@ -128,7 +163,7 @@ void Master::ProcessCommand(ITask* apTask)
 			break;
 			default:
 				apTask->Disable(); //no commands to be read
-				break;					
+				break;
 		}
 	}
 }
@@ -153,7 +188,7 @@ void Master::SyncTime(ITask* apTask)
 
 void Master::WriteIIN(ITask* apTask)
 {
-	if(mLastIIN.GetDeviceRestart()) 
+	if(mLastIIN.GetDeviceRestart())
 	{
 		mpState->StartTask(this, apTask, &mClearRestart);
 	}
@@ -176,6 +211,29 @@ void Master::ChangeUnsol(ITask* apTask, bool aEnable, int aClassMask)
 {
 	mConfigureUnsol.Set(aEnable, aClassMask);
 	mpState->StartTask(this, apTask, &mConfigureUnsol);
+}
+
+void Master::TransmitVtoData(ITask* apTask)
+{
+	VtoEvent info;
+
+	/* Take out of the mVtoWriter and put into the mVtoTransmitTask */
+	while (!mVtoTransmitTask.mBuffer.IsFull() && mVtoWriter.Read(info))
+	{
+		mVtoTransmitTask.mBuffer.Update(info);
+	}
+
+	/* Any data to transmit? */
+	if (mVtoTransmitTask.mBuffer.Size() > 0)
+	{
+		/* Start the mVtoTransmitTask */
+		mpState->StartTask(this, apTask, &mVtoTransmitTask);
+	}
+	else
+	{
+		/* Stop the mVtoTransmitTask */
+		apTask->Disable();
+	}
 }
 
 /* Implement IAppUser */
@@ -215,10 +273,10 @@ void Master::OnUnsolFailure()
 }
 
 void Master::OnPartialResponse(const APDU& arAPDU)
-{	
+{
 	mLastIIN = arAPDU.GetIIN();
 	this->ProcessIIN(mLastIIN);
-	mpState->OnPartialResponse(this, arAPDU);	
+	mpState->OnPartialResponse(this, arAPDU);
 }
 
 void Master::OnFinalResponse(const APDU& arAPDU)
@@ -226,14 +284,14 @@ void Master::OnFinalResponse(const APDU& arAPDU)
 	this->UpdateState(MS_COMMS_UP);
 	mLastIIN = arAPDU.GetIIN();
 	this->ProcessIIN(arAPDU.GetIIN());
-	mpState->OnFinalResponse(this, arAPDU);	
+	mpState->OnFinalResponse(this, arAPDU);
 }
 
 void Master::OnUnsolResponse(const APDU& arAPDU)
-{	
+{
 	mLastIIN = arAPDU.GetIIN();
 	this->ProcessIIN(mLastIIN);
-	mpState->OnUnsolResponse(this, arAPDU);		
+	mpState->OnUnsolResponse(this, arAPDU);
 }
 
 /* Private functions */
@@ -243,8 +301,8 @@ void Master::ProcessDataResponse(const APDU& arResponse)
 	try {
 		ResponseLoader loader(mpLogger, mpPublisher);
 
-		for(HeaderReadIterator hdr = arResponse.BeginRead(); !hdr.IsEnd(); ++hdr) 
-			loader.Process(hdr);		
+		for(HeaderReadIterator hdr = arResponse.BeginRead(); !hdr.IsEnd(); ++hdr)
+			loader.Process(hdr);
 	}
 	catch(Exception ex)
 	{
@@ -253,3 +311,5 @@ void Master::ProcessDataResponse(const APDU& arResponse)
 }
 
 }} //end ns
+
+/* vim: set ts=4 sw=4: */

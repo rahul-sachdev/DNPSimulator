@@ -6,7 +6,7 @@
  * "License"); you may not use this file except in compliance with the
  * License.  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-3.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
@@ -20,8 +20,10 @@
 
 #include <assert.h>
 
-#include "APL/DataTypes.h"
-#include "DNP3/ObjectInterfaces.h"
+#include <APL/DataTypes.h>
+
+#include "EventTypes.h"
+#include "ObjectInterfaces.h"
 
 namespace apl {
 	namespace dnp {
@@ -78,7 +80,7 @@ namespace apl {
 		class IVtoWriter
 		{
 			public:
-				
+
 				/**
 				 * Writes a stream of data to the remote VTO endpoint.
 				 *
@@ -94,6 +96,30 @@ namespace apl {
 				 *                      buffer has insufficient space.
 				 */
 				virtual size_t Write(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId) = 0;
+
+				/**
+				 * Reads one item from the front of the queue.  If no items
+				 * are available, the function returns false.  If an item is
+				 * found in the queue, the item is stored in arEvent and
+				 * removed from the queue, and the function returns true.
+				 *
+				 * @param arEvent		The destination store for the queue
+				 * 						data
+				 *
+				 * @return				true if data is returned, false
+				 * 						otherwise
+				 */
+				bool Read(VtoEvent& arEvent);
+
+				/**
+				 * Returns the number of objects in the queue that are ready
+				 * to be sent.
+				 *
+				 * @return				the number of objects in the
+				 *						transmission queue
+				 */
+				virtual size_t Size() = 0;
+
 		};
 		
 		/**
@@ -121,7 +147,7 @@ namespace apl {
 				/**
 				 * Called when data arrives from stack and needs to be handled.
 				 *
-				 * @param arData		The data received from the VTO stream.
+				 * @param apData		The data received from the VTO stream.
 				 * @param aLength		The length of the data received (in
 				 *						bytes).
 				 */
@@ -140,5 +166,6 @@ namespace apl {
 	}
 }
 
-#endif
+/* vim: set ts=4 sw=4: */
 
+#endif

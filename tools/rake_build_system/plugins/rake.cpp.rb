@@ -36,9 +36,9 @@ def make_obj_file(source, obj_file, includes, cc_flags, warn_flags)
 end
 
 def make_library(lib, obj)
-  puts "Creating arhive: #{lib}"
+  puts "Creating archive: #{lib}"
   sh "#{$AR} #{lib} #{obj}"
-  puts "Indexing arhive: #{lib}"
+  puts "Indexing archive: #{lib}"
   sh "#{$RANLIB} #{lib}"
 end
 

@@ -29,6 +29,13 @@ namespace apl { namespace dnp {
 
 	const size_t DEFAULT_FRAG_SIZE = 2048;
 
+	/**
+	 * The default queue size for a VtoWriter object.  At ~256 bytes of
+	 * data per queued object, the current size of 1024 allows ~256 KB of
+	 * data to be buffered.
+	 */
+	const size_t DEFAULT_VTO_WRITER_QUEUE_SIZE = 1024;
+
 	enum DNPErrorCodes
 	{
 		// Slave error codes

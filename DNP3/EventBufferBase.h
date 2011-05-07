@@ -26,10 +26,11 @@
 namespace apl { namespace dnp {
 
 
-	/** Base class for the EventBuffer classes (with templating and
-		virtual function for Update to alter event storage behavior)
-
-		Single-threaded for asynchronous/event-based model.
+	/**
+	 * Base class for the EventBuffer classes (with templating and virtual
+	 * function for Update to alter event storage behavior)
+	 *
+	 * Single-threaded for asynchronous/event-based model.
 	*/
 	template <class EventType, class SetType>
 	class EventBufferBase
@@ -39,61 +40,122 @@ namespace apl { namespace dnp {
 		virtual ~EventBufferBase() {}
 
 		/**
-			Adds an event to the buffer, tracking insertion order. Calls
-			_Update which can be overriden to do special types of insertion.
-
-			@param arVal Event update to add the to the buffer
-			@param aClass Class of the measurement
-			@param aIndex Index of the measurement
-		*/
+		 * Adds an event to the buffer, tracking insertion order. Calls _Update
+		 * which can be overriden to do special types of insertion.
+		 *
+		 * @param arVal			Event update to add to the buffer
+		 * @param aClass		Class of the measurement
+		 * @param aIndex		Index of the measurement
+		 */
 		void Update(const typename EventType::MeasType& arVal, PointClass aClass, size_t aIndex);
 
+		/**
+		 * Adds an event to the buffer, tracking insertion order. Calls _Update
+		 * which can be overriden to do special types of insertion.
+		 *
+		 * @param arEvent		Event update to add to the buffer
+		 * @param aNewValue		a new sequence value will be assigned to the
+		 * 						arEvent if the value is true, otherwise the
+		 * 						existing arEvent sequence number will be used
+		 */
+		void Update(EventType& arEvent, bool aNewValue = true);
+
+		/**
+		 * Returns true if the buffer contains any data matching the given
+		 * PointClass.
+		 *
+		 * @param aClass		the class of data to match
+		 *
+		 * @return				true if the buffer contains matching data,
+		 * 						false if not
+		 */
 		bool HasClassData(PointClass aClass) { return mCounter.GetNum(aClass) > 0; }
 
 		/**
-			@param aClass PointClass to select (i.e. PC_CLASS_1, 2, 3) into the selection buffer
-			@param aMaxEvent Maximum number of events to select
-			@return Number of events selected
-		*/
+		 * Selects data in the buffer that matches the given PointClass, up to
+		 * the defined number of entries.
+		 *
+		 * @param aClass		the class of data to match
+		 * @param aMaxEvent		Maximum number of events to select
+		 *
+		 * @return				the number of events selected
+		 */
 		size_t Select(PointClass aClass, size_t aMaxEvent = std::numeric_limits<size_t>::max());
 
 		/**
-			Transfer any unwritten events back into the event set
-
-			@return Number of events returned to the event set
-		*/
+		 * Transfers any unwritten events back into the event set.
+		 *
+		 * @return				the number of events returned to the event set
+		 */
 		size_t Deselect();
 
 
 		/**
-			Clear events flagged with mWritten = true from the selection buffer
-
-			@return Number of events cleared
-		*/
+		 * Remove events that have been written (flagged with 'mWritten=true')
+		 * from the selection buffer.
+		 *
+		 * @return				the number of events removed
+		 */
 		size_t ClearWrittenEvents();
 
+		/**
+		 * Returns an EvtItr iterator object for accessing the data previously
+		 * selected through EventBufferBase::Select().
+		 *
+		 * @return				the iterator object to the data from Select()
+		 */
 		typename EvtItr< EventType >::Type Begin();
 
+		/**
+		 * Returns the number of events that were previously selected through
+		 * EventBufferBase::Select().
+		 *
+		 * @return				the number of events selected
+		 */
 		size_t NumSelected() { return mSelectedEvents.size(); }
+
+		/**
+		 * Returns the number of events that were omitted from the selection
+		 * during the last call of EventBufferBase::Select().
+		 *
+		 * @return				the number of events not selected
+		 */
 		size_t NumUnselected() { return mEventSet.size(); }
+
+		/**
+		 * Returns the total number of events (selected and unselected) being
+		 * managed by the EventBufferBase.
+		 *
+		 * @return				the number of events
+		 */
 		size_t Size() { return mSelectedEvents.size() + mEventSet.size(); }
 
+		/**
+		 * Returns a flag to indicate whether the buffer has been overflown.
+		 *
+		 * @return				true if too much data has been written to the
+		 * 						buffer, false if not.
+		 */
 		bool IsOverflown();
+
+		/**
+		 * Returns a flag to indicate whether the buffer is full.  A subsequent
+		 * write the buffer at this point would lead to IsOverflown() returning
+		 * true.
+		 *
+		 * @return				true if the buffer is full, false if the buffer
+		 * 						still has space
+		 */
+		bool IsFull() { return NumUnselected() >= M_MAX_EVENTS; }
 
 	protected:
 
-		bool IsFull() { return NumUnselected() >= M_MAX_EVENTS; }
-
-
-		void Update(EventType& arEvent, bool aNewValue);
-
 		/**
-			Overridable NVII function called by Update. Default implementation does
-			a simple insert into mEventSet
-
-
-			@param arEvent Event update to add the to the buffer
-		*/
+		 * Overridable NVII function called by Update.  The default
+		 * implementation does a simple insert into mEventSet.
+		 *
+		 * @param arEvent		Event update to add to the buffer
+		 */
 		virtual void _Update(const EventType& arEvent);
 
 		ClassCounter mCounter;		/// counter for class events
@@ -109,16 +171,13 @@ namespace apl { namespace dnp {
 		typename SetType::Type mEventSet;
 	};
 
-
 	template <class EventType, class SetType>
 	EventBufferBase <EventType, SetType> :: EventBufferBase(size_t aMaxEvents, bool aDropFirst) :
-	M_MAX_EVENTS(aMaxEvents),
-	mSequence(0),
-	mIsOverflown(false),
-	mDropFirst(aDropFirst)
-	{
-
-	}
+		M_MAX_EVENTS(aMaxEvents),
+		mSequence(0),
+		mIsOverflown(false),
+		mDropFirst(aDropFirst)
+	{}
 
 	template <class EventType, class SetType>
 	void EventBufferBase<EventType,SetType> :: Update(const typename EventType::MeasType& arVal, PointClass aClass, size_t aIndex)
@@ -221,5 +280,7 @@ namespace apl { namespace dnp {
 	}
 
 }} //end NS
+
+/* vim: set ts=4 sw=4: */
 
 #endif

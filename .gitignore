@@ -8,6 +8,7 @@
 /*/pc_cygwin
 /*/pc_linux_arm
 /tools/install_scripts/boost/*/temp
+/tools/boostlib
 /CSToCppXMLBinder/bin
 /CSToCppXMLBinder/obj
 /ConfigurationBuilder/*.cs
@@ -19,4 +20,5 @@
 /*/Linux_i686
 TestAPL/TestSingle.tiny.xml
 TestSingle.tiny.xml
+/doc
 
