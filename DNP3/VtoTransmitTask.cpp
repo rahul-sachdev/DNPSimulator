@@ -95,7 +95,7 @@ namespace apl {
 			return TR_SUCCESS;
 		}
 
-		TaskResult VtoTransmitTask::OnFailure()
+		void VtoTransmitTask::OnFailure()
 		{
 			/* Put the written data back onto the buffer */
 			this->mBuffer.Deselect();
