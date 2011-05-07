@@ -31,56 +31,91 @@ class IINField;
 
 enum TaskResult {
 	TR_FAIL,		// The task fails, further responses are ignored
+
 	TR_SUCCESS,		// The tasks is successful and complete
-	TR_CONTINUE,    // The task is not yet complete. If OnFinalResponse returns CONTINUE, it's a multi request task
+
+	TR_CONTINUE,    // The task is not yet complete. If OnFinalResponse
+					// returns CONTINUE, it's a multi request task
 };
 
-/** A generic interface for defining master request/response style tasks
-*/
+/**
+ * A generic interface for defining master request/response style tasks.
+ */
 class MasterTaskBase : public Loggable
 {
 	public:
 
 		MasterTaskBase(Logger* apLogger);
 
-		/// Sets the task completion handler and calls
-		/// the overiddable _Init() function
+		/**
+		 * Sets the task completion handler and calls the overiddable _Init()
+		 * function.
+		 */
 		virtual void Init() {}
 		
-		/// Configure a request APDU
+		/**
+		 * Configure a request APDU.  A container APDU instance is passed in
+		 * as the argument, and the implementing function should setup the
+		 * APDU instance as is appropriate for the subclass implementing the
+		 * behavior.
+		 *
+		 * @param arAPDU	the DNP3 message as an APDU instance
+		 */
 		virtual void ConfigureRequest(APDU& arAPDU) = 0;
 		
-		/** Handler for non-FIN responses, performs common validation 
-		 *  and delegates to _OnPartialResponse
+		/**
+		 * Handler for non-FIN responses, performs common validation and
+		 * delegates to _OnPartialResponse().
 		 *
-		 *	@return TaskResult enumeration
+		 * @param arAPDU	the DNP3 message as an APDU instance
+		 *
+		 * @return			TaskResult enumeration
 		 */
-		TaskResult OnPartialResponse(const APDU&);
+		TaskResult OnPartialResponse(const APDU& arAPDU);
 		
-		/** Handler for FIN responses, performs common validation 
-		 *  and delegates to _OnFinalResponse
+		/**
+		 * Handler for FIN responses, performs common validation and delegates
+		 * to _OnFinalResponse().
 		 *
-		 *	@return True if a valid response, false otherwise
+		 * @param arAPDU	the DNP3 message as an APDU instance
+		 *
+		 * @return			true if a valid response, false otherwise
 		 */
 		TaskResult OnFinalResponse(const APDU&);
 
-		/** Overridable handler for timeouts, layer closes, etc
+		/**
+		 * Overridable handler for timeouts, layer closes, etc.  Subclasses
+		 * that wish to handle failures of the Link Layer to deliver the
+		 * message should override this function.
 		 */
 		virtual void OnFailure() {}
 		
-		/// Name of the Task
+		/**
+		 * Returns the name of the task.
+		 *
+		 * @return			the name of the task
+		 */
 		virtual std::string Name() const = 0;
-
 	
 	protected:
 
-		/** Handler for non-FIN responses
-		 *	@return True if a valid response, false otherwise
+		/**
+		 * Handler for non-FIN responses.  Subclasses should override this
+		 * function to provide class-specific interpretations of the behavior.
+		 *
+		 * @param arAPDU	the DNP3 message as an APDU instance
+		 *
+		 * @return			a TaskResult value as a response
 		 */
 		virtual TaskResult _OnPartialResponse(const APDU&) = 0;
 		
-		/** Handler for FIN responses
-		 *	@return True if a valid response, false otherwise
+		/**
+		 * Handler for FIN responses.  Subclasses should override this
+		 * function to provide class-specific interpretations of the behavior.
+		 *
+		 * @param arAPDU	the DNP3 message as an APDU instance
+		 *
+		 * @return			a TaskResult value as a response
 		 */
 		virtual TaskResult _OnFinalResponse(const APDU&) = 0;
 		
@@ -111,5 +146,7 @@ class SimpleRspBase : public SingleRspBase
 
 
 }} //ens ns
+
+/* vim: set ts=4 sw=4: */
 
 #endif

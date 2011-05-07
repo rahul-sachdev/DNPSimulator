@@ -80,23 +80,25 @@ namespace apl {
 
 		TaskResult VtoTransmitTask::_OnPartialResponse(const APDU& arAPDU)
 		{
-			LOG_BLOCK(LEV_WARNING,
-					"Ignoring non-FIN response to task: "
+			LOG_BLOCK(LEV_ERROR,
+					"Non fin responses not allowed for task: "
 					<< this->Name());
 
-			return TR_FAIL;
+			return TR_CONTINUE;
 		}
 
 		TaskResult VtoTransmitTask::_OnFinalResponse(const APDU& arAPDU)
 		{
-			if (arAPDU.BeginRead().Count() == 0)
-			{
-				LOG_BLOCK(LEV_WARNING,
-						"Unexpected object headers in response: "
-						<< this->Name());
-			}
+			/* Remove the written data from the buffer */
+			this->mBuffer.ClearWrittenEvents();
 
 			return TR_SUCCESS;
+		}
+
+		TaskResult VtoTransmitTask::OnFailure()
+		{
+			/* Put the written data back onto the buffer */
+			this->mBuffer.Deselect();
 		}
 
 	}
