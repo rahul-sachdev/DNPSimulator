@@ -95,11 +95,10 @@ namespace apl {
 				 * no data loss.
 				 */
 				void OnFailure();
-
+				
 			protected:
 
-				void OnFailure();
-
+				
 				/**
 				 * No specific subclass behavior for a partial response.
 				 *

@@ -29,12 +29,10 @@ namespace apl {
 		void VtoTransmitTask::ConfigureRequest(APDU& arAPDU)
 		{
 			/*
-			 * For now, VTO packets are only sent as a single fragment.  We
-			 * also will require the receiver to confirm receipt, because I
-			 * don't want to have to code reliable delivery into the higher
-			 * level protocol.
+			 *  Masters never request confirmed data. The response from the slave is all that's required
+			 *  for reliable delivery.
 			 */
-			arAPDU.Set(FC_WRITE, true, true, false, false);
+			arAPDU.Set(FC_WRITE);
 
 			size_t numObjects = this->mBuffer.Select(PC_ALL_EVENTS);
 					
@@ -75,11 +73,7 @@ namespace apl {
 				++vto;				
 			}
 		}
-
-		void VtoTransmitTask::OnFailure()
-		{
-			mBuffer.Deselect();
-		}
+		
 
 		TaskResult VtoTransmitTask::_OnPartialResponse(const APDU& arAPDU)
 		{
@@ -94,9 +88,7 @@ namespace apl {
 		{
 			/* Remove the written data from the buffer */
 			this->mBuffer.ClearWrittenEvents();
-
-			mBuffer.ClearWrittenEvents();
-
+			
 			return TR_SUCCESS;
 		}
 
