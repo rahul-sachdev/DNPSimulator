@@ -87,7 +87,9 @@ class ResponseLoader : Loggable
 		void ReadCTO(HeaderReadIterator& arIter);
 
 		/**
-		 * Process an incoming data stream into a Virtual Terminal object.
+		 * Convert an incoming data stream for DNP3 Object Groups 112 or 113
+		 * into a VtoData object and pass the object to the user application
+		 * via the VtoReader instance.
 		 *
 		 * @param arIter	the header iterator that provides access to the
 		 * 					group, variation, data, etc.

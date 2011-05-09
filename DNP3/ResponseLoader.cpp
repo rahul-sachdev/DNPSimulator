@@ -124,7 +124,17 @@ void ResponseLoader::ProcessData(HeaderReadIterator& arIter, int aGrp, int aVar)
 
 void ResponseLoader::ReadVto(HeaderReadIterator& arIter, SizeByVariationObject* apObj)
 {
-	throw Exception(LOCATION, "Not yet implemented");
+	/* Get an iterator to the object data */
+	ObjectReadIterator objIter = arIter.BeginRead();
+
+	/* Copy the object data to a VtoData instance */
+	VtoData data;
+	data.Copy(*objIter, arIter->GetVariation());
+
+	/* Determine the Virtual Terminal port/channel number */
+	uint8_t channel = objIter->Index();
+
+	this->mpVtoReader->Update(data, channel);
 }
 
 }}

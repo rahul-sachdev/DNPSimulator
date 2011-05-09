@@ -35,21 +35,23 @@ namespace apl { namespace dnp {
 
 	class ObjectReadIterator;
 
+	/**
+	 * A class that represents a DNP3 Object Header in an APDU object.
+	 */
 	class HeaderInfo
 	{
 		public:
 
 		HeaderInfo(const ObjectHeaderField& arData, size_t aCount, size_t aPrefixSize, IObjectHeader* apHeader, ObjectBase* apObject, size_t aPos) :
-		mPos(aPos),
-		mHeaderData(arData),
-		mCount(aCount),
-		mPrefixSize(aPrefixSize),
-		mpHeader(apHeader),
-		mpObjectBase(apObject)
-		{
-		}
+			mPos(aPos),
+			mHeaderData(arData),
+			mCount(aCount),
+			mPrefixSize(aPrefixSize),
+			mpHeader(apHeader),
+			mpObjectBase(apObject)
+		{}
 
-		HeaderInfo(){}
+		HeaderInfo() {}
 
 		// accessor helpers to simplify reading code
 		ObjectHeaderTypes GetHeaderType() const { return mpHeader->GetType(); }
@@ -74,30 +76,35 @@ namespace apl { namespace dnp {
 		ObjectBase* mpObjectBase;
 	};
 
-	/// An interator that clients can use to loop over the object headers in an APDU
+	/**
+	 * An interator that clients can use to loop over the object headers in an
+	 * APDU object.
+	 */
 	class HeaderReadIterator
 	{
 		friend class APDU;
 
 		public:
 
-		const HeaderInfo* operator->() const;
-		const boost::uint8_t* operator*() const;
-		const HeaderReadIterator& operator++();
-		const HeaderReadIterator operator++(int);
-		const HeaderInfo& info() const;
+			const HeaderInfo* operator->() const;
+			const boost::uint8_t* operator*() const;
+			const HeaderReadIterator& operator++();
+			const HeaderReadIterator operator++(int);
+			const HeaderInfo& info() const;
 
-		ObjectReadIterator BeginRead();
-		size_t Count() { return mpHeaders->size(); }
-		bool IsEnd() { return mIndex >= mpHeaders->size(); }
+			ObjectReadIterator BeginRead();
+			size_t Count() { return mpHeaders->size(); }
+			bool IsEnd() { return mIndex >= mpHeaders->size(); }
 
 		private:
 
-		HeaderReadIterator(const std::vector<HeaderInfo>* apHeaders, const boost::uint8_t* apBuffer, bool aHasData);
-		const std::vector<HeaderInfo>* mpHeaders;
-		const boost::uint8_t* mpBuffer;
-		bool mHasData;
-		size_t mIndex;
+			HeaderReadIterator(const std::vector<HeaderInfo>* apHeaders, const boost::uint8_t* apBuffer, bool aHasData);
+
+			const std::vector<HeaderInfo>* mpHeaders;
+			const boost::uint8_t* mpBuffer;
+			bool mHasData;
+			size_t mIndex;
+
 	};
 
 	inline const HeaderInfo& HeaderReadIterator::info() const
@@ -138,8 +145,8 @@ namespace apl { namespace dnp {
 		return tmp;
 	}
 
-} //end dnp
+}}
 
-} //end apl
+/* vim: set ts=4 sw=4: */
 
 #endif

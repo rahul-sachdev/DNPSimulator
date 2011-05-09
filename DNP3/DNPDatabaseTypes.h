@@ -28,13 +28,13 @@
 
 #include <vector>
 
-//using namespace dnp;
 namespace apl { namespace dnp {
 
 /**
-Common base class for point information and associated meta-data needed for processing it.
-The common base class allows some common operations to be performed on static and event types.
-*/
+ * Common base class for point information and associated meta-data needed for
+ * processing it.  The common base class allows some common operations to be
+ * performed on static and event types.
+ */
 template<typename T>
 struct PointInfoBase
 {
@@ -44,30 +44,36 @@ struct PointInfoBase
 		mIndex(aIndex)
 	{}
 
-	PointInfoBase() : mClass(PC_CLASS_0) {}
+	PointInfoBase() :
+		mClass(PC_CLASS_0)
+	{}
 
-	T mValue;						/// current measurment (i.e. Binary, Analog, etc)
-	PointClass mClass;				/// class of the point (PC_CLASS<0-3>)
-	size_t mIndex;					/// index of the measurement
+	T mValue;			/// current measurment (i.e. Binary, Analog, etc)
+	PointClass mClass;	/// class of the point (PC_CLASS<0-3>)
+	size_t mIndex;		/// index of the measurement
 
 	typedef T MeasType;
 };
 
 /**
-Structure for holding static data information. Adds a deadband
-and a last event value to the base class.
-*/
+ * Structure for holding static data information. Adds a deadband and a last
+ * event value to the base class.
+ */
 template<typename T>
 struct PointInfo : public PointInfoBase<T>
 {
 	PointInfo(const T& arVal, PointClass aClass, size_t aIndex) :
-	PointInfoBase<T>(arVal, aClass, aIndex),
-	mDeadband(0),
-	mLastEventValue(0),
-	mSequence(0)
+		PointInfoBase<T>(arVal, aClass, aIndex),
+		mDeadband(0),
+		mLastEventValue(0),
+		mSequence(0)
 	{}
 
-	PointInfo() : mDeadband(0), mLastEventValue(0), mSequence(0) {}
+	PointInfo() :
+		mDeadband(0),
+		mLastEventValue(0),
+		mSequence(0)
+	{}
 
 	double mDeadband;						/// deadband associated with measurement (optional)
 	typename T::ValueType mLastEventValue;	/// the last value that was reported

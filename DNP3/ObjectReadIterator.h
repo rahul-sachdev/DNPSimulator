@@ -19,13 +19,13 @@
 #ifndef __OBJECT_READ_ITERATOR_H_
 #define __OBJECT_READ_ITERATOR_H_
 
-
+#include <assert.h>
 
 #include <APL/Types.h>
+
 #include "HeaderReadIterator.h"
 #include "ObjectHeader.h"
 #include "ObjectInterfaces.h"
-#include <assert.h>
 
 class IObjectHeader;
 
@@ -36,25 +36,29 @@ namespace apl { namespace dnp {
 		friend class ObjectReadIterator;
 
 		public:
-		//const boost::uint8_t* Position() const { return mpPosition; }
-		size_t Index() const { return mIndex; }
-		size_t Start() const { return mStart; }
+
+			size_t Index() const { return mIndex; }
+			size_t Start() const { return mStart; }
 
 		private:
 
-		size_t mIndex;					// the objects device-based index
-		size_t mStart;					// used in conjunction with bitfield objects only,
-										// returns the device-based index of the first object in the collection
+		size_t mIndex;		// the objects device-based index
+		size_t mStart;		// used in conjunction with bitfield objects only,
+							// returns the device-based index of the first
+							// object in the collection
 	};
 
 	/**
-	Traverses APDU buffer for object data.
+	 * An iterator that clients can use to loop over the object data in an
+	 * APDU object.  This class is usually used in conjunction with the
+	 * HeaderReadIterator class.
 	*/
 	class ObjectReadIterator
 	{
 		friend class HeaderReadIterator;
 
 		public:
+
 			bool HasData() { return mHasData; }
 			const ObjectInfo* operator->() const;
 			const boost::uint8_t* operator*() const;
@@ -67,6 +71,7 @@ namespace apl { namespace dnp {
 			bool IsEnd() const { return mCurrentObjectNum >= Count(); }
 
 		private:
+
 			ObjectReadIterator(const HeaderInfo& arInfo, const boost::uint8_t* apBuffer, bool aHasData);
 			HeaderInfo mHeaderInfo;
 			size_t mCurrentObjectNum;
@@ -75,7 +80,6 @@ namespace apl { namespace dnp {
 			const boost::uint8_t* mpPosition;
 			const boost::uint8_t* mpBuffer;
 			bool mHasData;
-
 
 			void SetObjectInfo();
 
@@ -123,9 +127,8 @@ namespace apl { namespace dnp {
 		return tmp;
 	}
 
-} //end dnp
+}}
 
-} //end apl
+/* vim: set ts=4 sw=4: */
 
 #endif
-

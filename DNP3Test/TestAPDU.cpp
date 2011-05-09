@@ -561,3 +561,5 @@ BOOST_AUTO_TEST_SUITE(APDUReading)
 		BOOST_REQUIRE_EQUAL("world", std::string(reinterpret_cast<const char*>(buff), 5));
 	}
 BOOST_AUTO_TEST_SUITE_END()
+
+/* vim: set ts=4 sw=4: */
