@@ -62,36 +62,7 @@ namespace apl {
 				 * Terminal Objects.  Data is pulled out of the
 				 * InsertionOrderedEventBuffer<VtoEvent> instance and is
 				 * placed into the APDU.
-				 *
-				 * The number of Virtual Terminal Objects that are packed into
-				 * a single message is calculated based on the size of one
-				 * fragment consisting of:
-				 *
-				 * @code
-				 *     1  Application Request Header   2 bytes
-				 *
-				 *    'N' Virtual Terminal objects   300 bytes each
-				 *          Object Type                   2 bytes
-				 *          Qualifier                     1 byte
-				 *          Range                         1 byte
-				 *          Object Prefix Index           1 byte
-				 *          Data Octets                   255 bytes
-				 * @endcode
-				 *
-				 * The resulting equation is:
-				 *
-				 * @code
-				 *    Fragment Size = 2 + ( N * [2 + 1 + 1 + 1 + 255] )
-				 *    Fragment Size = 2 + ( 300 * N )
-				 * @endcode
-				 *
-				 * Therefore, the number of Virtual Terminal objects that can
-				 * fit in a single DNP3 fragment is equal to:
-				 *
-				 * @code
-				 * N = (Fragment Size - 2) / 300
-				 * @endcode
-				 *
+				 *				 
 				 * @param arAPDU	the DNP3 message container that will
 				 * 					contain the DNP3 Virtual Terminal Objects
 				 */
@@ -118,6 +89,8 @@ namespace apl {
 				InsertionOrderedEventBuffer<VtoEvent> mBuffer;
 
 			protected:
+
+				void OnFailure();
 
 				/**
 				 * TODO - Any special behavior on a partial response?

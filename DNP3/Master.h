@@ -77,6 +77,8 @@ class Master : public Loggable, public IAppUser
 
 	ICommandAcceptor* GetCmdAcceptor() { return &mCommandQueue; }
 
+	IVtoWriter* GetVTOWriter() { return &mVtoWriter; }
+
 	/* Implement IAppUser - callbacks from the app layer */
 
 	void OnLowerLayerUp();

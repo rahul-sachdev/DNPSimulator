@@ -259,26 +259,6 @@ bool ResponseContext::LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> >& ar
 	return true;	// the queue has been exhausted on this iteration
 }
 
-/*
-template <class T>
-bool ResponseContext::IterateContiguous(IterRecord<T>& arIters, APDU& arAPDU, typename WriteFunc<typename T::MeasType>::Type& arWriter)
-{
-	size_t start = arIters.first->mIndex;
-	size_t stop = arIters.last->mIndex;
-
-	ObjectWriteIterator owi = arAPDU.WriteContiguous(arIters.pObject, start, stop);
-
-	for(size_t i=start; i<=stop; ++i)
-	{
-		if(owi.IsEnd()) return false; // out of space in the fragment
-		arWriter(*owi, arIters.first->mValue, i);
-		++arIters.first; //increment the iterators
-		++owi;
-	}
-
-	return true;
-}*/
-
 template <class T>
 bool ResponseContext::IterateContiguous(IterRecord<T>& arIters, APDU& arAPDU)
 {
@@ -298,8 +278,6 @@ bool ResponseContext::IterateContiguous(IterRecord<T>& arIters, APDU& arAPDU)
 
 	return true;
 }
-
-
 
 
 // T is the point info type

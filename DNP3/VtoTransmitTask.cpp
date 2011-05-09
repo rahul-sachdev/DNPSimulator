@@ -34,48 +34,51 @@ namespace apl {
 			 * don't want to have to code reliable delivery into the higher
 			 * level protocol.
 			 */
-			arAPDU.Set(FC_WRITE, true, true, true, false);
+			arAPDU.Set(FC_WRITE, true, true, false, false);
 
-			/*
-			 * Only grab from the buffer that which will fit into a single APDU
-			 * message.  VTO is considered a 'low-priority' traffic flow, so we
-			 * don't want to hog the bandwidth with multiple fragments.
-			 */
-			size_t numObjects = this->mBuffer.Select(
-					PC_ALL_EVENTS,
-					(arAPDU.Size() - 2) / 300
-			);
-
+			size_t numObjects = this->mBuffer.Select(PC_ALL_EVENTS);
+					
 			/*
 			 * If there are no objects to write, skip the remainder.
 			 */
-			if (numObjects < 0)
-				return;
+			if (numObjects < 0) return;
 
 			/*
 			 * Loop through the selected data and add corresponding objects to
 			 * the arAPDU instance.
 			 */
-			VtoDataEventIter itr = this->mBuffer.Begin();
-			for (size_t i = 0; i < numObjects; ++i, ++itr)
+			VtoDataEventIter vto = this->mBuffer.Begin();
+
+			for (size_t i = 0; i < numObjects; ++i)
 			{
 				/* Insert a new object into the APDU message. */
-				IndexedWriteIterator obj = arAPDU.WriteIndexed(
+				IndexedWriteIterator itr = arAPDU.WriteIndexed(
 						Group112Var0::Inst(),
-						itr->mValue.GetSize(),
-						itr->mIndex
+						vto->mValue.GetSize(),
+						vto->mIndex
 				);
 
+				if(itr.IsEnd()) return; //that's all we can get in this fragment
+
 				/* Set the object index */
-				obj.SetIndex(itr->mIndex);
+				itr.SetIndex(vto->mIndex);
 
 				/* Write the data to the APDU message */
 				Group112Var0::Inst()->Write(
-						*obj,
-						itr->mValue.GetSize(),
-						itr->mValue.GetData()
+						*itr,
+						vto->mValue.GetSize(),
+						vto->mValue.GetData()
 				);
+
+				vto->mWritten = true;
+				
+				++vto;				
 			}
+		}
+
+		void VtoTransmitTask::OnFailure()
+		{
+			mBuffer.Deselect();
 		}
 
 		TaskResult VtoTransmitTask::_OnPartialResponse(const APDU& arAPDU)
@@ -95,6 +98,8 @@ namespace apl {
 						"Unexpected object headers in response: "
 						<< this->Name());
 			}
+
+			mBuffer.ClearWrittenEvents();
 
 			return TR_SUCCESS;
 		}

@@ -599,5 +599,29 @@ using namespace boost;
 			BOOST_REQUIRE(t.fdo.Check(true, BQ_ONLINE, 2, TimeStamp_t(0)));		
 		}
 
+		BOOST_AUTO_TEST_CASE(WriteSingleVtoByte)
+		{
+			MasterConfig master_cfg; master_cfg.IntegrityRate = -1;
+			MasterTestObject t(master_cfg);
+			t.master.OnLowerLayerUp();
+
+			TestForIntegrityPoll(t);
+			BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); // check that the master sends no more packets
+						
+			// make sure that there aro no events ready to be run in the reactor
+			BOOST_REQUIRE_FALSE(t.mts.DispatchOne());
+
+			// queue a VTO byte and expect this to cause an event
+			boost::uint8_t data[2] = {0xAB, 0xBC};
+			t.master.GetVTOWriter()->Write(data, 2, 0xFF);			
+			BOOST_REQUIRE(t.mts.DispatchOne());
+
+			BOOST_REQUIRE_EQUAL(t.Read(), "C0 02 70 02 17 01 FF AB BC");
+			t.RespondToMaster("C0 81 00 00");
+			
+			BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0);  // no more data to transmit
+			BOOST_REQUIRE_FALSE(t.mts.DispatchOne()); // no more actions to dispatch
+		}
+
 	BOOST_AUTO_TEST_SUITE_END() //end suite
 
