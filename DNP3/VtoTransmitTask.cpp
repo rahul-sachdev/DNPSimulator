@@ -39,7 +39,10 @@ namespace apl {
 			/*
 			 * If there are no objects to write, skip the remainder.
 			 */
-			if (numObjects < 0) return;
+			if (numObjects < 0)
+			{
+				return;
+			}
 
 			/*
 			 * Loop through the selected data and add corresponding objects to
