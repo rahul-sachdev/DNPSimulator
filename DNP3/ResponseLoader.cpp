@@ -108,3 +108,5 @@ void ResponseLoader::ProcessData(HeaderReadIterator& arIter, int aGrp, int aVar)
 
 	
 }}
+
+/* vim: set ts=4 sw=4: */
