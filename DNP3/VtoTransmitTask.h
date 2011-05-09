@@ -88,17 +88,35 @@ namespace apl {
 				 */
 				InsertionOrderedEventBuffer<VtoEvent> mBuffer;
 
+				/**
+				 * On failure of the Link Layer to deliver the DNP3 message
+				 * created in ConfigureRequest(), put the data that was
+				 * previously sent back onto the event queue.  This results in
+				 * no data loss.
+				 */
+				void OnFailure();
+
 			protected:
 
 				void OnFailure();
 
 				/**
-				 * TODO - Any special behavior on a partial response?
+				 * No specific subclass behavior for a partial response.
+				 *
+				 * @param arAPDU	the DNP3 message as an APDU instance
+				 *
+				 * @return			TR_CONTINUE as a constant response
 				 */
 				TaskResult _OnPartialResponse(const APDU& arAPDU);
 
 				/**
-				 * TODO - Any special behavior on a final response?
+				 * Acknowledge that the data previously sent with
+				 * ConfigureRequest() was received successfully by the other
+				 * station, and remove the data from the mBuffer queue.
+				 *
+				 * @param arAPDU	the DNP3 message as an APDU instance
+				 *
+				 * @return			TR_SUCCESS as a constant
 				 */
 				TaskResult _OnFinalResponse(const APDU& arAPDU);
 		};
