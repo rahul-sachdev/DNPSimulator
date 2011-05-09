@@ -64,13 +64,16 @@ class ResponseLoader : Loggable
 		void ProcessData(HeaderReadIterator& itr, int aGrp, int aVar);
 
 		template <class T>
-		void ReadCTO(HeaderReadIterator& arIter);
-
-		template <class T>
 		void Read(HeaderReadIterator& arIter, StreamObject<T>* apObj);
 
 		template <class T>
 		void ReadBitfield(HeaderReadIterator& arHeader);
+
+		template <class T>
+		void ReadCTO(HeaderReadIterator& arIter);
+
+		template <class T>
+		void ReadVto(HeaderReadIterator& arIter, SizeByVariation* apObj);
 
 		IDataObserver* mpPublisher;
 		Transaction mTransaction;		
