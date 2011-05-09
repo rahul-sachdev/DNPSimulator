@@ -34,11 +34,10 @@ namespace apl {
 			 */
 			arAPDU.Set(FC_WRITE);
 
+			/* Get all of the data objects in the buffer. */
 			size_t numObjects = this->mBuffer.Select(PC_ALL_EVENTS);
 					
-			/*
-			 * If there are no objects to write, skip the remainder.
-			 */
+			/* If there are no objects to write, skip the remainder. */
 			if (numObjects < 0)
 			{
 				return;
@@ -59,7 +58,15 @@ namespace apl {
 						vto->mIndex
 				);
 
-				if(itr.IsEnd()) return; //that's all we can get in this fragment
+				/*
+				 * Check to see if the APDU fragment has enough room for the
+				 * data segment.  If the fragment is full, return out of this
+				 * function and let the fragment send.
+				 */
+				if (itr.IsEnd())
+				{
+					return;
+				}
 
 				/* Set the object index */
 				itr.SetIndex(vto->mIndex);
@@ -71,13 +78,14 @@ namespace apl {
 						vto->mValue.GetData()
 				);
 
+				/* Mark the data segment as being written */
 				vto->mWritten = true;
 				
+				/* Move to the next data segment in the buffer */
 				++vto;				
 			}
 		}
 		
-
 		TaskResult VtoTransmitTask::_OnPartialResponse(const APDU& arAPDU)
 		{
 			LOG_BLOCK(LEV_ERROR,
