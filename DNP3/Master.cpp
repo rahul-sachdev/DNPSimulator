@@ -43,6 +43,7 @@ namespace apl { namespace dnp {
 
 Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IDataObserver* apPublisher, AsyncTaskGroup* apTaskGroup, ITimerSource* apTimerSrc, ITimeSource* apTimeSrc) :
 	Loggable(apLogger),
+	mVtoReader(apLogger),
 	mVtoWriter(aCfg.VtoWriterQueueSize),
 	mRequest(aCfg.FragSize),
 	mpAppLayer(apAppLayer),
@@ -56,7 +57,7 @@ Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IData
 	mpObserver(aCfg.mpObserver),
 	mState(MS_UNKNOWN),
 	mSchedule(MasterSchedule::GetSchedule(aCfg, this, apTaskGroup)),
-	mClassPoll(apLogger, apPublisher),
+	mClassPoll(apLogger, apPublisher, &mVtoReader),
 	mClearRestart(apLogger),
 	mConfigureUnsol(apLogger),
 	mTimeSync(apLogger, apTimeSrc),
@@ -299,7 +300,7 @@ void Master::OnUnsolResponse(const APDU& arAPDU)
 void Master::ProcessDataResponse(const APDU& arResponse)
 {
 	try {
-		ResponseLoader loader(mpLogger, mpPublisher);
+		ResponseLoader loader(this->mpLogger, this->mpPublisher, this->GetVtoReader());
 
 		for(HeaderReadIterator hdr = arResponse.BeginRead(); !hdr.IsEnd(); ++hdr)
 			loader.Process(hdr);

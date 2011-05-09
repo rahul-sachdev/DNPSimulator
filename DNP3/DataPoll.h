@@ -20,19 +20,22 @@
 #define __DATA_POLL_H_
 
 #include "MasterTaskBase.h"
+#include "VtoReader.h"
 
 namespace apl {
-	class IDataObserver;	
+	class IDataObserver;
 }
 
 namespace apl { namespace dnp {
 
-/** Base class for all data acquistion polls
-*/
+/**
+ * Base class for all data acquistion polls
+ */
 class DataPoll : public MasterTaskBase
-{	
+{
 	public:
-		DataPoll(Logger*, IDataObserver*);
+
+		DataPoll(Logger*, IDataObserver*, VtoReader*);
 
 	private:
 
@@ -43,6 +46,9 @@ class DataPoll : public MasterTaskBase
 		TaskResult _OnFinalResponse(const APDU&);
 
 		IDataObserver* mpObs;
+
+		VtoReader* mpVtoReader;
+
 };
 
 /** Task that acquires class data from the outstation
@@ -50,7 +56,8 @@ class DataPoll : public MasterTaskBase
 class ClassPoll : public DataPoll
 {
 	public:
-		ClassPoll(Logger*, IDataObserver*);
+
+		ClassPoll(Logger*, IDataObserver*, VtoReader*);
 
 		void Set(int aClassMask);
 
@@ -59,9 +66,13 @@ class ClassPoll : public DataPoll
 		virtual std::string Name() const { return "Class Poll"; }
 
 	private:
+
 		int mClassMask;
+
 };
 
 }} //ens ns
+
+/* vim: set ts=4 sw=4: */
 
 #endif

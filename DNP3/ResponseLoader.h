@@ -27,6 +27,7 @@
 #include "CTOHistory.h"
 #include "ObjectInterfaces.h"
 #include "ObjectReadIterator.h"
+#include "VtoReader.h"
 
 namespace apl { namespace dnp {
 
@@ -39,14 +40,26 @@ class IVTODataSink;
 class ResponseLoader : Loggable
 {
 	public:
-		ResponseLoader(Logger*, IDataObserver*);
+		/**
+		 * Creates a new ResponseLoader instance.
+		 *
+		 * @param log			the Logger that the loader should use for
+		 * 						message reporting
+		 * @param apPublisher	the IDataObserver for any responses that match
+		 * @param apVtoReader	the VtoReader for any responses that match
+		 *
+		 * @return				a new ResponseLoader instance
+		 */
+		ResponseLoader(Logger* log,
+				IDataObserver* apPublisher,
+				VtoReader *apVtoReader);
 
 		/**
 		 * Processes a DNP3 object received by the Master.  The real heavy
 		 * lifting is done in ResponseLoader::ProcessData().
 		 *
-		 * @param itr		the header iterator that provides access to the
-		 * 					group, variation, data, etc.
+		 * @param itr			the header iterator that provides access to
+		 * 						the group, variation, data, etc.
 		 */
 		void Process(HeaderReadIterator& itr);
 
@@ -73,11 +86,26 @@ class ResponseLoader : Loggable
 		template <class T>
 		void ReadCTO(HeaderReadIterator& arIter);
 
-		template <class T>
+		/**
+		 * Process an incoming data stream into a Virtual Terminal object.
+		 *
+		 * @param arIter	the header iterator that provides access to the
+		 * 					group, variation, data, etc.
+		 * @param apObj		the pointer to the DNP3 object instance that can
+		 * 					read/write the byte stream
+		 */
 		void ReadVto(HeaderReadIterator& arIter, SizeByVariationObject* apObj);
 
 		IDataObserver* mpPublisher;
-		Transaction mTransaction;		
+
+		/**
+		 * A pointer to the VtoReader instance that will accept the VtoData
+		 * processed by this ResponseLoader.
+		 */
+		VtoReader* mpVtoReader;
+
+		Transaction mTransaction;
+
 		CTOHistory mCTO;
 };
 
@@ -121,7 +149,7 @@ void ResponseLoader::Read(HeaderReadIterator& arIter, StreamObject<T>* apObj)
 		{
 			value.SetTime(t+value.GetTime());
 		}
-				
+
 		/* Make sure the value has quality information */
 		if (!apObj->HasQuality())
 		{

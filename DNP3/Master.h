@@ -33,6 +33,7 @@
 #include "ObjectInterfaces.h"
 #include "MasterSchedule.h"
 #include "MasterObserver.h"
+#include "VtoReader.h"
 #include "VtoWriter.h"
 
 // includes for tasks
@@ -77,6 +78,8 @@ class Master : public Loggable, public IAppUser
 
 	ICommandAcceptor* GetCmdAcceptor() { return &mCommandQueue; }
 
+	VtoReader* GetVtoReader() { return &mVtoReader; }
+
 	IVtoWriter* GetVtoWriter() { return &mVtoWriter; }
 
 	/* Implement IAppUser - callbacks from the app layer */
@@ -120,12 +123,13 @@ class Master : public Loggable, public IAppUser
 	PostingNotifierSource mNotifierSource;	/// way to get special notifiers for the command queue / VTO
 	CommandQueue mCommandQueue;				/// Threadsafe queue for buffering command requests
 
+	VtoReader mVtoReader;					/// Handler to direct received VTO data to userspace
 	VtoWriter mVtoWriter;					/// Thread-safe queue for buffering VTO data from userspace
 
 	APDU mRequest;							/// APDU that gets reused for requests
 
 	IAppLayer* mpAppLayer;					/// lower application layer
-	IDataObserver* mpPublisher;				/// where the measurement are pushed
+	IDataObserver* mpPublisher;				/// where the data measurements are pushed
 	AsyncTaskGroup* mpTaskGroup;			/// How task execution is controlled
 	ITimerSource* mpTimerSrc;				/// Controls the posting of events to marshall across threads
 	ITimeSource* mpTimeSrc;					/// Access to UTC, normally system time but can be a mock for testing

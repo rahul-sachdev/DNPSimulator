@@ -22,6 +22,8 @@
 #include <APL/Log.h>
 #include <APL/FlexibleDataObserver.h>
 
+#include <DNP3/VtoReader.h>
+
 namespace apl
 {
 	class Logger;
@@ -32,18 +34,21 @@ namespace apl { namespace dnp {
 class ResponseLoaderTestObject
 {
 	public:
-	ResponseLoaderTestObject();
 
-	void CheckBinaries(const std::string& arAPDU);
-	void CheckCounters(const std::string& arAPDU);
-	void CheckAnalogs(const std::string& arAPDU);
-	void CheckSetpointStatii(const std::string& arAPDU);
+		ResponseLoaderTestObject();
 
-	void Load(const std::string& arAPDU);
+		void CheckBinaries(const std::string& arAPDU);
+		void CheckCounters(const std::string& arAPDU);
+		void CheckAnalogs(const std::string& arAPDU);
+		void CheckSetpointStatii(const std::string& arAPDU);
+
+		void Load(const std::string& arAPDU);
 
 	private: EventLog log;
 	public: FlexibleDataObserver fdo;
 	private: Logger* mpLogger;
+	public: VtoReader vto;
+
 };
 
 }}

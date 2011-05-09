@@ -24,17 +24,17 @@
 #include "APDU.h"
 #include "ResponseLoader.h"
 #include "PointClass.h"
+#include "VtoReader.h"
 
 namespace apl { namespace dnp {
 
 /* DataPoll - base class */
 
-DataPoll::DataPoll(Logger* apLogger, IDataObserver* apObs) :
-MasterTaskBase(apLogger),
-mpObs(apObs)
-{
-
-}
+DataPoll::DataPoll(Logger* apLogger, IDataObserver* apObs, VtoReader* apVtoReader) :
+	MasterTaskBase(apLogger),
+	mpObs(apObs),
+	mpVtoReader(apVtoReader)
+{}
 
 TaskResult DataPoll::_OnPartialResponse(const APDU& f)
 {
@@ -50,29 +50,41 @@ TaskResult DataPoll::_OnFinalResponse(const APDU& f)
 
 void DataPoll::ReadData(const APDU& f)
 {
-	ResponseLoader loader(mpLogger, mpObs);
-	for(HeaderReadIterator hdr = f.BeginRead(); !hdr.IsEnd(); ++hdr) loader.Process(hdr);
+	ResponseLoader loader(mpLogger, mpObs, mpVtoReader);
+	HeaderReadIterator hdr = f.BeginRead();
+	for ( ; !hdr.IsEnd(); ++hdr)
+	{
+		loader.Process(hdr);
+	}
 }
 
 /* Class Poll */
 
-ClassPoll::ClassPoll(Logger* apLogger, IDataObserver* apObs) :
-DataPoll(apLogger, apObs),
-mClassMask(PC_INVALID)
+ClassPoll::ClassPoll(Logger* apLogger, IDataObserver* apObs, VtoReader* apVtoReader) :
+	DataPoll(apLogger, apObs, apVtoReader),
+	mClassMask(PC_INVALID)
 {}
 
-void ClassPoll::Set(int aClassMask) { mClassMask = aClassMask; }
+void ClassPoll::Set(int aClassMask)
+{
+	mClassMask = aClassMask;
+}
 
 void ClassPoll::ConfigureRequest(APDU& arAPDU)
 {
-	if(mClassMask == PC_INVALID) throw InvalidStateException(LOCATION, "Class mask has not been set");
+	if (mClassMask == PC_INVALID)
+	{
+		throw InvalidStateException(LOCATION, "Class mask has not been set");
+	}
 
 	arAPDU.Set(FC_READ);
-	if(mClassMask & PC_CLASS_0) arAPDU.DoPlaceholderWrite(Group60Var1::Inst());
-	if(mClassMask & PC_CLASS_1)	arAPDU.DoPlaceholderWrite(Group60Var2::Inst());
-	if(mClassMask & PC_CLASS_2) arAPDU.DoPlaceholderWrite(Group60Var3::Inst());
-	if(mClassMask & PC_CLASS_3)	arAPDU.DoPlaceholderWrite(Group60Var4::Inst());
+	if (mClassMask & PC_CLASS_0) arAPDU.DoPlaceholderWrite(Group60Var1::Inst());
+	if (mClassMask & PC_CLASS_1) arAPDU.DoPlaceholderWrite(Group60Var2::Inst());
+	if (mClassMask & PC_CLASS_2) arAPDU.DoPlaceholderWrite(Group60Var3::Inst());
+	if (mClassMask & PC_CLASS_3) arAPDU.DoPlaceholderWrite(Group60Var4::Inst());
 }
 
 
 }} //end ns
+
+/* vim: set ts=4 sw=4: */
