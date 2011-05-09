@@ -29,8 +29,8 @@ namespace apl {
 		void VtoTransmitTask::ConfigureRequest(APDU& arAPDU)
 		{
 			/*
-			 *  Masters never request confirmed data. The response from the slave is all that's required
-			 *  for reliable delivery.
+			 *  Masters never request confirmed data. The response from the
+			 *  slave is all that's required for reliable delivery.
 			 */
 			arAPDU.Set(FC_WRITE);
 
