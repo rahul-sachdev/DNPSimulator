@@ -25,6 +25,7 @@
 #include <APL/Logger.h>
 
 #include "CTOHistory.h"
+#include "ObjectInterfaces.h"
 #include "ObjectReadIterator.h"
 
 namespace apl { namespace dnp {
@@ -73,7 +74,7 @@ class ResponseLoader : Loggable
 		void ReadCTO(HeaderReadIterator& arIter);
 
 		template <class T>
-		void ReadVto(HeaderReadIterator& arIter, SizeByVariation* apObj);
+		void ReadVto(HeaderReadIterator& arIter, SizeByVariationObject* apObj);
 
 		IDataObserver* mpPublisher;
 		Transaction mTransaction;		
