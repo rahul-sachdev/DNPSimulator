@@ -1,24 +1,22 @@
 //
-// Licensed to Green Energy Corp (www.greenenergycorp.com) under one
-// or more contributor license agreements. See the NOTICE file
-// distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
-// to you under the Apache License, Version 2.0 (the
-// "License"); you may not use this file except in compliance
-// with the License.  You may obtain a copy of the License at
+// Licensed to Green Energy Corp (www.greenenergycorp.com) under one or more
+// contributor license agreements. See the NOTICE file distributed with this
+// work for additional information regarding copyright ownership.  Green Enery
+// Corp licenses this file to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance with the
+// License.  You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
 //
-// Unless required by applicable law or agreed to in writing,
-// software distributed under the License is distributed on an
-// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-// KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+// License for the specific language governing permissions and limitations
 // under the License.
 //
+
 #ifndef __SLAVE_STATES_H_
 #define __SLAVE_STATES_H_
-
 
 #include <string>
 #include <APL/Singleton.h>
@@ -38,132 +36,155 @@ namespace apl { namespace dnp {
 class Slave;
 class APDU;
 
-/** @section desc
-Base class for all slave transaction states
-*/
+/**
+ * Base class for all transaction states of a Slave
+ */
 class AS_Base
 {
 	public:
 
-	/* Events from application layer */
+		/* Events from application layer */
 
-	virtual void OnLowerLayerUp(Slave*);
-	virtual void OnLowerLayerDown(Slave*);
+		virtual void OnLowerLayerUp(Slave*);
+		virtual void OnLowerLayerDown(Slave*);
 
-	virtual void OnSolSendSuccess(Slave*);
-	virtual void OnSolFailure(Slave*);
+		virtual void OnSolSendSuccess(Slave*);
+		virtual void OnSolFailure(Slave*);
 
-	virtual void OnUnsolSendSuccess(Slave*);
-	virtual void OnUnsolFailure(Slave*);
+		virtual void OnUnsolSendSuccess(Slave*);
+		virtual void OnUnsolFailure(Slave*);
 
-	virtual void OnRequest(Slave*, const APDU&, SequenceInfo);
+		virtual void OnRequest(Slave*, const APDU&, SequenceInfo);
 
-	virtual void OnUnknown(Slave*);
+		virtual void OnUnknown(Slave*);
 
-	/* Events produced from the user layer */
+		/* Events produced from the user layer */
 
-	/// Called when a data update is received from the user layer
-	virtual void OnDataUpdate(Slave*);
+		/// Called when a data update is received from the user layer
+		virtual void OnDataUpdate(Slave*);
 
-	/// Called when a data update is received from the user layer
-	virtual void OnUnsolExpiration(Slave*);
+		/// Called when a data update is received from the user layer
+		virtual void OnUnsolExpiration(Slave*);
 
-	/// @return The name associated with the state
-	virtual std::string Name() const = 0;
+		/// @return The name associated with the state
+		virtual std::string Name() const = 0;
 
-	virtual bool AcceptsDeferredRequests() { return false; }
-	virtual bool AcceptsDeferredUpdates()  { return false; }
-	virtual bool AcceptsDeferredUnsolExpiration()  { return false; }
-	virtual bool AcceptsDeferredUnknown()  { return false; }
+		virtual bool AcceptsDeferredRequests() { return false; }
+		virtual bool AcceptsDeferredUpdates()  { return false; }
+		virtual bool AcceptsDeferredUnsolExpiration()  { return false; }
+		virtual bool AcceptsDeferredUnknown()  { return false; }
 
 	protected:
 
-	void SwitchOnFunction(Slave*, AS_Base* apNext, const APDU& arRequest, SequenceInfo aSeqInfo);
-	void DoUnsolSuccess(Slave*);
-	void DoRequest(Slave* c, AS_Base* apNext, const APDU& arAPDU, SequenceInfo aSeqInfo);
+		void SwitchOnFunction(Slave*, AS_Base* apNext, const APDU& arRequest, SequenceInfo aSeqInfo);
+		void DoUnsolSuccess(Slave*);
+		void DoRequest(Slave* c, AS_Base* apNext, const APDU& arAPDU, SequenceInfo aSeqInfo);
 
-	//Work functions
+		//Work functions
 
-	void ChangeState(Slave*, AS_Base*);
+		void ChangeState(Slave*, AS_Base*);
+
 };
 
-/** @section desc
-The application layer has not informed the slave yet that it is up
-*/
+/**
+ * A state that indicates when the application layer has not informed the
+ * slave yet that it is up.
+ */
 class AS_Closed : public AS_Base
 {
-	MACRO_STATE_SINGLETON_INSTANCE(AS_Closed);
+	public:
 
-	void OnLowerLayerUp(Slave*);
-	void OnDataUpdate(Slave*);
+		MACRO_STATE_SINGLETON_INSTANCE(AS_Closed);
 
-	bool AcceptsDeferUpdates() { return true; }
+		void OnLowerLayerUp(Slave*);
+		void OnDataUpdate(Slave*);
+
+		bool AcceptsDeferUpdates() { return true; }
+
 };
 
 class AS_OpenBase : public AS_Base
 {
 	public:
-	void OnLowerLayerDown(Slave*);
+
+		void OnLowerLayerDown(Slave*);
+
 };
 
-/** @section desc
-The app layer is online, but the slave is not doing or waiting on anything
-*/
+/**
+ * A state that indicates when the AppLayer is online but the Slave is not
+ * doing or waiting on anything.
+ */
 class AS_Idle : public AS_OpenBase
 {
-	MACRO_STATE_SINGLETON_INSTANCE(AS_Idle);
+	public:
 
-	void OnRequest(Slave*, const APDU&, SequenceInfo);
-	void OnDataUpdate(Slave*);
-	void OnUnsolExpiration(Slave*);
-	void OnUnknown(Slave*);
+		MACRO_STATE_SINGLETON_INSTANCE(AS_Idle);
 
-	bool AcceptsDeferredRequests() { return true; }
-	bool AcceptsDeferredUpdates() { return true; }
-	bool AcceptsDeferredUnsolExpiration()  { return true; }
+		void OnRequest(Slave*, const APDU&, SequenceInfo);
+		void OnDataUpdate(Slave*);
+		void OnUnsolExpiration(Slave*);
+		void OnUnknown(Slave*);
+
+		bool AcceptsDeferredRequests() { return true; }
+		bool AcceptsDeferredUpdates() { return true; }
+		bool AcceptsDeferredUnsolExpiration()  { return true; }
 
 };
 
 
-/** @section desc
-The slave is waiting for a response to complete
-*/
+/**
+ * A state that indicates when the Slave is waiting for a response to
+ * complete.
+ */
 class AS_WaitForRspSuccess : public AS_OpenBase
 {
-	MACRO_STATE_SINGLETON_INSTANCE(AS_WaitForRspSuccess);
+	public:
 
-	void OnRequest(Slave*, const APDU&, SequenceInfo);
-	void OnSolFailure(Slave*);
-	void OnSolSendSuccess(Slave*);
+		MACRO_STATE_SINGLETON_INSTANCE(AS_WaitForRspSuccess);
+
+		void OnRequest(Slave*, const APDU&, SequenceInfo);
+		void OnSolFailure(Slave*);
+		void OnSolSendSuccess(Slave*);
+
 };
 
-/** @section desc
-The slave is waiting for an unsolicited response to complete
-*/
+/**
+ * A state that indicates when the Slave is waiting for an unsolicited
+ * response to complete.
+ */
 class AS_WaitForUnsolSuccess : public AS_OpenBase
 {
-	MACRO_STATE_SINGLETON_INSTANCE(AS_WaitForUnsolSuccess);
+	public:
 
-	void OnRequest(Slave*, const APDU&, SequenceInfo);
-	void OnUnsolFailure(Slave*);
-	void OnUnsolSendSuccess(Slave*);
+		MACRO_STATE_SINGLETON_INSTANCE(AS_WaitForUnsolSuccess);
+
+		void OnRequest(Slave*, const APDU&, SequenceInfo);
+		void OnUnsolFailure(Slave*);
+		void OnUnsolSendSuccess(Slave*);
+
 };
 
-/** @section desc
-The slave is waiting for an unsolicited response and a solicited response to complete
-*/
+/**
+ * A state that indicates when the Slave is waiting for an unsolicited
+ * response and a solicited response to complete.
+ */
 class AS_WaitForSolUnsolSuccess : public AS_OpenBase
 {
-	MACRO_STATE_SINGLETON_INSTANCE(AS_WaitForSolUnsolSuccess);
+	public:
 
-	void OnRequest(Slave*, const APDU&, SequenceInfo);
-	void OnSolFailure(Slave*);
-	void OnSolSendSuccess(Slave*);
-	void OnUnsolFailure(Slave*);
-	void OnUnsolSendSuccess(Slave*);
+		MACRO_STATE_SINGLETON_INSTANCE(AS_WaitForSolUnsolSuccess);
+
+		void OnRequest(Slave*, const APDU&, SequenceInfo);
+		void OnSolFailure(Slave*);
+		void OnSolSendSuccess(Slave*);
+		void OnUnsolFailure(Slave*);
+		void OnUnsolSendSuccess(Slave*);
+
 };
 
-
 }} //ens ns
+
+/* vim: set ts=4 sw=4: */
 
 #endif

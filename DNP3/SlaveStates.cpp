@@ -1,21 +1,20 @@
-// 
-// Licensed to Green Energy Corp (www.greenenergycorp.com) under one
-// or more contributor license agreements. See the NOTICE file
-// distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
-// to you under the Apache License, Version 2.0 (the
-// "License"); you may not use this file except in compliance
-// with the License.  You may obtain a copy of the License at
-// 
+//
+// Licensed to Green Energy Corp (www.greenenergycorp.com) under one or more
+// contributor license agreements. See the NOTICE file distributed with this
+// work for additional information regarding copyright ownership.  Green Enery
+// Corp licenses this file to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
-// Unless required by applicable law or agreed to in writing,
-// software distributed under the License is distributed on an
-// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-// KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+// License for the specific language governing permissions and limitations
 // under the License.
-// 
+//
+
 #include "SlaveStates.h"
 
 #include "Slave.h"
@@ -51,7 +50,7 @@ void AS_Base::OnRequest(Slave*, const APDU&, SequenceInfo)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
 void AS_Base::OnUnknown(Slave* c)
-{ 
+{
 	c->mDeferredUnknown = true;
 }
 
@@ -68,52 +67,52 @@ void AS_Base::OnUnsolExpiration(Slave* c)
 }
 
 void AS_Base::SwitchOnFunction(Slave* c, AS_Base* apNext, const APDU& arRequest, SequenceInfo aSeqInfo)
-{	
-	switch(arRequest.GetFunction())
+{
+	switch (arRequest.GetFunction())
 	{
-		case(FC_READ):
+		case (FC_READ):
 		{
 			ChangeState(c, apNext);
-			c->mRspContext.Reset();			
+			c->mRspContext.Reset();
 			IINField iin = c->mRspContext.Configure(arRequest);
 			c->mRspContext.LoadResponse(c->mResponse);
 			c->Send(c->mResponse, iin);
 			break;
 		}
-		case(FC_WRITE):
+		case (FC_WRITE):
 			ChangeState(c, apNext);
 			c->HandleWrite(arRequest);
 			c->ConfigureAndSendSimpleResponse();
 			break;
-		case(FC_SELECT):
+		case (FC_SELECT):
 			ChangeState(c, apNext);
 			c->HandleSelect(arRequest, aSeqInfo);
 			c->Send(c->mResponse);
 			break;
-		case(FC_OPERATE):
+		case (FC_OPERATE):
 			ChangeState(c, apNext);
 			c->HandleOperate(arRequest, aSeqInfo);
 			c->Send(c->mResponse);
 			break;
-		case(FC_DIRECT_OPERATE):
+		case (FC_DIRECT_OPERATE):
 			ChangeState(c, apNext);
 			c->HandleDirectOperate(arRequest, aSeqInfo);
 			c->Send(c->mResponse);
 			break;
-		case(FC_DIRECT_OPERATE_NO_ACK):			
+		case (FC_DIRECT_OPERATE_NO_ACK):
 			c->HandleDirectOperate(arRequest, aSeqInfo);
 			break;
-		case(FC_ENABLE_UNSOLICITED):
+		case (FC_ENABLE_UNSOLICITED):
 			ChangeState(c, apNext);
 			c->HandleEnableUnsolicited(arRequest, true);
 			c->Send(c->mResponse);
 			break;
-		case(FC_DISABLE_UNSOLICITED):
+		case (FC_DISABLE_UNSOLICITED):
 			ChangeState(c, apNext);
 			c->HandleEnableUnsolicited(arRequest, false);
 			c->Send(c->mResponse);
 			break;
-		case(FC_DELAY_MEASURE):
+		case (FC_DELAY_MEASURE):
 			ChangeState(c, apNext);
 			c->ConfigureDelayMeasurement(arRequest);
 			c->Send(c->mResponse);
@@ -122,7 +121,7 @@ void AS_Base::SwitchOnFunction(Slave* c, AS_Base* apNext, const APDU& arRequest,
 		{
 			std::ostringstream oss;
 			oss << "Function not supported: " << arRequest.GetFunction();
-			throw NotSupportedException(LOCATION, oss.str(), SERR_FUNC_NOT_SUPPORTED);			
+			throw NotSupportedException(LOCATION, oss.str(), SERR_FUNC_NOT_SUPPORTED);
 		}
 	}
 }
@@ -135,19 +134,19 @@ void AS_Base::DoRequest(Slave* c, AS_Base* apNext, const APDU& arAPDU, SequenceI
 	{
 		this->SwitchOnFunction(c, apNext, arAPDU, aSeqInfo);
 	}
-	catch(ParameterException ex)
+	catch (ParameterException ex)
 	{
 		ChangeState(c, apNext);
-		ERROR_LOGGER_BLOCK(c->mpLogger, LEV_ERROR, ex.Message(), ex.ErrorCode());		
+		ERROR_LOGGER_BLOCK(c->mpLogger, LEV_ERROR, ex.Message(), ex.ErrorCode());
 		c->mRspIIN.SetParameterError(true);
-		c->ConfigureAndSendSimpleResponse();		
+		c->ConfigureAndSendSimpleResponse();
 	}
-	catch(NotSupportedException ex)
+	catch (NotSupportedException ex)
 	{
 		ChangeState(c, apNext);
-		ERROR_LOGGER_BLOCK(c->mpLogger, LEV_ERROR, ex.Message(), ex.ErrorCode());		
+		ERROR_LOGGER_BLOCK(c->mpLogger, LEV_ERROR, ex.Message(), ex.ErrorCode());
 		c->mRspIIN.SetFuncNotSupported(true);
-		c->ConfigureAndSendSimpleResponse();		
+		c->ConfigureAndSendSimpleResponse();
 	}
 
 	c->mLastRequest = arAPDU;
@@ -158,11 +157,10 @@ void AS_Base::DoRequest(Slave* c, AS_Base* apNext, const APDU& arAPDU, SequenceI
 
 void AS_Base::ChangeState(Slave* c, AS_Base* apState)
 {
-	if(apState == AS_Closed::Inst()) {
-		if(c->mpTimeTimer) {
-			c->mpTimeTimer->Cancel();
-			c->mpTimeTimer = NULL;
-		}
+	if (apState == AS_Closed::Inst() && c->mpTimeTimer)
+	{
+		c->mpTimeTimer->Cancel();
+		c->mpTimeTimer = NULL;
 	}
 	LOGGER_BLOCK(c->mpLogger, LEV_DEBUG, "State changed from " << c->mpState->Name() << " to " << apState->Name());
 	c->mpState = apState;
@@ -170,9 +168,9 @@ void AS_Base::ChangeState(Slave* c, AS_Base* apState)
 
 void AS_Base::DoUnsolSuccess(Slave* c)
 {
-	if(!c->mStartupNullUnsol) c->mStartupNullUnsol = true; //it was a null unsol packet
+	if (!c->mStartupNullUnsol) c->mStartupNullUnsol = true; //it was a null unsol packet
 	c->mRspContext.ClearAndReset();
-		
+
 	// this will cause us to immediately re-evaluate if we need to send another unsol rsp
 	// we use the Deferred mechanism to give the slave an opportunity to respond to any Deferred request instead
 	c->mDeferredUnsol = true;
@@ -185,7 +183,7 @@ AS_Closed AS_Closed::mInstance;
 void AS_Closed::OnLowerLayerUp(Slave* c)
 {
 	// this is implemented as a simple timer because it can run if the slave is connected/disconnected etc
-	if(c->mConfig.mAllowTimeSync) c->ResetTimeIIN();
+	if (c->mConfig.mAllowTimeSync) c->ResetTimeIIN();
 
 	ChangeState(c, AS_Idle::Inst());
 }
@@ -216,14 +214,16 @@ void AS_Idle::OnDataUpdate(Slave* c)
 	c->FlushUpdates();
 
 	// start the unsol timer or act immediately if there's no pack timer
-	if(!c->mConfig.mDisableUnsol && c->mStartupNullUnsol && c->mRspContext.HasEvents(c->mConfig.mUnsolMask)) {
-		
-		if(c->mConfig.mUnsolPackDelay == 0) {
+	if (!c->mConfig.mDisableUnsol && c->mStartupNullUnsol && c->mRspContext.HasEvents(c->mConfig.mUnsolMask))
+	{
+		if (c->mConfig.mUnsolPackDelay == 0)
+		{
 			ChangeState(c, AS_WaitForUnsolSuccess::Inst());
 			c->mRspContext.LoadUnsol(c->mUnsol, c->mIIN, c->mConfig.mUnsolMask);
 			c->SendUnsolicited(c->mUnsol);
 		}
-		else if(c->mpUnsolTimer == NULL) {
+		else if (c->mpUnsolTimer == NULL)
+		{
 			c->StartUnsolTimer(c->mConfig.mUnsolPackDelay);
 		}
 	}
@@ -231,14 +231,18 @@ void AS_Idle::OnDataUpdate(Slave* c)
 
 void AS_Idle::OnUnsolExpiration(Slave* c)
 {
-	if(c->mStartupNullUnsol) { 
-		if(c->mRspContext.HasEvents(c->mConfig.mUnsolMask)) {
+	if (c->mStartupNullUnsol)
+	{
+		if (c->mRspContext.HasEvents(c->mConfig.mUnsolMask))
+		{
 			ChangeState(c, AS_WaitForUnsolSuccess::Inst());
 			c->mRspContext.LoadUnsol(c->mUnsol, c->mIIN, c->mConfig.mUnsolMask);
 			c->SendUnsolicited(c->mUnsol);
 		}
 	}
-	else { // do the startup null unsol task
+	else
+	{
+		// do the startup null unsol task
 		ChangeState(c, AS_WaitForUnsolSuccess::Inst());
 		c->mRspContext.LoadUnsol(c->mUnsol, c->mIIN, ClassMask(false, false, false));
 		c->SendUnsolicited(c->mUnsol);
@@ -259,17 +263,19 @@ AS_WaitForRspSuccess AS_WaitForRspSuccess::mInstance;
 void AS_WaitForRspSuccess::OnSolFailure(Slave* c)
 {
 	ChangeState(c, AS_Idle::Inst());
-	c->mRspContext.Reset();	
+	c->mRspContext.Reset();
 }
 
 void AS_WaitForRspSuccess::OnSolSendSuccess(Slave* c)
 {
 	c->mRspContext.ClearWritten();
-	
-	if(c->mRspContext.IsComplete()) {
+
+	if (c->mRspContext.IsComplete())
+	{
 		ChangeState(c, AS_Idle::Inst());
 	}
-	else {
+	else
+	{
 		c->mRspContext.LoadResponse(c->mResponse);
 		c->Send(c->mResponse);
 	}
@@ -278,7 +284,7 @@ void AS_WaitForRspSuccess::OnSolSendSuccess(Slave* c)
 /// When we get a request we should no longer wait for confirmation, but we should
 /// immediately handle the new request. We implement this behavior asynchronously, by
 /// canceling the response transaction, and waiting for an OnFailure callback.
-/// The callback may still succeed if 
+/// The callback may still succeed if
 void AS_WaitForRspSuccess::OnRequest(Slave* c, const APDU& arAPDU, SequenceInfo aSeqInfo)
 {
 	c->mpAppLayer->CancelResponse();
@@ -295,24 +301,28 @@ void AS_WaitForUnsolSuccess::OnUnsolFailure(Slave* c)
 {
 	// if any unsol transaction fails, we re-enable the timer with the unsol retry delay
 	ChangeState(c, AS_Idle::Inst());
-	c->mRspContext.Reset();	
+	c->mRspContext.Reset();
 	c->StartUnsolTimer(c->mConfig.mUnsolRetryDelay);
 }
 
 void AS_WaitForUnsolSuccess::OnUnsolSendSuccess(Slave* c)
 {
 	ChangeState(c, AS_Idle::Inst());	// transition to the idle state
-	this->DoUnsolSuccess(c);	
+	this->DoUnsolSuccess(c);
 }
 
 void AS_WaitForUnsolSuccess::OnRequest(Slave* c, const APDU& arAPDU, SequenceInfo aSeqInfo)
 {
-	if(arAPDU.GetFunction() == FC_READ) { //read requests should be defered until after the unsol
+	if (arAPDU.GetFunction() == FC_READ)
+	{
+		//read requests should be defered until after the unsol
 		c->mRequest = arAPDU;
 		c->mSeqInfo = aSeqInfo;
 		c->mDeferredRequest = true;
 	}
-	else { // all other requests should be handled immediately
+	else
+	{
+		// all other requests should be handled immediately
 		c->mDeferredRequest = false;
 		this->DoRequest(c, AS_WaitForSolUnsolSuccess::Inst(), arAPDU, aSeqInfo);
 	}
@@ -346,7 +356,7 @@ void AS_WaitForSolUnsolSuccess::OnUnsolFailure(Slave* c)
 	c->mRspContext.Reset();
 	if (c->mConfig.mUnsolRetryDelay > 0)
 		c->StartUnsolTimer(c->mConfig.mUnsolRetryDelay);
-	else 
+	else
 		c->OnUnsolTimerExpiration();
 }
 
@@ -356,8 +366,6 @@ void AS_WaitForSolUnsolSuccess::OnUnsolSendSuccess(Slave* c)
 	this->DoUnsolSuccess(c);
 }
 
-
-
 }} //ens ns
 
-
+/* vim: set ts=4 sw=4: */
