@@ -131,8 +131,8 @@ void ResponseLoader::ReadVto(HeaderReadIterator& arIter, SizeByVariationObject* 
 	VtoData data;
 	data.Copy(*objIter, arIter->GetVariation());
 
-	/* Determine the Virtual Terminal port/channel number */
-	uint8_t channel = objIter->Index();
+	/* Determine the Virtual Terminal port/channel number */	
+	boost::uint8_t channel = objIter->Index();
 
 	this->mpVtoReader->Update(data, channel);
 }

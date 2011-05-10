@@ -43,7 +43,7 @@ namespace apl {
 					mSize(0)
 				{}
 
-				VtoData(const uint8_t* aValue, size_t aSize)
+				VtoData(const boost::uint8_t* aValue, size_t aSize)
 				{
 					this->Copy(aValue, aSize);
 				}
@@ -53,12 +53,12 @@ namespace apl {
 					return this->mSize;
 				}
 
-				const uint8_t* GetData() const
+				const boost::uint8_t* GetData() const
 				{
 					return mData;
 				}
 
-				void Copy(const uint8_t* aValue, size_t aSize)
+				void Copy(const boost::uint8_t* aValue, size_t aSize)
 				{
 					assert(aSize <= MAX_SIZE);
 					memcpy(this->mData, aValue, aSize);
@@ -67,7 +67,7 @@ namespace apl {
 
 			private:
 
-				uint8_t mData[MAX_SIZE];
+				boost::uint8_t mData[MAX_SIZE];
 
 				size_t mSize;
 
