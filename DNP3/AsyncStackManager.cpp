@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 
 #include "AsyncStackManager.h"
 #include "Port.h"
@@ -40,34 +40,47 @@ using namespace std;
 namespace apl { namespace dnp {
 
 AsyncStackManager::AsyncStackManager(Logger* apLogger, bool aAutoRun) :
-Loggable(apLogger),
-mRunASIO(aAutoRun),
-mRunning(false),
-mService(),
-mTimerSrc(mService.Get()),
-mMgr(apLogger->GetSubLogger("ports", LEV_WARNING), false),	// the false here is important!!!												  
-mScheduler(&mTimerSrc),								        // it means that any layer we retrieve from the manager, we will delete
-mThread(this)
-{
-	
-}
+	Loggable(apLogger),
+	mRunASIO(aAutoRun),
+	mRunning(false),
+	mService(),
+	mTimerSrc(mService.Get()),
+	mMgr(apLogger->GetSubLogger("ports", LEV_WARNING), false),
+	mScheduler(&mTimerSrc),
+	mThread(this)
+{}
 
 AsyncStackManager::~AsyncStackManager()
-{	
-	this->Stop(); // tell every port to stop, join on the thread	
-	this->Run(); // run out the io_service, to make sure all the deletes are called, if the io_service wasn't running
+{
+	/*
+	 * Tell every port to stop, join on the thread.
+	 */
+	this->Stop();
+
+	/*
+	 * Run out the io_service to verify that all the delete operations are
+	 * called, just in case the io_service wasn't running before.
+	 */
+	this->Run();
 }
 
-std::vector<std::string> AsyncStackManager::GetStackNames() { return GetKeys<PortMap, string>(mStackToPort); }
-std::vector<std::string> AsyncStackManager::GetPortNames()  {  return GetKeys<PortMap, string>(mPortToPort); }
+std::vector<std::string> AsyncStackManager::GetStackNames()
+{
+	return GetKeys<PortMap, string>(mStackToPort);
+}
+
+std::vector<std::string> AsyncStackManager::GetPortNames()
+{
+	return GetKeys<PortMap, string>(mPortToPort);
+}
 
 void AsyncStackManager::AddTCPClient(const std::string& arName, PhysLayerSettings aSettings, const std::string& arAddr, boost::uint16_t aPort)
-{	
+{
 	mMgr.AddTCPClient(arName, aSettings, arAddr, aPort);
 }
 
 void AsyncStackManager::AddTCPServer(const std::string& arName, PhysLayerSettings aSettings, const std::string& arEndpoint, boost::uint16_t aPort)
-{	
+{
 	mMgr.AddTCPServer(arName, aSettings, arEndpoint, aPort);
 }
 
@@ -82,7 +95,7 @@ ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, c
 	Port* pPort = this->AllocatePort(arPortName);
 	Logger* pLogger = mpLogger->GetSubLogger(arStackName, aLevel);
 	pLogger->SetVarName(arStackName);
-	MasterStack* pMaster = new MasterStack(pLogger, &mTimerSrc, apPublisher, pPort->GetGroup(), arCfg);	
+	MasterStack* pMaster = new MasterStack(pLogger, &mTimerSrc, apPublisher, pPort->GetGroup(), arCfg);
 	this->OnAddStack(arStackName, pMaster, pPort, arCfg.link.LocalAddr);
 	return pMaster->mMaster.GetCmdAcceptor();
 }
@@ -93,7 +106,7 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 	Port* pPort = this->AllocatePort(arPortName);
 	Logger* pLogger = mpLogger->GetSubLogger(arStackName, aLevel);
 	pLogger->SetVarName(arStackName);
-	SlaveStack* pSlave = new SlaveStack(pLogger, &mTimerSrc, apCmdAcceptor, arCfg);	
+	SlaveStack* pSlave = new SlaveStack(pLogger, &mTimerSrc, apCmdAcceptor, arCfg);
 	this->OnAddStack(arStackName, pSlave, pPort, arCfg.link.LocalAddr);
 	return pSlave->mSlave.GetDataObserver();
 }
@@ -114,13 +127,13 @@ void AsyncStackManager::StartVtoRouter(const std::string& arPortName,
 {
 	throw NotImplementedException(LOCATION);
 }
-		
+
 void AsyncStackManager::StopVtoRouter(const std::string& arStackName,
 				boost::uint8_t aVtoChannelId)
 {
 	throw NotImplementedException(LOCATION);
 }
-		
+
 void AsyncStackManager::StopVtoRouter(const std::string& arStackName)
 {
 	throw NotImplementedException(LOCATION);
@@ -128,18 +141,18 @@ void AsyncStackManager::StopVtoRouter(const std::string& arStackName)
 
 /// Remove a port and all associated stacks
 void AsyncStackManager::RemovePort(const std::string& arPortName)
-{	
+{
 	Port* pPort = this->GetPort(arPortName);
 	vector<string> stacks = this->StacksOnPort(arPortName);
-	BOOST_FOREACH(string s, stacks) { this->SeverStack(pPort, s); }		
+	BOOST_FOREACH(string s, stacks) { this->SeverStack(pPort, s); }
 	mPortToPort.erase(arPortName);
-	
+
 	mScheduler.Sever(pPort->GetGroup());	// this tells the scheduler that we'll delete the group
-	mTimerSrc.Post(boost::bind(&Port::Release, pPort));	
-		
+	mTimerSrc.Post(boost::bind(&Port::Release, pPort));
+
 	// remove the physical layer from the list
 	// The ports own the layers themselves, so deleting the port will delete the layer
-	mMgr.Remove(arPortName); 
+	mMgr.Remove(arPortName);
 
 	this->CheckForJoin();
 }
@@ -161,8 +174,8 @@ void AsyncStackManager::RemoveStack(const std::string& arStackName)
 }
 
 void AsyncStackManager::SeverStack(Port* apPort, const std::string& arStackName)
-{	
-	mTimerSrc.Post(boost::bind(&Port::Disassociate, apPort, arStackName)); 
+{
+	mTimerSrc.Post(boost::bind(&Port::Disassociate, apPort, arStackName));
 	mStackToPort.erase(arStackName);
 }
 
@@ -174,10 +187,10 @@ Port* AsyncStackManager::GetPortByStackName(const std::string& arStackName)
 }
 
 void AsyncStackManager::Stop()
-{	
+{
 	LOG_BLOCK(LEV_DEBUG, "enter stop");
 	vector<string> ports = this->GetPortNames();
-	BOOST_FOREACH(string s, ports) { 
+	BOOST_FOREACH(string s, ports) {
 		LOG_BLOCK(LEV_DEBUG, "Removing port: " << s);
 		this->RemovePort(s);
 		LOG_BLOCK(LEV_DEBUG, "Done removing Port: " << s);
@@ -207,7 +220,7 @@ Port* AsyncStackManager::AllocatePort(const std::string& arName)
 		IPhysicalLayerAsync* pPhys = mMgr.GetLayer(arName, mService.Get());
 		Logger* pPortLogger = mpLogger->GetSubLogger(arName, s.LogLevel);
 		pPortLogger->SetVarName(arName);
-		pPort = this->CreatePort(arName, pPhys, pPortLogger, s.RetryTimeout, s.mpObserver);		
+		pPort = this->CreatePort(arName, pPhys, pPortLogger, s.RetryTimeout, s.mpObserver);
 	}
 	return pPort;
 }
@@ -239,9 +252,9 @@ void AsyncStackManager::Run()
 	size_t num = 0;
 
 	do {
-		try {			
+		try {
 			num = mService.Get()->run();
-		}		
+		}
 		catch(const std::exception& ex) {
 			std::cout << "Unhandled exception: " << ex.what() << std::endl;
 		}
@@ -252,10 +265,10 @@ void AsyncStackManager::Run()
 }
 
 void AsyncStackManager::OnAddStack(const std::string& arStackName, Stack* apStack, Port* apPort, boost::uint16_t aAddress)
-{	
+{
 	// marshall the linking to the io_service
 	mStackToPort[arStackName] = apPort; //map the stack to a portname
-	mTimerSrc.Post(boost::bind(&Port::Associate, apPort, arStackName, apStack, aAddress)); 
+	mTimerSrc.Post(boost::bind(&Port::Associate, apPort, arStackName, apStack, aAddress));
 	if(!mRunning && mRunASIO) {
 		mRunning = true;
 		mThread.Start();
@@ -263,14 +276,15 @@ void AsyncStackManager::OnAddStack(const std::string& arStackName, Stack* apStac
 }
 
 void AsyncStackManager::CheckForJoin()
-{	
+{
 	if(mRunning && this->NumStacks() == 0) {
 		LOG_BLOCK(LEV_DEBUG, "Check For join: joining on io_service thread");
 		mThread.WaitForStop();	//join on the thread, ASIO will exit when there's no more work to be done
-		mRunning = false;		
+		mRunning = false;
 		LOG_BLOCK(LEV_DEBUG, "Check For join: complete");
-	}	
+	}
 }
 
-
 }}
+
+/* vim: set ts=4 sw=4: */

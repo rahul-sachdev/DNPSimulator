@@ -16,9 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+
 #ifndef __ASYNC_STACK_MANAGER_H_
 #define __ASYNC_STACK_MANAGER_H_
-
 
 #include <map>
 #include <vector>
@@ -50,7 +50,6 @@ class Stack;
 
 struct SlaveStackConfig;
 struct MasterStackConfig;
-
 
 /**
 	The interface for C++ projects for dnp3. Provides an interface for
@@ -140,7 +139,7 @@ class AsyncStackManager : private Threadable, private Loggable
 			AsyncStackManager::StartVtoRouter() as a simpler way of connecting a
 			port (such as a local TCP service) to the VTO stream.
 
-			@param arStackName			Unique name of the stack.			
+			@param arStackName			Unique name of the stack.
 			@param apOnDataCallback		Interface to callback with received
 										data.  The callback comes from an
 										unknown network thread, and should not
@@ -154,7 +153,7 @@ class AsyncStackManager : private Threadable, private Loggable
 										or if the VTO channel ID is already
 										bound for that stack
 		 */
-		IVtoWriter* AddVtoChannel(const std::string& arStackName,						
+		IVtoWriter* AddVtoChannel(const std::string& arStackName,
 						IVtoCallbacks* apOnDataCallback);
 
 		/**
@@ -271,5 +270,7 @@ class AsyncStackManager : private Threadable, private Loggable
 };
 
 }}
+
+/* vim: set ts=4 sw=4: */
 
 #endif
