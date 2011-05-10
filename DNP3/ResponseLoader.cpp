@@ -131,10 +131,15 @@ void ResponseLoader::ReadVto(HeaderReadIterator& arIter, SizeByVariationObject* 
 	VtoData data;
 	data.Copy(*objIter, arIter->GetVariation());
 
-	/* Determine the Virtual Terminal port/channel number */	
-	boost::uint8_t channel = objIter->Index();
-
-	this->mpVtoReader->Update(data, channel);
+	/* Determine the Virtual Terminal port/channel number */
+	size_t index = objIter->Index();
+	if(index > std::numeric_limits<boost::uint8_t>::max()) {
+		LOG_BLOCK(LEV_WARNING, "Ignoring VTO index that exceeds bit width of uint8_t: " << index);
+	}
+	else {
+		boost::uint8_t channel = static_cast<boost::uint8_t>(index);
+		this->mpVtoReader->Update(data, channel);
+	}
 }
 
 }}
