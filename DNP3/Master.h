@@ -98,6 +98,11 @@ class Master : public Loggable, public IAppUser
 	void OnFinalResponse(const APDU&);
 	void OnUnsolResponse(const APDU&);
 
+	/**
+	 * Implements IAppUser::IsMaster().
+	 *
+	 * @return			'true' since this is a Master implementation
+	 */
 	bool IsMaster()
 	{
 		return true;
