@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_SUITE(VtoInterfaceTests)
 		VtoEvent info;
 
 		const size_t dataSize = 5;
-		uint8_t data[dataSize];
+		boost::uint8_t data[dataSize];
 
 		size_t len;
 
@@ -165,7 +165,7 @@ BOOST_AUTO_TEST_SUITE(VtoInterfaceTests)
 		VtoWriter writer(numChunks);
 
 		const size_t dataSize = MAX_SIZE * 10;
-		uint8_t data[dataSize];
+		boost::uint8_t data[dataSize];
 
 		size_t len;
 
@@ -209,7 +209,7 @@ BOOST_AUTO_TEST_SUITE(VtoInterfaceTests)
 		VtoReader reader(log.GetLogger(LEV_WARNING, "test"));
 
 		const size_t size = 6;
-		uint8_t buffer[size];
+		boost::uint8_t buffer[size];
 
 		VtoData data;
 

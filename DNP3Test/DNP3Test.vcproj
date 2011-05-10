@@ -463,6 +463,14 @@
 					</File>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="Vto"
+				>
+				<File
+					RelativePath=".\TestVtoInterface.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
