@@ -1,21 +1,20 @@
-// 
-// Licensed to Green Energy Corp (www.greenenergycorp.com) under one
-// or more contributor license agreements. See the NOTICE file
-// distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
-// to you under the Apache License, Version 2.0 (the
-// "License"); you may not use this file except in compliance
-// with the License.  You may obtain a copy of the License at
-// 
+//
+// Licensed to Green Energy Corp (www.greenenergycorp.com) under one or more
+// contributor license agreements. See the NOTICE file distributed with this
+// work for additional information regarding copyright ownership.  Green Enery
+// Corp licenses this file to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance with the
+// License.  You may obtain a copy of the License at
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
-// Unless required by applicable law or agreed to in writing,
-// software distributed under the License is distributed on an
-// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-// KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+// License for the specific language governing permissions and limitations
 // under the License.
-// 
+//
+
 #include "Slave.h"
 
 
@@ -33,57 +32,60 @@
 
 namespace apl { namespace dnp {
 
-Slave::Slave(
-					   Logger* apLogger, 
-					   IAppLayer* apAppLayer,
-					   ITimerSource* apTimerSrc,
-					   ITimeManager* apTime,
-					   Database* apDatabase,
-					   IDNPCommandMaster* apCmdMaster,
-					   const SlaveConfig& arCfg
-					   ) :
-Loggable(apLogger),
-mpAppLayer(apAppLayer),
-mpTimerSrc(apTimerSrc),
-mpDatabase(apDatabase),
-mpCmdMaster(apCmdMaster),
-mpState(AS_Closed::Inst()),
-mConfig(arCfg),
-mRspTypes(arCfg),
-mpUnsolTimer(NULL),
-mResponse(arCfg.mMaxFragSize),
-mUnsol(arCfg.mMaxFragSize),
-mRspContext(apLogger, apDatabase, &mRspTypes, arCfg.mMaxBinaryEvents, arCfg.mMaxAnalogEvents, arCfg.mMaxCounterEvents),
-mHaveLastRequest(false),
-mLastRequest(arCfg.mMaxFragSize),
-mpTime(apTime),
-mCommsStatus(apLogger, "comms_status"),
-mDeferredUpdate(false),
-mDeferredRequest(false),
-mDeferredUnsol(false),
-mDeferredUnknown(false),
-mStartupNullUnsol(false),
-mpTimeTimer(NULL)
+Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, ITimeManager* apTime, Database* apDatabase, IDNPCommandMaster* apCmdMaster, const SlaveConfig& arCfg) :
+	Loggable(apLogger),
+	mpAppLayer(apAppLayer),
+	mpTimerSrc(apTimerSrc),
+	mpDatabase(apDatabase),
+	mpCmdMaster(apCmdMaster),
+	mpState(AS_Closed::Inst()),
+	mConfig(arCfg),
+	mRspTypes(arCfg),
+	mpUnsolTimer(NULL),
+	mResponse(arCfg.mMaxFragSize),
+	mUnsol(arCfg.mMaxFragSize),
+	mRspContext(apLogger, apDatabase, &mRspTypes, arCfg.mMaxBinaryEvents, arCfg.mMaxAnalogEvents, arCfg.mMaxCounterEvents),
+	mHaveLastRequest(false),
+	mLastRequest(arCfg.mMaxFragSize),
+	mpTime(apTime),
+	mCommsStatus(apLogger, "comms_status"),
+	mDeferredUpdate(false),
+	mDeferredRequest(false),
+	mDeferredUnsol(false),
+	mDeferredUnknown(false),
+	mStartupNullUnsol(false),
+	mpTimeTimer(NULL)
 {
-	// link the event buffer to the database
+	/* Link the event buffer to the database */
 	mpDatabase->SetEventBuffer(mRspContext.GetBuffer());
 
-	mIIN.SetDeviceRestart(true); // always set on restart
+	mIIN.SetDeviceRestart(true);	/* Always set on restart */
 
-	// use the cmd master to send and rsp queue to wait for reply
+	/* Use the cmd master to send and rsp queue to wait for reply */
 	mpCmdMaster->SetResponseObserver(&mRspQueue);
 
-	// Incoming data will trigger a POST on the timer source to call OnDataUpdate
-	mChangeBuffer.AddObserver(mNotifierSource.Get(boost::bind(&Slave::OnDataUpdate, this), mpTimerSrc));
+	/*
+	 * Incoming data will trigger a POST on the timer source to call
+	 * Slave::OnDataUpdate().
+	 */
+	mChangeBuffer.AddObserver(
+		mNotifierSource.Get(
+				boost::bind(&Slave::OnDataUpdate, this),
+				mpTimerSrc
+		)
+	);
 
-	// this will cause the slave to go through the null-unsol startup sequence
-	if(!mConfig.mDisableUnsol) mDeferredUnsol = true;
+	/* Cause the slave to go through the null-unsol startup sequence */
+	if (!mConfig.mDisableUnsol)
+	{
+		mDeferredUnsol = true;
+	}
 
 	mCommsStatus.Set(COMMS_DOWN);
 }
 
 /* Implement IAppUser - external callbacks from the app layer */
-	
+
 void Slave::OnLowerLayerUp()
 {
 	mpState->OnLowerLayerUp(this);
@@ -158,31 +160,38 @@ void Slave::OnUnsolTimerExpiration()
 
 void Slave::FlushDeferredEvents()
 {
-	// if a data update events was previously Deferred
-	// this action might cause the state to change
-	// for an unsol response
-	if(mpState->AcceptsDeferredUpdates() && mDeferredUpdate) {
+	/*
+	 * If a data update events was previously Deferred this action might cause
+	 * the state to change for an unsol response.
+	 */
+	if (mpState->AcceptsDeferredUpdates() && mDeferredUpdate)
+	{
 		mDeferredUpdate = false;
 		mpState->OnDataUpdate(this);
 	}
-	
-	// if a request APDU was previously Deferred by a state,
-	// this action might cause a response and subsequent state
-	// change
-	if(mpState->AcceptsDeferredRequests() && mDeferredRequest) {
+
+	/*
+	 * If a request APDU was previously Deferred by a state, this action might
+	 * cause a response and subsequent state change.
+	 */
+	if (mpState->AcceptsDeferredRequests() && mDeferredRequest)
+	{
 		mDeferredRequest = false;
 		mpState->OnRequest(this, mRequest, mSeqInfo);
 	}
 
-	// if an unsol timer expiration was Deferred by a state,
-	// this action might cause an unsolicted response to be 
-	// generated
-	if(mpState->AcceptsDeferredUnsolExpiration() && mDeferredUnsol) {
+	/*
+	 * If an unsol timer expiration was Deferred by a state, this action might
+	 * cause an unsolicted response to be generated.
+	 */
+	if (mpState->AcceptsDeferredUnsolExpiration() && mDeferredUnsol)
+	{
 		mDeferredUnsol = false;
 		mpState->OnUnsolExpiration(this);
 	}
 
-	if(mpState->AcceptsDeferredUnknown() && mDeferredUnknown) {
+	if (mpState->AcceptsDeferredUnknown() && mDeferredUnknown)
+	{
 		mDeferredUnknown = false;
 		mpState->OnUnknown(this);
 	}
@@ -191,11 +200,11 @@ void Slave::FlushDeferredEvents()
 size_t Slave::FlushUpdates()
 {
 	size_t num = 0;
-	try 
+	try
 	{
 		num = mChangeBuffer.FlushUpdates(mpDatabase);
 	}
-	catch ( Exception& ex ) 
+	catch (Exception& ex)
 	{
 		LOG_BLOCK(LEV_ERROR, "Error in flush updates: " << ex.Message());
 		Transaction tr(mChangeBuffer);
@@ -226,7 +235,7 @@ void Slave::Send(APDU& arAPDU, const IINField& arIIN)
 
 void Slave::Send(APDU& arAPDU)
 {
-	mRspIIN.BitwiseOR(mIIN);	
+	mRspIIN.BitwiseOR(mIIN);
 	arAPDU.SetIIN(mRspIIN);
 	mpAppLayer->SendResponse(arAPDU);
 }
@@ -241,27 +250,33 @@ void Slave::SendUnsolicited(APDU& arAPDU)
 void Slave::ConfigureDelayMeasurement(const APDU& arRequest)
 {
 	HeaderReadIterator hdr = arRequest.BeginRead();
-	if(hdr.Count() > 0) mRspIIN.SetFuncNotSupported(true);
+	if (hdr.Count() > 0)
+	{
+		mRspIIN.SetFuncNotSupported(true);
+	}
 
 	Group52Var2* pObj = Group52Var2::Inst();
 
 	mResponse.Set(FC_RESPONSE);
-	
+
 	IndexedWriteIterator i = mResponse.WriteIndexed(pObj, 1, QC_1B_CNT);
 	i.SetIndex(0);
-	pObj->mTime.Set(*i, 0);	
+	pObj->mTime.Set(*i, 0);
 }
 
 void Slave::HandleWriteIIN(HeaderReadIterator& arHdr)
 {
-	for(ObjectReadIterator obj = arHdr.BeginRead(); !obj.IsEnd(); ++obj)
+	for (ObjectReadIterator obj = arHdr.BeginRead(); !obj.IsEnd(); ++obj)
 	{
-		switch(obj->Index())
+		switch (obj->Index())
 		{
-			case(IINI_DEVICE_RESTART):
+			case IINI_DEVICE_RESTART:
 			{
 				bool value = Group80Var1::Inst()->Read(*obj, obj->Start(), obj->Index());
-				if(!value) mIIN.SetDeviceRestart(false);
+				if (!value)
+				{
+					mIIN.SetDeviceRestart(false);
+				}
 				else
 				{
 					mRspIIN.SetParameterError(true);
@@ -279,7 +294,7 @@ void Slave::HandleWriteIIN(HeaderReadIterator& arHdr)
 
 void Slave::HandleWriteTimeDate(HeaderReadIterator& arHWI)
 {
-	if(!mIIN.GetNeedTime())
+	if (!mIIN.GetNeedTime())
 	{
 		LOG_BLOCK(LEV_WARNING, "Master is attempting to write time but slave is not requesting time sync");
 		return;
@@ -287,11 +302,11 @@ void Slave::HandleWriteTimeDate(HeaderReadIterator& arHWI)
 
 	ObjectReadIterator obj = arHWI.BeginRead();
 
-	if(obj.Count() != 1) {
+	if (obj.Count() != 1) {
 		mRspIIN.SetParameterError(true);
 		return;
 	}
-	
+
 	millis_t val = Group50Var1::Inst()->mTime.Get(*obj);
 	mpTime->SetTime(val);
 
@@ -300,20 +315,20 @@ void Slave::HandleWriteTimeDate(HeaderReadIterator& arHWI)
 
 void Slave::HandleWrite(const APDU& arRequest)
 {
-	for(HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr)
+	for (HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr)
 	{
-		switch(MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation()))
+		switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation()))
 		{
-			case(MACRO_DNP_RADIX(80,1)):
+			case (MACRO_DNP_RADIX(80,1)):
 				this->HandleWriteIIN(hdr);
 				break;
-			case(MACRO_DNP_RADIX(50,1)):
+			case (MACRO_DNP_RADIX(50,1)):
 				this->HandleWriteTimeDate(hdr);
 				break;
 			default:
 				mRspIIN.SetFuncNotSupported(true);
 				ERROR_BLOCK(LEV_WARNING, "Object/Function mismatch", SERR_OBJ_FUNC_MISMATCH);
-				break;				
+				break;
 		}
 	}
 }
@@ -324,29 +339,29 @@ void Slave::HandleSelect(const APDU& arRequest, SequenceInfo aSeqInfo)
 
 	mResponse.Set(FC_RESPONSE);
 
-	for(HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr) {
+	for (HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr) {
 
 		ObjectReadIterator i = hdr.BeginRead();
 
-		switch(MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation())) {
+		switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation())) {
 
-			case(MACRO_DNP_RADIX(12,1)):
+			case (MACRO_DNP_RADIX(12,1)):
 				this->RespondToCommands<BinaryOutput>(Group12Var1::Inst(), i, boost::bind(&Slave::Select<BinaryOutput>, this, _1, _2, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
 				break;
-			
-			case(MACRO_DNP_RADIX(41,1)):
+
+			case (MACRO_DNP_RADIX(41,1)):
 				this->RespondToCommands<Setpoint>(Group41Var1::Inst(), i, boost::bind(&Slave::Select<Setpoint>, this, _1, _2, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
 				break;
-				
-			case(MACRO_DNP_RADIX(41,2)):
+
+			case (MACRO_DNP_RADIX(41,2)):
 				this->RespondToCommands<Setpoint>(Group41Var2::Inst(), i, boost::bind(&Slave::Select<Setpoint>, this, _1, _2, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
 				break;
 
-			case(MACRO_DNP_RADIX(41,3)):
+			case (MACRO_DNP_RADIX(41,3)):
 				this->RespondToCommands<Setpoint>(Group41Var3::Inst(), i, boost::bind(&Slave::Select<Setpoint>, this, _1, _2, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
 				break;
-				
-			case(MACRO_DNP_RADIX(41,4)):
+
+			case (MACRO_DNP_RADIX(41,4)):
 				this->RespondToCommands<Setpoint>(Group41Var4::Inst(), i, boost::bind(&Slave::Select<Setpoint>, this, _1, _2, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
 				break;
 
@@ -360,34 +375,36 @@ void Slave::HandleSelect(const APDU& arRequest, SequenceInfo aSeqInfo)
 
 void Slave::HandleOperate(const APDU& arRequest, SequenceInfo aSeqInfo)
 {
-	if ( aSeqInfo == SI_PREV && mLastRequest == arRequest )
+	if (aSeqInfo == SI_PREV && mLastRequest == arRequest)
+	{
 		return;
+	}
 
 	mResponse.Set(FC_RESPONSE);
 
-	for(HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr) {
+	for (HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr) {
 
 		ObjectReadIterator i = hdr.BeginRead();
 
-		switch(MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation())) {
+		switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation())) {
 
-			case(MACRO_DNP_RADIX(12,1)):	
+			case (MACRO_DNP_RADIX(12,1)):
 				this->RespondToCommands<BinaryOutput>(Group12Var1::Inst(), i, boost::bind(&Slave::Operate<BinaryOutput>, this, _1, _2, false, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
 				break;
-			
-			case(MACRO_DNP_RADIX(41,1)):
+
+			case (MACRO_DNP_RADIX(41,1)):
 				this->RespondToCommands<Setpoint>(Group41Var1::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, false, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
 				break;
-				
-			case(MACRO_DNP_RADIX(41,2)):
+
+			case (MACRO_DNP_RADIX(41,2)):
 				this->RespondToCommands<Setpoint>(Group41Var2::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, false, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
 				break;
 
-			case(MACRO_DNP_RADIX(41,3)):
+			case (MACRO_DNP_RADIX(41,3)):
 				this->RespondToCommands<Setpoint>(Group41Var3::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, false, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
 				break;
-				
-			case(MACRO_DNP_RADIX(41,4)):
+
+			case (MACRO_DNP_RADIX(41,4)):
 				this->RespondToCommands<Setpoint>(Group41Var4::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, false, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
 				break;
 
@@ -403,29 +420,29 @@ void Slave::HandleDirectOperate(const APDU& arRequest, SequenceInfo aSeqInfo)
 {
 	mResponse.Set(FC_RESPONSE);
 
-	for(HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr) {
+	for (HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr) {
 
 		ObjectReadIterator i = hdr.BeginRead();
 
-		switch(MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation())) {
+		switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation())) {
 
-			case(MACRO_DNP_RADIX(12,1)):	
+			case (MACRO_DNP_RADIX(12,1)):
 				this->RespondToCommands<BinaryOutput>(Group12Var1::Inst(), i, boost::bind(&Slave::Operate<BinaryOutput>, this, _1, _2, true, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
 				break;
-			
-			case(MACRO_DNP_RADIX(41,1)):
+
+			case (MACRO_DNP_RADIX(41,1)):
 				this->RespondToCommands<Setpoint>(Group41Var1::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, true, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
 				break;
-				
-			case(MACRO_DNP_RADIX(41,2)):
+
+			case (MACRO_DNP_RADIX(41,2)):
 				this->RespondToCommands<Setpoint>(Group41Var2::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, true, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
 				break;
 
-			case(MACRO_DNP_RADIX(41,3)):
+			case (MACRO_DNP_RADIX(41,3)):
 				this->RespondToCommands<Setpoint>(Group41Var3::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, true, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
 				break;
-				
-			case(MACRO_DNP_RADIX(41,4)):
+
+			case (MACRO_DNP_RADIX(41,4)):
 				this->RespondToCommands<Setpoint>(Group41Var4::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, true, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
 				break;
 
@@ -441,26 +458,30 @@ void Slave::HandleEnableUnsolicited(const APDU& arRequest, bool aIsEnable)
 {
 	mResponse.Set(FC_RESPONSE);
 
-	if(mConfig.mDisableUnsol) {
+	if (mConfig.mDisableUnsol)
+	{
 		mRspIIN.SetFuncNotSupported(true);
 	}
-	else {
+	else
+	{
+		if (aIsEnable)
+		{
+			this->mDeferredUnsol = true;
+		}
 
-		if(aIsEnable) this->mDeferredUnsol = true;
+		for (HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr) {
 
-		for(HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr) {
-
-			switch(MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation())) {
-
-				case(MACRO_DNP_RADIX(60,2)):	
+			switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation()))
+			{
+				case (MACRO_DNP_RADIX(60,2)):
 					mConfig.mUnsolMask.class1 = aIsEnable;
 					break;
 
-				case(MACRO_DNP_RADIX(60,3)):
+				case (MACRO_DNP_RADIX(60,3)):
 					mConfig.mUnsolMask.class2 = aIsEnable;
 					break;
-					
-				case(MACRO_DNP_RADIX(60,4)):
+
+				case (MACRO_DNP_RADIX(60,4)):
 					mConfig.mUnsolMask.class3 = aIsEnable;
 					break;
 
@@ -470,7 +491,7 @@ void Slave::HandleEnableUnsolicited(const APDU& arRequest, bool aIsEnable)
 					break;
 			}
 		}
-	}	
+	}
 }
 
 void Slave::HandleUnknown()
@@ -492,6 +513,6 @@ void Slave::ResetTimeIIN()
 	mpTimeTimer = mpTimerSrc->Start(mConfig.mTimeSyncPeriod, boost::bind(&Slave::ResetTimeIIN, this));
 }
 
-
 }} //end ns
 
+/* vim: set ts=4 sw=4: */

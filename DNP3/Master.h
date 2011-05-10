@@ -98,7 +98,10 @@ class Master : public Loggable, public IAppUser
 	void OnFinalResponse(const APDU&);
 	void OnUnsolResponse(const APDU&);
 
-	bool IsMaster() { return true; }
+	bool IsMaster()
+	{
+		return true;
+	}
 
 	private:
 

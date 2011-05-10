@@ -41,10 +41,11 @@ namespace apl
 	};
 
 	/**
-		When a command is recieved from a master the application sends a code to
-		indicate if it was successfull or if not what class of error was encountered.
-		Each code has a description that indicates its customary meaning.
-	*/
+	 * When a command is recieved from a master the application sends a code to
+	 * indicate if it was successfull or if not what class of error was
+	 * encountered.  Each code has a description that indicates its customary
+	 * meaning.
+	 */
 	enum CommandStatus
 	{
 		CS_SUCCESS = 0,			//!< command was successfully recieved and handled
@@ -64,12 +65,13 @@ namespace apl
 	std::string ToString(CommandStatus aType);
 
 	/**
-		There are a number of types of controls. The best way to understand this difference is to
-		think about the hardware controls the communication protocols are emulating. The most common to use
-		are CC_PULSE, CC_LATCH_ON and CC_LATCH_OFF
-
-		NOTE: Current implementation doesn't support queue/clear
-	*/
+	 * There are a number of types of controls. The best way to understand this
+	 * difference is to think about the hardware controls the communication
+	 * protocols are emulating. The most common to use are CC_PULSE,
+	 * CC_LATCH_ON and CC_LATCH_OFF.
+	 *
+	 * NOTE: Current implementation doesn't support queue/clear.
+	 */
 	enum ControlCode
 	{
 		CC_NULL = 0,			//!< illegal command code (used internally)
@@ -102,10 +104,12 @@ namespace apl
 	};
 
 	/**
-		Describes an incoming control request from the master. It is the applications responsibility to handle
-		the request and return an approiate status code.The PULSE_CLOSE and PULSE_TRIP ControlCodes require
-		setting the mOnTimeMS,mOffTimeMS and mCount variables, otherwise just use the defaults.
-	*/
+	 * Describes an incoming control request from the master. It is the
+	 * applications responsibility to handle the request and return an
+	 * approiate status code.The PULSE_CLOSE and PULSE_TRIP ControlCodes
+	 * require setting the mOnTimeMS, mOffTimeMS and mCount variables, otherwise
+	 * just use the defaults.
+	 */
 	class BinaryOutput : public CommandRequest
 	{
 		public:
@@ -132,62 +136,86 @@ namespace apl
 	};
 
 	/**
-		this encoding type describes exactly what the range and valid values
-		for a setpoint are, all encodings are signed
-	*/
-	enum SetpointEncodingType{
-		SPET_INT16,      //!< 16bit floating point (dnp Object41var1)
-		SPET_INT32,      //!< 32bit signed integer (dnp Object41var2)
-		SPET_FLOAT,      //!< 32bit floating point (dnp Object41var3)
-		SPET_DOUBLE,     //!< 64bit floating point (dnp Object41var4)
-		SPET_AUTO_INT,   //!< automatically choose smallest valid int type
-		SPET_AUTO_DOUBLE,//!< automatically choose smallest valid double type
-		SPET_UNSET,      //!< means no type has been guessed or set yet
+	 * This encoding type describes exactly what the range and valid values for
+	 * a setpoint are, all encodings are signed.
+	 */
+	enum SetpointEncodingType
+	{
+		SPET_INT16,			//!< 16bit floating point (dnp Object41var1)
+		SPET_INT32,			//!< 32bit signed integer (dnp Object41var2)
+		SPET_FLOAT,			//!< 32bit floating point (dnp Object41var3)
+		SPET_DOUBLE,		//!< 64bit floating point (dnp Object41var4)
+		SPET_AUTO_INT,		//!< automatically choose smallest valid int type
+		SPET_AUTO_DOUBLE,	//!< automatically choose smallest valid double type
+		SPET_UNSET,			//!< means no type has been guessed or set yet
 	};
 
 	/**
-		The object to represent a setpoint request from the master. Think of this like turning a
-		dial on the front of a machine to desired setting.  A setpoint is natively repersented as
-		a double but can be used to send both floating point and integer values. The key field is
-		mEncodingType which informs the protocol buffers how to treat and format the values. There
-		are smart defaults and behaviors to automatically determine the correct type of encoding
-		to use in most cases (by default uses smallest type that can handle the number). This can be
-		overridden with the SetEncodingType() function.
-	*/
+	 * The object to represent a setpoint request from the master. Think of
+	 * this like turning a dial on the front of a machine to desired setting.
+	 * A setpoint is natively repersented as a double but can be used to send
+	 * both floating point and integer values. The key field is mEncodingType
+	 * which informs the protocol buffers how to treat and format the values.
+	 * There are smart defaults and behaviors to automatically determine the
+	 * correct type of encoding to use in most cases (by default uses smallest
+	 * type that can handle the number). This can be overridden with the
+	 * SetEncodingType() function.
+	 */
 	class Setpoint : public CommandRequest
 	{
-	public:
-		Setpoint(boost::int16_t aValue); // this constructor is necessary to stop the compiler from having to guess which upcast to use
-		Setpoint(boost::int32_t aValue);
+		public:
 
-		Setpoint(double aValue);
+			/**
+			 * Creates a new Setpoint instance based on a 16-bit integer
+			 * value.  This constructor is necessary to stop the compiler from
+			 * having to guess which upcast to use.
+			 */
+			Setpoint(boost::int16_t aValue);
 
-		// blank constructor, care must be used, an exception will be thrown if someone tries to access
-		// the encoding type or value if one hasn't been set yet.
-		Setpoint();
+			/**
+			 * Creates a new Setpoint instance based on a 32-bit integer
+			 * value.  This constructor is necessary to stop the compiler from
+			 * having to guess which upcast to use.
+			 */
+			Setpoint(boost::int32_t aValue);
 
-		std::string ToString() const;
+			/**
+			 * Creates a new Setpoint instance based on a double value.  This
+			 * constructor is necessary to stop the compiler from having to
+			 * guess which upcast to use.
+			 */
+			Setpoint(double aValue);
 
-		bool operator==(const Setpoint& arRHS) const
-		{ return fabs(mValue -arRHS.mValue) < 1E-6; }
+			/**
+			 * Creates a new Setpoint instance with no initial value.  Care
+			 * must be used with objects created by this method, as an
+			 * exception will be thrown if someone tries to access the
+			 * encoding type or value if one hasn't been set yet.
+			 */
+			Setpoint();
 
-		static const CommandTypes EnumType = CT_SETPOINT;
+			std::string ToString() const;
 
-		boost::int32_t GetIntValue() const { return static_cast<boost::int32_t>(GetValue()); }
-		double GetValue() const;
+			bool operator==(const Setpoint& arRHS) const
+			{ return fabs(mValue -arRHS.mValue) < 1E-6; }
 
-		void SetValue(double aValue);
-		void SetValue(boost::int32_t aValue);
+			static const CommandTypes EnumType = CT_SETPOINT;
 
-		SetpointEncodingType GetOptimalEncodingType() const;
+			boost::int32_t GetIntValue() const { return static_cast<boost::int32_t>(GetValue()); }
+			double GetValue() const;
 
-		SetpointEncodingType GetEncodingType() const {return mEncodingType;}
-		void SetEncodingType(SetpointEncodingType aEncodingType){mEncodingType = aEncodingType;}
+			void SetValue(double aValue);
+			void SetValue(boost::int32_t aValue);
 
-	private:
-		double mValue;
+			SetpointEncodingType GetOptimalEncodingType() const;
 
-		SetpointEncodingType mEncodingType;
+			SetpointEncodingType GetEncodingType() const {return mEncodingType;}
+			void SetEncodingType(SetpointEncodingType aEncodingType){mEncodingType = aEncodingType;}
+
+		private:
+			double mValue;
+
+			SetpointEncodingType mEncodingType;
 
 	};
 
@@ -201,5 +229,7 @@ namespace apl
 	};
 
 }
+
+/* vim: set ts=4 sw=4: */
 
 #endif
