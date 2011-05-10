@@ -77,6 +77,9 @@ namespace apl { namespace dnp {
 		/// The maximum fragment size the slave will use for data it sends
 		size_t mMaxFragSize;
 
+		/// The number of objects to store in the VtoWriter queue.
+		size_t VtoWriterQueueSize;
+
 		/// The number of binary events the slave will buffer before overflowing
 		size_t mMaxBinaryEvents;
 

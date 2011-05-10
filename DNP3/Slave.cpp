@@ -54,7 +54,10 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	mDeferredUnsol(false),
 	mDeferredUnknown(false),
 	mStartupNullUnsol(false),
-	mpTimeTimer(NULL)
+	mpTimeTimer(NULL),
+	mVtoReader(apLogger),
+	mVtoWriter(arCfg.VtoWriterQueueSize),
+	mVtoTransmitBuffer(arCfg.mMaxFragSize)
 {
 	/* Link the event buffer to the database */
 	mpDatabase->SetEventBuffer(mRspContext.GetBuffer());

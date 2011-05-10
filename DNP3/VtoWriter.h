@@ -42,10 +42,11 @@ namespace apl {
 			public:
 
 				/**
-				 * Creates a new VtoQueue instance configured for Virtual
-				 * Terminal channel id matching aChannelId.
+				 * Creates a new VtoQueue instance.  The aMaxVtoChunks
+				 * parameter defines the maximum number of 255-byte blocks
+				 * that can be buffered at a time.
 				 *
-				 * @param aMaxVtoChunks	Maximum number of 255 byte blocks that
+				 * @param aMaxVtoChunks	Maximum number of 255-byte blocks that
 				 *                      can be stored at a time
 				 *
 				 * @return				the new VtoQueue instance

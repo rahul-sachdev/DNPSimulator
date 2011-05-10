@@ -37,6 +37,7 @@ namespace apl { namespace dnp {
 	mUnsolRetryDelay(2000),
 
 	mMaxFragSize(DEFAULT_FRAG_SIZE),
+	VtoWriterQueueSize(DEFAULT_VTO_WRITER_QUEUE_SIZE),
 	mMaxBinaryEvents(1000),
 	mMaxAnalogEvents(1000),
 	mMaxCounterEvents(1000),

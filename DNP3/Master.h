@@ -76,11 +76,35 @@ class Master : public Loggable, public IAppUser
 	Master(Logger*, MasterConfig aCfg, IAppLayer*, IDataObserver*, AsyncTaskGroup*, ITimerSource*, ITimeSource* apTimeSrc = TimeSource::Inst());
 	virtual ~Master() {}
 
-	ICommandAcceptor* GetCmdAcceptor() { return &mCommandQueue; }
+	ICommandAcceptor* GetCmdAcceptor()
+	{
+		return &mCommandQueue;
+	}
 
-	VtoReader* GetVtoReader() { return &mVtoReader; }
+	/**
+	 * Returns a pointer to the VTO reader object.  This should only be
+	 * used by internal subsystems in the library.  External user
+	 * applications should associate IVtoCallbacks objects using the
+	 * AsyncStackManager.
+	 *
+	 * @return			a pointer to the VtoReader instance for this stack
+	 */
+	VtoReader* GetVtoReader()
+	{
+		return &mVtoReader;
+	}
 
-	IVtoWriter* GetVtoWriter() { return &mVtoWriter; }
+	/**
+	 * Returns a pointer to the VtoWriter instance for this stack.
+	 * External user applications should use this hook to write new data
+	 * to the Slave (outstation) via the Master.
+	 *
+	 * @return			a pointer to the VtoWriter instance for this stack
+	 */
+	IVtoWriter* GetVtoWriter()
+	{
+		return &mVtoWriter;
+	}
 
 	/* Implement IAppUser - callbacks from the app layer */
 
@@ -131,8 +155,20 @@ class Master : public Loggable, public IAppUser
 	PostingNotifierSource mNotifierSource;	/// way to get special notifiers for the command queue / VTO
 	CommandQueue mCommandQueue;				/// Threadsafe queue for buffering command requests
 
-	VtoReader mVtoReader;					/// Handler to direct received VTO data to userspace
-	VtoWriter mVtoWriter;					/// Thread-safe queue for buffering VTO data from userspace
+	/**
+	 * The VtoReader instance for this stack which will direct received
+	 * VTO data to the user application.  The user application should
+	 * register an IVtoCallbacks instance for the desired virtual channel
+	 * id(s) using AsyncStackManager::AddVtoChannel().
+	 */
+	VtoReader mVtoReader;
+
+	/**
+	 * The VtoWriter instance for this stack which will buffer new data
+	 * from the user application to the DNP3 stream.  This handler is
+	 * thread-safe.
+	 */
+	VtoWriter mVtoWriter;
 
 	APDU mRequest;							/// APDU that gets reused for requests
 

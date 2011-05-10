@@ -39,12 +39,20 @@ namespace apl {
 		{
 			public:
 
+				/**
+				 * Create a new VtoReader instance.
+				 *
+				 * @param apLogger			the Logger that the instance
+				 * 							should use for log messages
+				 *
+				 * @return					a new VtoReader instance
+				 */
 				VtoReader(Logger* apLogger) : Loggable(apLogger) {}
 
 				/**
 				 * Register an IVtoCallbacks instance with the VtoReader
-				 *instance.
-				 * The IVtoCallbacks instance is self-aware of its channel id.
+				 * instance.  The IVtoCallbacks instance is self-aware of its
+				 * channel id.
 				 *
 				 * @param apCallbacks		The callback handler for the channel
 				 *

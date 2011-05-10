@@ -18,23 +18,26 @@
 #ifndef __SLAVE_H_
 #define __SLAVE_H_
 
-#include <APL/Loggable.h>
-#include <APL/Logger.h>
-#include <APL/TimeSource.h>
-#include <APL/Lock.h>
-#include <APL/PostingNotifierSource.h>
+#include <APL/CachedLogVariable.h>
 #include <APL/ChangeBuffer.h>
 #include <APL/CommandResponseQueue.h>
-#include <APL/CachedLogVariable.h>
+#include <APL/Lock.h>
+#include <APL/Loggable.h>
+#include <APL/Logger.h>
+#include <APL/PostingNotifierSource.h>
+#include <APL/TimeSource.h>
 
-#include "AppInterfaces.h"
 #include "APDU.h"
-#include "ResponseContext.h"
-#include "SlaveEventBuffer.h"
-#include "SlaveConfig.h"
-#include "SlaveResponseTypes.h"
-#include "ObjectReadIterator.h"
+#include "AppInterfaces.h"
 #include "DNPCommandMaster.h"
+#include "EventBuffers.h"
+#include "ObjectReadIterator.h"
+#include "ResponseContext.h"
+#include "SlaveConfig.h"
+#include "SlaveEventBuffer.h"
+#include "SlaveResponseTypes.h"
+#include "VtoReader.h"
+#include "VtoWriter.h"
 
 namespace apl
 {
@@ -127,6 +130,31 @@ class Slave : public Loggable, public IAppUser
 			return &mChangeBuffer;
 		}
 
+		/**
+		 * Returns a pointer to the VTO reader object.  This should only be
+		 * used by internal subsystems in the library.  External user
+		 * applications should associate IVtoCallbacks objects using the
+		 * AsyncStackManager.
+		 *
+		 * @return			a pointer to the VtoReader instance for this stack
+		 */
+		VtoReader* GetVtoReader()
+		{
+			return &mVtoReader;
+		}
+
+		/**
+		 * Returns a pointer to the VtoWriter instance for this stack.
+		 * External user applications should use this hook to write new data
+		 * to the Master via the Slave (outstation).
+		 *
+		 * @return			a pointer to the VtoWriter instance for this stack
+		 */
+		IVtoWriter* GetVtoWriter()
+		{
+			return &mVtoWriter;
+		}
+
 	private:
 
 		ChangeBuffer<SigLock> mChangeBuffer;	/// how client code gives us updates
@@ -197,6 +225,26 @@ class Slave : public Loggable, public IAppUser
 
 		void ResetTimeIIN();
 		ITimer* mpTimeTimer;
+
+		/**
+		 * The VtoReader instance for this stack which will direct received
+		 * VTO data to the user application.  The user application should
+		 * register an IVtoCallbacks instance for the desired virtual channel
+		 * id(s) using AsyncStackManager::AddVtoChannel().
+		 */
+		VtoReader mVtoReader;
+
+		/**
+		 * The VtoWriter instance for this stack which will buffer new data
+		 * from the user application to the DNP3 stream.  This handler is
+		 * thread-safe.
+		 */
+		VtoWriter mVtoWriter;
+
+		/**
+		 * The transmission buffer for Virtual Terminal objects.
+		 */
+		InsertionOrderedEventBuffer<VtoEvent> mVtoTransmitBuffer;
 
 	/**
 	 * A structure to provide the C++ equivalent of templated typedefs.
