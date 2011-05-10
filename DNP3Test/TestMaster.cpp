@@ -630,6 +630,28 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 		BOOST_REQUIRE_FALSE(t.mts.DispatchOne()); // no more actions to dispatch
 	}
 
+	BOOST_AUTO_TEST_CASE(UnexpectedUnsolicitedVTO)
+	{
+		MasterConfig master_cfg; master_cfg.IntegrityRate = -1;
+		MasterTestObject t(master_cfg);
+		t.master.OnLowerLayerUp();
+
+		TestForIntegrityPoll(t);
+
+		/* Check that the master sends no more packets */
+		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0);
+					
+		/*
+		 * Make sure that there are no events ready to be run in the reactor.
+		 */
+		BOOST_REQUIRE_FALSE(t.mts.DispatchOne());
+		
+		// 3 bytes for channel 0xFF
+		t.SendUnsolToMaster("C0 82 00 00 71 03 17 01 FF AB BC CD");
+		
+		BOOST_CHECK_EQUAL(MERR_VTO_FOR_UNEXPECTED_CHANNEL, t.NextErrorCode());		
+	}
+
 BOOST_AUTO_TEST_SUITE_END() //end suite
 
 /* vim: set ts=4 sw=4: */

@@ -138,6 +138,7 @@ void ResponseLoader::ReadVto(HeaderReadIterator& arIter, SizeByVariationObject* 
 	}
 	else {
 		boost::uint8_t channel = static_cast<boost::uint8_t>(index);
+		Transaction t(mpVtoReader);
 		this->mpVtoReader->Update(data, channel);
 	}
 }

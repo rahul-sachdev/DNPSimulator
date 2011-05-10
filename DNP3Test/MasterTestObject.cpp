@@ -48,6 +48,15 @@ void MasterTestObject::RespondToMaster(const std::string& arData, bool aFinal)
 	else master.OnPartialResponse(mAPDU);
 }
 
+void MasterTestObject::SendUnsolToMaster(const std::string& arData)
+{
+	HexSequence hs(arData);
+	mAPDU.Reset();
+	mAPDU.Write(hs, hs.Size());
+	mAPDU.Interpret();
+	master.OnUnsolResponse(mAPDU);	
+}
+
 std::string MasterTestObject::Read()
 {
 	mAPDU = app.Read();

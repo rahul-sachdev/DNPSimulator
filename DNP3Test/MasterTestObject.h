@@ -37,6 +37,7 @@ class MasterTestObject : public LogTester
 	MasterTestObject(MasterConfig, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
 
 	void RespondToMaster(const std::string& arData, bool aFinal = true);
+	void SendUnsolToMaster(const std::string& arData);
 	std::string Read();
 
 	MockTimeSource fake_time;

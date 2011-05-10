@@ -50,6 +50,7 @@ namespace apl { namespace dnp {
 		// Master error codes
 		MERR_FUNC_NOT_SUPPORTED,
 		MERR_UNEXPECTED_MULTI_FRAG_RSP,
+		MERR_VTO_FOR_UNEXPECTED_CHANNEL,
 
 		// APPLICATION Layer Context
 

@@ -17,6 +17,8 @@
 
 #include "VtoReader.h"
 
+#include "DNPConstants.h"
+
 #include <APL/Exception.h>
 #include <APL/Logger.h>
 
@@ -85,9 +87,9 @@ namespace apl {
 
 			if (i == mChannelMap.end())
 			{
-				LOG_BLOCK(LEV_ERROR,
+				ERROR_BLOCK(LEV_ERROR,
 				          "No registered callback handler for received data "
-				          "on VTO channel id: " + aChannelId);
+				          "on VTO channel id: " + aChannelId, MERR_VTO_FOR_UNEXPECTED_CHANNEL);
 			}
 			else
 			{
