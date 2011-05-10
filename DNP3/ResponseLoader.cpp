@@ -43,17 +43,7 @@ void ResponseLoader::Process(HeaderReadIterator& arIter)
 }
 
 void ResponseLoader::ProcessData(HeaderReadIterator& arIter, int aGrp, int aVar)
-{
-	/*
-	 * These objects only require matching on the aGrp field.
-	 */
-	switch (aGrp)
-	{
-		/* Virtual Terminal Objects */
-		case (112): this->ReadVto(arIter, Group112Var0::Inst()); break;
-		case (113): this->ReadVto(arIter, Group113Var0::Inst()); break;
-	}
-
+{	
 	/*
 	 * These objects require matching on both the aGrp and aVar fields.
 	 */
@@ -111,15 +101,34 @@ void ResponseLoader::ProcessData(HeaderReadIterator& arIter, int aGrp, int aVar)
 		// CTO
 		case (MACRO_DNP_RADIX(51,1)): this->ReadCTO<Group51Var1>(arIter); break;
 		case (MACRO_DNP_RADIX(51,2)): this->ReadCTO<Group51Var2>(arIter); break;
-	}
 
+		default:
+			this->ProcessSizeByVariation(arIter, aGrp, aVar);
+			break;
+	}	
+}
+
+void ResponseLoader::ProcessSizeByVariation(HeaderReadIterator& arIter, int aGrp, int aVar)
+{
 	/*
-	 * If we reach this point, then we don't yet support this object type.
+	 * These objects only require matching on the aGrp field.
 	 */
-	LOG_BLOCK(LEV_WARNING,
-			"Group: " << aGrp << " "
-			"Var: " << aVar << " "
-			"does not map to a data type");
+	switch (aGrp)
+	{
+		/* Virtual Terminal Objects */
+		case (112): this->ReadVto(arIter, Group112Var0::Inst()); break;
+		case (113): this->ReadVto(arIter, Group113Var0::Inst()); break;
+
+		default:
+			/*
+			* If we reach this point, then we don't yet support this object type.
+			*/
+			ERROR_BLOCK(LEV_WARNING,
+				"Group: " << aGrp << " "
+				"Var: " << aVar << " "
+				"does not map to a data type", MERR_UNSUPPORTED_OBJECT_TYPE);
+			break;
+	}
 }
 
 void ResponseLoader::ReadVto(HeaderReadIterator& arIter, SizeByVariationObject* apObj)

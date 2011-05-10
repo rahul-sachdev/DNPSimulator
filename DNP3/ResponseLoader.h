@@ -77,6 +77,15 @@ class ResponseLoader : Loggable
 		 */
 		void ProcessData(HeaderReadIterator& itr, int aGrp, int aVar);
 
+		/**
+		* Processes size by variation objects received by the master.
+		*
+		* @param itr		the header iterator that provides access to the
+		* 					group, variation, data, etc.
+		* @param aGrp		the DNP3 group object id
+		*/
+		void ProcessSizeByVariation(HeaderReadIterator& itr, int aGrp, int aVar);
+
 		template <class T>
 		void Read(HeaderReadIterator& arIter, StreamObject<T>* apObj);
 
