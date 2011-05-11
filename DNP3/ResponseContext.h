@@ -58,7 +58,7 @@ class ResponseContext : public Loggable
 	};
 
 	public:
-	ResponseContext(Logger*, Database*, SlaveResponseTypes* apRspTypes, size_t aMaxBinary, size_t aMaxAnalog, size_t aMaxCounter);
+	ResponseContext(Logger*, Database*, SlaveResponseTypes* apRspTypes, const EventMaxConfig& arEventMaxConfig);
 
 	Mode GetMode() { return mMode; }
 

@@ -44,7 +44,7 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	mpUnsolTimer(NULL),
 	mResponse(arCfg.mMaxFragSize),
 	mUnsol(arCfg.mMaxFragSize),
-	mRspContext(apLogger, apDatabase, &mRspTypes, arCfg.mMaxBinaryEvents, arCfg.mMaxAnalogEvents, arCfg.mMaxCounterEvents),
+	mRspContext(apLogger, apDatabase, &mRspTypes, arCfg.mEventMaxConfig),
 	mHaveLastRequest(false),
 	mLastRequest(arCfg.mMaxFragSize),
 	mpTime(apTime),
@@ -56,8 +56,7 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	mStartupNullUnsol(false),
 	mpTimeTimer(NULL),
 	mVtoReader(apLogger),
-	mVtoWriter(arCfg.VtoWriterQueueSize),
-	mVtoTransmitBuffer(arCfg.mMaxFragSize)
+	mVtoWriter(arCfg.mVtoWriterQueueSize)	
 {
 	/* Link the event buffer to the database */
 	mpDatabase->SetEventBuffer(mRspContext.GetBuffer());

@@ -23,9 +23,12 @@
 
 namespace apl { namespace dnp {
 
-	SlaveEventBuffer :: SlaveEventBuffer(size_t aMaxBinary, size_t aMaxAnalog, size_t aMaxCounter)
-		: mBinaryEvents(aMaxBinary), mAnalogEvents(aMaxAnalog), mCounterEvents(aMaxCounter)
-	{	}
+	SlaveEventBuffer :: SlaveEventBuffer(const EventMaxConfig& arEventMaxConfig) : 
+		mBinaryEvents(arEventMaxConfig.mMaxBinaryEvents), 
+		mAnalogEvents(arEventMaxConfig.mMaxAnalogEvents), 
+		mCounterEvents(arEventMaxConfig.mMaxCounterEvents),
+		mVtoEvents(arEventMaxConfig.mMaxVtoEvents)
+	{}
 
 	void SlaveEventBuffer :: Update(const Binary& arEvent, PointClass aClass, size_t aIndex)
 	{

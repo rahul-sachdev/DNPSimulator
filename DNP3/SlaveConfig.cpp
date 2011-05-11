@@ -24,6 +24,20 @@
 
 namespace apl { namespace dnp {
 
+	EventMaxConfig::EventMaxConfig() :
+		mMaxBinaryEvents(1000),
+		mMaxAnalogEvents(1000),
+		mMaxCounterEvents(1000),
+		mMaxVtoEvents(100)
+	{}
+
+	EventMaxConfig::EventMaxConfig(size_t aMaxBinaryEvents, size_t aMaxAnalogEvents, size_t aMaxCounterEvents, size_t aMaxVtoEvents) :
+		mMaxBinaryEvents(aMaxBinaryEvents),
+		mMaxAnalogEvents(aMaxAnalogEvents),
+		mMaxCounterEvents(aMaxCounterEvents),
+		mMaxVtoEvents(aMaxVtoEvents)
+	{}
+
 	SlaveConfig::SlaveConfig() :
 
 	mMaxControls(1),
@@ -37,10 +51,8 @@ namespace apl { namespace dnp {
 	mUnsolRetryDelay(2000),
 
 	mMaxFragSize(DEFAULT_FRAG_SIZE),
-	VtoWriterQueueSize(DEFAULT_VTO_WRITER_QUEUE_SIZE),
-	mMaxBinaryEvents(1000),
-	mMaxAnalogEvents(1000),
-	mMaxCounterEvents(1000),
+	mVtoWriterQueueSize(DEFAULT_VTO_WRITER_QUEUE_SIZE),
+	mEventMaxConfig(),
 
 	mStaticBinary(GrpVar(1,2)),
 	mStaticAnalog(GrpVar(30,1)),

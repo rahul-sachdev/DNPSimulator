@@ -326,7 +326,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 	{
 		SlaveConfig cfg;
 		cfg.mUnsolMask.class1 = true; // this allows the EnableUnsol sequence to be skipped
-		cfg.mMaxBinaryEvents = 2; // set the max to 3 to max testing easy
+		cfg.mEventMaxConfig.mMaxBinaryEvents = 2; // set the max to 2 to make testing easy
 		cfg.mUnsolPackDelay = 0;
 		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 1);

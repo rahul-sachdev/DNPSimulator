@@ -150,9 +150,9 @@ namespace apl { namespace dnp {
 		c.mEventAnalog =  Convert(arCfg.EventRsp.AnalogGrpVar);
 		c.mEventCounter =  Convert(arCfg.EventRsp.CounterGrpVar);
 
-		c.mMaxBinaryEvents = arCfg.MaxBinaryEvents;
-		c.mMaxAnalogEvents = arCfg.MaxAnalogEvents;
-		c.mMaxCounterEvents = arCfg.MaxCounterEvents;
+		c.mEventMaxConfig.mMaxBinaryEvents = arCfg.MaxBinaryEvents;
+		c.mEventMaxConfig.mMaxAnalogEvents = arCfg.MaxAnalogEvents;
+		c.mEventMaxConfig.mMaxCounterEvents = arCfg.MaxCounterEvents;
 
 		c.mMaxControls = 1;
 

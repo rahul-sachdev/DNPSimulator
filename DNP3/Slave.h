@@ -240,11 +240,7 @@ class Slave : public Loggable, public IAppUser
 		 * thread-safe.
 		 */
 		VtoWriter mVtoWriter;
-
-		/**
-		 * The transmission buffer for Virtual Terminal objects.
-		 */
-		InsertionOrderedEventBuffer<VtoEvent> mVtoTransmitBuffer;
+		
 
 	/**
 	 * A structure to provide the C++ equivalent of templated typedefs.

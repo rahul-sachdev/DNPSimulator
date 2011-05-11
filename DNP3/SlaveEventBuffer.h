@@ -23,6 +23,7 @@
 #include "EventBuffers.h"
 #include "DNPDatabaseTypes.h"
 #include "DatabaseInterfaces.h"
+#include "SlaveConfig.h"
 
 namespace apl { namespace dnp {
 
@@ -36,7 +37,7 @@ namespace apl { namespace dnp {
 class SlaveEventBuffer : public IEventBuffer
 {
 	public:
-		SlaveEventBuffer(size_t aMaxBinary, size_t aMaxAnalog, size_t aMaxCounter);
+		SlaveEventBuffer(const EventMaxConfig& arEventMaxConfig);
 
 		void Update(const Binary& arEvent, PointClass aClass, size_t aIndex);
 		void Update(const Analog& arEvent, PointClass aClass, size_t aIndex);
@@ -67,6 +68,7 @@ class SlaveEventBuffer : public IEventBuffer
 		TimeOrderedEventBuffer<BinaryEvent>			mBinaryEvents;	/// Multiple events for the same time, ordered by time of occurrence
 		SingleEventBuffer<AnalogEvent>				mAnalogEvents;	/// Single event per point, previous events overridden
 		SingleEventBuffer<CounterEvent>				mCounterEvents; /// Single event per point, previous events overridden
+		InsertionOrderedEventBuffer<VtoEvent>		mVtoEvents;		/// Order always maintained by insertion order
 
 		bool mChange;
 };

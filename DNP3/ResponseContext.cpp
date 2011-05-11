@@ -36,9 +36,9 @@ case(MACRO_DNP_RADIX(obj,var)): { \
 
 namespace apl { namespace dnp {
 
-ResponseContext::ResponseContext(Logger* apLogger, Database* apDB, SlaveResponseTypes* apRspTypes, size_t aMaxBinary, size_t aMaxAnalog, size_t aMaxCounter) :
+ResponseContext::ResponseContext(Logger* apLogger, Database* apDB, SlaveResponseTypes* apRspTypes, const EventMaxConfig& arEventMaxConfig) :
 Loggable(apLogger),
-mBuffer(aMaxBinary, aMaxAnalog, aMaxCounter),
+mBuffer(arEventMaxConfig),
 mMode(UNDEFINED),
 
 mpDB(apDB),

@@ -38,6 +38,25 @@ namespace apl { namespace dnp {
 		int Var;
 	};
 
+	struct EventMaxConfig 
+	{
+		EventMaxConfig();
+
+		EventMaxConfig(size_t, size_t, size_t, size_t);
+
+		/** The number of binary events the slave will buffer before overflowing */
+		size_t mMaxBinaryEvents;
+
+		/** The number of analog events the slave will buffer before overflowing */
+		size_t mMaxAnalogEvents;
+
+		/** The number of counter events the slave will buffer before overflowing */
+		size_t mMaxCounterEvents;
+
+		/** The number of vto events the slave will buffer before overflowing */
+		size_t mMaxVtoEvents;
+	};
+
 	/** Configuration information for a dnp3 slave (outstation)
 
 	Used as both input describing the startup configuration of the slave, and as configuration state of mutable properties (i.e. unsolicited responses).
@@ -78,17 +97,10 @@ namespace apl { namespace dnp {
 		size_t mMaxFragSize;
 
 		/// The number of objects to store in the VtoWriter queue.
-		size_t VtoWriterQueueSize;
+		size_t mVtoWriterQueueSize;
 
-		/// The number of binary events the slave will buffer before overflowing
-		size_t mMaxBinaryEvents;
-
-		/// The number of analog events the slave will buffer before overflowing
-		size_t mMaxAnalogEvents;
-
-		/// The number of counter events the slave will buffer before overflowing
-		size_t mMaxCounterEvents;
-
+		/// Structure that defines the maximum number of events to buffer
+		EventMaxConfig mEventMaxConfig;
 
 		// default static response types
 

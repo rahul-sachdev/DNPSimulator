@@ -39,7 +39,8 @@ using namespace apl::dnp;
 		template <class T>
 		void OverflowTest(const T& first, const T& second)
 		{
-			SlaveEventBuffer b(1, 1, 1);
+			EventMaxConfig cfg(1, 1, 1, 0);
+			SlaveEventBuffer b(cfg);
 			b.Update(first, PC_CLASS_1, 0);
 			BOOST_REQUIRE_FALSE(b.IsOverflow());
 			BOOST_REQUIRE(b.HasEventData());
@@ -53,7 +54,9 @@ using namespace apl::dnp;
 			const size_t NUM_EVENT = 100;
 			const size_t NUM_INDICES = 10;
 
-			SlaveEventBuffer b(0, NUM_INDICES, 0);
+			EventMaxConfig cfg(0, NUM_INDICES, 0, 0);
+
+			SlaveEventBuffer b(cfg);
 			
 			PushEvents(b, NUM_EVENT, NUM_INDICES); //push lots of events but only 
 			BOOST_REQUIRE_FALSE(b.IsOverflow());
@@ -87,7 +90,8 @@ using namespace apl::dnp;
 
 		BOOST_AUTO_TEST_CASE(ClassSelect)
 		{
-			SlaveEventBuffer b(10, 10, 10);
+			EventMaxConfig cfg(10, 10, 10, 0);
+			SlaveEventBuffer b(cfg);
 			b.Update(Binary(true), PC_CLASS_1, 0);
 			b.Update(Binary(false), PC_CLASS_1, 0);
 			b.Update(Analog(5), PC_CLASS_1, 0);
@@ -118,7 +122,8 @@ using namespace apl::dnp;
 
 		BOOST_AUTO_TEST_CASE(TypeExceptions)
 		{
-			SlaveEventBuffer b(10, 10, 10);
+			EventMaxConfig cfg(10, 10, 10, 0);
+			SlaveEventBuffer b(cfg);
 			BOOST_REQUIRE_THROW(b.NumType(DT_CONTROL_STATUS), ArgumentException);
 			BOOST_REQUIRE_THROW(b.NumSelected(DT_CONTROL_STATUS), ArgumentException);
 		}
