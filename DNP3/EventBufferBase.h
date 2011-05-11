@@ -66,8 +66,8 @@ namespace apl { namespace dnp {
 		 *
 		 * @param aClass		the class of data to match
 		 *
-		 * @return				true if the buffer contains matching data,
-		 * 						false if not
+		 * @return				'true' if the buffer contains matching data,
+		 * 						'false' if not
 		 */
 		bool HasClassData(PointClass aClass) { return mCounter.GetNum(aClass) > 0; }
 
@@ -76,7 +76,7 @@ namespace apl { namespace dnp {
 		 * the defined number of entries.
 		 *
 		 * @param aClass		the class of data to match
-		 * @param aMaxEvent		Maximum number of events to select
+		 * @param aMaxEvent		maximum number of events to select
 		 *
 		 * @return				the number of events selected
 		 */
@@ -187,7 +187,7 @@ namespace apl { namespace dnp {
 
 		if(this->NumUnselected() > M_MAX_EVENTS) { //we've overflown and we've got to drop an event
 			mIsOverflown = true;
-			typename SetType::Type::iterator itr;			
+			typename SetType::Type::iterator itr;
 			if(mDropFirst) itr = mEventSet.begin();
 			else itr = (++mEventSet.rbegin()).base();
 			this->mCounter.DecrCount(itr->mClass);
