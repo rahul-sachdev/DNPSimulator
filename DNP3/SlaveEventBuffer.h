@@ -24,10 +24,11 @@
 #include "DNPDatabaseTypes.h"
 #include "DatabaseInterfaces.h"
 #include "SlaveConfig.h"
+#include "BufferTypes.h"
 
 namespace apl { namespace dnp {
 
-
+	
 	/** Manager for DNP3 data events composed of per-type event buffer implementations. Events are selected based on
 	classification (data type, class) and then read using an iterator system. The behavior is transactional such that
 	failed deliveries put events back into the buffer.
@@ -36,17 +37,18 @@ namespace apl { namespace dnp {
 	*/
 class SlaveEventBuffer : public IEventBuffer
 {
-	public:
+	public:		
+
 		SlaveEventBuffer(const EventMaxConfig& arEventMaxConfig);
 
 		void Update(const Binary& arEvent, PointClass aClass, size_t aIndex);
 		void Update(const Analog& arEvent, PointClass aClass, size_t aIndex);
 		void Update(const Counter& arEvent, PointClass aClass, size_t aIndex);
 
-		size_t NumSelected(DataTypes aType);
+		size_t NumSelected(BufferTypes aType);
 		size_t NumSelected();
 
-		size_t NumType(DataTypes aType);
+		size_t NumType(BufferTypes aType);
 
 		void Begin(BinaryEventIter& arIter)		{ arIter = mBinaryEvents.Begin(); }
 		void Begin(AnalogEventIter& arIter)		{ arIter = mAnalogEvents.Begin(); }
@@ -56,7 +58,7 @@ class SlaveEventBuffer : public IEventBuffer
 		bool HasClassData(PointClass aClass);
 		bool HasEventData();
 
-		size_t Select(DataTypes aType, PointClass aClass, size_t aMaxEvent = std::numeric_limits<size_t>::max());
+		size_t Select(BufferTypes aType, PointClass aClass, size_t aMaxEvent = std::numeric_limits<size_t>::max());
 		size_t Select(PointClass aClass, size_t aMaxEvent = std::numeric_limits<size_t>::max());
 
 		/// Put all selected events back into the event buffer

@@ -210,7 +210,7 @@ class ResponseContext : public Loggable
 template <class T>
 size_t ResponseContext::SelectEvents(PointClass aClass, const StreamObject<T>* apObj, std::deque< EventRequest<T> >& arQueue, size_t aNum)
 {
-	size_t num = mBuffer.Select(T::MeasEnum, aClass, aNum);
+	size_t num = mBuffer.Select(Convert(T::MeasEnum), aClass, aNum);
 	if(num > 0) {
 		EventRequest<T> r(apObj, aNum);
 		arQueue.push_back(r);
@@ -237,7 +237,7 @@ bool ResponseContext::LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> >& ar
 {
 	typename EvtItr< EventInfo<T> >::Type itr;
 	mBuffer.Begin(itr);
-	size_t remain = mBuffer.NumSelected(T::MeasEnum);
+	size_t remain = mBuffer.NumSelected(Convert(T::MeasEnum));
 
 	while(arQueue.size() > 0) {
 		EventRequest<T>& r = arQueue.front();					// how many were requested

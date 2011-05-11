@@ -44,7 +44,7 @@ using namespace apl::dnp;
 			b.Update(first, PC_CLASS_1, 0);
 			BOOST_REQUIRE_FALSE(b.IsOverflow());
 			BOOST_REQUIRE(b.HasEventData());
-			BOOST_REQUIRE_EQUAL(b.NumType(T::MeasEnum), 1);
+			BOOST_REQUIRE_EQUAL(b.NumType(Convert(T::MeasEnum)), 1);
 			b.Update(second, PC_CLASS_1, 1);
 			BOOST_REQUIRE(b.IsOverflow());
 		}
@@ -60,17 +60,17 @@ using namespace apl::dnp;
 			
 			PushEvents(b, NUM_EVENT, NUM_INDICES); //push lots of events but only 
 			BOOST_REQUIRE_FALSE(b.IsOverflow());
-			BOOST_REQUIRE_EQUAL(b.NumType(DT_ANALOG), NUM_INDICES);
+			BOOST_REQUIRE_EQUAL(b.NumType(BT_ANALOG), NUM_INDICES);
 			
-			b.Select(DT_ANALOG, PC_CLASS_1); //select all the events
-			BOOST_REQUIRE_EQUAL(b.NumType(DT_ANALOG), NUM_INDICES);
+			b.Select(BT_ANALOG, PC_CLASS_1); //select all the events
+			BOOST_REQUIRE_EQUAL(b.NumType(BT_ANALOG), NUM_INDICES);
 			PushEvents(b, NUM_EVENT, NUM_INDICES);
 			BOOST_REQUIRE_FALSE(b.IsOverflow());
-			BOOST_REQUIRE_EQUAL(b.NumType(DT_ANALOG), 2*NUM_INDICES);
+			BOOST_REQUIRE_EQUAL(b.NumType(BT_ANALOG), 2*NUM_INDICES);
 
 			//now deselect
 			b.Deselect();
-			BOOST_REQUIRE_EQUAL(b.NumType(DT_ANALOG), NUM_INDICES);
+			BOOST_REQUIRE_EQUAL(b.NumType(BT_ANALOG), NUM_INDICES);
 			BOOST_REQUIRE_FALSE(b.IsOverflow()); //still shouldn't be 
 
 		}
@@ -100,31 +100,24 @@ using namespace apl::dnp;
 			b.Update(Counter(3), PC_CLASS_1, 1);
 			
 			b.Select(PC_CLASS_1, 1);
-			BOOST_REQUIRE_EQUAL(b.NumSelected(DT_BINARY), 1);
+			BOOST_REQUIRE_EQUAL(b.NumSelected(BT_BINARY), 1);
 			b.Deselect();
 
 			b.Select(PC_CLASS_1, 3);
-			BOOST_REQUIRE_EQUAL(b.NumSelected(DT_BINARY), 2);
-			BOOST_REQUIRE_EQUAL(b.NumSelected(DT_ANALOG), 1);
+			BOOST_REQUIRE_EQUAL(b.NumSelected(BT_BINARY), 2);
+			BOOST_REQUIRE_EQUAL(b.NumSelected(BT_ANALOG), 1);
 			b.Deselect();
 
 			b.Select(PC_CLASS_1, 5);
-			BOOST_REQUIRE_EQUAL(b.NumSelected(DT_BINARY), 2);
-			BOOST_REQUIRE_EQUAL(b.NumSelected(DT_ANALOG), 2);
-			BOOST_REQUIRE_EQUAL(b.NumSelected(DT_COUNTER), 1);
+			BOOST_REQUIRE_EQUAL(b.NumSelected(BT_BINARY), 2);
+			BOOST_REQUIRE_EQUAL(b.NumSelected(BT_ANALOG), 2);
+			BOOST_REQUIRE_EQUAL(b.NumSelected(BT_COUNTER), 1);
 			b.Deselect();
 
 			b.Select(PC_CLASS_1, 6);
-			BOOST_REQUIRE_EQUAL(b.NumSelected(DT_BINARY), 2);
-			BOOST_REQUIRE_EQUAL(b.NumSelected(DT_ANALOG), 2);
-			BOOST_REQUIRE_EQUAL(b.NumSelected(DT_COUNTER), 2);
+			BOOST_REQUIRE_EQUAL(b.NumSelected(BT_BINARY), 2);
+			BOOST_REQUIRE_EQUAL(b.NumSelected(BT_ANALOG), 2);
+			BOOST_REQUIRE_EQUAL(b.NumSelected(BT_COUNTER), 2);
 		}
-
-		BOOST_AUTO_TEST_CASE(TypeExceptions)
-		{
-			EventMaxConfig cfg(10, 10, 10, 0);
-			SlaveEventBuffer b(cfg);
-			BOOST_REQUIRE_THROW(b.NumType(DT_CONTROL_STATUS), ArgumentException);
-			BOOST_REQUIRE_THROW(b.NumSelected(DT_CONTROL_STATUS), ArgumentException);
-		}
+		
 	BOOST_AUTO_TEST_SUITE_END()

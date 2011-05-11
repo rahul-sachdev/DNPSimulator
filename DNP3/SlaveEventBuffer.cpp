@@ -18,11 +18,10 @@
 // 
 #include "SlaveEventBuffer.h"
 
-
 #include <APL/Exception.h>
 
 namespace apl { namespace dnp {
-
+	
 	SlaveEventBuffer :: SlaveEventBuffer(const EventMaxConfig& arEventMaxConfig) : 
 		mBinaryEvents(arEventMaxConfig.mMaxBinaryEvents), 
 		mAnalogEvents(arEventMaxConfig.mMaxAnalogEvents), 
@@ -44,78 +43,88 @@ namespace apl { namespace dnp {
 	{
 		mCounterEvents.Update(arEvent, aClass, aIndex);
 	}
-
-	size_t SlaveEventBuffer :: NumSelected(DataTypes aType)
+	
+	size_t SlaveEventBuffer :: NumSelected(BufferTypes aType)
 	{
 		switch(aType){
-			case DT_BINARY:
+			case BT_BINARY:
 				return mBinaryEvents.NumSelected();
-			case DT_ANALOG:
+			case BT_ANALOG:
 				return mAnalogEvents.NumSelected();
-			case DT_COUNTER:
+			case BT_COUNTER:
 				return mCounterEvents.NumSelected();
+			case BT_VTO:
+				return mVtoEvents.NumSelected();
 			default:
-				throw ArgumentException(LOCATION, "Invalid event type");
+				throw new ArgumentException(LOCATION, "Invalid BufferType");
 		}
 	}
 
-	size_t SlaveEventBuffer :: NumType(DataTypes aType)
+	size_t SlaveEventBuffer :: NumType(BufferTypes aType)
 	{
 		switch(aType){
-			case DT_BINARY:
+			case BT_BINARY:
 				return mBinaryEvents.Size();
-			case DT_ANALOG:
+			case BT_ANALOG:
 				return mAnalogEvents.Size();
-			case DT_COUNTER:
+			case BT_COUNTER:
 				return mCounterEvents.Size();
+			case BT_VTO:
+				return mVtoEvents.Size();			
 			default:
-				throw ArgumentException(LOCATION, "Invalid event type");
+				throw new ArgumentException(LOCATION, "Invalid BufferType");
 		}
 	}
 
 	size_t SlaveEventBuffer :: NumSelected()
 	{
-		return mBinaryEvents.NumSelected() + mAnalogEvents.NumSelected() + mCounterEvents.NumSelected();
+		return mBinaryEvents.NumSelected() + mAnalogEvents.NumSelected() + mCounterEvents.NumSelected() + mVtoEvents.NumSelected();
 	}
 
 	bool SlaveEventBuffer :: IsOverflow()
 	{
-		return mBinaryEvents.IsOverflown() || mAnalogEvents.IsOverflown() || mCounterEvents.IsOverflown();
+		return mBinaryEvents.IsOverflown() || mAnalogEvents.IsOverflown() || mCounterEvents.IsOverflown() || mVtoEvents.IsOverflown();
 	}
 
 	bool SlaveEventBuffer :: HasEventData()
 	{
-		return mBinaryEvents.NumUnselected() > 0 || mAnalogEvents.NumUnselected() > 0  || mCounterEvents.NumUnselected() > 0;
+		return mBinaryEvents.NumUnselected() > 0 
+				|| mAnalogEvents.NumUnselected() > 0  
+				|| mCounterEvents.NumUnselected() > 0
+				|| mVtoEvents.NumUnselected() > 0;
 	}
 
 	bool SlaveEventBuffer :: HasClassData(PointClass aClass)
 	{
-		return mBinaryEvents.HasClassData(aClass) || mAnalogEvents.HasClassData(aClass) || mCounterEvents.HasClassData(aClass);
+		return mBinaryEvents.HasClassData(aClass) 
+			|| mAnalogEvents.HasClassData(aClass) 
+			|| mCounterEvents.HasClassData(aClass)
+			|| mVtoEvents.HasClassData(aClass);
 	}
 
-	size_t SlaveEventBuffer :: Select(DataTypes aType, PointClass aClass, size_t aMaxEvent)
+	size_t SlaveEventBuffer :: Select(BufferTypes aType, PointClass aClass, size_t aMaxEvent)
 	{
 		switch(aType){
-			case DT_BINARY:
+			case BT_BINARY:
 				return mBinaryEvents.Select(aClass, aMaxEvent);
-			case DT_ANALOG:
+			case BT_ANALOG:
 				return mAnalogEvents.Select(aClass, aMaxEvent);
-			case DT_COUNTER:
+			case BT_COUNTER:
 				return mCounterEvents.Select(aClass, aMaxEvent);
+			case BT_VTO:
+				return mVtoEvents.Select(aClass, aMaxEvent);
 			default:
-				throw ArgumentException(LOCATION, "Invalid event type");
+				throw new ArgumentException(LOCATION, "Invalid BufferType");
 		}		
 	}
 
 	size_t SlaveEventBuffer :: Select(PointClass aClass, size_t aMaxEvent)
 	{
 		size_t left = aMaxEvent;
-		if ( left > 0 )
-			left -= mBinaryEvents.Select(aClass, left);
-		if ( left > 0 )
-			left -= mAnalogEvents.Select(aClass, left);
-		if ( left > 0 )
-			left -= mCounterEvents.Select(aClass, left);
+		if ( left > 0 ) left -= mBinaryEvents.Select(aClass, left);
+		if ( left > 0 ) left -= mAnalogEvents.Select(aClass, left);
+		if ( left > 0 ) left -= mCounterEvents.Select(aClass, left);
+		if ( left > 0 ) left -= mVtoEvents.Select(aClass, left);
 		return aMaxEvent - left;
 	}
 
@@ -124,6 +133,7 @@ namespace apl { namespace dnp {
 		mBinaryEvents.ClearWrittenEvents();
 		mAnalogEvents.ClearWrittenEvents();
 		mCounterEvents.ClearWrittenEvents();
+		mVtoEvents.ClearWrittenEvents();
 	}
 	
 	void SlaveEventBuffer :: Deselect()
@@ -131,6 +141,7 @@ namespace apl { namespace dnp {
 		mBinaryEvents.Deselect();
 		mAnalogEvents.Deselect();
 		mCounterEvents.Deselect();
+		mVtoEvents.Deselect();
 	}
 
 }} //end NS
