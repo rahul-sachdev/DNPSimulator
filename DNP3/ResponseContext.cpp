@@ -1,50 +1,51 @@
-// 
-// Licensed to Green Energy Corp (www.greenenergycorp.com) under one
-// or more contributor license agreements. See the NOTICE file
-// distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
-// to you under the Apache License, Version 2.0 (the
-// "License"); you may not use this file except in compliance
-// with the License.  You may obtain a copy of the License at
-// 
+//
+// Licensed to Green Energy Corp (www.greenenergycorp.com) under one or more
+// contributor license agreements. See the NOTICE file distributed with this
+// work for additional information regarding copyright ownership.  Green Enery
+// Corp licenses this file to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance with the
+// License.  You may obtain a copy of the License at
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
-// Unless required by applicable law or agreed to in writing,
-// software distributed under the License is distributed on an
-// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-// KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+// License for the specific language governing permissions and limitations
 // under the License.
-// 
-#include "ResponseContext.h"
-
-#include "Objects.h"
-#include "DNPConstants.h"
-#include "SlaveResponseTypes.h"
-#include <APL/Logger.h>
+//
 
 #include <boost/bind.hpp>
+
+#include <APL/Logger.h>
+
+#include "DNPConstants.h"
+#include "Objects.h"
+#include "ResponseContext.h"
+#include "SlaveResponseTypes.h"
 
 using namespace boost;
 
 #define MACRO_CONTINUOUS_CASE(obj,var) \
-case(MACRO_DNP_RADIX(obj,var)): { \
-	/*WriteFunc<datatype>::Type func = bind(DataToDNP::WriteGroup##obj##Var##var, _1, _2); \*/ \
-	if(!this->IterateContiguous(iter, arAPDU)) return false; \
-	break; \
-}
+		case MACRO_DNP_RADIX(obj,var): { \
+			/* WriteFunc<datatype>::Type func = bind(DataToDNP::WriteGroup##obj##Var##var, _1, _2); */ \
+			if (!this->IterateContiguous(iter, arAPDU)) \
+			{ \
+				return false; \
+			} \
+			break; \
+		}
 
 namespace apl { namespace dnp {
 
 ResponseContext::ResponseContext(Logger* apLogger, Database* apDB, SlaveResponseTypes* apRspTypes, const EventMaxConfig& arEventMaxConfig) :
-Loggable(apLogger),
-mBuffer(arEventMaxConfig),
-mMode(UNDEFINED),
-
-mpDB(apDB),
-mFIR(true),
-mFIN(false),
-mpRspTypes(apRspTypes)
+	Loggable(apLogger),
+	mBuffer(arEventMaxConfig),
+	mMode(UNDEFINED),
+	mpDB(apDB),
+	mFIR(true),
+	mFIN(false),
+	mpRspTypes(apRspTypes)
 {}
 
 void ResponseContext::Reset()
@@ -52,7 +53,7 @@ void ResponseContext::Reset()
 	mFIR = true;
 	mMode = UNDEFINED;
 	mTempIIN.Zero();
-	
+
 	this->mStaticBinaries.clear();
 	this->mStaticAnalogs.clear();
 	this->mStaticCounters.clear();
@@ -62,6 +63,7 @@ void ResponseContext::Reset()
 	this->mBinaryEvents.clear();
 	this->mAnalogEvents.clear();
 	this->mCounterEvents.clear();
+	this->mVtoEvents.clear();
 
 	mBuffer.Deselect();
 }
@@ -77,7 +79,7 @@ void ResponseContext::ClearAndReset()
 	this->Reset();
 }
 
-inline size_t GetEventCount(const HeaderInfo& arHeader) 
+inline size_t GetEventCount(const HeaderInfo& arHeader)
 {
 	switch(arHeader.GetQualifier()) {
 		case QC_1B_CNT:
@@ -93,11 +95,42 @@ IINField ResponseContext::Configure(const APDU& arRequest)
 	this->Reset();
 	mMode = SOLICITED;
 
-	for(HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr)
+	for (HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr)
 	{
-		switch(MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation()))
-		{	
-			// static objects, all variations		
+		/*
+		 * Handle all of the objects that only use a Group identifier.  The
+		 * switch statement is responsible for selecting all of the events
+		 * that are in the various queues that could be used to respond to the
+		 * arRequest message.  Then a separate handler will loop through and
+		 * cherry pick the events that will make it into the response.
+		 *
+		 * For this first switch statement set, use "continue" rather than
+		 * "break" so that control loops back around to the for loop.
+		 */
+		switch (hdr->GetGroup())
+		{
+			/* Virtual Terminal Objects */
+			case 112:
+			case 113:
+				/*
+				 * TODO - cannot use the standard SelectEvents() since a
+				 * SizeByVariationObject is not a StreamObject, so what is the
+				 * appropriate function to call/create?
+				 */
+				//this->SelectEvents(PC_ALL_EVENTS, Group113Var0::Inst(), mVtoEvents, GetEventCount(hdr.info()));
+				continue;
+			default:
+				/*
+				 * Note: the next switch statement's default statement will
+				 * catch unknown object types.
+				 */
+				break;
+		}
+
+		/* Handle all of the objects that have a Group/Variation tuple */
+		switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation()))
+		{
+			// static objects, all variations
 			case(MACRO_DNP_RADIX(1,0)):
 				this->AddIntegrity(mStaticBinaries, mpRspTypes->mpStaticBinary);
 				break;
@@ -113,13 +146,13 @@ IINField ResponseContext::Configure(const APDU& arRequest)
 			case(MACRO_DNP_RADIX(40,0)):
 				this->AddIntegrity(mStaticSetpoints, mpRspTypes->mpStaticSetpointStatus);
 				break;
-			
+
 			// event objects
 			case(MACRO_DNP_RADIX(2,0)):
-				this->SelectEvents(PC_ALL_EVENTS, mpRspTypes->mpEventBinary, mBinaryEvents, GetEventCount(hdr.info()));				
+				this->SelectEvents(PC_ALL_EVENTS, mpRspTypes->mpEventBinary, mBinaryEvents, GetEventCount(hdr.info()));
 				break;
 			case(MACRO_DNP_RADIX(22,0)):
-				this->SelectEvents(PC_ALL_EVENTS, mpRspTypes->mpEventCounter, mCounterEvents, GetEventCount(hdr.info()));				
+				this->SelectEvents(PC_ALL_EVENTS, mpRspTypes->mpEventCounter, mCounterEvents, GetEventCount(hdr.info()));
 				break;
 			case(MACRO_DNP_RADIX(32,0)):
 				this->SelectEvents(PC_ALL_EVENTS, mpRspTypes->mpEventAnalog, mAnalogEvents, GetEventCount(hdr.info()));
@@ -136,26 +169,23 @@ IINField ResponseContext::Configure(const APDU& arRequest)
 				this->SelectEvents(PC_ALL_EVENTS, Group2Var3::Inst(), mBinaryEvents, GetEventCount(hdr.info()));
 				break;
 
-
 			// Class Objects
 			case(MACRO_DNP_RADIX(60,1)):
 				this->AddIntegrityPoll();
-				break;			
+				break;
 			case(MACRO_DNP_RADIX(60,2)):
-				this->SelectEvents(PC_CLASS_1, GetEventCount(hdr.info()));								
+				this->SelectEvents(PC_CLASS_1, GetEventCount(hdr.info()));
 				break;
 			case(MACRO_DNP_RADIX(60,3)):
 				this->SelectEvents(PC_CLASS_2, GetEventCount(hdr.info()));
 				break;
-			case(MACRO_DNP_RADIX(60,4)):			
+			case(MACRO_DNP_RADIX(60,4)):
 				this->SelectEvents(PC_CLASS_3, GetEventCount(hdr.info()));
 				break;
 			default:
 				LOG_BLOCK(LEV_WARNING, "READ for obj " << hdr->GetGroup() << " var " << hdr->GetVariation() << " not supported.");
 				this->mTempIIN.SetFuncNotSupported(true);
 				break;
-
-			/* TODO - need to add objects here? */
 		}
 	}
 
@@ -166,12 +196,20 @@ void ResponseContext::SelectEvents(PointClass aClass, size_t aNum)
 {
 	size_t remain = aNum;
 
-	if(mBuffer.IsOverflow())
+	if (mBuffer.IsOverflow())
+	{
 		mTempIIN.SetEventBufferOverflow(true);
+	}
 
 	remain -= this->SelectEvents(aClass, mpRspTypes->mpEventBinary, mBinaryEvents, remain);
 	remain -= this->SelectEvents(aClass, mpRspTypes->mpEventAnalog, mAnalogEvents, remain);
 	remain -= this->SelectEvents(aClass, mpRspTypes->mpEventCounter, mCounterEvents, remain);
+	/*
+	 * TODO - cannot use the standard SelectEvents() since a
+	 * SizeByVariationObject is not a StreamObject, so what is the
+	 * appropriate function to call/create?
+	 */
+	//remain -= this->SelectEvents(aClass, mpRspTypes->mpEventVto, mVtoEvents, remain);
 }
 
 void ResponseContext::LoadResponse(APDU& arAPDU)
@@ -188,7 +226,7 @@ void ResponseContext::LoadResponse(APDU& arAPDU)
 	FinalizeResponse(arAPDU, events, wrote_all);
 }
 
-bool ResponseContext::SelectUnsol(ClassMask m) 
+bool ResponseContext::SelectUnsol(ClassMask m)
 {
 	if(m.class1) this->SelectEvents(PC_CLASS_1);
 	if(m.class2) this->SelectEvents(PC_CLASS_2);
@@ -207,7 +245,7 @@ bool ResponseContext::HasEvents(ClassMask m)
 }
 
 bool ResponseContext::LoadUnsol(APDU& arAPDU, const IINField& arIIN, ClassMask m)
-{	
+{
 	this->SelectUnsol(m);
 
 	arAPDU.Set(FC_UNSOLICITED_RESPONSE, true, true, true, true);
@@ -229,9 +267,15 @@ bool ResponseContext::LoadStaticData(APDU& arAPDU)
 
 bool ResponseContext::LoadEventData(APDU& arAPDU, bool& arEventsLoaded)
 {
-	if(!this->LoadEvents<Binary>(arAPDU, mBinaryEvents, arEventsLoaded)) return false;
-	if(!this->LoadEvents<Analog>(arAPDU, mAnalogEvents, arEventsLoaded)) return false;
-	if(!this->LoadEvents<Counter>(arAPDU, mCounterEvents, arEventsLoaded)) return false;
+	if (!this->LoadEvents<Binary>(arAPDU, mBinaryEvents, arEventsLoaded)) return false;
+	if (!this->LoadEvents<Analog>(arAPDU, mAnalogEvents, arEventsLoaded)) return false;
+	if (!this->LoadEvents<Counter>(arAPDU, mCounterEvents, arEventsLoaded)) return false;
+	/*
+	 * TODO - cannot use the standard LoadEvents() since a
+	 * SizeByVariationObject is not a StreamObject, so what is the appropriate
+	 * function to call/create?
+	 */
+	//if(!this->LoadEvents<Counter>(arAPDU, mCounterEvents, arEventsLoaded)) return false;
 
 	return true;
 }
@@ -281,7 +325,7 @@ bool ResponseContext::LoadStaticBinaries(APDU& arAPDU)
 			}*/
 
 			MACRO_CONTINUOUS_CASE(1,2);
-			
+
 			default:
 				break;
 		}
@@ -307,8 +351,8 @@ bool ResponseContext::LoadStaticAnalogs(APDU& arAPDU)
 			MACRO_CONTINUOUS_CASE(30,3);
 			MACRO_CONTINUOUS_CASE(30,4);
 			MACRO_CONTINUOUS_CASE(30,5);
-			MACRO_CONTINUOUS_CASE(30,6);			
-					
+			MACRO_CONTINUOUS_CASE(30,6);
+
 			default:
 				break;
 		}
@@ -316,7 +360,7 @@ bool ResponseContext::LoadStaticAnalogs(APDU& arAPDU)
 		this->mStaticAnalogs.pop_front();
 	}
 
-	return true;	
+	return true;
 }
 
 bool ResponseContext::LoadStaticCounters(APDU& arAPDU)
@@ -334,11 +378,11 @@ bool ResponseContext::LoadStaticCounters(APDU& arAPDU)
 			MACRO_CONTINUOUS_CASE(20,2);
 			MACRO_CONTINUOUS_CASE(20,5);
 			MACRO_CONTINUOUS_CASE(20,6);
-			
+
 			default:
 				break;
 		}
-			
+
 		this->mStaticCounters.pop_front();
 	}
 
@@ -356,11 +400,11 @@ bool ResponseContext::LoadStaticControlStatii(APDU& arAPDU)
 		switch(MACRO_DNP_RADIX(grp, var))
 		{
 			MACRO_CONTINUOUS_CASE(10,2);
-			
+
 			default:
 				break;
 		}
-			
+
 		this->mStaticControls.pop_front();
 	}
 
@@ -391,11 +435,11 @@ bool ResponseContext::LoadStaticSetpointStatii(APDU& arAPDU)
 			MACRO_CONTINUOUS_CASE(40,2);
 			MACRO_CONTINUOUS_CASE(40,3);
 			MACRO_CONTINUOUS_CASE(40,4);
-			
+
 			default:
 				break;
 		}
-			
+
 		this->mStaticSetpoints.pop_front();
 	}
 
@@ -403,7 +447,7 @@ bool ResponseContext::LoadStaticSetpointStatii(APDU& arAPDU)
 }
 
 void ResponseContext::AddIntegrityPoll()
-{	
+{
 	this->AddIntegrity(mStaticBinaries, mpRspTypes->mpStaticBinary);
 	this->AddIntegrity(mStaticAnalogs, mpRspTypes->mpStaticAnalog);
 	this->AddIntegrity(mStaticCounters, mpRspTypes->mpStaticCounter);
@@ -413,3 +457,4 @@ void ResponseContext::AddIntegrityPoll()
 
 }}
 
+/* vim: set ts=4 sw=4: */

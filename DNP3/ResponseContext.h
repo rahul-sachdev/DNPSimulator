@@ -1,35 +1,33 @@
 //
-// Licensed to Green Energy Corp (www.greenenergycorp.com) under one
-// or more contributor license agreements. See the NOTICE file
-// distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
-// to you under the Apache License, Version 2.0 (the
-// "License"); you may not use this file except in compliance
-// with the License.  You may obtain a copy of the License at
+// Licensed to Green Energy Corp (www.greenenergycorp.com) under one or more
+// contributor license agreements. See the NOTICE file distributed with this
+// work for additional information regarding copyright ownership.  Green Enery
+// Corp licenses this file to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance with the
+// License.  You may obtain a copy of the License at
 //
 // http://www.apache.org/licenses/LICENSE-2.0
 //
-// Unless required by applicable law or agreed to in writing,
-// software distributed under the License is distributed on an
-// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-// KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+// License for the specific language governing permissions and limitations
 // under the License.
 //
+
 #ifndef __RESPONSE_CONTEXT_H_
 #define __RESPONSE_CONTEXT_H_
 
+#include <boost/function.hpp>
+#include <queue>
+
 #include <APL/Loggable.h>
 
-#include "DNPDatabaseTypes.h"
 #include "APDU.h"
-#include "Database.h"
-#include "SlaveEventBuffer.h"
 #include "ClassMask.h"
-
-#include <queue>
-#include <boost/function.hpp>
-
+#include "Database.h"
+#include "DNPDatabaseTypes.h"
+#include "SlaveEventBuffer.h"
 
 namespace apl { namespace dnp {
 
@@ -45,13 +43,15 @@ struct WriteFunc
 };
 
 /**
- Builds and tracks the state of responses. Interprets FC_READ requests or can be prompted for an unsolicited response fragment.
-
- Coordinates the Database and SlaveEventBuffer.
-*/
+ * Builds and tracks the state of responses. Interprets FC_READ requests or
+ * can be prompted for an unsolicited response fragment.
+ *
+ * Coordinates the Database and SlaveEventBuffer.
+ */
 class ResponseContext : public Loggable
 {
-	enum Mode {
+	enum Mode
+	{
 		UNDEFINED,
 		SOLICITED,
 		UNSOLICITED
@@ -89,12 +89,10 @@ class ResponseContext : public Loggable
 	/// Clear written events and reset the state of the object
 	void ClearAndReset();
 
-
 	private:
 
 	// configure the state for unsol, return true of events exist
 	bool SelectUnsol(ClassMask aMask);
-
 
 	SlaveEventBuffer mBuffer;
 
@@ -103,11 +101,17 @@ class ResponseContext : public Loggable
 	/// @return TRUE if all of the data has been written
 	bool LoadStaticData(APDU&);
 
-
-	/** @param arEventsLoaded Set to true if events were written to the APDU
-		@param arAPDU Events are loaded into this fragment
-		@return TRUE if all of the data has been written
-	*/
+	/**
+	 * Loads the previously buffered events into the APDU response.
+	 *
+	 * @param arAPDU			the APDU fragment that should be used to store
+	 * 							the events
+	 * @param arEventsLoaded	set to 'true' if some events were written to
+	 * 							arAPDU
+	 *
+	 * @return					'true' if all of the events were written, or
+	 * 							'false' if more events remain
+	 */
 	bool LoadEventData(APDU& arAPDU, bool& arEventsLoaded);
 
 	void FinalizeResponse(APDU&, bool aHasEventData, bool aFIN);
@@ -134,19 +138,19 @@ class ResponseContext : public Loggable
 
 		typename StaticIter<T>::Type first;				/// Begining of iteration
 		typename StaticIter<T>::Type last;				/// Last element of iteration
-		StreamObject<typename T::MeasType>* pObject;	/// Type to use to write
+		StreamObject<typename T::MeasType>* pObject;		/// Type to use to write
 	};
 
 	template<class T>
 	struct EventRequest
 	{
 		EventRequest(const StreamObject<T>* apObj, size_t aCount = std::numeric_limits<size_t>::max()) :
-		pObj(apObj),
-		count(aCount)
+			pObj(apObj),
+			count(aCount)
 		{}
 
 		const StreamObject<T>* pObj;	/// Type to use to write
-		size_t count;					/// Number of events to read
+		size_t count;				/// Number of events to read
 
 	};
 
@@ -156,9 +160,10 @@ class ResponseContext : public Loggable
 	typedef std::deque< IterRecord<ControlStatusInfo> >		ControlIterQueue;
 	typedef std::deque< IterRecord<SetpointStatusInfo> >	SetpointIterQueue;
 
-	typedef std::deque< EventRequest<Binary> > BinaryEventQueue;
-	typedef std::deque< EventRequest<Analog> > AnalogEventQueue;
-	typedef std::deque< EventRequest<Counter> > CounterEventQueue;
+	typedef std::deque< EventRequest<Binary> >				BinaryEventQueue;
+	typedef std::deque< EventRequest<Analog> >				AnalogEventQueue;
+	typedef std::deque< EventRequest<Counter> >				CounterEventQueue;
+	typedef std::deque< EventRequest<VtoData> >				VtoEventQueue;
 
 	//these queues track what static point ranges were requested so that we can split the response over multiple fragments
 	BinaryIterQueue mStaticBinaries;
@@ -171,6 +176,7 @@ class ResponseContext : public Loggable
 	BinaryEventQueue mBinaryEvents;
 	AnalogEventQueue mAnalogEvents;
 	CounterEventQueue mCounterEvents;
+	VtoEventQueue mVtoEvents;
 
 	template <class T>
 	void AddIntegrity(std::deque< IterRecord<T> >& arQueue, StreamObject<typename T::MeasType>* apObject);
@@ -186,6 +192,7 @@ class ResponseContext : public Loggable
 
 	//wrappers that select the event buffer and add to the event queues
 	void SelectEvents(PointClass aClass, size_t aNum = std::numeric_limits<size_t>::max());
+
 	template <class T>
 	size_t SelectEvents(PointClass aClass, const StreamObject<T>* apObj, std::deque< EventRequest<T> >& arQueue, size_t aNum = std::numeric_limits<size_t>::max());
 
@@ -211,7 +218,8 @@ template <class T>
 size_t ResponseContext::SelectEvents(PointClass aClass, const StreamObject<T>* apObj, std::deque< EventRequest<T> >& arQueue, size_t aNum)
 {
 	size_t num = mBuffer.Select(Convert(T::MeasEnum), aClass, aNum);
-	if(num > 0) {
+
+	if (num > 0) {
 		EventRequest<T> r(apObj, aNum);
 		arQueue.push_back(r);
 	}
@@ -239,18 +247,33 @@ bool ResponseContext::LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> >& ar
 	mBuffer.Begin(itr);
 	size_t remain = mBuffer.NumSelected(Convert(T::MeasEnum));
 
-	while(arQueue.size() > 0) {
-		EventRequest<T>& r = arQueue.front();					// how many were requested
+	while (arQueue.size() > 0)
+	{
+		/* Get the number of events requested */
+		EventRequest<T>& r = arQueue.front();
 
-		if(r.count > remain) r.count = remain;
+		if (r.count > remain)
+		{
+			r.count = remain;
+		}
 
 		size_t written = r.pObj->UseCTO() ? this->IterateCTO<T>(r.pObj, r.count, itr, arAPDU) : this->IterateIndexed<T>(r, itr, arAPDU);
 		remain -= written;
 
-		if(written > 0) arEventsLoaded = true;					// at least 1 event was loaded
+		if (written > 0)
+		{
+			/* At least one event was loaded */
+			arEventsLoaded = true;
+		}
 
-		if(written == r.count) arQueue.pop_front();				// all events written, we're done with this request
-		else { //incomplete write
+		if (written == r.count)
+		{
+			/* all events were written, finished with request */
+			arQueue.pop_front();
+		}
+		else
+		{
+			/* more event data remains in the queue */
 			r.count -= written;
 			return false;
 		}
@@ -351,8 +374,8 @@ size_t ResponseContext::IterateCTO(const StreamObject<T>* apObj, size_t aCount, 
 	else return num + this->IterateCTO(apObj, aCount - num, arIter, arAPDU); //recurse, and do another CTO header
 }
 
-
 }}
 
-#endif
+/* vim: set ts=4 sw=4: */
 
+#endif

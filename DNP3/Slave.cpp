@@ -56,7 +56,7 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	mStartupNullUnsol(false),
 	mpTimeTimer(NULL),
 	mVtoReader(apLogger),
-	mVtoWriter(arCfg.mVtoWriterQueueSize)	
+	mVtoWriter(arCfg.mVtoWriterQueueSize)
 {
 	/* Link the event buffer to the database */
 	mpDatabase->SetEventBuffer(mRspContext.GetBuffer());
@@ -73,6 +73,17 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	mChangeBuffer.AddObserver(
 		mNotifierSource.Get(
 				boost::bind(&Slave::OnDataUpdate, this),
+				mpTimerSrc
+		)
+	);
+
+	/*
+	 * Incoming data will trigger a POST on the timer source to call
+	 * Slave::OnVtoUpdate().
+	 */
+	mVtoWriter.AddObserver(
+		mNotifierSource.Get(
+				boost::bind(&Slave::OnVtoUpdate, this),
 				mpTimerSrc
 		)
 	);
@@ -142,6 +153,30 @@ void Slave::OnUnknownObject()
 }
 
 /* Internally generated events */
+
+void Slave::OnVtoUpdate()
+{
+	/*
+	 * Copy as much data as we can from the VtoWriter into the
+	 * SlaveEventBuffer's VtoEvent buffer.
+	 */
+	SlaveEventBuffer* seb = reinterpret_cast<SlaveEventBuffer*>(this->mRspContext.GetBuffer());
+	InsertionOrderedEventBuffer<VtoEvent>* buffer = seb->GetVtoEventBuffer();
+	VtoEvent info;
+
+	while (!buffer->IsFull() && this->mVtoWriter.Read(info))
+	{
+		buffer->Update(info);
+	}
+
+	/*
+	 * Let the current state decide how to handle the VTO buffer.  We use the
+	 * same handler as Slave::OnDataUpdate() to reduce the complexity in the
+	 * mechanism.
+	 */
+	mpState->OnDataUpdate(this);
+	this->FlushDeferredEvents();
+}
 
 void Slave::OnDataUpdate()
 {
@@ -266,6 +301,17 @@ void Slave::ConfigureDelayMeasurement(const APDU& arRequest)
 	pObj->mTime.Set(*i, 0);
 }
 
+void Slave::HandleWriteVto(HeaderReadIterator& arHdr)
+{
+	for (ObjectReadIterator obj = arHdr.BeginRead(); !obj.IsEnd(); ++obj)
+	{
+		/*
+		 * TODO - Look up the IVtoCallbacks instance in the VtoReader for the
+		 * obj->Index(), then send the buffer data up the food chain.
+		 */
+	}
+}
+
 void Slave::HandleWriteIIN(HeaderReadIterator& arHdr)
 {
 	for (ObjectReadIterator obj = arHdr.BeginRead(); !obj.IsEnd(); ++obj)
@@ -319,6 +365,13 @@ void Slave::HandleWrite(const APDU& arRequest)
 {
 	for (HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr)
 	{
+		switch (hdr->GetGroup())
+		{
+			case 112:
+				this->HandleWriteVto(hdr);
+				continue;
+		}
+
 		switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation()))
 		{
 			case (MACRO_DNP_RADIX(80,1)):

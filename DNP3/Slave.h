@@ -195,6 +195,7 @@ class Slave : public Loggable, public IAppUser
 
 		bool mStartupNullUnsol;					/// Tracks whether the device has completed the NULL unsol startup message
 
+		void OnVtoUpdate();						/// internal event dispatched when user code commits an update to mVtoWriter
 		void OnDataUpdate();					/// internal event dispatched when user code commits an update to mChangeBuffer
 		void OnUnsolTimerExpiration();			/// internal event dispatched when the unsolicted pack/retry timer expires
 
@@ -206,6 +207,7 @@ class Slave : public Loggable, public IAppUser
 		void HandleWrite(const APDU& arRequest);
 		void HandleWriteIIN(HeaderReadIterator& arHdr);
 		void HandleWriteTimeDate(HeaderReadIterator& arHWI);
+		void HandleWriteVto(HeaderReadIterator& arHdr);
 		void HandleSelect(const APDU& arRequest, SequenceInfo aSeqInfo);
 		void HandleOperate(const APDU& arRequest, SequenceInfo aSeqInfo);
 		void HandleDirectOperate(const APDU& arRequest, SequenceInfo aSeqInfo);
@@ -240,7 +242,6 @@ class Slave : public Loggable, public IAppUser
 		 * thread-safe.
 		 */
 		VtoWriter mVtoWriter;
-		
 
 	/**
 	 * A structure to provide the C++ equivalent of templated typedefs.
