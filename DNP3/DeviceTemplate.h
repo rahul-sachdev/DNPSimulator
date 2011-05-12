@@ -36,13 +36,13 @@ namespace apl { namespace dnp {
 */
 struct DeviceTemplate
 {
-	DeviceTemplate( size_t aNumBinary = 0,
-					size_t aNumAnalog = 0,
-					size_t aNumCounter = 0,
-					size_t aNumControlStatus = 0,
-					size_t aNumSetpointStatus = 0,
-					size_t aNumSetpoints = 0,
-					size_t aNumControls = 0);
+	DeviceTemplate(size_t aNumBinary = 0,
+			size_t aNumAnalog = 0,
+			size_t aNumCounter = 0,
+			size_t aNumControlStatus = 0,
+			size_t aNumSetpointStatus = 0,
+			size_t aNumControls = 0,
+			size_t aNumSetpoints = 0);
 
 	//Measurements
 	std::vector<EventPointRecord> mBinary;		/// list of binary point properties
