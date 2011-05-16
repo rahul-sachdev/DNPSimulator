@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 
 
 #include "TransportScalabilityTestObject.h"
@@ -60,7 +60,7 @@ TransportScalabilityTestObject::~TransportScalabilityTestObject()
 
 bool TransportScalabilityTestObject::AllLayersUp()
 {
-	BOOST_FOREACH(TransportStackPair* pPair, mPairs) { 
+	BOOST_FOREACH(TransportStackPair* pPair, mPairs) {
 		if(!pPair->BothLayersUp()) return false;
 	}
 
@@ -69,7 +69,7 @@ bool TransportScalabilityTestObject::AllLayersUp()
 
 bool TransportScalabilityTestObject::AllLayerEqual(const boost::uint8_t* apData, size_t aNumBytes)
 {
-	BOOST_FOREACH(TransportStackPair* pPair, mPairs) { 
+	BOOST_FOREACH(TransportStackPair* pPair, mPairs) {
 		if(! pPair->mServerStack.mUpper.BufferEquals(apData, aNumBytes)) return false;
 		if(! pPair->mClientStack.mUpper.BufferEquals(apData, aNumBytes)) return false;
 	}
@@ -78,9 +78,9 @@ bool TransportScalabilityTestObject::AllLayerEqual(const boost::uint8_t* apData,
 }
 
 bool TransportScalabilityTestObject::AllLayerReceived(size_t aNumBytes)
-{	
+{
 	BOOST_FOREACH(TransportStackPair* pPair, mPairs) {
-		if(pPair->mServerStack.mUpper.Size() != aNumBytes) return false;		
+		if(pPair->mServerStack.mUpper.Size() != aNumBytes) return false;
 		if(pPair->mClientStack.mUpper.Size() != aNumBytes) return false;
 	}
 

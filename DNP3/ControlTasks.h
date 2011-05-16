@@ -35,7 +35,7 @@ namespace apl { namespace dnp {
 
 /// Base class with machinery for performing control operations
 class ControlTaskBase : public MasterTaskBase
-{		
+{
 	public:
 		ControlTaskBase(Logger*);
 		virtual ~ControlTaskBase() {}
@@ -49,13 +49,13 @@ class ControlTaskBase : public MasterTaskBase
 			INVALID
 		};
 
-		State mState;		
-		CommandData mData;		
-		
+		State mState;
+		CommandData mData;
+
 		boost::function<CommandStatus (const APDU&)> mValidator;
 
 		template <class T>
-		static CommandStatus ValidateCommandResponse(const APDU& arAPDU, CommandObject<T>* apObj, const CopyableBuffer& arData, size_t aIndex);		
+		static CommandStatus ValidateCommandResponse(const APDU& arAPDU, CommandObject<T>* apObj, const CopyableBuffer& arData, size_t aIndex);
 
 		bool GetSelectBit();
 
@@ -81,16 +81,16 @@ class ControlTask : public ControlTaskBase
 
 	virtual ~ControlTask() {}
 
-	void Set(const T& arCommand, const CommandData& arData, bool aIsSBO) { 
+	void Set(const T& arCommand, const CommandData& arData, bool aIsSBO) {
 		mCommand = arCommand;
-		mData = arData;		
+		mData = arData;
 		mState = aIsSBO ? SELECT : OPERATE;
 	}
 
 	void ConfigureRequest(APDU& arAPDU);
 
 	protected:
-	
+
 	virtual CommandObject<T>* GetObject(const T& arCmd) = 0;
 
 	T mCommand;
@@ -101,7 +101,7 @@ class BinaryOutputTask : public ControlTask<BinaryOutput>
 {
 	public:
 		BinaryOutputTask(Logger*);
-		
+
 		CommandObject<BinaryOutput>* GetObject(const BinaryOutput&);
 
 		std::string Name() const { return "BinaryOutputTask"; }
@@ -117,12 +117,12 @@ class SetpointTask : public ControlTask<Setpoint>
 
 		std::string Name() const { return "SetpointTask"; }
 
-		static CommandObject<Setpoint>* GetOptimalEncoder(SetpointEncodingType aType);			
+		static CommandObject<Setpoint>* GetOptimalEncoder(SetpointEncodingType aType);
 };
 
 template <class T>
 void ControlTask<T>::ConfigureRequest(APDU& arAPDU)
-{	
+{
 	CommandObject<T>* pObj = this->GetObject(mCommand);
 	arAPDU.Set(this->GetSelectBit() ? FC_SELECT : FC_OPERATE, true, true, false, false);
 	IndexedWriteIterator i = arAPDU.WriteIndexed(pObj, 1, mData.mIndex);

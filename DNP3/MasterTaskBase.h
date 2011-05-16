@@ -52,7 +52,7 @@ class MasterTaskBase : public Loggable
 		 * function.
 		 */
 		virtual void Init() {}
-		
+
 		/**
 		 * Configure a request APDU.  A container APDU instance is passed in
 		 * as the argument, and the implementing function should setup the
@@ -62,7 +62,7 @@ class MasterTaskBase : public Loggable
 		 * @param arAPDU	the DNP3 message as an APDU instance
 		 */
 		virtual void ConfigureRequest(APDU& arAPDU) = 0;
-		
+
 		/**
 		 * Handler for non-FIN responses, performs common validation and
 		 * delegates to _OnPartialResponse().
@@ -72,7 +72,7 @@ class MasterTaskBase : public Loggable
 		 * @return			TaskResult enumeration
 		 */
 		TaskResult OnPartialResponse(const APDU& arAPDU);
-		
+
 		/**
 		 * Handler for FIN responses, performs common validation and delegates
 		 * to _OnFinalResponse().
@@ -89,14 +89,14 @@ class MasterTaskBase : public Loggable
 		 * message should override this function.
 		 */
 		virtual void OnFailure() {}
-		
+
 		/**
 		 * Returns the name of the task.
 		 *
 		 * @return			the name of the task
 		 */
 		virtual std::string Name() const = 0;
-	
+
 	protected:
 
 		/**
@@ -108,7 +108,7 @@ class MasterTaskBase : public Loggable
 		 * @return			a TaskResult value as a response
 		 */
 		virtual TaskResult _OnPartialResponse(const APDU& arAPDU) = 0;
-		
+
 		/**
 		 * Handler for FIN responses.  Subclasses should override this
 		 * function to provide class-specific interpretations of the behavior.
@@ -118,7 +118,7 @@ class MasterTaskBase : public Loggable
 		 * @return			a TaskResult value as a response
 		 */
 		virtual TaskResult _OnFinalResponse(const APDU& arAPDU) = 0;
-		
+
 	private:
 
 		TaskResult ProcessResult(TaskResult);

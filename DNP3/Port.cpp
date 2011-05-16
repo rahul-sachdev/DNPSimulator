@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "Port.h"
 
 #include "Stack.h"
@@ -48,11 +48,11 @@ Port::~Port()
 
 }
 
-//Once we're sure the router is done with 
+//Once we're sure the router is done with
 void Port::Release() //do nothing right now
 {
 	if(mRouter.IsRunning()) mRelease = true;
-	else { 
+	else {
 		delete this;
 	}
 }
@@ -67,8 +67,8 @@ void Port::OnStateChange(IPhysMonitor::State aState)
 
 void Port::Associate(const std::string& arStackName, Stack* apStack, boost::uint16_t aLocalAddress)
 {
-	LOG_BLOCK(LEV_DEBUG, "Linking stack to port: " << aLocalAddress);	
-	mStackMap[arStackName] = StackRecord(apStack, aLocalAddress);	
+	LOG_BLOCK(LEV_DEBUG, "Linking stack to port: " << aLocalAddress);
+	mStackMap[arStackName] = StackRecord(apStack, aLocalAddress);
 	apStack->mLink.SetRouter(&mRouter);
 	mRouter.AddContext(&apStack->mLink, aLocalAddress);
 	if(!mRouter.IsRunning()) {
@@ -78,8 +78,8 @@ void Port::Associate(const std::string& arStackName, Stack* apStack, boost::uint
 }
 
 void Port::Disassociate(const std::string& arStackName)
-{	
-	StackMap::iterator i = mStackMap.find(arStackName);	
+{
+	StackMap::iterator i = mStackMap.find(arStackName);
 	StackRecord r = i->second;
 	LOG_BLOCK(LEV_DEBUG, "Unlinking stack from port: " << r.mLocalAddress);
 	mRouter.RemoveContext(r.mLocalAddress);		// decouple the stack from the router and tell the stack to go offline if the it was previously online
@@ -88,7 +88,7 @@ void Port::Disassociate(const std::string& arStackName)
 		LOG_BLOCK(LEV_DEBUG, "Stopping router");
 		mRouter.Stop();
 	}
-	mStackMap.erase(i);	
+	mStackMap.erase(i);
 }
 
 

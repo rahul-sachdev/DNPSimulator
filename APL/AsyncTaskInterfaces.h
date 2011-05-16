@@ -31,7 +31,7 @@ class ITask
 
 	/// Enable the task and notify the task group which might execute another task
 	virtual void Enable() = 0;
-	
+
 	/// Disable ''
 	virtual void Disable()= 0;
 

@@ -94,7 +94,7 @@ class AMS_Idle : public AMS_OpenBase
 {
 	MACRO_STATE_SINGLETON_INSTANCE(AMS_Idle);
 
-	void StartTask(Master* c, ITask*, MasterTaskBase*);	
+	void StartTask(Master* c, ITask*, MasterTaskBase*);
 };
 
 /* AMS_Waiting */

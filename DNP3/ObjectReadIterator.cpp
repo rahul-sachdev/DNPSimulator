@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "ObjectReadIterator.h"
 #include "ObjectHeader.h"
 #include <APL/Exception.h>
@@ -24,14 +24,14 @@
 
 namespace apl { namespace dnp {
 
-	ObjectReadIterator::ObjectReadIterator(const HeaderInfo& arInfo, const boost::uint8_t* apBuffer, bool aHasData) : 
+	ObjectReadIterator::ObjectReadIterator(const HeaderInfo& arInfo, const boost::uint8_t* apBuffer, bool aHasData) :
 	mHeaderInfo(arInfo),
 	mCurrentObjectNum(0),
 	mpPrefixPos(NULL),
 	mpBuffer(apBuffer),
 	mHasData(aHasData)
-	{		
-		if(!this->IsEnd()) 
+	{
+		if(!this->IsEnd())
 		{
 			mpPrefixPos = mpBuffer + (mHeaderInfo.GetPosition() + mHeaderInfo.GetHeaderSize());
 			this->SetObjectInfo();
@@ -59,7 +59,7 @@ namespace apl { namespace dnp {
 
 		switch(mHeaderInfo.GetQualifier())
 		{
-			
+
 			case(QC_1B_VCNT_1B_SIZE):
 				return UInt8::Read(apPrefixPos);
 			case(QC_1B_VCNT_2B_SIZE):
@@ -73,7 +73,7 @@ namespace apl { namespace dnp {
 					case(OT_FIXED):
 						return static_cast<const FixedObject*>(mHeaderInfo.GetBaseObject())->GetSize();
 					case(OT_BITFIELD):
-						return static_cast<const BitfieldObject*>(mHeaderInfo.GetBaseObject())->GetSize(mHeaderInfo.GetCount());	
+						return static_cast<const BitfieldObject*>(mHeaderInfo.GetBaseObject())->GetSize(mHeaderInfo.GetCount());
 					default:
 						break;
 				}
@@ -92,15 +92,15 @@ namespace apl { namespace dnp {
 		switch(mHeaderInfo.GetHeaderType())
 		{
 			//For a count you have to examine the prefix code
-			case(OHT_COUNT_1_OCTET): 
+			case(OHT_COUNT_1_OCTET):
 			case(OHT_COUNT_2_OCTET):
 			case(OHT_COUNT_4_OCTET):
 				index = this->CalcCountIndex(mHeaderInfo.GetQualifier(), mpPrefixPos);
 				break;
 			// these must be used with no-prefix so
 			// you can just examine the range and current object number
-			case(OHT_RANGED_2_OCTET): 
-			case(OHT_RANGED_4_OCTET):	
+			case(OHT_RANGED_2_OCTET):
+			case(OHT_RANGED_4_OCTET):
 			case(OHT_RANGED_8_OCTET):
 			{
 				RangeInfo range;
@@ -119,12 +119,12 @@ namespace apl { namespace dnp {
 	{
 		switch(aCode)
 		{
-			
+
 			// if there's no prefix or it's prefixed
-			// with a size assume the index is implicit 
+			// with a size assume the index is implicit
 			// based on the object number in the sequence from 0
-			case(QC_1B_CNT): 
-			case(QC_2B_CNT): 											
+			case(QC_1B_CNT):
+			case(QC_2B_CNT):
 			case(QC_4B_CNT):
 			case(QC_ALL_OBJ):
 				return this->mCurrentObjectNum;

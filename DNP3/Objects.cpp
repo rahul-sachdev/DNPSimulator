@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "Objects.h"
 
 #include <APL/DataTypes.h>
@@ -36,7 +36,7 @@ namespace apl { namespace dnp {
 	MACRO_STATIC_INSTANCE(2,1)
 	MACRO_STATIC_INSTANCE(2,2)
 	MACRO_STATIC_INSTANCE(2,3)
-		
+
 	MACRO_STATIC_INSTANCE(10,0)
 	MACRO_STATIC_INSTANCE(10,1)
 	MACRO_STATIC_INSTANCE(10,2)
@@ -44,7 +44,7 @@ namespace apl { namespace dnp {
 	MACRO_STATIC_INSTANCE(12,1)
 	MACRO_STATIC_INSTANCE(12,2)
 	MACRO_STATIC_INSTANCE(12,3)
-	
+
 
 	MACRO_STATIC_INSTANCE(20,0)
 	MACRO_STATIC_INSTANCE(20,1)
@@ -125,7 +125,7 @@ namespace apl { namespace dnp {
 	MACRO_STATIC_INSTANCE(33,6)
 	MACRO_STATIC_INSTANCE(33,7)
 	MACRO_STATIC_INSTANCE(33,8)
-	
+
 	MACRO_STATIC_INSTANCE(40,0)
 	MACRO_STATIC_INSTANCE(40,1)
 	MACRO_STATIC_INSTANCE(40,2)
@@ -143,12 +143,12 @@ namespace apl { namespace dnp {
 	MACRO_STATIC_INSTANCE(51,2)
 	MACRO_STATIC_INSTANCE(52,1)
 	MACRO_STATIC_INSTANCE(52,2)
-	
+
 	MACRO_STATIC_INSTANCE(60,1)
 	MACRO_STATIC_INSTANCE(60,2)
 	MACRO_STATIC_INSTANCE(60,3)
 	MACRO_STATIC_INSTANCE(60,4)
-	
+
 
 	MACRO_STATIC_INSTANCE(80,1)
 
@@ -170,8 +170,8 @@ namespace apl { namespace dnp {
 	Binary Group2Var1::Read(const boost::uint8_t* p) const { return DNPFromStream::ReadBinaryQV(p, Group2Var1::Inst()); }
 	Binary Group2Var2::Read(const boost::uint8_t* p) const { return DNPFromStream::ReadBinaryQV(p, Group2Var2::Inst()); }
 	Binary Group2Var3::Read(const boost::uint8_t* p) const { return DNPFromStream::ReadBinaryQVT(p, Group2Var3::Inst()); }
-	
-	
+
+
 	//////////////////////////////////////////////
 	//	Binary Output Status
 	//////////////////////////////////////////////
@@ -191,7 +191,7 @@ namespace apl { namespace dnp {
 		mOnTime.Set(apPos, arControl.mOnTimeMS);
 		mStatus.Set(apPos, arControl.mStatus);
 	}
-	
+
 	BinaryOutput Group12Var1::Read(const boost::uint8_t* apPos) const
 	{
 		BinaryOutput b;
@@ -283,7 +283,7 @@ namespace apl { namespace dnp {
 	Analog Group32Var6::Read(const boost::uint8_t* apPos) const { return DNPFromStream::ReadQV(apPos, Group32Var6::Inst()); }
 	Analog Group32Var7::Read(const boost::uint8_t* apPos) const { return DNPFromStream::ReadQVT(apPos, Group32Var7::Inst()); }
 	Analog Group32Var8::Read(const boost::uint8_t* apPos) const { return DNPFromStream::ReadQVT(apPos, Group32Var8::Inst()); }
-	
+
 	//////////////////////////////////////////////
 	//	Analog Output Status
 	//////////////////////////////////////////////
@@ -307,7 +307,7 @@ namespace apl { namespace dnp {
 		this->mValue.Set(apBuff, arVal.GetIntValue());
 		this->mStatus.Set(apBuff, arVal.mStatus);
 	}
-	
+
 	Setpoint Group41Var1::Read(const boost::uint8_t* apBuff) const
 	{
 		Setpoint s(static_cast<boost::int32_t>(this->mValue.Get(apBuff)));
@@ -315,7 +315,7 @@ namespace apl { namespace dnp {
 		s.SetEncodingType(SPET_INT32);
 		return s;
 	}
-	
+
 	apl::CopyableBuffer Group41Var1::GetValueBytes(const boost::uint8_t* apBuff) const
 	{
 		return CopyableBuffer(apBuff, 4);
@@ -326,7 +326,7 @@ namespace apl { namespace dnp {
 		this->mValue.Set(apBuff, static_cast<boost::uint16_t>(arVal.GetIntValue()));
 		this->mStatus.Set(apBuff, arVal.mStatus);
 	}
-	
+
 	Setpoint Group41Var2::Read(const boost::uint8_t* apBuff) const
 	{
 		Setpoint s(static_cast<boost::int16_t>(this->mValue.Get(apBuff)));
@@ -345,7 +345,7 @@ namespace apl { namespace dnp {
 		this->mValue.Set(apBuff, static_cast<float>(arVal.GetValue()));
 		this->mStatus.Set(apBuff, arVal.mStatus);
 	}
-	
+
 	Setpoint Group41Var3::Read(const boost::uint8_t* apBuff) const
 	{
 		Setpoint s(this->mValue.Get(apBuff));
@@ -360,11 +360,11 @@ namespace apl { namespace dnp {
 	}
 
 	void Group41Var4::Write(boost::uint8_t* apBuff, const Setpoint& arVal) const
-	{		
+	{
 		this->mValue.Set(apBuff, arVal.GetValue());
 		this->mStatus.Set(apBuff, arVal.mStatus);
 	}
-	
+
 	Setpoint Group41Var4::Read(const boost::uint8_t* apBuff) const
 	{
 		Setpoint s(this->mValue.Get(apBuff));

@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
@@ -84,14 +84,14 @@ void TestSetpointExecution(const std::string& setpointhex, T aValue)
 	CommandResponseQueue mRspQueue;
 	t.master.GetCmdAcceptor()->AcceptCommand(st, 1, 7, &mRspQueue);
 	BOOST_REQUIRE(t.mts.DispatchOne());
-	
+
 	BOOST_REQUIRE_EQUAL(t.Read(), "C0 03 " + setpointhex); // SELECT
 	t.RespondToMaster("C0 81 00 00 " + setpointhex);
 	BOOST_REQUIRE_EQUAL(t.Read(), "C0 04 " + setpointhex); // OPERATE
 	t.RespondToMaster("C0 81 00 00 " + setpointhex);
 
 	BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //nore more packets
-	
+
 	CommandResponse cr;
 	BOOST_REQUIRE(mRspQueue.WaitForResponse(cr, 7, 0));
 	BOOST_REQUIRE_EQUAL(cr.mResult, CS_SUCCESS);
@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 
 	BOOST_AUTO_TEST_CASE(InitialState)
 	{
-		MasterConfig master_cfg;			
+		MasterConfig master_cfg;
 		MasterTestObject t(master_cfg);
 
 		APDU f;
@@ -121,16 +121,16 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 
 	BOOST_AUTO_TEST_CASE(IntegrityOnStartup)
 	{
-		MasterConfig master_cfg;			
+		MasterConfig master_cfg;
 		MasterTestObject t(master_cfg);
 		t.master.OnLowerLayerUp();
-		
+
 		TestForIntegrityPoll(t);
 		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0);
 	}
-	
+
 	BOOST_AUTO_TEST_CASE(StateTransitionSuccessFailure)
-	{	
+	{
 		QueueingMasterObserver obs;
 		MasterConfig cfg; cfg.IntegrityRate = 1000;
 		cfg.mpObserver = &obs;
@@ -140,16 +140,16 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 		obs.mQueue.pop_front();
 		t.master.OnLowerLayerUp();
 		BOOST_REQUIRE_EQUAL(obs.mQueue.size(), 0);
-		
+
 		TestForIntegrityPoll(t);
 		BOOST_REQUIRE_EQUAL(obs.mQueue.size(), 1);
 		BOOST_REQUIRE_EQUAL(obs.mQueue.front(), MS_COMMS_UP);
 		obs.mQueue.pop_front();
 
 		t.fake_time.Advance(2000);
-		BOOST_REQUIRE(t.mts.DispatchOne());			
+		BOOST_REQUIRE(t.mts.DispatchOne());
 		TestForIntegrityPoll(t, false);
-					
+
 		BOOST_REQUIRE_EQUAL(obs.mQueue.size(), 1);
 		BOOST_REQUIRE_EQUAL(obs.mQueue.front(), MS_COMMS_DOWN);
 		obs.mQueue.pop_front();
@@ -157,7 +157,7 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 		t.fake_time.Advance(10000);
 		BOOST_REQUIRE(t.mts.DispatchOne());
 		TestForIntegrityPoll(t);
-					
+
 		BOOST_REQUIRE_EQUAL(obs.mQueue.size(), 1);
 		BOOST_REQUIRE_EQUAL(obs.mQueue.front(), MS_COMMS_UP);
 		obs.mQueue.pop_front();
@@ -184,7 +184,7 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 		t.RespondToMaster(rsp);
 
 		TestForIntegrityPoll(t);
-		
+
 		// enable unsol
 		BOOST_REQUIRE_EQUAL("C0 14 3C 02 06 3C 03 06 3C 04 06", t.Read());
 		t.RespondToMaster(rsp);
@@ -211,12 +211,12 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 		BOOST_REQUIRE_EQUAL("C0 17", t.Read()); ; //Delay measure
 		t.fake_time.Advance(100); //advance time by 100ms so that the master sees 100ms for a response
 		t.RespondToMaster("C0 81 10 00 34 02 07 01 0A 00"); // still need time, 52 Var 2, delay == 10ms
-		
+
 		// Write group 50 var 1
 		// 200-100-10/2 = 45 => 45 + 200 - 0xF5
 		BOOST_REQUIRE_EQUAL("C0 02 32 01 07 01 F5 00 00 00 00 00", t.Read());
 		t.RespondToMaster("C0 81 00 00"); // time bit is now clear
-		
+
 		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); // no more packets
 	}
 
@@ -325,7 +325,7 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 		// 400 > 200, so delay is 0 + 200
 		BOOST_REQUIRE_EQUAL("C0 02 32 01 07 01 C8 00 00 00 00 00", t.Read());
 		t.RespondToMaster("C0 81 00 00"); // time bit is now clear
-		
+
 		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); // no more packets
 	}
 
@@ -333,7 +333,7 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 	{
 		MasterConfig master_cfg;
 		MasterTestObject t(master_cfg);
-		
+
 		ICommandAcceptor* pAcceptor = t.master.GetCmdAcceptor();
 
 		BinaryOutput bo(CC_PULSE);
@@ -368,7 +368,7 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 		t.RespondToMaster("C0 81 00 00 " + crob);
 
 		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //nore more packets
-		
+
 		CommandResponse cr;
 		BOOST_REQUIRE(mRspQueue.WaitForResponse(cr, 7, 0));
 		BOOST_REQUIRE_EQUAL(cr.mResult, CS_SUCCESS);
@@ -428,7 +428,7 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 		CommandResponseQueue rspQueue;
 
 		DoControlSelect(t, rspQueue);
-		t.RespondToMaster("80 81 00 00 0C 01 17 01 01 01 01 64 00 00 00 64 00 00 00 00", false); 
+		t.RespondToMaster("80 81 00 00 0C 01 17 01 01 01 01 64 00 00 00 64 00 00 00 00", false);
 
 		CommandResponse cr;
 		BOOST_REQUIRE_FALSE(rspQueue.WaitForResponse(cr, 7, 0));
@@ -479,7 +479,7 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 
 		// check that a read request was made on startup
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06"); ;
-		
+
 		//issue a command while the master is waiting for a response from the slave
 		BinaryOutput bo(CC_PULSE); bo.mStatus = CS_SUCCESS;
 		CommandResponseQueue mRspQueue;
@@ -487,50 +487,50 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 		BOOST_REQUIRE(t.mts.DispatchOne());
 		CommandResponse cr;
 		BOOST_REQUIRE_FALSE(mRspQueue.WaitForResponse(cr, 7, 0));
-	
+
 		t.RespondToMaster("C0 81 00 00"); //now master gets response to integrity
-		
+
 
 		std::string crob = "0C 01 17 01 01 01 01 64 00 00 00 64 00 00 00 00";
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 03 " + crob); //select
 	}
 
 	BOOST_AUTO_TEST_CASE(SingleSetpointExecution)// Group 41 Var4
-	{		
+	{
 		// 100.0
 		TestSetpointExecution("29 03 17 01 01 00 00 C8 42 00", 100.0);
 
-		// 95.6			
+		// 95.6
 		TestSetpointExecution("29 03 17 01 01 33 33 BF 42 00", 95.6);
 	}
 
 	BOOST_AUTO_TEST_CASE(DoubleSetpointExecution)
-	{			
+	{
 		TestSetpointExecution("29 04 17 01 01 00 00 00 E7 FF FF 58 48 00", SingleFloat::Max*100.0);
 	}
 
 	BOOST_AUTO_TEST_CASE(Int32SetpointExecution)
 	{
 		// Group 41 Var1, Int32, 65536
-		TestSetpointExecution("29 01 17 01 01 00 00 01 00 00", 65536);			
+		TestSetpointExecution("29 01 17 01 01 00 00 01 00 00", 65536);
 	}
 
 	BOOST_AUTO_TEST_CASE(Int16SetpointExecution)
 	{
 		// Group 41 Var2, Int16, 100
-		TestSetpointExecution("29 02 17 01 01 64 00 00", 100);			
+		TestSetpointExecution("29 02 17 01 01 64 00 00", 100);
 	}
 
 	BOOST_AUTO_TEST_CASE(SolicitedResponseWithData)
 	{
 		MasterConfig master_cfg;
-		MasterTestObject t(master_cfg);			
+		MasterTestObject t(master_cfg);
 		t.master.OnLowerLayerUp();
 
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06"); ;
 		t.RespondToMaster("C0 81 00 00 01 02 00 02 02 81"); //group 2 var 1, index = 2, 0x81 = Online, true
 
-		BOOST_REQUIRE(t.fdo.Check(true, BQ_ONLINE, 2, TimeStamp_t(0)));		
+		BOOST_REQUIRE(t.fdo.Check(true, BQ_ONLINE, 2, TimeStamp_t(0)));
 	}
 
 	BOOST_AUTO_TEST_CASE(SolicitedResponseFailure)
@@ -544,7 +544,7 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 		t.master.OnSolFailure();
 		t.fake_time.Advance(master_cfg.TaskRetryRate);
 		BOOST_REQUIRE(t.mts.DispatchOne());
-		BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06"); ;	
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06"); ;
 	}
 
 	BOOST_AUTO_TEST_CASE(SolicitedResponseLayerDown)
@@ -557,13 +557,13 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06"); ;
 		t.master.OnLowerLayerDown();
 		t.master.OnLowerLayerUp();
-		BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06"); ;	
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06"); ;
 	}
 
 	BOOST_AUTO_TEST_CASE(SolicitedMultiFragResponse)
 	{
 		MasterConfig master_cfg;
-		MasterTestObject t(master_cfg);			
+		MasterTestObject t(master_cfg);
 		t.master.OnLowerLayerUp();
 
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06");
@@ -572,7 +572,7 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 		BOOST_REQUIRE(t.fdo.Check(true, BQ_ONLINE, 2, TimeStamp_t(0)));
 
 		t.RespondToMaster("C0 81 00 00 01 02 00 03 03 02");
-		BOOST_REQUIRE(t.fdo.Check(false, BQ_RESTART, 3, TimeStamp_t(0)));			
+		BOOST_REQUIRE(t.fdo.Check(false, BQ_RESTART, 3, TimeStamp_t(0)));
 	}
 
 	BOOST_AUTO_TEST_CASE(EventPoll)
@@ -584,7 +584,7 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 		master_cfg.mScans.push_back(scan);
 		scan.ClassMask = PC_CLASS_3;
 		master_cfg.mScans.push_back(scan);
-		MasterTestObject t(master_cfg);			
+		MasterTestObject t(master_cfg);
 		t.master.OnLowerLayerUp();
 
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06");
@@ -596,7 +596,7 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 04 06");
 		t.RespondToMaster("C0 81 00 00 01 02 00 02 02 81"); //group 2 var 1, index = 2, 0x81 = Online, true
 
-		BOOST_REQUIRE(t.fdo.Check(true, BQ_ONLINE, 2, TimeStamp_t(0)));		
+		BOOST_REQUIRE(t.fdo.Check(true, BQ_ONLINE, 2, TimeStamp_t(0)));
 	}
 
 	BOOST_AUTO_TEST_CASE(WriteSingleVtoByte)
@@ -609,7 +609,7 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 
 		/* Check that the master sends no more packets */
 		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0);
-					
+
 		/*
 		 * Make sure that there are no events ready to be run in the reactor.
 		 */
@@ -620,12 +620,12 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 		 * event.
 		 */
 		boost::uint8_t data[2] = {0xAB, 0xBC};
-		t.master.GetVtoWriter()->Write(data, 2, 0xFF);			
+		t.master.GetVtoWriter()->Write(data, 2, 0xFF);
 		BOOST_REQUIRE(t.mts.DispatchOne());
 
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 02 70 02 17 01 FF AB BC");
 		t.RespondToMaster("C0 81 00 00");
-		
+
 		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0);  // no more data to transmit
 		BOOST_REQUIRE_FALSE(t.mts.DispatchOne()); // no more actions to dispatch
 	}
@@ -640,16 +640,16 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 
 		/* Check that the master sends no more packets */
 		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0);
-					
+
 		/*
 		 * Make sure that there are no events ready to be run in the reactor.
 		 */
 		BOOST_REQUIRE_FALSE(t.mts.DispatchOne());
-		
+
 		// 3 bytes for channel 0xFF
 		t.SendUnsolToMaster("C0 82 00 00 71 03 17 01 FF AB BC CD");
-		
-		BOOST_CHECK_EQUAL(MERR_VTO_FOR_UNEXPECTED_CHANNEL, t.NextErrorCode());		
+
+		BOOST_CHECK_EQUAL(MERR_VTO_FOR_UNEXPECTED_CHANNEL, t.NextErrorCode());
 	}
 
 BOOST_AUTO_TEST_SUITE_END() //end suite

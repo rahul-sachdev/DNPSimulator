@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "PhysicalLayerAsyncBase.h"
 
 #include "IHandlerAsync.h"
@@ -33,7 +33,7 @@ namespace apl {
 // State object
 ////////////////////////////////////////////////////
 
-PhysicalLayerAsyncBase::State::State() :  
+PhysicalLayerAsyncBase::State::State() :
 mOpen(false),
 mOpening(false),
 mReading(false),
@@ -79,7 +79,7 @@ std::string PhysicalLayerAsyncBase::State::ToString()
 // PhysicalLayerAsyncBase
 ////////////////////////////////////////////////////
 
-PhysicalLayerAsyncBase::PhysicalLayerAsyncBase(Logger* apLogger) : 
+PhysicalLayerAsyncBase::PhysicalLayerAsyncBase(Logger* apLogger) :
 Loggable(apLogger),
 mpHandler(NULL)
 {
@@ -113,7 +113,7 @@ void PhysicalLayerAsyncBase::StartClose()
 {
 	if(mState.CanClose()) {
 		mState.mClosing = true;
-		
+
 		if(mState.mOpening) this->DoOpeningClose();
 		else this->DoClose();
 	}
@@ -179,7 +179,7 @@ void PhysicalLayerAsyncBase::OnReadCallback(const boost::system::error_code& arE
 			if(mState.mClosing) {
 				LOG_BLOCK(LEV_WARNING, "Ignoring received bytes since layer is closing: " << aSize);
 			}
-			else { 
+			else {
 				this->DoReadCallback(apBuff, aSize);
 			}
 		}
@@ -202,11 +202,11 @@ void PhysicalLayerAsyncBase::OnWriteCallback(const boost::system::error_code& ar
 			if(mState.mClosing) {
 				LOG_BLOCK(LEV_WARNING, "Ignoring written bytes since layer is closing: " << aNumBytes);
 			}
-			else { 
+			else {
 				this->DoWriteSuccess();
 			}
 		}
-		
+
 		if(mState.CheckForClose()) this->DoThisLayerDown();
 	}
 	else throw InvalidStateException(LOCATION, "OnWriteCallback: " + mState.ToString());

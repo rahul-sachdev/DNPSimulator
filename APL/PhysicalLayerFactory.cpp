@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 
 #include "PhysicalLayerFactory.h"
 
@@ -39,22 +39,22 @@ namespace apl {
 	{
 		return boost::bind(&PhysicalLayerFactory::FGetTCPClientAsync, aAddress, aPort, _2, _1);
 	}
-	
+
 	IPhysicalLayerAsyncFactory PhysicalLayerFactory :: GetTCPServerAsync(std::string aEndpoint, boost::uint16_t aPort)
 	{
 		return boost::bind(&PhysicalLayerFactory::FGetTCPServerAsync, aEndpoint, aPort, _2, _1);
 	}
-	
+
 	IPhysicalLayerAsync* PhysicalLayerFactory :: FGetSerialAsync(SerialSettings s, boost::asio::io_service* apSrv, Logger* apLogger)
 	{
 		return new PhysicalLayerAsyncSerial(apLogger, apSrv, s);
 	}
-	
+
 	IPhysicalLayerAsync* PhysicalLayerFactory :: FGetTCPClientAsync(std::string aAddress, boost::uint16_t aPort, boost::asio::io_service* apSrv, Logger* apLogger)
 	{
 		return new PhysicalLayerAsyncTCPClient(apLogger, apSrv, aAddress, aPort);
 	}
-	
+
 	IPhysicalLayerAsync* PhysicalLayerFactory :: FGetTCPServerAsync(std::string aEndpoint, boost::uint16_t aPort, boost::asio::io_service* apSrv, Logger* apLogger)
 	{
 		return new PhysicalLayerAsyncTCPServer(apLogger, apSrv, aEndpoint, aPort);

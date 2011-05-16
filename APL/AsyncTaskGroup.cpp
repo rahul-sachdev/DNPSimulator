@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "AsyncTaskGroup.h"
 
 #include "AsyncTaskBase.h"
@@ -46,7 +46,7 @@ mpTimer(NULL)
 AsyncTaskGroup::~AsyncTaskGroup()
 {
 
-	if(mpTimer) { 
+	if(mpTimer) {
 		mpTimer->Cancel();
 		mpTimer = NULL;
 	}
@@ -103,7 +103,7 @@ void AsyncTaskGroup::Enable(int aMask)
 
 void AsyncTaskGroup::Disable(int aMask)
 {
-	BOOST_FOREACH(AsyncTaskBase* p, mTaskVec) 
+	BOOST_FOREACH(AsyncTaskBase* p, mTaskVec)
 	{
 		if((p->GetFlags() & aMask) != 0) p->SilentDisable();
 	}
@@ -128,10 +128,10 @@ void AsyncTaskGroup::CheckState()
 {
 	ptime now = GetUTC();
 	AsyncTaskBase* pTask = GetNext(now);
-		
+
 	if(pTask == NULL) return;
 	if(pTask->NextRunTime() == max_date_time) return;
-	
+
 	if(pTask->NextRunTime() <= now)
 	{
 		mIsRunning = true;
@@ -140,7 +140,7 @@ void AsyncTaskGroup::CheckState()
 	else
 	{
 		this->RestartTimer(pTask->NextRunTime());
-	}	
+	}
 }
 
 void AsyncTaskGroup::OnCompletion()

@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 
 
 #ifdef max
@@ -27,7 +27,7 @@
 namespace apl{
 
 	//////////////////////////////////////////////////////////////////////
-	//	StopWatch	
+	//	StopWatch
 	//////////////////////////////////////////////////////////////////////
 
 	apl::millis_t StopWatch :: Elapsed(bool aReset){
@@ -41,7 +41,7 @@ namespace apl{
 	}
 
 	//////////////////////////////////////////////////////////////////////
-	//	TimeStamp	
+	//	TimeStamp
 	//////////////////////////////////////////////////////////////////////
 
 	//millis_t TimeStamp :: mOffset = TimeStamp::UTCUnset;
@@ -55,7 +55,7 @@ namespace apl{
 		Time dt; // need faster calls
 		return (TimeStamp_t)(dt.GetValueMS() + aInFuture);
 	}
-	
+
 	UTCTimeStamp_t TimeStamp :: GetUTCTimeStamp(const millis_t aInFuture){
 		Time dt; // need faster calls
 		return (UTCTimeStamp_t) (dt.GetValueMS() + aInFuture);

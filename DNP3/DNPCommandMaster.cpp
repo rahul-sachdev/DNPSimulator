@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "DNPCommandMaster.h"
 
 #include <APL/Configure.h>
@@ -40,12 +40,12 @@ namespace apl { namespace dnp {
 	mpRspAcceptor(NULL),
 	mCommandMode(aMode)
 	{
-		
+
 	}
 
 	void DNPCommandMaster::Configure(const DeviceTemplate& arTmp, ICommandAcceptor* apAcceptor)
 	{
-		for(size_t j=0; j<arTmp.mControls.size(); ++j) 
+		for(size_t j=0; j<arTmp.mControls.size(); ++j)
 		{ this->BindCommand(CT_BINARY_OUTPUT, j, j, arTmp.mControls[j].CommandMode, arTmp.mControls[j].SelectTimeoutMS, apAcceptor); }
 
 		for(size_t j=0; j<arTmp.mSetpoints.size(); ++j)
@@ -62,8 +62,8 @@ namespace apl { namespace dnp {
 		{
 			i->second.mIsSelected = false;
 		}
-	}	
-	
+	}
+
 	void DNPCommandMaster::SetResponseObserver(IResponseAcceptor* apAcceptor)
 	{
 		assert(mpRspAcceptor == NULL);
@@ -84,7 +84,7 @@ namespace apl { namespace dnp {
 	void DNPCommandMaster::BindCommand(CommandTypes aType, size_t aLocalIndex, size_t aRemoteIndex, CommandModes aMode, millis_t aSelectTimeoutMS, ICommandAcceptor* apAcceptor)
 	{
 		assert(apAcceptor != NULL);
-		
+
 		if ( aType == CT_BINARY_OUTPUT )
 			BindCommand<BinaryOutput>(mControlMap, aType, aLocalIndex, aRemoteIndex, aMode, aSelectTimeoutMS, apAcceptor);
 		else if ( aType == CT_SETPOINT )
@@ -92,5 +92,5 @@ namespace apl { namespace dnp {
 		else
 			throw Exception(LOCATION, "Command type invalid");
 	}
-	
+
 }}

@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "Database.h"
 
 #include <assert.h>
@@ -33,7 +33,7 @@ namespace apl { namespace dnp {
 	Loggable(apLogger),
 	mpEventBuffer(NULL)
 	{
-	
+
 	}
 
 	Database::~Database(){}
@@ -75,7 +75,7 @@ namespace apl { namespace dnp {
 				this->AssignIndices(mSetpointStatusVec);
 				if ( aStartOnline )
 					this->SetAllOnline(mSetpointStatusVec);
-				break;			
+				break;
 		}
 	}
 
@@ -93,7 +93,7 @@ namespace apl { namespace dnp {
 		this->Configure(DT_COUNTER, numCounter, arTmp.mStartOnline);
 		this->Configure(DT_CONTROL_STATUS, numControlStatus, arTmp.mStartOnline);
 		this->Configure(DT_SETPOINT_STATUS, numSetpointStatus, arTmp.mStartOnline);
-		
+
 		for(size_t i=0; i<arTmp.mBinary.size(); ++i)
 		{ this->SetClass(DT_BINARY, i, arTmp.mBinary[i].EventClass); }
 
@@ -101,14 +101,14 @@ namespace apl { namespace dnp {
 		{ this->SetClass(DT_COUNTER, i, arTmp.mCounter[i].EventClass); }
 
 		for(size_t i=0; i<arTmp.mAnalog.size(); ++i)
-		{ 
-			this->SetClass(DT_ANALOG, i, arTmp.mAnalog[i].EventClass); 
+		{
+			this->SetClass(DT_ANALOG, i, arTmp.mAnalog[i].EventClass);
 			this->SetDeadband(DT_ANALOG, i, arTmp.mAnalog[i].Deadband);
 		}
-		
+
 		/*for(size_t i=0; i<arTmp.mControlStatus.size(); ++i)
 		{ this->SetClass(DT_CONTROL_STATUS, i, arTmp.mControlStatus[i].EventClass); }
-		
+
 		for(size_t i=0; i<arTmp.mSetpointStatus.size(); ++i)
 		{ this->SetClass(DT_SETPOINT_STATUS, i, arTmp.mSetpointStatus[i].EventClass); }*/
 	}
@@ -135,7 +135,7 @@ namespace apl { namespace dnp {
 			default:
 				throw ArgumentException(LOCATION, "Class cannot be assigned for this type");
 				break;
-		}	
+		}
 	}
 
 	void Database::SetClass(apl::DataTypes aType, size_t aIndex, PointClass aClass)
@@ -190,9 +190,9 @@ namespace apl { namespace dnp {
 		assert(mpEventBuffer == NULL);
 		mpEventBuffer = apEventBuffer;
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////////////
-	// IDataObserver interfae - Private NVII functions - 
+	// IDataObserver interfae - Private NVII functions -
 	//////////////////////////////////////////////////////////////////////////////
 
 	void Database::_Update(const apl::Binary& arPoint, size_t aIndex)
@@ -215,7 +215,7 @@ namespace apl { namespace dnp {
 			if(mpEventBuffer) mpEventBuffer->Update(v.mValue, v.mClass, aIndex);
 		}
 	}
-	
+
 	void Database::_Update(const apl::Counter& arPoint, size_t aIndex)
 	{
 		if(UpdateValue<apl::Counter>(mCounterVec, arPoint, aIndex))
@@ -229,12 +229,12 @@ namespace apl { namespace dnp {
 
 	void Database::_Update(const apl::ControlStatus& arPoint, size_t aIndex)
 	{
-		UpdateValue<apl::ControlStatus>(mControlStatusVec, arPoint, aIndex); 
+		UpdateValue<apl::ControlStatus>(mControlStatusVec, arPoint, aIndex);
 	}
 
 	void Database::_Update(const apl::SetpointStatus& arPoint, size_t aIndex)
 	{
-		UpdateValue<apl::SetpointStatus>(mSetpointStatusVec, arPoint, aIndex); 
+		UpdateValue<apl::SetpointStatus>(mSetpointStatusVec, arPoint, aIndex);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -261,7 +261,7 @@ namespace apl { namespace dnp {
 			case(DT_CONTROL_STATUS):
 				return mControlStatusVec.size();
 			case(DT_SETPOINT_STATUS):
-				return mSetpointStatusVec.size();			
+				return mSetpointStatusVec.size();
 		}
 
 		return 0;

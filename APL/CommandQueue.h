@@ -60,12 +60,12 @@ namespace apl
 
 			/** Synchronously executes a command, expecting an immediate response from a handler
 			*	@return true if there was a command to execute
-			*/	
+			*/
 			bool ExecuteCommand(ICommandHandler* apHandler);
 
 			/** Immediately respond to a command
 			*	@return true if there was a command to respond
-			*/	
+			*/
 			bool RespondToCommand(CommandStatus aStatus);
 
 		protected:

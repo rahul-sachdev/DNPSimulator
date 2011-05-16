@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 
 #include "IntegrationTest.h"
 
@@ -60,7 +60,7 @@ void IntegrationTest::Next() { AsyncTestObject::Next(this->mService.Get(), 10); 
 bool IntegrationTest::SameData()
 {
 	if(!mChange) return false;
-	
+
 	mChange = false;
 
 	BOOST_FOREACH(FlexibleDataObserver* pObs, mMasterObservers)
@@ -73,14 +73,14 @@ bool IntegrationTest::SameData()
 
 Binary IntegrationTest::RandomBinary()
 {
-    boost::uniform_int<> num(0,1);      
+    boost::uniform_int<> num(0,1);
 	boost::variate_generator<boost::mt19937&, boost::uniform_int<> > val(rng, num);
 	Binary v(val() ? true : false, BQ_ONLINE);
 	return v;
 }
 
 Analog IntegrationTest::RandomAnalog()
-{           
+{
     boost::uniform_int<boost::int32_t> num;
 	boost::variate_generator<boost::mt19937&, boost::uniform_int<boost::int32_t> > val(rng, num);
 	Analog v(val(), AQ_ONLINE);
@@ -88,7 +88,7 @@ Analog IntegrationTest::RandomAnalog()
 }
 
 Counter IntegrationTest::RandomCounter()
-{              
+{
     boost::uniform_int<boost::uint32_t> num;
 	boost::variate_generator<boost::mt19937&, boost::uniform_int<boost::uint32_t> > val(rng, num);
 	Counter v(val(), CQ_ONLINE);
@@ -98,10 +98,10 @@ Counter IntegrationTest::RandomCounter()
 void IntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 {
 	boost::uint16_t port = M_START_PORT + this->mMasterObservers.size();
-	
+
 	FlexibleDataObserver* pMasterFDO = new FlexibleDataObserver(); mMasterObservers.push_back(pMasterFDO);
 	pMasterFDO->AddObserver(&mNotifier);
-	
+
 	ostringstream oss;
 	oss << "Port: " << port;
 	std::string client = oss.str() + " Client ";
@@ -131,7 +131,7 @@ void IntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 	this->mFanout.Add(pObs);
 	}
 
-	
+
 }
 
 

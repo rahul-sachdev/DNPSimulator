@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
@@ -51,7 +51,7 @@ using namespace apl::dnp;
 			{ pObj->Write(data, start, i, false); }
 			for(size_t i=0; i<T; i++) BOOST_REQUIRE_EQUAL(data[i], 0);
 
-			
+
 
 			for(size_t i=start; i <= stop; i++)
 			{
@@ -61,7 +61,7 @@ using namespace apl::dnp;
 				BOOST_REQUIRE_EQUAL(*pPos, 1 << bit);
 				pObj->Write(data, start, i, false);
 				BOOST_REQUIRE_EQUAL(*pPos, 0);
-				
+
 			}
 
 			return true;
@@ -73,6 +73,6 @@ using namespace apl::dnp;
 			TestRange<1>(1);
 			TestRange<2>(0);
 			TestRange<2>(3);
-			TestRange<4>(1234);		
+			TestRange<4>(1234);
 		}
 	BOOST_AUTO_TEST_SUITE_END()

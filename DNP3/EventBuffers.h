@@ -54,14 +54,14 @@ namespace apl { namespace dnp {
 		TimeOrderedEventBuffer(size_t aMaxEvents);
 	};
 
-	/** Event buffer that stores all changes to all points in the order. */	
+	/** Event buffer that stores all changes to all points in the order. */
 	template <class EventType>
 	class InsertionOrderedEventBuffer : public EventBufferBase<EventType, InsertionOrderSet< EventType > >
 	{
 	public:
 
 		InsertionOrderedEventBuffer(size_t aMaxEvents);
-	};	
+	};
 
 	template <class EventType>
 	SingleEventBuffer<EventType> :: SingleEventBuffer(size_t aMaxEvents) :
@@ -72,12 +72,12 @@ namespace apl { namespace dnp {
 	TimeOrderedEventBuffer<EventType> :: TimeOrderedEventBuffer(size_t aMaxEvents) :
 	EventBufferBase <EventType, TimeMultiSet< EventType > >(aMaxEvents)
 	{}
-	
+
 	template <class EventType>
 	InsertionOrderedEventBuffer<EventType> :: InsertionOrderedEventBuffer(size_t aMaxEvents) :
 	EventBufferBase<EventType, InsertionOrderSet< EventType > >(aMaxEvents)
 	{}
-	
+
 	template <class EventType>
 	void SingleEventBuffer<EventType> :: _Update(const EventType& arEvent)
 	{

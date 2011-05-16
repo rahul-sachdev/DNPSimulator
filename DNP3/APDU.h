@@ -59,7 +59,7 @@ namespace apl { namespace dnp {
 
 			/**
 				Parse and validate the entire currently-set buffer.
-				
+
 				@throw Exception		if malformed data is encountered
 			 */
 			void Interpret();
@@ -67,28 +67,28 @@ namespace apl { namespace dnp {
 			/**
 				Parse and validate the only the header components of the
 				currently-set buffer.
-				
+
 				@throw Exception		if malformed data is encountered
 			 */
 			void InterpretHeader();
 
 			/**
 				Returns the current fragment size.
-				
+
 				@return		the current fragment size
 			 */
 			size_t Size() const { return mFragmentSize; }
 
 			/**
 				Returns a byte pointer to the current buffer.
-				
+
 				@return		a pointer to the current byte buffer
 			 */
 			const boost::uint8_t* GetBuffer() const { return mBuffer; }
 
 			/**
 				Returns the maximum possible size of the fragment (in bytes).
-				
+
 				@return		the maximum possible size of the fragment
 			 */
 			size_t MaxSize() { return mBuffer.Size(); }

@@ -20,7 +20,7 @@
 #define __QUALITY_MASKS_H_
 
 namespace apl {
-	
+
 	/**
 		Bitmasks that make make up the quality field for binaries. The first 5 field are common across all of the data types.
 	 */
@@ -80,7 +80,7 @@ namespace apl {
 		TQ_RESERVED_2 = 0x40,
 		TQ_STATE = 0x80
 	};
-	
+
 	/**
 		Bitmasks that make make up the quality field for setpoint statuses. See BinaryQuality for common (unlabeled) bitmasks.
 	 */

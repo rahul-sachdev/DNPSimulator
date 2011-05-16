@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "LinkLayer.h"
 
 
@@ -51,13 +51,13 @@ mpSecState(SLLS_NotReset::Inst())
 void LinkLayer::SetRouter(ILinkRouter* apRouter)
 {
 	assert(mpRouter == NULL); assert(apRouter != NULL);
-	mpRouter = apRouter;	
+	mpRouter = apRouter;
 }
 
-void LinkLayer::ChangeState(PriStateBase* apState) 
+void LinkLayer::ChangeState(PriStateBase* apState)
 { mpPriState = apState; }
 
-void LinkLayer::ChangeState(SecStateBase* apState) 
+void LinkLayer::ChangeState(SecStateBase* apState)
 { mpSecState = apState; }
 
 bool LinkLayer::Validate(bool aIsMaster, boost::uint16_t aSrc, boost::uint16_t aDest)
@@ -66,7 +66,7 @@ bool LinkLayer::Validate(bool aIsMaster, boost::uint16_t aSrc, boost::uint16_t a
 		throw InvalidStateException(LOCATION, "LowerLayerDown");
 
 	if(aIsMaster == mCONFIG.IsMaster) {
-		ERROR_BLOCK(LEV_WARNING, 
+		ERROR_BLOCK(LEV_WARNING,
 		(aIsMaster ? "Master frame received for master" : "Slave frame received for slave"),
 		DLERR_MASTER_BIT_MATCH);
 		return false;
@@ -103,10 +103,10 @@ void LinkLayer::OnLowerLayerDown()
 		throw InvalidStateException(LOCATION, "LowerLayerDown");
 
 	if(mpTimer != NULL) this->CancelTimer();
-	mIsOnline = false;	
+	mIsOnline = false;
 	mpPriState = PLLS_SecNotReset::Inst();
-	mpSecState = SLLS_NotReset::Inst();	
-	
+	mpSecState = SLLS_NotReset::Inst();
+
 	if(mpUpperLayer) mpUpperLayer->OnLowerLayerDown();
 }
 
@@ -178,13 +178,13 @@ bool LinkLayer::Retry()
 ////////////////////////////////////////////////
 
 void LinkLayer::Ack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
-{ 
-	if(this->Validate(aIsMaster, aSrc, aDest)) 
+{
+	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpPriState->Ack(this, aIsRcvBuffFull);
 }
 
 void LinkLayer::Nack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
-{ 
+{
 	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpPriState->Nack(this, aIsRcvBuffFull);
 }
@@ -192,7 +192,7 @@ void LinkLayer::Nack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest,
 void LinkLayer::LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	if(this->Validate(aIsMaster, aSrc, aDest))
-		mpPriState->LinkStatus(this, aIsRcvBuffFull); 
+		mpPriState->LinkStatus(this, aIsRcvBuffFull);
 }
 
 void LinkLayer::NotSupported (bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
@@ -208,14 +208,14 @@ void LinkLayer::TestLinkStatus(bool aIsMaster, bool aFcb, boost::uint16_t aDest,
 }
 
 void LinkLayer::ResetLinkStates(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc)
-{ 
+{
 	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpSecState->ResetLinkStates(this);
 }
 
 void LinkLayer::RequestLinkStatus(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
-	if(this->Validate(aIsMaster, aSrc, aDest)) 
+	if(this->Validate(aIsMaster, aSrc, aDest))
 		mpSecState->RequestLinkStatus(this);
 }
 
@@ -240,7 +240,7 @@ void LinkLayer::_Send(const boost::uint8_t* apData, size_t aDataLength)
 	if(!mIsOnline)
 		throw InvalidStateException(LOCATION, "LowerLayerDown");
 	if(mCONFIG.UseConfirms) mpPriState->SendConfirmed(this, apData, aDataLength);
-	else mpPriState->SendUnconfirmed(this, apData, aDataLength); 
+	else mpPriState->SendUnconfirmed(this, apData, aDataLength);
 }
 
 void LinkLayer::OnTimeout()

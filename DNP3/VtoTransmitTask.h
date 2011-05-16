@@ -62,7 +62,7 @@ namespace apl {
 				 * Terminal Objects.  Data is pulled out of the
 				 * InsertionOrderedEventBuffer<VtoEvent> instance and is
 				 * placed into the APDU.
-				 *				 
+				 *
 				 * @param arAPDU	the DNP3 message container that will
 				 * 					contain the DNP3 Virtual Terminal Objects
 				 */
@@ -95,10 +95,10 @@ namespace apl {
 				 * no data loss.
 				 */
 				void OnFailure();
-				
+
 			protected:
 
-				
+
 				/**
 				 * No specific subclass behavior for a partial response.
 				 *

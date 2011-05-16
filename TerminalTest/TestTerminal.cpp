@@ -24,17 +24,17 @@ using namespace apl;
 /*
 tests that does a pretty stupid run through the Terminal UI commands to make sure
 that everything is still functioning. This is not really intended to be a full validation
-just a sanity check to make sure all the functionality has been run and an easy fast way 
+just a sanity check to make sure all the functionality has been run and an easy fast way
 to develop new functionality.
 */
 BOOST_AUTO_TEST_SUITE(UISuite)
 
 bool SendAndTest(MockPhysicalLayerAsyncTS* apLayer, std::string aCmd, std::string aSearchString)
-{	
+{
 	aCmd.append("\r\n");
 	apLayer->WriteToLayer(reinterpret_cast<const boost::uint8_t*>(aCmd.c_str()), aCmd.length());
 	apLayer->Advance();
-	return apLayer->BufferContains(aSearchString);	
+	return apLayer->BufferContains(aSearchString);
 }
 
 void TestCommandParsing(MockPhysicalLayerAsyncTS* apLayer){
@@ -53,7 +53,7 @@ void TestCommandParsing(MockPhysicalLayerAsyncTS* apLayer){
 	for(int i=0; i < 1100; ++i) tooBigBuff[i] = '0' + (i%10);
 	string tooBigString((char*)tooBigBuff, 1100);
 	//add onto the end of the string a valid command we can check the output of
-	tooBigString.append("\r\nlog print");						
+	tooBigString.append("\r\nlog print");
 }
 
 void TestHelpCommands(MockPhysicalLayerAsyncTS* apLayer){
@@ -68,7 +68,7 @@ void TestHelpCommands(MockPhysicalLayerAsyncTS* apLayer){
 
 	//check that we get a list of sub commands (log should be one)
 	BOOST_REQUIRE(SendAndTest(apLayer, "help log", "run"));
-	
+
 	//shows that atleast filter is a subcommand of set
 	BOOST_REQUIRE(SendAndTest(apLayer, "help filter", "set"));
 	//check that the help string is approriate for set filter
@@ -77,7 +77,7 @@ void TestHelpCommands(MockPhysicalLayerAsyncTS* apLayer){
 	BOOST_REQUIRE(SendAndTest(apLayer, "help logcol", "column order"));
 
 	//check that a bad subcommand generates the usage message.
-	BOOST_REQUIRE(SendAndTest(apLayer, "loggers NotARealDevice", "usage: "));	
+	BOOST_REQUIRE(SendAndTest(apLayer, "loggers NotARealDevice", "usage: "));
 }
 
 void TestPrintCommands(MockPhysicalLayerAsyncTS* apLayer, Logger* apLogger){
@@ -92,7 +92,7 @@ void TestPrintCommands(MockPhysicalLayerAsyncTS* apLayer, Logger* apLogger){
 	apLogger->Log(LEV_ERROR,LOCATION,"TestOutputOnly");
 	BOOST_REQUIRE(SendAndTest(apLayer, "log print TestDevice", "TestOutputOnly"));
 }
-		
+
 void TestSetCommands(MockPhysicalLayerAsyncTS* apLayer){
 	//test that the help string is correct
 	BOOST_REQUIRE(SendAndTest(apLayer, "logcol", "usage: "));
@@ -105,7 +105,7 @@ void TestSetCommands(MockPhysicalLayerAsyncTS* apLayer){
 
 	//test the help string
 	BOOST_REQUIRE(SendAndTest(apLayer, "filter", "usage: "));
-	
+
 	//check that a bad filter is ignored
 	BOOST_REQUIRE(SendAndTest(apLayer, "filter x", "Couldn't parse"));
 	//check that a bad filter is ignored, even if valid filters are present
@@ -130,21 +130,21 @@ void TestRunCommands(MockPhysicalLayerAsyncTS* apLayer, Logger* apLogger){
 	//put an entry into the log that we will pickup on RunLog so we see something
 	apLogger->Log(LEV_ERROR,LOCATION,"TestOutputOnRun");
 
-	//do the run command, notice I adedd a \r\n which forces a second line of input to be ready 
+	//do the run command, notice I adedd a \r\n which forces a second line of input to be ready
 	//immediateley to break the "run" cycle after a single iteration (this is necessary since the
 	//parser is expecting ">" which we don't get during a "run" command.
-	BOOST_REQUIRE(SendAndTest(apLayer, "log run\r\n", "TestOutputOnRun"));			
+	BOOST_REQUIRE(SendAndTest(apLayer, "log run\r\n", "TestOutputOnRun"));
 }
-		
+
 BOOST_AUTO_TEST_CASE(TerminalInteractions)
 {
 	//prepare the terminal on a "non-standard" port
 	EventLog log;
 	Logger* pLoggerA = log.GetLogger(LEV_INTERPRET, "Terminal");
-	
+
 	MockTimerSource mts;
 	MockPhysicalLayerAsyncTS phys(log.GetLogger(LEV_INTERPRET, "Phys"), &mts);
-		
+
 	LogTerminalExtension lte(&log);
 	Terminal trm(pLoggerA, &phys, &mts, "Test Terminal", false, false);
 	trm.AddExtension(&lte);
@@ -157,13 +157,13 @@ BOOST_AUTO_TEST_CASE(TerminalInteractions)
 
 	TestCommandParsing(&phys);
 	TestHelpCommands(&phys);
-	TestPrintCommands(&phys, logger);			
-	
+	TestPrintCommands(&phys, logger);
+
 	TestSetCommands(&phys);
 	TestRunCommands(&phys, logger);
 
 	trm.Shutdown();
 }
-		
+
 BOOST_AUTO_TEST_SUITE_END()
 

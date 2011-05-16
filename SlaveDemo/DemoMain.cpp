@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 
 #include "SlaveDemo.h"
 
@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
 	// give it a loffer with a unique name and log level
 	SlaveDemoApp app(log.GetLogger(LOG_LEVEL, "demoapp"));
 
-	// This is the main point of interaction with the stack. The AsyncStackManager object instantiates 
+	// This is the main point of interaction with the stack. The AsyncStackManager object instantiates
 	// master/slave DNP stacks, as well as their physical layers
 	AsyncStackManager mgr(log.GetLogger(LOG_LEVEL, "dnp"));
 
@@ -69,22 +69,22 @@ int main(int argc, char* argv[])
 
 	// The master config object for a slave. The default are useable, but understaning the options are important
 	SlaveStackConfig stackConfig;
-	
+
 	//override the default link addressing
 	stackConfig.link.LocalAddr = 1;
 	stackConfig.link.RemoteAddr = 100;
 
 	// The DeviceTemplate struct specifies the structure of the slave's database, as well as the index range of controls
-	// and setpoints it accepts. 
+	// and setpoints it accepts.
 	DeviceTemplate device(5, 5, 5, 5, 5, 5, 5);
 	stackConfig.device = device;
 
 	// Create a new slave on a previously declared port, with a name, log level, command acceptor, and config info
 	// This returns a thread-safe interface used for updating the slave's database.
 	IDataObserver* pDataObserver = mgr.AddSlave("tcpserver", "slave", LOG_LEVEL, app.GetCmdAcceptor(), stackConfig);
-	
+
 	// Tell the app where to write opdates
-	app.SetDataObserver(pDataObserver);	
+	app.SetDataObserver(pDataObserver);
 
 	// start the stack manager (this starts up 1 or more threads that handle the communications)
 	// will automatically stop and cleanup on destruction
@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
 	signal(SIGTERM, &Terminate);
 	signal(SIGABRT, &Terminate);
 	signal(SIGINT, &Terminate);
-	
+
 	app.Run();
 
 	SetDemo(NULL);

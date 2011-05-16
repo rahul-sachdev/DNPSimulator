@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "APDU.h"
 
 #include <APL/Exception.h>
@@ -37,17 +37,17 @@ using namespace std;
 
 namespace apl { namespace dnp {
 
-	APDU::APDU(size_t aFragSize) : 
+	APDU::APDU(size_t aFragSize) :
 	mIsInterpreted(false),
 	mpAppHeader(NULL),
 	mObjectHeaders(0),
 	mBuffer(aFragSize),
 	mFragmentSize(0)
 	{
-		
+
 	}
 
-	
+
 	bool APDU::operator==(const APDU& rhs)
 	{
 		if ( this->Size() != rhs.Size() )
@@ -75,7 +75,7 @@ namespace apl { namespace dnp {
 
 		if(mpAppHeader->GetType() != AHT_RESPONSE)
 		{ throw Exception(LOCATION, "Only response packets have IIN fields"); }
-		
+
 		return static_cast<ResponseHeader*>(mpAppHeader)->GetIIN(mBuffer);
 	}
 
@@ -112,7 +112,7 @@ namespace apl { namespace dnp {
 
 		mpAppHeader->SetControl(mBuffer, arControl);
 	}
-	
+
 	void APDU::SetIIN(const IINField& arIIN)
 	{
 		assert(mpAppHeader != NULL);
@@ -132,7 +132,7 @@ namespace apl { namespace dnp {
 	}
 
 	void APDU::Write(const boost::uint8_t* apData, size_t aLength)
-	{	
+	{
 		if(aLength > mBuffer.Size()) {
 			ostringstream oss;
 			oss << "Size " << aLength << " exceeds max fragment size of " << mBuffer.Size();
@@ -152,7 +152,7 @@ namespace apl { namespace dnp {
 
 		size_t consumed = mpAppHeader->GetSize();
 		size_t remainder = mFragmentSize - consumed;
-		
+
 		while(remainder > 0)
 		{
 			size_t header_size = this->ReadObjectHeader(consumed, remainder);
@@ -179,7 +179,7 @@ namespace apl { namespace dnp {
 		IAppHeader* pHeader = RequestHeader::Inst();
 		FunctionCodes function = pHeader->GetFunction(mBuffer);
 		AppControlField control = pHeader->GetControl(mBuffer);
-		
+
 		if( IsResponse(function) )
 		{
 			if(mFragmentSize < 4)
@@ -193,32 +193,32 @@ namespace apl { namespace dnp {
 
 	size_t APDU::ReadObjectHeader(size_t aOffset, size_t aRemainder)
 	{
-		
+
 		const boost::uint8_t* pStart = mBuffer.Buffer() + aOffset;
 		IObjectHeader* pHdr = AllObjectsHeader::Inst(); //Start by interpreting using the smallest possible header
 		ObjectHeaderField hdrData;
-		
+
 		if(aRemainder < pHdr->GetSize())
 		{ throw apl::Exception(LOCATION, GetSizeString(aRemainder),ALERR_INSUFFICIENT_DATA_FOR_HEADER); }
 
 		//Read the header data and select the correct object header based on this information
 		pHdr->Get(pStart, hdrData);
-		
+
 		if(hdrData.Qualifier == QC_UNDEFINED)
 		{ throw Exception(LOCATION, "Unknown qualifier", ALERR_UNKNOWN_QUALIFIER); }
 
 		pHdr = this->GetObjectHeader(hdrData.Qualifier);
-		
+
 		//lookup the object type
 		ObjectBase* pObj = ObjectBase::Get(hdrData.Group, hdrData.Variation);
 
 		if(pObj == NULL)
-		{ 
+		{
 			ostringstream oss;
 			oss << "Undefined object, " << "Group: " << static_cast<int>(hdrData.Group) << " Var: " << static_cast<int>(hdrData.Variation);
-			throw ObjectException(LOCATION, oss.str()); 
+			throw ObjectException(LOCATION, oss.str());
 		}
-		
+
 		if(aRemainder < pHdr->GetSize())
 		{ throw apl::Exception(LOCATION, GetSizeString(aRemainder), ALERR_INSUFFICIENT_DATA_FOR_HEADER); }
 
@@ -227,9 +227,9 @@ namespace apl { namespace dnp {
 		//figure out what the size of the prefixes are in bytes and how many objects there are.
 		size_t prefixSize = this->GetPrefixSizeAndValidate(hdrData.Qualifier, pObj->GetType());
 		size_t objCount = this->GetNumObjects(pHdr, pStart);
-		
+
 		//pStart += pHdr->GetSize(); //move the reading position to the first object
-		
+
 		size_t data_size = 0;
 
 		//Some function codes, aka read implicitly do not carry data, only indices
@@ -254,10 +254,10 @@ namespace apl { namespace dnp {
 			default:
 				throw Exception(LOCATION, "Unknown object type");
 		}
-		
+
 		if(data_size > aRemainder)
-		{ 
-			throw Exception(LOCATION, "", ALERR_INSUFFICIENT_DATA_FOR_OBJECTS); 
+		{
+			throw Exception(LOCATION, "", ALERR_INSUFFICIENT_DATA_FOR_OBJECTS);
 		}
 
 		mObjectHeaders.push_back(HeaderInfo(hdrData, objCount, prefixSize, pHdr, pObj, aOffset));
@@ -290,7 +290,7 @@ namespace apl { namespace dnp {
 			case(QC_4B_CNT_4B_INDEX):
 				return Count4OctetHeader::Inst();
 			default:
-				throw Exception(LOCATION, "Unknown range specifier");				
+				throw Exception(LOCATION, "Unknown range specifier");
 		}
 	}
 
@@ -322,7 +322,7 @@ namespace apl { namespace dnp {
 
 	size_t APDU::GetPrefixSizeAndValidate(QualifierCode aCode, ObjectTypes aType)
 	{
-		
+
 		switch(MACRO_QUAL_OBJ_RADIX(aCode, aType))
 		{
 			//allowed cases with no prefix
@@ -348,7 +348,7 @@ namespace apl { namespace dnp {
 			case(MACRO_QUAL_OBJ_RADIX(QC_2B_CNT, OT_PLACEHOLDER)):
 			case(MACRO_QUAL_OBJ_RADIX(QC_4B_CNT, OT_PLACEHOLDER)):
 				return 0;
-			
+
 			//Objects prefixed with an index can only be OT_STATIC or OT_VARIABLE
 			case(MACRO_QUAL_OBJ_RADIX(QC_1B_CNT_1B_INDEX, OT_FIXED)):	return 1;
 			case(MACRO_QUAL_OBJ_RADIX(QC_2B_CNT_2B_INDEX, OT_FIXED)):	return 2;
@@ -356,17 +356,17 @@ namespace apl { namespace dnp {
 			case(MACRO_QUAL_OBJ_RADIX(QC_1B_CNT_1B_INDEX, OT_SIZE_BY_VARIATION)):	return 1;
 			case(MACRO_QUAL_OBJ_RADIX(QC_2B_CNT_2B_INDEX, OT_SIZE_BY_VARIATION)):	return 2;
 			case(MACRO_QUAL_OBJ_RADIX(QC_4B_CNT_4B_INDEX, OT_SIZE_BY_VARIATION)):	return 4;
-			
+
 			// Objects prefixed with a size must be of variable length type
 			case(MACRO_QUAL_OBJ_RADIX(QC_1B_VCNT_1B_SIZE, OT_VARIABLE)): return 1;
 			case(MACRO_QUAL_OBJ_RADIX(QC_1B_VCNT_2B_SIZE, OT_VARIABLE)): return 2;
 			case(MACRO_QUAL_OBJ_RADIX(QC_1B_VCNT_4B_SIZE, OT_VARIABLE)): return 4;
-				
+
 			default:
 				throw Exception(LOCATION, "Unknown Prefix Size", ALERR_ILLEGAL_QUALIFIER_AND_OBJECT);
 		}
 	}
-	
+
 	HeaderReadIterator APDU::BeginRead() const
 	{
 		return HeaderReadIterator(&mObjectHeaders, mBuffer, HasData(this->GetFunction()));
@@ -388,12 +388,12 @@ namespace apl { namespace dnp {
 	{
 		this->CheckWriteState(apObj);
 		if(aCode == QC_UNDEFINED)  aCode = this->GetContiguousQualifier(aStart, aStop);
-		
+
 		IObjectHeader* pHdr = this->GetObjectHeader(aCode);
 		if(pHdr->GetSize() > this->Remainder()) return ObjectWriteIterator();
-		
+
 		size_t maxObjects = (this->Remainder()-pHdr->GetSize())/apObj->GetSize();
-		
+
 		//No point in writing a header if it can't hold an object
 		if(maxObjects == 0) return ObjectWriteIterator();
 
@@ -415,17 +415,17 @@ namespace apl { namespace dnp {
 
 		return ObjectWriteIterator(pPos, aStart, stop, obj_size);
 	}
-	
+
 	ObjectWriteIterator APDU::WriteContiguous(const BitfieldObject* apObj, size_t aStart, size_t aStop, QualifierCode aCode)
 	{
 		this->CheckWriteState(apObj);
 		if(aCode == QC_UNDEFINED)  aCode = this->GetContiguousQualifier(aStart, aStop);
-		
+
 		IObjectHeader* pHdr = this->GetObjectHeader(aCode);
 		if(pHdr->GetSize() > this->Remainder()) return ObjectWriteIterator();
-		
+
 		size_t maxObjects = (this->Remainder()-pHdr->GetSize())*8; //bitfield, 8 objects per byte
-		
+
 		//No point in writing a header if it can't hold an object
 		if(maxObjects == 0) return ObjectWriteIterator();
 
@@ -441,13 +441,13 @@ namespace apl { namespace dnp {
 		apObj->Zero(pPos, count);
 
 		this->WriteContiguousHeader(pHdr, pHeaderPos, aStart, stop);
-		
+
 		mFragmentSize += pHdr->GetSize();
 		bool has_data = APDU::HasData(this->GetFunction());
 		size_t data_size = has_data ? apObj->GetSize(count) : 0;
 		mFragmentSize += data_size;
 
-		return ObjectWriteIterator(pPos, aStart, stop, 0);	
+		return ObjectWriteIterator(pPos, aStart, stop, 0);
 	}
 
 	void APDU::WriteContiguousHeader(IObjectHeader* apHdr,boost::uint8_t* apPos, size_t aStart, size_t aStop)
@@ -485,7 +485,7 @@ namespace apl { namespace dnp {
 	IndexedWriteIterator APDU::WriteIndexed(const SizeByVariationObject* apObj, size_t aSize, QualifierCode aCode)
 	{
 		this->CheckWriteState(apObj);
-		
+
 		// This object type encodes the size in the variation field, the prefix is used to encode something else
 		boost::uint8_t variation = boost::numeric::converter<boost::uint8_t,size_t>::convert(aSize);
 		size_t obj_size = APDU::HasData(this->GetFunction()) ? aSize : 0;
@@ -497,7 +497,7 @@ namespace apl { namespace dnp {
 	IndexedWriteIterator APDU::WriteIndexed(const FixedObject* apObj, size_t aCount, QualifierCode aCode)
 	{
 		this->CheckWriteState(apObj);
-			
+
 		size_t obj_size = APDU::HasData(this->GetFunction()) ? apObj->GetSize() : 0;
 		size_t prefix_size = this->GetPrefixSizeAndValidate(aCode, apObj->GetType());
 
@@ -506,7 +506,7 @@ namespace apl { namespace dnp {
 
 	IndexedWriteIterator APDU::WriteCountHeader(size_t aObjectSize, size_t aPrefixSize,boost::uint8_t aGrp,boost::uint8_t aVar, size_t aCount, QualifierCode aQual)
 	{
-		ICountHeader* pHdr = this->GetCountHeader(aQual); //Get the count header		
+		ICountHeader* pHdr = this->GetCountHeader(aQual); //Get the count header
 		if(pHdr->GetSize() > this->Remainder()) return IndexedWriteIterator();
 
 		size_t obj_plus_prefix_size = aObjectSize + aPrefixSize;
@@ -516,7 +516,7 @@ namespace apl { namespace dnp {
 
 		// No point in writing a header if it can't hold an object/index
 		if(max_num == 0) return IndexedWriteIterator();
-		
+
 		//how many will we write?
 		size_t count = (aCount < max_num) ? aCount : max_num;
 		size_t data_size = count*obj_plus_prefix_size;
@@ -532,18 +532,18 @@ namespace apl { namespace dnp {
 		return IndexedWriteIterator(pObjectPos, count, aQual, aObjectSize);
 	}
 
-	
+
 
 	bool APDU::DoPlaceholderWrite(ObjectBase* apObj)
 	{
 		this->CheckWriteState(apObj);
-		
+
 		//determine what the prefix and range specifier should be
 		IObjectHeader* pHdr = AllObjectsHeader::Inst();
 
 		size_t remainder = mBuffer.Size() - mFragmentSize;
 		if(pHdr->GetSize() > remainder) return false;
-		
+
 		pHdr->Set(mBuffer+mFragmentSize, apObj->GetGroup(), apObj->GetVariation(), QC_ALL_OBJ);
 		mFragmentSize += pHdr->GetSize();
 
@@ -579,7 +579,7 @@ namespace apl { namespace dnp {
 				throw ArgumentException(LOCATION, "Invalid qualifier for count header");
 		}
 	}
-	
+
 
 	// Found a bug here... The Max index is not enough information because the count can exceed
 	// the max index when binary events are reported because of SOE
@@ -602,7 +602,7 @@ namespace apl { namespace dnp {
 		{ return QC_2B_START_STOP; }
 		else
 		{ return QC_4B_START_STOP; }
-	}	
+	}
 
 	std::string APDU::ToString() const
 	{
@@ -612,15 +612,15 @@ namespace apl { namespace dnp {
 
 		FunctionCodes func = copy.GetFunction();
 		AppControlField acf = copy.GetControl();
-		
-		oss << "FIR: " << acf.FIR; 
+
+		oss << "FIR: " << acf.FIR;
 		oss << ", FIN: " << acf.FIN;
 		oss << ", CON: " << acf.CON;
 		oss << ", UNS: " << acf.UNS;
 		oss << ", SEQ: " << acf.SEQ;
 		oss << ", Func: " << apl::dnp::ToString(func);
 		if ( IsResponse(func) ) oss << copy.GetIIN().ToString();
-		
+
 		try
 		{
 			copy.Interpret();
@@ -640,11 +640,11 @@ namespace apl { namespace dnp {
 		catch(Exception)
 		{
 			oss << " Malformed header data preceeds";
-		}	
+		}
 
 		oss << ", Size: " << this->Size();
 
 		return oss.str();
 	}
-	
+
 }}

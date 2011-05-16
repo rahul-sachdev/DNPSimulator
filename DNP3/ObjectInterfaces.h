@@ -210,7 +210,7 @@ namespace apl { namespace dnp {
 			virtual void Write(boost::uint8_t* apPos, const T&) const = 0;
 
 			virtual T Read(const boost::uint8_t*) const = 0;
-			
+
 			virtual bool HasQuality() const
 			{
 				return false;
@@ -315,7 +315,7 @@ namespace apl { namespace dnp {
 	 * "size-by-variation" feature are 100 (floating-point), 110 (octet
 	 * string), 111 (octet string event), 112 (virtual terminal output block),
 	 * and 113 (virtual terminal event data).
-	 * 
+	 *
 	 */
 	class SizeByVariationObject : public IndexedObject
 	{

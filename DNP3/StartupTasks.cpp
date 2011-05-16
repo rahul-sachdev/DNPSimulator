@@ -28,7 +28,7 @@ namespace apl { namespace dnp {
 
 /* ------ Clear Restart ------- */
 
-ClearRestartIIN::ClearRestartIIN(Logger* apLogger) : 
+ClearRestartIIN::ClearRestartIIN(Logger* apLogger) :
 SimpleRspBase(apLogger)
 {}
 
@@ -61,11 +61,11 @@ void ConfigureUnsol::ConfigureRequest(APDU& arAPDU)
 	if(mClassMask & PC_CLASS_2) arAPDU.DoPlaceholderWrite(Group60Var3::Inst());
 	if(mClassMask & PC_CLASS_3) arAPDU.DoPlaceholderWrite(Group60Var4::Inst());
 }
-		
+
 
 /* ------ Time Sync ------- */
-		
-TimeSync::TimeSync(Logger* apLogger, ITimeSource* apTimeSrc) : 
+
+TimeSync::TimeSync(Logger* apLogger, ITimeSource* apTimeSrc) :
 SingleRspBase(apLogger),
 mpTimeSrc(apTimeSrc),
 mDelay(-1)
@@ -96,7 +96,7 @@ TaskResult TimeSync::_OnFinalResponse(const APDU& arAPDU)
 			LOG_BLOCK(LEV_WARNING, "DelayMeas response w/ unexcpected header count");
 			return TR_FAIL;
 		}
-		
+
 		if(!hri->GetBaseObject()->Equals(Group52Var2::Inst())) {
 			LOG_BLOCK(LEV_WARNING, "DelayMeas response w/ unexpected object: " << hri->GetBaseObject()->Name());
 			return TR_FAIL;
@@ -120,7 +120,7 @@ TaskResult TimeSync::_OnFinalResponse(const APDU& arAPDU)
 	else {
 
 		return TR_SUCCESS;
-	}	
+	}
 }
 
 }} //ens ns

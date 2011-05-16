@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 
 #include "ASIOSerialHelpers.h"
 
@@ -51,7 +51,7 @@ namespace apl{ namespace asio_serial{
 			default:
 				throw apl::Exception(LOCATION, "Unsupported Stop Bits");
 		}
-		
+
 		return serial_port_base::stop_bits(t);
 	}
 
@@ -90,7 +90,7 @@ namespace apl{ namespace asio_serial{
 			case(PAR_NONE): t = serial_port_base::parity::none; break;
 			case(PAR_EVEN): t = serial_port_base::parity::even; break;
 			case(PAR_ODD): t = serial_port_base::parity::odd; break;
-			
+
 			default:
 				throw apl::Exception(LOCATION, "Unsupported Parity");
 		}
@@ -98,8 +98,8 @@ namespace apl{ namespace asio_serial{
 		return serial_port_base::parity(t);
 	}
 
-	void Configure(SerialSettings& arSettings, boost::asio::serial_port& arPort, error_code& ec) 
-	{ 	
+	void Configure(SerialSettings& arSettings, boost::asio::serial_port& arPort, error_code& ec)
+	{
 		//Set all the various options
 		arPort.set_option(ConvertBaud(arSettings.mBaud), ec); if(ec) return;
 		arPort.set_option(ConvertDataBits(arSettings.mDataBits), ec); if(ec) return;
@@ -108,8 +108,8 @@ namespace apl{ namespace asio_serial{
 		arPort.set_option(ConvertFlow(arSettings.mFlowType), ec); if(ec) return;
 	}
 
-	void Configure(SerialSettings& arSettings, boost::asio::serial_port& arPort) 
-	{ 	
+	void Configure(SerialSettings& arSettings, boost::asio::serial_port& arPort)
+	{
 		//Set all the various options
 		SetOption(arPort,ConvertBaud(arSettings.mBaud));
 		SetOption(arPort,ConvertDataBits(arSettings.mDataBits));

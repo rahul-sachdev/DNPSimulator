@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_SUITE(AsyncTransportSuite)
 		TransportTestObject test;
 
 		BOOST_REQUIRE_THROW(test.upper.SendDown("00"), InvalidStateException);
-		BOOST_REQUIRE_THROW(test.lower.SendUp(""), InvalidStateException); 
+		BOOST_REQUIRE_THROW(test.lower.SendUp(""), InvalidStateException);
 		BOOST_REQUIRE_THROW(test.lower.SendSuccess(), InvalidStateException);
 		BOOST_REQUIRE_THROW(test.lower.ThisLayerDown(), InvalidStateException);
 	}
@@ -52,14 +52,14 @@ BOOST_AUTO_TEST_SUITE(AsyncTransportSuite)
 	BOOST_AUTO_TEST_CASE(TestStateReady)
 	{
 		TransportTestObject test(true); //makes an implicit call to 'test.lower.ThisLayerUp()'
-		
+
 		//check that that the transport layer is correctly forwarding up/down
 		BOOST_REQUIRE(test.upper.IsLowerLayerUp());
 		test.lower.ThisLayerDown();
 		BOOST_REQUIRE_FALSE(test.upper.IsLowerLayerUp());
 		test.lower.ThisLayerUp();
 		BOOST_REQUIRE(test.upper.IsLowerLayerUp());
-		
+
 		//check that these actions all throw InvalidStateException
 		BOOST_REQUIRE_THROW(test.lower.ThisLayerUp(), InvalidStateException);
 		BOOST_REQUIRE_THROW(test.lower.SendSuccess(), InvalidStateException);
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_SUITE(AsyncTransportSuite)
 	BOOST_AUTO_TEST_CASE(TestReceiveBadArguments)
 	{
 		TransportTestObject test(true);
-		//check that the wrong aruments throw argument exceptions, and it's doesn't go to the sending state		
+		//check that the wrong aruments throw argument exceptions, and it's doesn't go to the sending state
 		BOOST_REQUIRE_THROW(test.lower.SendUp(""), ArgumentException);   // length 0
 		BOOST_REQUIRE_THROW(test.lower.SendUp(test.GetData("C0", 0, 250)), ArgumentException); // length 251
 	}
@@ -103,13 +103,13 @@ BOOST_AUTO_TEST_SUITE(AsyncTransportSuite)
 		TransportTestObject test(true);
 		//now try receiving 1 a single FIR/FIN with a magic value
 		test.lower.SendUp("C0 77");
-		test.upper.BufferEquals("77");	
+		test.upper.BufferEquals("77");
 	}
 
 	BOOST_AUTO_TEST_CASE(TestReceiveLargestPossibleAPDU)
 	{
 		TransportTestObject test(true);
-		
+
 		size_t num_packets = CalcMaxPackets(DEFAULT_FRAG_SIZE, TL_MAX_TPDU_PAYLOAD);
 		size_t last_packet_length = CalcLastPacketSize(DEFAULT_FRAG_SIZE, TL_MAX_TPDU_PAYLOAD);
 
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_SUITE(AsyncTransportSuite)
 	BOOST_AUTO_TEST_CASE(TestReceiveBufferOverflow)
 	{
 		TransportTestObject test(true);
-		
+
 		size_t num_packets = CalcMaxPackets(DEFAULT_FRAG_SIZE, TL_MAX_TPDU_PAYLOAD);
 		size_t last_packet_length = CalcLastPacketSize(DEFAULT_FRAG_SIZE, TL_MAX_TPDU_PAYLOAD);
 
@@ -140,10 +140,10 @@ BOOST_AUTO_TEST_SUITE(AsyncTransportSuite)
 	BOOST_AUTO_TEST_CASE(TestReceiveNewFir)
 	{
 		TransportTestObject test(true);
-		
+
 		test.lower.SendUp(test.GetData("40"));	// FIR/_/0
 		BOOST_REQUIRE(test.upper.IsBufferEmpty());
-		
+
 		test.lower.SendUp(test.GetData("C0"));	// FIR/FIN/0
 		test.upper.BufferEquals(test.GetData(""));
 		BOOST_REQUIRE_EQUAL(test.NextErrorCode(), TLERR_NEW_FIR);
@@ -159,13 +159,13 @@ BOOST_AUTO_TEST_SUITE(AsyncTransportSuite)
 	BOOST_AUTO_TEST_CASE(TestStateSending)
 	{
 		TransportTestObject test(true);
-		
+
 		test.lower.DisableAutoSendCallback();
 
 		// this puts the layer into the Sending state
-		test.upper.SendDown("11"); 
+		test.upper.SendDown("11");
 		BOOST_REQUIRE(test.lower.BufferEquals("C0 11")); //FIR/FIN SEQ=0
-		
+
 		// Check that while we're sending, all other send requests are rejected
 		BOOST_REQUIRE_THROW(test.upper.SendDown("00"), InvalidStateException);
 		BOOST_REQUIRE_THROW(test.lower.ThisLayerUp(), InvalidStateException);
@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_SUITE(AsyncTransportSuite)
 		//while we are sending, we should still be able to receive data as normal
 		test.lower.SendUp("C0 77");
 		test.upper.BufferEquals("77");
-		
+
 		//this should put us back in the Ready state since it was a single tpdu send
 		test.lower.SendSuccess();
 		BOOST_REQUIRE_EQUAL(test.upper.GetState().mSuccessCnt, 1);
@@ -186,18 +186,18 @@ BOOST_AUTO_TEST_SUITE(AsyncTransportSuite)
 		TransportTestObject test(true);
 
 		test.lower.DisableAutoSendCallback();
-		
+
 		// this puts the layer into the Sending state
-		test.upper.SendDown("11"); 
+		test.upper.SendDown("11");
 		BOOST_REQUIRE(test.lower.BufferEquals("C0 11")); //FIR/FIN SEQ=0
-		
+
 		//this should put us back in the Ready state
 		test.lower.SendFailure();
 		BOOST_REQUIRE_EQUAL(test.upper.GetState().mSuccessCnt, 0);
 		BOOST_REQUIRE_EQUAL(test.upper.GetState().mFailureCnt, 1);
 
 		test.lower.ClearBuffer();
-		test.upper.SendDown("11"); 
+		test.upper.SendDown("11");
 		BOOST_REQUIRE(test.lower.BufferEquals("C0 11")); // should resend with the same sequence number FIR/FIN SEQ=0
 		test.lower.SendSuccess();
 		BOOST_REQUIRE_EQUAL(test.upper.GetState().mSuccessCnt, 1);
@@ -207,15 +207,15 @@ BOOST_AUTO_TEST_SUITE(AsyncTransportSuite)
 	BOOST_AUTO_TEST_CASE(TestSendSuccess)
 	{
 		TransportTestObject test(true);
-		
+
 		// this puts the layer into the Sending state
 		test.upper.SendDown("11");
 		BOOST_REQUIRE(test.lower.BufferEquals("C0 11")); //FIR/FIN SEQ=0
 		test.lower.ClearBuffer();
-		
+
 		// this puts the layer into the Sending state
 		test.upper.SendDown("11");
-		BOOST_REQUIRE(test.lower.BufferEquals("C1 11")); //FIR/FIN SEQ=1		
+		BOOST_REQUIRE(test.lower.BufferEquals("C1 11")); //FIR/FIN SEQ=1
 		BOOST_REQUIRE_EQUAL(test.upper.GetState().mSuccessCnt, 2);
 	}
 
@@ -232,7 +232,7 @@ BOOST_AUTO_TEST_SUITE(AsyncTransportSuite)
 	BOOST_AUTO_TEST_CASE(TestSendFullAPDU)
 	{
 		TransportTestObject test(true);
-		
+
 		size_t num_packets = CalcMaxPackets(DEFAULT_FRAG_SIZE, TL_MAX_TPDU_PAYLOAD);
 		size_t last_packet_length = CalcLastPacketSize(DEFAULT_FRAG_SIZE, TL_MAX_TPDU_PAYLOAD);
 

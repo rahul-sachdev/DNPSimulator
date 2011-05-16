@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "TransportLayer.h"
 
 #include <APL/Logger.h>
@@ -34,8 +34,8 @@ using namespace std;
 
 namespace apl { namespace dnp {
 
-	TransportLayer::TransportLayer(apl::Logger* apLogger, size_t aFragSize) : 
-	Loggable(apLogger), 
+	TransportLayer::TransportLayer(apl::Logger* apLogger, size_t aFragSize) :
+	Loggable(apLogger),
 	IUpperLayer(apLogger),
 	ILowerLayer(apLogger),
 	mpState(TLS_Closed::Inst()),
@@ -44,7 +44,7 @@ namespace apl { namespace dnp {
 	mTransmitter(apLogger, this, aFragSize),
 	mThisLayerUp(false)
 	{
-	
+
 	}
 
 	//////////////////////////////////////////////////////////
@@ -104,7 +104,7 @@ namespace apl { namespace dnp {
 	{
 		if(mpUpperLayer != NULL) mpUpperLayer->OnSendFailure();
 	}
-	
+
 	//////////////////////////////////////////////////////////
 	// ILayerDown NVII implementations
 	//////////////////////////////////////////////////////////
@@ -127,7 +127,7 @@ namespace apl { namespace dnp {
 	{
 		mpState->HandleReceive(apData, aNumBytes, this);
 	}
-	
+
 	void TransportLayer::_OnSendSuccess()
 	{
 		mpState->HandleSendSuccess(this);
@@ -137,12 +137,12 @@ namespace apl { namespace dnp {
 	{
 		mpState->HandleSendFailure(this);
 	}
-	
+
 	void TransportLayer::_OnLowerLayerUp()
 	{
 		mpState->LowerLayerUp(this);
 	}
-	
+
 	void TransportLayer::_OnLowerLayerDown()
 	{
 		mpState->LowerLayerDown(this);

@@ -38,7 +38,7 @@ namespace apl { namespace dnp {
 		int Var;
 	};
 
-	struct EventMaxConfig 
+	struct EventMaxConfig
 	{
 		EventMaxConfig();
 

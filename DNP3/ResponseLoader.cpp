@@ -43,7 +43,7 @@ void ResponseLoader::Process(HeaderReadIterator& arIter)
 }
 
 void ResponseLoader::ProcessData(HeaderReadIterator& arIter, int aGrp, int aVar)
-{	
+{
 	/*
 	 * These objects require matching on both the aGrp and aVar fields.
 	 */
@@ -105,7 +105,7 @@ void ResponseLoader::ProcessData(HeaderReadIterator& arIter, int aGrp, int aVar)
 		default:
 			this->ProcessSizeByVariation(arIter, aGrp, aVar);
 			break;
-	}	
+	}
 }
 
 void ResponseLoader::ProcessSizeByVariation(HeaderReadIterator& arIter, int aGrp, int aVar)

@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,23 +6,23 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "LogEntryCircularBuffer.h"
 #include <iostream>
 
 namespace apl{
 
-	LogEntryCircularBuffer :: LogEntryCircularBuffer(size_t aMaxEntries) : 
-	mMaxEntries(aMaxEntries)	
+	LogEntryCircularBuffer :: LogEntryCircularBuffer(size_t aMaxEntries) :
+	mMaxEntries(aMaxEntries)
 	{
 
 	}
@@ -36,21 +36,21 @@ namespace apl{
 	bool LogEntryCircularBuffer :: ReadLog(LogEntry& mEntry, int aTimeout)
 	{
 		CriticalSection cs(&mLock);
-		
-		if(CheckRead(mEntry)) return true;		
+
+		if(CheckRead(mEntry)) return true;
 		else {
 			if(aTimeout < 0) cs.Wait();
-			else if(aTimeout > 0) cs.TimedWait(aTimeout);			
-			if(CheckRead(mEntry)) return true;			
+			else if(aTimeout > 0) cs.TimedWait(aTimeout);
+			if(CheckRead(mEntry)) return true;
 		}
 
-		return false;		
+		return false;
 	}
 
 	void LogEntryCircularBuffer :: BlockUntilEntry()
 	{
 		CriticalSection cs(&mLock);
-		if(mItemQueue.size() == 0) cs.Wait();		
+		if(mItemQueue.size() == 0) cs.Wait();
 	}
 
 	bool LogEntryCircularBuffer :: CheckRead(LogEntry& aEntry)
@@ -71,7 +71,7 @@ namespace apl{
 	void LogEntryCircularBuffer :: Log( FilterLevel aFilterLevel, const std::string& aDeviceName, const std::string& aLocation, const std::string& aMessage, int aErrorCode)
 	{
 		if(mIgnoreCodes.find(aErrorCode) == mIgnoreCodes.end()) { //only log messages that aren't ignored
-		
+
 			LogEntry item( aFilterLevel, aDeviceName, aLocation, aMessage, aErrorCode );
 			size_t num = 0;
 			{
@@ -82,7 +82,7 @@ namespace apl{
 				{ mItemQueue.pop_front(); }
 				cs.Signal();
 			}
-			
+
 			// only notify if the queue was empty
 			if(num == 0) this->NotifyAll();
 		}
@@ -93,5 +93,5 @@ namespace apl{
 		CriticalSection cs(&mLock);
 		mMaxEntries = aMax;
 		while(mItemQueue.size() > aMax) mItemQueue.pop_front();
-	}	
+	}
 }

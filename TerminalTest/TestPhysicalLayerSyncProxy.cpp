@@ -29,9 +29,9 @@ class SyncProxyTestObject : public LogTester, public AsyncTestObjectASIO, public
 		{
 			adapter.SetUpperLayer(&upper);
 		}
-		
+
 		std::string Read()
-		{ 
+		{
 			CriticalSection cs(&mQueueLock);
 			while(mReadQueue.size() == 0) cs.Wait();
 			std::string ret = mReadQueue.front();
@@ -41,7 +41,7 @@ class SyncProxyTestObject : public LogTester, public AsyncTestObjectASIO, public
 
 		void Write(const std::string&)
 		{
-		
+
 		}
 
 		void Push(const std::string& s)
@@ -54,7 +54,7 @@ class SyncProxyTestObject : public LogTester, public AsyncTestObjectASIO, public
 		apl::LowerLayerToPhysAdapter adapter;
 		apl::MockUpperLayer upper;
 
-	private:		
+	private:
 
 		SigLock mQueueLock;
 		std::deque<std::string> mReadQueue;
@@ -73,13 +73,13 @@ BOOST_AUTO_TEST_SUITE(PhysicalLayerSyncProxy)
 		SyncProxyTestObject t(LEV_INFO);
 		MockUpperLayer::State s;
 		BOOST_REQUIRE(t.upper.StateEquals(s));
-		t.AsyncOpen(); ++s.mNumLayerUp;		
+		t.AsyncOpen(); ++s.mNumLayerUp;
 		t.ProceedUntil(boost::bind(&MockUpperLayer::StateEquals, &t.upper, s));
-		
+
 		t.adapter.StartRead();
 		t.Push("foo");
 		BOOST_REQUIRE(t.ProceedUntil(boost::bind(&MockUpperLayer::BufferEqualsString, &t.upper, "foo")));
-		
+
 		t.Push("bar");
 		t.adapter.StartRead();
 		BOOST_REQUIRE(t.ProceedUntil(boost::bind(&MockUpperLayer::BufferEqualsString, &t.upper, "foobar")));
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_SUITE(PhysicalLayerSyncProxy)
 		t.ProceedUntil(boost::bind(&MockUpperLayer::StateEquals, &t.upper, s));
 	}
 
-	
+
 
 BOOST_AUTO_TEST_SUITE_END()
 

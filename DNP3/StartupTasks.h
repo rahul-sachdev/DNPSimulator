@@ -29,11 +29,11 @@ namespace apl { namespace dnp {
 
 /// Clears the outstation IIN restart bit
 class ClearRestartIIN : public SimpleRspBase
-{	
+{
 	public:
 		ClearRestartIIN(Logger*);
 
-		void ConfigureRequest(APDU& arAPDU);						
+		void ConfigureRequest(APDU& arAPDU);
 		std::string Name() const { return "ClearRestartIIN"; }
 };
 
@@ -45,7 +45,7 @@ class ConfigureUnsol : public SimpleRspBase
 
 		void Set(bool aIsEnable, int aClassMask);
 
-		void ConfigureRequest(APDU& arAPDU);						
+		void ConfigureRequest(APDU& arAPDU);
 		std::string Name() const { return "ConfigureUnsol"; }
 
 	private:
@@ -56,14 +56,14 @@ class ConfigureUnsol : public SimpleRspBase
 /// Synchronizes the time on the outstation
 class TimeSync : public SingleRspBase
 {
-	public:			
+	public:
 		TimeSync(Logger*, ITimeSource*);
 
 		/// override Init
 		void Init();
-		void ConfigureRequest(APDU& arAPDU);				
+		void ConfigureRequest(APDU& arAPDU);
 		TaskResult _OnFinalResponse(const APDU&);
-		
+
 		std::string Name() const { return "TimeSync"; }
 
 	private:

@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "SecLinkLayerStates.h"
 
 #include <APL/Exception.h>
@@ -32,7 +32,7 @@ namespace apl { namespace dnp {
 ///////////////////////////////////////////////////////////
 
 void SecStateBase::ResetLinkStates(LinkLayer* apLL)
-{ 
+{
 	apLL->ResetReadFCB();
 	apLL->SendAck();
 	apLL->ChangeState(SLLS_Reset::Inst());
@@ -44,10 +44,10 @@ void SecStateBase::RequestLinkStatus(LinkLayer* apLL)
 }
 
 void SecStateBase::UnconfirmedUserData(LinkLayer* apLL, const boost::uint8_t* apData, size_t aDataLength)
-{ 
+{
 	apLL->DoDataUp(apData, aDataLength);
 }
-		
+
 ////////////////////////////////////////////////////////////////////////////////////
 //	Class SLLS_NotReset
 ////////////////////////////////////////////////////////////////////////////////////
@@ -55,11 +55,11 @@ SLLS_NotReset SLLS_NotReset::mInstance;
 
 void SLLS_NotReset::TestLinkStatus(LinkLayer* apLL, bool aFcb)
 {
-	ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "TestLinkStatus ignored", DLERR_UNEXPECTED_FRAME);	
+	ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "TestLinkStatus ignored", DLERR_UNEXPECTED_FRAME);
 }
 
 void SLLS_NotReset::ConfirmedUserData(LinkLayer* apLL, bool aFcb, const boost::uint8_t* apData, size_t aDataLength)
-{	
+{
 	ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "ConfirmedUserData ignored", DLERR_UNEXPECTED_FRAME);
 }
 
@@ -70,8 +70,8 @@ SLLS_Reset SLLS_Reset::mInstance;
 
 void SLLS_Reset::TestLinkStatus(LinkLayer* apLL, bool aFcb)
 {
-	if(apLL->NextReadFCB() == aFcb) {		
-		apLL->ToggleReadFCB(); 
+	if(apLL->NextReadFCB() == aFcb) {
+		apLL->ToggleReadFCB();
 		apLL->SendAck();
 	}
 	else {
@@ -82,7 +82,7 @@ void SLLS_Reset::TestLinkStatus(LinkLayer* apLL, bool aFcb)
 }
 
 void SLLS_Reset::ConfirmedUserData(LinkLayer* apLL, bool aFcb, const boost::uint8_t* apData, size_t aDataLength)
-{	
+{
 	apLL->SendAck();
 
 	if(apLL->NextReadFCB() == aFcb) {

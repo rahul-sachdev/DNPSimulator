@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "AppHeader.h"
 
 
@@ -36,7 +36,7 @@ namespace apl { namespace dnp {
 	FunctionCodes IntToFunction(int aFunction)
 	{
 		switch(aFunction)
-		{	
+		{
 			MACRO_FUNC_CASE(FC_CONFIRM)
 			MACRO_FUNC_CASE(FC_READ)
 			MACRO_FUNC_CASE(FC_WRITE)
@@ -91,7 +91,7 @@ namespace apl { namespace dnp {
 	{
 		ostringstream oss;
 		oss << " IIN: (LSB: " << ByteToHex(GetLSB());
-		
+
 		MACRO_IIN_TO_STRING(AllStations)
 		MACRO_IIN_TO_STRING(Class1Events)
 		MACRO_IIN_TO_STRING(Class2Events)
@@ -126,7 +126,7 @@ namespace apl { namespace dnp {
 
 		(*apStart) |= (arControl.SEQ % 16);
 	}
-	
+
 	AppControlField IAppHeader::GetControl(const boost::uint8_t* apStart) const
 	{
 		AppControlField f;
@@ -140,7 +140,7 @@ namespace apl { namespace dnp {
 		return f;
 	}
 
-	
+
 
 	IINField ResponseHeader::GetIIN(const boost::uint8_t* apStart) const
 	{
@@ -157,7 +157,7 @@ namespace apl { namespace dnp {
 	void ResponseHeader::SetIIN(boost::uint8_t* apStart, const IINField& arIIN) const
 	{
 		boost::uint8_t* pByte = apStart+2; //start w/ LSB
-		
+
 		*pByte = arIIN.GetLSB();
 		*(++pByte) = arIIN.GetMSB();
 	}

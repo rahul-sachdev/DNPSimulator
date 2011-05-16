@@ -59,13 +59,13 @@ namespace apl {
 			updates.push_back(arVal);
 		}
 
-		
+
 		template <class T>
 		void OnUpdate(const T& arPoint, typename PointMap<T>::Type& arMap, size_t aIndex)
 		{
 			typename PointMap<T>::Type::iterator i = arMap.find(aIndex);
 			if(i == arMap.end()) {
-				std::ostringstream oss;				
+				std::ostringstream oss;
 				oss << GetString(T::MeasEnum, aIndex) << " --> " << GetString(arPoint);
 				this->Push(oss.str());
 			}
@@ -81,8 +81,8 @@ namespace apl {
 		static std::string GetString(DataTypes dt, size_t index) {
 			std::ostringstream oss;
 			oss << GetDataTypeName(dt) << "[" << index << "]";
-			std::string ret = oss.str();			
-			ret.resize(20, ' ');			
+			std::string ret = oss.str();
+			ret.resize(20, ' ');
 			return ret;
 		}
 

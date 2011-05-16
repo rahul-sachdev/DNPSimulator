@@ -36,7 +36,7 @@ namespace apl {
 
 			/* Get all of the data objects in the buffer. */
 			size_t numObjects = this->mBuffer.Select(PC_ALL_EVENTS);
-					
+
 			/* If there are no objects to write, skip the remainder. */
 			if (numObjects < 0)
 			{
@@ -80,12 +80,12 @@ namespace apl {
 
 				/* Mark the data segment as being written */
 				vto->mWritten = true;
-				
+
 				/* Move to the next data segment in the buffer */
-				++vto;				
+				++vto;
 			}
 		}
-		
+
 		TaskResult VtoTransmitTask::_OnPartialResponse(const APDU& arAPDU)
 		{
 			LOG_BLOCK(LEV_ERROR,
@@ -99,7 +99,7 @@ namespace apl {
 		{
 			/* Remove the written data from the buffer */
 			this->mBuffer.ClearWrittenEvents();
-			
+
 			return TR_SUCCESS;
 		}
 

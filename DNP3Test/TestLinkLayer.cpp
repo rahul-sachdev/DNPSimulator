@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
@@ -78,21 +78,21 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 	BOOST_AUTO_TEST_CASE(SecToPriNoContext)
 	{
 		LinkLayerTest t; t.link.OnLowerLayerUp();
-		
+
 		BOOST_REQUIRE(t.IsLogErrorFree());
 		t.link.Ack(false, false, 1, 1024);
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_UNEXPECTED_FRAME);
-		
+
 
 		BOOST_REQUIRE(t.IsLogErrorFree());
 		t.link.Nack(false, false, 1, 1024);
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_UNEXPECTED_FRAME);
-		
+
 
 		BOOST_REQUIRE(t.IsLogErrorFree());
 		t.link.LinkStatus(false, false, 1, 1024);
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_UNEXPECTED_FRAME);
-		
+
 
 		BOOST_REQUIRE(t.IsLogErrorFree());
 		t.link.NotSupported(false, false, 1, 1024);
@@ -138,9 +138,9 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 		LinkLayerTest t(cfg);
 		t.link.OnLowerLayerUp();
 		t.link.ResetLinkStates(false, 1, 1024);
-		
+
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 1);
-		
+
 		ByteStr b(250, 0);
 		t.link.ConfirmedUserData(false, false, 1, 1024, b, b.Size());
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 2);
@@ -168,7 +168,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 	{
 		LinkLayerTest t;
 		t.link.OnLowerLayerUp();
-		t.link.ResetLinkStates(false, 1, 1024);			
+		t.link.ResetLinkStates(false, 1, 1024);
 
 		ByteStr bytes(250, 0);
 		t.link.ConfirmedUserData(false, true, 1, 1024, bytes, bytes.Size());
@@ -176,7 +176,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 		BOOST_REQUIRE(t.upper.BufferEquals(bytes, bytes.Size()));
 		BOOST_REQUIRE(t.IsLogErrorFree());
 		t.upper.ClearBuffer();
-		
+
 		t.link.ConfirmedUserData(false, true, 1, 1024, bytes, bytes.Size()); //send with wrong FCB
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 3); //should still get an ACK
 		BOOST_REQUIRE(t.upper.IsBufferEmpty()); //but no data
@@ -196,7 +196,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 
 		t.link.RequestLinkStatus(false, 1, 1024); //should be able to request this before the link is reset
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 3);
-		BOOST_REQUIRE_EQUAL(t.mLastSend, f);	
+		BOOST_REQUIRE_EQUAL(t.mLastSend, f);
 	}
 
 	BOOST_AUTO_TEST_CASE(TestLinkStates)
@@ -208,24 +208,24 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 
 		t.link.ResetLinkStates(false, 1, 1024);
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 1);
-		
+
 		t.link.TestLinkStatus(false, true, 1, 1024);
 		LinkFrame f; f.FormatAck(true, false, 1024, 1);
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 2);
-		BOOST_REQUIRE_EQUAL(t.mLastSend, f);	
+		BOOST_REQUIRE_EQUAL(t.mLastSend, f);
 	}
 
 	BOOST_AUTO_TEST_CASE(SendUnconfirmed)
 	{
 		LinkLayerTest t;
 		t.link.OnLowerLayerUp();
-		
+
 		ByteStr bytes(250, 0);
 
 		t.link.Send(bytes, bytes.Size());
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 1);
 		LinkFrame f; f.FormatUnconfirmedUserData(true, 1024, 1, bytes, bytes.Size());
-		BOOST_REQUIRE_EQUAL(t.mLastSend, f);		
+		BOOST_REQUIRE_EQUAL(t.mLastSend, f);
 		BOOST_REQUIRE_EQUAL(t.upper.GetState().mSuccessCnt, 1);
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 1);
 	}
@@ -234,19 +234,19 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 	{
 		LinkLayerTest t;
 		t.link.OnLowerLayerUp();
-		
+
 		ByteStr bytes(250, 0);
-		t.link.Send(bytes, bytes.Size());		
+		t.link.Send(bytes, bytes.Size());
 		BOOST_REQUIRE(t.upper.CountersEqual(1,0));
 		t.link.OnLowerLayerDown(); //take it down during the middle of a send
 		BOOST_REQUIRE_FALSE(t.upper.IsLowerLayerUp());
-		
-		
+
+
 		t.link.OnLowerLayerUp();
 		BOOST_REQUIRE(t.upper.IsLowerLayerUp());
 		t.link.Send(bytes, bytes.Size());
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 2);
-			
+
 	}
 
 	BOOST_AUTO_TEST_CASE(ResetLinkTimerExpiration)
@@ -256,12 +256,12 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 
 		LinkLayerTest t(cfg);
 		t.link.OnLowerLayerUp();
-		
+
 		ByteStr bytes(250, 0);
 		t.link.Send(bytes, bytes.Size());
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 1);
 		LinkFrame f; f.FormatResetLinkStates(true, 1024, 1);
-		BOOST_REQUIRE_EQUAL(t.mLastSend, f);		
+		BOOST_REQUIRE_EQUAL(t.mLastSend, f);
 		BOOST_REQUIRE(t.upper.CountersEqual(0,0));
 
 		BOOST_REQUIRE(t.IsLogErrorFree());
@@ -278,10 +278,10 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 
 		LinkLayerTest t(cfg);
 		t.link.OnLowerLayerUp();
-		
+
 		ByteStr bytes(250, 0);
 		t.link.Send(bytes, bytes.Size());
-		BOOST_REQUIRE_EQUAL(t.mNumSend, 1);			
+		BOOST_REQUIRE_EQUAL(t.mNumSend, 1);
 
 		BOOST_REQUIRE(t.IsLogErrorFree());
 		BOOST_REQUIRE(t.mts.DispatchOne());
@@ -292,7 +292,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.mLastSend, f); // check that reset links got sent again
 
 		t.link.Ack(false, false, 1, 1024);
-		BOOST_REQUIRE_EQUAL(t.mNumSend, 3);			
+		BOOST_REQUIRE_EQUAL(t.mNumSend, 3);
 		f.FormatConfirmedUserData(true, true, 1024, 1, bytes, bytes.Size());
 		BOOST_REQUIRE_EQUAL(t.mLastSend, f); // check that reset links got sent again
 
@@ -302,7 +302,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 
 		// Test retry reset
 		t.link.Send(bytes, bytes.Size());
-		BOOST_REQUIRE_EQUAL(t.mNumSend, 4);			
+		BOOST_REQUIRE_EQUAL(t.mNumSend, 4);
 
 		BOOST_REQUIRE(t.IsLogErrorFree());
 		BOOST_REQUIRE(t.mts.DispatchOne());
@@ -317,7 +317,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 
 		LinkLayerTest t(cfg);
 		t.link.OnLowerLayerUp();
-		
+
 		ByteStr bytes(250, 0);
 		t.link.Send(bytes, bytes.Size());
 		t.link.Ack(false, false, 1, 1024);
@@ -325,13 +325,13 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 		BOOST_REQUIRE(t.upper.CountersEqual(1,0));
 
 		t.link.Send(bytes, bytes.Size());
-		BOOST_REQUIRE_EQUAL(t.mNumSend, 3);			
+		BOOST_REQUIRE_EQUAL(t.mNumSend, 3);
 
 		BOOST_REQUIRE(t.IsLogErrorFree());
 		BOOST_REQUIRE(t.mts.DispatchOne());
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_TIMEOUT_RETRY);
 		BOOST_REQUIRE(t.upper.CountersEqual(1,0));//check that the send is still occuring
-		BOOST_REQUIRE_EQUAL(t.mNumSend, 4);	
+		BOOST_REQUIRE_EQUAL(t.mNumSend, 4);
 
 		t.link.Ack(false, false, 1, 1024);
 		BOOST_REQUIRE(t.upper.CountersEqual(2,0));
@@ -339,7 +339,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 		// Test retry reset
 		t.link.Send(bytes, bytes.Size());
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 5);	// Should now be waiting for an ACK with active timer
-		
+
 		BOOST_REQUIRE(t.IsLogErrorFree());
 		BOOST_REQUIRE(t.mts.DispatchOne());
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_TIMEOUT_RETRY);
@@ -353,20 +353,20 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 		cfg.UseConfirms = true;
 
 		LinkLayerTest t(cfg); t.link.OnLowerLayerUp();
-		
+
 		ByteStr bytes(250, 0);
 		t.link.Send(bytes, bytes.Size());
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 1); // Should now be waiting for an ACK with active timer
-		
+
 		t.link.Ack(false, false, 1, 1024);
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 2);
-		
+
 		BOOST_REQUIRE(t.mts.DispatchOne()); //timeout the ConfData, check that it retransmits
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_TIMEOUT_RETRY);
-		BOOST_REQUIRE_EQUAL(t.mNumSend, 3);			
+		BOOST_REQUIRE_EQUAL(t.mNumSend, 3);
 		LinkFrame f; f.FormatConfirmedUserData(true, true, 1024, 1, bytes, bytes.Size());
 		BOOST_REQUIRE_EQUAL(t.mLastSend, f);
-		
+
 		t.link.Ack(false, false, 1, 1024);
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 3);
 		BOOST_REQUIRE(t.upper.CountersEqual(1,0));
@@ -379,16 +379,16 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 
 		LinkLayerTest t(cfg);
 		t.link.OnLowerLayerUp();
-		
+
 		ByteStr bytes(250, 0);
-		t.link.Send(bytes, bytes.Size()); 
+		t.link.Send(bytes, bytes.Size());
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 1);
 		t.link.Ack(false, false, 1, 1024); // ACK the reset links
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 2);
 		LinkFrame f; f.FormatConfirmedUserData(true, true, 1024, 1, bytes, bytes.Size());
 		BOOST_REQUIRE_EQUAL(t.mNumSend, 2);
 		BOOST_REQUIRE_EQUAL(t.mLastSend, f); // check that data was sent
-		BOOST_REQUIRE(t.mts.DispatchOne()); //trigger the timeout callback				
+		BOOST_REQUIRE(t.mts.DispatchOne()); //trigger the timeout callback
 		BOOST_REQUIRE(t.upper.CountersEqual(0,1));
 	}
 
@@ -399,10 +399,10 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 
 		LinkLayerTest t(cfg);
 		t.link.OnLowerLayerUp();
-		
+
 		ByteStr bytes(250, 0);
-		t.link.Send(bytes, bytes.Size()); // Should now be waiting for an ACK			
-		t.link.Ack(false, false, 1, 1024); //this 
+		t.link.Send(bytes, bytes.Size()); // Should now be waiting for an ACK
+		t.link.Ack(false, false, 1, 1024); //this
 
 		t.link.Ack(false, false, 1, 1024);
 		BOOST_REQUIRE(t.upper.CountersEqual(1,0));

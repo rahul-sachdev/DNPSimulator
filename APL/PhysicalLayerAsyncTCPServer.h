@@ -26,7 +26,7 @@ namespace apl {
 
 	class PhysicalLayerAsyncTCPServer : public PhysicalLayerAsyncBaseTCP
 	{
-		public:			
+		public:
 			PhysicalLayerAsyncTCPServer(Logger*, boost::asio::io_service* apIOService, const std::string& arEndpoint, boost::uint16_t aPort);
 
 			/* Implement the remainging actions */

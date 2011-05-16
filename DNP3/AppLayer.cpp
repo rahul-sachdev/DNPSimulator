@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,17 +6,18 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
-#include "AppLayer.h"
+//
+
+#include "./AppLayer.h"
 
 
 #include <APL/Logger.h>
@@ -38,7 +39,7 @@ mSolicited(apLogger->GetSubLogger("sol"), this, apTimerSrc, aAppCfg.RspTimeout),
 mUnsolicited(apLogger->GetSubLogger("unsol"), this, apTimerSrc, aAppCfg.RspTimeout),
 mNumRetry(aAppCfg.NumRetry)
 {
-	mConfirm.SetFunction(FC_CONFIRM);	
+	mConfirm.SetFunction(FC_CONFIRM);
 }
 
 void AppLayer::SetUser(IAppUser* apUser)
@@ -54,11 +55,11 @@ void AppLayer::SetUser(IAppUser* apUser)
 void AppLayer::SendResponse(APDU& arAPDU)
 {
 	this->Validate(arAPDU.GetControl(), false, false, true, false);
-		
-	if(arAPDU.GetFunction() != FC_RESPONSE)
-		throw ArgumentException(LOCATION, "Non-response function code");	
 
-	mSolicited.Send(arAPDU, this->GetRetries(FC_RESPONSE));	
+	if(arAPDU.GetFunction() != FC_RESPONSE)
+		throw ArgumentException(LOCATION, "Non-response function code");
+
+	mSolicited.Send(arAPDU, this->GetRetries(FC_RESPONSE));
 }
 
 void AppLayer::SendUnsolicited(APDU& arAPDU)
@@ -67,8 +68,8 @@ void AppLayer::SendUnsolicited(APDU& arAPDU)
 
 	if(arAPDU.GetFunction() != FC_UNSOLICITED_RESPONSE )
 		throw ArgumentException(LOCATION, "Non-unsolicited function code");
-	
-	mUnsolicited.Send(arAPDU, this->GetRetries(FC_UNSOLICITED_RESPONSE));	
+
+	mUnsolicited.Send(arAPDU, this->GetRetries(FC_UNSOLICITED_RESPONSE));
 }
 
 void AppLayer::SendRequest(APDU& arAPDU)
@@ -103,7 +104,7 @@ void AppLayer::_OnReceive(const boost::uint8_t* apBuffer, size_t aSize)
 
 		FunctionCodes func = mIncoming.GetFunction();
 		AppControlField ctrl = mIncoming.GetControl();
-		
+
 		switch(func){
 			case(FC_CONFIRM):
 				this->OnConfirm(ctrl, mIncoming);
@@ -142,7 +143,7 @@ void AppLayer::_OnLowerLayerDown()
 
 	//reset the transmitter state
 	mSendQueue.erase(mSendQueue.begin(), mSendQueue.end());
-	mSending = false;		
+	mSending = false;
 
 	//notify the user
 	mpUser->OnLowerLayerDown();
@@ -156,7 +157,7 @@ void AppLayer::OnSendResult(bool aSuccess)
 	assert(mSendQueue.size() > 0);
 	mSending = false;
 
-	FunctionCodes func = mSendQueue.front()->GetFunction();	
+	FunctionCodes func = mSendQueue.front()->GetFunction();
 	mSendQueue.pop_front();
 
 	if(func == FC_CONFIRM) {
@@ -178,7 +179,7 @@ void AppLayer::OnSendResult(bool aSuccess)
 }
 
 void AppLayer::_OnSendSuccess() { this->OnSendResult(true); }
-	
+
 void AppLayer::_OnSendFailure() { this->OnSendResult(false); }
 
 
@@ -188,17 +189,17 @@ void AppLayer::_OnSendFailure() { this->OnSendResult(false); }
 
 void AppLayer::OnResponse(const AppControlField& arCtrl, APDU& arAPDU)
 {
-	if(arCtrl.UNS) 
+	if(arCtrl.UNS)
 		throw Exception(LOCATION, "Bad unsol bit", ALERR_BAD_UNSOL_BIT);
-	
+
 	// If we get a response that requests confirmation, we shouldn't confirm
 	// if we're not going to handle the data. This is usually indicative of an
 	// early timeout. It will show up in the logs as a response without context.
-	if(arCtrl.CON && mSolicited.AcceptsResponse()) { 
+	if(arCtrl.CON && mSolicited.AcceptsResponse()) {
 		this->QueueConfirm(false, arCtrl.SEQ);
 	}
-	
-	mSolicited.OnResponse(arAPDU);	
+
+	mSolicited.OnResponse(arAPDU);
 }
 
 void AppLayer::OnUnsolResponse(const AppControlField& arCtrl, APDU& arAPDU)
@@ -209,10 +210,10 @@ void AppLayer::OnUnsolResponse(const AppControlField& arCtrl, APDU& arAPDU)
 	if(!mpUser->IsMaster())
 		throw Exception(LOCATION, SERR_FUNC_NOT_SUPPORTED);
 
-	if(arCtrl.CON) 
+	if(arCtrl.CON)
 		this->QueueConfirm(true, arCtrl.SEQ);
-	
-	mUnsolicited.OnUnsol(arAPDU);	
+
+	mUnsolicited.OnUnsol(arAPDU);
 }
 
 void AppLayer::OnConfirm(const AppControlField& arCtrl, APDU& arAPDU)
@@ -224,11 +225,11 @@ void AppLayer::OnConfirm(const AppControlField& arCtrl, APDU& arAPDU)
 		if(mpUser->IsMaster())
 			throw Exception(LOCATION, ALERR_UNEXPECTED_CONFIRM);
 
-		mUnsolicited.OnConfirm(arCtrl.SEQ);		
+		mUnsolicited.OnConfirm(arCtrl.SEQ);
 	}
 	else {
-		mSolicited.OnConfirm(arCtrl.SEQ);		
-	}	
+		mSolicited.OnConfirm(arCtrl.SEQ);
+	}
 }
 
 
@@ -237,8 +238,8 @@ void AppLayer::OnUnknownObject(FunctionCodes aCode, const AppControlField& arCtr
 	if(!mpUser->IsMaster())
 	{
 		switch(aCode) {
-			case(FC_CONFIRM):								
-			case(FC_RESPONSE):								
+			case(FC_CONFIRM):
+			case(FC_RESPONSE):
 			case(FC_UNSOLICITED_RESPONSE):
 			case(FC_DIRECT_OPERATE_NO_ACK):
 				break;
@@ -246,7 +247,7 @@ void AppLayer::OnUnknownObject(FunctionCodes aCode, const AppControlField& arCtr
 				mSolicited.OnUnknownObjectInRequest(arCtrl);
 				mpUser->OnUnknownObject();
 				break;
-		}		
+		}
 	}
 }
 
@@ -269,7 +270,7 @@ void AppLayer::OnRequest(const AppControlField& arCtrl, APDU& arAPDU)
 /////////////////////////////
 
 void AppLayer::QueueConfirm(bool aUnsol, int aSeq)
-{	
+{
 	if(mConfirmSending)
 		throw Exception(LOCATION, "Unsol flood", aUnsol ? ALERR_UNSOL_FLOOD : ALERR_SOL_FLOOD);
 

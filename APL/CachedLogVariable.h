@@ -30,16 +30,16 @@ namespace apl
 	class CachedLogVariable
 	{
 	public:
-		CachedLogVariable(Logger* apLogger, const std::string& arName) 
+		CachedLogVariable(Logger* apLogger, const std::string& arName)
 			: mVar(apLogger, arName),
 			mCurrent(0),
 			mSet(false)
-		{ 
+		{
 		}
 
 		void Set(int aVal) {
 			if ( aVal != mCurrent || !mSet) {
-				mVar.Set(aVal); 
+				mVar.Set(aVal);
 				mCurrent = aVal;
 				mSet = true;
 			}

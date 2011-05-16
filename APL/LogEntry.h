@@ -22,12 +22,12 @@
 #include "TimingTools.h"
 #include "LogBase.h"
 
-namespace apl {	
-	
+namespace apl {
+
 	class LogEntry
 	{
 		public:
-			
+
 			LogEntry():mTime(TimeStamp::GetUTCTimeStamp()){};
 
 			LogEntry( FilterLevel aLevel, const std::string& aDeviceName, const std::string& aLocation, const std::string& aMessage, int aErrorCode);
@@ -36,7 +36,7 @@ namespace apl {
 			const std::string&	GetLocation() { return mLocation; }
 			const std::string&	GetMessage() { return mMessage; }
 			FilterLevel			GetFilterLevel() { return mFilterLevel; }
-			std::string			GetTimeString(){ return TimeStamp::UTCTimeStampToString(mTime);}			
+			std::string			GetTimeString(){ return TimeStamp::UTCTimeStampToString(mTime);}
 			int					GetErrorCode(){return mErrorCode; }
 
 			std::string			LogString();

@@ -55,7 +55,7 @@ namespace apl { namespace dnp {
 
 		typedef std::multiset<T, LessThanByTime > Type;
 	};
-	
+
 	/** Sorts events by the order in which they are inserted.
 		The last event value has been hijacked here for use with VTO.
 	*/

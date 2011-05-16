@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "AppChannelStates.h"
 
 #include <APL/Singleton.h>
@@ -31,27 +31,27 @@ namespace apl { namespace dnp {
 
 	// ---- Default behaviors for the states ----
 
-	void ACS_Base::Send(AppLayerChannel*, APDU&, size_t) 
+	void ACS_Base::Send(AppLayerChannel*, APDU&, size_t)
 	{ this->ThrowInvalidState("Send"); }
 
 	void ACS_Base::Cancel(AppLayerChannel*)
 	{ this->ThrowInvalidState("Cancel"); }
-	
+
 	void ACS_Base::OnSendSuccess(AppLayerChannel*)
 	{ this->ThrowInvalidState("OnSendSuccess"); }
 
 	void ACS_Base::OnSendFailure(AppLayerChannel*)
 	{ this->ThrowInvalidState("OnSendFailure"); }
-	
+
 	void ACS_Base::OnConfirm(AppLayerChannel* c, int aSeq)
 	{
-		ERROR_LOGGER_BLOCK(c->GetLogger(), LEV_WARNING, 
+		ERROR_LOGGER_BLOCK(c->GetLogger(), LEV_WARNING,
 			"Unexpected confirm with sequence: " << aSeq, ALERR_UNEXPECTED_CONFIRM);
 	}
 
 	void ACS_Base::OnResponse(AppLayerChannel* c, APDU& arAPDU)
 	{
-		LOGGER_BLOCK(c->GetLogger(), LEV_WARNING, 
+		LOGGER_BLOCK(c->GetLogger(), LEV_WARNING,
 			"Unexpected response with sequence: " << arAPDU.GetControl().SEQ);
 	}
 
@@ -69,14 +69,14 @@ namespace apl { namespace dnp {
 	{
 		AppControlField acf = arAPDU.GetControl();
 
-		if(acf.SEQ == c->Sequence()) {		
+		if(acf.SEQ == c->Sequence()) {
 			if(acf.FIR == aExpectFIR) {
 				c->CancelTimer();
 
 				if(acf.FIN) {
-					c->ChangeState(ACS_Idle::Inst());				
+					c->ChangeState(ACS_Idle::Inst());
 					c->DoFinalResponse(arAPDU);
-				} 
+				}
 				else {
 					c->IncrSequence();
 					c->ChangeState(ACS_WaitForFinalResponse::Inst());
@@ -86,28 +86,28 @@ namespace apl { namespace dnp {
 			}
 			else {
 				ERROR_LOGGER_BLOCK(c->GetLogger(), LEV_WARNING, "Unexpected fir bit " << acf.FIR, ALERR_BAD_FIR_FIN);
-			}		
+			}
 		}
 		else {
 			ERROR_LOGGER_BLOCK(c->GetLogger(), LEV_WARNING, "Bad sequence number " << acf.SEQ, ALERR_BAD_SEQUENCE);
-		}	
+		}
 	}
-	
+
 	/// ---- ACS_IDle ----
 
 	ACS_Idle ACS_Idle::mInstance;
-	
+
 	void ACS_Idle::Send(AppLayerChannel* c, APDU& arAPDU, size_t aNumRetry)
-	{	
+	{
 		AppControlField acf = arAPDU.GetControl();
 		FunctionCodes func = arAPDU.GetFunction();
-		acf.SEQ = (acf.FIR && func == FC_RESPONSE) ? c->Sequence() : c->IncrSequence();		
+		acf.SEQ = (acf.FIR && func == FC_RESPONSE) ? c->Sequence() : c->IncrSequence();
 		arAPDU.SetControl(acf);
 		c->ChangeState(NextState(c, arAPDU.GetFunction(), acf.CON));
 		c->SetRetry(aNumRetry);
 		c->QueueSend(arAPDU);
 	}
-	
+
 	ACS_Base* ACS_Idle::NextState(AppLayerChannel* c, FunctionCodes aFunc, bool aConfirm)
 	{
 		switch(aFunc)
@@ -115,7 +115,7 @@ namespace apl { namespace dnp {
 			case(FC_CONFIRM):
 				throw ArgumentException(LOCATION, "Confirms are automatic only");
 			case(FC_RESPONSE):
-				if(c->Sequence() < 0) 
+				if(c->Sequence() < 0)
 					throw InvalidStateException(LOCATION, "Can't respond until we've received a request");
 
 			case(FC_UNSOLICITED_RESPONSE):
@@ -139,9 +139,9 @@ namespace apl { namespace dnp {
 		if(!c->Retry(this)) { //if we can't retry, then go back to idle
 			c->ChangeState(ACS_Idle::Inst());
 			c->DoFailure();
-		}		
+		}
 	}
-	
+
 	void ACS_SendBase::Cancel(AppLayerChannel* c)
 	{
 		c->ChangeState(ACS_SendCanceled::Inst());
@@ -156,7 +156,7 @@ namespace apl { namespace dnp {
 		c->ChangeState(ACS_Idle::Inst());
 		c->DoFailure();
 	}
-	
+
 	void ACS_SendCanceled::OnSendFailure(AppLayerChannel* c)
 	{
 		c->ChangeState(ACS_Idle::Inst());
@@ -213,7 +213,7 @@ namespace apl { namespace dnp {
 			c->DoSendSuccess();
 		}
 		else {
-			ERROR_LOGGER_BLOCK(c->GetLogger(), LEV_WARNING, 
+			ERROR_LOGGER_BLOCK(c->GetLogger(), LEV_WARNING,
 				"Unexpected confirm w/ sequence " << aSeq, ALERR_UNEXPECTED_CONFIRM);
 		}
 
@@ -233,12 +233,12 @@ namespace apl { namespace dnp {
 	void ACS_WaitForResponseBase::OnTimeout(AppLayerChannel* c)
 	{
 		LOGGER_BLOCK(c->GetLogger(), LEV_WARNING, "Timeout while waiting for response");
-		if(!c->Retry(ACS_SendExpectResponse::Inst())) {		
+		if(!c->Retry(ACS_SendExpectResponse::Inst())) {
 			c->ChangeState(ACS_Idle::Inst());
 			c->DoFailure();
 		}
 	}
-	
+
 // ---- ACS_WaitForFirstResponse ----
 
 ACS_WaitForFirstResponse ACS_WaitForFirstResponse::mInstance;

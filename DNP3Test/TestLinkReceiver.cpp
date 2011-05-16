@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
@@ -29,7 +29,7 @@ using namespace apl::dnp;
 
 
 	BOOST_AUTO_TEST_SUITE(AsyncLinkReceiver)
-		
+
 		BOOST_AUTO_TEST_CASE(InitializationState){
 			LinkReceiverTest t;
 			BOOST_REQUIRE_EQUAL(t.mSink.mNumFrames, 0);
@@ -38,7 +38,7 @@ using namespace apl::dnp;
 		//////////////////////////////////////////////////////////////
 		//  CRC Failures
 		//////////////////////////////////////////////////////////////
-		
+
 		BOOST_AUTO_TEST_CASE(HeaderCRCError) {
 			LinkReceiverTest t;
 			t.WriteData("05 64 05 C0 01 00 00 04 E9 20");
@@ -168,7 +168,7 @@ using namespace apl::dnp;
 		//////////////////////////////////////////////////////////////
 		// Successful packets - Pri To Sec
 		//////////////////////////////////////////////////////////////
-		
+
 		BOOST_AUTO_TEST_CASE(TestLinkStates) {
 			LinkReceiverTest t;
 			LinkFrame f;
@@ -202,7 +202,7 @@ using namespace apl::dnp;
 		BOOST_AUTO_TEST_CASE(UnconfirmedUserData) {
 			LinkReceiverTest t;
 			LinkFrame f;
-			ByteStr data(250, 0); //initializes a buffer with increasing value	
+			ByteStr data(250, 0); //initializes a buffer with increasing value
 			f.FormatUnconfirmedUserData(true, 1, 2, data, data.Size());
 			t.WriteData(f);
 			BOOST_REQUIRE(t.IsLogErrorFree());
@@ -214,7 +214,7 @@ using namespace apl::dnp;
 		BOOST_AUTO_TEST_CASE(ConfirmedUserData) {
 			LinkReceiverTest t;
 			LinkFrame f;
-			ByteStr data(250, 0); //initializes a buffer with increasing value	
+			ByteStr data(250, 0); //initializes a buffer with increasing value
 			f.FormatConfirmedUserData(true, true, 1, 2, data, data.Size());
 			t.WriteData(f);
 			BOOST_REQUIRE(t.IsLogErrorFree());
@@ -230,7 +230,7 @@ using namespace apl::dnp;
 		BOOST_AUTO_TEST_CASE(TestTwoPackets) {
 			LinkReceiverTest t;
 			// back to back reset link
-			t.WriteData("05 64 05 C0 01 00 00 04 E9 21 05 64 05 C0 01 00 00 04 E9 21"); 
+			t.WriteData("05 64 05 C0 01 00 00 04 E9 21 05 64 05 C0 01 00 00 04 E9 21");
 			BOOST_REQUIRE(t.IsLogErrorFree());
 			BOOST_REQUIRE_EQUAL(t.mSink.mNumFrames, 2);
 			BOOST_REQUIRE(t.mSink.CheckLast(FC_PRI_RESET_LINK_STATES, true, 1, 1024));
@@ -239,7 +239,7 @@ using namespace apl::dnp;
 		//////////////////////////////////////////////////////////////
 		// framing errors
 		//////////////////////////////////////////////////////////////
-		
+
 		// Test that the parser is able to resync without discarding
 		BOOST_AUTO_TEST_CASE(Resync0564) {
 			LinkReceiverTest t;
@@ -252,7 +252,7 @@ using namespace apl::dnp;
 		//////////////////////////////////////////////////////////////
 		// many packets
 		//////////////////////////////////////////////////////////////
-		
+
 		// Test that the parser is able to handle many packets successively without
 		// doing something stupid like overflowing it's buffer
 		BOOST_AUTO_TEST_CASE(ManyReceives) {

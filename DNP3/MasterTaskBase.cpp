@@ -24,7 +24,7 @@
 
 namespace apl { namespace dnp {
 
-MasterTaskBase::MasterTaskBase(Logger* apLogger) : 
+MasterTaskBase::MasterTaskBase(Logger* apLogger) :
 Loggable(apLogger)
 {}
 

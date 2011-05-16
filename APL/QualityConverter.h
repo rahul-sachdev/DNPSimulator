@@ -29,7 +29,7 @@
 namespace apl {
 
 template <class T, size_t N>
-struct QualityInfo 
+struct QualityInfo
 {
 	const static size_t NUM = N;
 	const static boost::uint8_t masks[N];
@@ -51,25 +51,25 @@ class QualityConverter
 
 	static char GetSymbol(boost::uint8_t aMask)
 	{
-		for (size_t i = 0; i < T::NUM; ++i) 
-			if(T::masks[i] == aMask) return T::symbols[i];		
+		for (size_t i = 0; i < T::NUM; ++i)
+			if(T::masks[i] == aMask) return T::symbols[i];
 		return '.';
 	}
 
 	static std::string GetName(boost::uint8_t aMask)
 	{
-		for (size_t i = 0; i < T::NUM; ++i) 
-			if(T::masks[i] == aMask) return T::names[i];		
+		for (size_t i = 0; i < T::NUM; ++i)
+			if(T::masks[i] == aMask) return T::names[i];
 		return "Reserved";
 	}
 
 	static boost::uint8_t GetMask(char aSymbol)
 	{
-		for (size_t i=0; i < T::NUM; ++i) 
-			if(T::symbols[i] == aSymbol) return T::masks[i];		
+		for (size_t i=0; i < T::NUM; ++i)
+			if(T::symbols[i] == aSymbol) return T::masks[i];
 		return 0;
 	}
-	
+
 	static std::string GetSymbolString(boost::uint8_t aQual)
 	{
 		std::ostringstream oss;
@@ -81,18 +81,18 @@ class QualityConverter
 		oss << "}";
 		return oss.str();
 	}
-	
+
 	static std::string GetNameString(boost::uint8_t aQual)
 	{
 		std::ostringstream oss;
-		for (size_t i=0; i < T::NUM; ++i) 
+		for (size_t i=0; i < T::NUM; ++i)
 			if(aQual & T::masks[i]) oss << " " << T::names[i];
-		return oss.str();		
+		return oss.str();
 	}
-	
+
 	static std::string GetAllSymbols() { return GetSymbolString(~0); }
 };
-		
+
 }
 
 #endif

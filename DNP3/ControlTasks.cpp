@@ -25,7 +25,7 @@
 
 namespace apl { namespace dnp {
 
-ControlTaskBase::ControlTaskBase(Logger* apLogger) : 
+ControlTaskBase::ControlTaskBase(Logger* apLogger) :
 MasterTaskBase(apLogger),
 mState(INVALID)
 {}
@@ -52,15 +52,15 @@ void ControlTaskBase::OnFailure()
 
 TaskResult ControlTaskBase::_OnPartialResponse(const APDU& arAPDU)
 {
-	LOG_BLOCK(LEV_ERROR, "Non fin responses not allowed for control tasks");	
+	LOG_BLOCK(LEV_ERROR, "Non fin responses not allowed for control tasks");
 	return TR_CONTINUE;
 }
 
 TaskResult ControlTaskBase::_OnFinalResponse(const APDU& arAPDU)
-{	
+{
 	CommandStatus cs = mValidator(arAPDU);
 
-	if(mState == SELECT && cs == CS_SUCCESS) { 
+	if(mState == SELECT && cs == CS_SUCCESS) {
 		mState = OPERATE;
 		return TR_CONTINUE;
 	}
@@ -68,37 +68,37 @@ TaskResult ControlTaskBase::_OnFinalResponse(const APDU& arAPDU)
 		this->Respond(cs);
 		return TR_SUCCESS;
 	}
-	
+
 }
 
 /* -------- BinaryOutputTask -------- */
 
-BinaryOutputTask::BinaryOutputTask(Logger* apLogger) : 
+BinaryOutputTask::BinaryOutputTask(Logger* apLogger) :
 ControlTask<BinaryOutput>(apLogger)
 {}
 
-CommandObject<BinaryOutput>* BinaryOutputTask::GetObject(const BinaryOutput&) 
+CommandObject<BinaryOutput>* BinaryOutputTask::GetObject(const BinaryOutput&)
 { return Group12Var1::Inst(); }
 
 /* -------- SetpointTask -------- */
 
-SetpointTask::SetpointTask(Logger* apLogger) :  
+SetpointTask::SetpointTask(Logger* apLogger) :
 ControlTask<Setpoint>(apLogger)
 {}
 
 CommandObject<Setpoint>* SetpointTask::GetOptimalEncoder(SetpointEncodingType aType)
 {
 	switch(aType) {
-		case SPET_INT16: return Group41Var2::Inst();				
-		case SPET_INT32: return Group41Var1::Inst();		
+		case SPET_INT16: return Group41Var2::Inst();
+		case SPET_INT32: return Group41Var1::Inst();
 		case SPET_FLOAT: return Group41Var3::Inst();
-		case SPET_DOUBLE: return Group41Var4::Inst();		
+		case SPET_DOUBLE: return Group41Var4::Inst();
 		default:
 			throw ArgumentException(LOCATION, "Enum not handled");
 	}
 }
 
-CommandObject<Setpoint>* SetpointTask::GetObject(const Setpoint& arSetpoint) 
+CommandObject<Setpoint>* SetpointTask::GetObject(const Setpoint& arSetpoint)
 {
 	return GetOptimalEncoder(arSetpoint.GetOptimalEncodingType());
 }

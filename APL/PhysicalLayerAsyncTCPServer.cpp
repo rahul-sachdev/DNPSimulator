@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 
 #include "PhysicalLayerAsyncTCPServer.h"
 
@@ -41,8 +41,8 @@ mAcceptor(*apIOService)
 {
 	//set the endpoint's address
 	boost::system::error_code ec;
-	ip::address_v4 addr = ip::address_v4::from_string(arEndpoint, ec);	
-	if(ec) throw ArgumentException(LOCATION, "endpoint: " + arEndpoint + " is invalid ");	
+	ip::address_v4 addr = ip::address_v4::from_string(arEndpoint, ec);
+	if(ec) throw ArgumentException(LOCATION, "endpoint: " + arEndpoint + " is invalid ");
 	mEndpoint.address(addr);
 }
 
@@ -62,7 +62,7 @@ void PhysicalLayerAsyncTCPServer::DoOpen()
 		mAcceptor.listen(socket_base::max_connections, ec);
 		if(ec) throw Exception(LOCATION, ec.message());
 	}
-	
+
 	mAcceptor.async_accept(mSocket, mEndpoint, boost::bind(&PhysicalLayerAsyncTCPServer::OnOpenCallback, this, placeholders::error));
 }
 

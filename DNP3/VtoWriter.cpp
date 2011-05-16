@@ -22,7 +22,7 @@
 namespace apl {
 	namespace dnp {
 
-		VtoWriter::VtoWriter(size_t aMaxVtoChunks) : 
+		VtoWriter::VtoWriter(size_t aMaxVtoChunks) :
 			mMaxVtoChunks(aMaxVtoChunks)
 		{}
 

@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "AsyncTaskBase.h"
 
 
@@ -45,7 +45,7 @@ mNextRunTime(arInitialTime),
 M_INITIAL_TIME(arInitialTime),
 mFlags(0)
 {
-	
+
 }
 
 void AsyncTaskBase::Disable()
@@ -74,7 +74,7 @@ void AsyncTaskBase::SilentDisable()
 void AsyncTaskBase::Dispatch()
 {
 	if(mIsRunning) throw InvalidStateException(LOCATION, "Running");
-	if(!mIsEnabled) throw InvalidStateException(LOCATION, "Disabled");	
+	if(!mIsEnabled) throw InvalidStateException(LOCATION, "Disabled");
 
 	mIsRunning = true;
 	mIsComplete = false;
@@ -112,7 +112,7 @@ void AsyncTaskBase::OnComplete(bool aSuccess)
 	mIsRunning = false;
 
 	this->_OnComplete(aSuccess);
-	
+
 	mpGroup->OnCompletion();
 }
 
@@ -144,10 +144,10 @@ bool AsyncTaskBase::LessThan(const AsyncTaskBase* l, const AsyncTaskBase* r)
 	if(!l->IsEnabled() && r->IsEnabled()) return true;
 	if(!r->IsEnabled() && l->IsEnabled()) return false;
 
-	if(l->IsExpired()) 
+	if(l->IsExpired())
 	{
 		if(r->IsExpired()) //if they're both expired, resolve using priority
-		{ 
+		{
 			return l->Priority() < r->Priority();
 		}
 		else
@@ -155,12 +155,12 @@ bool AsyncTaskBase::LessThan(const AsyncTaskBase* l, const AsyncTaskBase* r)
 			return false; // left expired but right is not
 		}
 	}
-	else if(r->IsExpired()) 
+	else if(r->IsExpired())
 	{
 		return true; // right expired but left is not
 	}
 	else // if they're both not expired, the one with the lowest run time is higher
-	{ 
+	{
 		return l->NextRunTime() > r->NextRunTime();
 	}
 }

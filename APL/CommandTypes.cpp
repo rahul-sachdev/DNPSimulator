@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "CommandTypes.h"
 #include "PackingUnpacking.h"
 #include "Exception.h"
@@ -42,7 +42,7 @@ namespace apl
 			MACRO_CASE_DECLARE(CS_LOCAL)
 			MACRO_CASE_DECLARE(CS_TOO_MANY_OPS)
 			MACRO_CASE_DECLARE(CS_NOT_AUTHORIZED)
-			
+
 			default:
 				return CS_UNDEFINED;
 		}
@@ -60,7 +60,7 @@ namespace apl
 			MACRO_CASE_DECLARE(CC_PULSE_CLOSE)
 			MACRO_CASE_DECLARE(CC_PULSE_TRIP)
 			MACRO_CASE_DECLARE(CC_UNDEFINED)
-			
+
 			default:
 				return CC_UNDEFINED;
 		}
@@ -114,7 +114,7 @@ namespace apl
 		}
 	}
 
-	CommandRequest::CommandRequest(CommandTypes aType) : 
+	CommandRequest::CommandRequest(CommandTypes aType) :
 	mStatus(CS_SUCCESS),
 	mType(aType)
 	{}
@@ -125,14 +125,14 @@ namespace apl
 		mStatus = arCopy.mStatus;
 	}
 
-	BinaryOutput::BinaryOutput() : 
+	BinaryOutput::BinaryOutput() :
 	CommandRequest(CT_BINARY_OUTPUT),
 	mRawCode(CC_NULL),
 	mCount(1),
 	mOnTimeMS(100),
 	mOffTimeMS(100)
 	{
-	
+
 	}
 
 	BinaryOutput::BinaryOutput(ControlCode aCode,boost::uint8_t aCount, boost::uint8_t aOnTime, boost::uint8_t aOffTime) :
@@ -142,7 +142,7 @@ namespace apl
 	mOnTimeMS(aOnTime),
 	mOffTimeMS(aOffTime)
 	{
-		
+
 	}
 
 	ControlCode BinaryOutput::GetCode() const { return ByteToControlCode(mRawCode); }
@@ -157,19 +157,19 @@ namespace apl
 
 	Setpoint::Setpoint() : CommandRequest(CT_SETPOINT), mEncodingType(SPET_UNSET) {}
 
-	Setpoint::Setpoint(boost::int16_t aValue) : 
+	Setpoint::Setpoint(boost::int16_t aValue) :
 	CommandRequest(CT_SETPOINT),
 	mValue(aValue),
-	mEncodingType(SPET_AUTO_INT) 
+	mEncodingType(SPET_AUTO_INT)
 	{}
 
-	Setpoint::Setpoint(boost::int32_t aValue) : 
+	Setpoint::Setpoint(boost::int32_t aValue) :
 	CommandRequest(CT_SETPOINT),
 	mValue(aValue),
-	mEncodingType(SPET_AUTO_INT) 
+	mEncodingType(SPET_AUTO_INT)
 	{}
 
-	Setpoint::Setpoint(double aValue) : 
+	Setpoint::Setpoint(double aValue) :
 	CommandRequest(CT_SETPOINT),
 	mValue(aValue),
 	mEncodingType(SPET_AUTO_DOUBLE)
@@ -190,21 +190,21 @@ namespace apl
 		}
 	}
 	void Setpoint::SetValue(boost::int32_t aValue)
-	{ 
-		mValue = static_cast<double>(aValue); 
+	{
+		mValue = static_cast<double>(aValue);
 		if(mEncodingType == SPET_UNSET){
 			mEncodingType = SPET_AUTO_INT;
 		}
 	}
 
 	double Setpoint::GetValue() const
-	{		
+	{
 		assert(mEncodingType != SPET_UNSET);
 		return mValue;
 	}
 
 	SetpointEncodingType Setpoint::GetOptimalEncodingType() const
-	{	
+	{
 		assert(mEncodingType != SPET_UNSET);
 		if(mEncodingType == SPET_AUTO_INT){
 			if(mValue <= Int16LE::Max && mValue >= Int16LE::Min) return SPET_INT16;
@@ -218,6 +218,6 @@ namespace apl
 		// so we should use that type.
 		return mEncodingType;
 	}
-	
+
 
 }

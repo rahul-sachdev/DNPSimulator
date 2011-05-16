@@ -74,7 +74,7 @@ namespace apl
 		DT_ANALOG,
 		DT_COUNTER,
 		DT_CONTROL_STATUS,
-		DT_SETPOINT_STATUS		
+		DT_SETPOINT_STATUS
 	};
 
 	std::string GetDataTypeName(DataTypes aType);
@@ -220,7 +220,7 @@ namespace apl
 		{ return GetValue() == rhs.GetValue() && GetQuality() == rhs.GetQuality(); }
 
 		protected:
-		// IntDataPoints have seperate fields for quality and value		
+		// IntDataPoints have seperate fields for quality and value
 		TypedDataPoint(boost::uint8_t aQuality, DataTypes aType);
 		T mValue;
 

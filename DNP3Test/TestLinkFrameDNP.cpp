@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
@@ -38,7 +38,7 @@ void FormatUserData(apl::dnp::LinkFrame& f, bool aIsMaster, bool aIsConfirmed, i
 	}
 	else {
 		f.FormatUnconfirmedUserData(aIsMaster, aDest, aSrc, hs, hs.Size());
-	}	
+	}
 }
 
 BOOST_AUTO_TEST_SUITE(DNPLinkFrame)
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_SUITE(DNPLinkFrame)
 	BOOST_AUTO_TEST_CASE(CopyConstructor) //make sure the default copies the buffer properly
 	{
 		LinkFrame a;
-		for(size_t i=0; i<a.GetSize(); i++) 
+		for(size_t i=0; i<a.GetSize(); i++)
 			a.GetBuffer()[i] = static_cast<boost::uint8_t>(i);
 
 		LinkFrame b(a);
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_SUITE(DNPLinkFrame)
 	{
 		LinkFrame f;
 		BOOST_REQUIRE(!f.IsComplete());
-		
+
 		// ResetLinkStates - Master
 		f.FormatResetLinkStates(true, 1, 1024);
 		BOOST_REQUIRE(f.IsComplete());
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_SUITE(DNPLinkFrame)
 		//ACK - Slave (DFC = false)
 		f.FormatAck(false, false, 1024, 1);
 		BOOST_REQUIRE(IsFrameEqual(f, "05 64 05 00 00 04 01 00 19 A6")); //ACK - Slave
-		
+
 		// ACK - Slave (DFC = true)
 		f.FormatAck(false, true, 1024, 1);
 		BOOST_REQUIRE(IsFrameEqual(f, "05 64 05 10 00 04 01 00 8B 0C")); // ACK - Slave (with DFC set)
@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_SUITE(DNPLinkFrame)
 		// ACK - Master (DFC = false)
 		f.FormatAck(true, false, 1, 1024);
 		BOOST_REQUIRE(IsFrameEqual(f, "05 64 05 80 01 00 00 04 53 11"));
-		
+
 		// ACK - Master (DFC = true)
 		f.FormatAck(true, true, 1, 1024);
 		BOOST_REQUIRE(IsFrameEqual(f, "05 64 05 90 01 00 00 04 C1 BB"));
@@ -116,12 +116,12 @@ BOOST_AUTO_TEST_SUITE(DNPLinkFrame)
 		f.FormatResetLinkStates(false, 1024, 1);
 		BOOST_REQUIRE(IsFrameEqual(f, "05 64 05 40 00 04 01 00 A3 96"));
 	}
-		
+
 	BOOST_AUTO_TEST_CASE(UnconfirmedUserData)
 	{
 		LinkFrame f;
 		// Unconfirmed User Data - Slave
-		
+
 		FormatUserData(f, false, false, 1024, 1, "C1 E3 81 96 00 02 01 28 01 00 00 00 01 02 01 28 01 00 01 00 01 02 01 28 01 00 02 00 01 02 01 28 01 00 03 00 01 20 02 28 01 00 00 00 01 00 00 20 02 28 01 00 01 00 01 00 00 01 01 01 00 00 03 00 00 1E 02 01 00 00 01 00 01 00 00 01 00 00");
 		//take the packet from the test above, change the control byte to 44 , repair the crc
 		BOOST_REQUIRE(IsFrameEqual(f, RepairCRC("05 64 53 44 00 04 01 00 FF FF C1 E3 81 96 00 02 01 28 01 00 00 00 01 02 01 28 FF FF 01 00 01 00 01 02 01 28 01 00 02 00 01 02 01 28 FF FF 01 00 03 00 01 20 02 28 01 00 00 00 01 00 00 20 FF FF 02 28 01 00 01 00 01 00 00 01 01 01 00 00 03 00 FF FF 00 1E 02 01 00 00 01 00 01 00 00 01 00 00 FF FF")));

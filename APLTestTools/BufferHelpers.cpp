@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include "BufferHelpers.h"
 
 #include <APL/Configure.h>
@@ -33,7 +33,7 @@ namespace apl {
 	{}
 
 	ByteStr::ByteStr(size_t aLength,boost::uint8_t aSeed) : CopyableBuffer(aLength)
-	{		
+	{
 		for(size_t i=0; i<aLength; ++i) mpBuff[i] = static_cast<boost::uint8_t>((i+aSeed)%256);
 	}
 
@@ -46,7 +46,7 @@ namespace apl {
 	{
 		memcpy(mpBuff, aChars.c_str(), aChars.size());
 	}
-	
+
 	bool ByteStr::operator==(const ByteStr& arRHS) const
 	{
 		if(Size() != arRHS.Size()) return false;
@@ -57,14 +57,14 @@ namespace apl {
 		return true;
 	}
 
-	HexSequence::HexSequence( const std::string& aSequence) : 
+	HexSequence::HexSequence( const std::string& aSequence) :
 	ByteStr(Validate(RemoveSpaces(aSequence)))
 	{
 		std::string s = RemoveSpaces(aSequence);
 
 		size_t size = s.size();
 		for(size_t index = 0, pos = 0; pos < size; ++index, pos+=2) {
-			boost::uint32_t val;   
+			boost::uint32_t val;
 			std::stringstream ss;
 			ss << std::hex << s.substr(pos,2);
 			if((ss >> val).fail()) {

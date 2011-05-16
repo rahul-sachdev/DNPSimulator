@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
@@ -76,8 +76,8 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		}
 
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 1);
-		BOOST_REQUIRE(t.mts.DispatchOne());		
-		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0);	
+		BOOST_REQUIRE(t.mts.DispatchOne());
+		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0);
 	}
 
 	BOOST_AUTO_TEST_CASE(DataPostToNonExistent)
@@ -96,8 +96,8 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		}
 
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 1);
-		BOOST_REQUIRE(t.mts.DispatchOne());	
-		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0);	
+		BOOST_REQUIRE(t.mts.DispatchOne());
+		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0);
 
 		{
 			Transaction t(pObs);
@@ -105,15 +105,15 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 			pObs->Update(b, 0);
 		}
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 1);
-		BOOST_REQUIRE(t.mts.DispatchOne());	
-		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0);	
+		BOOST_REQUIRE(t.mts.DispatchOne());
+		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0);
 	}
 
 	BOOST_AUTO_TEST_CASE(UnsupportedFunction)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
 		SlaveTestObject t(cfg);
-		t.slave.OnLowerLayerUp();			
+		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 10"); // func = initialize application (16)
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 01"); // IIN = device restart + func not supported
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		t.SendToSlave("C0 02 50 01 00 04 04 01");
 	    BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 04");
 	}
-	
+
 	BOOST_AUTO_TEST_CASE(WriteNonWriteObject)
 	{
 		SlaveConfig cfg;  cfg.mDisableUnsol = true;
@@ -168,7 +168,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		t.SendToSlave("C0 17"); //delay measure
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 34 02 07 01 00 00"); // response, Grp51Var2, count 1, value == 00 00
 	}
-	
+
 	BOOST_AUTO_TEST_CASE(WriteTimeDate)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 
 		t.SendToSlave("C0 02 32 01 07 01 D2 04 00 00 00 00"); //write Grp50Var1, value = 1234 ms after epoch
 		BOOST_REQUIRE_EQUAL(t.fakeTime.GetTime(), 1234);
-		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00"); 
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00");
 	}
 	BOOST_AUTO_TEST_CASE(WriteTimeDateNotAsking)
 	{
@@ -230,14 +230,14 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		SlaveTestObject t(cfg);
 		t.db.Configure(DT_ANALOG, 8);
 		t.slave.OnLowerLayerUp();
-	
+
 		{
 			Transaction tr(&t.db);
 			for(size_t i=0; i<8; i++) t.db.Update(Analog(0,AQ_ONLINE), i);
 		}
-		
+
 		t.SendToSlave("C0 01 3C 01 06"); // Read class 0
-		
+
 		// Response should be (30,1)x2 per fragment, quality ONLINE, value 0
 		// 4 fragment response, first 3 fragments should be confirmed, last one shouldn't be
 		BOOST_REQUIRE_EQUAL(t.Read(), "A0 81 80 00 1E 01 00 00 01 01 00 00 00 00 01 00 00 00 00");
@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
 		SlaveTestObject t(cfg);
-		
+
 		t.db.Configure(DT_ANALOG, 100);
 		t.db.SetClass(DT_ANALOG, 23, PC_CLASS_1);
 		t.db.SetClass(DT_ANALOG, 05, PC_CLASS_1);
@@ -264,11 +264,11 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 
 		t.SendToSlave("C0 01 3C 02 06");
 		BOOST_REQUIRE_EQUAL(t.Read(), "E0 81 80 00 20 01 17 02 05 01 02 00 00 00 17 01 39 30 00 00"); // 12345 in Little endian hex is 39 30 00 00
-		
+
 
 		t.SendToSlave("C0 01 3C 02 06");			// Repeat read class 1
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00");	// Buffer should have been cleared
-		
+
 	}
 
 	BOOST_AUTO_TEST_CASE(NullUnsolOnStartup)
@@ -276,7 +276,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		SlaveConfig cfg;  cfg.mAllowTimeSync = true;
 		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
-		
+
 		// Null UNSOL, FIR, FIN, CON, UNS, w/ restart and need-time IIN
 		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 90 00");
 	}
@@ -287,7 +287,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		SlaveTestObject t(cfg);
 		t.app.EnableAutoSendCallback(false); //will respond with failure
 		t.slave.OnLowerLayerUp();
-		
+
 		// check for the startup null unsol packet, but fail the transaction
 		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 1); // this should cause a timer to become active
@@ -315,11 +315,11 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		t.slave.OnLowerLayerUp();
 		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
 
-		// should immediately try to send another unsol packet, 
+		// should immediately try to send another unsol packet,
 		// Grp2Var1, qual 0x17, count 1, index 0, quality+val == 0x01
 		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 02 01 17 01 00 01");
 
-		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //check that no more frags are sent			
+		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //check that no more frags are sent
 	}
 
 	BOOST_AUTO_TEST_CASE(UnsolEventBufferOverflow)
@@ -352,7 +352,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// the first value is lost off the front of the buffer
 		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 02 01 17 02 00 01 00 81");
 
-		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //check that no more frags are sent			
+		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //check that no more frags are sent
 	}
 
 	BOOST_AUTO_TEST_CASE(UnsolMultiFragments)
@@ -367,7 +367,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		t.slave.OnLowerLayerUp();
 		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
 
-		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //check that no more frags are sent			
+		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //check that no more frags are sent
 
 		{
 			Transaction tr(t.slave.GetDataObserver());
@@ -384,10 +384,10 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Only enough room to in the APDU to carry a single value
 		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 02 01 17 01 01 01");
 		// should immediately try to send another unsol packet
-		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 02 01 17 01 00 01");	
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 02 01 17 01 00 01");
 	}
 
-	// Test that non-read fragments are immediately responded to while waiting for a 
+	// Test that non-read fragments are immediately responded to while waiting for a
 	// response to unsolicited data
 	BOOST_AUTO_TEST_CASE(WriteDuringUnsol)
 	{
@@ -399,7 +399,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		t.slave.OnLowerLayerUp();
 
 		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
-		
+
 		{
 			Transaction tr(t.slave.GetDataObserver());
 			t.slave.GetDataObserver()->Update(Binary(true, BQ_ONLINE), 0);
@@ -427,7 +427,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		t.slave.OnLowerLayerUp();
 
 		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
-		
+
 		{
 			Transaction tr(t.slave.GetDataObserver());
 			t.slave.GetDataObserver()->Update(Binary(true, BQ_ONLINE), 0);
@@ -436,7 +436,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		t.app.DisableAutoSendCallback();
 		BOOST_REQUIRE(t.mts.DispatchOne());
 		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 02 01 17 01 00 81");
-		
+
 		t.SendToSlave("C0 01 3C 02 06");
 
 		t.slave.OnUnsolSendSuccess();
@@ -453,7 +453,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		t.slave.OnLowerLayerUp();
 
 		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
-		
+
 		{
 			Transaction tr(t.slave.GetDataObserver());
 			t.slave.GetDataObserver()->Update(Binary(true, BQ_ONLINE), 0);
@@ -462,7 +462,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		t.app.DisableAutoSendCallback();
 		BOOST_REQUIRE(t.mts.DispatchOne());
 		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 02 01 17 01 00 81");
-		
+
 		t.SendToSlave("C0 01 3C 01 06");
 
 		//now send a write IIN request, and test that the slave answers immediately
@@ -505,14 +505,14 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_OTHER);
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		
+
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate
 		t.SendToSlave("C1 04 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_CORRECT);
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
-		
+
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBWrongSequence)
@@ -525,14 +525,14 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_OTHER);
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		
+
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate
 		t.SendToSlave("C2 04 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_OTHER);
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
-		
+
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBDiffQual)
@@ -545,14 +545,14 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		
+
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate (with 0x23 as qual)
 		t.SendToSlave("C1 04 0C 01 28 01 00 03 00 01 01 01 00 00 00 01 00 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 28 01 00 03 00 01 01 01 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
-		
+
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBDiffCode)
@@ -565,14 +565,14 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		
+
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate (with control code 02)
 		t.SendToSlave("C1 04 0C 01 17 01 03 02 01 01 00 00 00 01 00 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 02 01 01 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
-		
+
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBDiffCount)
@@ -585,14 +585,14 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		
+
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate (with control code 02)
 		t.SendToSlave("C1 04 0C 01 17 01 03 01 02 01 00 00 00 01 00 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 02 01 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
-		
+
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBDiffOnTime)
@@ -605,14 +605,14 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		
+
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate (with on time as 2 instead of 1)
 		t.SendToSlave("C1 04 0C 01 17 01 03 01 01 02 00 00 00 01 00 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 02 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
-		
+
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBDiffOffTime)
@@ -625,14 +625,14 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		
+
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate (with off time as 2 instead of 1)
 		t.SendToSlave("C1 04 0C 01 17 01 03 01 01 01 00 00 00 02 00 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 02 00 00 00 02"); // 0x02 status == CS_NO_SELECT
-		
+
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBRetry)
@@ -645,19 +645,19 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_OTHER);
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		
+
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate
 		t.SendToSlave("C1 04 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_CORRECT);
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
-		
+
 
 		// operate
 		t.SendToSlave("C1 04 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_PREV);
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
-		
+
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBRetryDifferent)
@@ -670,19 +670,19 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_OTHER);
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		
+
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate
 		t.SendToSlave("C1 04 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_CORRECT);
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
-		
+
 
 		// operate
 		t.SendToSlave("C1 04 0C 01 17 01 03 01 02 01 00 00 00 01 00 00 00 00", SI_PREV); // byte changed (count)
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 02 01 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
-		
+
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectDirectOperateFails)
@@ -695,14 +695,14 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_OTHER);
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		
+
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate
 		t.SendToSlave("C1 05 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_CORRECT);
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 04 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 04"); // 0x04 status == CS_NOT_SUPPORTED
-		
+
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectGroup41Var1)
@@ -763,7 +763,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 04 29 04 17 01 01 00 00 00 00 00 00 59 40 04"); // 0x04 status == CS_NOT_SUPPORTED
 	}
 
-	
+
 
 	BOOST_AUTO_TEST_CASE(SelectOperateGroup41Var1)
 	{
@@ -775,14 +775,14 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Select group 41 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 29 01 17 01 03 00 00 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 01 17 01 03 00 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		
+
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// Select group 41 Var 1, count = 1, index = 3
 		t.SendToSlave("C1 04 29 01 17 01 03 00 00 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 01 17 01 03 00 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		
+
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateGroup41Var1DiffVal)
@@ -795,14 +795,14 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Select group 41 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 29 01 17 01 03 00 00 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 01 17 01 03 00 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		
+
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// Select group 41 Var 1, count = 1, index = 3
 		t.SendToSlave("C1 04 29 01 17 01 03 01 00 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 01 17 01 03 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
-		
+
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateGroup41Var2)
@@ -815,14 +815,14 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Select group 41 Var 2, count = 1, index = 3
 		t.SendToSlave("C0 03 29 02 17 01 03 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 02 17 01 03 00 00 00"); // 0x00 status == CS_SUCCESS
-		
+
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// Select group 41 Var 1, count = 1, index = 3
 		t.SendToSlave("C1 04 29 02 17 01 03 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 02 17 01 03 00 00 00"); // 0x00 status == CS_SUCCESS
-		
+
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateGroup41Var3)
@@ -835,14 +835,14 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Select group 41 Var 3, count = 1, index = 1
 		t.SendToSlave("C0 03 29 03 17 01 01 00 00 C8 42 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 03 17 01 01 00 00 C8 42 00"); // 0x00 status == CS_SUCCESS
-		
+
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate group 41 Var 3, count = 1, index = 1
 		t.SendToSlave("C1 04 29 03 17 01 01 00 00 C8 42 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 03 17 01 01 00 00 C8 42 00"); // 0x00 status == CS_SUCCESS
-		
+
 
 		Setpoint s = t.cmd_acceptor.NextSetpoint();
 
@@ -861,14 +861,14 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Select group 41 Var 4, count = 1, index = 1
 		t.SendToSlave("C0 03 29 04 17 01 01 00 00 00 00 00 00 59 40 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 04 17 01 01 00 00 00 00 00 00 59 40 00"); // 0x00 status == CS_SUCCESS
-		
+
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate group 41 Var 4, count = 1, index = 1
 		t.SendToSlave("C1 04 29 04 17 01 01 00 00 00 00 00 00 59 40 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 04 17 01 01 00 00 00 00 00 00 59 40 00"); // 0x00 status == CS_SUCCESS
-		
+
 
 		Setpoint s = t.cmd_acceptor.NextSetpoint();
 
@@ -889,7 +889,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Select group 41 Var 1, count = 1, index = 3
 		t.SendToSlave("C1 05 29 01 17 01 03 00 00 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 01 17 01 03 00 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		
+
 	}
 	BOOST_AUTO_TEST_CASE(DirectOperateGroup41Var2)
 	{
@@ -903,7 +903,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// Select group 41 Var 1, count = 1, index = 3
 		t.SendToSlave("C1 05 29 02 17 01 03 00 00 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 02 17 01 03 00 00 00"); // 0x00 status == CS_SUCCESS
-		
+
 	}
 	BOOST_AUTO_TEST_CASE(DirectOperateGroup41Var3)
 	{
@@ -917,7 +917,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// operate group 41 Var 3, count = 1, index = 1
 		t.SendToSlave("C1 05 29 03 17 01 01 00 00 C8 42 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 03 17 01 01 00 00 C8 42 00"); // 0x00 status == CS_SUCCESS
-		
+
 	}
 	BOOST_AUTO_TEST_CASE(DirectOperateGroup41Var4)
 	{
@@ -931,7 +931,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		// operate group 41 Var 4, count = 1, index = 1
 		t.SendToSlave("C1 05 29 04 17 01 01 00 00 00 00 00 00 59 40 00");
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 04 17 01 01 00 00 00 00 00 00 59 40 00"); // 0x00 status == CS_SUCCESS
-		
+
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectBadObject)
@@ -989,7 +989,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00");
 
 		// should automatically send the previous data as unsol
-		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 02 01 17 01 00 01");			
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 02 01 17 01 00 01");
 	}
 
 	BOOST_AUTO_TEST_CASE(UnsolEnableBadObject)
@@ -1012,7 +1012,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //check that no unsol packets are generated
 
 		t.SendToSlave("C0 14 01 02 06");
-		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 01");		
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 01");
 	}
 
 	BOOST_AUTO_TEST_CASE(UnsolEnableDisableFailure)
@@ -1028,11 +1028,11 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadFuncNotSupported)
-	{			
+	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
 		SlaveTestObject t(cfg);
 		t.slave.OnLowerLayerUp();
-		
+
 		t.SendToSlave("C0 01 0C 01 06"); //try to read 12/1 (control block)
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 01"); //restart/func not supported
 	}
@@ -1054,9 +1054,9 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 
 	/* ---- Static data reads ----- */
 
-	
+
 	/*BOOST_AUTO_TEST_CASE(ReadGrp1Var1)
-	{	
+	{
 		SlaveConfig cfg; cfg.mStaticBinary = GrpVar(1,1);
 		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 9);
@@ -1067,28 +1067,28 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 	}*/
 
 	BOOST_AUTO_TEST_CASE(ReadGrp1Var0)
-	{			
-		TestStaticRead("C0 01 01 00 06", "C0 81 80 00 01 02 00 00 00 02"); // 1 byte start/stop, RESTART quality		
+	{
+		TestStaticRead("C0 01 01 00 06", "C0 81 80 00 01 02 00 00 00 02"); // 1 byte start/stop, RESTART quality
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadGrp10Var0)
-	{			
-		TestStaticRead("C0 01 0A 00 06", "C0 81 80 00 0A 02 00 00 00 02"); // 1 byte start/stop, RESTART quality		
+	{
+		TestStaticRead("C0 01 0A 00 06", "C0 81 80 00 0A 02 00 00 00 02"); // 1 byte start/stop, RESTART quality
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadGrp20Var0)
-	{			
-		TestStaticRead("C0 01 14 00 06", "C0 81 80 00 14 01 00 00 00 02 00 00 00 00"); // 1 byte start/stop, RESTART quality		
+	{
+		TestStaticRead("C0 01 14 00 06", "C0 81 80 00 14 01 00 00 00 02 00 00 00 00"); // 1 byte start/stop, RESTART quality
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadGrp30Var0)
-	{			
-		TestStaticRead("C0 01 1E 00 06", "C0 81 80 00 1E 01 00 00 00 02 00 00 00 00"); // 1 byte start/stop, RESTART quality		
+	{
+		TestStaticRead("C0 01 1E 00 06", "C0 81 80 00 1E 01 00 00 00 02 00 00 00 00"); // 1 byte start/stop, RESTART quality
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadGrp40Var0)
-	{			
-		TestStaticRead("C0 01 28 00 06", "C0 81 80 00 28 01 00 00 00 02 00 00 00 00"); // 1 byte start/stop, RESTART quality		
+	{
+		TestStaticRead("C0 01 28 00 06", "C0 81 80 00 28 01 00 00 00 02 00 00 00 00"); // 1 byte start/stop, RESTART quality
 	}
 
 	// test that asking for a specific data type returns the requested type
@@ -1103,13 +1103,13 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		t.db.Configure(DT_SETPOINT_STATUS, 1);
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
 		t.db.SetClass(DT_ANALOG, PC_CLASS_1);
-		t.db.SetClass(DT_COUNTER, PC_CLASS_1);			
+		t.db.SetClass(DT_COUNTER, PC_CLASS_1);
 		t.slave.OnLowerLayerUp();
 
-					
+
 		{
 			Transaction tr(&t.db);
-			t.db.Update(Binary(false, BQ_ONLINE), 0); 
+			t.db.Update(Binary(false, BQ_ONLINE), 0);
 			t.db.Update(Counter(0, CQ_ONLINE), 0);
 			t.db.Update(Analog(0.0, AQ_ONLINE), 0);
 			t.db.Update(ControlStatus(false, TQ_ONLINE), 0);
@@ -1121,33 +1121,33 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadGrp2Var0)
-	{			
-		TestEventRead("C0 01 02 00 06", "E0 81 80 00 02 01 17 01 00 01"); // 1 byte count == 1, ONLINE quality		
+	{
+		TestEventRead("C0 01 02 00 06", "E0 81 80 00 02 01 17 01 00 01"); // 1 byte count == 1, ONLINE quality
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadGrp22Var0)
-	{			
-		TestEventRead("C0 01 16 00 06", "E0 81 80 00 16 01 17 01 00 01 00 00 00 00"); // 1 byte count == 1, ONLINE quality		
+	{
+		TestEventRead("C0 01 16 00 06", "E0 81 80 00 16 01 17 01 00 01 00 00 00 00"); // 1 byte count == 1, ONLINE quality
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadGrp32Var0)
-	{			
-		TestEventRead("C0 01 20 00 06", "E0 81 80 00 20 01 17 01 00 01 00 00 00 00"); // 1 byte count == 1, ONLINE quality		
+	{
+		TestEventRead("C0 01 20 00 06", "E0 81 80 00 20 01 17 01 00 01 00 00 00 00"); // 1 byte count == 1, ONLINE quality
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadGrp2Var1)
-	{			
-		TestEventRead("C0 01 02 01 06", "E0 81 80 00 02 01 17 01 00 01"); // 1 byte count == 1, ONLINE quality		
+	{
+		TestEventRead("C0 01 02 01 06", "E0 81 80 00 02 01 17 01 00 01"); // 1 byte count == 1, ONLINE quality
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadGrp2Var2)
-	{			
-		TestEventRead("C0 01 02 02 06", "E0 81 80 00 02 02 17 01 00 01 00 00 00 00 00 00"); // 1 byte count == 1, ONLINE quality		
+	{
+		TestEventRead("C0 01 02 02 06", "E0 81 80 00 02 02 17 01 00 01 00 00 00 00 00 00"); // 1 byte count == 1, ONLINE quality
 	}
-	
+
 	BOOST_AUTO_TEST_CASE(ReadGrp2Var3)
-	{			
-		TestEventRead("C0 01 02 03 06", "E0 81 80 00 33 01 07 01 00 00 00 00 00 00 02 03 17 01 00 01 00 00"); // 1 byte count == 1, ONLINE quality		
+	{
+		TestEventRead("C0 01 02 03 06", "E0 81 80 00 33 01 07 01 00 00 00 00 00 00 02 03 17 01 00 01 00 00"); // 1 byte count == 1, ONLINE quality
 	}
 
 	BOOST_AUTO_TEST_CASE(InvalidObject)
@@ -1166,13 +1166,13 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		const size_t NUM = 4;
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
 		SlaveTestObject t(cfg);
-		t.db.Configure(DT_BINARY, NUM);			
-		t.db.SetClass(DT_BINARY, PC_CLASS_1);			
+		t.db.Configure(DT_BINARY, NUM);
+		t.db.SetClass(DT_BINARY, PC_CLASS_1);
 		t.slave.OnLowerLayerUp();
-					
+
 		{
 			Transaction tr(&t.db);
-			for(size_t i=0; i<NUM; ++i) t.db.Update(Binary(false, BQ_ONLINE), i);		
+			for(size_t i=0; i<NUM; ++i) t.db.Update(Binary(false, BQ_ONLINE), i);
 		}
 
 		//request
@@ -1186,24 +1186,24 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		std::string grp2Var2hdr("02 02 17 02");
 		std::string grp2Var1hdr("02 01 17 02");
 		std::string grp2Var2rsp("01 00 00 00 00 00 00"); //minus the index
-		
-		
+
+
 		request.append(" ").append(grp2Var2x2).append(" ").append(grp2Var0);
 		rsp.append(" ").append(grp2Var2hdr).append(" 00 ").append(grp2Var2rsp).append(" 01 ").append(grp2Var2rsp);
 		rsp.append(" ").append(grp2Var1hdr).append(" 02 01 03 01");
-		
-		
+
+
 		t.SendToSlave(request);
 		BOOST_REQUIRE_EQUAL(t.Read(), rsp);
 	}
 
-	template <class PointType, class T> 
+	template <class PointType, class T>
 	void TestStaticType(apl::dnp::SlaveConfig& aCfg, apl::dnp::GrpVar& aGrpVar, int aGroup, int aVar, T aVal, const std::string& aRsp)
 	{
 		aGrpVar = GrpVar(aGroup,aVar);
 		SlaveTestObject t(aCfg);
-		t.db.Configure(PointType::MeasEnum, 1);			
-		t.db.SetClass(PointType::MeasEnum, PC_CLASS_1);			
+		t.db.Configure(PointType::MeasEnum, 1);
+		t.db.SetClass(PointType::MeasEnum, PC_CLASS_1);
 		t.slave.OnLowerLayerUp();
 
 		{
@@ -1223,7 +1223,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadGrp20Var1)
-	{	
+	{
 		TestStaticCounter(1, 5, "C0 81 80 00 14 01 00 00 00 01 05 00 00 00");
 	}
 
@@ -1231,7 +1231,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 	{
 		TestStaticCounter(2, 5, "C0 81 80 00 14 02 00 00 00 01 05 00");
 	}
-	
+
 	BOOST_AUTO_TEST_CASE(ReadGrp20Var5)
 	{
 		TestStaticCounter(5, 5, "C0 81 80 00 14 05 00 00 00 05 00 00 00");
@@ -1250,27 +1250,27 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadGrp30Var2)
-	{	
+	{
 		TestStaticAnalog(2, 100, "C0 81 80 00 1E 02 00 00 00 01 64 00");
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadGrp30Var3)
-	{	
+	{
 		TestStaticAnalog(3, 65536, "C0 81 80 00 1E 03 00 00 00 00 00 01 00");
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadGrp30Var4)
-	{	
+	{
 		TestStaticAnalog(4, 100, "C0 81 80 00 1E 04 00 00 00 64 00");
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadGrp30Var5)
-	{	
+	{
 		TestStaticAnalog(5, 95.6, "C0 81 80 00 1E 05 00 00 00 01 33 33 BF 42");
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadGrp30Var6)
-	{	
+	{
 		TestStaticAnalog(6, -20, "C0 81 80 00 1E 06 00 00 00 01 00 00 00 00 00 00 34 C0");
 	}
 
@@ -1279,8 +1279,8 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
 		SlaveTestObject t(cfg);
-		t.db.Configure(DT_CONTROL_STATUS, 1);			
-		t.db.SetClass(DT_CONTROL_STATUS, PC_CLASS_1);			
+		t.db.Configure(DT_CONTROL_STATUS, 1);
+		t.db.SetClass(DT_CONTROL_STATUS, PC_CLASS_1);
 		t.slave.OnLowerLayerUp();
 
 		{
@@ -1297,7 +1297,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		TestStaticControlStatus(2, true, "C0 81 80 00 0A 02 00 00 00 81");
 	}
 
-	
+
 	template <class T>
 	void TestStaticSetpointStatus(int aVar, T aVal, const string& aRsp)
 	{
@@ -1314,7 +1314,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 	{
 		TestStaticSetpointStatus(2, 100, "C0 81 80 00 28 02 00 00 00 01 64 00");
 	}
-	
+
 	BOOST_AUTO_TEST_CASE(ReadGrp40Var3)
 	{
 		TestStaticSetpointStatus(3, 95.6, "C0 81 80 00 28 03 00 00 00 01 33 33 BF 42");

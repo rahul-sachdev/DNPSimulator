@@ -213,8 +213,8 @@ namespace apl
 
 
 		static void NaiveWrite(boost::uint8_t* apStart, T aValue)
-		{			
-			*reinterpret_cast<T*>(apStart) = aValue;			
+		{
+			*reinterpret_cast<T*>(apStart) = aValue;
 		}
 	};
 

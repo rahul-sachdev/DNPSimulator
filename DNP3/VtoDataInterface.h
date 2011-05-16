@@ -121,7 +121,7 @@ namespace apl {
 				virtual size_t Size() = 0;
 
 		};
-		
+
 		/**
 		 * Receives data from the stack for a particular channel and is notified
 		 * when buffer space becomes available.  Applications that wish to use

@@ -22,8 +22,8 @@
 #include <boost/cstdint.hpp>
 
 namespace apl
-{	
-	
+{
+
 #ifndef SIZE_MAX
 	#define SIZE_MAX ~0
 #endif

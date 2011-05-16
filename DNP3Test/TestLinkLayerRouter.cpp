@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include <boost/test/unit_test.hpp>
 #include <boost/bind.hpp>
 #include <APLTestTools/TestHelpers.h>
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 		BOOST_REQUIRE_EQUAL(t.phys.NumOpenSuccess(), 0);
 		BOOST_REQUIRE_EQUAL(t.phys.NumOpenFailure(), 1);
 	}
-	
+
 	/// Test that send frames from unknown sources are rejected
 	BOOST_AUTO_TEST_CASE(UnknownSourceException) {
 		LinkLayerRouterTest t;
@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 		t.phys.TriggerRead("05 64 05 C0 01 00 00 04 E9 21");
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_UNKNOWN_DESTINATION);
 	}
-	
+
 	/// Test that the router rejects sends until it is online
 	BOOST_AUTO_TEST_CASE(LayerNotOnline){
 		LinkLayerRouterTest t;
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 		f.FormatAck(true, false, 1, 1024);
 		BOOST_REQUIRE_THROW(t.router.Transmit(f), InvalidStateException);
 	}
-	
+
 	/// Test that router is correctly clears the send buffer on close
 	BOOST_AUTO_TEST_CASE(CloseBehavior){
 		LinkLayerRouterTest t;
@@ -93,10 +93,10 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 
 		// now the layer should go offline, this should clear the transmitt queue,
 		// the router should also try to restart
-		BOOST_REQUIRE_FALSE(mfs.mLowerOnline); 
+		BOOST_REQUIRE_FALSE(mfs.mLowerOnline);
 
 		t.phys.ClearBuffer();
-		
+
 		t.phys.SignalOpenSuccess();
 
 		//format another request, but change the to address
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 		t.phys.TriggerRead(toHex(f.GetBuffer(), f.GetSize()));
 		BOOST_REQUIRE(t.IsLogErrorFree());
 	}
-	
+
 	/// Test that the second bind fails when a non-unique address is added
 	BOOST_AUTO_TEST_CASE(MultiAddressBindError){
 		LinkLayerRouterTest t;
@@ -148,13 +148,13 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 		t.router.Start(); t.phys.SignalOpenSuccess();
 		t.router.Transmit(f1);
 		t.router.Transmit(f2);
-		BOOST_REQUIRE_EQUAL(t.phys.NumWrites(), 1);			
-		t.phys.SignalSendSuccess();			
+		BOOST_REQUIRE_EQUAL(t.phys.NumWrites(), 1);
+		t.phys.SignalSendSuccess();
 		BOOST_REQUIRE_EQUAL(t.phys.NumWrites(), 2);
-		t.phys.SignalSendSuccess();			
+		t.phys.SignalSendSuccess();
 		BOOST_REQUIRE_EQUAL(t.phys.NumWrites(), 2);
 	}
-	
+
 
 
 BOOST_AUTO_TEST_SUITE_END()

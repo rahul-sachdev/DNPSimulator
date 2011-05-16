@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
@@ -57,11 +57,11 @@ using namespace apl::dnp;
 			EventMaxConfig cfg(0, NUM_INDICES, 0, 0);
 
 			SlaveEventBuffer b(cfg);
-			
-			PushEvents(b, NUM_EVENT, NUM_INDICES); //push lots of events but only 
+
+			PushEvents(b, NUM_EVENT, NUM_INDICES); //push lots of events but only
 			BOOST_REQUIRE_FALSE(b.IsOverflow());
 			BOOST_REQUIRE_EQUAL(b.NumType(BT_ANALOG), NUM_INDICES);
-			
+
 			b.Select(BT_ANALOG, PC_CLASS_1); //select all the events
 			BOOST_REQUIRE_EQUAL(b.NumType(BT_ANALOG), NUM_INDICES);
 			PushEvents(b, NUM_EVENT, NUM_INDICES);
@@ -71,7 +71,7 @@ using namespace apl::dnp;
 			//now deselect
 			b.Deselect();
 			BOOST_REQUIRE_EQUAL(b.NumType(BT_ANALOG), NUM_INDICES);
-			BOOST_REQUIRE_FALSE(b.IsOverflow()); //still shouldn't be 
+			BOOST_REQUIRE_FALSE(b.IsOverflow()); //still shouldn't be
 
 		}
 
@@ -98,7 +98,7 @@ using namespace apl::dnp;
 			b.Update(Analog(6), PC_CLASS_1, 1);
 			b.Update(Counter(1), PC_CLASS_1, 0);
 			b.Update(Counter(3), PC_CLASS_1, 1);
-			
+
 			b.Select(PC_CLASS_1, 1);
 			BOOST_REQUIRE_EQUAL(b.NumSelected(BT_BINARY), 1);
 			b.Deselect();
@@ -119,5 +119,5 @@ using namespace apl::dnp;
 			BOOST_REQUIRE_EQUAL(b.NumSelected(BT_ANALOG), 2);
 			BOOST_REQUIRE_EQUAL(b.NumSelected(BT_COUNTER), 2);
 		}
-		
+
 	BOOST_AUTO_TEST_SUITE_END()
