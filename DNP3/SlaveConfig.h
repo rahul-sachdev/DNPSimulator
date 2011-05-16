@@ -19,12 +19,12 @@
 #ifndef __SLAVE_CONFIG_H_
 #define __SLAVE_CONFIG_H_
 
+#include <assert.h>
 
-#include "ObjectInterfaces.h"
-#include "ClassMask.h"
 #include <APL/Exception.h>
 
-#include <assert.h>
+#include "ClassMask.h"
+#include "ObjectInterfaces.h"
 
 namespace apl { namespace dnp {
 
@@ -127,6 +127,9 @@ namespace apl { namespace dnp {
 
 		/// The default group/variation to use for counter event responses
 		GrpVar mEventCounter;
+
+		/// The default group/variation to use for VTO event responses
+		GrpVar mEventVto;
 	};
 
 }}

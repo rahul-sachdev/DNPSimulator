@@ -36,6 +36,8 @@ namespace apl { namespace dnp {
 		mpEventBinary = GetEventBinary(arCfg.mEventBinary);
 		mpEventAnalog = GetEventAnalog(arCfg.mEventAnalog);
 		mpEventCounter = GetEventCounter(arCfg.mEventCounter);
+
+		mpEventVto = GetEventVto(arCfg.mEventVto);
 	}
 
 	StreamObject<Binary>* SlaveResponseTypes::GetStaticBinary(GrpVar gv)
@@ -152,6 +154,11 @@ namespace apl { namespace dnp {
 		}
 
 		throw ArgumentException(LOCATION, "Invalid event counter");
+	}
+
+	SizeByVariationObject* SlaveResponseTypes::GetEventVto(GrpVar gv)
+	{
+		return Group112Var0::Inst();
 	}
 
 }}

@@ -27,11 +27,14 @@ namespace apl { namespace dnp {
 struct SlaveConfig;
 struct GrpVar;
 
-/** Reads a slave config object and and translates the configuration to singletons
-*/
+/**
+ * Reads a slave config object and and translates the configuration to
+ * singletons.
+ */
 class SlaveResponseTypes
 {
 	public:
+
 	SlaveResponseTypes(const SlaveConfig& arCfg);
 
 	StreamObject<Binary>* mpStaticBinary;
@@ -44,6 +47,8 @@ class SlaveResponseTypes
 	StreamObject<Analog>* mpEventAnalog;
 	StreamObject<Counter>* mpEventCounter;
 
+	SizeByVariationObject* mpEventVto;
+
 	private:
 
 	static StreamObject<Binary>* GetStaticBinary(GrpVar);
@@ -54,6 +59,8 @@ class SlaveResponseTypes
 	static StreamObject<Binary>* GetEventBinary(GrpVar);
 	static StreamObject<Analog>* GetEventAnalog(GrpVar);
 	static StreamObject<Counter>* GetEventCounter(GrpVar);
+
+	static SizeByVariationObject* GetEventVto(GrpVar);
 
 };
 

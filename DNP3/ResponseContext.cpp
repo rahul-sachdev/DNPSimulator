@@ -112,12 +112,7 @@ IINField ResponseContext::Configure(const APDU& arRequest)
 			/* Virtual Terminal Objects */
 			case 112:
 			case 113:
-				/*
-				 * TODO - cannot use the standard SelectEvents() since a
-				 * SizeByVariationObject is not a StreamObject, so what is the
-				 * appropriate function to call/create?
-				 */
-				//this->SelectEvents(PC_ALL_EVENTS, Group113Var0::Inst(), mVtoEvents, GetEventCount(hdr.info()));
+				this->SelectVtoEvents(PC_ALL_EVENTS, Group113Var0::Inst(), GetEventCount(hdr.info()));
 				continue;
 			default:
 				/*
@@ -204,12 +199,19 @@ void ResponseContext::SelectEvents(PointClass aClass, size_t aNum)
 	remain -= this->SelectEvents(aClass, mpRspTypes->mpEventBinary, mBinaryEvents, remain);
 	remain -= this->SelectEvents(aClass, mpRspTypes->mpEventAnalog, mAnalogEvents, remain);
 	remain -= this->SelectEvents(aClass, mpRspTypes->mpEventCounter, mCounterEvents, remain);
-	/*
-	 * TODO - cannot use the standard SelectEvents() since a
-	 * SizeByVariationObject is not a StreamObject, so what is the
-	 * appropriate function to call/create?
-	 */
-	//remain -= this->SelectEvents(aClass, mpRspTypes->mpEventVto, mVtoEvents, remain);
+	remain -= this->SelectVtoEvents(aClass, mpRspTypes->mpEventVto, remain);
+}
+
+size_t ResponseContext::SelectVtoEvents(PointClass aClass, const SizeByVariationObject* apObj, size_t aNum)
+{
+	size_t num = mBuffer.Select(BT_VTO, aClass, aNum);
+
+	if (num > 0) {
+		VtoEventRequest r(apObj, aNum);
+		this->mVtoEvents.push_back(r);
+	}
+
+	return num;
 }
 
 void ResponseContext::LoadResponse(APDU& arAPDU)
@@ -270,14 +272,90 @@ bool ResponseContext::LoadEventData(APDU& arAPDU, bool& arEventsLoaded)
 	if (!this->LoadEvents<Binary>(arAPDU, mBinaryEvents, arEventsLoaded)) return false;
 	if (!this->LoadEvents<Analog>(arAPDU, mAnalogEvents, arEventsLoaded)) return false;
 	if (!this->LoadEvents<Counter>(arAPDU, mCounterEvents, arEventsLoaded)) return false;
-	/*
-	 * TODO - cannot use the standard LoadEvents() since a
-	 * SizeByVariationObject is not a StreamObject, so what is the appropriate
-	 * function to call/create?
-	 */
-	//if(!this->LoadEvents<Counter>(arAPDU, mCounterEvents, arEventsLoaded)) return false;
+	if (!this->LoadVtoEvents(arAPDU, arEventsLoaded)) return false;
 
 	return true;
+}
+
+bool ResponseContext::LoadVtoEvents(APDU& arAPDU, bool& arEventsLoaded)
+{
+	VtoDataEventIter itr;
+	mBuffer.Begin(itr);
+	size_t remain = mBuffer.NumSelected(BT_VTO);
+
+	while (this->mVtoEvents.size() > 0)
+	{
+		/* Get the number of events requested */
+		VtoEventRequest& r = this->mVtoEvents.front();
+
+		if (r.count > remain)
+		{
+			r.count = remain;
+		}
+
+		size_t written = this->IterateIndexed(r, itr, arAPDU);
+		remain -= written;
+
+		if (written > 0)
+		{
+			/* At least one event was loaded */
+			arEventsLoaded = true;
+		}
+
+		if (written == r.count)
+		{
+			/* all events were written, finished with request */
+			this->mVtoEvents.pop_front();
+		}
+		else
+		{
+			/* more event data remains in the queue */
+			r.count -= written;
+			return false;
+		}
+	}
+
+	return true;	// the queue has been exhausted on this iteration
+}
+
+size_t ResponseContext::IterateIndexed(VtoEventRequest& arRequest, VtoDataEventIter& arIter, APDU& arAPDU)
+{
+	for (size_t i = 0; i < arRequest.count; ++i)
+	{
+		IndexedWriteIterator itr = arAPDU.WriteIndexed(
+				arRequest.pObj,
+				arIter->mValue.GetSize(),
+				arIter->mIndex
+		);
+
+		/*
+		 * Check to see if the APDU fragment has enough room for the
+		 * data segment.  If the fragment is full, return out of this
+		 * function and let the fragment send.
+		 */
+		if (itr.IsEnd())
+		{
+			return i;
+		}
+
+		/* Set the object index */
+		itr.SetIndex(arIter->mIndex);
+
+		/* Write the data to the APDU message */
+		arRequest.pObj->Write(
+				*itr,
+				arIter->mValue.GetSize(),
+				arIter->mValue.GetData()
+		);
+
+		/* Mark the data segment as being written */
+		arIter->mWritten = true;
+
+		/* Move to the next data segment in the reader buffer */
+		++arIter;
+	}
+
+	return arRequest.count; // all requested events were written
 }
 
 bool ResponseContext::IsEmpty()

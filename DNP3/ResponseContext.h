@@ -138,7 +138,7 @@ class ResponseContext : public Loggable
 
 		typename StaticIter<T>::Type first;				/// Begining of iteration
 		typename StaticIter<T>::Type last;				/// Last element of iteration
-		StreamObject<typename T::MeasType>* pObject;		/// Type to use to write
+		StreamObject<typename T::MeasType>* pObject;	/// Type to use to write
 	};
 
 	template<class T>
@@ -149,9 +149,19 @@ class ResponseContext : public Loggable
 			count(aCount)
 		{}
 
-		const StreamObject<T>* pObj;	/// Type to use to write
-		size_t count;				/// Number of events to read
+		const StreamObject<T>* pObj;		/// Type to use to write
+		size_t count;						/// Number of events to read
+	};
 
+	struct VtoEventRequest
+	{
+		VtoEventRequest(const SizeByVariationObject* apObj, size_t aCount = std::numeric_limits<size_t>::max()) :
+			pObj(apObj),
+			count(aCount)
+		{}
+
+		const SizeByVariationObject* pObj;	/// Type to use to write
+		size_t count;						/// Number of events to read
 	};
 
 	typedef std::deque< IterRecord<BinaryInfo> >			BinaryIterQueue;
@@ -163,7 +173,8 @@ class ResponseContext : public Loggable
 	typedef std::deque< EventRequest<Binary> >				BinaryEventQueue;
 	typedef std::deque< EventRequest<Analog> >				AnalogEventQueue;
 	typedef std::deque< EventRequest<Counter> >				CounterEventQueue;
-	typedef std::deque< EventRequest<VtoData> >				VtoEventQueue;
+
+	typedef std::deque<VtoEventRequest>						VtoEventQueue;
 
 	//these queues track what static point ranges were requested so that we can split the response over multiple fragments
 	BinaryIterQueue mStaticBinaries;
@@ -184,6 +195,8 @@ class ResponseContext : public Loggable
 	template <class T>
 	bool LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> >& arQueue, bool& arEventsLoaded);
 
+	bool LoadVtoEvents(APDU& arAPDU, bool& arEventsLoaded);
+
 	bool LoadStaticBinaries(APDU&);
 	bool LoadStaticAnalogs(APDU&);
 	bool LoadStaticCounters(APDU&);
@@ -195,6 +208,8 @@ class ResponseContext : public Loggable
 
 	template <class T>
 	size_t SelectEvents(PointClass aClass, const StreamObject<T>* apObj, std::deque< EventRequest<T> >& arQueue, size_t aNum = std::numeric_limits<size_t>::max());
+
+	size_t SelectVtoEvents(PointClass aClass, const SizeByVariationObject* apObj, size_t aNum);
 
 	// templated function for writing APDUs
 	/*template <class T>
@@ -212,6 +227,8 @@ class ResponseContext : public Loggable
 
 	template <class T>
 	size_t CalcPossibleCTO(typename EvtItr< EventInfo<T> >::Type aIter, size_t aMax);
+
+	size_t IterateIndexed(VtoEventRequest& arRequest, VtoDataEventIter& arIter, APDU& arAPDU);
 };
 
 template <class T>
