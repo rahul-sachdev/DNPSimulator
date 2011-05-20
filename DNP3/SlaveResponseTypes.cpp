@@ -37,7 +37,8 @@ namespace apl { namespace dnp {
 		mpEventAnalog = GetEventAnalog(arCfg.mEventAnalog);
 		mpEventCounter = GetEventCounter(arCfg.mEventCounter);
 
-		mpEventVto = GetEventVto(arCfg.mEventVto);
+		/* This is the only valid Slave VTO response, therefore it doesn't need to be configurable */
+		mpEventVto = Group113Var0::Inst();
 	}
 
 	StreamObject<Binary>* SlaveResponseTypes::GetStaticBinary(GrpVar gv)
@@ -155,11 +156,7 @@ namespace apl { namespace dnp {
 
 		throw ArgumentException(LOCATION, "Invalid event counter");
 	}
-
-	SizeByVariationObject* SlaveResponseTypes::GetEventVto(GrpVar gv)
-	{
-		return Group112Var0::Inst();
-	}
+	
 
 }}
 

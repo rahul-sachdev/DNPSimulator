@@ -109,8 +109,7 @@ IINField ResponseContext::Configure(const APDU& arRequest)
 		 */
 		switch (hdr->GetGroup())
 		{
-			/* Virtual Terminal Objects */
-			case 112:
+			/* Virtual Terminal Objects */			
 			case 113:
 				this->SelectVtoEvents(PC_ALL_EVENTS, Group113Var0::Inst(), GetEventCount(hdr.info()));
 				continue;

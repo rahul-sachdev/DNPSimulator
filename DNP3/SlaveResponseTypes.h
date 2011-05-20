@@ -58,9 +58,7 @@ class SlaveResponseTypes
 
 	static StreamObject<Binary>* GetEventBinary(GrpVar);
 	static StreamObject<Analog>* GetEventAnalog(GrpVar);
-	static StreamObject<Counter>* GetEventCounter(GrpVar);
-
-	static SizeByVariationObject* GetEventVto(GrpVar);
+	static StreamObject<Counter>* GetEventCounter(GrpVar);	
 
 };
 

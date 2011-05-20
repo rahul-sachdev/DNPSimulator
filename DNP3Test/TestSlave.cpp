@@ -223,6 +223,27 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00");
 	}
 
+	BOOST_AUTO_TEST_CASE(ReportVTOViaExceptionScan)
+	{
+		SlaveConfig cfg; cfg.mDisableUnsol = true;
+		SlaveTestObject t(cfg);
+		t.slave.OnLowerLayerUp();
+
+		IVtoWriter* pWriter = t.slave.GetVtoWriter();
+
+		BOOST_REQUIRE_FALSE(t.mts.DispatchOne());
+
+		boost::uint8_t pData[3] = {0x13, 0x14, 0x15};
+		pWriter->Write(pData, 3, 0xAA);
+
+		BOOST_REQUIRE(t.mts.DispatchOne());
+
+		t.SendToSlave("C0 01 3C 02 06"); // Read class 1
+
+		// Slave should send 3 bytes of vto data with index AA and Group/Var 113/3
+		BOOST_REQUIRE_EQUAL(t.Read(), "E0 81 80 00 71 03 17 01 AA 13 14 15");
+	}
+
 	BOOST_AUTO_TEST_CASE(ReadClass0MultiFrag)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
@@ -1037,6 +1058,8 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 01"); //restart/func not supported
 	}
 
+
+
 	void TestStaticRead(const std::string& arRequest, const std::string& arResponse)
 	{
 		SlaveConfig cfg; cfg.mDisableUnsol = true;
@@ -1324,6 +1347,8 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 	{
 		TestStaticSetpointStatus(4, -20.0, "C0 81 80 00 28 04 00 00 00 01 00 00 00 00 00 00 34 C0");
 	}
+
+
 
 
 BOOST_AUTO_TEST_SUITE_END()
