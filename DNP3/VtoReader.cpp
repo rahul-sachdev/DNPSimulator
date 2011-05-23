@@ -82,14 +82,14 @@ namespace apl {
 			 * exist, register an error.  Otherwise, notify the callback
 			 * object.
 			 */
-
 			ChannelMap::iterator i = mChannelMap.find(aChannelId);
 
 			if (i == mChannelMap.end())
 			{
 				ERROR_BLOCK(LEV_ERROR,
-				          "No registered callback handler for received data "
-				          "on VTO channel id: " + aChannelId, MERR_VTO_FOR_UNEXPECTED_CHANNEL);
+						  "No registered callback handler for received data "
+						  "on VTO channel id: " + aChannelId,
+						  MERR_VTO_FOR_UNEXPECTED_CHANNEL);
 			}
 			else
 			{

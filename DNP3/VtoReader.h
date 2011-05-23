@@ -31,9 +31,9 @@ namespace apl {
 	namespace dnp {
 
 		/**
-		 *  Class used to track registered VTO Channels, assemble VtoData
-		 *objects
-		 *  back into contigous streams, and deliver to the correct channel
+		 * Class used to track registered VTO Channels, assemble VtoData
+		 * objects back into contigous streams, and deliver to the correct
+		 * channel
 		 */
 		class VtoReader : private Loggable, public ITransactable
 		{
