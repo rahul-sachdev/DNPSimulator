@@ -24,12 +24,12 @@
 namespace apl {
 
 LowerLayerToPhysAdapter::LowerLayerToPhysAdapter(Logger* apLogger, IPhysicalLayerAsync* apPhys, bool aAutoRead) :
-Loggable(apLogger),
-IHandlerAsync(apLogger),
-ILowerLayer(apLogger),
-mAutoRead(aAutoRead),
-mNumOpenFailure(0),
-mpPhys(apPhys)
+	Loggable(apLogger),
+	IHandlerAsync(apLogger),
+	ILowerLayer(apLogger),
+	mAutoRead(aAutoRead),
+	mNumOpenFailure(0),
+	mpPhys(apPhys)
 {
 	mpPhys->SetHandler(this);
 }

@@ -151,7 +151,7 @@ namespace apl {
 				 * @param aLength		The length of the data received (in
 				 *						bytes).
 				 */
-				virtual void OnDataReceived(const boost::uint8_t* apData,
+				virtual void OnVtoDataReceived(const boost::uint8_t* apData,
 				                            size_t aLength) = 0;
 
 				/**

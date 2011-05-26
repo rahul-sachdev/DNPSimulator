@@ -50,38 +50,38 @@ class VtoCallbackTest : public IVtoCallbacks
 			this->Reset();
 		}
 
-		void OnDataReceived(const boost::uint8_t* apData, size_t aLength);
+		void OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength);
 		void OnBufferAvailable(size_t aSize);
 
 		void Reset() {
-			this->numOnDataReceived = 0;
+			this->numOnVtoDataReceived = 0;
 			this->numOnBufferAvailable = 0;
 
-			this->lastOnDataReceived = 0;
+			this->lastOnVtoDataReceived = 0;
 			this->lastOnBufferAvailable = 0;
 
 			MACRO_BZERO(this->received, 1024);
 			this->size = 0;
 		}
 
-		size_t numOnDataReceived;
+		size_t numOnVtoDataReceived;
 		size_t numOnBufferAvailable;
 
-		size_t lastOnDataReceived;
+		size_t lastOnVtoDataReceived;
 		size_t lastOnBufferAvailable;
 
 		boost::uint8_t received[4096];
 		size_t size;
 };
 
-void VtoCallbackTest::OnDataReceived(const boost::uint8_t* apData, size_t aLength)
+void VtoCallbackTest::OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength)
 {
 	assert(this->size + aLength <= sizeof(received));
 	memcpy(&this->received[this->size], apData, aLength);
 	this->size += aLength;
 
-	this->lastOnDataReceived = aLength;
-	++this->numOnDataReceived;
+	this->lastOnVtoDataReceived = aLength;
+	++this->numOnVtoDataReceived;
 }
 
 void VtoCallbackTest::OnBufferAvailable(size_t aSize)
@@ -239,12 +239,12 @@ BOOST_AUTO_TEST_SUITE(VtoInterfaceTests)
 			reader.Update(data, 3);
 		}
 
-		BOOST_REQUIRE_EQUAL(channel1.numOnDataReceived, 0);
-		BOOST_REQUIRE_EQUAL(channel1.lastOnDataReceived, 0);
+		BOOST_REQUIRE_EQUAL(channel1.numOnVtoDataReceived, 0);
+		BOOST_REQUIRE_EQUAL(channel1.lastOnVtoDataReceived, 0);
 		BOOST_REQUIRE_EQUAL(channel1.size, 0);
 
-		BOOST_REQUIRE_EQUAL(channel2.numOnDataReceived, 0);
-		BOOST_REQUIRE_EQUAL(channel2.lastOnDataReceived, 0);
+		BOOST_REQUIRE_EQUAL(channel2.numOnVtoDataReceived, 0);
+		BOOST_REQUIRE_EQUAL(channel2.lastOnVtoDataReceived, 0);
 		BOOST_REQUIRE_EQUAL(channel2.size, 0);
 
 		/* Check that data for a registered channel is stored */
@@ -255,12 +255,12 @@ BOOST_AUTO_TEST_SUITE(VtoInterfaceTests)
 			reader.Update(data, 1);
 		}
 
-		BOOST_REQUIRE_EQUAL(channel1.numOnDataReceived, 1);
-		BOOST_REQUIRE_EQUAL(channel1.lastOnDataReceived, size);
+		BOOST_REQUIRE_EQUAL(channel1.numOnVtoDataReceived, 1);
+		BOOST_REQUIRE_EQUAL(channel1.lastOnVtoDataReceived, size);
 		BOOST_REQUIRE_EQUAL(channel1.size, size);
 
-		BOOST_REQUIRE_EQUAL(channel2.numOnDataReceived, 0);
-		BOOST_REQUIRE_EQUAL(channel2.lastOnDataReceived, 0);
+		BOOST_REQUIRE_EQUAL(channel2.numOnVtoDataReceived, 0);
+		BOOST_REQUIRE_EQUAL(channel2.lastOnVtoDataReceived, 0);
 		BOOST_REQUIRE_EQUAL(channel2.size, 0);
 
 		/* Check a sequence of data stores */
@@ -274,12 +274,12 @@ BOOST_AUTO_TEST_SUITE(VtoInterfaceTests)
 				reader.Update(data, 1);
 			}
 
-			BOOST_REQUIRE_EQUAL(channel1.numOnDataReceived, 1);
-			BOOST_REQUIRE_EQUAL(channel1.lastOnDataReceived, size);
+			BOOST_REQUIRE_EQUAL(channel1.numOnVtoDataReceived, 1);
+			BOOST_REQUIRE_EQUAL(channel1.lastOnVtoDataReceived, size);
 			BOOST_REQUIRE_EQUAL(channel1.size, size);
 
-			BOOST_REQUIRE_EQUAL(channel2.numOnDataReceived, 0);
-			BOOST_REQUIRE_EQUAL(channel2.lastOnDataReceived, 0);
+			BOOST_REQUIRE_EQUAL(channel2.numOnVtoDataReceived, 0);
+			BOOST_REQUIRE_EQUAL(channel2.lastOnVtoDataReceived, 0);
 			BOOST_REQUIRE_EQUAL(channel2.size, 0);
 
 			/* Check that data for different channels are stored */
@@ -289,12 +289,12 @@ BOOST_AUTO_TEST_SUITE(VtoInterfaceTests)
 				reader.Update(data, 2);
 			}
 
-			BOOST_REQUIRE_EQUAL(channel1.numOnDataReceived, 1);
-			BOOST_REQUIRE_EQUAL(channel1.lastOnDataReceived, size);
+			BOOST_REQUIRE_EQUAL(channel1.numOnVtoDataReceived, 1);
+			BOOST_REQUIRE_EQUAL(channel1.lastOnVtoDataReceived, size);
 			BOOST_REQUIRE_EQUAL(channel1.size, size);
 
-			BOOST_REQUIRE_EQUAL(channel2.numOnDataReceived, 1);
-			BOOST_REQUIRE_EQUAL(channel2.lastOnDataReceived, size / 2);
+			BOOST_REQUIRE_EQUAL(channel2.numOnVtoDataReceived, 1);
+			BOOST_REQUIRE_EQUAL(channel2.lastOnVtoDataReceived, size / 2);
 			BOOST_REQUIRE_EQUAL(channel2.size, size / 2);
 
 			/* Check that multiple data for a channel is stored */
@@ -304,12 +304,12 @@ BOOST_AUTO_TEST_SUITE(VtoInterfaceTests)
 				reader.Update(data, 1);
 			}
 
-			BOOST_REQUIRE_EQUAL(channel1.numOnDataReceived, 2);
-			BOOST_REQUIRE_EQUAL(channel1.lastOnDataReceived, size / 2);
+			BOOST_REQUIRE_EQUAL(channel1.numOnVtoDataReceived, 2);
+			BOOST_REQUIRE_EQUAL(channel1.lastOnVtoDataReceived, size / 2);
 			BOOST_REQUIRE_EQUAL(channel1.size, size + (size / 2));
 
-			BOOST_REQUIRE_EQUAL(channel2.numOnDataReceived, 1);
-			BOOST_REQUIRE_EQUAL(channel2.lastOnDataReceived, size / 2);
+			BOOST_REQUIRE_EQUAL(channel2.numOnVtoDataReceived, 1);
+			BOOST_REQUIRE_EQUAL(channel2.lastOnVtoDataReceived, size / 2);
 			BOOST_REQUIRE_EQUAL(channel2.size, size / 2);
 
 			/* Make sure the final received buffer stream looks proper */

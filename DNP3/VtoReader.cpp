@@ -93,7 +93,7 @@ namespace apl {
 			}
 			else
 			{
-				i->second->OnDataReceived(arData.GetData(), arData.GetSize());
+				i->second->OnVtoDataReceived(arData.GetData(), arData.GetSize());
 			}
 		}
 
