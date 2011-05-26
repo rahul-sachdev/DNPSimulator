@@ -18,6 +18,8 @@
 #ifndef __VTO_ROUTER_H_
 #define __VTO_ROUTER_H_
 
+#include <queue>
+
 #include <APL/IHandlerAsync.h>
 #include <APL/IPhysicalLayerAsync.h>
 #include <APL/Logger.h>
@@ -44,42 +46,59 @@ namespace apl {
 		 * The VtoRouter instance provides the necessary IVtoCallbacks hooks
 		 * that the VtoReader will use.
 		 */
-		class VtoRouter : public IVtoCallbacks, public IHandlerAsync
+		class VtoRouter : public IHandlerAsync, public IVtoCallbacks
 		{
 			public:
 
 				/**
-				 * Create a new VtoRouter instance.
+				 * Create a new VtoRouter instance.  Prior to using this
+				 * instance, make sure to register both a IPhysicalLayerAsync
+				 * and a VtoWriter using SetPhysicalLayer() and
+				 * SetVtoWriter(), respectively.
 				 *
 				 * @param apLogger			the Logger that the instance
 				 * 							should use for log messages
 				 * @param aChannelId		the DNP3 Virtual Terminal port
 				 * 							(channel id)
-				 * @param apVtoWriter		the VtoWriter instance that should
-				 * 							be used to write data to the VTO
-				 * 							stream
-				 * @param apPhysLayer		the IPhysicalLayerAsync instance
-				 * 							that is the non-VTO end of the
-				 * 							VtoRouter setup
 				 *
 				 * @return					a new VtoRouter instance
 				 */
-				VtoRouter(Logger* apLogger, boost::uint8_t aChannelId, VtoWriter* apVtoWriter, IPhysicalLayerAsync* apPhysLayer);
+				VtoRouter(Logger* apLogger, boost::uint8_t aChannelId);
+
+				/**
+				 * Sets the IPhysicalLayerAsync that will be used as the
+				 * non-VTO end of the VtoRouter setup.  You're only allowed to
+				 * set this once, so get it right!
+				 *
+				 * @param apPhysLayer		the physical layer with which we
+				 * 							are routing
+				 */
+				void SetPhysicalLayer(IPhysicalLayerAsync* apPhysLayer);
+
+				/**
+				 * Sets the VtoWriter that will be used to forward data which
+				 * was received on the IPhysicalLayerAsync interface to the
+				 * DNP3 endpoint across the VTO channel link.  You're only
+				 * allowed to set this once, so get it right!
+				 *
+				 * @param apVtoWriter		the VTO writer instance
+				 */
+				void SetVtoWriter(VtoWriter* apVtoWriter);
 
 				/**
 				 * Receives data from the VTO channel and forwards it to the
 				 * IPhysicalLayerAsync instance associated with this VtoRouter.
-				 * Implements IVtoCallbacks::OnDataReceived().
+				 * Implements IVtoCallbacks::OnVtoDataReceived().
 				 *
-				 * @param apData		The data received from the VTO stream.
+				 * @param apData		The data received from the VTO stream
 				 * @param aLength		The length of the data received (in
-				 *						bytes).
+				 *						bytes)
 				 */
-				void OnDataReceived(const boost::uint8_t* apData,
+				void OnVtoDataReceived(const boost::uint8_t* apData,
 				                            size_t aLength);
 
 				/**
-				 * Called when the Vto data buffer size changes (startup and
+				 * Called when the VTO data buffer size changes (startup and
 				 * successuly transmission).  This function is not used in the
 				 * VtoRouter implementation.
 				 *
@@ -87,19 +106,56 @@ namespace apl {
 				 */
 				void OnBufferAvailable(size_t aSize) {}
 
-				void OnReceive(const boost::uint8_t* apData, size_t aLength);
-
 			protected:
 
-				void _OnReceive(const boost::uint8_t*, size_t);
+				/**
+				 * Receives data from the physical layer and forwards it to the
+				 * VtoWriter.
+				 *
+				 * @param apData		The data received from the physical
+				 * 						layer
+				 * @param aLength		The length of the data received (in
+				 *						bytes)
+				 */
+				void _OnReceive(const boost::uint8_t* apData, size_t aLength);
 
+				/**
+				 * Implements IUpperLayer::_OnSendSuccess(), which was
+				 * inherited via IHandlerAsync.  Called when an asynchronous
+				 * transmission to the physical layer was successful.
+				 */
 				void _OnSendSuccess();
 
+				/**
+				 * Implements IUpperLayer::_OnSendFailure(), which was
+				 * inherited via IHandlerAsync.  Called when an asynchronous
+				 * transmission to the physical layer was not successful.
+				 */
 				void _OnSendFailure();
+
+				/**
+				 * The ITransactable transaction lock.
+				 */
+				SigLock mLock;
 
 			private:
 
+				/**
+				 * Implements IUpperLayer::_OnSendFailure(), which was
+				 * inherited via IHandlerAsync.  Called when an asynchronous
+				 * transmission to the physical layer was not successful.
+				 */
 				void _OnOpenFailure();
+
+				/**
+				 * Starts the ITransactable transaction lock.
+				 */
+				void _Start();
+
+				/**
+				 * Ends the ITransactable transaction lock.
+				 */
+				void _End();
 
 				/**
 				 * The VtoWriter instance that will be used to send the data
@@ -112,6 +168,12 @@ namespace apl {
 				 * The non-VTO endpoint of this VtoRouter.
 				 */
 				IPhysicalLayerAsync* mpPhysLayer;
+
+				/**
+				 * The transmit buffer for the physical layer.  The data that
+				 * is put into this buffer was originally received via VTO.
+				 */
+				std::queue<VtoData> mPhysLayerTxBuffer;
 
 		};
 

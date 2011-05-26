@@ -19,48 +19,107 @@
 
 #include "VtoRouter.h"
 
+using apl::CriticalSection;
 using apl::IPhysicalLayerAsync;
 using apl::Logger;
 using apl::NotImplementedException;
 using apl::dnp::VtoRouter;
 
-VtoRouter::VtoRouter(Logger* apLogger, boost::uint8_t aChannelId, VtoWriter* apVtoWriter, IPhysicalLayerAsync* apPhysLayer) :
-	IVtoCallbacks(aChannelId),
+VtoRouter::VtoRouter(Logger* apLogger, boost::uint8_t aChannelId) :
+	Loggable(apLogger),
 	IHandlerAsync(apLogger),
-	mpVtoWriter(apVtoWriter),
-	mpPhysLayer(apPhyslayer)
+	IVtoCallbacks(aChannelId),
+	mpVtoWriter(NULL),
+	mpPhysLayer(NULL)
+{}
+
+void VtoRouter::SetPhysicalLayer(IPhysicalLayerAsync* apPhysLayer)
 {
+	/* The whole function is thread-safe, from start to finish. */
+	CriticalSection cs(&mLock);
+
+	assert(apPhysLayer != NULL);
+	assert(this->mpPhysLayer == NULL);
+
+	this->mpPhysLayer = apPhysLayer;
 	this->mpPhysLayer->SetHandler(this);
 }
 
-void VtoRouter::OnDataReceived(const boost::uint8_t* apData, size_t aLength)
+void VtoRouter::SetVtoWriter(VtoWriter *apVtoWriter)
 {
-	/* TODO - write the data to the IPhysicalLayerAsync instance */
-	/* TODO - how do we do this? */
-	throw NotImplementedException(LOCATION);
+	/* The whole function is thread-safe, from start to finish. */
+	CriticalSection cs(&mLock);
+
+	assert(apVtoWriter != NULL);
+	assert(this->mpVtoWriter == NULL);
+
+	this->mpVtoWriter = apVtoWriter;
+}
+
+void VtoRouter::OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength)
+{
+	/* The whole function is thread-safe, from start to finish. */
+	CriticalSection cs(&mLock);
+
+	/* Make sure we're not going to write to a null pointer */
+	assert(this->mpPhysLayer != NULL);
+
+	/*
+	 * This will create a container object that allows us to hold the data
+	 * pointer asynchronously.  We need to release the object from the queue in
+	 * _OnSendSuccess().  Each call is processed serially, so we can take
+	 * advantage of the FIFO structure to keep things simple.
+	 */
+	VtoData vto(apData, aLength);
+	this->mPhysLayerTxBuffer.push(vto);
+	this->mpPhysLayer->AsyncWrite(apData, aLength);
 }
 
 void VtoRouter::_OnReceive(const boost::uint8_t* apData, size_t aLength)
 {
+	/*
+	 * Pipe the data straight from the physical layer into the VtoWriter.  No
+	 * need to make this function thread-safe, since the VtoWriter itself is
+	 * already thread-safe.
+	 */
 	this->mpVtoWriter->Write(apData, aLength, this->GetChannelId());
 }
 
 void VtoRouter::_OnSendSuccess()
 {
-	/* TODO - anything to do? */
-	throw NotImplementedException(LOCATION);
+	/* The whole function is thread-safe, from start to finish. */
+	CriticalSection cs(&mLock);
+
+	/* Make sure we're not going to write to a null pointer */
+	assert(this->mpPhysLayer != NULL);
+
+	/*
+	 * If this function has been called, it means that we can now discard the
+	 * data that is at the head of the FIFO queue.
+	 */
+	this->mPhysLayerTxBuffer.pop();
 }
 
 void VtoRouter::_OnSendFailure()
 {
-	/* TODO - anything to do? */
-	throw NotImplementedException(LOCATION);
+	/* Just do the same as _OnSendSuccess for now */
+	this->_OnSendSuccess();
 }
 
 void VtoRouter::_OnOpenFailure()
 {
 	/* TODO - anything to do? */
 	throw NotImplementedException(LOCATION);
+}
+
+void VtoRouter::_Start()
+{
+	this->mLock.Lock();
+}
+
+void VtoRouter::_End()
+{
+	this->mLock.Unlock();
 }
 
 /* vim: set ts=4 sw=4: */
