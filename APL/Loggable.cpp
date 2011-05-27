@@ -26,38 +26,11 @@
 namespace apl
 {
 
-Loggable::Loggable( Logger* apLogger, bool aMultiThreaded )
+Loggable::Loggable( Logger* apLogger )
 : mpLogger(apLogger)
 {
-#ifdef CHECK_LOGGER_OWNERSHIP
-	if(aMultiThreaded) mpLogger->DisableThreadChecking();
-#endif
+	assert(apLogger != NULL);
 }
-
-/*
-bool Loggable::CheckLogLevel(apl::FilterLevel aLevel)
-{
-	if(mIsLevelSet){
-		std::cerr << "WARNING: Log level already set, probably exception in LOG_BLOCK()" << std::endl;
-	}
-
-	this->mIsLevelSet = mpLogger->IsEnabled(aLevel);
-
-	if(mIsLevelSet) mLevel = aLevel;
-
-	return mIsLevelSet;
-}
-
-void Loggable::Log( const std::string& aLocation, const std::string& aMessage, int aErrorCode)
-{
-	assert(mIsLevelSet);
-
-	if ( mpLogger != NULL )
-		mpLogger->Log( mLevel, aLocation, aMessage, aErrorCode);
-
-	mIsLevelSet = false;
-}
-*/
 
 }
 

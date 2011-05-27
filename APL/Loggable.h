@@ -30,7 +30,7 @@ namespace apl
 	class Loggable
 	{
 		public:
-			Loggable( Logger* apLogger, bool aMultiThreaded = false);
+			Loggable( Logger* apLogger );
 
 		protected:
 			Logger* mpLogger;
