@@ -29,8 +29,9 @@ namespace apl {
 
 	class IPhysicalLayerAsync;
 
-	/// Class keeps a physical layer open by kicking off
-	/// AsyncOpen requests on a timer
+	/** Class keeps a physical layer open by kicking off
+	  *	AsyncOpen requests on a timer
+	  */
 	class AsyncPhysLayerMonitor : public IHandlerAsync
 	{
 		public:
@@ -54,8 +55,8 @@ namespace apl {
 			ITimer* mpOpenTimer;
 			LogVariable mPortState;
 
-			virtual void Up() = 0;
-			virtual void Down() = 0;
+			virtual void OnPhysicalLayerOpen() = 0;
+			virtual void OnPhysicalLayerClose() = 0;
 
 		private:
 

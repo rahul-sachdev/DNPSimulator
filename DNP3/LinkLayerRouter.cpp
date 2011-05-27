@@ -198,13 +198,13 @@ void LinkLayerRouter::CheckForSend()
 	}
 }
 
-void LinkLayerRouter::Up()
+void LinkLayerRouter::OnPhysicalLayerOpen()
 {
 	mpPhys->AsyncRead(mReceiver.WriteBuff(), mReceiver.NumWriteBytes());
 	BOOST_FOREACH(AddressMap::value_type p, mAddressMap) { p.second->OnLowerLayerUp(); }
 }
 
-void LinkLayerRouter::Down()
+void LinkLayerRouter::OnPhysicalLayerClose()
 {
 	mTransmitting = false;
 	mTransmitQueue.erase(mTransmitQueue.begin(), mTransmitQueue.end());

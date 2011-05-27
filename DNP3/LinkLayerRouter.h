@@ -95,8 +95,8 @@ namespace apl { namespace dnp {
 		void _OnSendFailure();
 
 		/// Implement virtual AsyncPhysLayerMonitor
-		void Up();
-		void Down();
+		void OnPhysicalLayerOpen();
+		void OnPhysicalLayerClose();
 
 		std::string RecvString() { return "<~"; }
 	};

@@ -96,29 +96,14 @@ namespace apl {
 				 *                      buffer has insufficient space.
 				 */
 				virtual size_t Write(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId) = 0;
-
+								
 				/**
-				 * Reads one item from the front of the queue.  If no items
-				 * are available, the function returns false.  If an item is
-				 * found in the queue, the item is stored in arEvent and
-				 * removed from the queue, and the function returns true.
-				 *
-				 * @param arEvent		The destination store for the queue
-				 * 						data
-				 *
-				 * @return				true if data is returned, false
-				 * 						otherwise
-				 */
-				bool Read(VtoEvent& arEvent);
-
-				/**
-				 * Returns the number of objects in the queue that are ready
-				 * to be sent.
+				 * Returns the number of bytes that the writer can currently accept
 				 *
 				 * @return				the number of objects in the
 				 *						transmission queue
 				 */
-				virtual size_t Size() = 0;
+				virtual size_t NumBytesAvailable() = 0;
 
 		};
 

@@ -21,14 +21,20 @@
 #include <queue>
 
 #include <APL/IHandlerAsync.h>
-#include <APL/IPhysicalLayerAsync.h>
-#include <APL/Logger.h>
+#include <APL/AsyncPhysLayerMonitor.h>
+#include <APL/ShiftableBuffer.h>
 
-#include "VtoReader.h"
-#include "VtoWriter.h"
+#include "VtoDataInterface.h"
 
 namespace apl {
+
+	class IPhysicalLayerAsync;
+	class ITimerSource;
+
 	namespace dnp {
+
+		class VtoReader;
+		class VtoWriter;
 
 		/**
 		 * Class used to route data between a VTO channel (made up of both a
@@ -46,7 +52,7 @@ namespace apl {
 		 * The VtoRouter instance provides the necessary IVtoCallbacks hooks
 		 * that the VtoReader will use.
 		 */
-		class VtoRouter : public IHandlerAsync, public IVtoCallbacks
+		class VtoRouter : public AsyncPhysLayerMonitor, IVtoCallbacks
 		{
 			public:
 
@@ -63,28 +69,8 @@ namespace apl {
 				 *
 				 * @return					a new VtoRouter instance
 				 */
-				VtoRouter(Logger* apLogger, boost::uint8_t aChannelId);
-
-				/**
-				 * Sets the IPhysicalLayerAsync that will be used as the
-				 * non-VTO end of the VtoRouter setup.  You're only allowed to
-				 * set this once, so get it right!
-				 *
-				 * @param apPhysLayer		the physical layer with which we
-				 * 							are routing
-				 */
-				void SetPhysicalLayer(IPhysicalLayerAsync* apPhysLayer);
-
-				/**
-				 * Sets the VtoWriter that will be used to forward data which
-				 * was received on the IPhysicalLayerAsync interface to the
-				 * DNP3 endpoint across the VTO channel link.  You're only
-				 * allowed to set this once, so get it right!
-				 *
-				 * @param apVtoWriter		the VTO writer instance
-				 */
-				void SetVtoWriter(VtoWriter* apVtoWriter);
-
+				VtoRouter(Logger* apLogger, boost::uint8_t aChannelId, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc);
+								
 				/**
 				 * Receives data from the VTO channel and forwards it to the
 				 * IPhysicalLayerAsync instance associated with this VtoRouter.
@@ -99,14 +85,21 @@ namespace apl {
 
 				/**
 				 * Called when the VTO data buffer size changes (startup and
-				 * successuly transmission).  This function is not used in the
-				 * VtoRouter implementation.
+				 * successuly transmission).
 				 *
 				 * @param aSize			Available space (bytes) in the buffer
 				 */
-				void OnBufferAvailable(size_t aSize) {}
+				void OnBufferAvailable(size_t aSize);
 
-			protected:
+				protected:
+
+				void CheckForRead();
+
+				// Implement AsyncPhysLayerMonitor
+
+				void OnPhysicalLayerOpen();
+				
+				void OnPhysicalLayerClose();
 
 				/**
 				 * Receives data from the physical layer and forwards it to the
@@ -132,49 +125,24 @@ namespace apl {
 				 * transmission to the physical layer was not successful.
 				 */
 				void _OnSendFailure();
-
-				/**
-				 * The ITransactable transaction lock.
-				 */
-				SigLock mLock;
-
-			private:
-
-				/**
-				 * Implements IUpperLayer::_OnSendFailure(), which was
-				 * inherited via IHandlerAsync.  Called when an asynchronous
-				 * transmission to the physical layer was not successful.
-				 */
-				void _OnOpenFailure();
-
-				/**
-				 * Starts the ITransactable transaction lock.
-				 */
-				void _Start();
-
-				/**
-				 * Ends the ITransactable transaction lock.
-				 */
-				void _End();
-
+				
+			private:				
+				
 				/**
 				 * The VtoWriter instance that will be used to send the data
 				 * that is received by the IPhysicalLayerAsync instance to the
 				 * VTO endpoint.
 				 */
-				VtoWriter* mpVtoWriter;
-
-				/**
-				 * The non-VTO endpoint of this VtoRouter.
-				 */
-				IPhysicalLayerAsync* mpPhysLayer;
-
+				IVtoWriter* mpVtoWriter;
+				
 				/**
 				 * The transmit buffer for the physical layer.  The data that
 				 * is put into this buffer was originally received via VTO.
 				 */
 				std::queue<VtoData> mPhysLayerTxBuffer;
 
+
+				ShiftableBuffer mBuffer;
 		};
 
 	}

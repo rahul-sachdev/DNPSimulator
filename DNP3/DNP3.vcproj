@@ -619,6 +619,14 @@
 						>
 					</File>
 					<File
+						RelativePath=".\VtoRouter.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VtoRouter.h"
+						>
+					</File>
+					<File
 						RelativePath=".\VtoWriter.cpp"
 						>
 					</File>

@@ -64,8 +64,8 @@ namespace apl {
 			void _OnSendSuccess(void){}
 			void _OnSendFailure(void){}
 
-			void Up(void);
-			void Down(void) {}
+			void OnPhysicalLayerOpen(void);
+			void OnPhysicalLayerClose(void) {}
 
 			void StartRead();
 	};

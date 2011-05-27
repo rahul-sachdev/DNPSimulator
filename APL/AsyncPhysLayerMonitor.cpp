@@ -40,6 +40,8 @@ mStopOpenRetry(false),
 M_OPEN_RETRY(aOpenRetry),
 mpMonitor(NULL)
 {
+	assert(apPhys != NULL);
+	assert(apTimerSrc != NULL);
 	mpPhys->SetHandler(this);
 }
 
@@ -110,7 +112,7 @@ void AsyncPhysLayerMonitor::_OnOpenFailure()
 void AsyncPhysLayerMonitor::_OnLowerLayerUp()
 {
 	assert(mOpening); mOpening = false; mOpen = true;
-	this->Up();
+	this->OnPhysicalLayerOpen();
 	this->Notify(IPhysMonitor::Open);
 }
 
@@ -118,7 +120,7 @@ void AsyncPhysLayerMonitor::_OnLowerLayerDown()
 {
 	mOpen = false;
 
-	this->Down();
+	this->OnPhysicalLayerClose();
 	this->Notify(IPhysMonitor::Closed);
 
 	if(mStopOpenRetry) {

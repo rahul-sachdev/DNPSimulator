@@ -61,7 +61,16 @@ namespace apl {
 				             boost::uint8_t aChannelId);
 
 				/**
-				 * Implements IVtoWriter::Read().
+				 * Reads one item from the front of the queue.  If no items
+				 * are available, the function returns false.  If an item is
+				 * found in the queue, the item is stored in arEvent and
+				 * removed from the queue, and the function returns true.
+				 *
+				 * @param arEvent		The destination store for the queue
+				 * 						data
+				 *
+				 * @return				true if data is returned, false
+				 * 						otherwise
 				 */
 				bool Read(VtoEvent& arEvent);
 

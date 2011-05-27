@@ -64,7 +64,7 @@ void AsyncLoopback::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
 	this->StartRead();
 }
 
-void AsyncLoopback::Up(void) { this->StartRead(); }
+void AsyncLoopback::OnPhysicalLayerOpen(void) { this->StartRead(); }
 
 
 

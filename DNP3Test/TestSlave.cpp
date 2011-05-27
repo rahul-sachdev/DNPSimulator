@@ -242,7 +242,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 
 		// Slave should send 3 bytes of vto data with index AA and Group/Var 113/3
 		BOOST_REQUIRE_EQUAL(t.Read(), "E0 81 80 00 71 03 17 01 AA 13 14 15");
-	}
+	}	
 
 	BOOST_AUTO_TEST_CASE(ReadClass0MultiFrag)
 	{

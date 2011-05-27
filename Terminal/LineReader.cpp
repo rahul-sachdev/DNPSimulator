@@ -14,13 +14,13 @@ namespace apl
 		this->Reset();
 	}
 	
-	void LineReader::Up()
+	void LineReader::OnPhysicalLayerOpen()
 	{
 		this->Read();
 		this->_Up();
 	}
 
-	void LineReader::Down()
+	void LineReader::OnPhysicalLayerClose()
 	{
 		this->Reset();
 		this->_Down();

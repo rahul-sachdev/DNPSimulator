@@ -28,8 +28,8 @@ class LineReader : public AsyncPhysLayerMonitor, private Uncopyable
 		bool mHasCR;
 
 		void Read();
-		void Up();
-		void Down();
+		void OnPhysicalLayerOpen();
+		void OnPhysicalLayerClose();
 		void Reset();
 
 		void _OnReceive(const boost::uint8_t*, size_t aNum);
