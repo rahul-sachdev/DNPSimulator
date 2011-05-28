@@ -52,7 +52,7 @@ void LinkLayerRouter::AddContext(ILinkContext* apContext, uint_16_t aAddress)
 	BOOST_FOREACH(AddressMap::value_type v, mAddressMap) {
 		if(apContext == v.second) {
 			ostringstream oss;
-			oss << "Context already in bound to address:  " << v.first;
+			oss << "Context already is bound to address:  " << v.first;
 			throw ArgumentException(LOCATION, oss.str());
 		}
 	}

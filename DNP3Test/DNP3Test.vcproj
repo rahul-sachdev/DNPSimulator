@@ -234,6 +234,10 @@
 					RelativePath=".\TestLinkReceiver.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\TestLinkRoute.cpp"
+					>
+				</File>
 				<Filter
 					Name="TestFramework"
 					>
