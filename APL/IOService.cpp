@@ -29,7 +29,7 @@ IOService::IOService() : mpService(new boost::asio::io_service())
 
 IOService::~IOService()
 {
-
+	delete mpService;
 }
 		
 }

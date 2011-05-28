@@ -19,8 +19,6 @@
 #ifndef __IO_SERVICE_H_
 #define __IO_SERVICE_H_
 
-#include <memory>
-
 namespace boost { namespace asio {
 	class io_service;
 }}
@@ -33,10 +31,10 @@ class IOService {
 	public:
 		IOService();
 		~IOService();
-		boost::asio::io_service* Get() { return mpService.get(); }
+		boost::asio::io_service* Get() { return mpService; }
 
 	private:
-		std::auto_ptr<boost::asio::io_service> mpService;
+		boost::asio::io_service* mpService;
 };
 
 }
