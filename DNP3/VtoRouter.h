@@ -70,7 +70,7 @@ namespace apl {
 				 * @return					a new VtoRouter instance
 				 */
 				VtoRouter(Logger* apLogger, boost::uint8_t aChannelId, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc);
-								
+
 				/**
 				 * Receives data from the VTO channel and forwards it to the
 				 * IPhysicalLayerAsync instance associated with this VtoRouter.
@@ -98,7 +98,7 @@ namespace apl {
 				// Implement AsyncPhysLayerMonitor
 
 				void OnPhysicalLayerOpen();
-				
+
 				void OnPhysicalLayerClose();
 
 				/**
@@ -125,16 +125,16 @@ namespace apl {
 				 * transmission to the physical layer was not successful.
 				 */
 				void _OnSendFailure();
-				
-			private:				
-				
+
+			private:
+
 				/**
 				 * The VtoWriter instance that will be used to send the data
 				 * that is received by the IPhysicalLayerAsync instance to the
 				 * VTO endpoint.
 				 */
 				IVtoWriter* mpVtoWriter;
-				
+
 				/**
 				 * The transmit buffer for the physical layer.  The data that
 				 * is put into this buffer was originally received via VTO.
