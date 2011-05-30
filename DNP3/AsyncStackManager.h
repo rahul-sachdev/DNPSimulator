@@ -34,6 +34,8 @@
 #include <APL/Lock.h>
 #include <APL/IOService.h>
 
+#include "LinkRoute.h"
+
 namespace apl {
 	class IPhysicalLayerAsync;
 	class Logger;
@@ -138,7 +140,7 @@ class AsyncStackManager : private Threadable, private Loggable
 		/// Remove a stack
 		void SeverStack(Port* apPort, const std::string& arStackName);
 
-		void OnAddStack(const std::string& arStackName, AsyncStack* apStack, Port* apPort, uint_16_t aAddress);
+		void OnAddStack(const std::string& arStackName, AsyncStack* apStack, Port* apPort, const LinkRoute&);
 		void CheckForJoin();
 
 		bool mRunASIO;

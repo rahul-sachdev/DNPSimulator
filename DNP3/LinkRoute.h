@@ -21,19 +21,28 @@
 
 #include <APL/Types.h>
 
+#include <iostream>
+
 namespace apl { namespace dnp {
 
 /**
 *	Immutable class that defines a route from a DNP3 source address to a destination address.
+*   Remote/Local used here instead of source/destination.
+*
+*	When transmitting, destination = remote, source = local
+*   When receiving, destination = local, soource = remote
+*
 *	Primary used as a key for stl map/set.
 */
 class LinkRoute
 {
 public:
-	LinkRoute(uint_16_t aSource, uint_16_t aDestination);
+	LinkRoute(uint_16_t aRemoteAddr, uint_16_t aLocalAddr);
 
-	const uint_16_t source;
-	const uint_16_t destination;
+	LinkRoute();
+
+	uint_16_t remote;
+	uint_16_t local;
 
 
 
@@ -44,6 +53,9 @@ public:
 		bool operator()(const LinkRoute& a, const LinkRoute& b) const;
 	};
 };
+
+std::ostream& operator<<(std::ostream& oss, const LinkRoute&);
+
 
 }}
 

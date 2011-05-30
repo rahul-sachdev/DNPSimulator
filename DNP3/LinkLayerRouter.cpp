@@ -39,31 +39,31 @@ mReceiver(apLogger, this),
 mTransmitting(false)
 {}
 
-void LinkLayerRouter::AddContext(ILinkContext* apContext, uint_16_t aAddress)
+void LinkLayerRouter::AddContext(ILinkContext* apContext, const LinkRoute& arRoute)
 {
 	assert(apContext != NULL);
 
-	if(mAddressMap.find(aAddress) != mAddressMap.end()) {
+	if(mAddressMap.find(arRoute) != mAddressMap.end()) {
 	  ostringstream oss;
-	  oss << "Address already in use: " << aAddress;
+	  oss << "Route already in use: " << arRoute;
       throw ArgumentException(LOCATION, oss.str());
 	}
 
 	BOOST_FOREACH(AddressMap::value_type v, mAddressMap) {
 		if(apContext == v.second) {
 			ostringstream oss;
-			oss << "Context already is bound to address:  " << v.first;
+			oss << "Context already is bound to route:  " << v.first;
 			throw ArgumentException(LOCATION, oss.str());
 		}
 	}
 
-	mAddressMap[aAddress] = apContext;
+	mAddressMap[arRoute] = apContext;
 	if(this->IsOpen()) apContext->OnLowerLayerUp();
 }
 
-void LinkLayerRouter::RemoveContext(uint_16_t aAddress)
+void LinkLayerRouter::RemoveContext(const LinkRoute& arRoute)
 {
-	AddressMap::iterator i = mAddressMap.find(aAddress);	
+	AddressMap::iterator i = mAddressMap.find(arRoute);	
 	if(i != mAddressMap.end()) { 
 		ILinkContext* pContext = i->second;
 		mAddressMap.erase(i);
@@ -72,19 +72,21 @@ void LinkLayerRouter::RemoveContext(uint_16_t aAddress)
 }
 
 
-ILinkContext* LinkLayerRouter::GetContext(uint_16_t aDest)
+ILinkContext* LinkLayerRouter::GetContext(const LinkRoute& arRoute)
 {
-	AddressMap::iterator i = mAddressMap.find(aDest);
+	AddressMap::iterator i = mAddressMap.find(arRoute);
 	return (i == mAddressMap.end()) ? NULL : i->second;
 }
 
 
-ILinkContext* LinkLayerRouter::GetDestination(uint_16_t aDest)
+ILinkContext* LinkLayerRouter::GetDestination(uint_16_t aDest, uint_16_t aSrc)
 {
-	ILinkContext* pDest = GetContext(aDest);
+	LinkRoute route(aSrc, aDest);
+
+	ILinkContext* pDest = GetContext(route);
 	
 	if(pDest == NULL) {
-		ERROR_BLOCK(LEV_WARNING, "Frame for unknown destination: " << aDest, DLERR_UNKNOWN_DESTINATION);
+		ERROR_BLOCK(LEV_WARNING, "Frame w/ unknown route: " << route, DLERR_UNKNOWN_DESTINATION);
 	}
 	
 	return pDest;
@@ -96,47 +98,47 @@ ILinkContext* LinkLayerRouter::GetDestination(uint_16_t aDest)
 
 void LinkLayerRouter::Ack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
 {
-	ILinkContext* pDest = GetDestination(aDest);
+	ILinkContext* pDest = GetDestination(aDest, aSrc);
 	if(pDest) pDest->Ack(aIsMaster, aIsRcvBuffFull, aDest, aSrc);
 }
 void LinkLayerRouter::Nack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
 {
-	ILinkContext* pDest = GetDestination(aDest);
+	ILinkContext* pDest = GetDestination(aDest, aSrc);
 	if(pDest) pDest->Nack(aIsMaster, aIsRcvBuffFull, aDest, aSrc);
 }
 void LinkLayerRouter::LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
 {
-	ILinkContext* pDest = GetDestination(aDest);
+	ILinkContext* pDest = GetDestination(aDest, aSrc);
 	if(pDest) pDest->LinkStatus(aIsMaster, aIsRcvBuffFull, aDest, aSrc);
 }
 void LinkLayerRouter::NotSupported (bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
 {
-	ILinkContext* pDest = GetDestination(aDest);
+	ILinkContext* pDest = GetDestination(aDest, aSrc);
 	if(pDest) pDest->NotSupported(aIsMaster, aIsRcvBuffFull, aDest, aSrc);
 }
 void LinkLayerRouter::TestLinkStatus(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc)
 {
-	ILinkContext* pDest = GetDestination(aDest);
+	ILinkContext* pDest = GetDestination(aDest, aSrc);
 	if(pDest) pDest->TestLinkStatus(aIsMaster, aFcb, aDest, aSrc);
 }
 void LinkLayerRouter::ResetLinkStates(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc)
 {
-	ILinkContext* pDest = GetDestination(aDest);
+	ILinkContext* pDest = GetDestination(aDest, aSrc);
 	if(pDest) pDest->ResetLinkStates(aIsMaster, aDest, aSrc);
 }
 void LinkLayerRouter::RequestLinkStatus(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc)
 {
-	ILinkContext* pDest = GetDestination(aDest);
+	ILinkContext* pDest = GetDestination(aDest, aSrc);
 	if(pDest) pDest->RequestLinkStatus(aIsMaster, aDest, aSrc);
 }
 void LinkLayerRouter::ConfirmedUserData(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength)
 {
-	ILinkContext* pDest = GetDestination(aDest);
+	ILinkContext* pDest = GetDestination(aDest, aSrc);
 	if(pDest) pDest->ConfirmedUserData(aIsMaster, aFcb, aDest, aSrc, apData, aDataLength);
 }
 void LinkLayerRouter::UnconfirmedUserData(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength)
 {
-	ILinkContext* pDest = GetDestination(aDest);
+	ILinkContext* pDest = GetDestination(aDest, aSrc);
 	if(pDest) pDest->UnconfirmedUserData(aIsMaster, aDest, aSrc, apData, aDataLength);
 }
 
@@ -152,7 +154,10 @@ void LinkLayerRouter::_OnReceive(const apl::byte_t*, size_t aNumBytes)
 
 void LinkLayerRouter::Transmit(const LinkFrame& arFrame)
 {	
-	if(this->GetContext(arFrame.GetSrc())) {
+	LinkRoute lr(arFrame.GetDest(), arFrame.GetSrc());
+
+
+	if(this->GetContext(lr)) {
 		if(!this->IsLowerLayerUp()) 
 			throw InvalidStateException(LOCATION, "LowerLayerDown");
 		this->mTransmitQueue.push_back(arFrame);
@@ -160,7 +165,7 @@ void LinkLayerRouter::Transmit(const LinkFrame& arFrame)
 	}
 	else {
 		ostringstream oss;
-		oss << "Unassociated context w/ address: " << arFrame.GetSrc();
+		oss << "Unassociated context w/ route: " << lr;
 		throw ArgumentException(LOCATION, oss.str());
 	}	
 }
@@ -169,7 +174,9 @@ void LinkLayerRouter::_OnSendSuccess()
 {
 	assert(mTransmitQueue.size() > 0);
 	assert(mTransmitting);
-	ILinkContext* pContext = this->GetContext(mTransmitQueue.front().GetSrc());
+	const LinkFrame& f = mTransmitQueue.front();
+	LinkRoute lr(f.GetDest(), f.GetSrc());
+	ILinkContext* pContext = this->GetContext(lr);
 	assert(pContext != NULL);
 	mTransmitting = false;	
 	mTransmitQueue.pop_front();

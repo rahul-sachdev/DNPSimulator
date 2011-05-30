@@ -18,6 +18,8 @@
 // 
 #include "TransportIntegrationStack.h"
 
+#include <DNP3/LinkRoute.h>
+
 namespace apl { namespace dnp {
 
 TransportIntegrationStack::TransportIntegrationStack(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, LinkConfig aCfg) :
@@ -26,7 +28,8 @@ mLink(apLogger, apTimerSrc, aCfg),
 mTransport(apLogger),
 mUpper(apLogger)
 {
-	mRouter.AddContext(&mLink, aCfg.LocalAddr);
+	LinkRoute route(aCfg.RemoteAddr, aCfg.LocalAddr);
+	mRouter.AddContext(&mLink, route);
 	mLink.SetUpperLayer(&mTransport);
 	mTransport.SetUpperLayer(&mUpper);
 	mLink.SetRouter(&mRouter);

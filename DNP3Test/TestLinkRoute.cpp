@@ -61,8 +61,8 @@ BOOST_AUTO_TEST_SUITE(LinkRouteSuite)
 		}
 		{
 			RouteMap::iterator i = rm.find(LinkRoute(4,1));
-			BOOST_REQUIRE_EQUAL(4,i->first.source);
-			BOOST_REQUIRE_EQUAL(1,i->first.destination);
+			BOOST_REQUIRE_EQUAL(4,i->first.remote);
+			BOOST_REQUIRE_EQUAL(1,i->first.local);
 			BOOST_REQUIRE_EQUAL(12,i->second);
 		}
 	}

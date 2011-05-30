@@ -28,6 +28,7 @@
 #include "LinkLayerReceiver.h"
 #include "IFrameSink.h"
 #include "ILinkRouter.h"
+#include "LinkRoute.h"
 
 namespace apl {
   class IPhysicalLayerAsync;
@@ -48,10 +49,10 @@ namespace apl { namespace dnp {
 		LinkLayerRouter(apl::Logger*, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);
 
 		/// Ties the lower part of the link layer to the upper part
-		void AddContext(ILinkContext*, uint_16_t aAddress);
+		void AddContext(ILinkContext*, const LinkRoute& arRoute);
 
 		/// This is safe to do at runtime, so long as the request happens from the io_service thread.
-		void RemoveContext(uint_16_t aAddress);
+		void RemoveContext(const LinkRoute& arRoute);
 
 		// Implement the IFrameSink interface - This is how the receiver pushes data
 		void Ack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc);
@@ -71,13 +72,13 @@ namespace apl { namespace dnp {
 
 		private:
 
-		ILinkContext* GetDestination(uint_16_t aDest);
-		ILinkContext* GetContext(uint_16_t aDest);
+		ILinkContext* GetDestination(uint_16_t aDest, uint_16_t aSrc);
+		ILinkContext* GetContext(const LinkRoute&);
 
 		void CheckForSend();
 
 
-		typedef std::map<uint_16_t, ILinkContext*> AddressMap;
+		typedef std::map<LinkRoute, ILinkContext*, LinkRoute::LessThan> AddressMap;
 		typedef std::deque<LinkFrame> TransmitQueue;
 
 		AddressMap mAddressMap;

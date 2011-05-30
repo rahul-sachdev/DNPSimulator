@@ -23,6 +23,8 @@
 #include <APL/Exception.h>
 #include <APL/ToHex.h>
 
+#include <DNP3/LinkRoute.h>
+
 #include "LinkLayerRouterTest.h"
 #include "MockFrameSink.h"
 
@@ -69,17 +71,18 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 	BOOST_AUTO_TEST_CASE(LayerNotOnline){
 		LinkLayerRouterTest t;
 		MockFrameSink mfs;
-		t.router.AddContext(&mfs, 1024);
+		t.router.AddContext(&mfs, LinkRoute(1, 1024));
 		LinkFrame f;
 		f.FormatAck(true, false, 1, 1024);
 		BOOST_REQUIRE_THROW(t.router.Transmit(f), InvalidStateException);
 	}
 	
+	
 	/// Test that router is correctly clears the send buffer on close
 	BOOST_AUTO_TEST_CASE(CloseBehavior){
 		LinkLayerRouterTest t;
 		MockFrameSink mfs;
-		t.router.AddContext(&mfs, 1024);
+		t.router.AddContext(&mfs, LinkRoute(1,1024));
 		t.router.Start(); t.phys.SignalOpenSuccess();
 		LinkFrame f;
 		f.FormatAck(true, false, 1, 1024);
@@ -98,9 +101,8 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 		t.phys.ClearBuffer();
 		
 		t.phys.SignalOpenSuccess();
-
-		//format another request, but change the to address
-		LinkFrame f2; f2.FormatAck(true, false, 2, 1024);
+		
+		LinkFrame f2; f2.FormatAck(true, false, 1, 1024);
 		t.router.Transmit(f2);
 		BOOST_REQUIRE_EQUAL(t.phys.NumWrites(), 2);
 		BOOST_REQUIRE(t.phys.BufferEquals(f2.GetBuffer(), f2.GetSize()));
@@ -108,41 +110,43 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 		BOOST_REQUIRE_EQUAL(t.phys.NumWrites(), 2);
 	}
 
+	
 	BOOST_AUTO_TEST_CASE(ReentrantCloseWorks){
 		LinkLayerRouterTest t;
 		MockFrameSink mfs;
-		t.router.AddContext(&mfs, 1024);
+		t.router.AddContext(&mfs, LinkRoute(1, 1024));
 		t.router.Start(); t.phys.SignalOpenSuccess();
 		BOOST_REQUIRE(mfs.mLowerOnline);
 		mfs.AddAction(boost::bind(&LinkLayerRouter::Stop, &t.router));
-		LinkFrame f; f.FormatAck(true, false, 1024, 2);
+		LinkFrame f; f.FormatAck(true, false, 1024, 1);
 		t.phys.TriggerRead(toHex(f.GetBuffer(), f.GetSize()));
 		BOOST_REQUIRE(t.IsLogErrorFree());
 	}
+	
 	
 	/// Test that the second bind fails when a non-unique address is added
 	BOOST_AUTO_TEST_CASE(MultiAddressBindError){
 		LinkLayerRouterTest t;
 		MockFrameSink mfs;
-		t.router.AddContext(&mfs, 1024);
-		BOOST_REQUIRE_THROW(t.router.AddContext(&mfs, 1024), ArgumentException);
+		t.router.AddContext(&mfs, LinkRoute(1, 1024));
+		BOOST_REQUIRE_THROW(t.router.AddContext(&mfs, LinkRoute(1, 1024)), ArgumentException);
 	}
-
+	
 	/// Test that the second bind fails when a non-unique context is added
 	BOOST_AUTO_TEST_CASE(MultiContextBindError){
 		LinkLayerRouterTest t;
 		MockFrameSink mfs;
-		t.router.AddContext(&mfs, 1024);
-		BOOST_REQUIRE_THROW(t.router.AddContext(&mfs, 2048), ArgumentException);
+		t.router.AddContext(&mfs, LinkRoute(1, 1024));
+		BOOST_REQUIRE_THROW(t.router.AddContext(&mfs, LinkRoute(1, 2048)), ArgumentException);
 	}
-
+	
 	/// Test that router correctly buffers and sends frames from multiple contexts
 	BOOST_AUTO_TEST_CASE(MultiContextSend){
 		LinkLayerRouterTest t;
 		MockFrameSink mfs1;
 		MockFrameSink mfs2;
-		t.router.AddContext(&mfs1, 1024);
-		t.router.AddContext(&mfs2, 2048);
+		t.router.AddContext(&mfs1, LinkRoute(1, 1024));
+		t.router.AddContext(&mfs2, LinkRoute(1, 2048));
 		LinkFrame f1; f1.FormatAck(true, false, 1, 1024);
 		LinkFrame f2; f2.FormatAck(true, false, 1, 2048);
 		t.router.Start(); t.phys.SignalOpenSuccess();
@@ -154,7 +158,5 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 		t.phys.SignalSendSuccess();			
 		BOOST_REQUIRE_EQUAL(t.phys.NumWrites(), 2);
 	}
-	
-
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -21,16 +21,26 @@
 
 namespace apl { namespace dnp {
 
-LinkRoute::LinkRoute(uint_16_t aSource, uint_16_t aDestination) :
-	source(aSource),
-	destination(aDestination)
+LinkRoute::LinkRoute(uint_16_t aRemoteAddr, uint_16_t aLocalAddr) :
+	remote(aRemoteAddr),
+	local(aLocalAddr)
+	{}
+
+LinkRoute::LinkRoute() :
+	remote(0),
+	local(0)
 	{}
 
 bool LinkRoute::LessThan::operator ()(const LinkRoute &a, const LinkRoute &b) const
 {	
-	if(a.source < b.source) return true;
-	else if(b.source < a.source) return false;
-	else return a.destination < b.destination;
+	if(a.remote < b.remote) return true;
+	else if(b.remote < a.remote) return false;
+	else return a.local < b.local;
+}
+
+std::ostream& operator<<(std::ostream& oss, const LinkRoute& arRoute)
+{
+	return oss << " Local: " << arRoute.local << " Remote: " << arRoute.remote;
 }
 		
 }}

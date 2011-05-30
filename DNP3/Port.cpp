@@ -65,12 +65,12 @@ void Port::OnStateChange(IPhysMonitor::State aState)
 	if((aState == IPhysMonitor::Stopped) && mRelease) delete this;
 }
 
-void Port::Associate(const std::string& arStackName, AsyncStack* apStack, uint_16_t aLocalAddress)
+void Port::Associate(const std::string& arStackName, AsyncStack* apStack, const LinkRoute& arRoute)
 {
-	LOG_BLOCK(LEV_DEBUG, "Linking stack to port: " << aLocalAddress);	
-	mStackMap[arStackName] = StackRecord(apStack, aLocalAddress);	
+	LOG_BLOCK(LEV_DEBUG, "Linking stack to port w/ route " << arRoute);	
+	mStackMap[arStackName] = StackRecord(apStack, arRoute);	
 	apStack->mLink.SetRouter(&mRouter);
-	mRouter.AddContext(&apStack->mLink, aLocalAddress);
+	mRouter.AddContext(&apStack->mLink, arRoute);
 	if(!mRouter.IsRunning()) {
 		LOG_BLOCK(LEV_DEBUG, "Starting router");
 		mRouter.Start();
@@ -81,8 +81,8 @@ void Port::Disassociate(const std::string& arStackName)
 {	
 	StackMap::iterator i = mStackMap.find(arStackName);	
 	StackRecord r = i->second;
-	LOG_BLOCK(LEV_DEBUG, "Unlinking stack from port: " << r.mLocalAddress);
-	mRouter.RemoveContext(r.mLocalAddress);		// decouple the stack from the router and tell the stack to go offline if the it was previously online
+	LOG_BLOCK(LEV_DEBUG, "Unlinking stack from port w/ route " << r.route);
+	mRouter.RemoveContext(r.route);		// decouple the stack from the router and tell the stack to go offline if the it was previously online
 	delete r.pStack;							// delete the stack
 	if(mRouter.IsRunning() && mRouter.NumContext() == 0) {
 		LOG_BLOCK(LEV_DEBUG, "Stopping router");
