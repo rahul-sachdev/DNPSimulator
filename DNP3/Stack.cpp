@@ -22,7 +22,7 @@
 
 namespace apl { namespace dnp {
 
-AsyncStack::AsyncStack(Logger* apLogger, ITimerSource* apTimerSrc, AppConfig aAppCfg, LinkConfig aCfg) :
+Stack::Stack(Logger* apLogger, ITimerSource* apTimerSrc, AppConfig aAppCfg, LinkConfig aCfg) :
 mLink(apLogger->GetSubLogger("link"), apTimerSrc, aCfg),
 mTransport(apLogger->GetSubLogger("transport")),
 mApplication(apLogger->GetSubLogger("app"), apTimerSrc, aAppCfg)

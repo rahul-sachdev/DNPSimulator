@@ -225,7 +225,7 @@ void AsyncStackManager::Run()
 	mService.Get()->reset();
 }
 
-void AsyncStackManager::OnAddStack(const std::string& arStackName, AsyncStack* apStack, Port* apPort, const LinkRoute& arRoute)
+void AsyncStackManager::OnAddStack(const std::string& arStackName, Stack* apStack, Port* apPort, const LinkRoute& arRoute)
 {	
 	// marshall the linking to the io_service
 	mStackToPort[arStackName] = apPort; //map the stack to a portname

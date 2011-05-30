@@ -46,7 +46,7 @@ namespace apl {
 namespace apl { namespace dnp {
 
 class Port;
-class AsyncStack;
+class Stack;
 
 struct SlaveStackConfig;
 struct MasterStackConfig;
@@ -140,7 +140,8 @@ class AsyncStackManager : private Threadable, private Loggable
 		/// Remove a stack
 		void SeverStack(Port* apPort, const std::string& arStackName);
 
-		void OnAddStack(const std::string& arStackName, AsyncStack* apStack, Port* apPort, const LinkRoute&);
+
+		void OnAddStack(const std::string& arStackName, Stack* apStack, Port* apPort, const LinkRoute&);
 		void CheckForJoin();
 
 		bool mRunASIO;
