@@ -153,7 +153,7 @@ class AsyncStackManager : private Threadable, private Loggable
 										or if the VTO channel ID is already
 										bound for that stack
 		 */
-		IVtoWriter* AddVtoChannel(const std::string& arStackName,
+		void AddVtoChannel(const std::string& arStackName,
 						IVtoCallbacks* apOnDataCallback);
 
 		/**
@@ -212,6 +212,17 @@ class AsyncStackManager : private Threadable, private Loggable
 			@throw ArgumentException	if arStackName doesn't exist
 		*/
 		void StopVtoRouter(const std::string& arStackName);
+
+		/**
+			Get the vto writer by stack name
+
+			@param arStackName Unique name of the stack
+
+			@throw ArgumentException if arStackName doesn't exist
+
+			@return The IVtoWriter interface for the named stack
+		*/
+		IVtoWriter* GetVtoWriter(const std::string& arStackName);
 
 		/// Remove a port and all associated stacks
 		void RemovePort(const std::string& arPortName);
