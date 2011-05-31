@@ -20,6 +20,8 @@
 #include <boost/test/unit_test.hpp>
 
 #include <APL/Log.h>
+#include <APL/ToHex.h>
+
 #include <APLTestTools/LogTester.h>
 #include <APLTestTools/MockPhysicalLayerAsync.h>
 #include <APLTestTools/MockTimerSource.h>
@@ -35,13 +37,15 @@ using namespace apl::dnp;
 class RouterTestClass : LogTester 
 {
 	public:
-	RouterTestClass() :
+		RouterTestClass(const VtoRouterSettings& arSettings = VtoRouterSettings(0), const size_t aWriterSize = 100) :
 		LogTester(false),
 		phys(mLog.GetLogger(LEV_DEBUG, "phys")),
-		writer(100),
+		writer(aWriterSize),
 		mts(),
-		router(mLog.GetLogger(LEV_DEBUG, "router"), 8, &writer, &phys, &mts)
-	{}
+		router(arSettings, mLog.GetLogger(LEV_DEBUG, "router"), &writer, &phys, &mts)
+	{
+		writer.AddVtoCallback(&router);	
+	}
 
 	MockPhysicalLayerAsync phys;
 	VtoWriter writer;
@@ -50,6 +54,18 @@ class RouterTestClass : LogTester
 };
 
 BOOST_AUTO_TEST_SUITE(VtoRouterTests)
+
+	boost::uint8_t data[3] = { 0xA, 0xB, 0xC };
+
+	void CheckVtoEvent(const VtoEvent& arEvent, const std::string& arData, boost::uint8_t aChannelId, PointClass aClass)
+	{
+		BOOST_REQUIRE_EQUAL(aChannelId, arEvent.mIndex); // the channel id
+		BOOST_REQUIRE_EQUAL(aClass, arEvent.mClass);
+
+		const std::string hex = toHex(arEvent.mValue.GetData(), arEvent.mValue.GetSize(), true);
+
+		BOOST_REQUIRE_EQUAL(arData, hex);		
+	}
 
 	BOOST_AUTO_TEST_CASE(Construction)
 	{
@@ -63,6 +79,87 @@ BOOST_AUTO_TEST_SUITE(VtoRouterTests)
 		BOOST_REQUIRE(rtc.phys.IsOpening());
 		rtc.phys.SignalOpenSuccess();
 		BOOST_REQUIRE(rtc.phys.IsReading());
+	}
+
+	BOOST_AUTO_TEST_CASE(WriteVtoBeforeConnect)
+	{
+		RouterTestClass rtc;		
+		rtc.router.Start();
+		BOOST_REQUIRE(rtc.phys.IsOpening());			
+		rtc.router.OnVtoDataReceived(data, 3);
+
+		/* When physical layer comes up, it should read and write */
+		rtc.phys.SignalOpenSuccess();
+		BOOST_REQUIRE(rtc.phys.IsReading());
+		BOOST_REQUIRE(rtc.phys.IsWriting());
+
+		BOOST_REQUIRE_EQUAL(1, rtc.phys.NumWrites());
+		BOOST_REQUIRE(rtc.phys.BufferEquals("0A 0B 0C"));
+		rtc.phys.SignalSendSuccess();
+		BOOST_REQUIRE_EQUAL(1, rtc.phys.NumWrites());
+	}
+
+	BOOST_AUTO_TEST_CASE(WriteVtoAfterConnect)
+	{
+		RouterTestClass rtc;		
+		rtc.router.Start();
+		BOOST_REQUIRE(rtc.phys.IsOpening());			
+		
+		/* When physical layer comes up, it should read and write */
+		rtc.phys.SignalOpenSuccess();
+		BOOST_REQUIRE(rtc.phys.IsReading());
+		BOOST_REQUIRE(rtc.phys.IsOpen());
+		rtc.router.OnVtoDataReceived(data, 3);
+		
+		BOOST_REQUIRE(rtc.phys.IsWriting());
+
+		BOOST_REQUIRE_EQUAL(1, rtc.phys.NumWrites());
+		BOOST_REQUIRE(rtc.phys.BufferEquals("0A 0B 0C"));
+		rtc.phys.SignalSendSuccess();
+		BOOST_REQUIRE_EQUAL(1, rtc.phys.NumWrites());
+	}
+
+	BOOST_AUTO_TEST_CASE(WriteVtoData)
+	{
+		RouterTestClass rtc(8);		
+		rtc.router.Start();
+		rtc.phys.SignalOpenSuccess();
+
+		std::string stringData("0A 0B 0C");
+		
+		rtc.phys.TriggerRead(stringData);
+		BOOST_REQUIRE_EQUAL(rtc.writer.Size(), 1);
+		VtoEvent vto;
+		BOOST_REQUIRE(rtc.writer.Read(vto));
+		CheckVtoEvent(vto, stringData, 8, PC_CLASS_1);
+	}
+
+	BOOST_AUTO_TEST_CASE(PhysReadBuffering)
+	{
+		RouterTestClass rtc(VtoRouterSettings(0), 1); // writer only takes 1 chunk!
+		rtc.router.Start();
+		rtc.phys.SignalOpenSuccess();
+
+		std::string stringData1("0A 0B 0C");
+		std::string stringData2("0D 0E 0F");
+		std::string stringData3("10 11 12");
+		
+		rtc.phys.TriggerRead(stringData1);
+		rtc.phys.TriggerRead(stringData2);
+		rtc.phys.TriggerRead(stringData3);
+		BOOST_REQUIRE_EQUAL(rtc.writer.Size(), 1);
+						
+		VtoEvent vto;
+		BOOST_REQUIRE(rtc.writer.Read(vto));
+		CheckVtoEvent(vto, stringData1, 0, PC_CLASS_1);
+
+		BOOST_REQUIRE_EQUAL(rtc.writer.Size(), 1);
+
+		// the 2nd set of data will get merged as a single vto object
+		BOOST_REQUIRE(rtc.writer.Read(vto));
+		CheckVtoEvent(vto, "0D 0E 0F 10 11 12", 0, PC_CLASS_1);
+
+		BOOST_REQUIRE_EQUAL(rtc.writer.Size(), 0);			
 	}
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -105,22 +105,7 @@ namespace apl {
 		void VtoReader::_End()
 		{
 			mLock.Unlock();
-		}
-
-		void VtoReader::Notify(size_t aAvailableBytes)
-		{
-			/*
-			 * The whole function is thread-safe, from start to finish.
-			 */
-			CriticalSection cs(&mLock);
-
-			for (ChannelMap::iterator i = mChannelMap.begin();
-			     i != mChannelMap.end();
-			     ++i)
-			{
-				i->second->OnBufferAvailable(aAvailableBytes);
-			}
-		}
+		}		
 	}
 }
 

@@ -72,16 +72,7 @@ namespace apl {
 				 *                          with this reader
 				 */
 				void RemoveVtoChannel(IVtoCallbacks* apCallbacks);
-
-				/**
-				 * Notifies all registered IVtoCallbacks that space is
-				 *available.
-				 *
-				 * @param aAvailableBytes	the number of bytes available for
-				 *                          reading.
-				 */
-				void Notify(size_t aAvailableBytes);
-
+				
 				/**
 				 * Adds a VtoEvent object to be delivered back to user code.
 				 * Must

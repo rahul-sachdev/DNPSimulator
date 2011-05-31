@@ -140,12 +140,9 @@ namespace apl {
 				                            size_t aLength) = 0;
 
 				/**
-				 * Called when the Vto data buffer size changes (startup and
-				 * successuly transmission).
-				 *
-				 * @param aSize			Available space (bytes) in the buffer
+				 * Called when the Vto data buffer releases space.
 				 */
-				virtual void OnBufferAvailable(size_t aSize) = 0;
+				virtual void OnBufferAvailable() = 0;
 		};
 
 	}

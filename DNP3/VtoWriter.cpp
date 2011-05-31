@@ -19,10 +19,7 @@
 
 #include <APL/Util.h>
 
-using apl::CriticalSection;
-using apl::dnp::VtoData;
-using apl::dnp::VtoEvent;
-using apl::dnp::VtoWriter;
+namespace apl { namespace dnp {
 
 VtoWriter::VtoWriter(size_t aMaxVtoChunks) :
 	mMaxVtoChunks(aMaxVtoChunks)
@@ -55,16 +52,6 @@ size_t VtoWriter::Write(const boost::uint8_t* apData,
 
 	/* Return the number of bytes from apData that were queued. */
 	return num;
-}
-
-void VtoWriter::_Start()
-{
-	this->mLock.Lock();
-}
-
-void VtoWriter::_End()
-{
-	this->mLock.Unlock();
 }
 
 void VtoWriter::Commit(const boost::uint8_t* apData,
@@ -107,10 +94,16 @@ void VtoWriter::QueueVtoObject(const boost::uint8_t* apData,
 }
 
 bool VtoWriter::Read(VtoEvent& arEvent)
+{	
+	bool readValue = this->ReadWithoutNotifying(arEvent);
+
+	if(readValue) this->NotifyAllCallbacks();
+
+	return readValue;
+}
+
+bool VtoWriter::ReadWithoutNotifying(VtoEvent& arEvent) 
 {
-	/*
-	 * The whole function is thread-safe, from start to finish.
-	 */
 	CriticalSection cs(&mLock);
 
 	/*
@@ -118,18 +111,43 @@ bool VtoWriter::Read(VtoEvent& arEvent)
 	 * the function to be used in the conditional block of a loop
 	 * construct.
 	 */
-	if (this->mQueue.size() == 0)
-	{
-		return false;
+	if(this->mQueue.size() == 0) return false;
+	else {
+		/*
+		* The queue has data, so pop off the front item, store it in
+		* arEvent, and return true.
+		*/
+		arEvent = this->mQueue.front();
+		this->mQueue.pop();
+		return true;
 	}
+}
 
-	/*
-	 * The queue has data, so pop off the front item, store it in
-	 * arEvent, and return true.
-	 */
-	arEvent = this->mQueue.front();
-	this->mQueue.pop();
-	return true;
+
+void VtoWriter::AddVtoCallback(IVtoCallbacks* apCallbacks)
+{
+	assert(apCallbacks != NULL);
+	CriticalSection cs(&mLock);
+	this->mCallbacks.insert(apCallbacks);
+}
+
+void VtoWriter::RemoveVtoCallback(IVtoCallbacks* apCallbacks)
+{
+	assert(apCallbacks != NULL);
+	CriticalSection cs(&mLock);
+	this->mCallbacks.erase(apCallbacks);
+}
+
+void VtoWriter::NotifyAllCallbacks()
+{
+	CallbackSet set; //create a copy of the set outside the critical section
+	{
+		CriticalSection cs(&mLock);
+		set = mCallbacks;
+	}
+	for(CallbackSet::iterator i = set.begin(); i != set.end(); ++i) {
+		(*i)->OnBufferAvailable();
+	}
 }
 
 size_t VtoWriter::Size()
@@ -151,6 +169,8 @@ size_t VtoWriter::NumBytesAvailable()
 {
 	return this->NumChunksAvailable() * VtoData::MAX_SIZE;
 }
+
+}}
 
 /* vim: set ts=4 sw=4: */
 
