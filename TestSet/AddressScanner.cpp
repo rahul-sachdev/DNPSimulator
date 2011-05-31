@@ -39,8 +39,9 @@ mScanTimeout(cfg.Master.Stack.LinkLayer.AckTimeoutMS),
 mCurrent(start),
 mStop(stop)
 {
-	manager.SetLayerOwnership(false);	
-	mRouter.AddContext(this, mMasterAddr);		
+	manager.SetLayerOwnership(false);
+	LinkRoute route(cfg.Master.Stack.LinkLayer.RemoteAddress, cfg.Master.Stack.LinkLayer.LocalAddress);
+	mRouter.AddContext(this, route);		
 }
 
 void AddressScanner::OnLowerLayerUp()

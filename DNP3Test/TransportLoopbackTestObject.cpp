@@ -18,6 +18,8 @@
 //
 #include "TransportLoopbackTestObject.h"
 
+#include <DNP3/LinkRoute.h>
+
 #include <sstream>
 #include <boost/foreach.hpp>
 
@@ -47,8 +49,8 @@ mRouter(mpLogger, apPhys, &mTimerSource, 1000),
 mUpperA(mpLogger),
 mUpperB(mpLogger)
 {
-	mRouter.AddContext(&mLinkA, mCfgA.LocalAddr);
-	mRouter.AddContext(&mLinkB, mCfgB.LocalAddr);
+	mRouter.AddContext(&mLinkA, LinkRoute(mCfgA.RemoteAddr, mCfgA.LocalAddr));
+	mRouter.AddContext(&mLinkB, LinkRoute(mCfgB.RemoteAddr, mCfgB.LocalAddr));
 
 	mLinkA.SetUpperLayer(&mTransA);
 	mLinkB.SetUpperLayer(&mTransB);

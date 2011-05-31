@@ -35,6 +35,7 @@
 #include <APL/IOService.h>
 
 #include "VtoDataInterface.h"
+#include "LinkRoute.h"
 
 namespace apl {
 	class IPhysicalLayerAsync;
@@ -256,7 +257,7 @@ class AsyncStackManager : private Threadable, private Loggable
 		// Remove a stack
 		void SeverStack(Port* apPort, const std::string& arStackName);
 
-		void OnAddStack(const std::string& arStackName, Stack* apStack, Port* apPort, boost::uint16_t aAddress);
+		void OnAddStack(const std::string& arStackName, Stack* apStack, Port* apPort, const LinkRoute&);
 		void CheckForJoin();
 
 		bool mRunASIO;

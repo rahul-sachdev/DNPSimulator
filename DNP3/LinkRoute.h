@@ -16,24 +16,48 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "TransportIntegrationStack.h"
+#ifndef __LINK_ROUTE_H_
+#define __LINK_ROUTE_H_
 
-#include <DNP3/LinkRoute.h>
+#include <APL/Types.h>
+
+#include <iostream>
 
 namespace apl { namespace dnp {
 
-TransportIntegrationStack::TransportIntegrationStack(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, LinkConfig aCfg) :
-mRouter(apLogger, apPhys, apTimerSrc, 1000),
-mLink(apLogger, apTimerSrc, aCfg),
-mTransport(apLogger),
-mUpper(apLogger)
+/**
+*	Immutable class that defines a route from a DNP3 source address to a destination address.
+*   Remote/Local used here instead of source/destination.
+*
+*	When transmitting, destination = remote, source = local
+*   When receiving, destination = local, soource = remote
+*
+*	Primary used as a key for stl map/set.
+*/
+class LinkRoute
 {
-	LinkRoute route(aCfg.RemoteAddr, aCfg.LocalAddr);
-	mRouter.AddContext(&mLink, route);
-	mLink.SetUpperLayer(&mTransport);
-	mTransport.SetUpperLayer(&mUpper);
-	mLink.SetRouter(&mRouter);
-}
+public:
+	LinkRoute(uint_16_t aRemoteAddr, uint_16_t aLocalAddr);
+
+	LinkRoute();
+
+	uint_16_t remote;
+	uint_16_t local;
+
+
+
+	// comparison functor for use with stl map/set
+	struct LessThan
+	{
+		// Const to fix VS compilation bug
+		bool operator()(const LinkRoute& a, const LinkRoute& b) const;
+	};
+};
+
+std::ostream& operator<<(std::ostream& oss, const LinkRoute&);
 
 
 }}
+
+#endif
+
