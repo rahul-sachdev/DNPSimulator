@@ -60,7 +60,7 @@ namespace apl {
 				 *registered
 				 *                          with this reader
 				 */
-				void AddVtoChannel(IVtoCallbacks* apCallbacks);
+				void AddVtoChannel(IVtoDataHandler* apCallbacks);
 
 				/**
 				 * Unregister an IVtoCallbacks instance with the VtoReader
@@ -71,7 +71,7 @@ namespace apl {
 				 * @throw ArgumentException	if the channel id is not registered
 				 *                          with this reader
 				 */
-				void RemoveVtoChannel(IVtoCallbacks* apCallbacks);
+				void RemoveVtoChannel(IVtoDataHandler* apCallbacks);
 				
 				/**
 				 * Adds a VtoEvent object to be delivered back to user code.
@@ -106,7 +106,7 @@ namespace apl {
 				 */
 				void _End();
 
-				typedef std::map<boost::uint8_t, IVtoCallbacks*> ChannelMap;
+				typedef std::map<boost::uint8_t, IVtoDataHandler*> ChannelMap;
 
 				ChannelMap mChannelMap;
 		};

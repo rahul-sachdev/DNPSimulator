@@ -72,6 +72,19 @@ namespace apl {
 		};
 
 		/**
+		*  Callback that notifies when space is available to write vto objects.
+		*/
+		class IVtoBufferHandler
+		{
+			public:
+							
+				/**
+				 * Called when an IVtoWriter has space available for writing
+				 */
+				virtual void OnBufferAvailable() = 0;
+		};
+
+		/**
 		 * IVTOWriter is returned by the stack for write operations to a Vto
 		 * stream.  The Write() function should be used in conjunction with the
 		 * OnBufferAvailable() callback on the IVTOCallbacks interface provided
@@ -105,7 +118,20 @@ namespace apl {
 				 */
 				virtual size_t NumBytesAvailable() = 0;
 
+				/**
+				* Registers an IVtoCallbacks to receive OnBufferAvailable() notifications
+				* @param apCallbacks The interface to invoke when space is made available
+				*/
+				void AddVtoCallback(IVtoBufferHandler* apHandler);
+
+				/**
+				* Stops an IVtoCallbacks from receiving OnBufferAvailable() notifications
+				* @param apCallbacks The interface to stop calling when space is available
+				*/
+				void RemoveVtoCallback(IVtoBufferHandler* apHandler);
 		};
+
+		
 
 		/**
 		 * Receives data from the stack for a particular channel and is notified
@@ -114,7 +140,7 @@ namespace apl {
 		 * subclass of this class and register an instance of that subclass
 		 * during the function call.
 		 */
-		class IVtoCallbacks : public IVtoChannel
+		class IVtoDataHandler : public IVtoChannel
 		{
 			public:
 
@@ -127,7 +153,7 @@ namespace apl {
 				 *
 				 * @return				the new IVtoCallbacks instance
 				 */
-				IVtoCallbacks(boost::uint8_t aChannelId) : IVtoChannel(aChannelId) {}
+				IVtoDataHandler(boost::uint8_t aChannelId) : IVtoChannel(aChannelId) {}
 
 				/**
 				 * Called when data arrives from stack and needs to be handled.
@@ -138,11 +164,21 @@ namespace apl {
 				 */
 				virtual void OnVtoDataReceived(const boost::uint8_t* apData,
 				                            size_t aLength) = 0;
+		};
 
-				/**
-				 * Called when the Vto data buffer releases space.
+		class IVtoCallbacks : public IVtoDataHandler, public IVtoBufferHandler
+		{
+		public:
+			/**
+				 * Creates a new IVtoCallbacks instance configured for Virtual
+				 * Terminal channel id matching aChannelId.
+				 *
+				 * @param aChannelId	the DNP3 Virtual Terminal port (channel
+				 *						id)
+				 *
+				 * @return				the new IVtoCallbacks instance
 				 */
-				virtual void OnBufferAvailable() = 0;
+				IVtoCallbacks(boost::uint8_t aChannelId) : IVtoDataHandler(aChannelId) {}
 		};
 
 	}

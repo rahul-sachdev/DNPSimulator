@@ -124,18 +124,18 @@ bool VtoWriter::ReadWithoutNotifying(VtoEvent& arEvent)
 }
 
 
-void VtoWriter::AddVtoCallback(IVtoCallbacks* apCallbacks)
+void VtoWriter::AddVtoCallback(IVtoBufferHandler* apHandler)
 {
-	assert(apCallbacks != NULL);
+	assert(apHandler != NULL);
 	CriticalSection cs(&mLock);
-	this->mCallbacks.insert(apCallbacks);
+	this->mCallbacks.insert(apHandler);
 }
 
-void VtoWriter::RemoveVtoCallback(IVtoCallbacks* apCallbacks)
+void VtoWriter::RemoveVtoCallback(IVtoBufferHandler* apHandler)
 {
-	assert(apCallbacks != NULL);
+	assert(apHandler != NULL);
 	CriticalSection cs(&mLock);
-	this->mCallbacks.erase(apCallbacks);
+	this->mCallbacks.erase(apHandler);
 }
 
 void VtoWriter::NotifyAllCallbacks()
