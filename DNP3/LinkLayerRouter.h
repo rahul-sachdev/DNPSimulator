@@ -72,7 +72,7 @@ namespace apl { namespace dnp {
 
 		private:
 
-		ILinkContext* GetDestination(uint_16_t aDest, uint_16_t aSrc);
+		ILinkContext* GetDestination(boost::uint16_t aDest, boost::uint16_t aSrc);
 		ILinkContext* GetContext(const LinkRoute&);
 
 		void CheckForSend();

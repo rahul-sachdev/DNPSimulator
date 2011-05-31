@@ -79,7 +79,7 @@ ILinkContext* LinkLayerRouter::GetContext(const LinkRoute& arRoute)
 }
 
 
-ILinkContext* LinkLayerRouter::GetDestination(uint_16_t aDest, uint_16_t aSrc)
+ILinkContext* LinkLayerRouter::GetDestination(boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	LinkRoute route(aSrc, aDest);
 
@@ -153,8 +153,8 @@ void LinkLayerRouter::_OnReceive(const boost::uint8_t*, size_t aNumBytes)
 }
 
 void LinkLayerRouter::Transmit(const LinkFrame& arFrame)
+{
 	LinkRoute lr(arFrame.GetDest(), arFrame.GetSrc());
-
 
 	if (this->GetContext(lr)) {
 		if (!this->IsLowerLayerUp())

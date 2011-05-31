@@ -26,25 +26,23 @@
 namespace apl { namespace dnp {
 
 /**
-*	Immutable class that defines a route from a DNP3 source address to a destination address.
-*   Remote/Local used here instead of source/destination.
-*
-*	When transmitting, destination = remote, source = local
-*   When receiving, destination = local, soource = remote
-*
-*	Primary used as a key for stl map/set.
-*/
+ * Immutable class that defines a route from a DNP3 source address to a
+ * destination address.  Remote/Local used here instead of source/destination.
+ *
+ * When transmitting, destination = remote, source = local
+ * When receiving, destination = local, soource = remote
+ *
+ * Primary used as a key for stl map/set.
+ */
 class LinkRoute
 {
 public:
-	LinkRoute(uint_16_t aRemoteAddr, uint_16_t aLocalAddr);
+	LinkRoute(const boost::uint16_t aRemoteAddr, const boost::uint16_t aLocalAddr);
 
 	LinkRoute();
 
-	uint_16_t remote;
-	uint_16_t local;
-
-
+	boost::uint16_t remote;
+	boost::uint16_t local;
 
 	// comparison functor for use with stl map/set
 	struct LessThan
@@ -55,7 +53,6 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& oss, const LinkRoute&);
-
 
 }}
 
