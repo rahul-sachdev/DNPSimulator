@@ -560,6 +560,27 @@ BOOST_AUTO_TEST_SUITE(APDUReading)
 
 		BOOST_REQUIRE_EQUAL("world", std::string(reinterpret_cast<const char*>(buff), 5));
 	}
+
+	BOOST_AUTO_TEST_CASE(OperatorEquals)
+	{
+		APDU frag1;
+		APDU frag2;
+		APDU frag3;
+
+		HexSequence hs("C3 01 3C 02 06 3C 03 06 3C 04 06 3C 01 06");
+		frag1.Write(hs, hs.Size());
+		frag2.Write(hs, hs.Size());
+
+		BOOST_REQUIRE(frag1 == frag2);
+		BOOST_REQUIRE(frag2 != frag3);
+	}
+
+	BOOST_AUTO_TEST_CASE(SetControlNegativeTC)
+	{
+		APDU frag;
+		BOOST_REQUIRE_THROW(frag.SetControl(true, true, true, true, -1), ArgumentException);
+		BOOST_REQUIRE_THROW(frag.SetControl(true, true, true, true, 16), ArgumentException);
+	}
 BOOST_AUTO_TEST_SUITE_END()
 
 /* vim: set ts=4 sw=4: */
