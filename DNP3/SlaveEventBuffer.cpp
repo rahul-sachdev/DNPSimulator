@@ -43,6 +43,11 @@ namespace apl { namespace dnp {
 		mCounterEvents.Update(arEvent, aClass, aIndex);
 	}
 
+	void SlaveEventBuffer::Update(VtoEvent& arEvent)
+	{
+		this->mVtoEvents.Update(arEvent);
+	}
+
 	size_t SlaveEventBuffer::NumSelected(BufferTypes aType)
 	{
 		switch(aType){

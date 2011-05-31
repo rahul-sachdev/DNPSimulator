@@ -82,6 +82,13 @@ class SlaveEventBuffer : public IEventBuffer
 		void Update(const Counter& arEvent, PointClass aClass, size_t aIndex);
 
 		/**
+		 * Adds an event to the buffer.
+		 *
+		 * @param arEvent		Event update to add to the buffer
+		 */
+		void Update(VtoEvent& arEvent);
+
+		/**
 		 * Returns the number of events that were previously selected through
 		 * SlaveEventBuffer::Select().  The selection behavior is restricted
 		 * only to the buffer type given (BT_BINARY, BT_ANALOG, BT_COUNTER,
