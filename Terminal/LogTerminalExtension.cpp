@@ -52,9 +52,9 @@ namespace apl
 
 	void LogTerminalExtension::_BindToTerminal(ITerminal* apTerminal)
 	{
-		////////////////////////////////////
+		////////////////////////
 		// Print routines
-		////////////////////////////////////
+		////////////////////////
 
 		CommandNode cmd;
 
@@ -72,9 +72,9 @@ namespace apl
 		cmd.mDesc = "Lists all of the loggers and the current filter settings";
 		apTerminal->BindCommand(cmd, "loggers");
 
-		////////////////////////////////////
+		////////////////////////
 		// run
-		////////////////////////////////////
+		////////////////////////
 
 		cmd.mName = "log";
 		cmd.mHandler = boost::bind(&LogTerminalExtension::HandleRunLog, this, _1);
@@ -82,9 +82,9 @@ namespace apl
 		cmd.mDesc = "Continuously outputs log entries as they occur.";
 		apTerminal->BindCommand(cmd, "log run");
 
-		////////////////////////////////////
+		////////////////////////
 		// set
-		////////////////////////////////////
+		////////////////////////
 
 		std::string levels("a=ALL, d=DEBUG, i=INFO, c=COMM, p=Interpret, w=WARNING, e=ERROR, v=EVENT, n=NONE");
 		std::string usage("[a|d|i|c|p|w|e|v|n] <loggername1> <loggername2> ...");
@@ -110,9 +110,9 @@ namespace apl
 		cmd.mDesc = "Sets the column order for displaying log entries";
 		apTerminal->BindCommand(cmd, "logcol");
 
-		////////////////////////////////////
+		////////////////////////
 		// clear
-		////////////////////////////////////
+		////////////////////////
 		
 		cmd.mName = "start";
 		cmd.mHandler = boost::bind(&LogTerminalExtension::HandleStartToFileLogging, this, _1);

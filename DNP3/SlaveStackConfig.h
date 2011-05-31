@@ -35,10 +35,10 @@ struct SlaveStackConfig
 	link(false, false)
 	{}
 
-	SlaveConfig slave;		/// Slave config
-	DeviceTemplate device;	/// Device template that specifies database layout, control behavior
-	AppConfig app;			/// Application layer config
-	LinkConfig link;		/// Link layer config
+	SlaveConfig slave;		// Slave config
+	DeviceTemplate device;	// Device template that specifies database layout, control behavior
+	AppConfig app;			// Application layer config
+	LinkConfig link;		// Link layer config
 };
 
 }}

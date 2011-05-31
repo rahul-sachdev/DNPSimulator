@@ -89,9 +89,9 @@ class Slave : public Loggable, public IAppUser
 		Slave(Logger*, IAppLayer*, ITimerSource*, ITimeManager* apTime, Database*, IDNPCommandMaster*, const SlaveConfig& arCfg);
 		virtual ~Slave() {}
 
-		///////////////////////////////////
+		////////////////////////
 		// External events
-		///////////////////////////////////
+		////////////////////////
 
 		/* Implement IAppUser - callbacks from the app layer */
 		void OnLowerLayerUp();
@@ -157,30 +157,30 @@ class Slave : public Loggable, public IAppUser
 
 	private:
 
-		ChangeBuffer<SigLock> mChangeBuffer;	/// how client code gives us updates
-		PostingNotifierSource mNotifierSource;	/// way to get special notifiers for the change queue / vto
-		IAppLayer* mpAppLayer;					/// lower application layer
-		ITimerSource* mpTimerSrc;				/// used for post and timers
-		Database* mpDatabase;					/// holds static data
-		IDNPCommandMaster* mpCmdMaster;			/// how commands are selected/operated
-		int mSequence;							/// control sequence
-		CommandResponseQueue mRspQueue;			/// how command responses are received
-		AS_Base* mpState;						/// current state for the state pattern
-		SlaveConfig mConfig;					/// houses the configurable paramters of the outstation
-		SlaveResponseTypes mRspTypes;			/// converts the group/var in the config to dnp singletons
+		ChangeBuffer<SigLock> mChangeBuffer;	// how client code gives us updates
+		PostingNotifierSource mNotifierSource;	// way to get special notifiers for the change queue / vto
+		IAppLayer* mpAppLayer;					// lower application layer
+		ITimerSource* mpTimerSrc;				// used for post and timers
+		Database* mpDatabase;					// holds static data
+		IDNPCommandMaster* mpCmdMaster;			// how commands are selected/operated
+		int mSequence;							// control sequence
+		CommandResponseQueue mRspQueue;			// how command responses are received
+		AS_Base* mpState;						// current state for the state pattern
+		SlaveConfig mConfig;					// houses the configurable paramters of the outstation
+		SlaveResponseTypes mRspTypes;			// converts the group/var in the config to dnp singletons
 
-		ITimer* mpUnsolTimer;					/// timer for sending unsol responsess
+		ITimer* mpUnsolTimer;					// timer for sending unsol responsess
 
-		IINField mIIN;							/// IIN bits that persist between requests (i.e. NeedsTime/Restart/Etc)
-		IINField mRspIIN;						/// Transient IIN bits that get merged before a response is issued
-		APDU mResponse;							/// APDU used to form responses
-		APDU mRequest;							/// APDU used to save Deferred requests
+		IINField mIIN;							// IIN bits that persist between requests (i.e. NeedsTime/Restart/Etc)
+		IINField mRspIIN;						// Transient IIN bits that get merged before a response is issued
+		APDU mResponse;							// APDU used to form responses
+		APDU mRequest;							// APDU used to save Deferred requests
 		SequenceInfo mSeqInfo;
-		APDU mUnsol;							/// APDY used to form unsol respones
-		ResponseContext mRspContext;			/// Used to track and construct response fragments
+		APDU mUnsol;							// APDY used to form unsol respones
+		ResponseContext mRspContext;			// Used to track and construct response fragments
 
 		bool mHaveLastRequest;
-		APDU mLastRequest;						/// APDU used to form responses
+		APDU mLastRequest;						// APDU used to form responses
 
 		ITimeManager* mpTime;
 		CachedLogVariable mCommsStatus;
@@ -188,20 +188,20 @@ class Slave : public Loggable, public IAppUser
 		// Flags that tell us that some action has been Deferred
 		// until the slave is in a state capable of handling it.
 
-		bool mDeferredUpdate;					/// Indicates that a data update has been Deferred
-		bool mDeferredRequest;					/// Indicates that a request has been Deferred
-		bool mDeferredUnsol;					/// Indicates that the unsol timer expired, but the event was Deferred
+		bool mDeferredUpdate;					// Indicates that a data update has been Deferred
+		bool mDeferredRequest;					// Indicates that a request has been Deferred
+		bool mDeferredUnsol;					// Indicates that the unsol timer expired, but the event was Deferred
 		bool mDeferredUnknown;
 
-		bool mStartupNullUnsol;					/// Tracks whether the device has completed the NULL unsol startup message
+		bool mStartupNullUnsol;					// Tracks whether the device has completed the NULL unsol startup message
 
-		void OnVtoUpdate();						/// internal event dispatched when user code commits an update to mVtoWriter
-		void OnDataUpdate();					/// internal event dispatched when user code commits an update to mChangeBuffer
-		void OnUnsolTimerExpiration();			/// internal event dispatched when the unsolicted pack/retry timer expires
+		void OnVtoUpdate();						// internal event dispatched when user code commits an update to mVtoWriter
+		void OnDataUpdate();					// internal event dispatched when user code commits an update to mChangeBuffer
+		void OnUnsolTimerExpiration();			// internal event dispatched when the unsolicted pack/retry timer expires
 
 		void ConfigureAndSendSimpleResponse();
 		void Send(APDU&);
-		void Send(APDU& arAPDU, const IINField& arIIN); /// overload with additional IIN data
+		void Send(APDU& arAPDU, const IINField& arIIN); // overload with additional IIN data
 		void SendUnsolicited(APDU& arAPDU);
 
 		void HandleWrite(const APDU& arRequest);

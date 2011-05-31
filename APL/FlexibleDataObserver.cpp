@@ -37,7 +37,7 @@ namespace apl
 		mSetpointStatusMap.clear();
 	}
 
-	/// The RHS is a strict subset of the LHS... i.e. everything in the RHS can be found in the LHS
+	// The RHS is a strict subset of the LHS... i.e. everything in the RHS can be found in the LHS
 	bool FlexibleDataObserver::StrictEquality(const FlexibleDataObserver& arLHS, const FlexibleDataObserver& arRHS)
 	{
 		if(! StrictEquality(arLHS.mBinaryMap, arRHS.mBinaryMap) ) return false;
@@ -49,7 +49,7 @@ namespace apl
 		return true;
 	}
 
-	/// The RHS is a strict subset of the LHS... i.e. everything in the RHS can be found in the LHS
+	// The RHS is a strict subset of the LHS... i.e. everything in the RHS can be found in the LHS
 	bool FlexibleDataObserver::IsSubsetOf(const FlexibleDataObserver& arLHS, const FlexibleDataObserver& arRHS)
 	{
 		if(! IsSubsetOf(arLHS.mBinaryMap, arRHS.mBinaryMap) ) return false;

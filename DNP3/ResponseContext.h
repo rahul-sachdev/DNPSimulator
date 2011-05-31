@@ -64,10 +64,10 @@ class ResponseContext : public Loggable
 
 	IEventBuffer* GetBuffer() { return &mBuffer; }
 
-	/// Setup the response context with a new read request
+	// Setup the response context with a new read request
 	IINField Configure(const APDU& arRequest);
 
-	/// Configure the APDU with response data for the next fragment
+	// Configure the APDU with response data for the next fragment
 	void LoadResponse(APDU&);
 
 	bool HasEvents(ClassMask aMask);
@@ -77,16 +77,16 @@ class ResponseContext : public Loggable
 	*/
 	bool LoadUnsol(APDU&, const IINField& arIIN, ClassMask aMask);
 
-	/// @return TRUE is all of the response data has already been written
+	// @return TRUE is all of the response data has already been written
 	bool IsComplete() { return IsEmpty(); }
 
-	/// Reset the state of the object to the initial state
+	// Reset the state of the object to the initial state
 	void Reset();
 
-	/// Tell the buffer to reset written events
+	// Tell the buffer to reset written events
 	void ClearWritten();
 
-	/// Clear written events and reset the state of the object
+	// Clear written events and reset the state of the object
 	void ClearAndReset();
 
 	private:
@@ -98,7 +98,7 @@ class ResponseContext : public Loggable
 
 	Mode mMode;
 
-	/// @return TRUE if all of the data has been written
+	// @return TRUE if all of the data has been written
 	bool LoadStaticData(APDU&);
 
 	/**
@@ -124,7 +124,7 @@ class ResponseContext : public Loggable
 
 	//bool WriteCTO(const TimeStamp_t& arTime, APDU& arAPDU);
 
-	Database* mpDB;				/// Pointer to the database for static data
+	Database* mpDB;				// Pointer to the database for static data
 	bool mFIR;
 	bool mFIN;
 	SlaveResponseTypes* mpRspTypes;
@@ -136,9 +136,9 @@ class ResponseContext : public Loggable
 	{
 		IterRecord() : pObject(NULL) {}
 
-		typename StaticIter<T>::Type first;				/// Begining of iteration
-		typename StaticIter<T>::Type last;				/// Last element of iteration
-		StreamObject<typename T::MeasType>* pObject;	/// Type to use to write
+		typename StaticIter<T>::Type first;				// Begining of iteration
+		typename StaticIter<T>::Type last;				// Last element of iteration
+		StreamObject<typename T::MeasType>* pObject;	// Type to use to write
 	};
 
 	template<class T>
@@ -149,8 +149,8 @@ class ResponseContext : public Loggable
 			count(aCount)
 		{}
 
-		const StreamObject<T>* pObj;		/// Type to use to write
-		size_t count;						/// Number of events to read
+		const StreamObject<T>* pObj;		// Type to use to write
+		size_t count;						// Number of events to read
 	};
 
 	struct VtoEventRequest
@@ -160,8 +160,8 @@ class ResponseContext : public Loggable
 			count(aCount)
 		{}
 
-		const SizeByVariationObject* pObj;	/// Type to use to write
-		size_t count;						/// Number of events to read
+		const SizeByVariationObject* pObj;	// Type to use to write
+		size_t count;						// Number of events to read
 	};
 
 	typedef std::deque< IterRecord<BinaryInfo> >			BinaryIterQueue;

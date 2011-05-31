@@ -27,7 +27,7 @@ IUpperLayer(apLogger)
 
 }
 
-/// For consistency sake, use NVII pattern in case we want pre/post conditions in the future
+// For consistency sake, use NVII pattern in case we want pre/post conditions in the future
 void IHandlerAsync::OnOpenFailure() { this->_OnOpenFailure(); }
 
 }

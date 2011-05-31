@@ -34,7 +34,7 @@ class SolicitedChannel : public AppLayerChannel
 	SolicitedChannel(Logger* apLogger, AppLayer* apApp, ITimerSource* apTimerSrc, millis_t aTimeout);
 	virtual ~SolicitedChannel(){}
 
-	/// Called when the app layer has a problem parsing an object header
+	// Called when the app layer has a problem parsing an object header
 	void OnUnknownObjectInRequest(const AppControlField& acf);
 	void OnResponse(APDU& arAPDU);
 	void OnRequest(APDU& arAPDU);

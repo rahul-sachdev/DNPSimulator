@@ -157,9 +157,9 @@ namespace apl { namespace dnp {
 	MACRO_STATIC_INSTANCE(112,0)
 	MACRO_STATIC_INSTANCE(113,0)
 
-	//////////////////////////////////////////////
+	///////////////////////////////
 	//	Binary Input Types
-	//////////////////////////////////////////////
+	///////////////////////////////
 
 	void Group1Var2::Write(boost::uint8_t* p, const apl::Binary& v) const { DNPToStream::WriteQ(p, Group1Var2::Inst(), v); }
 	void Group2Var1::Write(boost::uint8_t* p, const apl::Binary& v) const { DNPToStream::WriteQ(p, Group2Var1::Inst(), v); }
@@ -172,16 +172,16 @@ namespace apl { namespace dnp {
 	Binary Group2Var3::Read(const boost::uint8_t* p) const { return DNPFromStream::ReadBinaryQVT(p, Group2Var3::Inst()); }
 
 
-	//////////////////////////////////////////////
+	///////////////////////////////
 	//	Binary Output Status
-	//////////////////////////////////////////////
+	///////////////////////////////
 
 	ControlStatus Group10Var2::Read(const boost::uint8_t* apPos) const { return DNPFromStream::ReadQ(apPos, Group10Var2::Inst()); }
 	void Group10Var2::Write(boost::uint8_t* apPos, const ControlStatus& arObj) const { DNPToStream::WriteQ(apPos, Group10Var2::Inst(), arObj); }
 
-	//////////////////////////////////////////////
+	///////////////////////////////
 	//	Binary Output Types
-	//////////////////////////////////////////////
+	///////////////////////////////
 
 	void Group12Var1::Write(boost::uint8_t* apPos, const BinaryOutput& arControl) const
 	{
@@ -208,9 +208,9 @@ namespace apl { namespace dnp {
 		return CopyableBuffer(apPos, 10); //first 10 bytes, everything but the status
 	}
 
-	//////////////////////////////////////////////
+	///////////////////////////////
 	// Counter Types
-	//////////////////////////////////////////////
+	///////////////////////////////
 
 	Counter Group20Var1::Read(const boost::uint8_t* apPos) const { return DNPFromStream::ReadQV(apPos, Group20Var1::Inst()); }
 	Counter Group20Var2::Read(const boost::uint8_t* apPos) const { return DNPFromStream::ReadQV(apPos, Group20Var2::Inst()); }
@@ -249,9 +249,9 @@ namespace apl { namespace dnp {
 	void Group22Var8::Write(boost::uint8_t* apPos, const apl::Counter& v) const { DNPToStream::WriteQVT(apPos, Group22Var8::Inst(), v); }
 
 
-	//////////////////////////////////////////////
+	///////////////////////////////
 	//	Analog Input Types
-	//////////////////////////////////////////////
+	///////////////////////////////
 	void Group30Var1::Write(boost::uint8_t* p, const apl::Analog& v) const { DNPToStream::WriteCheckRangeQV(p, Group30Var1::Inst(), v); }
 	void Group30Var2::Write(boost::uint8_t* p, const apl::Analog& v) const { DNPToStream::WriteCheckRangeQV(p, Group30Var2::Inst(), v); }
 	void Group30Var3::Write(boost::uint8_t* p, const apl::Analog& v) const { DNPToStream::WriteV(p, Group30Var3::Inst(), v); }
@@ -284,9 +284,9 @@ namespace apl { namespace dnp {
 	Analog Group32Var7::Read(const boost::uint8_t* apPos) const { return DNPFromStream::ReadQVT(apPos, Group32Var7::Inst()); }
 	Analog Group32Var8::Read(const boost::uint8_t* apPos) const { return DNPFromStream::ReadQVT(apPos, Group32Var8::Inst()); }
 
-	//////////////////////////////////////////////
+	///////////////////////////////
 	//	Analog Output Status
-	//////////////////////////////////////////////
+	///////////////////////////////
 
 	SetpointStatus Group40Var1::Read(const boost::uint8_t* apPos) const { return DNPFromStream::ReadQV(apPos, Group40Var1::Inst()); }
 	SetpointStatus Group40Var2::Read(const boost::uint8_t* apPos) const { return DNPFromStream::ReadQV(apPos, Group40Var2::Inst()); }
@@ -298,9 +298,9 @@ namespace apl { namespace dnp {
 	void Group40Var3::Write(boost::uint8_t* apPos, const apl::SetpointStatus& arObj) const { DNPToStream::WriteQV(apPos, Group40Var3::Inst(), arObj); }
 	void Group40Var4::Write(boost::uint8_t* apPos, const apl::SetpointStatus& arObj) const { DNPToStream::WriteQV(apPos, Group40Var4::Inst(), arObj); }
 
-	//////////////////////////////////////////////
+	///////////////////////////////
 	//	Setpoint Types
-	//////////////////////////////////////////////
+	///////////////////////////////
 
 	void Group41Var1::Write(boost::uint8_t* apBuff, const Setpoint& arVal) const
 	{

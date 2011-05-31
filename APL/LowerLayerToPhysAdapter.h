@@ -52,7 +52,7 @@ class LowerLayerToPhysAdapter : public IHandlerAsync, public ILowerLayer
 
 		static const size_t BUFFER_SIZE = 1 << 16; // 65,536
 
-		boost::uint8_t mpBuff[BUFFER_SIZE]; /// Temporary buffer since IPhysicalLayerAsync now directly supports a read operation
+		boost::uint8_t mpBuff[BUFFER_SIZE]; // Temporary buffer since IPhysicalLayerAsync now directly supports a read operation
 
 		/* Implement IAsyncHandler */
 		void _OnOpenFailure();

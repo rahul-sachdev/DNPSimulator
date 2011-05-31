@@ -357,20 +357,20 @@ namespace apl { namespace dnp {
 
 			// Interpreted Information
 			bool mIsInterpreted;
-			IAppHeader* mpAppHeader;					/// uses a singleton so auto copy is safe
+			IAppHeader* mpAppHeader;					// uses a singleton so auto copy is safe
 			std::vector<HeaderInfo> mObjectHeaders;
 
-			CopyableBuffer mBuffer;		/// This makes it dynamically sizable without the need for a special copy constructor.
-			size_t mFragmentSize;		/// Number of bytes written to the buffer
+			CopyableBuffer mBuffer;		// This makes it dynamically sizable without the need for a special copy constructor.
+			size_t mFragmentSize;		// Number of bytes written to the buffer
 
 			QualifierCode GetContiguousQualifier(size_t aStart, size_t aStop);
 			QualifierCode GetIndexedQualifier(size_t aMaxIndex, size_t aCount);
 
 			ICountHeader* GetCountHeader(QualifierCode aCode);
 
-			//////////////////////////////////////////////////////////////
+			//////////////////////////////////////////
 			// Private Functions for Interpreting Frames
-			//////////////////////////////////////////////////////////////
+			//////////////////////////////////////////
 
 			IObjectHeader* GetObjectHeader(QualifierCode aCode);
 

@@ -30,8 +30,8 @@ using namespace apl::dnp;
 
 BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 
-	/// All operations should fail except for OnLowerLayerUp, just a representative
-	/// number of them
+	// All operations should fail except for OnLowerLayerUp, just a representative
+	// number of them
 	BOOST_AUTO_TEST_CASE(ClosedState)
 	{
 		LinkLayerTest t;
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 		BOOST_REQUIRE_THROW(t.link.Ack(false, false, 1, 2), InvalidStateException);
 	}
 
-	/// Prove that the upper layer is notified when the lower layer comes online
+	// Prove that the upper layer is notified when the lower layer comes online
 	BOOST_AUTO_TEST_CASE(ForwardsOnLowerLayerUp)
 	{
 		LinkLayerTest t;
@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 		BOOST_REQUIRE(t.upper.IsLowerLayerUp());
 	}
 
-	/// Check that once the layer comes up, validation errors can occur
+	// Check that once the layer comes up, validation errors can occur
 	BOOST_AUTO_TEST_CASE(ValidatesMasterSlaveBit)
 	{
 		LinkLayerTest t; t.link.OnLowerLayerUp();
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_MASTER_BIT_MATCH);
 	}
 
-	/// Only process frames from your designated remote address
+	// Only process frames from your designated remote address
 	BOOST_AUTO_TEST_CASE(ValidatesSourceAddress)
 	{
 		LinkLayerTest t; t.link.OnLowerLayerUp();
@@ -65,8 +65,8 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_UNKNOWN_SOURCE);
 	}
 
-	/// This should actually never happen when using the LinkLayerRouter
-	/// Only process frame addressed to you
+	// This should actually never happen when using the LinkLayerRouter
+	// Only process frame addressed to you
 	BOOST_AUTO_TEST_CASE(ValidatesDestinationAddress)
 	{
 		LinkLayerTest t;  t.link.OnLowerLayerUp();
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_UNKNOWN_DESTINATION);
 	}
 
-	/// Show that the base state of idle logs SecToPri frames as errors
+	// Show that the base state of idle logs SecToPri frames as errors
 	BOOST_AUTO_TEST_CASE(SecToPriNoContext)
 	{
 		LinkLayerTest t; t.link.OnLowerLayerUp();
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_UNEXPECTED_FRAME);
 	}
 
-	/// Show that the base state of idle forwards unconfirmed user data
+	// Show that the base state of idle forwards unconfirmed user data
 	BOOST_AUTO_TEST_CASE(UnconfirmedDataPassedUpFromIdleUnreset)
 	{
 		LinkLayerTest t; t.link.OnLowerLayerUp();
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 		BOOST_REQUIRE(t.upper.BufferEquals(bs, bs.Size()));
 	}
 
-	/// Show that the base state of idle forwards unconfirmed user data
+	// Show that the base state of idle forwards unconfirmed user data
 	BOOST_AUTO_TEST_CASE(ConfirmedDataIgnoredFromIdleUnreset)
 	{
 		LinkLayerTest t; t.link.OnLowerLayerUp();
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_UNEXPECTED_FRAME);
 	}
 
-	/// Secondary Reset Links
+	// Secondary Reset Links
 	BOOST_AUTO_TEST_CASE(SecondaryResetLink)
 	{
 		LinkLayerTest t(LinkLayerTest::DefaultConfig(), LEV_INTERPRET, true);
@@ -150,8 +150,8 @@ BOOST_AUTO_TEST_SUITE(LinkLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_WRONG_FCB_ON_RECEIVE_DATA);
 	}
 
-	/// When we get another reset links when we're already reset,
-	/// ACK it and reset the link state
+	// When we get another reset links when we're already reset,
+	// ACK it and reset the link state
 	BOOST_AUTO_TEST_CASE(SecondaryResetResetLinkStates)
 	{
 		LinkLayerTest t;

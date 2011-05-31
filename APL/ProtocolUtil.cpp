@@ -20,8 +20,8 @@
 
 namespace apl {
 
-/// Given a buffer and max packet size, calculcate the
-/// maximum number of packets the buffer can hold
+// Given a buffer and max packet size, calculcate the
+// maximum number of packets the buffer can hold
 size_t CalcMaxPackets(size_t aBuffer, size_t aPayload)
 {
 	size_t remain = aBuffer%aPayload;

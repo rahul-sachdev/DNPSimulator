@@ -53,7 +53,7 @@ namespace apl { namespace dnp {
 		void ReceiveAPDU(const boost::uint8_t* apData, size_t aNumBytes);
 		void ReceiveTPDU(const boost::uint8_t* apData, size_t aNumBytes);
 
-		bool ContinueSend(); /// return true if
+		bool ContinueSend(); // return true if
 		void SignalSendSuccess();
 		void SignalSendFailure();
 

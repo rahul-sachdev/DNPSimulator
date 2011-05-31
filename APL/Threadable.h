@@ -36,14 +36,14 @@ class Threadable
 		virtual ~Threadable();
 
 		// /These are provided
-		/// This way any pre/post conditions of Start() can be enforced by the base class
+		// This way any pre/post conditions of Start() can be enforced by the base class
 		void Start();
 		void RequestStop();
 
-		///allows a client to see if the thread is running
+		//allows a client to see if the thread is running
 		inline bool IsRunning() { return mIsRunning; }
 
-		///allows a client to see fi the thread has been "canceled"
+		//allows a client to see fi the thread has been "canceled"
 		inline bool IsExitRequested(){return mIsExitRequested;}
 
 		void ResetStopRequest();
@@ -54,18 +54,18 @@ class Threadable
 
 
 
-		/// allows inherited classes to override and do something to wake the thread
+		// allows inherited classes to override and do something to wake the thread
 		virtual void SignalStop();
 
 	private:
-		/// implemented Run() should check for this condition
-		/// and shutdown when requested to do so
+		// implemented Run() should check for this condition
+		// and shutdown when requested to do so
 		bool mIsExitRequested;
 
 		bool mIsRunning;
 
 
-		/// inherited objects must implement a run function
+		// inherited objects must implement a run function
 		virtual void Run() = 0;
 
 };

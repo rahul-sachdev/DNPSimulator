@@ -30,8 +30,8 @@ using namespace apl::dnp;
 
 BOOST_AUTO_TEST_SUITE(AsyncIntegrationSuite)
 
-	/// This test aggressively starts and stops stacks
-	/// while the io_service is running
+	// This test aggressively starts and stops stacks
+	// while the io_service is running
 	BOOST_AUTO_TEST_CASE(StackTearDown)
 	{
 		const size_t NUM_STACKS = 10;

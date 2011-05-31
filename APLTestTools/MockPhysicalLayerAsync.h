@@ -26,7 +26,7 @@
 
 namespace apl {
 
-	/// Provides a backend for testing physical layers
+	// Provides a backend for testing physical layers
 	class MockPhysicalLayerAsync : public PhysicalLayerAsyncBase, public BufferTestObject
 	{
 		public:

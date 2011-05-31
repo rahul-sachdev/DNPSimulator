@@ -36,8 +36,8 @@ namespace apl {
 			static bool Negate(const EvalFunc& arFunc) { return !arFunc(); }
 
 		protected:
-			/// Inherited classes implement this function. Test functions iteratively call this function
-			/// to try and make progress
+			// Inherited classes implement this function. Test functions iteratively call this function
+			// to try and make progress
 			virtual void Next()= 0;
 
 			static void Next(boost::asio::io_service* apSrv, millis_t aSleep);

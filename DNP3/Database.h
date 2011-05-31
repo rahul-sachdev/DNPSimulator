@@ -104,9 +104,9 @@ namespace apl { namespace dnp {
 			template<typename T>
 			void PerformRead(std::vector< PointInfo<T> >& arVec, T& arValue, size_t aIndex);
 
-			/////////////////////////////////////////////////////////////
+			/////////////////////////////////////////
 			//	Static data
-			/////////////////////////////////////////////////////////////
+			/////////////////////////////////////////
 
 			std::vector< PointInfo<apl::Binary> > mBinaryVec;
 			std::vector< PointInfo<apl::Analog> > mAnalogVec;

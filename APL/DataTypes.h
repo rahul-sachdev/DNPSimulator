@@ -263,9 +263,9 @@ namespace apl
 %template(UnsignedPoint) apl::TypedDataPoint<apl::uint32_t>;
 #endif
 
-	///////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////
 	// Concrete Classes
-	///////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////
 
 	/**
 		The Binary data type is for describing on-off (boolean) type values. Good examples of
@@ -286,7 +286,7 @@ namespace apl
 		typedef BinaryQuality QualityType;
 		typedef QualityConverter<BinaryQualInfo> QualConverter;
 
-		/// Describes the static data type of the measurement as an enum
+		// Describes the static data type of the measurement as an enum
 		static const DataTypes MeasEnum = DT_BINARY;
 
 		static const int ONLINE = BQ_ONLINE;

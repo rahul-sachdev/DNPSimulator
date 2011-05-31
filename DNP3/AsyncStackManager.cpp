@@ -144,7 +144,7 @@ IVtoWriter* AsyncStackManager::GetVtoWriter(const std::string& arStackName)
 	throw NotImplementedException(LOCATION);
 }
 
-/// Remove a port and all associated stacks
+// Remove a port and all associated stacks
 void AsyncStackManager::RemovePort(const std::string& arPortName)
 {
 	Port* pPort = this->GetPort(arPortName);

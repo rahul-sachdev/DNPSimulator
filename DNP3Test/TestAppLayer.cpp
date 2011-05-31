@@ -30,7 +30,7 @@ using namespace boost;
 
 BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 
-	/// Test the accessible events to demonstrate do not work if the layer is offline
+	// Test the accessible events to demonstrate do not work if the layer is offline
 	BOOST_AUTO_TEST_CASE(InitialState)
 	{
 		AppLayerTest t;
@@ -40,8 +40,8 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 		BOOST_REQUIRE_THROW(t.lower.SendUp(""), InvalidStateException);
 	}
 
-	/// Check that Up/Down are forwarded correctly
-	/// and that the state gets reset correctly
+	// Check that Up/Down are forwarded correctly
+	// and that the state gets reset correctly
 	BOOST_AUTO_TEST_CASE(LayerUpDown)
 	{
 		AppLayerTest t(true); // master
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 	}
 
 
-	/// Malformed data should be getting logged
+	// Malformed data should be getting logged
 	BOOST_AUTO_TEST_CASE(ParsingErrorsCaptured)
 	{
 		AppLayerTest t; t.lower.ThisLayerUp();
@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), ALERR_INSUFFICIENT_DATA_FOR_FRAG);
 	}
 
-	/// Test that the correct header validation occurs before passing up Unsol datas
+	// Test that the correct header validation occurs before passing up Unsol datas
 	BOOST_AUTO_TEST_CASE(UnsolErrors)
 	{
 		AppLayerTest t(false); // slaves can't accept unsol responsess
@@ -75,8 +75,8 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), SERR_FUNC_NOT_SUPPORTED);
 	}
 
-	/// Test that unsol data is correctly confirmed, passed up,
-	/// and that flooding is logged+ignored
+	// Test that unsol data is correctly confirmed, passed up,
+	// and that flooding is logged+ignored
 	BOOST_AUTO_TEST_CASE(UnsolSuccess)
 	{
 		AppLayerTest t(true); // master
@@ -96,9 +96,9 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 		t.app.OnSendSuccess(); //doesn't throw exception
 	}
 
-	/// Test that the various send methods reject
-	/// illegal function codes. Also check that the app layer
-	/// is slave/master aware with respect to send
+	// Test that the various send methods reject
+	// illegal function codes. Also check that the app layer
+	// is slave/master aware with respect to send
 	BOOST_AUTO_TEST_CASE(SendBadFuncCodeSlave)
 	{
 		AppLayerTest t(false);	// slave
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 			apl::Exception);
 	}
 
-	/// Same test for the master
+	// Same test for the master
 	BOOST_AUTO_TEST_CASE(SendBadFuncCodeMaster)
 	{
 		AppLayerTest t(true);	// master
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 		BOOST_REQUIRE(t.CheckSentAPDU(FC_RESPONSE, true, true, false, false, 4)); //check correct seq
 	}
 
-	/// Test a simple send without confirm transaction
+	// Test a simple send without confirm transaction
 	BOOST_AUTO_TEST_CASE(SendResponseWithoutConfirm)
 	{
 		AppLayerTest t(false);	// slave
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 
 	}
 
-	/// Test a simple send without confirm transaction
+	// Test a simple send without confirm transaction
 	BOOST_AUTO_TEST_CASE(SendResponseFailure)
 	{
 		AppLayerTest t(false);	// slave
@@ -190,7 +190,7 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 	}
 
-	/// Test a send with confirm
+	// Test a send with confirm
 	BOOST_AUTO_TEST_CASE(SendResponseWithConfirm)
 	{
 		AppLayerTest t(false);	// slave
@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 	}
 
-	/// Test a send with confirm
+	// Test a send with confirm
 	BOOST_AUTO_TEST_CASE(CancelResponseWhileSending)
 	{
 		AppLayerTest t(false);	// slave
@@ -226,7 +226,7 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 	}
 
-	/// Test a send with confirm
+	// Test a send with confirm
 	BOOST_AUTO_TEST_CASE(CancelResponseWhileAwaitingConfirm)
 	{
 		AppLayerTest t(false);	// slave
@@ -260,7 +260,7 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 1);
 	}
 
-	/// Test a send with confirm timeout
+	// Test a send with confirm timeout
 	BOOST_AUTO_TEST_CASE(SendResponseWithConfirmTimeout)
 	{
 		AppLayerTest t(false);	// slave
@@ -272,8 +272,8 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 	}
 
-	/// Test a non-fir send, this should
-	/// increment the sequence number
+	// Test a non-fir send, this should
+	// increment the sequence number
 	BOOST_AUTO_TEST_CASE(SendResponseNonFIR)
 	{
 		AppLayerTest t(false);	// slave
@@ -288,7 +288,7 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 	}
 
-	/// Test the formatting exceptions for unsol send
+	// Test the formatting exceptions for unsol send
 	BOOST_AUTO_TEST_CASE(SendUnsolBadFormatting)
 	{
 		AppLayerTest t(false);	// slave
@@ -305,7 +305,7 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 		);
 	}
 
-	/// Test an unsol send with confirm transaction
+	// Test an unsol send with confirm transaction
 	BOOST_AUTO_TEST_CASE(SendUnsolicitedWithConfirm)
 	{
 		AppLayerTest t(false);	// slave
@@ -320,7 +320,7 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 	}
 
-	/// Test an unsol send with confirm timeout
+	// Test an unsol send with confirm timeout
 	BOOST_AUTO_TEST_CASE(SendUnsolicitedWithConfirmTimeout)
 	{
 		AppLayerTest t(false);	// slave
@@ -330,7 +330,7 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 	}
 
-	/// Test a single response transaction
+	// Test a single response transaction
 	BOOST_AUTO_TEST_CASE(SendRequestSingleResponse)
 	{
 		AppLayerTest t(true);	// master
@@ -342,7 +342,7 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 	}
 
-	/// Test a response timeout
+	// Test a response timeout
 	BOOST_AUTO_TEST_CASE(SendRequestResponseTimeout)
 	{
 		AppLayerTest t(true);	// master
@@ -352,7 +352,7 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 	}
 
-	/// Test a multi-fragmented response transaction
+	// Test a multi-fragmented response transaction
 	BOOST_AUTO_TEST_CASE(SendRequestMultiResponse)
 	{
 		AppLayerTest t(true);	// master
@@ -388,8 +388,8 @@ BOOST_AUTO_TEST_SUITE(AppLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 	}
 
-	/// The SendRequest transaction needs to gracefully confirm and handle
-	/// incoming unsolicited data before receiving it's response
+	// The SendRequest transaction needs to gracefully confirm and handle
+	// incoming unsolicited data before receiving it's response
 	BOOST_AUTO_TEST_CASE(MasterUnsolictedDuringRequest)
 	{
 		AppLayerTest t(true);	// master

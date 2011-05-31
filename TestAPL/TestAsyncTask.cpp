@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE(ContinousTask)
 	
 }
 
-/// Two groups that execute independently of one another
+// Two groups that execute independently of one another
 BOOST_AUTO_TEST_CASE(DecoupledGroupsMode)
 {
 	MockTaskHandler mth;

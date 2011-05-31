@@ -34,9 +34,9 @@ struct MasterStackConfig
 	link(true, false)
 	{}
 
-	MasterConfig master;  /// Master config
-	AppConfig app;		  /// Application layer config
-	LinkConfig link;	  /// Link layer config
+	MasterConfig master;  // Master config
+	AppConfig app;		  // Application layer config
+	LinkConfig link;	  // Link layer config
 
 
 };

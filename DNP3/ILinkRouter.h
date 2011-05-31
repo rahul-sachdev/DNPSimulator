@@ -23,7 +23,7 @@ namespace apl { namespace dnp {
 
 class LinkFrame;
 
-/// @section DESCRIPTION Interface from the link layer to the link router
+// @section DESCRIPTION Interface from the link layer to the link router
 class ILinkRouter
 {
   public:

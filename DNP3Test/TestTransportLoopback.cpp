@@ -39,8 +39,8 @@ using namespace apl::dnp;
 
 BOOST_AUTO_TEST_SUITE(AsyncTransportLoopback)
 
-	/// Do a bidirectional send operation and proceed until both sides have correctly
-	/// received all the data
+	// Do a bidirectional send operation and proceed until both sides have correctly
+	// received all the data
 	void TestLoopback(TransportLoopbackTestObject* apTest, size_t aNumBytes)
 	{
 		apTest->Start();

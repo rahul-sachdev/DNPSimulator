@@ -43,9 +43,9 @@ class ShiftableBuffer
 	ShiftableBuffer( const boost::uint8_t * aBuffer, size_t aSize);
 	~ShiftableBuffer();
 
-	/////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////
 	// Functions related to reading
-	/////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////
 
 	/** @return Bytes available to be read */
 	size_t NumReadBytes() const;
@@ -59,9 +59,9 @@ class ShiftableBuffer
 	/** Signal that some bytes don't have to be stored any longer. They'll be recovered during the next shift operation. */
 	void AdvanceRead(size_t aNumBytes);
 
-	/////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////
 	// Functions related to writing
-	/////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////
 
 	/** Shift the buffer back to front, writing over bytes that have already been read. The objective
 		being to free space for further writing. */
@@ -74,9 +74,9 @@ class ShiftableBuffer
 	/** Signal to the buffer bytes were written to the current write position */
 	void AdvanceWrite(size_t aNumBytes);
 
-	/////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////
 	// Other functions
-	/////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////
 
 	/**
 		Searches the read subsequence for a pattern. If a match is found, the reader is advanced to the beginning of the match.
@@ -96,7 +96,7 @@ class ShiftableBuffer
 
 	private:
 
-	/// Recursive function called by Sync
+	// Recursive function called by Sync
 	size_t SyncSubsequence(const boost::uint8_t* apPattern, size_t aNumPatternBytes, size_t aOffset);
 
 

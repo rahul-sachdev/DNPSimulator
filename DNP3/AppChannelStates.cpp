@@ -93,7 +93,7 @@ namespace apl { namespace dnp {
 		}
 	}
 
-	/// ---- ACS_IDle ----
+	// ---- ACS_IDle ----
 
 	ACS_Idle ACS_Idle::mInstance;
 

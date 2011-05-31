@@ -27,7 +27,7 @@
 
 namespace apl { namespace dnp {
 
-/// base class - all point types have a name
+// base class - all point types have a name
 struct PointRecord
 {
 	PointRecord(const std::string& arName) : Name(arName) {}
@@ -36,7 +36,7 @@ struct PointRecord
 	std::string Name;
 };
 
-/// Event point records also have a class
+// Event point records also have a class
 struct EventPointRecord : public PointRecord
 {
 	EventPointRecord(const std::string& arName, PointClass aPointClass) :
@@ -46,11 +46,11 @@ struct EventPointRecord : public PointRecord
 
 	EventPointRecord() : EventClass(PC_CLASS_1) {}
 
-	/// when the point changes, it will generate an event unless EventClass == PC_CLASS_0
+	// when the point changes, it will generate an event unless EventClass == PC_CLASS_0
 	PointClass EventClass;
 };
 
-/// Adds a deadband parameter
+// Adds a deadband parameter
 struct DeadbandPointRecord : public EventPointRecord
 {
 	DeadbandPointRecord(const std::string& arName, PointClass aPointClass, double aDeadband) :
@@ -60,11 +60,11 @@ struct DeadbandPointRecord : public EventPointRecord
 
 	DeadbandPointRecord() : Deadband(0) {}
 
-	/// Points can change value within the deadband and not trigger events
+	// Points can change value within the deadband and not trigger events
 	double Deadband;
 };
 
-/// Todo - Add properties that determine how controls are handled - i.e. DO/SBO/etc
+// Todo - Add properties that determine how controls are handled - i.e. DO/SBO/etc
 struct ControlRecord : public PointRecord
 {
 	ControlRecord(const std::string& arName = "", CommandModes aMode = CM_SBO_ONLY, millis_t aSelectTimeoutMS = 5000) :

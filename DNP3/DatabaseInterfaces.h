@@ -30,20 +30,20 @@ class INotifier;
 
 namespace apl{ namespace dnp {
 
-/// @section desc Used by the database
+// @section desc Used by the database
 class IEventBuffer
 {
 	public:
 
 	virtual ~IEventBuffer() {}
 
-	/// @return true if the event buffer accepts the event, false otherwise
+	// @return true if the event buffer accepts the event, false otherwise
 	virtual void Update(const Binary& arEvent, PointClass aClass, size_t aIndex) = 0;
 
-	/// @return true if the event buffer accepts the event, false otherwise
+	// @return true if the event buffer accepts the event, false otherwise
 	virtual void Update(const Analog& arEvent, PointClass aClass, size_t aIndex) = 0;
 
-	/// @return true if the event buffer accepts the event, false otherwise
+	// @return true if the event buffer accepts the event, false otherwise
 	virtual void Update(const Counter& arEvent, PointClass aClass, size_t aIndex) = 0;
 
 };

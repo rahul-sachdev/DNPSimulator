@@ -158,16 +158,16 @@ namespace apl { namespace dnp {
 		 */
 		virtual void _Update(const EventType& arEvent);
 
-		ClassCounter mCounter;		/// counter for class events
-		const size_t M_MAX_EVENTS;	/// max number of events to accept before setting overflow
-		size_t mSequence;			/// used to track the insertion order of events into the buffer
-		bool mIsOverflown;			/// flag that tracks when an overflow occurs
-		bool mDropFirst;			/// on overflow, do we drop the first or last element?
+		ClassCounter mCounter;		// counter for class events
+		const size_t M_MAX_EVENTS;	// max number of events to accept before setting overflow
+		size_t mSequence;			// used to track the insertion order of events into the buffer
+		bool mIsOverflown;			// flag that tracks when an overflow occurs
+		bool mDropFirst;			// on overflow, do we drop the first or last element?
 
-		/// vector to hold all selected events until they are cleared or failed back into mEventSet
+		// vector to hold all selected events until they are cleared or failed back into mEventSet
 		typename std::vector< EventType > mSelectedEvents;
 
-		/// store to keep and order incoming events
+		// store to keep and order incoming events
 		typename SetType::Type mEventSet;
 	};
 

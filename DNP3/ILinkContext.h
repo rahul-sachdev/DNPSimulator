@@ -23,7 +23,7 @@
 
 namespace apl { namespace dnp {
 
-/// @section DESCRIPTION Interface from the link router to the link layer
+// @section DESCRIPTION Interface from the link router to the link layer
 class ILinkContext : public IFrameSink
 {
   public:

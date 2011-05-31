@@ -66,18 +66,18 @@ class LinkFrame
 
 	size_t ReadUserData(boost::uint8_t* apBuffer) const;
 
-	////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////
 	//	Functions for formatting outgoing Sec to Pri frames
-	////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////
 
 	void FormatAck(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
 	void FormatNack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
 	void FormatLinkStatus(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
 	void FormatNotSupported (bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
 
-	////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////
 	//	Functions for formatting outgoing Pri to Sec frames
-	////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////
 
 	void FormatTestLinkStatus(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc);
 	void FormatResetLinkStates(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc);
@@ -87,11 +87,11 @@ class LinkFrame
 
 	void ChangeFCB(bool aFCB);
 
-	////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////
 	//	Reusable static formatting functions to any buffer
-	////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////
 
-	/// @return Total frame size based on user data length
+	// @return Total frame size based on user data length
 	static size_t CalcFrameSize(size_t aDataLength);
 
 	/** @return String representation of the frame */

@@ -49,7 +49,7 @@ namespace apl { namespace dnp {
 		virtual std::string Name() const = 0;
 	};
 
-	///	@section desc Entry state for primary station
+	//	@section desc Entry state for primary station
 	class PLLS_SecNotReset : public PriStateBase
 	{
 		MACRO_STATE_SINGLETON_INSTANCE(PLLS_SecNotReset);
@@ -57,7 +57,7 @@ namespace apl { namespace dnp {
 		void SendConfirmed(LinkLayer*, const boost::uint8_t*, size_t);
 	};
 
-	///	@section desc for reset state
+	//	@section desc for reset state
 	class PLLS_SecReset : public PriStateBase
 	{
 		MACRO_STATE_SINGLETON_INSTANCE(PLLS_SecReset);
@@ -65,7 +65,7 @@ namespace apl { namespace dnp {
 		void SendConfirmed(LinkLayer*, const boost::uint8_t*, size_t);
 	};
 
-	///	@section desc As soon as we get an ACK, send the delayed pri frame
+	//	@section desc As soon as we get an ACK, send the delayed pri frame
 	class PLLS_ResetLinkWait : public PriStateBase
 	{
 		MACRO_STATE_SINGLETON_INSTANCE(PLLS_ResetLinkWait);
@@ -81,7 +81,7 @@ namespace apl { namespace dnp {
 		void Failure(LinkLayer*);
 	};
 
-	///	@section desc As soon as we get an ACK, send the delayed pri frame
+	//	@section desc As soon as we get an ACK, send the delayed pri frame
 	class PLLS_ConfDataWait : public PriStateBase
 	{
 		MACRO_STATE_SINGLETON_INSTANCE(PLLS_ConfDataWait);

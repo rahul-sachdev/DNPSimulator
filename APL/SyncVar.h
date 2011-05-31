@@ -46,7 +46,7 @@ namespace apl
 
 			bool ChangeSinceRead() { return mChange; }
 
-			/// sets the value to arVal and returns whether the new value == the previous value.
+			// sets the value to arVal and returns whether the new value == the previous value.
 			bool Set(const T& arVal)
 			{
 				bool changed;

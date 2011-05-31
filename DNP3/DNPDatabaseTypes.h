@@ -48,9 +48,9 @@ struct PointInfoBase
 		mClass(PC_CLASS_0)
 	{}
 
-	T mValue;			/// current measurment (i.e. Binary, Analog, etc)
-	PointClass mClass;	/// class of the point (PC_CLASS<0-3>)
-	size_t mIndex;		/// index of the measurement
+	T mValue;			// current measurment (i.e. Binary, Analog, etc)
+	PointClass mClass;	// class of the point (PC_CLASS<0-3>)
+	size_t mIndex;		// index of the measurement
 
 	typedef T MeasType;
 };
@@ -75,8 +75,8 @@ struct PointInfo : public PointInfoBase<T>
 		mSequence(0)
 	{}
 
-	double mDeadband;						/// deadband associated with measurement (optional)
-	typename T::ValueType mLastEventValue;	/// the last value that was reported
+	double mDeadband;						// deadband associated with measurement (optional)
+	typename T::ValueType mLastEventValue;	// the last value that was reported
 	size_t mSequence;
 };
 

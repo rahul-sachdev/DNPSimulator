@@ -33,7 +33,7 @@
 
 namespace apl { namespace dnp {
 
-/// Base class with machinery for performing control operations
+// Base class with machinery for performing control operations
 class ControlTaskBase : public MasterTaskBase
 {
 	public:
@@ -70,8 +70,8 @@ class ControlTaskBase : public MasterTaskBase
 		TaskResult _OnFinalResponse(const APDU&);
 };
 
-/// Base class that adds the ConfigureRequest and Set functions.
-/// Leaves the inherited classes only needing to define the GetObject() function
+// Base class that adds the ConfigureRequest and Set functions.
+// Leaves the inherited classes only needing to define the GetObject() function
 template <class T>
 class ControlTask : public ControlTaskBase
 {
@@ -96,7 +96,7 @@ class ControlTask : public ControlTaskBase
 	T mCommand;
 };
 
-/// Concrete class for BinaryOutput commands
+// Concrete class for BinaryOutput commands
 class BinaryOutputTask : public ControlTask<BinaryOutput>
 {
 	public:
@@ -107,7 +107,7 @@ class BinaryOutputTask : public ControlTask<BinaryOutput>
 		std::string Name() const { return "BinaryOutputTask"; }
 };
 
-/// Concrete class for Setpoint commands
+// Concrete class for Setpoint commands
 class SetpointTask : public ControlTask<Setpoint>
 {
 	public:

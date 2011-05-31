@@ -148,10 +148,10 @@ namespace apl
 				       	mSetpointStatusMap.size();
 			}
 
-			/// The two data observers have the exact same contents
+			// The two data observers have the exact same contents
 			static bool StrictEquality(const FlexibleDataObserver& arLHS, const FlexibleDataObserver& arRHS);
 
-			/// The RHS is a strict subset of the LHS... i.e. everything in the RHS can be found in the LHS
+			// The RHS is a strict subset of the LHS... i.e. everything in the RHS can be found in the LHS
 			static bool IsSubsetOf(const FlexibleDataObserver& arLHS, const FlexibleDataObserver& arRHS);
 
 		protected:
@@ -196,11 +196,11 @@ namespace apl
 			template <class T>
 			void Print(typename PointMap<T>::Type& arMap);
 
-			/// Both maps have the exact same contents
+			// Both maps have the exact same contents
 			template<class T>
 			static bool StrictEquality(const T& arMap1, const T& arMap2);
 
-			/// Map2 contains everything found in Map1. Map2 is a subset of Map1.
+			// Map2 contains everything found in Map1. Map2 is a subset of Map1.
 			template<class T>
 			static bool IsSubsetOf(const T& arMap1, const T& arMap2);
 	};

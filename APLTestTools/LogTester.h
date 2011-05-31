@@ -28,7 +28,7 @@ class LogTester : public ILogBase
 	public:
 	LogTester(bool aImmediate);
 
-	/// updating a variable/metric in the system
+	// updating a variable/metric in the system
 	void SetVar(const std::string& aSource, const std::string& aVarName, int aValue);
 
 	int ClearLog();

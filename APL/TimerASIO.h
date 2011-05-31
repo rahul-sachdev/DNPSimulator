@@ -46,7 +46,7 @@ class TimerASIO : public ITimer
 	public:
 		TimerASIO(boost::asio::io_service&);
 
-		/// Implement ITimer
+		// Implement ITimer
 		void Cancel();
 
 		/**

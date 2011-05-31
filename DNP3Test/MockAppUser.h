@@ -25,7 +25,7 @@
 
 namespace apl { namespace dnp {
 
-/// @section desc Test class for app layer
+// @section desc Test class for app layer
 class MockAppUser : public IAppUser
 {
 	public:

@@ -46,9 +46,9 @@ class SlaveStack : public Stack
 		const SlaveStackConfig& arCfg);
 
 	TimeSourceSystemOffset mTimeSource;
-	Database mDB;				/// The database holds static event data and forwards to an event buffer
-	DNPCommandMaster mCmdMaster;	/// Controls the execution of commands
-	Slave mSlave;				/// The dnp3 outstation class
+	Database mDB;				// The database holds static event data and forwards to an event buffer
+	DNPCommandMaster mCmdMaster;	// Controls the execution of commands
+	Slave mSlave;				// The dnp3 outstation class
 };
 
 }}

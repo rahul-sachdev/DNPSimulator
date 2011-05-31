@@ -60,16 +60,16 @@ class MasterSchedule
 	 */
 	AsyncTaskBase* mpVtoTransmitTask;
 
-	/// Enables all of the tasks that run when the layer is Open
+	// Enables all of the tasks that run when the layer is Open
 	void EnableOnlineTasks();
 
-	/// Disables all of the tasks that run when the layer is Open
+	// Disables all of the tasks that run when the layer is Open
 	void DisableOnlineTasks();
 
-	/// Resets all of the tasks that run on startup. This is typically done after a failure
+	// Resets all of the tasks that run on startup. This is typically done after a failure
 	void ResetStartupTasks();
 
-	/// Returns a configured MasterSchedule
+	// Returns a configured MasterSchedule
 	static MasterSchedule GetSchedule(MasterConfig aCfg, Master*, AsyncTaskGroup*);
 
 	private:

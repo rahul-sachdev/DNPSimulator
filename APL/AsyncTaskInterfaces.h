@@ -29,16 +29,16 @@ class ITask
 
 	virtual void OnComplete(bool aSuccess) = 0;
 
-	/// Enable the task and notify the task group which might execute another task
+	// Enable the task and notify the task group which might execute another task
 	virtual void Enable() = 0;
 
-	/// Disable ''
+	// Disable ''
 	virtual void Disable()= 0;
 
-	/// Enable without notifying the task group
+	// Enable without notifying the task group
 	virtual void SilentEnable() = 0;
 
-	/// Diable ''
+	// Diable ''
 	virtual void SilentDisable() = 0;
 };
 
