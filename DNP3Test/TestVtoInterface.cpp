@@ -66,7 +66,7 @@ class VtoCallbackTest : public IVtoCallbacks
 		size_t numOnVtoDataReceived;
 		size_t numOnBufferAvailable;
 
-		size_t lastOnVtoDataReceived;		
+		size_t lastOnVtoDataReceived;
 
 		boost::uint8_t received[4096];
 		size_t size;
@@ -322,13 +322,6 @@ BOOST_AUTO_TEST_SUITE(VtoInterfaceTests)
 				BOOST_REQUIRE_EQUAL(channel2.received[i], ch2Data[i]);
 			}
 		}
-	}
-
-	BOOST_AUTO_TEST_CASE(VtoWriterTransactable)
-	{
-		VtoWriter writer(1);
-		BOOST_REQUIRE_NO_THROW(writer.Start());
-		BOOST_REQUIRE_NO_THROW(writer.End());
 	}
 BOOST_AUTO_TEST_SUITE_END()
 

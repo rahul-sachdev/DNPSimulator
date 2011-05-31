@@ -43,8 +43,6 @@ class StartupTeardownTest
 
 		void StartService() { mMgr.Start(); }
 
-	private:
-
 		EventLog mLog;
 		FilterLevel mLevel;
 		AsyncStackManager mMgr;

@@ -28,35 +28,66 @@ using namespace std;
 using namespace apl;
 using namespace apl::dnp;
 
+static void StackTearDownTest(bool aAutoRun)
+{
+	const size_t NUM_STACKS = 10;
+	const size_t NUM_PORTS = 10;
+
+	FilterLevel lev = LEV_WARNING;
+
+	StartupTeardownTest t(lev, aAutoRun);
+
+	for (size_t i = 0; i < NUM_PORTS; ++i)
+	{
+		ostringstream port;
+		port << "port" << i;
+
+		/*
+		 * If aAutoRun == true, the stack starts executing as soon as the
+		 * first stack is added.  Otherwise, the stack will wait until
+		 * Start() has been called below.
+		 */
+		t.CreatePort(port.str(), lev);
+
+		for(size_t i=0; i<NUM_STACKS; ++i) {
+			ostringstream stack;
+			stack << port.str() << " - stack" << i;
+
+			t.AddMaster(stack.str(), port.str(), static_cast<boost::uint16_t>(i), LEV_WARNING);
+		}
+	}
+
+	if (aAutoRun)
+	{
+		/*
+		 * The stack is already executing, and will automatically kill
+		 * itself when the destructor kicks in at the end of this
+		 * function.  So nothing to do right now.
+		 */
+	}
+	else
+	{
+		/*
+		 * Explicitly start up the stack, then stop it
+		 */
+		t.mMgr.Start();
+		sleep(5);
+		t.mMgr.Stop();
+	}
+}
+
 BOOST_AUTO_TEST_SUITE(AsyncIntegrationSuite)
 
 	// This test aggressively starts and stops stacks
 	// while the io_service is running
-	BOOST_AUTO_TEST_CASE(StackTearDown)
+	BOOST_AUTO_TEST_CASE(StackTearDownAutoStart)
 	{
-		const size_t NUM_STACKS = 10;
-		const size_t NUM_PORTS = 10;
+		StackTearDownTest(true);
+	}
 
-		FilterLevel lev = LEV_WARNING;
-
-		StartupTeardownTest t(lev, true); //autostart = true
-
-		for(size_t i=0; i<NUM_PORTS; ++i) {
-			ostringstream port;
-			port << "port" << i;
-
-			//since auto is true, the stack starts executing as soon as the first stack is added
-			t.CreatePort(port.str(), lev);
-
-			for(size_t i=0; i<NUM_STACKS; ++i) {
-				ostringstream stack;
-				stack << port.str() << " - stack" << i;
-
-				t.AddMaster(stack.str(), port.str(), static_cast<boost::uint16_t>(i), LEV_WARNING);
-			}
-		}
-
-		// shutdown starts when the destructor is called.
+	BOOST_AUTO_TEST_CASE(StackTearDownNoAutoStart)
+	{
+		StackTearDownTest(false);
 	}
 
 BOOST_AUTO_TEST_SUITE_END()

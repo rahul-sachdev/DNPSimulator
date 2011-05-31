@@ -25,14 +25,13 @@
 #include <boost/asio.hpp>
 #include <boost/foreach.hpp>
 
-namespace apl { namespace dnp {
+using namespace apl;
+using namespace apl::dnp;
 
 StartupTeardownTest::StartupTeardownTest(FilterLevel aLevel, bool aAutoStart) :
-mLog(),
-mMgr(mLog.GetLogger(aLevel, "mgr"), aAutoStart)
-{
-
-}
+	mLog(),
+	mMgr(mLog.GetLogger(aLevel, "mgr"), aAutoStart)
+{}
 
 void StartupTeardownTest::CreatePort(const std::string& arName, FilterLevel aLevel)
 {
@@ -47,10 +46,4 @@ void StartupTeardownTest::AddMaster(const std::string& arStackName, const std::s
 	cfg.link.LocalAddr = aLocalAddress;
 	mMgr.AddMaster(arPortName, arStackName, aLevel, &mFDO, cfg);
 }
-
-
-
-}}
-
-
 
