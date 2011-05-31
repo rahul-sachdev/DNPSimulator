@@ -141,7 +141,7 @@ void AsyncStackManager::StopVtoRouter(const std::string& arStackName)
 
 IVtoWriter* AsyncStackManager::GetVtoWriter(const std::string& arStackName)
 {
-	throw NotImplementedException(LOCATION);
+	return this->GetStackByName(arStackName)->GetVtoWriter();
 }
 
 // Remove a port and all associated stacks
@@ -182,12 +182,24 @@ void AsyncStackManager::SeverStack(Port* apPort, const std::string& arStackName)
 {
 	mTimerSrc.Post(boost::bind(&Port::Disassociate, apPort, arStackName));
 	mStackToPort.erase(arStackName);
+	mStackMap.erase(arStackName);
 }
 
 Port* AsyncStackManager::GetPortByStackName(const std::string& arStackName)
 {
 	PortMap::iterator i = mStackToPort.find(arStackName);
 	if(i == mStackToPort.end()) throw ArgumentException(LOCATION, "Unknown stack");
+	return i->second;
+}
+
+Stack* AsyncStackManager::GetStackByName(const std::string& arStackName)
+{
+	StackMap::iterator i = mStackMap.find(arStackName);
+	if (i == mStackMap.end())
+	{
+		throw ArgumentException(LOCATION, "Unknown stack");
+	}
+
 	return i->second;
 }
 
@@ -272,9 +284,11 @@ void AsyncStackManager::Run()
 void AsyncStackManager::OnAddStack(const std::string& arStackName, Stack* apStack, Port* apPort, boost::uint16_t aAddress)
 {
 	// marshall the linking to the io_service
-	mStackToPort[arStackName] = apPort; //map the stack to a portname
+	mStackToPort[arStackName] = apPort; // map the stack name to a Port object
+	mStackMap[arStackName] = apStack;	// map the stack name to a Stack object
+
 	mTimerSrc.Post(boost::bind(&Port::Associate, apPort, arStackName, apStack, aAddress));
-	if(!mRunning && mRunASIO) {
+	if (!mRunning && mRunASIO) {
 		mRunning = true;
 		mThread.Start();
 	}

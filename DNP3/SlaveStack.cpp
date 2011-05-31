@@ -18,19 +18,25 @@
 //
 #include "SlaveStack.h"
 
-
-namespace apl { namespace dnp {
-
+using apl::ICommandAcceptor;
+using apl::ITimerSource;
+using apl::Logger;
+using apl::dnp::SlaveStack;
+using apl::dnp::SlaveStackConfig;
+using apl::dnp::IVtoWriter;
 
 SlaveStack::SlaveStack(Logger* apLogger, ITimerSource* apTimerSrc, ICommandAcceptor* apCmdAcceptor, const SlaveStackConfig& arCfg) :
-Stack(apLogger->GetSubLogger("slave"), apTimerSrc, arCfg.app, arCfg.link),
-mDB(apLogger),
-mCmdMaster(10000),
-mSlave(apLogger, &mApplication, apTimerSrc, &mTimeSource, &mDB, &mCmdMaster, arCfg.slave)
+	Stack(apLogger->GetSubLogger("slave"), apTimerSrc, arCfg.app, arCfg.link),
+	mDB(apLogger),
+	mCmdMaster(10000),
+	mSlave(apLogger, &mApplication, apTimerSrc, &mTimeSource, &mDB, &mCmdMaster, arCfg.slave)
 {
 	this->mApplication.SetUser(&mSlave);
 	mDB.Configure(arCfg.device);
 	mCmdMaster.Configure(arCfg.device, apCmdAcceptor);
 }
 
-}}
+IVtoWriter* SlaveStack::GetVtoWriter()
+{
+	return this->mSlave.GetVtoWriter();
+}

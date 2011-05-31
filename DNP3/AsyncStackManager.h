@@ -249,6 +249,7 @@ class AsyncStackManager : private Threadable, private Loggable
 		Port* GetPort(const std::string& arName);
 		Port* GetPortByStackName(const std::string& arStackName);
 		Port* GetPortPointer(const std::string& arName);
+		Stack* GetStackByName(const std::string& arStackName);
 
 		void Run();
 
@@ -272,6 +273,9 @@ class AsyncStackManager : private Threadable, private Loggable
 		PhysicalLayerManager mMgr;
 		AsyncTaskScheduler mScheduler;
 		Thread mThread;
+
+		typedef std::map<std::string, Stack*> StackMap;
+		StackMap mStackMap;			// maps a stack name a Stack instance
 
 		typedef std::map<std::string, Port*> PortMap;
 		PortMap mStackToPort;		// maps a stack name a port instance

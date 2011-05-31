@@ -20,20 +20,22 @@
 
 #include <APL/Logger.h>
 
-namespace apl { namespace dnp {
+using apl::AsyncTaskGroup;
+using apl::IDataObserver;
+using apl::ITimerSource;
+using apl::Logger;
+using apl::dnp::MasterStack;
+using apl::dnp::MasterStackConfig;
+using apl::dnp::IVtoWriter;
 
-MasterStack::MasterStack(
-
-Logger* apLogger,
-ITimerSource* apTimerSrc,
-IDataObserver* apPublisher,
-AsyncTaskGroup* apTaskGroup,
-const MasterStackConfig& arCfg) :
-
-Stack(apLogger, apTimerSrc, arCfg.app, arCfg.link),
-mMaster(apLogger->GetSubLogger("master"), arCfg.master, &mApplication, apPublisher, apTaskGroup, apTimerSrc)
+MasterStack::MasterStack(Logger* apLogger, ITimerSource* apTimerSrc, IDataObserver* apPublisher, AsyncTaskGroup* apTaskGroup, const MasterStackConfig& arCfg) :
+	Stack(apLogger, apTimerSrc, arCfg.app, arCfg.link),
+	mMaster(apLogger->GetSubLogger("master"), arCfg.master, &mApplication, apPublisher, apTaskGroup, apTimerSrc)
 {
 	mApplication.SetUser(&mMaster);
 }
 
-}}
+IVtoWriter* MasterStack::GetVtoWriter()
+{
+	return this->mMaster.GetVtoWriter();
+}

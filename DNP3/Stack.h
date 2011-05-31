@@ -22,10 +22,11 @@
 #include "LinkLayer.h"
 #include "TransportLayer.h"
 #include "AppLayer.h"
+#include "VtoDataInterface.h"
 
 namespace apl {
-class Logger;
-class ITimerSource;
+	class Logger;
+	class ITimerSource;
 }
 
 namespace apl { namespace dnp {
@@ -33,12 +34,19 @@ namespace apl { namespace dnp {
 class Stack
 {
 	public:
-	Stack(Logger*, ITimerSource* apTimerSrc, AppConfig aAppCfg, LinkConfig aCfg);
-	virtual ~Stack() {}
+		Stack(Logger*, ITimerSource* apTimerSrc, AppConfig aAppCfg, LinkConfig aCfg);
+		virtual ~Stack() {}
 
-	LinkLayer mLink;
-	TransportLayer mTransport;
-	AppLayer mApplication;
+		/**
+		 * Returns a pointer to the IVtoWriter instance for the layer.
+		 *
+		 * @return		a pointer to the IVtoWriter for the layer
+		 */
+		virtual IVtoWriter* GetVtoWriter() = 0;
+
+		LinkLayer mLink;
+		TransportLayer mTransport;
+		AppLayer mApplication;
 };
 
 }}

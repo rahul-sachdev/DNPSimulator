@@ -37,6 +37,8 @@ class MasterStack : public Stack
 		AsyncTaskGroup* apTaskGroup,
 		const MasterStackConfig& arCfg);
 
+	IVtoWriter* GetVtoWriter();
+
 	Master mMaster;
 };
 

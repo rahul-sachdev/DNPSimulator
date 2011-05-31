@@ -45,6 +45,8 @@ class SlaveStack : public Stack
 		ICommandAcceptor* apCmdAcceptor,
 		const SlaveStackConfig& arCfg);
 
+	IVtoWriter* GetVtoWriter();
+
 	TimeSourceSystemOffset mTimeSource;
 	Database mDB;				// The database holds static event data and forwards to an event buffer
 	DNPCommandMaster mCmdMaster;	// Controls the execution of commands

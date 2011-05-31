@@ -93,6 +93,28 @@ BOOST_AUTO_TEST_CASE(MasterToSlave)
 		BOOST_REQUIRE_EQUAL(list[0], oss.str());
 	}
 
+	/* Verify that GetVtoWriter behaves as expected */
+	{
+		std::ostringstream oss;
+		oss << "Port: " << port;
+
+		std::string client1 = oss.str() + " Client ";
+		std::string client2 = oss.str() + " Server ";
+
+		IVtoWriter* pWriter1a = NULL;
+		IVtoWriter* pWriter1b = NULL;
+		IVtoWriter* pWriter2 = NULL;
+
+		BOOST_REQUIRE_NO_THROW(pWriter1a = t.GetVtoWriter(client1));
+		BOOST_REQUIRE_NO_THROW(pWriter1b = t.GetVtoWriter(client1));
+		BOOST_REQUIRE_NO_THROW(pWriter2 = t.GetVtoWriter(client2));
+
+		BOOST_REQUIRE(pWriter1a == pWriter1b);
+		BOOST_REQUIRE(pWriter1a != pWriter2);
+
+		BOOST_REQUIRE_THROW(t.GetVtoWriter("trash"), ArgumentException);
+	}
+
 	for (size_t j = 0; j < numChanges; ++j)
 	{
 		/*
