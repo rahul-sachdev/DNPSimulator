@@ -127,25 +127,25 @@ BOOST_AUTO_TEST_SUITE(SlaveEventBufferSuite)
 
 	BOOST_AUTO_TEST_CASE(SlaveVtoEvents)
 	{
-		size_t vtoBufferSize = 2;
+		boost::uint8_t vtoBufferSize = 2;
 		VtoWriter writer(vtoBufferSize + 1);
 		EventMaxConfig cfg( 0, 0, 0, vtoBufferSize);
 		SlaveEventBuffer b(cfg);
 		VtoEvent info;
 
 		/* Initialize the data stream to a pseudo-random sequence */
-		size_t dataSize = 255;
+		const size_t dataSize = 255;
 		boost::uint8_t data[dataSize];
 		for (size_t i = 0; i < dataSize; ++i)
 		{
-			data[i] = i;
+			data[i] = static_cast<boost::uint8_t>(i%255);
 		}
 
 		/*
 		 * Add the data to the VtoWriter, as three different virtual
 		 * channels
 		 */
-		for (size_t i = 0; i < (vtoBufferSize + 1); ++i)
+		for (boost::uint8_t i = 0; i <= vtoBufferSize; ++i)
 		{
 			writer.Write(data, dataSize, i);
 		}
