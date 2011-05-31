@@ -69,6 +69,30 @@ BOOST_AUTO_TEST_CASE(MasterToSlave)
 
 	IDataObserver* pObs = t.GetFanout();
 
+	/* Verify that the Master and Slave stacks were created */
+	{
+		std::vector<std::string> list;
+
+		std::ostringstream oss;
+		oss << "Port: " << port << " Client ";
+
+		list = t.GetStackNames();
+		BOOST_REQUIRE_EQUAL(list.size(), numPairs * 2);
+		BOOST_REQUIRE_EQUAL(list[0], oss.str());
+	}
+
+	/* Verify that the Master and Slave ports were created */
+	{
+		std::vector<std::string> list;
+
+		std::ostringstream oss;
+		oss << "Port: " << port << " Client ";
+
+		list = t.GetPortNames();
+		BOOST_REQUIRE_EQUAL(list.size(), numPairs * 2);
+		BOOST_REQUIRE_EQUAL(list[0], oss.str());
+	}
+
 	for (size_t j = 0; j < numChanges; ++j)
 	{
 		/*
@@ -103,7 +127,76 @@ BOOST_AUTO_TEST_CASE(MasterToSlave)
 		cout << "elapsed seconds: " << elapsed_sec << endl;
 		cout << "points/sec: " << points/elapsed_sec << endl;
 	}
+
+	/* Remove a stack, but leave the port associated */
+	{
+		std::vector<std::string> list;
+
+		std::ostringstream oss;
+		oss << "Port: " << port << " Client ";
+
+		list = t.GetStackNames();
+		BOOST_REQUIRE_EQUAL(list.size(), numPairs * 2);
+		BOOST_REQUIRE(list[0] == oss.str());
+
+		list = t.GetPortNames();
+		BOOST_REQUIRE_EQUAL(list.size(), numPairs * 2);
+		BOOST_REQUIRE(list[0] == oss.str());
+
+		BOOST_REQUIRE_NO_THROW(t.RemoveStack(oss.str()));
+
+		list = t.GetStackNames();
+		BOOST_REQUIRE_EQUAL(list.size(), (numPairs * 2) - 1);
+		BOOST_REQUIRE(list[0] != oss.str());
+
+		list = t.GetPortNames();
+		BOOST_REQUIRE_EQUAL(list.size(), numPairs * 2);
+		BOOST_REQUIRE(list[0] == oss.str());
+
+		BOOST_REQUIRE_NO_THROW(t.RemovePort(oss.str()));
+
+		list = t.GetStackNames();
+		BOOST_REQUIRE_EQUAL(list.size(), (numPairs * 2) - 1);
+		BOOST_REQUIRE(list[0] != oss.str());
+
+		list = t.GetPortNames();
+		BOOST_REQUIRE_EQUAL(list.size(), (numPairs * 2) - 1);
+		BOOST_REQUIRE(list[0] != oss.str());
+	}
+
+	/* Remove a port and its associated stacks */
+	{
+		std::vector<std::string> list;
+
+		std::ostringstream oss;
+		oss << "Port: " << port << " Server ";
+
+		list = t.GetStackNames();
+		BOOST_REQUIRE_EQUAL(list.size(), (numPairs * 2) - 1);
+		BOOST_REQUIRE(list[0] == oss.str());
+
+		list = t.GetPortNames();
+		BOOST_REQUIRE_EQUAL(list.size(), (numPairs * 2) - 1);
+		BOOST_REQUIRE(list[0] == oss.str());
+
+		BOOST_REQUIRE_NO_THROW(t.RemovePort(oss.str()));
+
+		list = t.GetStackNames();
+		BOOST_REQUIRE_EQUAL(list.size(), (numPairs * 2) - 2);
+		BOOST_REQUIRE(list[0] != oss.str());
+
+		list = t.GetPortNames();
+		BOOST_REQUIRE_EQUAL(list.size(), (numPairs * 2) - 2);
+		BOOST_REQUIRE(list[0] != oss.str());
+	}
+
+	/* Try to remove a non-existant stack and port */
+	{
+		BOOST_REQUIRE_THROW(t.RemoveStack("trash"), ArgumentException);
+		BOOST_REQUIRE_THROW(t.RemovePort("trash"), ArgumentException);
+	}
 }
 
 BOOST_AUTO_TEST_SUITE_END()
 
+/* vim: set ts=4 sw=4: */

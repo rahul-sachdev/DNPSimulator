@@ -37,16 +37,19 @@
 #include <boost/bind.hpp>
 
 using namespace std;
-
-namespace apl { namespace dnp {
+using namespace apl;
+using namespace apl::dnp;
 
 IntegrationTest::IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints) :
-AsyncStackManager(apLogger),
-M_START_PORT(aStartPort),
-mChange(false),
-mNotifier(boost::bind(&IntegrationTest::RegisterChange, this))
+	AsyncStackManager(apLogger),
+	M_START_PORT(aStartPort),
+	mChange(false),
+	mNotifier(boost::bind(&IntegrationTest::RegisterChange, this))
 {
-	for(size_t i=0; i<aNumPairs; ++i) AddStackPair(aLevel, aNumPoints);
+	for (size_t i = 0; i < aNumPairs; ++i)
+	{
+		AddStackPair(aLevel, aNumPoints);
+	}
 	mFanout.Add(&mLocalFDO);
 }
 
@@ -111,31 +114,37 @@ void IntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 	this->AddTCPClient(client, s, "127.0.0.1", port);
 	this->AddTCPServer(server, s, "127.0.0.1", port);
 
+	/*
+	 * Add a Master instance.  The code is wrapped in braces so that we can
+	 * re-use the 'cfg' variable name.
+	 */
 	{
-	MasterStackConfig cfg;
-	cfg.app.RspTimeout = 20000;
-	cfg.master.IntegrityRate = 60000; //set this to retry, if the task timer doesn't close properly this will seal the deal
-	cfg.master.EnableUnsol = true;
-	cfg.master.DoUnsolOnStartup = true;
-	cfg.master.UnsolClassMask = PC_ALL_EVENTS;
-	this->AddMaster(client, client, aLevel, pMasterFDO, cfg);
+		MasterStackConfig cfg;
+		cfg.app.RspTimeout = 20000;
+		cfg.master.IntegrityRate = 60000;	// set this to retry, if the task
+											// timer doesn't close properly,
+											// this will seal the deal
+		cfg.master.EnableUnsol = true;
+		cfg.master.DoUnsolOnStartup = true;
+		cfg.master.UnsolClassMask = PC_ALL_EVENTS;
+		this->AddMaster(client, client, aLevel, pMasterFDO, cfg);
 	}
 
+	/*
+	 * Add a Slave instance.  The code is wrapped in braces so that we can
+	 * re-use the 'cfg' variable name.
+	 */
 	{
-	SlaveStackConfig cfg;
-	cfg.app.RspTimeout = 20000;
-	cfg.slave.mDisableUnsol = false;
-	cfg.slave.mUnsolPackDelay = 0;
-	cfg.device = DeviceTemplate(aNumPoints, aNumPoints, aNumPoints);
-	IDataObserver* pObs = this->AddSlave(server, server, aLevel, &mCmdAcceptor, cfg);
-	this->mFanout.Add(pObs);
+		SlaveStackConfig cfg;
+		cfg.app.RspTimeout = 20000;
+		cfg.slave.mDisableUnsol = false;
+		cfg.slave.mUnsolPackDelay = 0;
+		cfg.device = DeviceTemplate(aNumPoints, aNumPoints, aNumPoints);
+		IDataObserver* pObs = this->AddSlave(server, server, aLevel, &mCmdAcceptor, cfg);
+		this->mFanout.Add(pObs);
 	}
-
 
 }
 
-
-}}
-
-
+/* vim: set ts=4 sw=4: */
 
