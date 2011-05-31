@@ -52,7 +52,7 @@ class ACS_Base
 
 	protected:
 
-	void ThrowInvalidState(const std::string& arMethod);
+	void ThrowInvalidState(const std::string& arLocation);
 
 	void ProcessResponse(AppLayerChannel*, APDU&, bool aExpectFIR);
 

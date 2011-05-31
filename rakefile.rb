@@ -53,7 +53,9 @@ format_dirs = ['DNP3', 'APL', 'DNP3Test', 'TestAPL', 'APLTestTools', 'Terminal',
 task :format do
   format_dirs.each do |dir|
    FileList["#{dir}/*.h"].each do |file|
-    `uncrustify -c config/uncrustify.cfg  -f #{file} > #{file}`
+    cmd = "uncrustify -c config/uncrustify.cfg  -f #{file} > #{file}"
+    puts cmd
+    `cmd`
    end
   end
 end

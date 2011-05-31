@@ -32,16 +32,16 @@ namespace apl { namespace dnp {
 	// ---- Default behaviors for the states ----
 
 	void ACS_Base::Send(AppLayerChannel*, APDU&, size_t)
-	{ this->ThrowInvalidState("Send"); }
+	{ this->ThrowInvalidState(LOCATION); }
 
 	void ACS_Base::Cancel(AppLayerChannel*)
-	{ this->ThrowInvalidState("Cancel"); }
+	{ this->ThrowInvalidState(LOCATION); }
 
 	void ACS_Base::OnSendSuccess(AppLayerChannel*)
-	{ this->ThrowInvalidState("OnSendSuccess"); }
+	{ this->ThrowInvalidState(LOCATION); }
 
 	void ACS_Base::OnSendFailure(AppLayerChannel*)
-	{ this->ThrowInvalidState("OnSendFailure"); }
+	{ this->ThrowInvalidState(LOCATION); }
 
 	void ACS_Base::OnConfirm(AppLayerChannel* c, int aSeq)
 	{
@@ -56,13 +56,13 @@ namespace apl { namespace dnp {
 	}
 
 	void ACS_Base::OnTimeout(AppLayerChannel*)
-	{ this->ThrowInvalidState("OnTimeout"); }
+	{ this->ThrowInvalidState(LOCATION); }
 
-	void ACS_Base::ThrowInvalidState(const std::string& arMethod)
+	void ACS_Base::ThrowInvalidState(const std::string& arLocation)
 	{
 		std::ostringstream oss;
-		oss << "State: " << this->Name() << " Method: " << arMethod;
-		throw InvalidStateException(LOCATION, oss.str());
+		oss << "State: " << this->Name();
+		throw InvalidStateException(arLocation, oss.str());
 	}
 
 	void ACS_Base::ProcessResponse(AppLayerChannel* c, APDU& arAPDU, bool aExpectFIR)
