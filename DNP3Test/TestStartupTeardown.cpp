@@ -70,8 +70,7 @@ static void StackTearDownTest(bool aAutoRun)
 		/*
 		 * Explicitly start up the stack, then stop it
 		 */
-		t.mMgr.Start();
-		sleep(5);
+		t.mMgr.Start();		
 		t.mMgr.Stop();
 	}
 }
