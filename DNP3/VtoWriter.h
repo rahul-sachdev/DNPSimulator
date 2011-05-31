@@ -55,15 +55,15 @@ namespace apl {
 				
 				/**
 				* Registers an IVtoCallbacks to receive OnBufferAvailable() notifications
-				* @param apCallbacks The interface to invoke when space is made available
+				* @param apHandler The interface to invoke when space is made available
 				*/
-				void AddVtoCallback(IVtoCallbacks* apCallbacks);
+				void AddVtoCallback(IVtoBufferHandler* apHandler);
 
 				/**
 				* Stops an IVtoCallbacks from receiving OnBufferAvailable() notifications
-				* @param apCallbacks The interface to stop calling when space is available
+				* @param apHandler The interface to stop calling when space is available
 				*/
-				void RemoveVtoCallback(IVtoCallbacks* apCallbacks);
+				void RemoveVtoCallback(IVtoBufferHandler* apHandler);
 
 				/**
 				 * Implements IVtoWriter::Write().
@@ -134,7 +134,7 @@ namespace apl {
 				const size_t mMaxVtoChunks;
 				std::queue<VtoEvent> mQueue;
 
-				typedef std::set<IVtoCallbacks*> CallbackSet;
+				typedef std::set<IVtoBufferHandler*> CallbackSet;
 				CallbackSet mCallbacks;
 		};
 	}
