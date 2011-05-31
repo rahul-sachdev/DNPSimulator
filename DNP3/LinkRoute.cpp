@@ -16,24 +16,32 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "TransportIntegrationStack.h"
 
-#include <DNP3/LinkRoute.h>
+#include "LinkRoute.h"
 
 namespace apl { namespace dnp {
 
-TransportIntegrationStack::TransportIntegrationStack(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, LinkConfig aCfg) :
-mRouter(apLogger, apPhys, apTimerSrc, 1000),
-mLink(apLogger, apTimerSrc, aCfg),
-mTransport(apLogger),
-mUpper(apLogger)
+LinkRoute::LinkRoute(const boost::uint16_t aRemoteAddr, const boost::uint16_t aLocalAddr) :
+	remote(aRemoteAddr),
+	local(aLocalAddr)
+{}
+
+LinkRoute::LinkRoute() :
+	remote(0),
+	local(0)
+{}
+
+bool LinkRoute::LessThan::operator ()(const LinkRoute &a, const LinkRoute &b) const
 {
-	LinkRoute route(aCfg.RemoteAddr, aCfg.LocalAddr);
-	mRouter.AddContext(&mLink, route);
-	mLink.SetUpperLayer(&mTransport);
-	mTransport.SetUpperLayer(&mUpper);
-	mLink.SetRouter(&mRouter);
+	if(a.remote < b.remote) return true;
+	else if(b.remote < a.remote) return false;
+	else return a.local < b.local;
 }
 
+std::ostream& operator<<(std::ostream& oss, const LinkRoute& arRoute)
+{
+	return oss << " Local: " << arRoute.local << " Remote: " << arRoute.remote;
+}
 
 }}
+

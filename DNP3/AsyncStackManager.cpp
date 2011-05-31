@@ -96,7 +96,8 @@ ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, c
 	Logger* pLogger = mpLogger->GetSubLogger(arStackName, aLevel);
 	pLogger->SetVarName(arStackName);
 	MasterStack* pMaster = new MasterStack(pLogger, &mTimerSrc, apPublisher, pPort->GetGroup(), arCfg);
-	this->OnAddStack(arStackName, pMaster, pPort, arCfg.link.LocalAddr);
+	LinkRoute route(arCfg.link.RemoteAddr, arCfg.link.LocalAddr);
+	this->OnAddStack(arStackName, pMaster, pPort, route);
 	return pMaster->mMaster.GetCmdAcceptor();
 }
 
@@ -107,7 +108,8 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 	Logger* pLogger = mpLogger->GetSubLogger(arStackName, aLevel);
 	pLogger->SetVarName(arStackName);
 	SlaveStack* pSlave = new SlaveStack(pLogger, &mTimerSrc, apCmdAcceptor, arCfg);
-	this->OnAddStack(arStackName, pSlave, pPort, arCfg.link.LocalAddr);
+	LinkRoute route(arCfg.link.RemoteAddr, arCfg.link.LocalAddr);
+	this->OnAddStack(arStackName, pSlave, pPort, route);
 	return pSlave->mSlave.GetDataObserver();
 }
 
@@ -286,14 +288,14 @@ void AsyncStackManager::Run()
 	mService.Get()->reset();
 }
 
-void AsyncStackManager::OnAddStack(const std::string& arStackName, Stack* apStack, Port* apPort, boost::uint16_t aAddress)
+void AsyncStackManager::OnAddStack(const std::string& arStackName, Stack* apStack, Port* apPort, const LinkRoute& arRoute)
 {
 	// marshall the linking to the io_service
 	mStackToPort[arStackName] = apPort; // map the stack name to a Port object
 	mStackMap[arStackName] = apStack;	// map the stack name to a Stack object
 
-	mTimerSrc.Post(boost::bind(&Port::Associate, apPort, arStackName, apStack, aAddress));
-	if (!mRunning && mRunASIO) {
+	mTimerSrc.Post(boost::bind(&Port::Associate, apPort, arStackName, apStack, arRoute));
+	if(!mRunning && mRunASIO) {
 		mRunning = true;
 		mThread.Start();
 	}

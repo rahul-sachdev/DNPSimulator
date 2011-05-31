@@ -231,7 +231,19 @@
 					>
 				</File>
 				<File
+					RelativePath=".\TestLinkLayer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TestLinkLayerRouter.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\TestLinkReceiver.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TestLinkRoute.cpp"
 					>
 				</File>
 				<Filter
@@ -271,14 +283,6 @@
 					</File>
 					<File
 						RelativePath=".\MockFrameSink.h"
-						>
-					</File>
-					<File
-						RelativePath=".\TestLinkLayer.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\TestLinkLayerRouter.cpp"
 						>
 					</File>
 				</Filter>

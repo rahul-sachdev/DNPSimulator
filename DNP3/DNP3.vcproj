@@ -244,6 +244,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\LinkRoute.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\LinkRoute.h"
+					>
+				</File>
+				<File
 					RelativePath=".\PriLinkLayerStates.cpp"
 					>
 				</File>
