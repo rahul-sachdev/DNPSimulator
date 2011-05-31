@@ -191,4 +191,15 @@ BOOST_AUTO_TEST_SUITE(SlaveEventBufferSuite)
 		BOOST_REQUIRE(!b.IsFull(BT_VTO));
 		BOOST_REQUIRE_EQUAL(b.NumType(BT_VTO), 0);
 	}
+
+	BOOST_AUTO_TEST_CASE(SimpleNegativeTests)
+	{
+		EventMaxConfig cfg(5, 5, 5, 5);
+		SlaveEventBuffer b(cfg);
+
+		BOOST_REQUIRE_THROW(b.NumSelected(BT_INVALID), ArgumentException);
+		BOOST_REQUIRE_THROW(b.NumType(BT_INVALID), ArgumentException);
+		BOOST_REQUIRE_THROW(b.Select(BT_INVALID, PC_CLASS_1, 1), ArgumentException);
+		BOOST_REQUIRE_THROW(b.IsFull(BT_INVALID), ArgumentException);
+	}
 BOOST_AUTO_TEST_SUITE_END()

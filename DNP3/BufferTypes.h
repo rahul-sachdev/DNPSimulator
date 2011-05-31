@@ -34,7 +34,8 @@ namespace apl {
 			BT_BINARY,
 			BT_ANALOG,
 			BT_COUNTER,
-			BT_VTO
+			BT_VTO,
+			BT_INVALID		/* used for unit testing only, keep as last */
 		};
 
 		/**

@@ -60,7 +60,7 @@ namespace apl { namespace dnp {
 			case BT_VTO:
 				return mVtoEvents.NumSelected();
 			default:
-				throw new ArgumentException(LOCATION, "Invalid BufferType");
+				throw ArgumentException(LOCATION, "Invalid BufferType");
 		}
 	}
 
@@ -76,7 +76,7 @@ namespace apl { namespace dnp {
 			case BT_VTO:
 				return mVtoEvents.Size();
 			default:
-				throw new ArgumentException(LOCATION, "Invalid BufferType");
+				throw ArgumentException(LOCATION, "Invalid BufferType");
 		}
 	}
 
@@ -128,7 +128,7 @@ namespace apl { namespace dnp {
 			case BT_VTO:
 				return mVtoEvents.Select(aClass, aMaxEvent);
 			default:
-				throw new ArgumentException(LOCATION, "Invalid BufferType");
+				throw ArgumentException(LOCATION, "Invalid BufferType");
 		}
 	}
 
@@ -181,7 +181,7 @@ namespace apl { namespace dnp {
 			case BT_VTO:
 				return mVtoEvents.IsFull();
 			default:
-				throw new ArgumentException(LOCATION, "Invalid BufferType");
+				throw ArgumentException(LOCATION, "Invalid BufferType");
 		}
 	}
 
