@@ -326,6 +326,13 @@ BOOST_AUTO_TEST_SUITE(VtoInterfaceTests)
 			}
 		}
 	}
+
+	BOOST_AUTO_TEST_CASE(VtoWriterTransactable)
+	{
+		VtoWriter writer(1);
+		BOOST_REQUIRE_NO_THROW(writer.Start());
+		BOOST_REQUIRE_NO_THROW(writer.End());
+	}
 BOOST_AUTO_TEST_SUITE_END()
 
 /* vim: set ts=4 sw=4: */
