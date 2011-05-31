@@ -47,6 +47,8 @@ class SlaveStack : public Stack
 
 	IVtoWriter* GetVtoWriter();
 
+	IVtoReader* GetVtoReader();
+
 	TimeSourceSystemOffset mTimeSource;
 	Database mDB;				// The database holds static event data and forwards to an event buffer
 	DNPCommandMaster mCmdMaster;	// Controls the execution of commands

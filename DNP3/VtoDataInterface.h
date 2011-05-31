@@ -122,16 +122,14 @@ namespace apl {
 				* Registers an IVtoCallbacks to receive OnBufferAvailable() notifications
 				* @param apCallbacks The interface to invoke when space is made available
 				*/
-				void AddVtoCallback(IVtoBufferHandler* apHandler);
+				virtual void AddVtoCallback(IVtoBufferHandler* apHandler) = 0;
 
 				/**
 				* Stops an IVtoCallbacks from receiving OnBufferAvailable() notifications
 				* @param apCallbacks The interface to stop calling when space is available
 				*/
-				void RemoveVtoCallback(IVtoBufferHandler* apHandler);
+				virtual void RemoveVtoCallback(IVtoBufferHandler* apHandler) = 0;
 		};
-
-		
 
 		/**
 		 * Receives data from the stack for a particular channel and is notified
@@ -164,6 +162,35 @@ namespace apl {
 				 */
 				virtual void OnVtoDataReceived(const boost::uint8_t* apData,
 				                            size_t aLength) = 0;
+		};
+
+		class IVtoReader
+		{
+			public:
+
+				/**
+				 * Register an IVtoCallbacks instance with the VtoReader
+				 * instance.  The IVtoCallbacks instance is self-aware of its
+				 * channel id.
+				 *
+				 * @param apCallbacks		The callback handler for the channel
+				 *
+				 * @throw ArgumentException	if the channel id is already
+				 *registered
+				 *                          with this reader
+				 */
+				virtual void AddVtoChannel(IVtoDataHandler* apCallbacks) = 0;
+
+				/**
+				 * Unregister an IVtoCallbacks instance with the VtoReader
+				 * instance.
+				 *
+				 * @param apCallbacks		The callback handler to unregister
+				 *
+				 * @throw ArgumentException	if the channel id is not registered
+				 *                          with this reader
+				 */
+				virtual void RemoveVtoChannel(IVtoDataHandler* apCallbacks) = 0;
 		};
 
 		class IVtoCallbacks : public IVtoDataHandler, public IVtoBufferHandler

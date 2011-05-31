@@ -38,6 +38,7 @@ class MasterStack : public Stack
 		const MasterStackConfig& arCfg);
 
 	IVtoWriter* GetVtoWriter();
+	IVtoReader* GetVtoReader();
 
 	Master mMaster;
 };

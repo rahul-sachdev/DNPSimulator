@@ -160,12 +160,13 @@ class AsyncStackManager : private Threadable, private Loggable
 			Removes an existing VTO channel that was created using
 			AsyncStackManager::AddVtoChannel(), stopping callbacks.
 
+			@param arStackName			Unique name of the stack.
 			@param apOnDataCallback		Callback interface previously registered
 										in AddVtoChannel()
 
 			@throw ArgumentException if apOnDataCallback doesn't exist
 		*/
-		void RemoveVtoChannel(IVtoCallbacks* apOnDataCallback);
+		void RemoveVtoChannel(const std::string& arStackName, IVtoCallbacks* apOnDataCallback);
 
 		/**
 			Starts the VtoRouter for the specified port and stack.

@@ -112,14 +112,19 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 }
 
 void AsyncStackManager::AddVtoChannel(const std::string& arStackName,
-				IVtoCallbacks* apOnDataCallback)
+				IVtoCallbacks* apCallbacks)
 {
-	throw NotImplementedException(LOCATION);
+	Stack* pStack = this->GetStackByName(arStackName);
+	pStack->GetVtoWriter()->AddVtoCallback(apCallbacks);
+	pStack->GetVtoReader()->AddVtoChannel(apCallbacks);
 }
 
-void AsyncStackManager::RemoveVtoChannel(IVtoCallbacks* apOnDataCallback)
+void AsyncStackManager::RemoveVtoChannel(const std::string& arStackName, 
+				IVtoCallbacks* apCallbacks)
 {
-	throw NotImplementedException(LOCATION);
+	Stack* pStack = this->GetStackByName(arStackName);
+	pStack->GetVtoWriter()->RemoveVtoCallback(apCallbacks);
+	pStack->GetVtoReader()->RemoveVtoChannel(apCallbacks);	
 }
 
 void AsyncStackManager::StartVtoRouter(const std::string& arPortName,

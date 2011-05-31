@@ -35,7 +35,7 @@ namespace apl {
 		 * objects back into contigous streams, and deliver to the correct
 		 * channel
 		 */
-		class VtoReader : private Loggable, public ITransactable
+		class VtoReader : private Loggable, public ITransactable, public IVtoReader
 		{
 			public:
 

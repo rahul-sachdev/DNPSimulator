@@ -23,6 +23,7 @@
 #include "TransportLayer.h"
 #include "AppLayer.h"
 #include "VtoDataInterface.h"
+#include "VtoReader.h"
 
 namespace apl {
 	class Logger;
@@ -43,6 +44,13 @@ class Stack
 		 * @return		a pointer to the IVtoWriter for the layer
 		 */
 		virtual IVtoWriter* GetVtoWriter() = 0;
+
+		/**
+		 * Returns a pointer to the IVtoReader instance for the layer.
+		 *
+		 * @return		a pointer to the IVtoReader for the layer
+		 */
+		virtual IVtoReader* GetVtoReader() = 0;
 
 		LinkLayer mLink;
 		TransportLayer mTransport;
