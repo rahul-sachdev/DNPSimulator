@@ -226,7 +226,7 @@ def add_executable(name, options)
     task :run, :cmdline, :needs => target do |task, args|
       puts "#{target} #{args[:cmdline] ? args[:cmdline] : ''}"
       sh   "#{target} #{args[:cmdline] ? args[:cmdline] : ''}"
-      #run_coverage( name, options) if $RELEASE_TYPE == 'coverage'
+      run_coverage( name, options) if $RELEASE_TYPE == 'coverage'
     end
 
     desc 'blindly run the executable -- no build dependency'

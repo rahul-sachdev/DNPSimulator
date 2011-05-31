@@ -21,4 +21,5 @@
 TestAPL/TestSingle.tiny.xml
 TestSingle.tiny.xml
 /doc
+/coverage-*
 

@@ -151,6 +151,17 @@ Flags not documented by Rake -T:
 > rake dnp3test:run debug=true 			// build and run the dnp3test w/ debug info
 > rake dnp3test:run["--show_progress=true"]	// run the test in release mode, w/ arg for Boost.Test
 
+## Generating Code Coverage ##
+
+To generate documentation for the code coverage of the unit tests relative to
+the rest of the stack, you will need to have lcov installed before invoking:
+
+rake dnp3test:run coverage=true
+
+Be patient, this generates several megabytes of data.
+
+The html output will be generated in ./coverage.
+
 ## Generating Documentation ##
 
 To generate documentation for the stack you need to have doxygen and graphviz (dot)
