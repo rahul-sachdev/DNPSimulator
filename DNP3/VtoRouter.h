@@ -37,6 +37,20 @@ namespace apl {
 		class VtoWriter;
 
 		/**
+		 * Settings classes used to configure the router.
+		 */
+		struct VtoRouterSettings
+		{
+			public:			
+			
+			VtoRouterSettings(boost::uint8_t aChannelId, size_t aVtoTxBufferSizeInBytes = 4096, millis_t aOpenRetryMs = 5000);
+	
+			const boost::uint8_t CHANNEL_ID;
+			const size_t VTO_TX_BUFFFER_SIZE_IN_BYTES;
+			const millis_t OPEN_RETRY_MS;
+		};
+
+		/**
 		 * Class used to route data between a VTO channel (made up of both a
 		 * VtoWriter and VtoReader instance) and an IPhysicalLayerAsync
 		 * instance.
@@ -52,7 +66,7 @@ namespace apl {
 		 * The VtoRouter instance provides the necessary IVtoCallbacks hooks
 		 * that the VtoReader will use.
 		 */
-		class VtoRouter : public AsyncPhysLayerMonitor, IVtoCallbacks
+		class VtoRouter : public AsyncPhysLayerMonitor, public IVtoCallbacks
 		{
 			public:
 
@@ -69,7 +83,7 @@ namespace apl {
 				 *
 				 * @return					a new VtoRouter instance
 				 */
-				VtoRouter(Logger* apLogger, boost::uint8_t aChannelId, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc);
+				VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc);
 
 				/**
 				 * Receives data from the VTO channel and forwards it to the
@@ -86,14 +100,16 @@ namespace apl {
 				/**
 				 * Called when the VTO data buffer size changes (startup and
 				 * successuly transmission).
-				 *
-				 * @param aSize			Available space (bytes) in the buffer
+				 *				 
 				 */
-				void OnBufferAvailable(size_t aSize);
+				void OnBufferAvailable();
 
 				protected:
 
-				void CheckForRead();
+				void CheckForPhysRead();
+				void CheckForPhysWrite();
+
+				void CheckForVtoWrite();
 
 				// Implement AsyncPhysLayerMonitor
 
@@ -136,13 +152,16 @@ namespace apl {
 				IVtoWriter* mpVtoWriter;
 
 				/**
-				 * The transmit buffer for the physical layer.  The data that
+				 * The transmit buffer for Vto -> physical layer.  The data that
 				 * is put into this buffer was originally received via VTO.
 				 */
 				std::queue<VtoData> mPhysLayerTxBuffer;
 
-
-				ShiftableBuffer mBuffer;
+				/**
+				 * The transmit buffer for physical layer -> Vto. The data that is put
+				 * into this buffer was originally received from the physical layer.
+				 */
+				ShiftableBuffer mVtoTxBuffer;
 		};
 
 	}

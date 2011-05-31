@@ -25,15 +25,23 @@
 
 namespace apl { namespace dnp {
 
-VtoRouter::VtoRouter(Logger* apLogger, boost::uint8_t aChannelId, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc) :
+	VtoRouterSettings::VtoRouterSettings(boost::uint8_t aChannelId, size_t aVtoTxBufferSizeInBytes, millis_t aOpenRetryMs) :
+		CHANNEL_ID(aChannelId),
+		VTO_TX_BUFFFER_SIZE_IN_BYTES(aVtoTxBufferSizeInBytes),
+		OPEN_RETRY_MS(aOpenRetryMs)
+	{}
+
+VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc) :
 	Loggable(apLogger),
-	AsyncPhysLayerMonitor(apLogger, apPhysLayer, apTimerSrc, 5000), // TODO - make open retry configurable
-	IVtoCallbacks(aChannelId),
+	AsyncPhysLayerMonitor(apLogger, apPhysLayer, apTimerSrc, arSettings.OPEN_RETRY_MS),
+	IVtoCallbacks(arSettings.CHANNEL_ID),
 	mpVtoWriter(apWriter),
-	mBuffer(4096) // TODO - make this size configurable
+	mVtoTxBuffer(arSettings.VTO_TX_BUFFFER_SIZE_IN_BYTES)
 {
 	assert(apLogger != NULL);
-	assert(apWriter != NULL);	
+	assert(apWriter != NULL);
+	assert(apPhysLayer != NULL);
+	assert(apTimerSrc != NULL);
 }
 
 void VtoRouter::OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength)
@@ -46,21 +54,26 @@ void VtoRouter::OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength)
 	 */
 	VtoData vto(apData, aLength);
 	this->mPhysLayerTxBuffer.push(vto);
-	this->mpPhys->AsyncWrite(apData, aLength);
+	this->CheckForPhysWrite();	
 }
 
 void VtoRouter::_OnReceive(const boost::uint8_t* apData, size_t aLength)
 {
-	/*
-	 * Pipe the data straight from the physical layer into the VtoWriter.  No
-	 * need to make this function thread-safe, since the VtoWriter itself is
-	 * already thread-safe.
-	 */
-	size_t numWritten = this->mpVtoWriter->Write(apData, aLength, this->GetChannelId());
+	/* Record how much we actual wrote into the buffer */
+	mVtoTxBuffer.AdvanceWrite(aLength);
 
-	mBuffer.AdvanceWrite(numWritten);
+	this->CheckForVtoWrite();
+	this->CheckForPhysRead();
+}
 
-	this->CheckForRead();
+void VtoRouter::CheckForVtoWrite()
+{
+	if(mVtoTxBuffer.NumReadBytes() > 0) {
+		size_t numWritten = mpVtoWriter->Write(mVtoTxBuffer.ReadBuff(), mVtoTxBuffer.NumReadBytes(), this->GetChannelId());
+		mVtoTxBuffer.AdvanceRead(numWritten);
+		mVtoTxBuffer.Shift();
+		this->CheckForPhysRead();
+	}
 }
 
 void VtoRouter::_OnSendSuccess()
@@ -70,32 +83,43 @@ void VtoRouter::_OnSendSuccess()
 	 * data that is at the head of the FIFO queue.
 	 */
 	this->mPhysLayerTxBuffer.pop();
+	this->CheckForPhysWrite();
 }
 
 void VtoRouter::_OnSendFailure()
 {
-	/* Just do the same as _OnSendSuccess for now */
-	this->_OnSendSuccess();
+	/* try to re-transmit the last packet */
+	this->CheckForPhysWrite();
 }
 
-void VtoRouter::CheckForRead()
+void VtoRouter::CheckForPhysRead()
 {
 	if(mpPhys->CanRead()) {
-		size_t num = Min<size_t>(mBuffer.NumWriteBytes(), mpVtoWriter->NumBytesAvailable());
+		size_t num = mVtoTxBuffer.NumWriteBytes();
 		if(num > 0) {
-			mpPhys->AsyncRead(mBuffer.WriteBuff(), num);
+			mpPhys->AsyncRead(mVtoTxBuffer.WriteBuff(), num);
 		}
 	}
 }
 
-void VtoRouter::OnBufferAvailable(size_t)
+void VtoRouter::CheckForPhysWrite()
 {
-	this->CheckForRead();
+	if(mpPhys->CanWrite()) {
+		if(mPhysLayerTxBuffer.size() > 0) {
+			mpPhys->AsyncWrite(mPhysLayerTxBuffer.front().GetData(), mPhysLayerTxBuffer.front().GetSize());
+		}
+	}
+}
+
+void VtoRouter::OnBufferAvailable()
+{	
+	this->CheckForVtoWrite();
 }
 
 void VtoRouter::OnPhysicalLayerOpen()
 {
-	this->CheckForRead();
+	this->CheckForPhysRead();
+	this->CheckForPhysWrite();
 }
 				
 void VtoRouter::OnPhysicalLayerClose()

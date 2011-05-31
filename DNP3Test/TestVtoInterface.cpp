@@ -51,14 +51,13 @@ class VtoCallbackTest : public IVtoCallbacks
 		}
 
 		void OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength);
-		void OnBufferAvailable(size_t aSize);
+		void OnBufferAvailable();
 
 		void Reset() {
 			this->numOnVtoDataReceived = 0;
 			this->numOnBufferAvailable = 0;
 
 			this->lastOnVtoDataReceived = 0;
-			this->lastOnBufferAvailable = 0;
 
 			MACRO_BZERO(this->received, 1024);
 			this->size = 0;
@@ -67,8 +66,7 @@ class VtoCallbackTest : public IVtoCallbacks
 		size_t numOnVtoDataReceived;
 		size_t numOnBufferAvailable;
 
-		size_t lastOnVtoDataReceived;
-		size_t lastOnBufferAvailable;
+		size_t lastOnVtoDataReceived;		
 
 		boost::uint8_t received[4096];
 		size_t size;
@@ -84,9 +82,8 @@ void VtoCallbackTest::OnVtoDataReceived(const boost::uint8_t* apData, size_t aLe
 	++this->numOnVtoDataReceived;
 }
 
-void VtoCallbackTest::OnBufferAvailable(size_t aSize)
+void VtoCallbackTest::OnBufferAvailable()
 {
-	this->lastOnBufferAvailable = aSize;
 	++this->numOnBufferAvailable;
 }
 

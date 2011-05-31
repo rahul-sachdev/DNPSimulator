@@ -19,6 +19,7 @@
 #define __VTO_WRITER_H_
 
 #include <queue>
+#include <set>
 
 #include <APL/Lock.h>
 #include <APL/DataInterfaces.h>
@@ -30,14 +31,13 @@
 
 namespace apl {
 	namespace dnp {
-
+		
 		/**
 		 * Implements the IVTOWriter interface that is handed out by the
 		 * stack.  Responsible for UserCode -> Stack thread marshalling and
 		 * stream decomposition.
 		 */
-		class VtoWriter : public IVtoWriter, public ITransactable,
-			public SubjectBase<NullLock>
+		class VtoWriter : public IVtoWriter, public SubjectBase<NullLock>
 		{
 			public:
 
@@ -52,6 +52,18 @@ namespace apl {
 				 * @return				the new VtoQueue instance
 				 */
 				VtoWriter(size_t aMaxVtoChunks);
+				
+				/**
+				* Registers an IVtoCallbacks to receive OnBufferAvailable() notifications
+				* @param apCallbacks The interface to invoke when space is made available
+				*/
+				void AddVtoCallback(IVtoCallbacks* apCallbacks);
+
+				/**
+				* Stops an IVtoCallbacks from receiving OnBufferAvailable() notifications
+				* @param apCallbacks The interface to stop calling when space is available
+				*/
+				void RemoveVtoCallback(IVtoCallbacks* apCallbacks);
 
 				/**
 				 * Implements IVtoWriter::Write().
@@ -93,22 +105,16 @@ namespace apl {
 			protected:
 
 				/**
-				 * The ITransactable transaction lock.
+				 * Lock used for thread safety
 				 */
 				SigLock mLock;
 
 			private:
 
-				/**
-				 * Starts the ITransactable transaction lock.
-				 */
-				void _Start();
+				bool ReadWithoutNotifying(VtoEvent& arEvent);
 
-				/**
-				 * Ends the ITransactable transaction lock.
-				 */
-				void _End();
-
+				void NotifyAllCallbacks();
+				
 				/**
 				 * Returns the number of object chunks available in the
 				 * transmission queue.
@@ -127,6 +133,9 @@ namespace apl {
 
 				const size_t mMaxVtoChunks;
 				std::queue<VtoEvent> mQueue;
+
+				typedef std::set<IVtoCallbacks*> CallbackSet;
+				CallbackSet mCallbacks;
 		};
 	}
 }
