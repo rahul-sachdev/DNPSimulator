@@ -111,7 +111,7 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 	return pSlave->mSlave.GetDataObserver();
 }
 
-IVtoWriter* AsyncStackManager::AddVtoChannel(const std::string& arStackName,
+void AsyncStackManager::AddVtoChannel(const std::string& arStackName,
 				IVtoCallbacks* apOnDataCallback)
 {
 	throw NotImplementedException(LOCATION);
@@ -135,6 +135,11 @@ void AsyncStackManager::StopVtoRouter(const std::string& arStackName,
 }
 
 void AsyncStackManager::StopVtoRouter(const std::string& arStackName)
+{
+	throw NotImplementedException(LOCATION);
+}
+
+IVtoWriter* AsyncStackManager::GetVtoWriter(const std::string& arStackName)
 {
 	throw NotImplementedException(LOCATION);
 }
