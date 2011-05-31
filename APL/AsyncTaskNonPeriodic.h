@@ -46,7 +46,7 @@ class AsyncTaskNonPeriodic : public AsyncTaskBase
 
 	private:
 
-	/// Implements ITaskCompletion
+	// Implements ITaskCompletion
 	void _OnComplete(bool aSuccess);
 
 

@@ -67,7 +67,7 @@ namespace apl {
 			bool mStopOpenRetry;
 			const millis_t M_OPEN_RETRY;
 
-			/// Implement from IHandlerAsync - Try to reconnect using a timer
+			// Implement from IHandlerAsync - Try to reconnect using a timer
 			void _OnOpenFailure();
 			void _OnLowerLayerUp();
 			void _OnLowerLayerDown();

@@ -32,9 +32,9 @@ namespace apl {
 class CopyableBuffer
 {
 	public:
-		/// Construct null bufer
+		// Construct null bufer
 		CopyableBuffer();
-		/// Construct based on starting size of buffer
+		// Construct based on starting size of buffer
 		CopyableBuffer(size_t aSize);
 		CopyableBuffer(const boost::uint8_t*, size_t aSize);
 		CopyableBuffer(const CopyableBuffer&);

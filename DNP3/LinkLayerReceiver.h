@@ -52,10 +52,10 @@ class LinkLayerReceiver : public Loggable
 		void OnRead(size_t aNumBytes);
 
 		/*
-		/// @return Returns true if a call to PushFrame() will succeed
+		// @return Returns true if a call to PushFrame() will succeed
 		bool HasFrame();
 
-		/// Calls the router with the next frames header and/or payload
+		// Calls the router with the next frames header and/or payload
 		void PushFrame();
 		*/
 
@@ -87,12 +87,12 @@ class LinkLayerReceiver : public Loggable
 		size_t mFrameSize;
 		static const boost::uint8_t M_SYNC_PATTERN[2];
 
-		IFrameSink* mpSink;  /// pointer to interface to push complete frames
+		IFrameSink* mpSink;  // pointer to interface to push complete frames
 		LRS_Base* mpState;
 
-		/// Buffer to which user data is extracted, this is necessary since CRC checks are interlaced
+		// Buffer to which user data is extracted, this is necessary since CRC checks are interlaced
 		boost::uint8_t mpUserData[LS_MAX_USER_DATA_SIZE];
-		ShiftableBuffer mBuffer; ///Buffer used to cache frames data as it arrives
+		ShiftableBuffer mBuffer; //Buffer used to cache frames data as it arrives
 		LogCounter mCrcFailures;
 };
 

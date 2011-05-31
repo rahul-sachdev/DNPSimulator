@@ -22,8 +22,6 @@
 #include <APL/Configure.h>
 #include <APL/DataTypes.h>
 #include <APL/CommandTypes.h>
-//#include "ObjectInterfaces.h"
-//#include "Objects.h"
 
 #ifdef APL_PLATFORM_WIN
 //disable the type converstion warnings
@@ -33,7 +31,7 @@
 
 namespace apl { namespace dnp {
 
-	class DNPToStream
+	class DNPToStream 
 	{
 		public:
 

@@ -27,8 +27,8 @@ namespace boost { namespace asio {
 
 namespace apl {
 
-	/// This is the base class for the new async physical layers. It assumes that all of the functions
-	/// are called from a single thread.
+	// This is the base class for the new async physical layers. It assumes that all of the functions
+	// are called from a single thread.
 
 	class PhysicalLayerAsyncASIO : public PhysicalLayerAsyncBase
 	{
@@ -41,8 +41,8 @@ namespace apl {
 			virtual ~PhysicalLayerAsyncASIO(){}
 
 		protected:
-			/// reference to the io_service object that is driving the class
-			/// Use this for any required post operations
+			// reference to the io_service object that is driving the class
+			// Use this for any required post operations
 			boost::asio::io_service* mpService;
 	};
 }

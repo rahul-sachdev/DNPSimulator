@@ -45,20 +45,20 @@ struct DeviceTemplate
 			size_t aNumSetpoints = 0);
 
 	//Measurements
-	std::vector<EventPointRecord> mBinary;		/// list of binary point properties
-	std::vector<EventPointRecord> mCounter;		/// list of counter point properties
-	std::vector<DeadbandPointRecord> mAnalog;	/// list of analog point properties
-	std::vector<PointRecord> mControlStatus;	/// list of control status point properties
-	std::vector<PointRecord> mSetpointStatus;	/// list of control status point properties
+	std::vector<EventPointRecord> mBinary;		// list of binary point properties
+	std::vector<EventPointRecord> mCounter;		// list of counter point properties
+	std::vector<DeadbandPointRecord> mAnalog;	// list of analog point properties
+	std::vector<PointRecord> mControlStatus;	// list of control status point properties
+	std::vector<PointRecord> mSetpointStatus;	// list of control status point properties
 
 	//Controls
-	std::vector<ControlRecord> mControls;		/// list of binary output properties
-	std::vector<ControlRecord> mSetpoints;		/// list of analog output properties
+	std::vector<ControlRecord> mControls;		// list of binary output properties
+	std::vector<ControlRecord> mSetpoints;		// list of analog output properties
 
 	bool mStartOnline;
 
 
-	/// Write the initial state of a database to an observer
+	// Write the initial state of a database to an observer
 	void Publish(IDataObserver*);
 
 	private:
@@ -72,7 +72,7 @@ struct DeviceTemplate
 		}
 	}
 
-	/// Helper function for setting up default names
+	// Helper function for setting up default names
 	template <class T>
 	void InitNames(const std::string& arName, std::vector<T>& arVec)
 	{

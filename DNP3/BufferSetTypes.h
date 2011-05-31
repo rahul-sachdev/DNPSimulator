@@ -30,7 +30,7 @@ namespace apl { namespace dnp {
 
 	// C++ doesn't allow templated typedefs, but this technique simulates this behavior
 
-	/// Set that forces data exclusivity by index
+	// Set that forces data exclusivity by index
 	template <class T>
 	struct IndexSet
 	{
@@ -43,7 +43,7 @@ namespace apl { namespace dnp {
 		typedef std::set< T,LessThanByIndex > Type;
 	};
 
-	///  Multiset that orders data by order by timestamp, multi-entries allowed
+	//  Multiset that orders data by order by timestamp, multi-entries allowed
 	template <class T>
 	struct TimeMultiSet
 	{

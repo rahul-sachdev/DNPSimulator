@@ -48,9 +48,9 @@ void AppLayer::SetUser(IAppUser* apUser)
 	mpUser = apUser;
 }
 
-/////////////////////////////
+////////////////////
 // IAppLayer
-/////////////////////////////
+////////////////////
 
 void AppLayer::SendResponse(APDU& arAPDU)
 {
@@ -87,9 +87,9 @@ void AppLayer::CancelResponse()
 	mSolicited.Cancel();
 }
 
-/////////////////////////////
+////////////////////
 // External events
-/////////////////////////////
+////////////////////
 
 void AppLayer::_OnReceive(const boost::uint8_t* apBuffer, size_t aSize)
 {
@@ -183,9 +183,9 @@ void AppLayer::_OnSendSuccess() { this->OnSendResult(true); }
 void AppLayer::_OnSendFailure() { this->OnSendResult(false); }
 
 
-/////////////////////////////
+////////////////////
 // Internal Events
-/////////////////////////////
+////////////////////
 
 void AppLayer::OnResponse(const AppControlField& arCtrl, APDU& arAPDU)
 {
@@ -265,9 +265,9 @@ void AppLayer::OnRequest(const AppControlField& arCtrl, APDU& arAPDU)
 	mSolicited.OnRequest(arAPDU);
 }
 
-/////////////////////////////
+////////////////////
 // Helperss
-/////////////////////////////
+////////////////////
 
 void AppLayer::QueueConfirm(bool aUnsol, int aSeq)
 {

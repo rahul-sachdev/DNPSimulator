@@ -27,7 +27,7 @@ namespace apl { class ITimeSource; }
 
 namespace apl { namespace dnp {
 
-/// Clears the outstation IIN restart bit
+// Clears the outstation IIN restart bit
 class ClearRestartIIN : public SimpleRspBase
 {
 	public:
@@ -37,7 +37,7 @@ class ClearRestartIIN : public SimpleRspBase
 		std::string Name() const { return "ClearRestartIIN"; }
 };
 
-/// Enables or disables unsolicited reporting
+// Enables or disables unsolicited reporting
 class ConfigureUnsol : public SimpleRspBase
 {
 	public:
@@ -53,13 +53,13 @@ class ConfigureUnsol : public SimpleRspBase
 		int mClassMask;
 };
 
-/// Synchronizes the time on the outstation
+// Synchronizes the time on the outstation
 class TimeSync : public SingleRspBase
 {
 	public:
 		TimeSync(Logger*, ITimeSource*);
 
-		/// override Init
+		// override Init
 		void Init();
 		void ConfigureRequest(APDU& arAPDU);
 		TaskResult _OnFinalResponse(const APDU&);

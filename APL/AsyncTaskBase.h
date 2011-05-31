@@ -45,20 +45,20 @@ class AsyncTaskBase : public ITask, private Uncopyable
 
 	virtual ~AsyncTaskBase() {}
 
-	/// Implements ITaskCompletion
+	// Implements ITaskCompletion
 	void OnComplete(bool aSuccess);
 
-	/// Modify this task's depth to make it dependent on the argument
+	// Modify this task's depth to make it dependent on the argument
 	void AddDependency(const AsyncTaskBase* apTask);
 	bool IsDependency(const AsyncTaskBase*) const;
 
 	void SetFlags(int aFlags) { mFlags = aFlags; }
 	int GetFlags() { return mFlags; }
 
-	void Enable();  /// Enable the task and notify the task group which might execute another task
-	void Disable(); /// Disable ''
+	void Enable();  // Enable the task and notify the task group which might execute another task
+	void Disable(); // Disable ''
 
-	void SilentEnable(); /// Enable without notifying the task group
+	void SilentEnable(); // Enable without notifying the task group
 	void SilentDisable();
 
 	std::string Name() const { return mName; }
@@ -78,7 +78,7 @@ class AsyncTaskBase : public ITask, private Uncopyable
 		const boost::posix_time::ptime& arInitialTime,
 		const std::string& arName);
 
-	/// optional NVII function for special bookkeeping
+	// optional NVII function for special bookkeeping
 	virtual void _OnComplete(bool aSuccess) {}
 	virtual void _Reset() {}
 
@@ -88,41 +88,41 @@ class AsyncTaskBase : public ITask, private Uncopyable
 	typedef std::vector<const AsyncTaskBase*> DependencyVec;
 	DependencyVec mDependencies;
 
-	/// Run the task if it is not currently executing
+	// Run the task if it is not currently executing
 	virtual void Dispatch();
 
-	/// Update the task's completion and expired status
-	/// base upon the input time
+	// Update the task's completion and expired status
+	// base upon the input time
 	void UpdateTime(const boost::posix_time::ptime& arTime);
 
 	bool IsEnabled() const { return mIsEnabled; }
 
-	/// @returns priority used to resolve ties
+	// @returns priority used to resolve ties
 	int Priority() const { return mPriority; }
 
-	/// @returns the completion status of the task
+	// @returns the completion status of the task
 	bool IsComplete() const { return mIsComplete; }
 
-	/// @return wether the task is expired
+	// @return wether the task is expired
 	bool IsExpired() const { return mIsExpired; }
 
-	/// @return wether the task is running
+	// @return wether the task is running
 	bool IsRunning() const { return mIsRunning; }
 
-	/// @returns max_date_time if the task is currently running or will not run again
+	// @returns max_date_time if the task is currently running or will not run again
 	boost::posix_time::ptime NextRunTime() const { return mNextRunTime; }
 
 
 
-	std::string mName;						/// Every task has a name
-	bool mIsEnabled;						/// Tasks can be enabled or disabled
-	bool mIsComplete;						/// Every task has a flag that executes it's completion status
-	bool mIsExpired;						/// Indicate wether the time from the last UpdateTime call >= mNextRunTime
-	bool mIsRunning;						/// Every task has an execution status
-	int mPriority;							/// Every task has a pr
-	TaskHandler mHandler;					/// Every task has a handler for executing the task
-	AsyncTaskGroup* mpGroup;				/// owning task group
-	boost::posix_time::ptime mNextRunTime;	/// next execution time for the task
+	std::string mName;						// Every task has a name
+	bool mIsEnabled;						// Tasks can be enabled or disabled
+	bool mIsComplete;						// Every task has a flag that executes it's completion status
+	bool mIsExpired;						// Indicate wether the time from the last UpdateTime call >= mNextRunTime
+	bool mIsRunning;						// Every task has an execution status
+	int mPriority;							// Every task has a pr
+	TaskHandler mHandler;					// Every task has a handler for executing the task
+	AsyncTaskGroup* mpGroup;				// owning task group
+	boost::posix_time::ptime mNextRunTime;	// next execution time for the task
 	const boost::posix_time::ptime M_INITIAL_TIME;
 	int mFlags;
 };

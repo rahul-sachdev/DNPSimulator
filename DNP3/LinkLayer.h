@@ -34,7 +34,7 @@ namespace apl {  namespace dnp {
 	class PriStateBase;
 	class SecStateBase;
 
-	///	@section desc Implements the contextual state of DNP3 Data Link Layer
+	//	@section desc Implements the contextual state of DNP3 Data Link Layer
 	class LinkLayer : public ILowerLayer, public ILinkContext
 	{
 		public:
@@ -111,7 +111,7 @@ namespace apl {  namespace dnp {
 		ITimerSource* mpTimerSrc;
 		ITimer* mpTimer;
 
-		/// callback from the active timer
+		// callback from the active timer
 		void OnTimeout();
 
 		bool mNextReadFCB;

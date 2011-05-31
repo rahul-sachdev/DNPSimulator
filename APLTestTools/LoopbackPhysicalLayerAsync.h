@@ -30,7 +30,7 @@ namespace boost { namespace asio {
 
 namespace apl {
 
-	/// Provides a backend for testing physical layers
+	// Provides a backend for testing physical layers
 	class LoopbackPhysicalLayerAsync : public PhysicalLayerAsyncBase
 	{
 		public:

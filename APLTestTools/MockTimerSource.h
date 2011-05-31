@@ -37,7 +37,7 @@ class MockTimerSource : public ITimerSource
 	MockTimerSource();
 	~MockTimerSource();
 
-	/// Implement ITimerSource
+	// Implement ITimerSource
 	ITimer* Start(millis_t, const ExpirationHandler&);
 	ITimer* Start(const boost::posix_time::ptime&, const ExpirationHandler&);
 	void Post(const ExpirationHandler&);
@@ -72,7 +72,7 @@ class MockTimer : public ITimer
 	public:
 		MockTimer(MockTimerSource*, const boost::posix_time::ptime&, const ExpirationHandler&);
 
-		///implement ITimer
+		//implement ITimer
 		void Cancel();
 		boost::posix_time::ptime ExpiresAt();
 

@@ -24,7 +24,7 @@
 
 namespace apl { namespace dnp {
 
-/// @section DESCRIPTION Interface that receives parsed FT3 frame information
+// @section DESCRIPTION Interface that receives parsed FT3 frame information
 class IFrameSink
 {
   public:

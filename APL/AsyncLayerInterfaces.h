@@ -36,11 +36,11 @@ class IUpDown
 		IUpDown() : mIsLowerLayerUp(false) {}
 		virtual ~IUpDown(){}
 
-		/// Called by a 'LowerLayer' when it can start performing send services
+		// Called by a 'LowerLayer' when it can start performing send services
 		void OnLowerLayerUp();
 
-		/// Called by a 'LowerLayer' when it can no longer perform Tx services for this layer.
-		/// Implies previous sends have failed.
+		// Called by a 'LowerLayer' when it can no longer perform Tx services for this layer.
+		// Implies previous sends have failed.
 		void OnLowerLayerDown();
 
 		bool IsLowerLayerUp() { return mIsLowerLayerUp; }
@@ -64,15 +64,15 @@ class IUpperLayer : public IUpDown, protected virtual Loggable
 		IUpperLayer(Logger*);
 		virtual ~IUpperLayer(){}
 
-		/// Called by 'layer down' when data arrives
+		// Called by 'layer down' when data arrives
 		void OnReceive(const boost::uint8_t*, size_t);
 
-		/// Called by 'layer down' when a previously requested send operation succeeds
-		/// Layers can only have 1 outstanding send operation. The callback is guaranteed
-		/// unless the the OnLowerLayerDown() function is called before
+		// Called by 'layer down' when a previously requested send operation succeeds
+		// Layers can only have 1 outstanding send operation. The callback is guaranteed
+		// unless the the OnLowerLayerDown() function is called before
 		void OnSendSuccess();
 
-		/// Called by 'layer down' when a previously requested send operation fails
+		// Called by 'layer down' when a previously requested send operation fails
 		void OnSendFailure();
 
 		void SetLowerLayer(ILowerLayer*);

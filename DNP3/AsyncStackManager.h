@@ -69,13 +69,13 @@ class AsyncStackManager : private Threadable, private Loggable
 
 		// All the io_service marshalling now occurs here. It's now safe to add/remove while the manager is running.
 
-		/// Adds a TCPClient port, excepts if the port already exists
+		// Adds a TCPClient port, excepts if the port already exists
 		void AddTCPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort);
 
-		/// Adds a TCPServer port, excepts if the port already exists
+		// Adds a TCPServer port, excepts if the port already exists
 		void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
 
-		/// Adds a Serial port, excepts if the port already exists
+		// Adds a Serial port, excepts if the port already exists
 		void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
 
 		/**
@@ -224,22 +224,22 @@ class AsyncStackManager : private Threadable, private Loggable
 		*/
 		IVtoWriter* GetVtoWriter(const std::string& arStackName);
 
-		/// Remove a port and all associated stacks
+		// Remove a port and all associated stacks
 		void RemovePort(const std::string& arPortName);
 
-		/// Remove only a single stack
+		// Remove only a single stack
 		void RemoveStack(const std::string& arStackName);
 
-		/// @return a vector of all the stack names
+		// @return a vector of all the stack names
 		std::vector<std::string> GetStackNames();
 
-		/// @return a vector of all the port names
+		// @return a vector of all the port names
 		std::vector<std::string> GetPortNames();
 
-		/// Start the thead if it isn't running
+		// Start the thead if it isn't running
 		void Start();
 
-		/// Stop the thread, doesn't delete anything until the stack manager destructs
+		// Stop the thread, doesn't delete anything until the stack manager destructs
 		void Stop();
 
 	private:
@@ -252,7 +252,7 @@ class AsyncStackManager : private Threadable, private Loggable
 
 		void Run();
 
-		/// Remove a stack
+		// Remove a stack
 		void SeverStack(Port* apPort, const std::string& arStackName);
 
 		void OnAddStack(const std::string& arStackName, Stack* apStack, Port* apPort, boost::uint16_t aAddress);
@@ -274,10 +274,10 @@ class AsyncStackManager : private Threadable, private Loggable
 		Thread mThread;
 
 		typedef std::map<std::string, Port*> PortMap;
-		PortMap mStackToPort;		/// maps a stack name a port instance
-		PortMap mPortToPort;		/// maps a port name to a port instance
+		PortMap mStackToPort;		// maps a stack name a port instance
+		PortMap mPortToPort;		// maps a port name to a port instance
 
-		typedef std::map<std::string, size_t> mPortCount;	/// how many stacks per port
+		typedef std::map<std::string, size_t> mPortCount;	// how many stacks per port
 };
 
 }}

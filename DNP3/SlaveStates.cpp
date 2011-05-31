@@ -54,13 +54,13 @@ void AS_Base::OnUnknown(Slave* c)
 	c->mDeferredUnknown = true;
 }
 
-/// by default, the data update event is Deferred until we enter a state that can handle it
+// by default, the data update event is Deferred until we enter a state that can handle it
 void AS_Base::OnDataUpdate(Slave* c)
 {
 	c->mDeferredUpdate = true;
 }
 
-/// by default, the unsol timer expiration is deferd until it can be handled
+// by default, the unsol timer expiration is deferd until it can be handled
 void AS_Base::OnUnsolExpiration(Slave* c)
 {
 	c->mDeferredUnsol = true;
@@ -281,10 +281,10 @@ void AS_WaitForRspSuccess::OnSolSendSuccess(Slave* c)
 	}
 }
 
-/// When we get a request we should no longer wait for confirmation, but we should
-/// immediately handle the new request. We implement this behavior asynchronously, by
-/// canceling the response transaction, and waiting for an OnFailure callback.
-/// The callback may still succeed if
+// When we get a request we should no longer wait for confirmation, but we should
+// immediately handle the new request. We implement this behavior asynchronously, by
+// canceling the response transaction, and waiting for an OnFailure callback.
+// The callback may still succeed if
 void AS_WaitForRspSuccess::OnRequest(Slave* c, const APDU& arAPDU, SequenceInfo aSeqInfo)
 {
 	c->mpAppLayer->CancelResponse();

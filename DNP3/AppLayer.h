@@ -55,9 +55,9 @@ class AppLayer : public IUpperLayer, public IAppLayer
 
 		void SetUser(IAppUser*);
 
-		/////////////////////////////////////////////////
+		/////////////////////////////////
 		// Implement IAppLayer
-		/////////////////////////////////////////////////
+		/////////////////////////////////
 		void SendUnsolicited(APDU&);
 		void SendResponse(APDU&);
 		void SendRequest(APDU&);
@@ -65,12 +65,12 @@ class AppLayer : public IUpperLayer, public IAppLayer
 
 	private:
 
-		/////////////////////////////
+		////////////////////
 		// External Events
-		/////////////////////////////
+		////////////////////
 
-		/// Parse the header of the incoming APDU and direct to the appropriate
-		/// internal event handler
+		// Parse the header of the incoming APDU and direct to the appropriate
+		// internal event handler
 		void _OnReceive(const boost::uint8_t*, size_t);
 
 		void _OnLowerLayerUp();
@@ -80,9 +80,9 @@ class AppLayer : public IUpperLayer, public IAppLayer
 
 		void OnSendResult(bool aSuccess);
 
-		/////////////////////////////
+		////////////////////
 		// Internal Events
-		/////////////////////////////
+		////////////////////
 
 		void OnUnknownObject(FunctionCodes aCode, const AppControlField&);
 		void OnResponse(const AppControlField&, APDU&);
@@ -90,29 +90,29 @@ class AppLayer : public IUpperLayer, public IAppLayer
 		void OnConfirm(const AppControlField&, APDU&);
 		void OnRequest(const AppControlField&, APDU&);
 
-		/////////////////////////////
+		////////////////////
 		// State
-		/////////////////////////////
+		////////////////////
 
 		typedef std::deque<const APDU*> SendQueue;
 
-		APDU mIncoming;						/// Fragment used to parse all incoming requests
-		APDU mConfirm;						/// Fragment used to do confirms
+		APDU mIncoming;						// Fragment used to parse all incoming requests
+		APDU mConfirm;						// Fragment used to do confirms
 
-		bool mSending;						/// State of send operation to the lower layer
+		bool mSending;						// State of send operation to the lower layer
 		bool mConfirmSending;
-		SendQueue mSendQueue;				/// Buffer of send operations
+		SendQueue mSendQueue;				// Buffer of send operations
 
-		IAppUser* mpUser;				/// Interface for dispatching callbacks
+		IAppUser* mpUser;				// Interface for dispatching callbacks
 
-		SolicitedChannel mSolicited;			/// Channel used for solicited communications
-		UnsolicitedChannel mUnsolicited;		/// Channel used for unsolicited communications
+		SolicitedChannel mSolicited;			// Channel used for solicited communications
+		UnsolicitedChannel mUnsolicited;		// Channel used for unsolicited communications
 		size_t mNumRetry;
 
 
-		/////////////////////////////
+		////////////////////
 		// Helpers
-		/////////////////////////////
+		////////////////////
 
 		void QueueConfirm(bool aUns, int aSeq);
 		void QueueFrame(const APDU& arAPDU);

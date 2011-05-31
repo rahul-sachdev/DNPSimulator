@@ -58,10 +58,10 @@ class AppLayerChannel : public Loggable
 	AppLayerChannel(const std::string& arName, Logger*, AppLayer*, ITimerSource*, millis_t aTimeout);
 	virtual ~AppLayerChannel(){}
 
-	/// Resets the channel to the initial state
+	// Resets the channel to the initial state
 	void Reset();
 
-	/// send, wether a response is expected is implicit based on func code
+	// send, wether a response is expected is implicit based on func code
 	void Send(APDU&, size_t aNumRetry);
 	void Cancel();
 
@@ -91,7 +91,7 @@ class AppLayerChannel : public Loggable
 	Logger* GetLogger() { return mpLogger; }
 
 	AppLayer* mpAppLayer;
-	int mSequence;	/// Rotating sequence number for the channel
+	int mSequence;	// Rotating sequence number for the channel
 	ACS_Base* mpState;
 
 	static int NextSeq(int s) { return (s+1)%16; }

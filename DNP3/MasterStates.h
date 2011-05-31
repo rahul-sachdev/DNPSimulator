@@ -89,7 +89,7 @@ class AMS_OpenBase : public AMS_Base
 
 /* AMS_Idle */
 
-/// The only state from which a task can be started
+// The only state from which a task can be started
 class AMS_Idle : public AMS_OpenBase
 {
 	MACRO_STATE_SINGLETON_INSTANCE(AMS_Idle);
@@ -99,8 +99,8 @@ class AMS_Idle : public AMS_OpenBase
 
 /* AMS_Waiting */
 
-/// Wait for responses or failure. Manipulates
-/// the current task instance.
+// Wait for responses or failure. Manipulates
+// the current task instance.
 class AMS_Waiting : public AMS_OpenBase
 {
 	MACRO_STATE_SINGLETON_INSTANCE(AMS_Waiting);

@@ -21,7 +21,7 @@ class ITimer;
 
 			void RedirectedLine(const std::string&);
 
-			/// Implements INotifier so that we can process new log messages
+			// Implements INotifier so that we can process new log messages
 			void Notify();
 
 		private:

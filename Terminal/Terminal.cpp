@@ -44,9 +44,9 @@ void Terminal::InitCmdHandlers()
 	cmd.mHandler = boost::bind(&Terminal::HandleDefault, this, _1);
 	this->mCmdRoot.SetValue(cmd);
 
-	////////////////////////////////////
+	////////////////////////
 	// help
-	////////////////////////////////////
+	////////////////////////
 
 	cmd.mName = "help";
 	cmd.mHandler = boost::bind(&Terminal::HandleHelp, this, _1);
@@ -55,9 +55,9 @@ void Terminal::InitCmdHandlers()
 	
 	this->BindCommand(cmd, cmd.mName);
 
-	////////////////////////////////////
+	////////////////////////
 	// echo
-	////////////////////////////////////
+	////////////////////////
 
 	cmd.mName = "echo";
 	cmd.mHandler = boost::bind(&Terminal::HandleEcho, this, _1);
@@ -68,9 +68,9 @@ void Terminal::InitCmdHandlers()
 		
 	if (mIOMode) {
 
-		////////////////////////////////////
+		////////////////////////
 		// quit
-		////////////////////////////////////
+		////////////////////////
 		CommandNode quit;
 		quit.mName = "quit";
 		quit.mHandler = boost::bind(&Terminal::HandleQuit, this, _1);
@@ -81,9 +81,9 @@ void Terminal::InitCmdHandlers()
 	}
 	else {
 
-		///////////////////////////////////
+		////////////////////////
 		// bye - closes the physical layer
-		///////////////////////////////////
+		////////////////////////
 		cmd.mName = "bye";
 		cmd.mHandler = boost::bind(&Terminal::HandleBye, this, _1);
 		cmd.mUsage = "bye";

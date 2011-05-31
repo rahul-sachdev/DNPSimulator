@@ -45,10 +45,10 @@ class SlaveDemoBase : protected Loggable, protected ICommandHandler, private IOS
 	public:
 	SlaveDemoBase(Logger* apLogger);
 
-	/// returns an interface the slave stack can use to notify when a command arrives
+	// returns an interface the slave stack can use to notify when a command arrives
 	ICommandAcceptor* GetCmdAcceptor() { return &mCommandQueue; }
 
-	/// Tell the io_service to exit
+	// Tell the io_service to exit
 	void Shutdown();
 
 	private:

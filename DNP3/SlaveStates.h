@@ -60,13 +60,13 @@ class AS_Base
 
 		/* Events produced from the user layer */
 
-		/// Called when a data update is received from the user layer
+		// Called when a data update is received from the user layer
 		virtual void OnDataUpdate(Slave*);
 
-		/// Called when a data update is received from the user layer
+		// Called when a data update is received from the user layer
 		virtual void OnUnsolExpiration(Slave*);
 
-		/// @return The name associated with the state
+		// @return The name associated with the state
 		virtual std::string Name() const = 0;
 
 		virtual bool AcceptsDeferredRequests() { return false; }

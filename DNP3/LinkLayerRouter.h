@@ -38,19 +38,19 @@ namespace apl { namespace dnp {
 	class ILinkContext;
 	class LinkFrame;
 
-	///	Implements the parsing and de-multiplexing portion of
-	///	of DNP 3 Data Link Layer. AsyncPhysLayerMonitor inherits
-	/// from IHandlerAsync, which inherits from IUpperLayer
+	//	Implements the parsing and de-multiplexing portion of
+	//	of DNP 3 Data Link Layer. AsyncPhysLayerMonitor inherits
+	// from IHandlerAsync, which inherits from IUpperLayer
 	class LinkLayerRouter : public AsyncPhysLayerMonitor, public IFrameSink, public ILinkRouter
 	{
 		public:
 
 		LinkLayerRouter(apl::Logger*, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);
 
-		/// Ties the lower part of the link layer to the upper part
+		// Ties the lower part of the link layer to the upper part
 		void AddContext(ILinkContext*, boost::uint16_t aAddress);
 
-		/// This is safe to do at runtime, so long as the request happens from the io_service thread.
+		// This is safe to do at runtime, so long as the request happens from the io_service thread.
 		void RemoveContext(boost::uint16_t aAddress);
 
 		// Implement the IFrameSink interface - This is how the receiver pushes data
@@ -83,18 +83,18 @@ namespace apl { namespace dnp {
 		AddressMap mAddressMap;
 		TransmitQueue mTransmitQueue;
 
-		/// Handles the parsing of incoming frames
+		// Handles the parsing of incoming frames
 		LinkLayerReceiver mReceiver;
 		bool mTransmitting;
 
 		/* Events - NVII delegates from IUpperLayer */
 
-		/// Called when the physical layer has read data into to the requested buffer
+		// Called when the physical layer has read data into to the requested buffer
 		void _OnReceive(const boost::uint8_t*, size_t);
 		void _OnSendSuccess();
 		void _OnSendFailure();
 
-		/// Implement virtual AsyncPhysLayerMonitor
+		// Implement virtual AsyncPhysLayerMonitor
 		void OnPhysicalLayerOpen();
 		void OnPhysicalLayerClose();
 

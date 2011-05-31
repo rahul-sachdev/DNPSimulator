@@ -163,7 +163,7 @@ namespace apl { namespace dnp {
 		mIsInterpreted = true;
 	}
 
-	/// Parse the header only. Throws exception if header is malformed
+	// Parse the header only. Throws exception if header is malformed
 	void APDU::InterpretHeader()
 	{
 		if(mpAppHeader != NULL) return;

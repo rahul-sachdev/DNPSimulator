@@ -45,8 +45,8 @@ class ILockBase
 		virtual void Broadcast() = 0; //wakes all threads waiting on the lock
 };
 
-/// this class is for templating purposes for when you want
-/// to provide the option to use a lock or not in a templated class.
+// this class is for templating purposes for when you want
+// to provide the option to use a lock or not in a templated class.
 class NullLock : public ILockBase
 {
 	public:

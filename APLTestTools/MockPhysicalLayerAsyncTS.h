@@ -32,7 +32,7 @@ namespace apl {
 	class MockTimerSource;
 	class ITimer;
 
-	/// Provides a backend for testing physical layers
+	// Provides a backend for testing physical layers
 	class MockPhysicalLayerAsyncTS : public PhysicalLayerAsyncBase, public BufferTestObject
 	{
 		public:

@@ -28,8 +28,8 @@ namespace apl {
 
 	class PLAS_Base;
 
-	/// This is the base class for the new async physical layers. It assumes that all of the functions
-	/// are called from a single thread.
+	// This is the base class for the new async physical layers. It assumes that all of the functions
+	// are called from a single thread.
 	class PhysicalLayerAsyncBase : public IPhysicalLayerAsync, public Loggable
 	{
 		struct State
@@ -56,8 +56,8 @@ namespace apl {
 		public:
 			PhysicalLayerAsyncBase(Logger*);
 
-			/// destructor should only be called once the object is totally finished with all of its async operations
-			/// to avoid segfaulting. There are a # of asserts that make sure the object has been shutdown properly.
+			// destructor should only be called once the object is totally finished with all of its async operations
+			// to avoid segfaulting. There are a # of asserts that make sure the object has been shutdown properly.
 			virtual ~PhysicalLayerAsyncBase() {}
 
 			bool IsReading() { return mState.mReading; }
@@ -101,10 +101,10 @@ namespace apl {
 			void OnReadCallback(const boost::system::error_code& arError,boost::uint8_t*, size_t aSize);
 			void OnWriteCallback(const boost::system::error_code& arError, size_t aSize);
 
-			/// "user" object that recieves the callbacks
+			// "user" object that recieves the callbacks
 			IHandlerAsync* mpHandler;
 
-			/// State object that tracks the activities of the class, state pattern too heavy
+			// State object that tracks the activities of the class, state pattern too heavy
 			PhysicalLayerAsyncBase::State mState;
 
 		private:

@@ -40,8 +40,8 @@ struct EventInfo : public PointInfoBase<T>
 
 	EventInfo() : mSequence(0), mWritten(false) {}
 
-	size_t mSequence;	/// sequence number used by the event buffers to record insertion order
-	bool mWritten;		/// true if the event has been written
+	size_t mSequence;	// sequence number used by the event buffers to record insertion order
+	bool mWritten;		// true if the event has been written
 };
 
 typedef EventInfo<apl::Binary>				BinaryEvent;

@@ -31,7 +31,7 @@ namespace apl
 	{
 		MACRO_SINGLETON_INSTANCE(TimeSource)
 
-		/// Implement ITimeSource
+		// Implement ITimeSource
 		boost::posix_time::ptime GetUTC();
 		TimeStamp_t GetTimeStampUTC();
 	};
@@ -42,7 +42,7 @@ namespace apl
 
 		MockTimeSource();
 
-		/// Implement ITimeSource
+		// Implement ITimeSource
 		boost::posix_time::ptime GetUTC() { return mTime; }
 		TimeStamp_t GetTimeStampUTC();
 

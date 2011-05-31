@@ -31,7 +31,7 @@ using namespace apl::dnp;
 
 BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 
-	/// Test the open retry behavior
+	// Test the open retry behavior
 	BOOST_AUTO_TEST_CASE(OpenRetryBehavior) {
 		LinkLayerRouterTest t;
 		t.router.Start();
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 		BOOST_REQUIRE_EQUAL(t.phys.NumOpenFailure(), 1);
 	}
 
-	/// Test that send frames from unknown sources are rejected
+	// Test that send frames from unknown sources are rejected
 	BOOST_AUTO_TEST_CASE(UnknownSourceException) {
 		LinkLayerRouterTest t;
 		LinkFrame f;
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 		BOOST_REQUIRE_THROW(t.router.Transmit(f), ArgumentException);
 	}
 
-	/// Test that frames with unknown destinations are correctly logged
+	// Test that frames with unknown destinations are correctly logged
 	BOOST_AUTO_TEST_CASE(UnknownDestination){
 		LinkLayerRouterTest t;
 		t.router.Start();
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_UNKNOWN_DESTINATION);
 	}
 
-	/// Test that the router rejects sends until it is online
+	// Test that the router rejects sends until it is online
 	BOOST_AUTO_TEST_CASE(LayerNotOnline){
 		LinkLayerRouterTest t;
 		MockFrameSink mfs;
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 		BOOST_REQUIRE_THROW(t.router.Transmit(f), InvalidStateException);
 	}
 
-	/// Test that router is correctly clears the send buffer on close
+	// Test that router is correctly clears the send buffer on close
 	BOOST_AUTO_TEST_CASE(CloseBehavior){
 		LinkLayerRouterTest t;
 		MockFrameSink mfs;
@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 		BOOST_REQUIRE(t.IsLogErrorFree());
 	}
 
-	/// Test that the second bind fails when a non-unique address is added
+	// Test that the second bind fails when a non-unique address is added
 	BOOST_AUTO_TEST_CASE(MultiAddressBindError){
 		LinkLayerRouterTest t;
 		MockFrameSink mfs;
@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 		BOOST_REQUIRE_THROW(t.router.AddContext(&mfs, 1024), ArgumentException);
 	}
 
-	/// Test that the second bind fails when a non-unique context is added
+	// Test that the second bind fails when a non-unique context is added
 	BOOST_AUTO_TEST_CASE(MultiContextBindError){
 		LinkLayerRouterTest t;
 		MockFrameSink mfs;
@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 		BOOST_REQUIRE_THROW(t.router.AddContext(&mfs, 2048), ArgumentException);
 	}
 
-	/// Test that router correctly buffers and sends frames from multiple contexts
+	// Test that router correctly buffers and sends frames from multiple contexts
 	BOOST_AUTO_TEST_CASE(MultiContextSend){
 		LinkLayerRouterTest t;
 		MockFrameSink mfs1;

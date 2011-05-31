@@ -35,10 +35,10 @@ class Logger;
 
 		protected:
 
-			/// Blocking read defined in base class
+			// Blocking read defined in base class
 			virtual std::string Read() = 0;
 
-			/// Blocking write defined in base class
+			// Blocking write defined in base class
 			virtual void Write(const std::string&) = 0;
 
 

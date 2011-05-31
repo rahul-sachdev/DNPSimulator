@@ -24,7 +24,7 @@
 
 namespace apl { namespace dnp {
 
-/// Class for dealing with all aspects of FT3 Frame headers
+// Class for dealing with all aspects of FT3 Frame headers
 struct LinkHeader
 {
 	LinkHeader();
@@ -34,7 +34,7 @@ struct LinkHeader
 	/** @param apBuff Buffer of at least 10 bytes*/
 	LinkHeader(const boost::uint8_t* apBuff);
 
-	/// Setter
+	// Setter
 
 	void Set(boost::uint8_t aLen, boost::uint16_t aSrc, boost::uint16_t aDest, bool aFromMaster, bool aFcvDfc, bool aFcb, FuncCodes aCode);
 
@@ -68,10 +68,10 @@ struct LinkHeader
 	private:
 
 	// Fields read directly from the header
-	boost::uint8_t length;	/// Length of field, range [5,255] valid
-	boost::uint16_t src;	/// Where the frame originated
-	boost::uint16_t dest;	/// Where the frame is going
-	boost::uint8_t ctrl;	/// Control octet, individual fields accessed using accessors below
+	boost::uint8_t length;	// Length of field, range [5,255] valid
+	boost::uint16_t src;	// Where the frame originated
+	boost::uint16_t dest;	// Where the frame is going
+	boost::uint8_t ctrl;	// Control octet, individual fields accessed using accessors below
 };
 
 

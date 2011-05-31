@@ -69,13 +69,13 @@ class MockFrameSink : public ILinkContext, public BufferTestObject
 
 	bool mLowerOnline;
 
-	/// Add a function to execute the next time a frame is received
-	/// This allows us to test re-entrant behaviors
+	// Add a function to execute the next time a frame is received
+	// This allows us to test re-entrant behaviors
 	void AddAction(boost::function<void ()> aFunc);
 
 	private:
 
-	/// Executes one action, if one is available
+	// Executes one action, if one is available
 	void ExecuteAction();
 
 	std::deque< boost::function<void ()> > mActions;

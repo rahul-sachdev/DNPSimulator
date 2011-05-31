@@ -32,7 +32,7 @@ namespace apl
 	{
 		public:
 
-			/// Constructor can specify whether or not the class will delete it's own physical layers via aOwnsLayer.
+			// Constructor can specify whether or not the class will delete it's own physical layers via aOwnsLayer.
 			PhysicalLayerManager(Logger*, bool aOwnsLayers = true);
 			virtual ~PhysicalLayerManager();
 
@@ -44,7 +44,7 @@ namespace apl
 			void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
 			void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
 
-			/// Removes a physical layer and deletes it if the manager has ownership.
+			// Removes a physical layer and deletes it if the manager has ownership.
 			void Remove(const std::string& arName);
 
 		private:
