@@ -90,7 +90,7 @@ const size_t NUM_CHANGES = 10;
 		oss << "Port: " << START_PORT << " Client ";
 
 		list = t.GetPortNames();
-		BOOST_REQUIRE_EQUAL(list.size(), NUM_POINTS * 2);
+		BOOST_REQUIRE_EQUAL(list.size(), NUM_PAIRS * 2);
 		BOOST_REQUIRE_EQUAL(list[0], oss.str());
 	}
 
