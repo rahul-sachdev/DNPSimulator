@@ -30,29 +30,27 @@ using namespace std;
 
 namespace apl
 {
-	PhysicalLayerManager :: PhysicalLayerManager(Logger* apBaseLogger, bool aOwnsLayers) :
-	PhysicalLayerMap(apBaseLogger),
-	mOwnsLayers(aOwnsLayers)
+	PhysicalLayerManager :: PhysicalLayerManager(Logger* apBaseLogger) :
+	PhysicalLayerMap(apBaseLogger)	
 	{
 
 	}
 
 	PhysicalLayerManager :: ~PhysicalLayerManager()
 	{
-		if(mOwnsLayers) {
-			for ( InstanceMap::iterator itr = this->mInstanceMap.begin(); itr != mInstanceMap.end(); itr++ ){
+		for (NameToInstanceMap::iterator itr = this->mNameToInstanceMap.begin(); itr != mNameToInstanceMap.end(); itr++ ){
 				itr->second.Release();
-			}
 		}
+		
 	}
 
 	void PhysicalLayerManager::Remove(const std::string& arName)
 	{
-		InstanceMap::iterator i = mInstanceMap.find(arName);
-		if(i == mInstanceMap.end()) throw ArgumentException(LOCATION, "Unknown layer");
-		if(mOwnsLayers) i->second.Release();
-		mInstanceMap.erase(i);
-		mSettingsMap.erase(arName);
+		NameToInstanceMap::iterator i = mNameToInstanceMap.find(arName);
+		if(i == mNameToInstanceMap.end()) throw ArgumentException(LOCATION, "Unknown layer");
+		i->second.Release();
+		mNameToInstanceMap.erase(i);
+		mNameToSettingsMap.erase(arName);
 	}
 
 	void PhysicalLayerManager ::AddTCPClient(const std::string& arName, PhysLayerSettings s, const std::string& arAddr, boost::uint16_t aPort)

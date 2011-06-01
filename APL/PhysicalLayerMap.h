@@ -22,31 +22,44 @@
 #include "IPhysicalLayerSource.h"
 #include "PhysicalLayerInstance.h"
 #include "PhysLayerSettings.h"
+#include "Lock.h"
+
 #include <map>
 
 namespace apl
 {
+	/** Threadsafe object 
+	*/
 	class PhysicalLayerMap : public IPhysicalLayerSource
 	{
 	public:
 		PhysicalLayerMap(Logger* apBaseLogger);
-		virtual ~PhysicalLayerMap() {}
-
+		virtual ~PhysicalLayerMap();
+		
+		IPhysicalLayerAsync* AcquireLayer(const std::string& arName, boost::asio::io_service*, bool aAutoDelete = true);
+		void ReleaseLayer(const std::string& arName);
 		PhysLayerSettings GetSettings(const std::string& arName);
-		IPhysicalLayerAsync* GetLayer(const std::string& arName, boost::asio::io_service*);
-
 
 	protected:
-
+		
+		SigLock mLock;
+	
 		Logger* MakeLogger(const std::string& arName, FilterLevel);
 
+		// unsynchronized versions
+		PhysLayerSettings _GetSettings(const std::string& arName);
+		PhysLayerInstance* _GetInstance(const std::string& arName);
+
 		void AddLayer(const std::string& arName, PhysLayerSettings aSettings, PhysLayerInstance aInstance);
+		
+		typedef std::map<std::string, PhysLayerSettings> NameToSettingsMap;
+		typedef std::map<std::string, PhysLayerInstance> NameToInstanceMap;
+		typedef std::map<IPhysicalLayerAsync*, std::string> LayerToNameMap;
 
-		typedef std::map<std::string, PhysLayerSettings> SettingsMap;
-		typedef std::map<std::string, PhysLayerInstance> InstanceMap;
+		NameToSettingsMap mNameToSettingsMap;
+		NameToInstanceMap mNameToInstanceMap;
+		LayerToNameMap mLayerToNameMap;
 
-		SettingsMap mSettingsMap;
-		InstanceMap mInstanceMap;
 		Logger* mpBaseLogger;
 	};
 

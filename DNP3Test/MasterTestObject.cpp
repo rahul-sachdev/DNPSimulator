@@ -33,7 +33,7 @@ mts(),
 ats(&mts, &fake_time),
 fdo(),
 app(mLog.GetLogger(aLevel, "MockAppLayer")),
-master(mLog.GetLogger(aLevel,"master"), cfg, &app, &fdo, ats.NewGroup(), &mts, &fake_time)
+master(mLog.GetLogger(aLevel,"master"), cfg, &app, &fdo, ats.CreateNewGroup(), &mts, &fake_time)
 {
 	app.SetUser(&master);
 }

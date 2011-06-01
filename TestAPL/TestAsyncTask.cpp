@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(DependencyAnalysis)
 	MockTimerSource mts;
 	AsyncTaskScheduler ats(&mts);
 	
-	AsyncTaskGroup* pGroup = ats.NewGroup();
+	AsyncTaskGroup* pGroup = ats.CreateNewGroup();
 
 	AsyncTaskBase* pT1 = pGroup->Add(1000, 1000, 0, mth.GetHandler());
 	AsyncTaskBase* pT2 = pGroup->Add(1000, 1000, 0, mth.GetHandler());
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(ContinousTask)
 	MockTimerSource mts;
 	AsyncTaskScheduler ats(&mts);
 	
-	AsyncTaskGroup* pGroup = ats.NewGroup();
+	AsyncTaskGroup* pGroup = ats.CreateNewGroup();
 
 	AsyncTaskContinuous* pT1 = pGroup->AddContinuous(0, mth.GetHandler());
 	AsyncTaskBase* pT2 = pGroup->Add(1000, 1000, 1, mth.GetHandler());
@@ -147,8 +147,8 @@ BOOST_AUTO_TEST_CASE(DecoupledGroupsMode)
 	MockTimerSource mts;
 	AsyncTaskScheduler ats(&mts);
 	
-	AsyncTaskGroup* pGroup1 = ats.NewGroup();
-	AsyncTaskGroup* pGroup2 = ats.NewGroup();
+	AsyncTaskGroup* pGroup1 = ats.CreateNewGroup();
+	AsyncTaskGroup* pGroup2 = ats.CreateNewGroup();
 
 	AsyncTaskBase* pT1 = pGroup1->Add(1000, 1000, 0, mth.GetHandler());
 	AsyncTaskBase* pT2 = pGroup2->Add(1000, 1000, 0, mth.GetHandler());
@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE(NonPeriodic)
 	MockTimeSource fake_time;
 	AsyncTaskScheduler ats(&mts, &fake_time);
 
-	AsyncTaskGroup* pGroup = ats.NewGroup();
+	AsyncTaskGroup* pGroup = ats.CreateNewGroup();
 	fake_time.SetToNow();
 
 	AsyncTaskBase* pT1 = pGroup->Add(-1, 100, 0, mth.GetHandler()); //non-periodic task
@@ -202,7 +202,7 @@ BOOST_AUTO_TEST_CASE(PriorityBreaksTies)
 	MockTimerSource mts;
 	AsyncTaskScheduler ats(&mts);
 
-	AsyncTaskGroup* pGroup = ats.NewGroup();
+	AsyncTaskGroup* pGroup = ats.CreateNewGroup();
 
 	pGroup->Add(100, 100, 0, mth.GetHandler());
 	AsyncTaskBase* pT2 = pGroup->Add(100, 100, 1, mth.GetHandler()); // higher priority
@@ -219,7 +219,7 @@ BOOST_AUTO_TEST_CASE(DependenciesEnforced)
 	MockTimerSource mts;
 	AsyncTaskScheduler ats(&mts);
 	
-	AsyncTaskGroup* pGroup = ats.NewGroup();
+	AsyncTaskGroup* pGroup = ats.CreateNewGroup();
 	AsyncTaskBase* pT1 = pGroup->Add(100, 100, 0, mth.GetHandler());
 	AsyncTaskBase* pT2 = pGroup->Add(100, 100, 0, mth.GetHandler());
 
@@ -240,7 +240,7 @@ BOOST_AUTO_TEST_CASE(TimerUsage)
 
 	fake_time.SetToNow();
 	
-	AsyncTaskGroup* pGroup = ats.NewGroup();
+	AsyncTaskGroup* pGroup = ats.CreateNewGroup();
 	AsyncTaskBase* pT1 = pGroup->Add(1000, 100, 0, mth.GetHandler());
 	AsyncTaskBase* pT2 = pGroup->Add(1500, 100, 0, mth.GetHandler());
 	
