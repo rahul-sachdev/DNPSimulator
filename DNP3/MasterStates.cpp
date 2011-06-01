@@ -125,8 +125,7 @@ void AMS_Waiting::OnPartialResponse(Master* c, const APDU& arAPDU)
 			this->ChangeState(c, AMS_Idle::Inst());
 			c->mpScheduledTask->OnComplete(false);
 			break;
-		case(TR_CONTINUE):
-			c->StartTask(c->mpTask, false);
+		case(TR_CONTINUE):			
 			break;
 		default:
 			throw InvalidStateException(LOCATION, "Tasks must return FAIL or CONTINUE in on partial responses");
