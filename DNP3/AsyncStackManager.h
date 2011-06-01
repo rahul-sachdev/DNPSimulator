@@ -265,7 +265,7 @@ class AsyncStackManager : private Threadable, private Loggable
 
 		bool mRunASIO;
 		bool mRunning;
-		size_t NumStacks() { return mStackToPort.size(); }
+		size_t NumStacks() { return mStackNameToPort.size(); }
 
 		std::vector<std::string> StacksOnPort(const std::string& arPortName);
 
@@ -280,13 +280,12 @@ class AsyncStackManager : private Threadable, private Loggable
 		Thread mThread;
 
 		typedef std::map<std::string, Stack*> StackMap;
-		StackMap mStackMap;			// maps a stack name a Stack instance
+		StackMap mStackNameToStack;		// maps a stack name a Stack instance
 
 		typedef std::map<std::string, Port*> PortMap;
-		PortMap mStackToPort;		// maps a stack name a port instance
-		PortMap mPortToPort;		// maps a port name to a port instance
-
-		typedef std::map<std::string, size_t> mPortCount;	// how many stacks per port
+		PortMap mStackNameToPort;		// maps a stack name a port instance
+		PortMap mPortNameToPort;		// maps a port name to a port instance
+		
 };
 
 }}

@@ -67,12 +67,12 @@ AsyncStackManager::~AsyncStackManager()
 
 std::vector<std::string> AsyncStackManager::GetStackNames()
 {
-	return GetKeys<PortMap, string>(mStackToPort);
+	return GetKeys<PortMap, string>(mStackNameToPort);
 }
 
 std::vector<std::string> AsyncStackManager::GetPortNames()
 {
-	return GetKeys<PortMap, string>(mPortToPort);
+	return GetKeys<PortMap, string>(mPortNameToPort);
 }
 
 void AsyncStackManager::AddTCPClient(const std::string& arName, PhysLayerSettings aSettings, const std::string& arAddr, boost::uint16_t aPort)
@@ -160,7 +160,7 @@ void AsyncStackManager::RemovePort(const std::string& arPortName)
 	Port* pPort = this->GetPort(arPortName);
 	vector<string> stacks = this->StacksOnPort(arPortName);
 	BOOST_FOREACH(string s, stacks) { this->SeverStack(pPort, s); }
-	mPortToPort.erase(arPortName);
+	mPortNameToPort.erase(arPortName);
 
 	mScheduler.Sever(pPort->GetGroup());	// this tells the scheduler that we'll delete the group
 	mTimerSrc.Post(boost::bind(&Port::Release, pPort));
@@ -175,7 +175,7 @@ void AsyncStackManager::RemovePort(const std::string& arPortName)
 std::vector<std::string> AsyncStackManager::StacksOnPort(const std::string& arPortName)
 {
 	std::vector<std::string> ret;
-	for(PortMap::iterator i = this->mStackToPort.begin(); i!=mStackToPort.end(); ++i) {
+	for(PortMap::iterator i = this->mStackNameToPort.begin(); i!=mStackNameToPort.end(); ++i) {
 		if(i->second->Name() == arPortName) ret.push_back(i->first);
 	}
 	return ret;
@@ -192,21 +192,21 @@ void AsyncStackManager::RemoveStack(const std::string& arStackName)
 void AsyncStackManager::SeverStack(Port* apPort, const std::string& arStackName)
 {
 	mTimerSrc.Post(boost::bind(&Port::Disassociate, apPort, arStackName));
-	mStackToPort.erase(arStackName);
-	mStackMap.erase(arStackName);
+	mStackNameToPort.erase(arStackName);
+	mStackNameToStack.erase(arStackName);
 }
 
 Port* AsyncStackManager::GetPortByStackName(const std::string& arStackName)
 {
-	PortMap::iterator i = mStackToPort.find(arStackName);
-	if(i == mStackToPort.end()) throw ArgumentException(LOCATION, "Unknown stack");
+	PortMap::iterator i = mStackNameToPort.find(arStackName);
+	if(i == mStackNameToPort.end()) throw ArgumentException(LOCATION, "Unknown stack");
 	return i->second;
 }
 
 Stack* AsyncStackManager::GetStackByName(const std::string& arStackName)
 {
-	StackMap::iterator i = mStackMap.find(arStackName);
-	if (i == mStackMap.end())
+	StackMap::iterator i = mStackNameToStack.find(arStackName);
+	if (i == mStackNameToStack.end())
 	{
 		throw ArgumentException(LOCATION, "Unknown stack");
 	}
@@ -265,14 +265,14 @@ Port* AsyncStackManager::CreatePort(const std::string& arName, IPhysicalLayerAsy
 {
 	if(GetPortPointer(arName) != NULL) throw ArgumentException(LOCATION, "Port already exists");
 	Port* pPort = new Port(arName, apLogger, mScheduler.NewGroup(), &mTimerSrc, apPhys, aOpenDelay, apObserver);
-	mPortToPort[arName] = pPort;
+	mPortNameToPort[arName] = pPort;
 	return pPort;
 }
 
 Port* AsyncStackManager::GetPortPointer(const std::string& arName)
 {
-	PortMap::iterator i = mPortToPort.find(arName);
-	return (i==mPortToPort.end()) ? NULL : i->second;
+	PortMap::iterator i = mPortNameToPort.find(arName);
+	return (i==mPortNameToPort.end()) ? NULL : i->second;
 }
 
 void AsyncStackManager::Run()
@@ -295,8 +295,8 @@ void AsyncStackManager::Run()
 void AsyncStackManager::OnAddStack(const std::string& arStackName, Stack* apStack, Port* apPort, const LinkRoute& arRoute)
 {
 	// marshall the linking to the io_service
-	mStackToPort[arStackName] = apPort; // map the stack name to a Port object
-	mStackMap[arStackName] = apStack;	// map the stack name to a Stack object
+	mStackNameToPort[arStackName] = apPort; // map the stack name to a Port object
+	mStackNameToStack[arStackName] = apStack;	// map the stack name to a Stack object
 
 	mTimerSrc.Post(boost::bind(&Port::Associate, apPort, arStackName, apStack, arRoute));
 	if(!mRunning && mRunASIO) {
