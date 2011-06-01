@@ -157,16 +157,22 @@ void PhysicalLayerAsyncBase::OnOpenCallback(const boost::system::error_code& arE
 			this->DoOpenFailure();
 			if(mpHandler) mpHandler->OnOpenFailure();
 		}
-		else { //successful connection
-			mState.mOpen = true;
-			this->DoOpenSuccess();
-			if(mpHandler) mpHandler->OnLowerLayerUp();
+		else { // successful connection			
+			if(this->IsClosing()) { // but the connection was closed
+				this->DoClose();
+				if(mpHandler) mpHandler->OnOpenFailure();
+			}
+			else {			
+				mState.mOpen = true;
+				this->DoOpenSuccess();
+				if(mpHandler) mpHandler->OnLowerLayerUp();
+			}			
 		}
 	}
 	else throw InvalidStateException(LOCATION, "OnOpenCallback: " + mState.ToString());
 }
 
-void PhysicalLayerAsyncBase::OnReadCallback(const boost::system::error_code& arErr,boost::uint8_t* apBuff, size_t aSize)
+void PhysicalLayerAsyncBase::OnReadCallback(const boost::system::error_code& arErr, boost::uint8_t* apBuff, size_t aSize)
 {
 	if(mState.mReading) {
 		mState.mReading = false;
