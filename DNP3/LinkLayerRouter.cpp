@@ -204,7 +204,9 @@ void LinkLayerRouter::CheckForSend()
 
 void LinkLayerRouter::OnPhysicalLayerOpen()
 {
-	mpPhys->AsyncRead(mReceiver.WriteBuff(), mReceiver.NumWriteBytes());
+	if(mpPhys->CanRead())
+		mpPhys->AsyncRead(mReceiver.WriteBuff(), mReceiver.NumWriteBytes());
+
 	BOOST_FOREACH(AddressMap::value_type p, mAddressMap) { p.second->OnLowerLayerUp(); }
 }
 
