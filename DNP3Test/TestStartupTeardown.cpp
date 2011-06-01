@@ -28,16 +28,9 @@ using namespace std;
 using namespace apl;
 using namespace apl::dnp;
 
-static void StackTearDownTest(bool aAutoRun)
-{
-	const size_t NUM_STACKS = 10;
-	const size_t NUM_PORTS = 10;
-
-	FilterLevel lev = LEV_WARNING;
-
-	StartupTeardownTest t(lev, aAutoRun);
-
-	for (size_t i = 0; i < NUM_PORTS; ++i)
+void Configure(StartupTeardownTest& arTest, FilterLevel aLevel, boost::uint16_t aNumStacks, boost::uint16_t aNumPorts)
+{	
+	for (boost::uint16_t i = 0; i < aNumPorts; ++i)
 	{
 		ostringstream port;
 		port << "port" << i;
@@ -47,46 +40,48 @@ static void StackTearDownTest(bool aAutoRun)
 		 * first stack is added.  Otherwise, the stack will wait until
 		 * Start() has been called below.
 		 */
-		t.CreatePort(port.str(), lev);
+		arTest.CreatePort(port.str(), aLevel);
 
-		for(size_t i=0; i<NUM_STACKS; ++i) {
+		for(boost::uint16_t i =0; i<aNumStacks; ++i) {
 			ostringstream stack;
 			stack << port.str() << " - stack" << i;
 
-			t.AddMaster(stack.str(), port.str(), static_cast<boost::uint16_t>(i), LEV_WARNING);
+			arTest.AddMaster(stack.str(), port.str(), i, aLevel);
 		}
-	}
-
-	if (aAutoRun)
-	{
-		/*
-		 * The stack is already executing, and will automatically kill
-		 * itself when the destructor kicks in at the end of this
-		 * function.  So nothing to do right now.
-		 */
-	}
-	else
-	{
-		/*
-		 * Explicitly start up the stack, then stop it
-		 */
-		t.mMgr.Start();		
-		t.mMgr.Stop();
 	}
 }
 
-BOOST_AUTO_TEST_SUITE(AsyncIntegrationSuite)
+BOOST_AUTO_TEST_SUITE(StartupTeardownSuite)
 
-	// This test aggressively starts and stops stacks
-	// while the io_service is running
-	BOOST_AUTO_TEST_CASE(StackTearDownAutoStart)
+	const FilterLevel LEVEL = LEV_WARNING;
+	const boost::uint16_t NUM_STACKS = 10;
+	const boost::uint16_t NUM_PORTS = 10;
+
+	BOOST_AUTO_TEST_CASE(NeverStart)
 	{
-		StackTearDownTest(true);
+		StartupTeardownTest test(LEVEL, false);
+		Configure(test, LEVEL, NUM_STACKS, NUM_PORTS);		
+	}
+	
+	BOOST_AUTO_TEST_CASE(AutoStartAndStopWithDestructor)
+	{
+		StartupTeardownTest test(LEVEL, true);
+		Configure(test, LEVEL, NUM_STACKS, NUM_PORTS);
 	}
 
-	BOOST_AUTO_TEST_CASE(StackTearDownNoAutoStart)
+	BOOST_AUTO_TEST_CASE(ManualStartAndStopWithDestructor)
 	{
-		StackTearDownTest(false);
+		StartupTeardownTest test(LEVEL, false);
+		Configure(test, LEVEL, NUM_STACKS, NUM_PORTS);
+		test.mMgr.Start();		
+	}
+
+	BOOST_AUTO_TEST_CASE(ManualStartStop)
+	{
+		StartupTeardownTest test(LEVEL, false);
+		Configure(test, LEVEL, NUM_STACKS, NUM_PORTS);
+		test.mMgr.Start();
+		test.mMgr.Stop();
 	}
 
 BOOST_AUTO_TEST_SUITE_END()
