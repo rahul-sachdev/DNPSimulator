@@ -22,6 +22,7 @@
 
 #include <APL/Exception.h>
 
+#include <boost/bind.hpp>
 #include <boost/foreach.hpp>
 #include <sstream>
 
@@ -48,20 +49,20 @@ VtoRouterManager::VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc) :
 	Loggable(apLogger),
 	mpTimerSrc(apTimerSrc)
 {
-	assert(apTimerSrc != NULL);	
+	assert(apTimerSrc != NULL);
 }
 
 void VtoRouterManager::StartRouter(
-		const std::string& arStackName, 
-		const VtoRouterSettings& arSettings, 
-		IVtoWriter* apWriter, 
+		const std::string& arStackName,
+		const VtoRouterSettings& arSettings,
+		IVtoWriter* apWriter,
 		IPhysicalLayerAsync* apPhys)
 {
 	RouterKey key(arStackName, arSettings.CHANNEL_ID);
 	RouterMap::iterator i = mRouterMap.find(key);
 	if(i == mRouterMap.end())
-	{	
-		Logger* pLogger = this->GetSubLogger(arStackName, arSettings.CHANNEL_ID); 
+	{
+		Logger* pLogger = this->GetSubLogger(arStackName, arSettings.CHANNEL_ID);
 		VtoRouter* pRouter = new VtoRouter(arSettings, pLogger, apWriter, apPhys, mpTimerSrc);
 		RouterLifecycle* pLifecycle = new RouterLifecycle(pRouter);
 		mRouterMap.insert(RouterMap::value_type(key, pLifecycle));
@@ -91,7 +92,7 @@ void VtoRouterManager::StopAllRouters(const std::string& arStackName)
 
 void VtoRouterManager::StopRouter(const std::string& arStackName, boost::uint8_t aChannelId)
 {
-	RouterMap::iterator i = mRouterMap.find(RouterKey(arStackName, aChannelId)); 
+	RouterMap::iterator i = mRouterMap.find(RouterKey(arStackName, aChannelId));
 	if(i == mRouterMap.end())
 	{
 		std::ostringstream oss;
@@ -110,7 +111,7 @@ Logger* VtoRouterManager::GetSubLogger(const std::string& arId, boost::uint8_t a
 {
 	std::ostringstream oss;
 	oss << "VtoRouterChannel-" << aVtoChannelId;
-	return mpLogger->GetSubLogger(oss.str());	
+	return mpLogger->GetSubLogger(oss.str());
 }
 
 }}
