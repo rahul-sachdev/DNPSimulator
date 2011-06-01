@@ -35,20 +35,7 @@ namespace apl {
 
 		class VtoReader;
 		class VtoWriter;
-
-		/**
-		 * Settings classes used to configure the router.
-		 */
-		struct VtoRouterSettings
-		{
-			public:			
-			
-			VtoRouterSettings(boost::uint8_t aChannelId, size_t aVtoTxBufferSizeInBytes = 4096, millis_t aOpenRetryMs = 5000);
-	
-			const boost::uint8_t CHANNEL_ID;
-			const size_t VTO_TX_BUFFFER_SIZE_IN_BYTES;
-			const millis_t OPEN_RETRY_MS;
-		};
+		class VtoRouterSettings;		
 
 		/**
 		 * Class used to route data between a VTO channel (made up of both a

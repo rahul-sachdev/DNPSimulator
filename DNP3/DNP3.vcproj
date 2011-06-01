@@ -635,6 +635,22 @@
 						>
 					</File>
 					<File
+						RelativePath=".\VtoRouterManager.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VtoRouterManager.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VtoRouterSettings.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VtoRouterSettings.h"
+						>
+					</File>
+					<File
 						RelativePath=".\VtoWriter.cpp"
 						>
 					</File>

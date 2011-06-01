@@ -28,6 +28,7 @@
 #include <APLTestTools/TestHelpers.h>
 
 #include <DNP3/VtoRouter.h>
+#include <DNP3/VtoRouterSettings.h>
 #include <DNP3/VtoWriter.h>
 
 using namespace std;

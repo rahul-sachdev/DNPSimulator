@@ -36,6 +36,7 @@
 
 #include "VtoDataInterface.h"
 #include "LinkRoute.h"
+#include "VtoRouterManager.h"
 
 namespace apl {
 	class IPhysicalLayerAsync;
@@ -48,6 +49,7 @@ namespace apl { namespace dnp {
 
 class Port;
 class Stack;
+class VtoRouterSettings;
 
 struct SlaveStackConfig;
 struct MasterStackConfig;
@@ -180,7 +182,7 @@ class AsyncStackManager : private Threadable, private Loggable
 			@param arPortName			Unique name of the port to which the
 										router should associate.
 			@param arStackName			Unique name of the stack.
-			@param aVtoChannelId		Unique channel ID for the VTO circuit.
+			@param arSettings			Configuration class for the router.
 
 			@return						Interface to use for writing
 										new VTO data from the master to the
@@ -192,7 +194,7 @@ class AsyncStackManager : private Threadable, private Loggable
 		 */
 		void StartVtoRouter(const std::string& arPortName,
 						const std::string& arStackName,
-						boost::uint8_t aVtoChannelId);
+						const VtoRouterSettings& arSettings);
 
 		/**
 			Shutdown a VtoRouter for the VTO channel on the specified stack.
@@ -213,7 +215,7 @@ class AsyncStackManager : private Threadable, private Loggable
 
 			@throw ArgumentException	if arStackName doesn't exist
 		*/
-		void StopVtoRouter(const std::string& arStackName);
+		void StopAllRoutersOnStack(const std::string& arStackName);
 
 		/**
 			Get the vto writer by stack name
@@ -274,6 +276,7 @@ class AsyncStackManager : private Threadable, private Loggable
 	private:
 		PhysicalLayerManager mMgr;
 		AsyncTaskScheduler mScheduler;
+		VtoRouterManager mVtoManager;
 		Thread mThread;
 
 		typedef std::map<std::string, Stack*> StackMap;

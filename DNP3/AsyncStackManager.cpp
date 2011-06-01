@@ -47,6 +47,7 @@ AsyncStackManager::AsyncStackManager(Logger* apLogger, bool aAutoRun) :
 	mTimerSrc(mService.Get()),
 	mMgr(apLogger->GetSubLogger("ports", LEV_WARNING), false),
 	mScheduler(&mTimerSrc),
+	mVtoManager(apLogger->GetSubLogger("VtoRouterManager"), &mTimerSrc),
 	mThread(this)
 {}
 
@@ -130,20 +131,22 @@ void AsyncStackManager::RemoveVtoChannel(const std::string& arStackName,
 }
 
 void AsyncStackManager::StartVtoRouter(const std::string& arPortName,
-				const std::string& arStackName, boost::uint8_t aVtoChannelId)
+				const std::string& arStackName, const VtoRouterSettings& arSettings)
 {
-	throw NotImplementedException(LOCATION);
+	IVtoWriter* pWriter = this->GetStackByName(arStackName)->GetVtoWriter();
+	IPhysicalLayerAsync* pPhys = mMgr.GetLayer(arPortName, mService.Get());
+	mVtoManager.StartRouter(arStackName, arSettings, pWriter, pPhys); 
 }
 
 void AsyncStackManager::StopVtoRouter(const std::string& arStackName,
 				boost::uint8_t aVtoChannelId)
 {
-	throw NotImplementedException(LOCATION);
+	mVtoManager.StopRouter(arStackName, aVtoChannelId);
 }
 
-void AsyncStackManager::StopVtoRouter(const std::string& arStackName)
+void AsyncStackManager::StopAllRoutersOnStack(const std::string& arStackName)
 {
-	throw NotImplementedException(LOCATION);
+	mVtoManager.StopAllRouters(arStackName);
 }
 
 IVtoWriter* AsyncStackManager::GetVtoWriter(const std::string& arStackName)
@@ -180,6 +183,7 @@ std::vector<std::string> AsyncStackManager::StacksOnPort(const std::string& arPo
 
 void AsyncStackManager::RemoveStack(const std::string& arStackName)
 {
+	mVtoManager.StopAllRouters(arStackName);
 	Port* pPort = this->GetPortByStackName(arStackName);
 	this->SeverStack(pPort, arStackName);
 	this->CheckForJoin();

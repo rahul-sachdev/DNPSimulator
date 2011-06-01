@@ -27,7 +27,7 @@
 
 namespace apl {
 	namespace dnp {
-
+		
 		/**
 		 * The abstract base class for all VTO interface handlers.
 		 */

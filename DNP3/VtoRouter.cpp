@@ -22,15 +22,10 @@
 #include <APL/Util.h>
 
 #include "VtoReader.h"
+#include "VtoRouterSettings.h"
 
 namespace apl { namespace dnp {
-
-	VtoRouterSettings::VtoRouterSettings(boost::uint8_t aChannelId, size_t aVtoTxBufferSizeInBytes, millis_t aOpenRetryMs) :
-		CHANNEL_ID(aChannelId),
-		VTO_TX_BUFFFER_SIZE_IN_BYTES(aVtoTxBufferSizeInBytes),
-		OPEN_RETRY_MS(aOpenRetryMs)
-	{}
-
+	
 VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc) :
 	Loggable(apLogger),
 	AsyncPhysLayerMonitor(apLogger, apPhysLayer, apTimerSrc, arSettings.OPEN_RETRY_MS),
