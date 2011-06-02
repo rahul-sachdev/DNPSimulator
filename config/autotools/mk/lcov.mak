@@ -6,8 +6,8 @@ lcov-reset:
 clean-local:
 	@make lcov-reset
 
-#clean:
-#	@find . -iname "*.gcov" -exec rm {} \;
+clean:
+	@find . -iname "*.gcno" -exec rm {} \;
 
 if LCOV
 lcov-report:
