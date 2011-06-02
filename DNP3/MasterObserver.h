@@ -31,6 +31,7 @@ enum MasterStates
 class IMasterObserver
 {
 public:
+	virtual ~IMasterObserver(){};
 
 	virtual void OnStateChange(MasterStates aState) = 0;
 };
