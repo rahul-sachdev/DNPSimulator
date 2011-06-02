@@ -26,6 +26,7 @@
 #include <DNP3/AsyncStackManager.h>
 #include <DNP3/SlaveStackConfig.h>
 #include <DNP3/MasterStackConfig.h>
+#include <DNP3/VtoRouterSettings.h>
 
 using namespace apl;
 using namespace apl::dnp;
@@ -45,18 +46,32 @@ BOOST_AUTO_TEST_SUITE(VtoRouterIntegrationSuite)
 BOOST_AUTO_TEST_CASE(MasterToSlave)
 {
 	const boost::uint16_t port = PORT_VALUE;
-	const FilterLevel level = LEV_INFO;
+	const FilterLevel level = LEV_COMM;
 
 	EventLog log;
+	log.AddLogSubscriber(LogToStdio::Inst());
 	FlexibleDataObserver fdo;
 	MockCommandAcceptor cmdAcceptor;	
 	AsyncStackManager mgr(log.GetLogger(level, "test"));
 	
-	mgr.AddTCPClient("client", PhysLayerSettings(), "127.0.0.1", port);
+	//mgr.AddTCPClient("client", PhysLayerSettings(), "127.0.0.1", port);
 	mgr.AddTCPServer("server", PhysLayerSettings(), "127.0.0.1", port);
-
+	
 	mgr.AddSlave("server", "slave", level, &cmdAcceptor, SlaveStackConfig());
-	mgr.AddMaster("client", "master", level, &fdo, MasterStackConfig());
+	//mgr.AddMaster("client", "master", level, &fdo, MasterStackConfig());
+	
+	/*
+	mgr.AddTCPServer("vtoserver1", PhysLayerSettings(), "127.0.0.1", port+1);
+	mgr.AddTCPServer("vtoserver2", PhysLayerSettings(), "127.0.0.1", port+2);
+	
+	mgr.StartVtoRouter("vtoserver1", "slave", VtoRouterSettings(0));
+	mgr.StartVtoRouter("vtoserver2", "master", VtoRouterSettings(0));
+	*/
+	
+
+	mgr.Start();
+
+	//Thread::SleepFor(100000);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

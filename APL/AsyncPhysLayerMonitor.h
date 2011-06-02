@@ -62,6 +62,8 @@ namespace apl {
 
 			void Notify(IPhysMonitor::State);
 
+			virtual void OnStateChange(IPhysMonitor::State) = 0;
+
 			bool mOpening;
 			bool mOpen;
 			bool mStopOpenRetry;

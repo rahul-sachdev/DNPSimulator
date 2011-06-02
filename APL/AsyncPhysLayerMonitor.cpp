@@ -66,6 +66,7 @@ void AsyncPhysLayerMonitor::SetMonitor(IPhysMonitor* apMonitor)
 void AsyncPhysLayerMonitor::Notify(IPhysMonitor::State aState)
 {
 	mPortState.Set(aState);
+	this->OnStateChange(aState);
 	if(mpMonitor) mpMonitor->OnStateChange(aState);
 }
 

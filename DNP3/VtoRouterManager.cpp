@@ -21,95 +21,121 @@
 #include "VtoRouterSettings.h"
 
 #include <APL/Exception.h>
+#include <APL/IPhysicalLayerSource.h>
+#include <APL/IPhysicalLayerAsync.h>
 
 #include <boost/foreach.hpp>
 #include <sstream>
 
 namespace apl { namespace dnp {
 
-RouterLifecycle::RouterLifecycle(VtoRouter* apRouter) : mpRouter(apRouter)
+VtoRouterManager::RouterRecord::RouterRecord(const std::string& arPortName, VtoRouter* apRouter, IVtoWriter* apWriter, boost::uint8_t aVtoChannelId) :
+	mPortName(arPortName),
+	mpRouter(apRouter),
+	mpWriter(apWriter),
+	mVtoChannelId(aVtoChannelId)
 {
-	assert(apRouter != NULL);
-	apRouter->SetMonitor(this);
+	
 }
 
-void RouterLifecycle::OnStateChange(IPhysMonitor::State aState)
-{
-	assert(mpRouter != NULL);
-
-	if(aState == IPhysMonitor::Stopped) {
-		delete mpRouter;
-		mpRouter = NULL;
-		delete this;
-	}
-}
-
-VtoRouterManager::VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc) :
+VtoRouterManager::VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc, boost::asio::io_service* apService) :
 	Loggable(apLogger),
-	mpTimerSrc(apTimerSrc)
-{
+	mpTimerSrc(apTimerSrc),
+	mpPhysSource(apPhysSrc),
+	mpService(apService)
+{	
 	assert(apTimerSrc != NULL);	
+	assert(apPhysSrc != NULL);
+	assert(apService != NULL);
 }
 
-void VtoRouterManager::StartRouter(
-		const std::string& arStackName, 
+void VtoRouterManager::ClenupAfterRouter(IPhysicalLayerAsync* apPhys, VtoRouter* apRouter)
+{
+	delete apPhys;
+	delete apRouter;
+}
+
+void VtoRouterManager::StartRouter(		
+		const std::string& arPortName,
 		const VtoRouterSettings& arSettings, 
-		IVtoWriter* apWriter, 
-		IPhysicalLayerAsync* apPhys)
+		IVtoWriter* apWriter)
+{		
+	IPhysicalLayerAsync* pPhys = mpPhysSource->AcquireLayer(arPortName, mpService, false); //don't autodelete
+	Logger* pLogger = this->GetSubLogger(arPortName, arSettings.CHANNEL_ID);
+				
+	VtoRouter* pRouter = new VtoRouter(arSettings, pLogger, apWriter, pPhys, mpTimerSrc);
+
+	// when the router is completely stopped, it's physical layer will be deleted, followed by itself
+	pRouter->AddCleanupTask(boost::bind(&VtoRouterManager::ClenupAfterRouter, pPhys, pRouter));
+
+	RouterRecord record(arPortName, pRouter, apWriter, arSettings.CHANNEL_ID);
+
+	pRouter->Start();
+	
+	this->mRecords.push_back(record);
+}
+
+void VtoRouterManager::StopRouterOnWriter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId)
 {
-	RouterKey key(arStackName, arSettings.CHANNEL_ID);
-	RouterMap::iterator i = mRouterMap.find(key);
-	if(i == mRouterMap.end())
-	{	
-		Logger* pLogger = this->GetSubLogger(arStackName, arSettings.CHANNEL_ID); 
-		VtoRouter* pRouter = new VtoRouter(arSettings, pLogger, apWriter, apPhys, mpTimerSrc);
-		RouterLifecycle* pLifecycle = new RouterLifecycle(pRouter);
-		mRouterMap.insert(RouterMap::value_type(key, pLifecycle));
+	RouterRecordVector::iterator i = this->Find(apWriter, aVtoChannelId);
+	if(i != mRecords.end()) {
+		this->StopRouter(i);
+		this->StopRouterOnWriter(apWriter, aVtoChannelId);
 	}
-	else
-	{
-		std::ostringstream oss;
-		oss << "Name: " << arStackName << " ChannelId: " << arSettings.CHANNEL_ID << " already bound to a router";
-		throw ArgumentException(LOCATION, oss.str());
+}
+	
+void VtoRouterManager::StopAllRouters()
+{
+	if(this->mRecords.size() != 0) {
+		this->StopRouter(mRecords.begin());
+		this->StopAllRouters();
 	}
 }
 
-void VtoRouterManager::StopAllRouters(const std::string& arStackName)
+void VtoRouterManager::StopAllRoutersOnWriter(IVtoWriter* apWriter)
 {
-	std::vector<RouterKey> keysToRemove;
-
-	for(RouterMap::iterator i = mRouterMap.begin(); i != mRouterMap.end(); ++i)
-	{
-		if(i->first.first == arStackName) keysToRemove.push_back(i->first);
-	}
-
-	BOOST_FOREACH(RouterKey key, keysToRemove)
-	{
-		this->StopRouter(key.first, key.second);
+	RouterRecordVector::iterator i = this->Find(apWriter);
+	if(i != mRecords.end()) {
+		this->StopRouter(i);
+		this->StopAllRoutersOnWriter(apWriter);
 	}
 }
 
-void VtoRouterManager::StopRouter(const std::string& arStackName, boost::uint8_t aChannelId)
+
+VtoRouterManager::RouterRecordVector::iterator VtoRouterManager::Find(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId)
 {
-	RouterMap::iterator i = mRouterMap.find(RouterKey(arStackName, aChannelId)); 
-	if(i == mRouterMap.end())
-	{
-		std::ostringstream oss;
-		oss << "Name: " << arStackName << " ChannelId: " << aChannelId << " not registered";
-		throw ArgumentException(LOCATION, oss.str());
+	RouterRecordVector::iterator i = this->mRecords.begin();
+
+	for(; i != mRecords.end(); ++i) {
+		if(i->mpWriter == apWriter && i->mVtoChannelId == aVtoChannelId) return i;
 	}
-	else
-	{
-		// Shutdown the router from another thread. It will automatically delete itself when it stops.
-		mpTimerSrc->Post(boost::bind(&VtoRouter::Stop, i->second->mpRouter));
-		mRouterMap.erase(i);
+
+	return i;
+}
+
+VtoRouterManager::RouterRecordVector::iterator VtoRouterManager::Find(IVtoWriter* apWriter)
+{
+	RouterRecordVector::iterator i = this->mRecords.begin();
+
+	for(; i != mRecords.end(); ++i) {
+		if(i->mpWriter == apWriter) return i;
 	}
+
+	return i;
+}
+
+void VtoRouterManager::StopRouter(const RouterRecordVector::iterator& arIter)
+{	
+	mpPhysSource->ReleaseLayer(arIter->mPortName);
+	// Shutdown the router from another thread. It will automatically clean up after it stops
+	mpTimerSrc->Post(boost::bind(&VtoRouter::Stop, arIter->mpRouter));
+	this->mRecords.erase(arIter);
 }
 
 Logger* VtoRouterManager::GetSubLogger(const std::string& arId, boost::uint8_t aVtoChannelId)
 {
 	std::ostringstream oss;
-	oss << "VtoRouterChannel-" << aVtoChannelId;
+	oss << arId << "-VtoRouterChannel-" << aVtoChannelId;
 	return mpLogger->GetSubLogger(oss.str());	
 }
 

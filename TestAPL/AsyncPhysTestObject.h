@@ -60,6 +60,8 @@ namespace apl {
 			CopyableBuffer mRead;
 			CopyableBuffer mWrite;
 
+			void OnStateChange(IPhysMonitor::State) {}
+
 			void _OnReceive(const boost::uint8_t *,size_t);
 			void _OnSendSuccess(void){}
 			void _OnSendFailure(void){}
