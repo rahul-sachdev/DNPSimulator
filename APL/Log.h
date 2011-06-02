@@ -55,7 +55,7 @@ namespace apl
 			* Binds a listener to only certain error messages
 			*/
 			void AddLogSubscriber(ILogBase* apSubscriber, int aErrorCode);
-			
+
 			/**
 			* Cancels a previous binding
 			*/
@@ -73,8 +73,8 @@ namespace apl
 
 			//holds pointers to the loggers that have been distributed
 			typedef std::map<std::string, Logger*> LoggerMap;
-			LoggerMap mLogMap;			
-			typedef std::map<ILogBase*, std::set<int>> SubscriberMap;
+			LoggerMap mLogMap;
+			typedef std::map< ILogBase*, std::set<int> > SubscriberMap;
 			SubscriberMap mSubscribers;
 
 	};
