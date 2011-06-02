@@ -148,5 +148,22 @@ using namespace apl;
 			t.phys.SignalSendFailure();
 			BOOST_REQUIRE_EQUAL(t.upper.GetState().mNumLayerDown, 1);
 		}
+
+		BOOST_AUTO_TEST_CASE(CloseWhileOpening) {
+			AsyncPhysBaseTest t;
+			
+			t.phys.AsyncOpen();
+			t.phys.AsyncClose();
+			BOOST_REQUIRE(t.phys.IsOpening());
+			BOOST_REQUIRE(t.phys.IsClosing());
+
+			/* this could happen for some layers, but we 
+			   still need to return an open failure to the handler */
+			t.phys.SignalOpenSuccess();
+
+			BOOST_REQUIRE_EQUAL(0, t.upper.GetState().mNumLayerUp);
+			BOOST_REQUIRE_EQUAL(1, t.adapter.GetNumOpenFailure());			
+		}
+
 	BOOST_AUTO_TEST_SUITE_END()
 

@@ -16,46 +16,35 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_TASK_SCHEDULER_H_
-#define __ASYNC_TASK_SCHEDULER_H_
 
+#include "CleanupHelper.h"
 
-#include <set>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <APL/TimerInterfaces.h>
 
-#include "TimeSource.h"
-#include "Lock.h"
+#include <boost/foreach.hpp>
 
-namespace apl {
+namespace apl { namespace dnp {
 
-class AsyncTaskBase;
-class AsyncTaskGroup;
-class ITimerSource;
-
-
-/** Thread-safe object that coordinates multiple task groups and manages their lifecycle
-*/
-class AsyncTaskScheduler
+CleanupHelper::CleanupHelper(ITimerSource* apTimerSource) : 
+	mpTimerSource(apTimerSource)
 {
-	friend class AsyncTaskGroup;
-
-	public:
-
-	AsyncTaskScheduler(ITimerSource* apTimerSrc, ITimeSource* apTimeSrc = TimeSource::Inst());
-	~AsyncTaskScheduler();
-
-	AsyncTaskGroup* CreateNewGroup();
-	void ReleaseGroup(AsyncTaskGroup*);	
-
-	private:
-	SigLock mLock;
-
-	ITimerSource* mpTimerSrc;
-	ITimeSource* mpTimeSrc;
-	typedef std::set<AsyncTaskGroup*> GroupSet;
-	GroupSet mGroupSet;
-};
 
 }
 
-#endif
+// implement the ISubject interface
+void CleanupHelper::AddCleanupTask(const CleanupTask& arCleanupTask)
+{
+	CriticalSection cs(&mCleanupHelperLock);
+	mCleanupTasks.push_back(arCleanupTask);
+}
+
+void CleanupHelper::Cleanup()
+{
+	CriticalSection cs(&mCleanupHelperLock);
+	BOOST_FOREACH(CleanupTask task, mCleanupTasks) {
+		mpTimerSource->Post(task);
+	}
+}
+
+}}
+

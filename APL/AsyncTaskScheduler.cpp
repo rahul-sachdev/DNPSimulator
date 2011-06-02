@@ -20,6 +20,7 @@
 
 #include "AsyncTaskGroup.h"
 #include "AsyncTaskBase.h"
+#include "Exception.h"
 
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
@@ -44,27 +45,23 @@ AsyncTaskScheduler::~AsyncTaskScheduler()
 	BOOST_FOREACH(AsyncTaskGroup* p, mGroupSet) { delete p; }
 }
 
-AsyncTaskGroup* AsyncTaskScheduler::NewGroup()
+AsyncTaskGroup* AsyncTaskScheduler::CreateNewGroup()
 {
+	CriticalSection cs(&mLock);
 	AsyncTaskGroup* pGroup = new AsyncTaskGroup(mpTimerSrc, mpTimeSrc);
 	mGroupSet.insert(pGroup);
 	return pGroup;
 }
 
-AsyncTaskGroup* AsyncTaskScheduler::Sever(AsyncTaskGroup* apGroup)
+void AsyncTaskScheduler::ReleaseGroup(AsyncTaskGroup* apGroup)
 {
+	CriticalSection cs(&mLock);
 	GroupSet::iterator i = mGroupSet.find(apGroup);
-	if( i != mGroupSet.end() ) {
-		AsyncTaskGroup* pGroup = *i;
-		mGroupSet.erase(i);
-		return pGroup;
+	if( i != mGroupSet.end() ) {		
+		delete *i;
+		mGroupSet.erase(i);		
 	}
-	else return NULL;
-}
-
-void AsyncTaskScheduler::Release(AsyncTaskGroup* apGroup)
-{
-	delete Sever(apGroup);
+	else throw ArgumentException(LOCATION, "Group not associated with this scheduler");
 }
 
 } //end ns

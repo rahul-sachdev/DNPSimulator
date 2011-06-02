@@ -36,16 +36,15 @@ namespace apl
 {
 	class Logger;
 	class IPhysicalLayerAsync;
-
 	struct PhysLayerSettings;
 
 	class IPhysicalLayerSource
 	{
-	public:
+		public:
 		virtual ~IPhysicalLayerSource(){}
-
-		virtual PhysLayerSettings GetSettings(const std::string& arName) = 0;
-		virtual IPhysicalLayerAsync* GetLayer(const std::string& arName, boost::asio::io_service*) = 0;
+		
+		virtual IPhysicalLayerAsync* AcquireLayer(const std::string& arName, boost::asio::io_service*, bool aAutoDelete = true) = 0;
+		virtual void ReleaseLayer(const std::string& arName) = 0;
 	};
 }
 

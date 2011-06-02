@@ -61,7 +61,7 @@ struct MasterStackConfig;
 	from a single thread at at a time.
 */
 class AsyncStackManager : private Threadable, private Loggable
-{
+{	
 	public:
 		/**
 			@param apLogger - Logger to use for all other loggers
@@ -243,13 +243,16 @@ class AsyncStackManager : private Threadable, private Loggable
 		// Start the thead if it isn't running
 		void Start();
 
-		// Stop the thread, doesn't delete anything until the stack manager destructs
+		// Stop all running stacks and synchronously wait for a join		
 		void Stop();
 
 	private:
 
+		static void DeletePort(Port* apPort);
+		static void DeleteLayer(IPhysicalLayerAsync* apLayer);
+
 		Port* AllocatePort(const std::string& arName);
-		Port* CreatePort(const std::string& arName, IPhysicalLayerAsync* apPhys, Logger* apLogger, millis_t aOpenDelay, IPhysMonitor* apObserver);
+		Port* CreatePort(const std::string& arName);
 		Port* GetPort(const std::string& arName);
 		Port* GetPortByStackName(const std::string& arStackName);
 		Port* GetPortPointer(const std::string& arName);

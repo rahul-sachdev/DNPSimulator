@@ -46,7 +46,7 @@ class AsyncStackManager;
 class StackManager
 {
 	public:
-		StackManager(bool aAutoStart);
+		StackManager();
 		~StackManager();
 
 		void AddTCPClient(const std::string& arName, PhysLayerSettings aPhys, const std::string& arAddr, boost::uint16_t aPort);

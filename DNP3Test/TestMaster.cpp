@@ -570,6 +570,8 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 
 		t.RespondToMaster("C0 81 00 00 01 02 00 02 02 81", false); //trigger partial response
 		BOOST_REQUIRE(t.fdo.Check(true, BQ_ONLINE, 2, TimeStamp_t(0)));
+		
+		BOOST_REQUIRE_EQUAL(0, t.app.NumAPDU());
 
 		t.RespondToMaster("C0 81 00 00 01 02 00 03 03 02");
 		BOOST_REQUIRE(t.fdo.Check(false, BQ_RESTART, 3, TimeStamp_t(0)));

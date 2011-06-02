@@ -30,6 +30,7 @@ namespace apl { namespace dnp {
 
 Port::Port(const std::string& arName, Logger* apLogger, AsyncTaskGroup* apGroup, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, millis_t aOpenDelay, IPhysMonitor* apObserver) :
 Loggable(apLogger->GetSubLogger("port")),
+CleanupHelper(apTimerSrc),
 mName(arName),
 mRouter(apLogger, apPhys, apTimerSrc, aOpenDelay),
 mpGroup(apGroup),
@@ -40,20 +41,13 @@ mRelease(false)
 	mRouter.SetMonitor(this);
 }
 
-//ports own their physical layers
-Port::~Port()
+// Releases the port now or when the router finall stops
+void Port::Release()
 {
-	delete mpPhys;
-	delete mpGroup;
-
-}
-
-//Once we're sure the router is done with
-void Port::Release() //do nothing right now
-{
-	if(mRouter.IsRunning()) mRelease = true;
-	else {
-		delete this;
+	if(!mRelease)
+	{
+		mRelease = true;	
+		if(!mRouter.IsRunning()) this->Cleanup();
 	}
 }
 
@@ -62,7 +56,7 @@ void Port::OnStateChange(IPhysMonitor::State aState)
 	if(mpObserver != NULL) mpObserver->OnStateChange(aState);
 
 	//when the router stops, delete ourselves
-	if((aState == IPhysMonitor::Stopped) && mRelease) delete this;
+	if((aState == IPhysMonitor::Stopped) && mRelease) this->Cleanup();
 }
 
 void Port::Associate(const std::string& arStackName, Stack* apStack, const LinkRoute& arRoute)
@@ -83,7 +77,7 @@ void Port::Disassociate(const std::string& arStackName)
 	StackRecord r = i->second;
 	LOG_BLOCK(LEV_DEBUG, "Unlinking stack from port w/ route " << r.route);
 	mRouter.RemoveContext(r.route);		// decouple the stack from the router and tell the stack to go offline if the it was previously online
-	delete r.pStack;							// delete the stack
+	delete r.pStack;					// delete the stack
 	if(mRouter.IsRunning() && mRouter.NumContext() == 0) {
 		LOG_BLOCK(LEV_DEBUG, "Stopping router");
 		mRouter.Stop();

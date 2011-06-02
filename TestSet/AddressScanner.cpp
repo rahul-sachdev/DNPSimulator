@@ -32,14 +32,13 @@ manager(apLogger, &cfg.PhysicalLayerList, xml::Convert(cfg.Log.Filter)),
 mService(),
 mTimerSrc(mService.Get()),
 mThread(mService.Get()),
-mRouter(apLogger, manager.GetLayer(cfg.PhysicalLayer, mService.Get()), &mTimerSrc, 1000),
+mRouter(apLogger, manager.AcquireLayer(cfg.PhysicalLayer, mService.Get()), &mTimerSrc, 1000),
 mpTimer(NULL),
 mMasterAddr(cfg.Master.Stack.LinkLayer.LocalAddress),
 mScanTimeout(cfg.Master.Stack.LinkLayer.AckTimeoutMS),
 mCurrent(start),
 mStop(stop)
-{
-	manager.SetLayerOwnership(false);
+{	
 	LinkRoute route(cfg.Master.Stack.LinkLayer.RemoteAddress, cfg.Master.Stack.LinkLayer.LocalAddress);
 	mRouter.AddContext(this, route);		
 }

@@ -580,6 +580,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\CleanupHelper.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CleanupHelper.h"
+					>
+				</File>
+				<File
 					RelativePath=".\MasterObserver.h"
 					>
 				</File>

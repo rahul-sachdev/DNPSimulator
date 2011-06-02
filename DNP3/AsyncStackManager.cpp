@@ -27,6 +27,7 @@
 #include <APL/TimerSourceASIO.h>
 #include <APL/Exception.h>
 #include <APL/Logger.h>
+#include <APL/IPhysicalLayerAsync.h>
 
 #include <DNP3/MasterStack.h>
 #include <DNP3/SlaveStack.h>
@@ -45,7 +46,7 @@ AsyncStackManager::AsyncStackManager(Logger* apLogger, bool aAutoRun) :
 	mRunning(false),
 	mService(),
 	mTimerSrc(mService.Get()),
-	mMgr(apLogger->GetSubLogger("ports", LEV_WARNING), false),
+	mMgr(apLogger->GetSubLogger("ports", LEV_WARNING)),
 	mScheduler(&mTimerSrc),
 	mVtoManager(apLogger->GetSubLogger("VtoRouterManager"), &mTimerSrc),
 	mThread(this)
@@ -134,7 +135,7 @@ void AsyncStackManager::StartVtoRouter(const std::string& arPortName,
 				const std::string& arStackName, const VtoRouterSettings& arSettings)
 {
 	IVtoWriter* pWriter = this->GetStackByName(arStackName)->GetVtoWriter();
-	IPhysicalLayerAsync* pPhys = mMgr.GetLayer(arPortName, mService.Get());
+	IPhysicalLayerAsync* pPhys = mMgr.AcquireLayer(arPortName, mService.Get());
 	mVtoManager.StartRouter(arStackName, arSettings, pWriter, pPhys); 
 }
 
@@ -161,8 +162,8 @@ void AsyncStackManager::RemovePort(const std::string& arPortName)
 	vector<string> stacks = this->StacksOnPort(arPortName);
 	BOOST_FOREACH(string s, stacks) { this->SeverStack(pPort, s); }
 	mPortNameToPort.erase(arPortName);
-
-	mScheduler.Sever(pPort->GetGroup());	// this tells the scheduler that we'll delete the group
+	
+	// this will cause the port to be released on the io_service thread
 	mTimerSrc.Post(boost::bind(&Port::Release, pPort));
 
 	// remove the physical layer from the list
@@ -191,6 +192,7 @@ void AsyncStackManager::RemoveStack(const std::string& arStackName)
 
 void AsyncStackManager::SeverStack(Port* apPort, const std::string& arStackName)
 {
+	//this will cause the stack to be pulled off the port and deleted on the io_service thread
 	mTimerSrc.Post(boost::bind(&Port::Disassociate, apPort, arStackName));
 	mStackNameToPort.erase(arStackName);
 	mStackNameToStack.erase(arStackName);
@@ -243,14 +245,8 @@ void AsyncStackManager::Start()
 Port* AsyncStackManager::AllocatePort(const std::string& arName)
 {
 	Port* pPort = this->GetPortPointer(arName);
-	if(pPort == NULL) {
-		PhysLayerSettings s = mMgr.GetSettings(arName);
-		IPhysicalLayerAsync* pPhys = mMgr.GetLayer(arName, mService.Get());
-		Logger* pPortLogger = mpLogger->GetSubLogger(arName, s.LogLevel);
-		pPortLogger->SetVarName(arName);
-		pPort = this->CreatePort(arName, pPhys, pPortLogger, s.RetryTimeout, s.mpObserver);
-	}
-	return pPort;
+	if(pPort == NULL) return this->CreatePort(arName);	
+	else return pPort;	
 }
 
 Port* AsyncStackManager::GetPort(const std::string& arName)
@@ -260,11 +256,34 @@ Port* AsyncStackManager::GetPort(const std::string& arName)
 	return pPort;
 }
 
+void AsyncStackManager::DeletePort(Port* apPort) 
+{
+	delete apPort;
+}
 
-Port* AsyncStackManager::CreatePort(const std::string& arName, IPhysicalLayerAsync* apPhys, Logger* apLogger, millis_t aOpenDelay, IPhysMonitor* apObserver)
+void AsyncStackManager::DeleteLayer(IPhysicalLayerAsync* apLayer)
+{
+	delete apLayer; 
+}
+
+Port* AsyncStackManager::CreatePort(const std::string& arName)
 {
 	if(GetPortPointer(arName) != NULL) throw ArgumentException(LOCATION, "Port already exists");
-	Port* pPort = new Port(arName, apLogger, mScheduler.NewGroup(), &mTimerSrc, apPhys, aOpenDelay, apObserver);
+
+	PhysLayerSettings s = mMgr.GetSettings(arName);
+	IPhysicalLayerAsync* pPhys = mMgr.AcquireLayer(arName, mService.Get(), false); //important! We'll delete the pointer manually
+	Logger* pPortLogger = mpLogger->GetSubLogger(arName, s.LogLevel);
+	pPortLogger->SetVarName(arName);
+
+	AsyncTaskGroup* pGroup = mScheduler.CreateNewGroup(); 
+	
+	Port* pPort = new Port(arName, pPortLogger, pGroup, &mTimerSrc, pPhys, s.RetryTimeout, s.mpObserver);
+	
+	// when the port is completely terminated, release these resources
+	pPort->AddCleanupTask(boost::bind(&AsyncTaskScheduler::ReleaseGroup, &mScheduler, pGroup));
+	pPort->AddCleanupTask(boost::bind(&AsyncStackManager::DeletePort, pPort));
+	pPort->AddCleanupTask(boost::bind(&AsyncStackManager::DeleteLayer, pPhys));
+	
 	mPortNameToPort[arName] = pPort;
 	return pPort;
 }

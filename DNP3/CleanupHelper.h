@@ -16,46 +16,41 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_TASK_SCHEDULER_H_
-#define __ASYNC_TASK_SCHEDULER_H_
+#ifndef __CLEANUP_HELPER_H_
+#define __CLEANUP_HELPER_H_
 
+#include <APL/Lock.h>
+#include <vector>
 
-#include <set>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
-
-#include "TimeSource.h"
-#include "Lock.h"
+#include <boost/function.hpp>
 
 namespace apl {
+	class ITimerSource;
+}
 
-class AsyncTaskBase;
-class AsyncTaskGroup;
-class ITimerSource;
+namespace apl { namespace dnp {
 
-
-/** Thread-safe object that coordinates multiple task groups and manages their lifecycle
-*/
-class AsyncTaskScheduler
+class CleanupHelper
 {
-	friend class AsyncTaskGroup;
+	typedef boost::function<void ()> CleanupTask;
+	typedef std::vector<CleanupTask> CleanupTaskVector;
 
 	public:
 
-	AsyncTaskScheduler(ITimerSource* apTimerSrc, ITimeSource* apTimeSrc = TimeSource::Inst());
-	~AsyncTaskScheduler();
+		CleanupHelper(ITimerSource* apTimerSource);
+				
+		void AddCleanupTask(const CleanupTask& arCleanupTask);
 
-	AsyncTaskGroup* CreateNewGroup();
-	void ReleaseGroup(AsyncTaskGroup*);	
+	protected:
 
+		void Cleanup();
+		
 	private:
-	SigLock mLock;
-
-	ITimerSource* mpTimerSrc;
-	ITimeSource* mpTimeSrc;
-	typedef std::set<AsyncTaskGroup*> GroupSet;
-	GroupSet mGroupSet;
+		SigLock mCleanupHelperLock;
+		CleanupTaskVector mCleanupTasks;
+		ITimerSource* mpTimerSource;
 };
 
-}
+}}
 
 #endif

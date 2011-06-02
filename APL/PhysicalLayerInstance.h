@@ -35,11 +35,13 @@ class PhysLayerInstance
 		PhysLayerInstance() : mpLayer(NULL), mpLogger(NULL) {}
 
 		PhysLayerInstance(IPhysicalLayerAsyncFactory);
-		PhysLayerInstance(IPhysicalLayerAsync* apPhys, Logger*);
+		PhysLayerInstance(IPhysicalLayerAsync* apPhys, Logger*, bool aAutoDelete);
 
-		IPhysicalLayerAsync* GetLayer(Logger*, boost::asio::io_service*);
+		IPhysicalLayerAsync* GetLayer(Logger*, boost::asio::io_service*, bool aAutoDelete);
+
 		void Release();
 
+		bool IsCreated();
 
 	private:
 
@@ -47,8 +49,9 @@ class PhysLayerInstance
 		IPhysicalLayerAsync* mpLayer;
 
 		Logger* mpLogger;
+		bool mAutoDelete;
 
-		void SetLayer(IPhysicalLayerAsync* apLayer, Logger* apLogger);
+		void SetLayer(IPhysicalLayerAsync* apLayer, Logger* apLogger, bool aAutoDelete);
 };
 
 }

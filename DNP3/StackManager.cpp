@@ -23,9 +23,9 @@
 
 namespace apl { namespace dnp {
 
-StackManager::StackManager(bool aAutoStart) :
+StackManager::StackManager() :
 mpLog(new EventLog()),
-mpImpl(new AsyncStackManager(mpLog->GetLogger(LEV_WARNING, "dnp"), aAutoStart))
+mpImpl(new AsyncStackManager(mpLog->GetLogger(LEV_WARNING, "dnp")))
 {
 
 }

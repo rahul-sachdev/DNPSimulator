@@ -22,6 +22,8 @@
 
 #include "LinkLayerRouter.h"
 
+#include "CleanupHelper.h"
+
 #include <APL/Loggable.h>
 #include <vector>
 
@@ -46,8 +48,8 @@ static std::vector<U> GetKeys(T& arMap)
 	return ret;
 }
 
-class Port : public Loggable, public IPhysMonitor
-{
+class Port : public Loggable, public IPhysMonitor, public CleanupHelper
+{	
 	struct StackRecord
 	{
 		StackRecord() : pStack(NULL), route()
@@ -62,10 +64,11 @@ class Port : public Loggable, public IPhysMonitor
 	};
 
 	public:
+
+	static void Delete(Port* apPort) { delete apPort; }
+
 	Port(const std::string& arName, Logger*, AsyncTaskGroup*, ITimerSource* apTimerSrc, IPhysicalLayerAsync*, millis_t aOpenDelay, IPhysMonitor*);
-	~Port();
-
-
+	
 	AsyncTaskGroup* GetGroup() { return mpGroup; }
 	void Associate(const std::string& arStackName, Stack* apStack, const LinkRoute& arRoute);
 	void Disassociate(const std::string& arStackName);

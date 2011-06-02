@@ -33,10 +33,8 @@ namespace apl
 		public:
 
 			// Constructor can specify whether or not the class will delete it's own physical layers via aOwnsLayer.
-			PhysicalLayerManager(Logger*, bool aOwnsLayers = true);
-			virtual ~PhysicalLayerManager();
-
-			void SetLayerOwnership(bool aOwnsLayers) { mOwnsLayers = aOwnsLayers; }
+			PhysicalLayerManager(Logger*);
+			virtual ~PhysicalLayerManager();			
 
 			//function for manually adding entires
 
@@ -45,10 +43,7 @@ namespace apl
 			void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
 
 			// Removes a physical layer and deletes it if the manager has ownership.
-			void Remove(const std::string& arName);
-
-		private:
-			bool mOwnsLayers;
+			void Remove(const std::string& arName);		
 	};
 }
 

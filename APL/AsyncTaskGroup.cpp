@@ -45,7 +45,6 @@ mpTimer(NULL)
 
 AsyncTaskGroup::~AsyncTaskGroup()
 {
-
 	if(mpTimer) {
 		mpTimer->Cancel();
 		mpTimer = NULL;
