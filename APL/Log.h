@@ -21,7 +21,6 @@
 
 
 #include <assert.h>
-#include <set>
 #include <map>
 #include <vector>
 
@@ -47,7 +46,19 @@ namespace apl
 			Logger* GetExistingLogger( const std::string& aLoggerID );
 			void GetAllLoggers( std::vector<Logger*>& apLoggers);
 
-			void AddLogSubscriber(ILogBase* apBase);
+			/**
+			* Binds a listener to ALL log messages
+			*/
+			void AddLogSubscriber(ILogBase* apSubscriber);
+
+			/**
+			* Binds a listener to only certain error messages
+			*/
+			void AddLogSubscriber(ILogBase* apSubscriber, int aErrorCode);
+			
+			/**
+			* Cancels a previous binding
+			*/
 			void RemoveLogSubscriber(ILogBase* apBase);
 
 			//implement the log function from ILogBase
@@ -55,12 +66,16 @@ namespace apl
 			void SetVar(const std::string& aSource, const std::string& aVarName, int aValue);
 
 		private:
+
+			bool SetContains(const std::set<int>& arSet, int aValue);
+
 			SigLock mLock;
 
 			//holds pointers to the loggers that have been distributed
 			typedef std::map<std::string, Logger*> LoggerMap;
-			LoggerMap mLogMap;
-			std::set<ILogBase*> mSubscribers;
+			LoggerMap mLogMap;			
+			typedef std::map<ILogBase*, std::set<int>> SubscriberMap;
+			SubscriberMap mSubscribers;
 
 	};
 

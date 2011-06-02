@@ -38,17 +38,24 @@ namespace apl
 
 	void EventLog::Log( const LogEntry& arEntry )
 	{
-		std::set<ILogBase*>::iterator i = mSubscribers.begin();
-		for(; i != mSubscribers.end(); ++i){
-			(*i)->Log(arEntry);
+		SubscriberMap::iterator i = mSubscribers.begin();		
+		for(; i != mSubscribers.end(); ++i){			
+			if(this->SetContains(i->second, -1) || this->SetContains(i->second, arEntry.GetErrorCode())) {
+				i->first->Log(arEntry);
+			}			
 		}
+	}
+
+	bool EventLog::SetContains(const std::set<int>& arSet, int aValue)
+	{		
+		return arSet.find(aValue) != arSet.end();
 	}
 
 	void EventLog::SetVar(const std::string& aSource, const std::string& aVarName, int aValue)
 	{
-		std::set<ILogBase*>::iterator i = mSubscribers.begin();
+		SubscriberMap::iterator i = mSubscribers.begin();
 		for(; i != mSubscribers.end(); ++i){
-			(*i)->SetVar(aSource, aVarName, aValue);
+			i->first->SetVar(aSource, aVarName, aValue);
 		}
 	}
 
@@ -81,7 +88,7 @@ namespace apl
 
 	void EventLog::GetAllLoggers( std::vector<Logger*>& apLoggers)
 	{
-		apLoggers.empty();
+		apLoggers.clear();
 		CriticalSection cs(&mLock);
 		for(LoggerMap::iterator i = mLogMap.begin(); i != mLogMap.end(); i++)
 		{
@@ -89,14 +96,25 @@ namespace apl
 		}
 	}
 
-	void EventLog :: AddLogSubscriber(ILogBase* apBase)
+	void EventLog :: AddLogSubscriber(ILogBase* apSubscriber)
 	{
-		mSubscribers.insert(apBase);
+		this->AddLogSubscriber(apSubscriber, -1);
+	}
+	
+	void EventLog :: AddLogSubscriber(ILogBase* apSubscriber, int aErrorCode)
+	{
+		SubscriberMap::iterator i = mSubscribers.find(apSubscriber);
+		if(i == mSubscribers.end()) {
+			std::set<int> set;
+			mSubscribers.insert(SubscriberMap::value_type(apSubscriber, set));
+			this->AddLogSubscriber(apSubscriber, aErrorCode);
+		}
+		else i->second.insert(aErrorCode);
 	}
 
 	void EventLog :: RemoveLogSubscriber(ILogBase* apBase)
 	{
-		std::set<ILogBase*>::iterator i = mSubscribers.find(apBase);
+		SubscriberMap::iterator i = mSubscribers.find(apBase);
 		if(i != mSubscribers.end()) mSubscribers.erase(i);
 	}
 
