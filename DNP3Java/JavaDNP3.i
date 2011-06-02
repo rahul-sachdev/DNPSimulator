@@ -23,8 +23,6 @@ using namespace apl::dnp;
 
 %feature("director"); //generate directors for all classes that have virtual methods
 
-%include <stdint.i>
-
 %apply short { boost::uint8_t };
 %apply char { boost::int8_t };
 %apply int { boost::uint16_t };
