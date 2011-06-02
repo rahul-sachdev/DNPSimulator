@@ -482,6 +482,10 @@
 					RelativePath=".\TestVtoRouterIntegration.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\TestVtoRouterManager.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

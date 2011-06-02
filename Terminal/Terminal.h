@@ -35,6 +35,7 @@ class ITimer;
 		void AcceptLine(const std::string& arLine);
 		void _Up();
 		void _Down();
+		void OnStateChange(IPhysMonitor::State) {}
 
 		retcode ProcessLine(const std::string& arLine);
 

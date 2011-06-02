@@ -68,16 +68,15 @@ namespace apl{
 		mIgnoreCodes.insert(aCode);
 	}
 
-	void LogEntryCircularBuffer :: Log( FilterLevel aFilterLevel, const std::string& aDeviceName, const std::string& aLocation, const std::string& aMessage, int aErrorCode)
+	void LogEntryCircularBuffer :: Log( const apl::LogEntry& arEntry )
 	{
-		if(mIgnoreCodes.find(aErrorCode) == mIgnoreCodes.end()) { //only log messages that aren't ignored
-
-			LogEntry item( aFilterLevel, aDeviceName, aLocation, aMessage, aErrorCode );
+		if(mIgnoreCodes.find(arEntry.GetErrorCode()) == mIgnoreCodes.end()) { //only log messages that aren't ignored
+			
 			size_t num = 0;
 			{
 				CriticalSection cs(&mLock);
 				num = mItemQueue.size();
-				mItemQueue.push_back(item);
+				mItemQueue.push_back(arEntry);
 				if(mItemQueue.size() > mMaxEntries)
 				{ mItemQueue.pop_front(); }
 				cs.Signal();

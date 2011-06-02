@@ -48,7 +48,7 @@ AsyncStackManager::AsyncStackManager(Logger* apLogger, bool aAutoRun) :
 	mTimerSrc(mService.Get()),
 	mMgr(apLogger->GetSubLogger("ports", LEV_WARNING)),
 	mScheduler(&mTimerSrc),
-	mVtoManager(apLogger->GetSubLogger("VtoRouterManager"), &mTimerSrc),
+	mVtoManager(apLogger->GetSubLogger("VtoRouterManager"), &mTimerSrc, &mMgr, mService.Get()),
 	mThread(this)
 {}
 
@@ -134,20 +134,20 @@ void AsyncStackManager::RemoveVtoChannel(const std::string& arStackName,
 void AsyncStackManager::StartVtoRouter(const std::string& arPortName,
 				const std::string& arStackName, const VtoRouterSettings& arSettings)
 {
-	IVtoWriter* pWriter = this->GetStackByName(arStackName)->GetVtoWriter();
-	IPhysicalLayerAsync* pPhys = mMgr.AcquireLayer(arPortName, mService.Get());
-	mVtoManager.StartRouter(arStackName, arSettings, pWriter, pPhys); 
+	IVtoWriter* pWriter = this->GetStackByName(arStackName)->GetVtoWriter();	
+	mVtoManager.StartRouter(arPortName, arSettings, pWriter);
 }
 
-void AsyncStackManager::StopVtoRouter(const std::string& arStackName,
-				boost::uint8_t aVtoChannelId)
+void AsyncStackManager::StopVtoRouter(const std::string& arStackName, boost::uint8_t aVtoChannelId)
 {
-	mVtoManager.StopRouter(arStackName, aVtoChannelId);
+	IVtoWriter* pWriter = this->GetVtoWriter(arStackName);
+	mVtoManager.StopRouterOnWriter(pWriter, aVtoChannelId);
 }
 
 void AsyncStackManager::StopAllRoutersOnStack(const std::string& arStackName)
 {
-	mVtoManager.StopAllRouters(arStackName);
+	IVtoWriter* pWriter = this->GetVtoWriter(arStackName);
+	mVtoManager.StopAllRoutersOnWriter(pWriter);
 }
 
 IVtoWriter* AsyncStackManager::GetVtoWriter(const std::string& arStackName)
@@ -183,8 +183,7 @@ std::vector<std::string> AsyncStackManager::StacksOnPort(const std::string& arPo
 }
 
 void AsyncStackManager::RemoveStack(const std::string& arStackName)
-{
-	mVtoManager.StopAllRouters(arStackName);
+{		
 	Port* pPort = this->GetPortByStackName(arStackName);
 	this->SeverStack(pPort, arStackName);
 	this->CheckForJoin();
@@ -192,6 +191,8 @@ void AsyncStackManager::RemoveStack(const std::string& arStackName)
 
 void AsyncStackManager::SeverStack(Port* apPort, const std::string& arStackName)
 {
+	IVtoWriter* pWriter = this->GetStackByName(arStackName)->GetVtoWriter();
+	mVtoManager.StopAllRoutersOnWriter(pWriter);
 	//this will cause the stack to be pulled off the port and deleted on the io_service thread
 	mTimerSrc.Post(boost::bind(&Port::Disassociate, apPort, arStackName));
 	mStackNameToPort.erase(arStackName);

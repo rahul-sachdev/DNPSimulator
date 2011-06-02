@@ -25,6 +25,7 @@
 #include <APL/ShiftableBuffer.h>
 
 #include "VtoDataInterface.h"
+#include "CleanupHelper.h"
 
 namespace apl {
 
@@ -53,7 +54,7 @@ namespace apl {
 		 * The VtoRouter instance provides the necessary IVtoCallbacks hooks
 		 * that the VtoReader will use.
 		 */
-		class VtoRouter : public AsyncPhysLayerMonitor, public IVtoCallbacks
+		class VtoRouter : public AsyncPhysLayerMonitor, public IVtoCallbacks, public CleanupHelper
 		{
 			public:
 
@@ -128,6 +129,11 @@ namespace apl {
 				 * transmission to the physical layer was not successful.
 				 */
 				void _OnSendFailure();
+
+				/**
+				 * Implement AsyncPhysMonitor::OnStateChange
+				 */
+				void OnStateChange(IPhysMonitor::State);
 
 			private:
 

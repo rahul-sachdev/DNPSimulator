@@ -68,7 +68,11 @@ void PhysicalLayerAsyncTCPServer::DoOpen()
 
 void PhysicalLayerAsyncTCPServer::DoOpeningClose()
 {
-	mAcceptor.cancel();
+	boost::system::error_code ec;
+	mAcceptor.cancel(ec);
+	if(ec) {
+		LOG_BLOCK(LEV_WARNING, "Error while canceling tcp acceptor: " << ec);
+	}
 }
 
 }

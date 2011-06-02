@@ -30,13 +30,14 @@ VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVto
 	Loggable(apLogger),
 	AsyncPhysLayerMonitor(apLogger, apPhysLayer, apTimerSrc, arSettings.OPEN_RETRY_MS),
 	IVtoCallbacks(arSettings.CHANNEL_ID),
+	CleanupHelper(apTimerSrc),
 	mpVtoWriter(apWriter),
 	mVtoTxBuffer(arSettings.VTO_TX_BUFFFER_SIZE_IN_BYTES)
 {
 	assert(apLogger != NULL);
 	assert(apWriter != NULL);
 	assert(apPhysLayer != NULL);
-	assert(apTimerSrc != NULL);
+	assert(apTimerSrc != NULL);	
 }
 
 void VtoRouter::OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength)
@@ -115,6 +116,11 @@ void VtoRouter::OnPhysicalLayerOpen()
 {
 	this->CheckForPhysRead();
 	this->CheckForPhysWrite();
+}
+
+void VtoRouter::OnStateChange(IPhysMonitor::State aState)
+{
+	if(aState == IPhysMonitor::Stopped) this->Cleanup();
 }
 				
 void VtoRouter::OnPhysicalLayerClose()

@@ -19,8 +19,7 @@
 #ifndef __LOG_BASE_H_
 #define __LOG_BASE_H_
 
-#include <string>
-#include "LogTypes.h"
+#include "LogEntry.h"
 
 namespace apl
 {
@@ -30,10 +29,10 @@ namespace apl
 			virtual ~ILogBase(){}
 
 			// logging error messages, etc
-			virtual void Log( FilterLevel aFilter, const std::string& aDevice, const std::string& aLocation, const std::string& aMessage, int aErrorCode) {}
+			virtual void Log( const apl::LogEntry& arEntry ) = 0;
 
 			// updating a variable/metric in the system
-			virtual void SetVar(const std::string& aSource, const std::string& aVarName, int aValue) {}
+			virtual void SetVar(const std::string& aSource, const std::string& aVarName, int aValue) = 0;
 	};
 
 }

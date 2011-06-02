@@ -28,6 +28,7 @@
 #include "EventLock.h"
 #include "Uncopyable.h"
 #include "SubjectBase.h"
+#include "LogBase.h"
 
 namespace apl {
 
@@ -38,7 +39,8 @@ class LogEntryCircularBuffer : public ILogBase, public SubjectBase<SigLock>, pri
 
 		bool ReadLog(LogEntry&, int aTimeout = 0);
 		void SetMaxEntries(size_t aMax);
-		void Log( FilterLevel aFilterLevel, const std::string& aDeviceName, const std::string& aLocation, const std::string& aMessage, int aErrorCode);
+		void Log( const LogEntry& arEntry );
+		void SetVar(const std::string& aSource, const std::string& aVarName, int aValue) {}
 		size_t Count();
 		void AddIgnoreCode(int aCode);
 

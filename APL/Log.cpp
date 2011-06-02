@@ -36,11 +36,11 @@ namespace apl
 		}
 	}
 
-	void EventLog::Log( FilterLevel aFilterLevel, const std::string& aDeviceName, const std::string& aLocation, const std::string& aMessage, int aErrorCode)
+	void EventLog::Log( const LogEntry& arEntry )
 	{
 		std::set<ILogBase*>::iterator i = mSubscribers.begin();
 		for(; i != mSubscribers.end(); ++i){
-			(*i)->Log(aFilterLevel, aDeviceName, aLocation, aMessage, aErrorCode);
+			(*i)->Log(arEntry);
 		}
 	}
 

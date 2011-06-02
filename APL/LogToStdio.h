@@ -30,7 +30,8 @@ class LogToStdio : public ILogBase
 	MACRO_SINGLETON_INSTANCE(LogToStdio);
 
 	public:
-		void Log( FilterLevel aFilter, const std::string& aDevice, const std::string& aLocation, const std::string& aMessage, int aErrorCode);
+		void Log( const LogEntry& arEntry );
+		void SetVar(const std::string& aSource, const std::string& aVarName, int aValue) {}
 
 	private:
 		SigLock mLock;

@@ -18,7 +18,7 @@
 #ifndef __VTO_ROUTER_MANAGER_H_
 #define __VTO_ROUTER_MANAGER_H_
 
-#include <map>
+#include <vector>
 
 #include <APL/Types.h>
 #include <APL/Loggable.h>
@@ -27,7 +27,10 @@
 namespace apl {
 	class ITimerSource;
 	class IPhysicalLayerAsync;
+	class IPhysicalLayerSource;
 }
+
+namespace boost { namespace asio { class io_service; } }
 
 namespace apl { namespace dnp {
 
@@ -35,42 +38,52 @@ class VtoRouter;
 class VtoRouterSettings;
 class IVtoWriter;
 
-/** Class that automatically deletes itself and a router */
-class RouterLifecycle : public IPhysMonitor
-{
-	public:
-		RouterLifecycle(VtoRouter*);
-
-		void OnStateChange(IPhysMonitor::State aState);
-	
-		VtoRouter* mpRouter;
-};
-
 class VtoRouterManager : private Loggable
 {
+	class RouterRecord
+	{
+		public:	
+		RouterRecord(const std::string& arPortName, VtoRouter* apRouter, IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
+		
+		std::string mPortName;
+		VtoRouter* mpRouter;
+		IVtoWriter* mpWriter;
+		boost::uint8_t mVtoChannelId;
+	};
+
+	static void ClenupAfterRouter(IPhysicalLayerAsync* apPhys, VtoRouter* apRouter);	
+
 public:
-	VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc);
+	VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc, boost::asio::io_service*);
 
-	void StartRouter(
-		const std::string& arStackName, 
+	void StartRouter(		
+		const std::string& arPortName,
 		const VtoRouterSettings& arSettings, 
-		IVtoWriter* apWriter, 
-		IPhysicalLayerAsync* apPhys);
+		IVtoWriter* apWriter);
+	
+	void StopAllRoutersOnWriter(IVtoWriter* apWriter);
 
-	void StopRouter(const std::string& arStackName, boost::uint8_t aChannelId);
-
-	void StopAllRouters(const std::string& arStackName);
+	void StopRouterOnWriter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
+	
+	void StopAllRouters();
 
 private:
 
-	Logger* GetSubLogger(const std::string& arId, boost::uint8_t aVtoChannelId);
+	typedef std::vector<RouterRecord> RouterRecordVector;
+
+	RouterRecordVector::iterator Find(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
+
+	RouterRecordVector::iterator Find(IVtoWriter* apWriter);
 	
-	typedef std::pair<std::string, boost::uint8_t> RouterKey;
-	typedef std::map<RouterKey, RouterLifecycle*> RouterMap;	
+	Logger* GetSubLogger(const std::string& arId, boost::uint8_t aVtoChannelId);
+			
+	void StopRouter(const RouterRecordVector::iterator& arIter);
 
-	RouterMap mRouterMap;
-
+	RouterRecordVector mRecords;
+		
 	ITimerSource* mpTimerSrc;
+	IPhysicalLayerSource* mpPhysSource;
+	boost::asio::io_service* mpService;
 };
 
 }}
