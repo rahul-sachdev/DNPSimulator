@@ -66,6 +66,24 @@ using namespace apl;
 
 		}
 
+		BOOST_AUTO_TEST_CASE( SelectiveSubscription )
+		{			
+			EventLog log;
+			LogEntryCircularBuffer buff;
+			log.AddLogSubscriber(&buff, 10);
+			
+			LogEntry le1(LEV_WARNING, "foo", "bar", "msg", -1);
+			LogEntry le2(LEV_WARNING, "foo", "bar", "msg", 10);
+			LogEntry le3(LEV_WARNING, "foo", "bar", "msg", 2);
+			
+			log.Log(le1);			
+			BOOST_REQUIRE_EQUAL(0, buff.Count());
+			log.Log(le2);
+			BOOST_REQUIRE_EQUAL(1, buff.Count());
+			log.Log(le3);
+			BOOST_REQUIRE_EQUAL(1, buff.Count());
+		}
+
 		BOOST_AUTO_TEST_CASE( LogEntryParamsTest )
 		{
 			EventLog log;
