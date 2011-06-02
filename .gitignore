@@ -30,6 +30,7 @@ TestSingle.tiny.xml
 .libs
 *.la
 *.so
+*.gcno
 
 /aclocal.m4
 /autom4te.cache
