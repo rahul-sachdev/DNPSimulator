@@ -66,8 +66,8 @@ class AddressScanner : private Loggable, public ILinkContext
 
 		void NextFrame();
 		
-		apl::xml::PhysicalLayerManagerXML manager;		
 		apl::IOService mService;
+		apl::xml::PhysicalLayerManagerXML manager;				
 		TimerSourceASIO mTimerSrc;
 		IOServiceThread mThread;
 		dnp::LinkLayerRouter mRouter;

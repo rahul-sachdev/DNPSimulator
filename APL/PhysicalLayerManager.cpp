@@ -30,8 +30,8 @@ using namespace std;
 
 namespace apl
 {
-	PhysicalLayerManager :: PhysicalLayerManager(Logger* apBaseLogger) :
-	PhysicalLayerMap(apBaseLogger)	
+	PhysicalLayerManager :: PhysicalLayerManager(Logger* apBaseLogger, boost::asio::io_service* apService) :
+	PhysicalLayerMap(apBaseLogger, apService)	
 	{
 
 	}

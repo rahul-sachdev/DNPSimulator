@@ -43,7 +43,7 @@ namespace apl
 		public:
 		virtual ~IPhysicalLayerSource(){}
 		
-		virtual IPhysicalLayerAsync* AcquireLayer(const std::string& arName, boost::asio::io_service*, bool aAutoDelete = true) = 0;
+		virtual IPhysicalLayerAsync* AcquireLayer(const std::string& arName, bool aAutoDelete = true) = 0;
 		virtual void ReleaseLayer(const std::string& arName) = 0;
 	};
 }

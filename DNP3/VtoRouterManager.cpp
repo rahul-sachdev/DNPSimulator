@@ -38,15 +38,13 @@ VtoRouterManager::RouterRecord::RouterRecord(const std::string& arPortName, VtoR
 	
 }
 
-VtoRouterManager::VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc, boost::asio::io_service* apService) :
+VtoRouterManager::VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc) :
 	Loggable(apLogger),
 	mpTimerSrc(apTimerSrc),
-	mpPhysSource(apPhysSrc),
-	mpService(apService)
+	mpPhysSource(apPhysSrc)	
 {	
 	assert(apTimerSrc != NULL);	
-	assert(apPhysSrc != NULL);
-	assert(apService != NULL);
+	assert(apPhysSrc != NULL);	
 }
 
 void VtoRouterManager::ClenupAfterRouter(IPhysicalLayerAsync* apPhys, VtoRouter* apRouter)
@@ -60,7 +58,7 @@ void VtoRouterManager::StartRouter(
 		const VtoRouterSettings& arSettings, 
 		IVtoWriter* apWriter)
 {		
-	IPhysicalLayerAsync* pPhys = mpPhysSource->AcquireLayer(arPortName, mpService, false); //don't autodelete
+	IPhysicalLayerAsync* pPhys = mpPhysSource->AcquireLayer(arPortName, false); //don't autodelete
 	Logger* pLogger = this->GetSubLogger(arPortName, arSettings.CHANNEL_ID);
 				
 	VtoRouter* pRouter = new VtoRouter(arSettings, pLogger, apWriter, pPhys, mpTimerSrc);

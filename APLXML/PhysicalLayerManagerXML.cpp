@@ -31,11 +31,12 @@ using namespace APLXML_Base;
 namespace apl { namespace xml {
 
 
-	PhysicalLayerManagerXML::PhysicalLayerManagerXML(Logger* apLogger)  : PhysicalLayerManager(apLogger)
+	PhysicalLayerManagerXML::PhysicalLayerManagerXML(Logger* apLogger, boost::asio::io_service* apService)  : 
+		PhysicalLayerManager(apLogger, apService)
 	{}
 
-	PhysicalLayerManagerXML::PhysicalLayerManagerXML(Logger* apLogger, const APLXML_Base::PhysicalLayerList_t* apList, FilterLevel aLevel) : 
-		PhysicalLayerManager(apLogger)
+	PhysicalLayerManagerXML::PhysicalLayerManagerXML(Logger* apLogger, boost::asio::io_service* apService, const APLXML_Base::PhysicalLayerList_t* apList, FilterLevel aLevel) : 
+		PhysicalLayerManager(apLogger, apService)
 	{
 		this->AddList(apList, aLevel);
 	}

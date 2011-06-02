@@ -23,7 +23,9 @@
 
 namespace apl
 {
-	PhysicalLayerMap::PhysicalLayerMap(Logger* apBaseLogger) : mpBaseLogger(apBaseLogger)
+	PhysicalLayerMap::PhysicalLayerMap(Logger* apBaseLogger, boost::asio::io_service* apService) : 
+		mpBaseLogger(apBaseLogger),
+		mpService(apService)
 	{
 
 	}
@@ -39,14 +41,14 @@ namespace apl
 		return _GetSettings(arName);		
 	}
 	
-	IPhysicalLayerAsync* PhysicalLayerMap::AcquireLayer(const std::string& arName, boost::asio::io_service* apService, bool aAutoDelete)
+	IPhysicalLayerAsync* PhysicalLayerMap::AcquireLayer(const std::string& arName, bool aAutoDelete)
 	{	
 		CriticalSection cs(&mLock);
 		PhysLayerSettings s = this->_GetSettings(arName);				
 		PhysLayerInstance* pInstance = this->_GetInstance(arName);
 		if(pInstance->IsCreated()) throw ArgumentException("Layer with name has already been acquired: " + arName);
 		else {
-			IPhysicalLayerAsync* pLayer = pInstance->GetLayer(this->MakeLogger(arName, s.LogLevel), apService, aAutoDelete);
+			IPhysicalLayerAsync* pLayer = pInstance->GetLayer(this->MakeLogger(arName, s.LogLevel), mpService, aAutoDelete);
 			mLayerToNameMap.insert(LayerToNameMap::value_type(pLayer, arName));
 			return pLayer;
 		}

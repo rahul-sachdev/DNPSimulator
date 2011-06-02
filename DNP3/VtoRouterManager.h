@@ -54,7 +54,7 @@ class VtoRouterManager : private Loggable
 	static void ClenupAfterRouter(IPhysicalLayerAsync* apPhys, VtoRouter* apRouter);	
 
 public:
-	VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc, boost::asio::io_service*);
+	VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc);
 
 	void StartRouter(		
 		const std::string& arPortName,
@@ -82,8 +82,7 @@ private:
 	RouterRecordVector mRecords;
 		
 	ITimerSource* mpTimerSrc;
-	IPhysicalLayerSource* mpPhysSource;
-	boost::asio::io_service* mpService;
+	IPhysicalLayerSource* mpPhysSource;	
 };
 
 }}

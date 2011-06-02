@@ -33,10 +33,10 @@ namespace apl
 	class PhysicalLayerMap : public IPhysicalLayerSource
 	{
 	public:
-		PhysicalLayerMap(Logger* apBaseLogger);
+		PhysicalLayerMap(Logger* apBaseLogger, boost::asio::io_service*);
 		virtual ~PhysicalLayerMap();
 		
-		IPhysicalLayerAsync* AcquireLayer(const std::string& arName, boost::asio::io_service*, bool aAutoDelete = true);
+		IPhysicalLayerAsync* AcquireLayer(const std::string& arName, bool aAutoDelete = true);
 		void ReleaseLayer(const std::string& arName);
 		PhysLayerSettings GetSettings(const std::string& arName);
 
@@ -60,6 +60,7 @@ namespace apl
 		NameToInstanceMap mNameToInstanceMap;
 		LayerToNameMap mLayerToNameMap;
 
+		boost::asio::io_service* mpService;
 		Logger* mpBaseLogger;
 	};
 

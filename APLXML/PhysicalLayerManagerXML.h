@@ -34,8 +34,8 @@ namespace apl { namespace xml {
 class PhysicalLayerManagerXML : public PhysicalLayerManager
 {
 	public:
-		PhysicalLayerManagerXML(Logger*);
-		PhysicalLayerManagerXML(Logger*, const APLXML_Base::PhysicalLayerList_t*, FilterLevel aLevel);
+		PhysicalLayerManagerXML(Logger*, boost::asio::io_service* apService);
+		PhysicalLayerManagerXML(Logger*, boost::asio::io_service* apService, const APLXML_Base::PhysicalLayerList_t*, FilterLevel aLevel);
 		virtual ~PhysicalLayerManagerXML() {}
 
 		void AddList(const APLXML_Base::PhysicalLayerList_t*, FilterLevel aLevel);
