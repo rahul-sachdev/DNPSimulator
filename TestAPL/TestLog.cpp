@@ -140,7 +140,7 @@ using namespace apl;
 		BOOST_AUTO_TEST_CASE( LogErrorCounting)
 		{
 			apl::LogTester log(false);
-			Logger* pLogger = log.GetLog().GetLogger(LEV_DEBUG, "test1");
+			Logger* pLogger = log.mLog.GetLogger(LEV_DEBUG, "test1");
 			pLogger->Log( LEV_DEBUG, "LogEntryParamsTest", "MessageMessage", 5 );
 
 			BOOST_REQUIRE_EQUAL(log.NextErrorCode(), 5);

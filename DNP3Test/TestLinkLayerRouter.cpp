@@ -63,8 +63,15 @@ BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 		LinkLayerRouterTest t;
 		t.router.Start();
 		t.phys.SignalOpenSuccess();
-		t.phys.TriggerRead("05 64 05 C0 01 00 00 04 E9 21");
-		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), DLERR_UNKNOWN_DESTINATION);
+		t.phys.TriggerRead("05 64 05 C0 01 00 00 04 E9 21");		
+		LogEntry le;
+		BOOST_REQUIRE(t.GetNextEntry(le));		
+		BOOST_REQUIRE_EQUAL(le.GetErrorCode(), DLERR_UNKNOWN_ROUTE);
+		int address;
+		BOOST_REQUIRE(le.GetValue("DESTINATION", address));
+		BOOST_REQUIRE_EQUAL(1, address);
+		BOOST_REQUIRE(le.GetValue("SOURCE", address));
+		BOOST_REQUIRE_EQUAL(1024, address);		
 	}
 
 	// Test that the router rejects sends until it is online

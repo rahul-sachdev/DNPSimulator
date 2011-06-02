@@ -45,13 +45,24 @@ namespace apl {
 			std::string			GetTimeString() const { return TimeStamp::UTCTimeStampToString(mTime);}
 			int					GetErrorCode() const {return mErrorCode; }
 			std::string			LogString() const;
-
-			void AddKeyValue(const std::string& arKey, const std::string& arValue);
-
+			
 			bool GetValue(const std::string& arKey, std::string& arValue) const;
 			bool GetValue(const std::string& arKey, int& arValue) const;
 
+			void AddValue(const std::string& arKey, int aValue);
+			void AddValue(const std::string& arKey, const std::string& arValue);
+
 		private:
+
+			void AddKeyValue(const std::string& arKey, const std::string& arValue);
+
+			template <class T>
+			void AddAnyValue(const std::string& arKey, const T& arValue)
+			{
+				std::ostringstream oss;
+				oss << arValue;
+				AddKeyValue(arKey, oss.str());
+			}
 
 			template <class T>
 			bool GetAnyValue(const std::string& arKey, T& arValue) const

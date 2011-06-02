@@ -55,6 +55,11 @@ int LogTester::NextErrorCode()
 	return -1;
 }
 
+bool LogTester::GetNextEntry(LogEntry& arEntry)
+{
+	return mBuffer.ReadLog(arEntry);
+}
+
 bool LogTester::IsLogErrorFree()
 {
 	return ClearLog() < 0;

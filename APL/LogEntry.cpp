@@ -45,6 +45,16 @@ namespace apl
 		mKeyValues.insert(KeyValueMap::value_type(arKey, arValue));
 	}
 
+	void LogEntry :: AddValue(const std::string& arKey, int aValue)
+	{
+		this->AddAnyValue(arKey, aValue);
+	}
+	
+	void LogEntry :: AddValue(const std::string& arKey, const std::string& arValue)
+	{
+		this->AddKeyValue(arKey, arValue);
+	}
+
 	bool LogEntry :: GetValue(const std::string& arKey, std::string& arValue) const
 	{
 		KeyValueMap::const_iterator i = mKeyValues.find(arKey);

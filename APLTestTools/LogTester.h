@@ -34,13 +34,12 @@ class LogTester : public ILogBase
 
 	int ClearLog();
 	int NextErrorCode();
+	bool GetNextEntry(LogEntry& arEntry);
 	bool IsLogErrorFree();
 
-	EventLog& GetLog(){return mLog;}
+	EventLog mLog;
 
 	protected:
-
-	EventLog mLog;
 	LogEntryCircularBuffer mBuffer;
 
 };
