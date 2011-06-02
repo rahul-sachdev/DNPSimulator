@@ -145,6 +145,36 @@ libopendnp3_dnp3_la_SOURCES = \
 	DNP3/VtoTransmitTask.cpp \
 	DNP3/VtoWriter.cpp
 
+bin_PROGRAMS  = testset
+
+testset_LDADD = libopendnp3_apl.la libopendnp3_dnp3.la
+testset_SOURCES = \
+	APLXML/PhysicalLayerManagerXML.cpp \
+	APLXML/PhysicalLayerXMLFactory.cpp \
+	APLXML/tinybinding.cpp \
+	APLXML/XML_APL.cpp \
+	APLXML/XMLConversion.cpp \
+	DNP3XML/XML_DNP3.cpp \
+	DNP3XML/XML_TestSet.cpp \
+	DNP3XML/XmlToConfig.cpp \
+	Terminal/ControlResponseTE.cpp \
+	Terminal/ControlTerminalExtension.cpp \
+	Terminal/DOTerminalExtension.cpp \
+	Terminal/FlexibleObserverTerminalExtension.cpp \
+	Terminal/LineReader.cpp \
+	Terminal/LogTerminalExtension.cpp \
+	Terminal/PhysicalLayerIOStreamAsync.cpp \
+	Terminal/PhysicalLayerSyncProxy.cpp \
+	Terminal/Terminal.cpp \
+	Terminal/TerminalInterfaces.cpp \
+	TestSet/AddressScanner.cpp \
+	TestSet/main.cpp \
+	TestSet/StackHelpers.cpp \
+	XMLBindings/APLXML_Base.cpp \
+	XMLBindings/APLXML_DNP.cpp \
+	XMLBindings/APLXML_MTS.cpp \
+	XMLBindings/APLXML_STS.cpp
+
 check_PROGRAMS = dnp3test
 TESTS = $(check_PROGRAMS)
 

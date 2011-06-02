@@ -78,6 +78,7 @@ Requirements:
     * boost::thread                 (required)
     * Boost Unit Test Framework     (required if running 'make check')
   - lcov                            (required if running 'make lcov')
+  - tinyxml                         (required)
 
 To start, first reinitialize autotools to be compatible with the version
 running on your system:

@@ -74,8 +74,11 @@ AC_CHECK_HEADERS([sys/wait.h]	,,AC_MSG_ERROR(missing header))
 AC_CHECK_HEADERS([syslog.h]	,,AC_MSG_ERROR(missing header))
 AC_CHECK_HEADERS([unistd.h]	,,AC_MSG_ERROR(missing header))
 
-AC_CHECK_LIB([pthread],	[pthread_join]	,,AC_MSG_ERROR(missing library))
-AC_CHECK_LIB([c],	[atexit]	,,AC_MSG_ERROR(missing library))
+AC_CHECK_HEADERS([tinyxml.h]	,,AC_MSG_ERROR(missing header))
+
+AC_CHECK_LIB([c],	[atexit]		,,AC_MSG_ERROR(missing library))
+AC_CHECK_LIB([pthread],	[pthread_join]		,,AC_MSG_ERROR(missing library))
+AC_CHECK_LIB([tinyxml],	[_ZTI9TiXmlNode]	,,AC_MSG_ERROR(missing library))
 
 AC_PROG_AWK
 AC_PROG_CXX
