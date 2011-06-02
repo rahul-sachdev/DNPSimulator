@@ -60,10 +60,16 @@ namespace apl
 		return this->GetSubLogger(aSubName, this->mLevel);
 	}
 
-	void Logger::Log( FilterLevel aFilterLevel, const std::string& aLocation, const std::string& aMessage, int aErrorCode)
+	void Logger::Log( const LogEntry& arEntry)
+	{
+		if(this->IsEnabled(arEntry.GetFilterLevel())) mpLog->Log(arEntry);		
+	}
+
+	void Logger::Log( FilterLevel aFilterLevel, const std::string& arLocation, const std::string& aMessage, int aErrorCode)
 	{
 		if(this->IsEnabled(aFilterLevel)) {
-			mpLog->Log(aFilterLevel, mName, aLocation, aMessage, aErrorCode);
+			LogEntry le(aFilterLevel, mName, arLocation, aMessage, aErrorCode);
+			mpLog->Log(le);
 		}
 	}
 

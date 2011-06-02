@@ -30,6 +30,7 @@ class LogTester : public ILogBase
 
 	// updating a variable/metric in the system
 	void SetVar(const std::string& aSource, const std::string& aVarName, int aValue);
+	void Log( const apl::LogEntry& arEntry ) {}
 
 	int ClearLog();
 	int NextErrorCode();

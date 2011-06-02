@@ -19,39 +19,59 @@
 #ifndef __LOG_ENTRY_H_
 #define __LOG_ENTRY_H_
 
+#include "LogTypes.h"
+#include "Parsing.h"
+#include "Types.h"
 #include "TimingTools.h"
-#include "LogBase.h"
+
+#include <map>
 
 namespace apl {
 
 	class LogEntry
 	{
+		typedef std::map<std::string, std::string> KeyValueMap;
+
 		public:
 
 			LogEntry():mTime(TimeStamp::GetUTCTimeStamp()){};
 
 			LogEntry( FilterLevel aLevel, const std::string& aDeviceName, const std::string& aLocation, const std::string& aMessage, int aErrorCode);
 
-			const std::string&	GetDeviceName() { return mDeviceName; }
-			const std::string&	GetLocation() { return mLocation; }
-			const std::string&	GetMessage() { return mMessage; }
-			FilterLevel			GetFilterLevel() { return mFilterLevel; }
-			std::string			GetTimeString(){ return TimeStamp::UTCTimeStampToString(mTime);}
-			int					GetErrorCode(){return mErrorCode; }
+			const std::string&	GetDeviceName() const { return mDeviceName; }
+			const std::string&	GetLocation() const { return mLocation; }
+			const std::string&	GetMessage() const { return mMessage; }
+			FilterLevel			GetFilterLevel() const { return mFilterLevel; }
+			std::string			GetTimeString() const { return TimeStamp::UTCTimeStampToString(mTime);}
+			int					GetErrorCode() const {return mErrorCode; }
+			std::string			LogString() const;
 
-			std::string			LogString();
+			void AddKeyValue(const std::string& arKey, const std::string& arValue);
+
+			bool GetValue(const std::string& arKey, std::string& arValue) const;
+			bool GetValue(const std::string& arKey, int& arValue) const;
 
 		private:
 
+			template <class T>
+			bool GetAnyValue(const std::string& arKey, T& arValue) const
+			{
+				std::string text;
+				if(GetValue(arKey, text)) {
+					Parsing::Get(text, arValue);
+					return true;
+				}
+				else return false;
+			}
+						
 			FilterLevel		mFilterLevel;
 			std::string		mDeviceName;
 			std::string		mLocation;
 			std::string		mMessage;
-			apl::UTCTimeStamp_t		mTime;
+			apl::UTCTimeStamp_t	mTime;
 			int				mErrorCode;
+			KeyValueMap		mKeyValues;
 	};
-
-
 
 }
 

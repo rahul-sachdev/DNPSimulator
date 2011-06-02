@@ -25,11 +25,10 @@ namespace apl {
 
 LogToStdio LogToStdio::mInstance;
 
-void LogToStdio::Log(FilterLevel aFilter, const std::string& aDevice, const std::string& aLocation, const std::string& aMessage, int aErrorCode)
-{
-	LogEntry item( aFilter, aDevice, aLocation, aMessage, aErrorCode );
+void LogToStdio::Log(const LogEntry& arEntry)
+{	
 	CriticalSection cs(&mLock);
-	std::cout << "IMMEDIATE: " << item.LogString() << std::endl;
+	std::cout << "IMMEDIATE: " << arEntry.LogString() << std::endl;
 }
 
 } //end ns

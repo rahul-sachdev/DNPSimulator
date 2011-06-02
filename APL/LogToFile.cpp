@@ -37,7 +37,8 @@ namespace apl{
 
 	void LogToFile :: StartLogging()
 	{
-		Log(LEV_EVENT, "FileLogger", LOCATION, "New Log Started", -1);
+		LogEntry le(LEV_EVENT, "FileLogger", LOCATION, "New Log Started", -1);
+		Log(le);
 
 		mpThread = new Thread(this);
 		mpThread->Start();

@@ -51,7 +51,7 @@ namespace apl
 			void RemoveLogSubscriber(ILogBase* apBase);
 
 			//implement the log function from ILogBase
-			void Log( FilterLevel aFilterLevel, const std::string& aDeviceName, const std::string& aLocation, const std::string& aMessage, int aErrorCode);
+			void Log( const LogEntry& arEntry );
 			void SetVar(const std::string& aSource, const std::string& aVarName, int aValue);
 
 		private:

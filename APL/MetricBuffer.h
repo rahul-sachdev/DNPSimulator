@@ -50,6 +50,8 @@ class MetricBuffer : public ILogBase, public SubjectBase<SigLock>, private Uncop
 
 		void SetVar(const std::string& aSource, const std::string& aVarName, int aValue);
 
+		void Log( const apl::LogEntry& arEntry ) {}
+
 		void Read(std::vector<Var>&);
 
 	private:

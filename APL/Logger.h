@@ -43,7 +43,8 @@ namespace apl
 			Logger( EventLog* apLog, FilterLevel aFilter, const std::string& aName);
 
 			void SetVarName(const std::string& arVarName) { mVarName = arVarName; }
-			void Log( FilterLevel aFilterLevel, const std::string& aLocation, const std::string& aMessage, int aErrorCode = -1);
+			void Log( FilterLevel aFilterLevel, const std::string& arLocation, const std::string& aMessage, int aErrorCode = -1);
+			void Log( const LogEntry& arEntry);
 			std::string GetName() const { return mName; }
 
 			//functions for manipulating filter levels

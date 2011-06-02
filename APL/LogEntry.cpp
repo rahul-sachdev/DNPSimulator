@@ -21,6 +21,7 @@
 
 #include <sstream>
 #include "Util.h"
+#include "Parsing.h"
 
 using namespace std;
 
@@ -39,7 +40,27 @@ namespace apl
 	{
 	}
 
-	string LogEntry :: LogString()
+	void LogEntry :: AddKeyValue(const std::string& arKey, const std::string& arValue)
+	{
+		mKeyValues.insert(KeyValueMap::value_type(arKey, arValue));
+	}
+
+	bool LogEntry :: GetValue(const std::string& arKey, std::string& arValue) const
+	{
+		KeyValueMap::const_iterator i = mKeyValues.find(arKey);
+		if(i == mKeyValues.end()) return false;
+		else {
+			arValue = i->second;
+			return true;
+		}		
+	}
+
+	bool LogEntry :: GetValue(const std::string& arKey, int& arValue) const
+	{
+		return GetAnyValue<int>(arKey, arValue);
+	}
+
+	string LogEntry :: LogString() const
 	{
 		ostringstream oss;
 		oss << GetTimeString() << " - "
