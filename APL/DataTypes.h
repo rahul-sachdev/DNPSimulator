@@ -260,7 +260,7 @@ namespace apl
 
 #ifdef SWIG
 %template(DoublePoint) apl::TypedDataPoint<double>;
-%template(UnsignedPoint) apl::TypedDataPoint<apl::uint32_t>;
+%template(UnsignedPoint) apl::TypedDataPoint<boost::uint32_t>;
 #endif
 
 	/////////////////////////////////////////////

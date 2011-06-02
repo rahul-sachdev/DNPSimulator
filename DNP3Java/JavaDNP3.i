@@ -2,6 +2,7 @@
 %{
 /* Includes the header in the wrapper code */
 
+#include <APL/IPhysMonitor.h>
 #include <DNP3/StackManager.h>
 
 using namespace apl;
@@ -22,10 +23,22 @@ using namespace apl::dnp;
 
 %feature("director"); //generate directors for all classes that have virtual methods
 
+%include <stdint.i>
+
+%apply short { boost::uint8_t };
+%apply char { boost::int8_t };
+%apply int { boost::uint16_t };
+%apply short { boost::int16_t };
+%apply int { boost::int32_t };
+%apply long long { boost::uint32_t };
+%apply long long { boost::int64_t };
+%apply long long { boost::uint64_t };
+
 %include "APL/Types.h"
 %include "APL/INotifier.h"
 %include "APL/LogTypes.h"
 %include "APL/LogBase.h"
+%include "APL/IPhysMonitor.h"
 %include "APL/PhysLayerSettings.h"
 %include "APL/SerialTypes.h"
 %include "APL/QualityMasks.h"
@@ -38,6 +51,8 @@ using namespace apl::dnp;
 %include "DNP3/LinkConfig.h"
 %include "DNP3/AppConfig.h"
 %include "DNP3/MasterConfigTypes.h"
+%include "DNP3/MasterObserver.h"
+%include <DNP3/ClassMask.h>
 
 %template(VectorOfExceptionScan) std::vector<apl::dnp::ExceptionScan>;
 %include "DNP3/MasterConfig.h"
@@ -47,6 +62,7 @@ using namespace apl::dnp;
 %template(VectorOfEventPointRecord) std::vector<apl::dnp::EventPointRecord>;
 %template(VectorOfDeadbandPointRecord) std::vector<apl::dnp::DeadbandPointRecord>;
 %template(VectorOfControlRecord) std::vector<apl::dnp::ControlRecord>;
+%template(VectorOfPointRecord) std::vector<apl::dnp::PointRecord>;
 %include "DNP3/DeviceTemplate.h"
 
 %include "DNP3/MasterStackConfig.h"
