@@ -21,6 +21,7 @@
 #include <DNP3/SlaveStackConfig.h>
 #include <DNP3/MasterStackConfig.h>
 #include <APL/IPhysicalLayerAsync.h>
+#include <APL/PhysicalLayerFactory.h>
 
 #include <APLXML/PhysicalLayerXMLFactory.h>
 #include <DNP3XML/XmlToConfig.h>

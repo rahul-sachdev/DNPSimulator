@@ -46,9 +46,9 @@ AsyncStackManager::AsyncStackManager(Logger* apLogger, bool aAutoRun) :
 	mRunning(false),
 	mService(),
 	mTimerSrc(mService.Get()),
-	mMgr(apLogger->GetSubLogger("ports", LEV_WARNING)),
+	mMgr(apLogger->GetSubLogger("ports", LEV_WARNING), mService.Get()),
 	mScheduler(&mTimerSrc),
-	mVtoManager(apLogger->GetSubLogger("VtoRouterManager"), &mTimerSrc, &mMgr, mService.Get()),
+	mVtoManager(apLogger->GetSubLogger("VtoRouterManager"), &mTimerSrc, &mMgr),
 	mThread(this)
 {}
 
@@ -272,7 +272,7 @@ Port* AsyncStackManager::CreatePort(const std::string& arName)
 	if(GetPortPointer(arName) != NULL) throw ArgumentException(LOCATION, "Port already exists");
 
 	PhysLayerSettings s = mMgr.GetSettings(arName);
-	IPhysicalLayerAsync* pPhys = mMgr.AcquireLayer(arName, mService.Get(), false); //important! We'll delete the pointer manually
+	IPhysicalLayerAsync* pPhys = mMgr.AcquireLayer(arName, false); //important! We'll delete the pointer manually
 	Logger* pPortLogger = mpLogger->GetSubLogger(arName, s.LogLevel);
 	pPortLogger->SetVarName(arName);
 

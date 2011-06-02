@@ -18,14 +18,17 @@
 //
 #include "MockPhysicalLayerAsync.h"
 
-#include <memory.h>
 #include "BufferHelpers.h"
+#include <APL/TimerInterfaces.h>
+
+#include <memory.h>
+#include <boost/bind.hpp>
 
 using namespace boost::system;
 
 namespace apl {
 
-MockPhysicalLayerAsync::MockPhysicalLayerAsync(Logger* apLogger) :
+MockPhysicalLayerAsync::MockPhysicalLayerAsync(Logger* apLogger, ITimerSource* apTimerSource) :
 PhysicalLayerAsyncBase(apLogger),
 mpWriteBuff(NULL),
 mNumToRead(0),
@@ -34,8 +37,33 @@ mNumWrites(0),
 mNumOpen(0),
 mNumOpenSuccess(0),
 mNumOpenFailure(0),
-mNumClose(0)
+mNumClose(0),
+
+mIsAutoOpenSuccess(true),
+mpTimerSource(apTimerSource)
 {}
+
+void MockPhysicalLayerAsync::SetAutoOpen(bool aIsSuccess)
+{
+	mIsAutoOpenSuccess = aIsSuccess;
+}
+
+void MockPhysicalLayerAsync::DoOpen() 
+{
+	++mNumOpen; 
+	if(mpTimerSource) {
+		if(this->mIsAutoOpenSuccess) mpTimerSource->Post(boost::bind(&MockPhysicalLayerAsync::SignalOpenSuccess, this));
+		else mpTimerSource->Post(boost::bind(&MockPhysicalLayerAsync::SignalOpenFailure, this));
+	}
+}
+
+void MockPhysicalLayerAsync::DoClose()
+{ 
+	++mNumClose;
+	if(mpTimerSource) {
+		mpTimerSource->Post(boost::bind(&MockPhysicalLayerAsync::DoThisLayerDown, this));
+	}
+}
 
 void MockPhysicalLayerAsync::SignalOpenSuccess()
 {

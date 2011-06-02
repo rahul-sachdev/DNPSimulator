@@ -46,6 +46,13 @@ class MockTimerSource : public ITimerSource
 		@returns true if a timer was dispatched */
 	bool DispatchOne();
 
+	/** Calls DispatchOne() up to some maximum number of times continuing while 
+		there are still events to dispatch 
+
+		@return the number of events dispatched
+	*/
+	size_t Dispatch(size_t aMaximum = 100);
+
 	/** @returns The number of active, pending timers */
 	size_t NumActive() { return mTimerMap.size() + mPostQueue.size(); }
 

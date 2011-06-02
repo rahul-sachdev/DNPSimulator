@@ -17,16 +17,42 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include <APL/Log.h>
+
 #include <DNP3/VtoRouterManager.h>
+#include <DNP3/VtoRouterSettings.h>
+#include <DNP3/VtoWriter.h>
+
+#include <APLTestTools/MockTimerSource.h>
+#include <APLTestTools/MockPhysicalLayerSource.h>
 
 using namespace apl;
 using namespace apl::dnp;
 
 BOOST_AUTO_TEST_SUITE(VtoRouterManagerSuite)
 
-BOOST_AUTO_TEST_CASE(MasterToSlave)
+BOOST_AUTO_TEST_CASE(Construction)
 {
+	EventLog log;
+	MockTimerSource mts;
+	MockPhysicalLayerSource mpls(log.GetLogger(LEV_INFO, "source"));
+	VtoRouterManager mgr(log.GetLogger(LEV_INFO, "test"), &mts, &mpls);	
+}
+
+BOOST_AUTO_TEST_CASE(RouterCleansUpAsynchronouslyViaDestructor)
+{
+	EventLog log;
+	MockTimerSource mts;
+	MockPhysicalLayerSource mpls(log.GetLogger(LEV_INFO, "source"));
 	
+	{
+		VtoRouterManager mgr(log.GetLogger(LEV_INFO, "test"), &mts, &mpls);
+		VtoWriter writer(100);		
+		mgr.StartRouter("someport", VtoRouterSettings(0), &writer);
+	}
+
+	//the only way you know this test fails is if you get a memory leak warning in boost::test
+	size_t num = mts.Dispatch();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

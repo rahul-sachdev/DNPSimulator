@@ -33,7 +33,7 @@ namespace apl
 		public:
 
 			// Constructor can specify whether or not the class will delete it's own physical layers via aOwnsLayer.
-			PhysicalLayerManager(Logger*);
+			PhysicalLayerManager(Logger*, boost::asio::io_service* apService);
 			virtual ~PhysicalLayerManager();			
 
 			//function for manually adding entires
