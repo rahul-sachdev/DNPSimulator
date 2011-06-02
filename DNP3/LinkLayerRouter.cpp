@@ -85,8 +85,13 @@ ILinkContext* LinkLayerRouter::GetDestination(boost::uint16_t aDest, boost::uint
 
 	ILinkContext* pDest = GetContext(route);
 
-	if(pDest == NULL) {
-		ERROR_BLOCK(LEV_WARNING, "Frame w/ unknown route: " << route, DLERR_UNKNOWN_DESTINATION);
+	if(pDest == NULL && mpLogger->IsEnabled(LEV_WARNING)) {		
+		std::ostringstream oss;
+		oss << "Frame w/ unknown route: " << route;			
+		LogEntry le(LEV_WARNING, mpLogger->GetName(), LOCATION, oss.str(), DLERR_UNKNOWN_ROUTE); 
+		le.AddValue("SOURCE", aSrc);
+		le.AddValue("DESTINATION", aDest);
+		mpLogger->Log(le);		
 	}
 
 	return pDest;

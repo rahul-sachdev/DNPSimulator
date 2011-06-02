@@ -45,7 +45,7 @@ namespace apl
 			void SetVarName(const std::string& arVarName) { mVarName = arVarName; }
 			void Log( FilterLevel aFilterLevel, const std::string& arLocation, const std::string& aMessage, int aErrorCode = -1);
 			void Log( const LogEntry& arEntry);
-			std::string GetName() const { return mName; }
+			const std::string& GetName() const { return mName; }
 
 			//functions for manipulating filter levels
 			inline bool IsEnabled(FilterLevel aFilter) { return (mLevel & aFilter) != 0; }

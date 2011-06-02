@@ -105,7 +105,14 @@ namespace apl { namespace dnp {
 		DLERR_UNEXPECTED_FCV,	//	FCV bit set unexpectedly, ie set on wrong func code
 		DLERR_UNEXPECTED_FCB,	//  FCB set unexpectedly
 
-		//user in datalinklayer
+		/* ---- user in datalinklayer ----- */
+		
+		
+		/**
+		 *	Carries 2 pieces of metadata, SOURCE<uint16_t> and DESTINATION<uint16_t>
+		 */
+		DLERR_UNKNOWN_ROUTE,
+
 		DLERR_UNKNOWN_DESTINATION,
 		DLERR_UNKNOWN_SOURCE,
 		DLERR_CONFIRM_NOT_RECEIVED,
