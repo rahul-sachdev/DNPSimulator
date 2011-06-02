@@ -17,22 +17,41 @@
 // under the License.
 //
 
-#ifndef __I_PHYSICAL_LAYER_SOURCE_H_
-#define __I_PHYSICAL_LAYER_SOURCE_H_
+#ifndef __MOCK_PHYSICAL_LAYER_SOURCE_H_
+#define __MOCK_PHYSICAL_LAYER_SOURCE_H_
 
-#include <string>
+#include <APL/IPhysicalLayerSource.h>
+#include <APL/PhysicalLayerInstance.h>
+
+#include <map>
 
 namespace apl
-{
-	class IPhysicalLayerAsync;
+{	
+	class MockPhysicalLayerAsync;
+	class ITimerSource;
 
-	class IPhysicalLayerSource
+	class MockPhysicalLayerSource : public IPhysicalLayerSource
 	{
 		public:
-		virtual ~IPhysicalLayerSource(){}
-		
-		virtual IPhysicalLayerAsync* AcquireLayer(const std::string& arName, bool aAutoDelete = true) = 0;
-		virtual void ReleaseLayer(const std::string& arName) = 0;
+
+		MockPhysicalLayerSource(Logger* apLogger, ITimerSource* apTimerSrc = NULL);
+
+		MockPhysicalLayerAsync* GetMock(const std::string& arName);
+	
+		IPhysicalLayerAsync* AcquireLayer(const std::string& arName, bool aAutoDelete);
+		void ReleaseLayer(const std::string& arName);
+
+		private:
+
+		Logger* mpLogger;
+		ITimerSource* mpTimerSrc;
+
+		typedef std::map<std::string, PhysLayerInstance> InstanceMap;
+		typedef std::map<std::string, MockPhysicalLayerAsync*> MockMap;
+
+		InstanceMap mInstanceMap;
+		MockMap mMockMap;
+
 	};
 }
 

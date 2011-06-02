@@ -26,11 +26,13 @@
 
 namespace apl {
 
+	class ITimerSource;
+
 	// Provides a backend for testing physical layers
 	class MockPhysicalLayerAsync : public PhysicalLayerAsyncBase, public BufferTestObject
 	{
 		public:
-			MockPhysicalLayerAsync(Logger*);
+			MockPhysicalLayerAsync(Logger*, ITimerSource* apTimerSource = NULL);
 
 			void SignalOpenSuccess();
 			void SignalOpenFailure();
@@ -45,9 +47,12 @@ namespace apl {
 			size_t NumOpenFailure() { return mNumOpenFailure; }
 			size_t NumClose() {  return mNumClose; }
 
+			void SetAutoOpen(bool aSuccess);
+
 		private:
-			void DoOpen() {++mNumOpen; }
-			void DoClose() { ++mNumClose; }
+			
+			void DoOpen();
+			void DoClose();
 			void DoOpenSuccess() { ++mNumOpenSuccess; }
 			void DoOpenFailure() { ++mNumOpenFailure; }
 			void DoAsyncRead(boost::uint8_t* apBuff, size_t aNumBytes) { mpWriteBuff = apBuff; mNumToRead = aNumBytes; }
@@ -65,6 +70,10 @@ namespace apl {
 			size_t mNumOpenSuccess;
 			size_t mNumOpenFailure;
 			size_t mNumClose;
+			
+			bool mIsAutoOpenSuccess;
+
+			ITimerSource* mpTimerSource;
 	};
 }
 

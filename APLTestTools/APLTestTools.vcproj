@@ -218,6 +218,14 @@
 					RelativePath=".\MockPhysicalLayerAsyncTS.h"
 					>
 				</File>
+				<File
+					RelativePath=".\MockPhysicalLayerSource.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\MockPhysicalLayerSource.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Timers"

@@ -37,7 +37,7 @@ class PhysLayerInstance
 		PhysLayerInstance(IPhysicalLayerAsyncFactory);
 		PhysLayerInstance(IPhysicalLayerAsync* apPhys, Logger*, bool aAutoDelete);
 
-		IPhysicalLayerAsync* GetLayer(Logger*, boost::asio::io_service*, bool aAutoDelete);
+		IPhysicalLayerAsync* GetLayer(Logger*, boost::asio::io_service*, bool aAutoDelete);		
 
 		void Release();
 

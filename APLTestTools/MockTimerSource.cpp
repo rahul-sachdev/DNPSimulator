@@ -66,6 +66,13 @@ bool MockTimerSource::DispatchOne()
 	return false;
 }
 
+size_t MockTimerSource::Dispatch(size_t aMaximum)
+{
+	size_t num = 0;
+	while(num < aMaximum && this->DispatchOne()) ++num;
+	return num;
+}
+
 void MockTimerSource::Post(const ExpirationHandler& arHandler)
 {
 	mPostQueue.push_back(arHandler);

@@ -47,6 +47,11 @@ VtoRouterManager::VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, I
 	assert(apPhysSrc != NULL);	
 }
 
+VtoRouterManager::~VtoRouterManager()
+{
+	this->StopAllRouters();
+}
+
 void VtoRouterManager::ClenupAfterRouter(IPhysicalLayerAsync* apPhys, VtoRouter* apRouter)
 {
 	delete apPhys;

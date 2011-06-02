@@ -56,6 +56,8 @@ class VtoRouterManager : private Loggable
 public:
 	VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc);
 
+	~VtoRouterManager();
+
 	void StartRouter(		
 		const std::string& arPortName,
 		const VtoRouterSettings& arSettings, 

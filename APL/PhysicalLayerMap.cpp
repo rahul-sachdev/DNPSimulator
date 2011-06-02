@@ -20,6 +20,7 @@
 
 #include "PhysLayerSettings.h"
 #include "Logger.h"
+#include "Exception.h"
 
 namespace apl
 {
