@@ -39,6 +39,7 @@ namespace apl {
 			void SignalSendSuccess();
 			void SignalSendFailure();
 			void SignalReadFailure();
+
 			void TriggerRead(const std::string& arData);
 
 			size_t NumWrites() { return mNumWrites; }
@@ -55,7 +56,13 @@ namespace apl {
 			void DoClose();
 			void DoOpenSuccess() { ++mNumOpenSuccess; }
 			void DoOpenFailure() { ++mNumOpenFailure; }
-			void DoAsyncRead(boost::uint8_t* apBuff, size_t aNumBytes) { mpWriteBuff = apBuff; mNumToRead = aNumBytes; }
+
+			void DoAsyncRead(boost::uint8_t* apBuff, size_t aNumBytes) 
+			{ 
+				mpWriteBuff = apBuff;
+				mNumToRead = aNumBytes; 
+			}
+
 			void DoAsyncWrite(const boost::uint8_t* apData, size_t aNumBytes) {
 				mNumToWrite = aNumBytes;
 				++mNumWrites;
@@ -63,6 +70,7 @@ namespace apl {
 			}
 
 			boost::uint8_t* mpWriteBuff;
+
 			size_t mNumToRead;
 			size_t mNumToWrite;
 			size_t mNumWrites;

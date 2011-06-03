@@ -23,6 +23,7 @@
 #include "PhysicalLayerInstance.h"
 #include "PhysLayerSettings.h"
 #include "Lock.h"
+#include "Loggable.h"
 
 #include <map>
 
@@ -30,7 +31,7 @@ namespace apl
 {
 	/** Threadsafe object 
 	*/
-	class PhysicalLayerMap : public IPhysicalLayerSource
+	class PhysicalLayerMap : public IPhysicalLayerSource, private Loggable
 	{
 	public:
 		PhysicalLayerMap(Logger* apBaseLogger, boost::asio::io_service*);

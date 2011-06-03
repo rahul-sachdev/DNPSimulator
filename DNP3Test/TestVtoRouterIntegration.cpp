@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_SUITE(VtoRouterIntegrationSuite)
 BOOST_AUTO_TEST_CASE(MasterToSlave)
 {
 	const boost::uint16_t port = PORT_VALUE;
-	const FilterLevel level = LEV_COMM;
+	const FilterLevel level = LEV_DEBUG;
 
 	EventLog log;
 	log.AddLogSubscriber(LogToStdio::Inst());
@@ -54,22 +54,21 @@ BOOST_AUTO_TEST_CASE(MasterToSlave)
 	MockCommandAcceptor cmdAcceptor;	
 	AsyncStackManager mgr(log.GetLogger(level, "test"));
 	
-	//mgr.AddTCPClient("client", PhysLayerSettings(), "127.0.0.1", port);
-	mgr.AddTCPServer("server", PhysLayerSettings(), "127.0.0.1", port);
+	mgr.AddTCPClient("client", PhysLayerSettings(), "127.0.0.1", port);
+	mgr.AddTCPServer("server", PhysLayerSettings(), "127.0.0.1", port+1);
 	
 	mgr.AddSlave("server", "slave", level, &cmdAcceptor, SlaveStackConfig());
-	//mgr.AddMaster("client", "master", level, &fdo, MasterStackConfig());
+	mgr.AddMaster("client", "master", level, &fdo, MasterStackConfig());
 	
 	/*
-	mgr.AddTCPServer("vtoserver1", PhysLayerSettings(), "127.0.0.1", port+1);
-	mgr.AddTCPServer("vtoserver2", PhysLayerSettings(), "127.0.0.1", port+2);
+	mgr.AddTCPServer("vtoserver1", PhysLayerSettings(), "127.0.0.1", port+10);
+	mgr.AddTCPServer("vtoserver2", PhysLayerSettings(), "127.0.0.1", port+20);
 	
 	mgr.StartVtoRouter("vtoserver1", "slave", VtoRouterSettings(0));
 	mgr.StartVtoRouter("vtoserver2", "master", VtoRouterSettings(0));
-	*/
 	
-
 	mgr.Start();
+	*/
 
 	//Thread::SleepFor(100000);
 }

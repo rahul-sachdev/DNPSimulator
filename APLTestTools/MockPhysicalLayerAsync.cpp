@@ -41,7 +41,9 @@ mNumClose(0),
 
 mIsAutoOpenSuccess(true),
 mpTimerSource(apTimerSource)
-{}
+{
+
+}
 
 void MockPhysicalLayerAsync::SetAutoOpen(bool aIsSuccess)
 {

@@ -25,6 +25,7 @@
 namespace apl
 {
 	PhysicalLayerMap::PhysicalLayerMap(Logger* apBaseLogger, boost::asio::io_service* apService) : 
+		Loggable(apBaseLogger),
 		mpBaseLogger(apBaseLogger),
 		mpService(apService)
 	{
@@ -48,9 +49,10 @@ namespace apl
 		PhysLayerSettings s = this->_GetSettings(arName);				
 		PhysLayerInstance* pInstance = this->_GetInstance(arName);
 		if(pInstance->IsCreated()) throw ArgumentException("Layer with name has already been acquired: " + arName);
-		else {
+		else {			
 			IPhysicalLayerAsync* pLayer = pInstance->GetLayer(this->MakeLogger(arName, s.LogLevel), mpService, aAutoDelete);
 			mLayerToNameMap.insert(LayerToNameMap::value_type(pLayer, arName));
+			LOG_BLOCK(LEV_DEBUG, "Physical layer acquired: " << arName);
 			return pLayer;
 		}
 	}
@@ -62,9 +64,10 @@ namespace apl
 		if(i == mNameToInstanceMap.end()) {
 			throw ArgumentException(LOCATION, "Physical layer not managed by this map: " + arName);		
 		}
-		else {
-			PhysLayerInstance* pInst = &i->second;
-			pInst->Release();			
+		else {			
+			PhysLayerInstance* pInst = &i->second;			
+			pInst->Release();				
+			LOG_BLOCK(LEV_DEBUG, "Physical layer released: " << arName);
 		}
 	}
 

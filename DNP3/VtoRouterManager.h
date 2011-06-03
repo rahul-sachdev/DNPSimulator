@@ -37,9 +37,11 @@ namespace apl { namespace dnp {
 class VtoRouter;
 class VtoRouterSettings;
 class IVtoWriter;
+class IVtoDataHandler;
 
 class VtoRouterManager : private Loggable
 {
+public:
 	class RouterRecord
 	{
 		public:	
@@ -51,25 +53,32 @@ class VtoRouterManager : private Loggable
 		boost::uint8_t mVtoChannelId;
 	};
 
-	static void ClenupAfterRouter(IPhysicalLayerAsync* apPhys, VtoRouter* apRouter);	
 
-public:
 	VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc);
 
 	~VtoRouterManager();
 
-	void StartRouter(		
+	VtoRouter* StartRouter(		
 		const std::string& arPortName,
 		const VtoRouterSettings& arSettings, 
 		IVtoWriter* apWriter);
-	
+		
+	void StopRouter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
 	void StopAllRoutersOnWriter(IVtoWriter* apWriter);
-
-	void StopRouterOnWriter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
-	
 	void StopAllRouters();
+	
 
+	RouterRecord GetRouterOnWriter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
+	std::vector<RouterRecord> GetAllRoutersOnWriter(IVtoWriter* apWriter);	
+	std::vector<RouterRecord> GetAllRouters();
+	
 private:
+
+	void StopRouter(VtoRouter* apRouter);
+
+	static void ClenupAfterRouter(IPhysicalLayerAsync* apPhys, VtoRouter* apRouter);	
+
+	void StopRouters(const std::vector<RouterRecord>& arRouters);
 
 	typedef std::vector<RouterRecord> RouterRecordVector;
 
