@@ -32,6 +32,7 @@
 #include <DNP3/MasterStack.h>
 #include <DNP3/SlaveStack.h>
 #include <DNP3/DeviceTemplate.h>
+#include <DNP3/VtoRouter.h>
 
 #include <iostream>
 
@@ -123,8 +124,7 @@ void AsyncStackManager::AddVtoChannel(const std::string& arStackName,
 	pStack->GetVtoReader()->AddVtoChannel(apCallbacks);
 }
 
-void AsyncStackManager::RemoveVtoChannel(const std::string& arStackName, 
-				IVtoCallbacks* apCallbacks)
+void AsyncStackManager::RemoveVtoChannel(const std::string& arStackName, IVtoCallbacks* apCallbacks)
 {
 	Stack* pStack = this->GetStackByName(arStackName);
 	pStack->GetVtoWriter()->RemoveVtoCallback(apCallbacks);
@@ -134,20 +134,24 @@ void AsyncStackManager::RemoveVtoChannel(const std::string& arStackName,
 void AsyncStackManager::StartVtoRouter(const std::string& arPortName,
 				const std::string& arStackName, const VtoRouterSettings& arSettings)
 {
-	IVtoWriter* pWriter = this->GetStackByName(arStackName)->GetVtoWriter();	
-	mVtoManager.StartRouter(arPortName, arSettings, pWriter);
+	Stack* pStack = this->GetStackByName(arStackName);	
+	VtoRouter* pRouter = mVtoManager.StartRouter(arPortName, arSettings, pStack->GetVtoWriter());	
+	this->AddVtoChannel(arStackName, pRouter);
 }
 
 void AsyncStackManager::StopVtoRouter(const std::string& arStackName, boost::uint8_t aVtoChannelId)
 {
-	IVtoWriter* pWriter = this->GetVtoWriter(arStackName);
-	mVtoManager.StopRouterOnWriter(pWriter, aVtoChannelId);
+	Stack* pStack = this->GetStackByName(arStackName);
+	IVtoWriter* pWriter = pStack->GetVtoWriter();
+	VtoRouterManager::RouterRecord rec = mVtoManager.GetRouterOnWriter(pWriter, aVtoChannelId);
+	this->RemoveVtoChannel(arStackName, rec.mpRouter);
+	mVtoManager.StopRouter(pWriter, aVtoChannelId);
 }
 
 void AsyncStackManager::StopAllRoutersOnStack(const std::string& arStackName)
 {
 	IVtoWriter* pWriter = this->GetVtoWriter(arStackName);
-	mVtoManager.StopAllRoutersOnWriter(pWriter);
+	//mVtoManager.StopAllRoutersOnWriter(pWriter);
 }
 
 IVtoWriter* AsyncStackManager::GetVtoWriter(const std::string& arStackName)
@@ -191,7 +195,7 @@ void AsyncStackManager::RemoveStack(const std::string& arStackName)
 
 void AsyncStackManager::SeverStack(Port* apPort, const std::string& arStackName)
 {
-	IVtoWriter* pWriter = this->GetStackByName(arStackName)->GetVtoWriter();
+	IVtoWriter* pWriter = this->GetStackByName(arStackName)->GetVtoWriter();	
 	mVtoManager.StopAllRoutersOnWriter(pWriter);
 	//this will cause the stack to be pulled off the port and deleted on the io_service thread
 	mTimerSrc.Post(boost::bind(&Port::Disassociate, apPort, arStackName));
