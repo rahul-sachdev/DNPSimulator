@@ -69,13 +69,21 @@ AC_CHECK_HEADERS([sys/wait.h]	,,AC_MSG_ERROR(missing header))
 AC_CHECK_HEADERS([syslog.h]	,,AC_MSG_ERROR(missing header))
 AC_CHECK_HEADERS([unistd.h]	,,AC_MSG_ERROR(missing header))
 
-AC_CHECK_HEADERS([tinyxml.h]	,,AC_MSG_ERROR(missing header))
-
 AC_CHECK_LIB([c],	[atexit]		,,AC_MSG_ERROR(missing library))
 AC_CHECK_LIB([pthread],	[pthread_join]		,,AC_MSG_ERROR(missing library))
 
-AC_CHECK_LIB([tinyxml],	[_ZTI9TiXmlNode]	,,AC_MSG_WARN(missing library - unable to build testset application))
-AM_CONDITIONAL(ENABLE_TESTSET, [test "$ac_cv_lib_tinyxml__ZTI9TiXmlNode" = yes])
+AC_CHECK_HEADERS([tinyxml.h],			ac_tinyxml_h_found=yes,		ac_tinyxml_h_found=no)
+AC_CHECK_LIB([tinyxml],	[_ZTI9TiXmlNode],	ac_tinyxml_lib_found=yes,	ac_tinyxml_lib_found=no)
+
+AC_ARG_ENABLE(testset,
+  AS_HELP_STRING([--enable-testset], [Enable building the testset application]),
+    [ac_testset_enabled=$enableval], [ac_testset_enabled=no])
+if test "$ac_testset_enabled" = yes; then
+  if test "$ac_tinyxml_h_found" = no -o "$ac_tinyxml_lib_found" = no; then
+    AC_MSG_ERROR("missing one or more components of the tinyxml library -- unable to build the testset application!")
+  fi
+fi
+AM_CONDITIONAL(ENABLE_TESTSET, [test "$ac_testset_enabled" = yes])
 
 AC_PROG_AWK
 AC_PROG_CXX
@@ -115,15 +123,20 @@ echo "
 $PACKAGE_NAME $PACKAGE_VERSION configuration:
 -----------------------------------------------------
 Source code location:       ${srcdir}
-Host System Type:           ${host}
-Compiler:                   ${CC}
-CXXFLAGS:                   ${CXXFLAGS}
-Static libraries:           ${enable_static}
-Shared libraries:           ${enable_shared}
-Code coverage support:      ${ac_lcov_enabled}
+Host system type:           ${host}
 Install path (prefix):      ${prefix}
+Boost libraries:            ${BOOSTLIBDIR}
+
+CXX:                        ${CXX}
+CXXFLAGS:                   ${CXXFLAGS}
+LDFLAGS:                    ${LDFLAGS}
+
+lcov support:               ${ac_lcov_enabled}
+testset application:        ${ac_testset_enabled}
+shared libraries:           ${enable_shared}
+static libraries:           ${enable_static}
 -----------------------------------------------------
 
-Now type 'make' to build $PACKAGE_NAME $PACKAGE_VERSION.
+When ready, type 'make' to build.
 "
 
