@@ -78,7 +78,7 @@ Requirements:
     * boost::thread                 (required)
     * Boost Unit Test Framework     (required if running 'make check')
   - lcov                            (required if running 'make lcov')
-  - tinyxml                         (required)
+  - tinyxml                         (required if 'testset' is desired)
 
 To start, first reinitialize autotools to be compatible with the version
 running on your system:
@@ -89,7 +89,9 @@ Next, run the 'configure' script:
 
   ./configure
 
-A full list of options can be found using './configure --help'.
+A full list of options can be found using './configure --help'.  If
+tinyxml is not found, a warning message is printed and the 'testset'
+application will not be built.
 
 You can now build the libraries:
 
