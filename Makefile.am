@@ -145,7 +145,13 @@ libopendnp3_dnp3_la_SOURCES = \
 	DNP3/VtoTransmitTask.cpp \
 	DNP3/VtoWriter.cpp
 
-bin_PROGRAMS  = testset
+if ENABLE_TESTSET
+TESTSET_APP = testset
+else
+TESTSET_APP =
+endif
+
+bin_PROGRAMS  = ${TESTSET_APP}
 
 testset_LDADD = libopendnp3_apl.la libopendnp3_dnp3.la
 testset_SOURCES = \

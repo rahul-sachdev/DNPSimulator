@@ -22,11 +22,6 @@ AX_BOOST_SYSTEM
 AX_BOOST_THREAD
 AX_BOOST_UNIT_TEST_FRAMEWORK
 
-#
-# TODO - if --enable-lcov is given:
-#
-#    Configure with --enable-static --disable-shared
-#
 AC_ARG_ENABLE(lcov,
   AS_HELP_STRING([--enable-lcov], [Enable gcov/lcov support]),
     [ac_lcov_enabled=$enableval], [ac_lcov_enabled=no])
@@ -78,7 +73,9 @@ AC_CHECK_HEADERS([tinyxml.h]	,,AC_MSG_ERROR(missing header))
 
 AC_CHECK_LIB([c],	[atexit]		,,AC_MSG_ERROR(missing library))
 AC_CHECK_LIB([pthread],	[pthread_join]		,,AC_MSG_ERROR(missing library))
-AC_CHECK_LIB([tinyxml],	[_ZTI9TiXmlNode]	,,AC_MSG_ERROR(missing library))
+
+AC_CHECK_LIB([tinyxml],	[_ZTI9TiXmlNode]	,,AC_MSG_WARN(missing library - unable to build testset application))
+AM_CONDITIONAL(ENABLE_TESTSET, [test "$ac_cv_lib_tinyxml__ZTI9TiXmlNode" = yes])
 
 AC_PROG_AWK
 AC_PROG_CXX
