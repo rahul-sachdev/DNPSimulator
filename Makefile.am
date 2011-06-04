@@ -6,7 +6,7 @@
 ACLOCAL_AMFLAGS = -I config/autotools/m4
 
 AM_CXXFLAGS = $(BOOST_CPPFLAGS) -DBOOST_TEST_DYN_LINK -DBOOST_ASIO_ENABLE_CANCELIO -DBOOST_REGEX_NO_LIB
-AM_LDFLAGS = $(BOOST_DATE_TIME_LIB) $(BOOST_THREAD_LIB) $(BOOST_PROGRAM_OPTIONS_LIB) $(BOOST_SYSTEM_LIB) $(BOOST_UNIT_TEST_FRAMEWORK_LIB)
+AM_LDFLAGS = $(BOOST_LDFLAGS) $(BOOST_DATE_TIME_LIB) $(BOOST_THREAD_LIB) $(BOOST_PROGRAM_OPTIONS_LIB) $(BOOST_SYSTEM_LIB) $(BOOST_UNIT_TEST_FRAMEWORK_LIB)
 
 lib_LTLIBRARIES = libopendnp3_apl.la libopendnp3_dnp3.la
 
@@ -145,6 +145,198 @@ libopendnp3_dnp3_la_SOURCES = \
 	DNP3/VtoTransmitTask.cpp \
 	DNP3/VtoWriter.cpp
 
+nobase_pkginclude_HEADERS= \
+	version.hpp \
+	APL/ASIOSerialHelpers.h \
+	APL/AsyncLayerInterfaces.h \
+	APL/AsyncPhysLayerMonitor.h \
+	APL/AsyncTaskBase.h \
+	APL/AsyncTaskContinuous.h \
+	APL/AsyncTaskGroup.h \
+	APL/AsyncTaskInterfaces.h \
+	APL/AsyncTaskNonPeriodic.h \
+	APL/AsyncTaskPeriodic.h \
+	APL/AsyncTaskScheduler.h \
+	APL/BoundNotifier.h \
+	APL/CachedLogVariable.h \
+	APL/ChangeBuffer.h \
+	APL/CommandInterfaces.h \
+	APL/CommandManager.h \
+	APL/CommandQueue.h \
+	APL/CommandResponseQueue.h \
+	APL/CommandTypes.h \
+	APL/Configure.h \
+	APL/CopyableBuffer.h \
+	APL/CRC.h \
+	APL/DataInterfaces.h \
+	APL/DataTypes.h \
+	APL/EventLockBase.h \
+	APL/EventLock.h \
+	APL/EventSet.h \
+	APL/Exception.h \
+	APL/FlexibleDataObserver.h \
+	APL/IEventLock.h \
+	APL/IHandlerAsync.h \
+	APL/INotifier.h \
+	APL/IOService.h \
+	APL/IOServiceThread.h \
+	APL/IPhysicalLayerAsync.h \
+	APL/IPhysicalLayerSource.h \
+	APL/IPhysMonitor.h \
+	APL/ISubject.h \
+	APL/ITimeSource.h \
+	APL/LockBase.h \
+	APL/LockBoost.h \
+	APL/Lock.h \
+	APL/LogBase.h \
+	APL/LogEntryCircularBuffer.h \
+	APL/LogEntry.h \
+	APL/Loggable.h \
+	APL/Logger.h \
+	APL/Log.h \
+	APL/LogToFile.h \
+	APL/LogToStdio.h \
+	APL/LogTypes.h \
+	APL/LogVar.h \
+	APL/LowerLayerToPhysAdapter.h \
+	APL/MetricBuffer.h \
+	APL/MultiplexingDataObserver.h \
+	APL/Notifier.h \
+	APL/PackingTemplates.h \
+	APL/PackingUnpacking.h \
+	APL/Parsing.h \
+	APL/PhysicalLayerAsyncASIO.h \
+	APL/PhysicalLayerAsyncBase.h \
+	APL/PhysicalLayerAsyncBaseTCP.h \
+	APL/PhysicalLayerAsyncSerial.h \
+	APL/PhysicalLayerAsyncTCPClient.h \
+	APL/PhysicalLayerAsyncTCPServer.h \
+	APL/PhysicalLayerFactory.h \
+	APL/PhysicalLayerFunctors.h \
+	APL/PhysicalLayerInstance.h \
+	APL/PhysicalLayerManager.h \
+	APL/PhysicalLayerMap.h \
+	APL/PhysLayerSettings.h \
+	APL/PostingNotifier.h \
+	APL/PostingNotifierSource.h \
+	APL/ProtocolUtil.h \
+	APL/QualityConverter.h \
+	APL/QualityMasks.h \
+	APL/QueueingFDO.h \
+	APL/SerialTypes.h \
+	APL/ShiftableBuffer.h \
+	APL/Singleton.h \
+	APL/SubjectBase.h \
+	APL/SyncVar.h \
+	APL/Threadable.h \
+	APL/ThreadBase.h \
+	APL/ThreadBoost.h \
+	APL/Thread.h \
+	APL/TimeBase.h \
+	APL/TimeBoost.h \
+	APL/Timeout.h \
+	APL/TimerASIO.h \
+	APL/TimerInterfaces.h \
+	APL/TimerSourceASIO.h \
+	APL/TimeSource.h \
+	APL/TimeTypes.h \
+	APL/TimingTools.h \
+	APL/ToHex.h \
+	APL/Types.h \
+	APL/Uncopyable.h \
+	APL/Util.h \
+	DNP3/APDUConstants.h \
+	DNP3/APDU.h \
+	DNP3/AppChannelStates.h \
+	DNP3/AppConfig.h \
+	DNP3/AppHeader.h \
+	DNP3/AppInterfaces.h \
+	DNP3/AppLayerChannel.h \
+	DNP3/AppLayer.h \
+	DNP3/AsyncStackManager.h \
+	DNP3/BufferSetTypes.h \
+	DNP3/BufferTypes.h \
+	DNP3/ClassCounter.h \
+	DNP3/ClassMask.h \
+	DNP3/CleanupHelper.h \
+	DNP3/ControlTasks.h \
+	DNP3/CTOHistory.h \
+	DNP3/Database.h \
+	DNP3/DatabaseInterfaces.h \
+	DNP3/DataPoll.h \
+	DNP3/DeviceTemplate.h \
+	DNP3/DeviceTemplateTypes.h \
+	DNP3/DNPCommandMaster.h \
+	DNP3/DNPConstants.h \
+	DNP3/DNPCrc.h \
+	DNP3/DNPDatabaseTypes.h \
+	DNP3/DNPExceptions.h \
+	DNP3/DNPFromStream.h \
+	DNP3/DNPToStream.h \
+	DNP3/EventBufferBase.h \
+	DNP3/EventBuffers.h \
+	DNP3/EventTypes.h \
+	DNP3/HeaderReadIterator.h \
+	DNP3/IFrameSink.h \
+	DNP3/ILinkContext.h \
+	DNP3/ILinkRouter.h \
+	DNP3/IndexedWriteIterator.h \
+	DNP3/LinkConfig.h \
+	DNP3/LinkFrame.h \
+	DNP3/LinkHeader.h \
+	DNP3/LinkLayerConstants.h \
+	DNP3/LinkLayer.h \
+	DNP3/LinkLayerReceiver.h \
+	DNP3/LinkLayerRouter.h \
+	DNP3/LinkReceiverStates.h \
+	DNP3/LinkRoute.h \
+	DNP3/MasterConfig.h \
+	DNP3/MasterConfigTypes.h \
+	DNP3/Master.h \
+	DNP3/MasterObserver.h \
+	DNP3/MasterSchedule.h \
+	DNP3/MasterStackConfig.h \
+	DNP3/MasterStack.h \
+	DNP3/MasterStates.h \
+	DNP3/MasterTaskBase.h \
+	DNP3/ObjectHeader.h \
+	DNP3/ObjectInterfaces.h \
+	DNP3/ObjectReadIterator.h \
+	DNP3/Objects.h \
+	DNP3/ObjectWriteIterator.h \
+	DNP3/PointClass.h \
+	DNP3/Port.h \
+	DNP3/PriLinkLayerStates.h \
+	DNP3/ResponseContext.h \
+	DNP3/ResponseLoader.h \
+	DNP3/SecLinkLayerStates.h \
+	DNP3/SlaveConfig.h \
+	DNP3/SlaveEventBuffer.h \
+	DNP3/Slave.h \
+	DNP3/SlaveResponseTypes.h \
+	DNP3/SlaveStackConfig.h \
+	DNP3/SlaveStack.h \
+	DNP3/SlaveStates.h \
+	DNP3/SolicitedChannel.h \
+	DNP3/Stack.h \
+	DNP3/StackManager.h \
+	DNP3/StartupTasks.h \
+	DNP3/TLS_Base.h \
+	DNP3/TransportConstants.h \
+	DNP3/TransportLayer.h \
+	DNP3/TransportRx.h \
+	DNP3/TransportStates.h \
+	DNP3/TransportTx.h \
+	DNP3/UnsolicitedChannel.h \
+	DNP3/VtoData.h \
+	DNP3/VtoDataInterface.h \
+	DNP3/VtoReader.h \
+	DNP3/VtoRouter.h \
+	DNP3/VtoRouterManager.h \
+	DNP3/VtoRouterSettings.h \
+	DNP3/VtoTransmitTask.h \
+	DNP3/VtoWriter.h
+
 if ENABLE_TESTSET
 TESTSET_APP = testset
 else
@@ -244,8 +436,6 @@ dnp3test_SOURCES = \
 
 include config/autotools/mk/doxygen.mak
 include config/autotools/mk/lcov.mak
-
-#CLEANFILES = $(DX_CLEANFILES)
 
 .PHONY : lcov lcov-report lcov-reset doxygen-run doxygen-doc $(DX_PS_GOAL) $(DX_PDF_GOAL)
 

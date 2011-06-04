@@ -4,9 +4,6 @@ lcov-reset:
 	@lcov --directory . --zerocounters
 
 clean-local:
-	@make lcov-reset
-
-clean:
 	@find . -iname "*.gcno" -exec rm {} \;
 
 if LCOV

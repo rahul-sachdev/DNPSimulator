@@ -1,4 +1,4 @@
-AC_INIT([open-dnp3], [0.9.5-rc1], [open-dnp3@googlegroups.com])
+AC_INIT([opendnp3], [0.9.5-rc1], [open-dnp3@googlegroups.com])
 AC_COPYRIGHT([(C) 2010, 2011 Green Energy Corp.  All rights reserved.])
 
 srcdir="`cd $srcdir; pwd`"
@@ -15,7 +15,7 @@ AC_CONFIG_HEADERS([config.h])
 
 AC_LANG([C++])
 
-AX_BOOST_BASE([1.42],, AC_MSG_ERROR(missing boost))
+AX_BOOST_BASE([1.46],, AC_MSG_ERROR(missing boost))
 AX_BOOST_DATE_TIME
 AX_BOOST_PROGRAM_OPTIONS
 AX_BOOST_SYSTEM
