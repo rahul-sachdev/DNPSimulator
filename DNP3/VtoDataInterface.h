@@ -109,6 +109,16 @@ namespace apl {
 				 *                      buffer has insufficient space.
 				 */
 				virtual size_t Write(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId) = 0;
+
+				/**
+				 * Sends an indication to the remote vto consumer that the VTO connection
+				 * on this side of the dnp3 connection has changed.
+				 *
+				 * @param aLocalVTOConnectionOpened  Whether the local connection
+				 *                                   should be considered to be online
+				 * @param aChannelId                 The channel id for the vto stream
+				 */
+				virtual void SetLocalVTOState(bool aLocalVTOConnectionOpened, boost::uint8_t aChannelId) = 0;
 								
 				/**
 				 * Returns the number of bytes that the writer can currently accept
@@ -162,6 +172,16 @@ namespace apl {
 				 */
 				virtual void OnVtoDataReceived(const boost::uint8_t* apData,
 				                            size_t aLength) = 0;
+
+				/**
+				 * This callback is called when we have detected that the remote
+				 * connection state has changed. It will change if the client of
+				 * the remote connection drops the connection or the dnp3
+				 * connection drops.
+				 *
+				 * @param aIsRemoteOpen  whether we should act if the remote side is open
+				 */
+				virtual void OnVtoRemoteConnectedChanged(bool aIsRemoteOpen) = 0;
 		};
 
 		class IVtoReader
