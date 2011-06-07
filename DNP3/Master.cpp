@@ -104,8 +104,12 @@ Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IData
 void Master::UpdateState(MasterStates aState)
 {
 	if(mState != aState) {
+		LOG_BLOCK(LEV_INFO, "MasterState: " << aState);
 		mState = aState;
 		if(mpObserver != NULL) mpObserver->OnStateChange(aState);
+		if(mState == MasterStates::MS_COMMS_UP){
+			mSchedule.mpVtoTransmitTask->Enable();
+		}
 	}
 }
 
@@ -224,16 +228,21 @@ void Master::TransmitVtoData(ITask* apTask)
 		mVtoTransmitTask.mBuffer.Update(info);
 	}
 
-	/* Any data to transmit? */
-	if (mVtoTransmitTask.mBuffer.Size() > 0)
-	{
-		/* Start the mVtoTransmitTask */
-		mpState->StartTask(this, apTask, &mVtoTransmitTask);
-	}
-	else
-	{
-		/* Stop the mVtoTransmitTask */
-		apTask->Disable();
+	// only start the task if we are in comms_up
+	// TODO: should this just be Enable?
+	if(this->mState == MasterStates::MS_COMMS_UP){
+
+		/* Any data to transmit? */
+		if (mVtoTransmitTask.mBuffer.Size() > 0)
+		{
+			/* Start the mVtoTransmitTask */
+			mpState->StartTask(this, apTask, &mVtoTransmitTask);
+		}
+		else
+		{
+			/* Stop the mVtoTransmitTask */
+			apTask->Disable();
+		}
 	}
 }
 

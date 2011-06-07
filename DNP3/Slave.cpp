@@ -57,6 +57,7 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	mpTimeTimer(NULL),
 	mVtoReader(apLogger),
 	mVtoWriter(arCfg.mVtoWriterQueueSize)
+
 {
 	/* Link the event buffer to the database */
 	mpDatabase->SetEventBuffer(mRspContext.GetBuffer());
@@ -77,16 +78,15 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 		)
 	);
 
+	mpVtoNotifier = mNotifierSource.Get(
+			boost::bind(&Slave::OnVtoUpdate, this),
+			mpTimerSrc
+	);
 	/*
 	 * Incoming data will trigger a POST on the timer source to call
 	 * Slave::OnVtoUpdate().
 	 */
-	mVtoWriter.AddObserver(
-		mNotifierSource.Get(
-				boost::bind(&Slave::OnVtoUpdate, this),
-				mpTimerSrc
-		)
-	);
+	mVtoWriter.AddObserver(mpVtoNotifier);
 
 	/* Cause the slave to go through the null-unsol startup sequence */
 	if (!mConfig.mDisableUnsol)
@@ -95,6 +95,13 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	}
 
 	mCommsStatus.Set(COMMS_DOWN);
+}
+
+Slave::~Slave(){
+	if(mpUnsolTimer) mpUnsolTimer->Cancel();
+	if(mpTimeTimer) mpTimeTimer->Cancel();
+
+	mVtoWriter.RemoveObserver(mpVtoNotifier);
 }
 
 /* Implement IAppUser - external callbacks from the app layer */
