@@ -54,6 +54,28 @@ size_t VtoWriter::Write(const boost::uint8_t* apData,
 	return num;
 }
 
+void VtoWriter::SetLocalVTOState(bool aLocalVTOConnectionOpened, boost::uint8_t aChannelId)
+{
+	/*
+	 * The whole function is thread-safe, from start to finish.
+	 */
+	CriticalSection cs(&mLock);
+
+	boost::uint8_t* data = new boost::uint8_t[2];
+
+	data[0] = aChannelId;
+	data[1] = aLocalVTOConnectionOpened ? 0 : 1;
+
+	VtoData vto(data, 2);
+
+	delete data;
+
+	VtoEvent evt(vto, PC_CLASS_1, 255);
+	this->mQueue.push(evt);
+
+	this->NotifyAll();
+}
+
 void VtoWriter::Commit(const boost::uint8_t* apData,
                        size_t aLength,
                        boost::uint8_t aChannelId)
