@@ -51,6 +51,9 @@ class VtoCallbackTest : public IVtoCallbacks
 		}
 
 		void OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength);
+
+		void OnVtoRemoteConnectedChanged(bool aIsRemoteOpen);
+
 		void OnBufferAvailable();
 
 		void Reset() {
@@ -61,12 +64,20 @@ class VtoCallbackTest : public IVtoCallbacks
 
 			MACRO_BZERO(this->received, 1024);
 			this->size = 0;
+
+			this->numRemoteConnectedClosed = 0;
+			this->numRemoteConnectedOpened = 0;
+			this->lastRemoteConnectionState = false;
 		}
 
 		size_t numOnVtoDataReceived;
 		size_t numOnBufferAvailable;
 
 		size_t lastOnVtoDataReceived;
+
+		size_t numRemoteConnectedClosed;
+		size_t numRemoteConnectedOpened;
+		bool lastRemoteConnectionState;
 
 		boost::uint8_t received[4096];
 		size_t size;
@@ -80,6 +91,14 @@ void VtoCallbackTest::OnVtoDataReceived(const boost::uint8_t* apData, size_t aLe
 
 	this->lastOnVtoDataReceived = aLength;
 	++this->numOnVtoDataReceived;
+}
+
+void VtoCallbackTest::OnVtoRemoteConnectedChanged(bool aIsRemoteOpen)
+{
+	if(aIsRemoteOpen) ++this->numRemoteConnectedOpened;
+	else ++this->numRemoteConnectedClosed;
+
+	this->lastRemoteConnectionState = aIsRemoteOpen;
 }
 
 void VtoCallbackTest::OnBufferAvailable()

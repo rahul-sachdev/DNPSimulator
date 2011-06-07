@@ -38,7 +38,7 @@ using namespace apl::dnp;
 class RouterTestClass : LogTester 
 {
 	public:
-		RouterTestClass(const VtoRouterSettings& arSettings = VtoRouterSettings(0), const size_t aWriterSize = 100) :
+		RouterTestClass(const VtoRouterSettings& arSettings = VtoRouterSettings(0, true), const size_t aWriterSize = 100) :
 		LogTester(false),
 		phys(mLog.GetLogger(LEV_DEBUG, "phys")),
 		writer(aWriterSize),
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_SUITE(VtoRouterTests)
 
 	BOOST_AUTO_TEST_CASE(WriteVtoData)
 	{
-		RouterTestClass rtc(8);		
+		RouterTestClass rtc(VtoRouterSettings(8, true));
 		rtc.router.Start();
 		rtc.phys.SignalOpenSuccess();
 
@@ -137,7 +137,7 @@ BOOST_AUTO_TEST_SUITE(VtoRouterTests)
 
 	BOOST_AUTO_TEST_CASE(PhysReadBuffering)
 	{
-		RouterTestClass rtc(VtoRouterSettings(0), 1); // writer only takes 1 chunk!
+		RouterTestClass rtc(VtoRouterSettings(0, true), 1); // writer only takes 1 chunk!
 		rtc.router.Start();
 		rtc.phys.SignalOpenSuccess();
 
