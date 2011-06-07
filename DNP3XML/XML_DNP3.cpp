@@ -99,6 +99,18 @@ namespace apl{ namespace dnp{
 		arStack.AppLayer.NumRetries = 3;
 	}
 
+	void XML_DNP3::AddVtoPort(APLXML_DNP::VtoPorts_t& arPorts, std::string aPhysicalLayer, int aChannel, bool aStartLocal, int aBufferSize, int aOpenRetry)
+	{
+		APLXML_DNP::VtoPort_t* port = new APLXML_DNP::VtoPort_t();
+		port->Index = aChannel;
+		port->BufferSize = aBufferSize;
+		port->StartLocal = aStartLocal;
+		port->PhysicalLayer = aPhysicalLayer;
+		port->OpenRetry = aOpenRetry;
+
+		arPorts.VtoPortVector.push_back(port);
+	}
+
 	std::string DefaultName(const std::string aBase, size_t aCount)
 	{
 		std::ostringstream oss;

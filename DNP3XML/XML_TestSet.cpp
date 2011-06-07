@@ -41,6 +41,10 @@ namespace apl {
 		 			
 		xml::XML_APL::AddSerial(arMasterTest.PhysicalLayerList, "serial", "COM1");				
 		xml::XML_APL::AddTCPClient(arMasterTest.PhysicalLayerList, "tcpclient", "127.0.0.1", 20000);		
+
+		xml::XML_APL::AddTCPServer(arMasterTest.PhysicalLayerList, "vtotunnel", "0.0.0.0", 20001);
+
+		XML_DNP3::AddVtoPort(arMasterTest.Master.VtoPorts, "vtotunnel", 0, true);
 	}
 
 	void XML_TestSet::Configure(APLXML_STS::SlaveTestSet_t& arSlaveTest)
@@ -52,6 +56,10 @@ namespace apl {
 		
 		xml::XML_APL::AddSerial(arSlaveTest.PhysicalLayerList, "serial", "COM1");
 		xml::XML_APL::AddTCPServer(arSlaveTest.PhysicalLayerList, "tcpserver", "0.0.0.0", 20000);
+
+		xml::XML_APL::AddTCPClient(arSlaveTest.PhysicalLayerList, "vtotunnel", "127.0.0.1", 23);
+
+		XML_DNP3::AddVtoPort(arSlaveTest.Slave.VtoPorts, "vtotunnel", 0, false);
 				
 		arSlaveTest.Remote = false;
 		arSlaveTest.RemotePort = 4999;

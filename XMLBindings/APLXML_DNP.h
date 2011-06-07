@@ -288,6 +288,33 @@ public:
 	int PackDelayMS;
 	int RetryMS;
 };
+class VtoPort_t : public IXMLDataBound {
+public:
+	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
+	void fromXml(TiXmlNode* pNode);
+	string PhysicalLayer;
+	int Index;
+	bool StartLocal;
+	int BufferSize;
+	int OpenRetry;
+};
+#ifdef SWIG
+}
+%template(VtoPort_c) std::vector<APLXML_DNP::VtoPort_t*>;
+namespace APLXML_DNP{
+#endif
+class VtoPorts_t : public IXMLDataBound {
+public:
+	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
+	void fromXml(TiXmlNode* pNode);
+	VtoPorts_t();
+
+#ifdef SWIG
+%immutable VtoPortVector;
+#endif
+	private: collectedType < VtoPort_t > VtoPort;
+	public: vector < VtoPort_t* >& VtoPortVector;
+};
 class AnalogGrpVar_t : public APLXML_DNP::GrpVar_t{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
@@ -374,6 +401,10 @@ public:
 %immutable Unsol;
 #endif
 	Unsol_t Unsol;
+#ifdef SWIG
+%immutable VtoPorts;
+#endif
+	VtoPorts_t VtoPorts;
 };
 class StaticRsp_t : public IXMLDataBound {
 public:
@@ -432,6 +463,10 @@ public:
 %immutable SlaveConfig;
 #endif
 	SlaveConfig_t SlaveConfig;
+#ifdef SWIG
+%immutable VtoPorts;
+#endif
+	VtoPorts_t VtoPorts;
 };
 }
 #endif

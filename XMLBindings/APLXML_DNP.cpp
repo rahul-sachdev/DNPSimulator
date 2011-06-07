@@ -605,6 +605,57 @@ void UnsolDefaults_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnore
 	pEm->SetAttribute("RetryMS", ToString_int(RetryMS));
 };
 
+void VtoPort_t :: fromXml(TiXmlNode* pNode){
+	if(pNode == NULL)return;
+	XML_CHECK("VtoPort",pNode->Type() == TiXmlNode::ELEMENT);
+	TiXmlElement* pEm = pNode->ToElement();
+	XML_CHECK("VtoPort",pEm != 0);
+	PhysicalLayer = FromString_string(pEm, pEm->Attribute("PhysicalLayer"));
+	Index = FromString_int(pEm, pEm->Attribute("Index"));
+	StartLocal = FromString_bool(pEm, pEm->Attribute("StartLocal"));
+	BufferSize = FromString_int(pEm, pEm->Attribute("BufferSize"));
+	OpenRetry = FromString_int(pEm, pEm->Attribute("OpenRetry"));
+	valid=true;
+};
+void VtoPort_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid){
+	if(!aIgnoreValid && !valid) return;
+	TiXmlElement * pEm;
+	if(aCreateNode){
+		pEm = new TiXmlElement("VtoPort");
+		pParent->LinkEndChild(pEm);
+	}else{
+		pEm = pParent->ToElement();
+	}
+	pEm->SetAttribute("PhysicalLayer", ToString_string(PhysicalLayer));
+	pEm->SetAttribute("Index", ToString_int(Index));
+	pEm->SetAttribute("StartLocal", ToString_bool(StartLocal));
+	pEm->SetAttribute("BufferSize", ToString_int(BufferSize));
+	pEm->SetAttribute("OpenRetry", ToString_int(OpenRetry));
+};
+
+VtoPorts_t::VtoPorts_t():
+		VtoPort("VtoPort"), VtoPortVector(VtoPort.collection){};
+void VtoPorts_t :: fromXml(TiXmlNode* pNode){
+	if(pNode == NULL)return;
+	XML_CHECK("VtoPorts",pNode->Type() == TiXmlNode::ELEMENT);
+	TiXmlElement* pEm = pNode->ToElement();
+	XML_CHECK("VtoPorts",pEm != 0);
+	VtoPort.fromXml(pNode);
+	valid=true;
+};
+void VtoPorts_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid){
+	if(VtoPort.size() == 0)return;
+	if(!aIgnoreValid && !valid) return;
+	TiXmlElement * pEm;
+	if(aCreateNode){
+		pEm = new TiXmlElement("VtoPorts");
+		pParent->LinkEndChild(pEm);
+	}else{
+		pEm = pParent->ToElement();
+	}
+	VtoPort.toXml(pEm, true, aIgnoreValid);
+};
+
 void AnalogGrpVar_t :: fromXml(TiXmlNode* pNode){
 	if(pNode == NULL)return;
 	XML_CHECK("AnalogGrpVar",pNode->Type() == TiXmlNode::ELEMENT);
@@ -732,6 +783,7 @@ void Master_t :: fromXml(TiXmlNode* pNode){
 	MasterSettings.fromXml(pNode->FirstChildElement("MasterSettings"));
 	ScanList.fromXml(pNode->FirstChildElement("ScanList"));
 	Unsol.fromXml(pNode->FirstChildElement("Unsol"));
+	VtoPorts.fromXml(pNode->FirstChildElement("VtoPorts"));
 	valid=true;
 };
 void Master_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid){
@@ -747,6 +799,7 @@ void Master_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid){
 	MasterSettings.toXml(pEm, true, aIgnoreValid);
 	ScanList.toXml(pEm, true, aIgnoreValid);
 	Unsol.toXml(pEm, true, aIgnoreValid);
+	VtoPorts.toXml(pEm, true, aIgnoreValid);
 };
 
 void StaticRsp_t :: fromXml(TiXmlNode* pNode){
@@ -814,6 +867,7 @@ void Slave_t :: fromXml(TiXmlNode* pNode){
 	XML_CHECK("Slave",pEm != 0);
 	Stack.fromXml(pNode->FirstChildElement("Stack"));
 	SlaveConfig.fromXml(pNode->FirstChildElement("SlaveConfig"));
+	VtoPorts.fromXml(pNode->FirstChildElement("VtoPorts"));
 	valid=true;
 };
 void Slave_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid){
@@ -827,6 +881,7 @@ void Slave_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid){
 	}
 	Stack.toXml(pEm, true, aIgnoreValid);
 	SlaveConfig.toXml(pEm, true, aIgnoreValid);
+	VtoPorts.toXml(pEm, true, aIgnoreValid);
 };
 
 }

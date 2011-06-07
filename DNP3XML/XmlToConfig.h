@@ -36,7 +36,7 @@ namespace APLXML_DNP{
 	class AppLayer_t;
 	class SlaveConfig_t;
 	class DeviceTemplate_t;
-	class VTOData_t;
+	class VtoPorts_t;
 	class GrpVar_t;
 	class Control_t;
 	class Setpoint_t;
@@ -52,7 +52,7 @@ namespace apl { namespace dnp {
 	struct AppConfig;
 	struct MasterConfig;
 	struct SlaveConfig;
-	struct VTOConfig;
+	struct VtoConfig;
 	struct GrpVar;
 	struct MasterStackConfig;
 	struct SlaveStackConfig;
@@ -77,7 +77,7 @@ namespace apl { namespace dnp {
 		static AppConfig Convert(const APLXML_DNP::AppLayer_t& arCfg);
 		static MasterConfig Convert(const APLXML_DNP::Master_t& arCfg);
 		static SlaveConfig Convert(const APLXML_DNP::SlaveConfig_t& arCfg, const APLXML_DNP::AppLayer_t& arApp);
-		static VTOConfig Convert(const APLXML_DNP::VTOData_t& arCfg);
+		static VtoConfig Convert(const APLXML_DNP::VtoPorts_t& arCfg);
 		static DeviceTemplate Convert( const APLXML_DNP::DeviceTemplate_t& arCfg, bool aStartOnline = false);
 
 		private:
