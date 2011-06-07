@@ -33,6 +33,7 @@
 #include <DNP3/SlaveStack.h>
 #include <DNP3/DeviceTemplate.h>
 #include <DNP3/VtoRouter.h>
+#include <DNP3/VtoConfig.h>
 
 #include <iostream>
 
@@ -101,6 +102,10 @@ ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, c
 	MasterStack* pMaster = new MasterStack(pLogger, &mTimerSrc, apPublisher, pPort->GetGroup(), arCfg);
 	LinkRoute route(arCfg.link.RemoteAddr, arCfg.link.LocalAddr);
 	this->OnAddStack(arStackName, pMaster, pPort, route);
+
+	// add any vto routers we've configured
+	BOOST_FOREACH(VtoRouterConfig s, arCfg.vto.mRouterConfigs) { this->StartVtoRouter(s.mPhysicalLayerName, arStackName, s.mSettings); }
+
 	return pMaster->mMaster.GetCmdAcceptor();
 }
 
@@ -113,6 +118,10 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 	SlaveStack* pSlave = new SlaveStack(pLogger, &mTimerSrc, apCmdAcceptor, arCfg);
 	LinkRoute route(arCfg.link.RemoteAddr, arCfg.link.LocalAddr);
 	this->OnAddStack(arStackName, pSlave, pPort, route);
+
+	// add any vto routers we've configured
+	BOOST_FOREACH(VtoRouterConfig s, arCfg.vto.mRouterConfigs) { this->StartVtoRouter(s.mPhysicalLayerName, arStackName, s.mSettings); }
+
 	return pSlave->mSlave.GetDataObserver();
 }
 

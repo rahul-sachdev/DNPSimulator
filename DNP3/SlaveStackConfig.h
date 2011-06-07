@@ -23,6 +23,7 @@
 #include "DeviceTemplate.h"
 #include "AppConfig.h"
 #include "LinkConfig.h"
+#include "VtoConfig.h"
 
 namespace apl { namespace dnp {
 
@@ -39,6 +40,7 @@ struct SlaveStackConfig
 	DeviceTemplate device;	// Device template that specifies database layout, control behavior
 	AppConfig app;			// Application layer config
 	LinkConfig link;		// Link layer config
+	VtoConfig vto;
 };
 
 }}
