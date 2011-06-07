@@ -33,14 +33,15 @@ VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVto
 	CleanupHelper(apTimerSrc),
 	mpVtoWriter(apWriter),
 	mVtoTxBuffer(arSettings.VTO_TX_BUFFFER_SIZE_IN_BYTES),
-	mStartLocal(arSettings.START_LOCAL)
+	mStartLocal(arSettings.START_LOCAL),
+	mDisableExtensions(arSettings.DISABLE_EXTENSIONS)
 {
 	assert(apLogger != NULL);
 	assert(apWriter != NULL);
 	assert(apPhysLayer != NULL);
 	assert(apTimerSrc != NULL);
 
-	if(mStartLocal) this->Start();
+	if(mStartLocal || mDisableExtensions) this->Start();
 }
 
 void VtoRouter::OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength)
@@ -60,18 +61,23 @@ void VtoRouter::OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength)
 void VtoRouter::OnVtoRemoteConnectedChanged(bool aOpened)
 {
 	LOG_BLOCK(LEV_INFO, "RemoteConnectionChanged: " << aOpened);
-	if(mStartLocal){
-		if(!aOpened){
-			// if the remote side has closed we should close our 
-			// local connection and then prepare for a new one
-			this->Stop();
-			this->Start();
-		}
+
+	if(mDisableExtensions){
+		LOG_BLOCK(LEV_DEBUG, "Custom VTO Extensions disabled");
 	}else{
-		// if we don't automatically start the VTO router we should 
-		// start as soon as we are told the other side started
-		if(aOpened) this->Start();
-		else this->Stop();
+		if(mStartLocal){
+			if(!aOpened){
+				// if the remote side has closed we should close our 
+				// local connection and then prepare for a new one
+				this->Stop();
+				this->Start();
+			}
+		}else{
+			// if we don't automatically start the VTO router we should 
+			// start as soon as we are told the other side started
+			if(aOpened) this->Start();
+			else this->Stop();
+		}
 	}
 }
 
@@ -139,7 +145,11 @@ void VtoRouter::OnBufferAvailable()
 void VtoRouter::OnPhysicalLayerOpen()
 {
 	LOG_BLOCK(LEV_INFO, "Local Connection Opened");
-	mpVtoWriter->SetLocalVTOState(true, this->GetChannelId());
+
+	if(!mDisableExtensions){
+		mpVtoWriter->SetLocalVTOState(true, this->GetChannelId());
+	}
+	
 	this->CheckForPhysRead();
 	this->CheckForPhysWrite();
 }
@@ -152,7 +162,7 @@ void VtoRouter::OnStateChange(IPhysMonitor::State aState)
 void VtoRouter::OnPhysicalLayerClose()
 {
 	LOG_BLOCK(LEV_INFO, "Local Connection Closed");
-	if(this->IsRunning()){
+	if(!mDisableExtensions && this->IsRunning()){
 		mpVtoWriter->SetLocalVTOState(false, this->GetChannelId());
 	}
 }

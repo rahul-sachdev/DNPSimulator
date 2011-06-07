@@ -170,6 +170,8 @@ namespace apl {
 				 * instead of flag
 				 */
 				bool mStartLocal;
+
+				bool mDisableExtensions;
 		};
 
 	}

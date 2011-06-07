@@ -989,7 +989,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 
 	BOOST_AUTO_TEST_CASE(UnsolEnable)
 	{
-		SlaveConfig cfg; cfg.mUnsolPackDelay = 0;
+		SlaveConfig cfg; cfg.mUnsolPackDelay = 0; cfg.mUnsolMask = ClassMask(false,false,false);
 		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 1);
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
@@ -1015,7 +1015,7 @@ BOOST_AUTO_TEST_SUITE(SlaveSuite)
 
 	BOOST_AUTO_TEST_CASE(UnsolEnableBadObject)
 	{
-		SlaveConfig cfg; cfg.mUnsolPackDelay = 0;
+		SlaveConfig cfg; cfg.mUnsolPackDelay = 0; cfg.mUnsolMask = ClassMask(false,false,false);
 		SlaveTestObject t(cfg);
 		t.db.Configure(DT_BINARY, 1);
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);

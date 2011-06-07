@@ -38,7 +38,7 @@ using namespace apl::dnp;
 class RouterTestClass : LogTester 
 {
 	public:
-		RouterTestClass(const VtoRouterSettings& arSettings = VtoRouterSettings(0, true), const size_t aWriterSize = 100) :
+		RouterTestClass(const VtoRouterSettings& arSettings = VtoRouterSettings(0,true,true), const size_t aWriterSize = 100) :
 		LogTester(false),
 		phys(mLog.GetLogger(LEV_DEBUG, "phys")),
 		writer(aWriterSize),
@@ -75,8 +75,7 @@ BOOST_AUTO_TEST_SUITE(VtoRouterTests)
 
 	BOOST_AUTO_TEST_CASE(StartsReadingAfterOpen)
 	{
-		RouterTestClass rtc;		
-		rtc.router.Start();
+		RouterTestClass rtc;
 		BOOST_REQUIRE(rtc.phys.IsOpening());
 		rtc.phys.SignalOpenSuccess();
 		BOOST_REQUIRE(rtc.phys.IsReading());
@@ -84,8 +83,7 @@ BOOST_AUTO_TEST_SUITE(VtoRouterTests)
 
 	BOOST_AUTO_TEST_CASE(WriteVtoBeforeConnect)
 	{
-		RouterTestClass rtc;		
-		rtc.router.Start();
+		RouterTestClass rtc;
 		BOOST_REQUIRE(rtc.phys.IsOpening());			
 		rtc.router.OnVtoDataReceived(data, 3);
 
@@ -102,8 +100,7 @@ BOOST_AUTO_TEST_SUITE(VtoRouterTests)
 
 	BOOST_AUTO_TEST_CASE(WriteVtoAfterConnect)
 	{
-		RouterTestClass rtc;		
-		rtc.router.Start();
+		RouterTestClass rtc;
 		BOOST_REQUIRE(rtc.phys.IsOpening());			
 		
 		/* When physical layer comes up, it should read and write */
@@ -122,8 +119,7 @@ BOOST_AUTO_TEST_SUITE(VtoRouterTests)
 
 	BOOST_AUTO_TEST_CASE(WriteVtoData)
 	{
-		RouterTestClass rtc(VtoRouterSettings(8, true));
-		rtc.router.Start();
+		RouterTestClass rtc(VtoRouterSettings(8, true, true));
 		rtc.phys.SignalOpenSuccess();
 
 		std::string stringData("0A 0B 0C");
@@ -137,8 +133,7 @@ BOOST_AUTO_TEST_SUITE(VtoRouterTests)
 
 	BOOST_AUTO_TEST_CASE(PhysReadBuffering)
 	{
-		RouterTestClass rtc(VtoRouterSettings(0, true), 1); // writer only takes 1 chunk!
-		rtc.router.Start();
+		RouterTestClass rtc(VtoRouterSettings(0, true, true), 1); // writer only takes 1 chunk!
 		rtc.phys.SignalOpenSuccess();
 
 		std::string stringData1("0A 0B 0C");

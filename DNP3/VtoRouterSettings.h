@@ -35,12 +35,13 @@ namespace apl { namespace dnp {
 		 * @param aVtoTxBufferSizeInBytes number of bytes to buffer locally
 		 * @param aOpenRetryMs how long to wait before retrying opening the physical layer after a failure
 		 */
-		VtoRouterSettings(boost::uint8_t aChannelId, bool aStartLocal, size_t aVtoTxBufferSizeInBytes = 4096, millis_t aOpenRetryMs = 5000);
+		VtoRouterSettings(boost::uint8_t aChannelId, bool aStartLocal, bool aDisableExtensions, size_t aVtoTxBufferSizeInBytes = 4096, millis_t aOpenRetryMs = 5000);
 
 		boost::uint8_t CHANNEL_ID;
 		size_t VTO_TX_BUFFFER_SIZE_IN_BYTES;
 		millis_t OPEN_RETRY_MS;
 		bool START_LOCAL;
+		bool DISABLE_EXTENSIONS;
 	};
 
 }}

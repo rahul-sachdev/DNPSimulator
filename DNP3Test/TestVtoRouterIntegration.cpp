@@ -43,14 +43,14 @@ using namespace apl::dnp;
 #endif
 
 BOOST_AUTO_TEST_SUITE(VtoRouterIntegrationSuite)
-/*
+
 BOOST_AUTO_TEST_CASE(MasterToSlave)
 {
 	const boost::uint16_t port = PORT_VALUE;
 	const FilterLevel level = LEV_INFO;
 
 	EventLog log;
-	log.AddLogSubscriber(LogToStdio::Inst());
+	//log.AddLogSubscriber(LogToStdio::Inst());
 	LogToFile ltf(&log, "integration.log");
 	FlexibleDataObserver fdo;
 	FlexibleDataObserver tunneledData;
@@ -69,8 +69,8 @@ BOOST_AUTO_TEST_CASE(MasterToSlave)
 	mgr.AddTCPClient("vtoserver1", PhysLayerSettings(), "127.0.0.1", port+10);
 	mgr.AddTCPServer("vtoserver2", PhysLayerSettings(), "127.0.0.1", port+20);
 	
-	mgr.StartVtoRouter("vtoserver1", "master", VtoRouterSettings(0, false));
-	mgr.StartVtoRouter("vtoserver2", "slave", VtoRouterSettings(0, true));
+	mgr.StartVtoRouter("vtoserver1", "master", VtoRouterSettings(0, false, false));
+	mgr.StartVtoRouter("vtoserver2", "slave", VtoRouterSettings(0, true, false));
 
 	mgr.AddTCPClient("tunneled_client", PhysLayerSettings(), "127.0.0.1", port+20);
 	mgr.AddTCPServer("tunneled_server", PhysLayerSettings(), "127.0.0.1", port+10);
@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE(MasterToSlave)
 
 	mgr.Stop();
 }
-
+/*
 BOOST_AUTO_TEST_CASE(SlaveToMaster)
 {
 	const boost::uint16_t port = PORT_VALUE;
@@ -118,8 +118,8 @@ BOOST_AUTO_TEST_CASE(SlaveToMaster)
 	mgr.AddTCPClient("vtoserver1", PhysLayerSettings(), "127.0.0.1", port+10);
 	mgr.AddTCPServer("vtoserver2", PhysLayerSettings(), "127.0.0.1", port+20);
 	
-	mgr.StartVtoRouter("vtoserver1", "slave", VtoRouterSettings(0, false));
-	mgr.StartVtoRouter("vtoserver2", "master", VtoRouterSettings(0, true));
+	mgr.StartVtoRouter("vtoserver1", "slave", VtoRouterSettings(0, false, false));
+	mgr.StartVtoRouter("vtoserver2", "master", VtoRouterSettings(0, true, false));
 
 	mgr.AddTCPClient("tunneled_client", PhysLayerSettings(), "127.0.0.1", port+20);
 	mgr.AddTCPServer("tunneled_server", PhysLayerSettings(), "127.0.0.1", port+10);
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE(SlaveToMaster)
 
 	mgr.Stop();
 }
-*/
+
 
 BOOST_AUTO_TEST_CASE(MultiThreadedSlaveToMaster)
 {
@@ -174,8 +174,8 @@ BOOST_AUTO_TEST_CASE(MultiThreadedSlaveToMaster)
 	local.AddTCPServer("vto_server", PhysLayerSettings(), "127.0.0.1", port+10);
 	remote.AddTCPClient("vto_client", PhysLayerSettings(), "127.0.0.1", port+20);
 	
-	local.StartVtoRouter("vto_server", "master", VtoRouterSettings(0, true));
-	remote.StartVtoRouter("vto_client", "slave", VtoRouterSettings(0, false));
+	local.StartVtoRouter("vto_server", "master", VtoRouterSettings(0, true, false));
+	remote.StartVtoRouter("vto_client", "slave", VtoRouterSettings(0, false, false));
 
 	AsyncStackManager mgrTunneledMaster(tunneledMaster.GetLogger(level, "tmaster"));
 	AsyncStackManager mgrTunneledSlave(tunneledSlave.GetLogger(level, "tslave"));
@@ -212,7 +212,7 @@ BOOST_AUTO_TEST_CASE(MultiThreadedSlaveToMaster)
 
 	
 }
-
+*/
 BOOST_AUTO_TEST_SUITE_END()
 
 /* vim: set ts=4 sw=4: */
