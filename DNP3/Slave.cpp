@@ -303,12 +303,19 @@ void Slave::ConfigureDelayMeasurement(const APDU& arRequest)
 
 void Slave::HandleWriteVto(HeaderReadIterator& arHdr)
 {
+	Transaction tr(mVtoReader);
 	for (ObjectReadIterator obj = arHdr.BeginRead(); !obj.IsEnd(); ++obj)
 	{
 		/*
-		 * TODO - Look up the IVtoCallbacks instance in the VtoReader for the
-		 * obj->Index(), then send the buffer data up the food chain.
+		 * Pass the data to the vto reader
 		 */
+		size_t size = arHdr->GetVariation();
+		boost::uint8_t* data = new boost::uint8_t[size];
+		Group112Var0::Inst()->Read(*obj, arHdr->GetVariation(), data);
+
+		VtoData vto(data,size);
+		delete data;
+		mVtoReader.Update(vto,obj->Index());
 	}
 }
 
