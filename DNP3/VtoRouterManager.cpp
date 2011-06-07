@@ -73,7 +73,8 @@ VtoRouter* VtoRouterManager::StartRouter(
 
 	RouterRecord record(arPortName, pRouter, apWriter, arSettings.CHANNEL_ID);
 
-	pRouter->Start();
+	// we need the VtoRouters to start themselves
+	//pRouter->Start();
 	
 	this->mRecords.push_back(record);
 
@@ -157,6 +158,7 @@ void VtoRouterManager::StopRouter(VtoRouter* apRouter)
 	for(RouterRecordVector::iterator i = mRecords.begin(); i != mRecords.end(); ++i) 
 	{
 		if(i->mpRouter == apRouter) {
+			LOG_BLOCK(LEV_INFO, "Releasing layer: " << i->mPortName);
 			mpPhysSource->ReleaseLayer(i->mPortName);
 			mpTimerSrc->Post(boost::bind(&VtoRouter::Stop, i->mpRouter));
 			mRecords.erase(i);
@@ -170,7 +172,7 @@ void VtoRouterManager::StopRouter(VtoRouter* apRouter)
 Logger* VtoRouterManager::GetSubLogger(const std::string& arId, boost::uint8_t aVtoChannelId)
 {
 	std::ostringstream oss;
-	oss << arId << "-VtoRouterChannel-" << aVtoChannelId;
+	oss << arId << "-VtoRouterChannel-" << ((int)aVtoChannelId);
 	return mpLogger->GetSubLogger(oss.str());	
 }
 

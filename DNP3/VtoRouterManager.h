@@ -35,7 +35,7 @@ namespace boost { namespace asio { class io_service; } }
 namespace apl { namespace dnp {
 
 class VtoRouter;
-class VtoRouterSettings;
+struct VtoRouterSettings;
 class IVtoWriter;
 class IVtoDataHandler;
 
