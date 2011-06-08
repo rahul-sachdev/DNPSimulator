@@ -313,16 +313,25 @@ void Slave::HandleWriteVto(HeaderReadIterator& arHdr)
 	Transaction tr(mVtoReader);
 	for (ObjectReadIterator obj = arHdr.BeginRead(); !obj.IsEnd(); ++obj)
 	{
-		/*
-		 * Pass the data to the vto reader
-		 */
-		size_t size = arHdr->GetVariation();
-		boost::uint8_t* data = new boost::uint8_t[size];
-		Group112Var0::Inst()->Read(*obj, arHdr->GetVariation(), data);
+		size_t index = obj->Index();
 
-		VtoData vto(data,size);
-		delete data;
-		mVtoReader.Update(vto,obj->Index());
+		if(index > std::numeric_limits<boost::uint8_t>::max()) {
+			LOG_BLOCK(LEV_WARNING, "Ignoring VTO index that exceeds bit width of uint8_t: " << index);
+		}
+		else {
+			/*
+			 * Pass the data to the vto reader
+			 */
+			boost::uint8_t channel = static_cast<boost::uint8_t>(index);
+
+			size_t size = arHdr->GetVariation();
+			boost::uint8_t* data = new boost::uint8_t[size];
+			Group112Var0::Inst()->Read(*obj, arHdr->GetVariation(), data);
+
+			VtoData vto(data,size);
+			delete data;
+			mVtoReader.Update(vto,channel);
+		}
 	}
 }
 
