@@ -107,7 +107,7 @@ void Master::UpdateState(MasterStates aState)
 		LOG_BLOCK(LEV_INFO, "MasterState: " << aState);
 		mState = aState;
 		if(mpObserver != NULL) mpObserver->OnStateChange(aState);
-		if(mState == MasterStates::MS_COMMS_UP){
+		if(mState == MS_COMMS_UP){
 			mSchedule.mpVtoTransmitTask->Enable();
 		}
 	}
@@ -230,7 +230,7 @@ void Master::TransmitVtoData(ITask* apTask)
 
 	// only start the task if we are in comms_up
 	// TODO: should this just be Enable?
-	if(this->mState == MasterStates::MS_COMMS_UP){
+	if(this->mState == MS_COMMS_UP){
 
 		/* Any data to transmit? */
 		if (mVtoTransmitTask.mBuffer.Size() > 0)

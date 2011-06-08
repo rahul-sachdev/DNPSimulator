@@ -74,7 +74,7 @@ namespace apl
 			//holds pointers to the loggers that have been distributed
 			typedef std::map<std::string, Logger*> LoggerMap;
 			LoggerMap mLogMap;			
-			typedef std::map<ILogBase*, std::set<int>> SubscriberMap;
+			typedef std::map<ILogBase*, std::set<int> > SubscriberMap;
 			SubscriberMap mSubscribers;
 
 	};

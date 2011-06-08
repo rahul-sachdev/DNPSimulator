@@ -25,6 +25,7 @@
 #include <APL/IPhysicalLayerAsync.h>
 
 #include <boost/foreach.hpp>
+#include <boost/bind.hpp>
 #include <sstream>
 
 namespace apl { namespace dnp {

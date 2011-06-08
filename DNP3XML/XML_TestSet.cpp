@@ -57,7 +57,7 @@ namespace apl {
 		xml::XML_APL::AddSerial(arSlaveTest.PhysicalLayerList, "serial", "COM1");
 		xml::XML_APL::AddTCPServer(arSlaveTest.PhysicalLayerList, "tcpserver", "0.0.0.0", 20000);
 
-		xml::XML_APL::AddTCPClient(arSlaveTest.PhysicalLayerList, "vtotunnel", "127.0.0.1", 23);
+		xml::XML_APL::AddTCPClient(arSlaveTest.PhysicalLayerList, "vtotunnel", "127.0.0.1", 22);
 
 		XML_DNP3::AddVtoPort(arSlaveTest.Slave.VtoPorts, "vtotunnel", 0, false);
 				
