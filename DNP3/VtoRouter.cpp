@@ -147,7 +147,7 @@ void VtoRouter::OnPhysicalLayerOpen()
 	LOG_BLOCK(LEV_INFO, "Local Connection Opened");
 
 	if(!mDisableExtensions){
-		mpVtoWriter->SetLocalVTOState(true, this->GetChannelId());
+		mpVtoWriter->SetLocalVtoState(true, this->GetChannelId());
 	}
 	
 	this->CheckForPhysRead();
@@ -163,7 +163,7 @@ void VtoRouter::OnPhysicalLayerClose()
 {
 	LOG_BLOCK(LEV_INFO, "Local Connection Closed");
 	if(!mDisableExtensions && this->IsRunning()){
-		mpVtoWriter->SetLocalVTOState(false, this->GetChannelId());
+		mpVtoWriter->SetLocalVtoState(false, this->GetChannelId());
 	}
 }
 }}

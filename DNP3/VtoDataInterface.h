@@ -114,11 +114,11 @@ namespace apl {
 				 * Sends an indication to the remote vto consumer that the VTO connection
 				 * on this side of the dnp3 connection has changed.
 				 *
-				 * @param aLocalVTOConnectionOpened  Whether the local connection
+				 * @param aLocalVtoConnectionOpened  Whether the local connection
 				 *                                   should be considered to be online
 				 * @param aChannelId                 The channel id for the vto stream
 				 */
-				virtual void SetLocalVTOState(bool aLocalVTOConnectionOpened, boost::uint8_t aChannelId) = 0;
+				virtual void SetLocalVtoState(bool aLocalVtoConnectionOpened, boost::uint8_t aChannelId) = 0;
 								
 				/**
 				 * Returns the number of bytes that the writer can currently accept
