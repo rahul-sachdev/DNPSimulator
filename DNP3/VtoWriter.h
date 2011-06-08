@@ -73,10 +73,10 @@ namespace apl {
 				             boost::uint8_t aChannelId);
 
 				/**
-				 * Implements IVtoWriter::SetLocalVTOState by shunting the state information to
+				 * Implements IVtoWriter::SetLocalVtoState by shunting the state information to
 				 * the magic vto channel 255
 				 */
-				virtual void SetLocalVTOState(bool aLocalVTOConnectionOpened,
+				virtual void SetLocalVtoState(bool aLocalVtoConnectionOpened,
 				             boost::uint8_t aChannelId);
 				/**
 				 * Reads one item from the front of the queue.  If no items

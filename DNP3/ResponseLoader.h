@@ -32,7 +32,6 @@
 namespace apl { namespace dnp {
 
 class HeaderReadIterator;
-class IVTODataSink;
 
 /**
  * Dedicated class for processing response data in the master.
