@@ -174,13 +174,8 @@ void VtoRouterManager::StopRouter(VtoRouter* apRouter)
 Logger* VtoRouterManager::GetSubLogger(const std::string& arId, boost::uint8_t aVtoChannelId)
 {
 	std::ostringstream oss;
-<<<<<<< HEAD
-	oss << arId << "-VtoRouterChannel-" << aVtoChannelId;
-	return mpLogger->GetSubLogger(oss.str());
-=======
 	oss << arId << "-VtoRouterChannel-" << ((int)aVtoChannelId);
 	return mpLogger->GetSubLogger(oss.str());
->>>>>>> gec/vto_integration
 }
 
 }}
