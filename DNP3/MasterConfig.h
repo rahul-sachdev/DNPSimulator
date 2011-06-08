@@ -22,7 +22,7 @@
 #include "DNPConstants.h"
 #include "PointClass.h"
 #include "MasterConfigTypes.h"
-#include "MasterObserver.h"
+#include "IStackObserver.h"
 
 #include <vector>
 
@@ -86,7 +86,7 @@ struct MasterConfig
 	std::vector<ExceptionScan> mScans;
 
 	// Observer class for notifying outside world what the master is doing
-	IMasterObserver* mpObserver;
+	IStackObserver* mpObserver;
 };
 
 }}

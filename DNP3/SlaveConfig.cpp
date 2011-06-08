@@ -54,7 +54,8 @@ namespace apl { namespace dnp {
 		mEventBinary(GrpVar(2, 1)),
 		mEventAnalog(GrpVar(32, 1)),
 		mEventCounter(GrpVar(22, 1)),
-		mEventVto(GrpVar(113, 0))
+		mEventVto(GrpVar(113, 0)),
+		mpObserver(NULL)
 	{}
 
 }}

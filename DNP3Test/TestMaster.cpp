@@ -24,7 +24,7 @@
 #include <APL/CommandResponseQueue.h>
 
 #include "MasterTestObject.h"
-#include "QueueingMasterObserver.h"
+#include "QueueingStackObserver.h"
 
 using namespace apl;
 using namespace apl::dnp;
@@ -131,19 +131,19 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 
 	BOOST_AUTO_TEST_CASE(StateTransitionSuccessFailure)
 	{
-		QueueingMasterObserver obs;
+		QueueingStackObserver obs;
 		MasterConfig cfg; cfg.IntegrityRate = 1000;
 		cfg.mpObserver = &obs;
 		MasterTestObject t(cfg);
 		BOOST_REQUIRE_EQUAL(obs.mQueue.size(), 1);
-		BOOST_REQUIRE_EQUAL(obs.mQueue.front(), MS_COMMS_DOWN);
+		BOOST_REQUIRE_EQUAL(obs.mQueue.front(), SS_COMMS_DOWN);
 		obs.mQueue.pop_front();
 		t.master.OnLowerLayerUp();
 		BOOST_REQUIRE_EQUAL(obs.mQueue.size(), 0);
 
 		TestForIntegrityPoll(t);
 		BOOST_REQUIRE_EQUAL(obs.mQueue.size(), 1);
-		BOOST_REQUIRE_EQUAL(obs.mQueue.front(), MS_COMMS_UP);
+		BOOST_REQUIRE_EQUAL(obs.mQueue.front(), SS_COMMS_UP);
 		obs.mQueue.pop_front();
 
 		t.fake_time.Advance(2000);
@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 		TestForIntegrityPoll(t, false);
 
 		BOOST_REQUIRE_EQUAL(obs.mQueue.size(), 1);
-		BOOST_REQUIRE_EQUAL(obs.mQueue.front(), MS_COMMS_DOWN);
+		BOOST_REQUIRE_EQUAL(obs.mQueue.front(), SS_COMMS_DOWN);
 		obs.mQueue.pop_front();
 
 		t.fake_time.Advance(10000);
@@ -159,13 +159,13 @@ BOOST_AUTO_TEST_SUITE(MasterSuite)
 		TestForIntegrityPoll(t);
 
 		BOOST_REQUIRE_EQUAL(obs.mQueue.size(), 1);
-		BOOST_REQUIRE_EQUAL(obs.mQueue.front(), MS_COMMS_UP);
+		BOOST_REQUIRE_EQUAL(obs.mQueue.front(), SS_COMMS_UP);
 		obs.mQueue.pop_front();
 
 		t.master.OnLowerLayerDown();
 
 		BOOST_REQUIRE_EQUAL(obs.mQueue.size(), 1);
-		BOOST_REQUIRE_EQUAL(obs.mQueue.front(), MS_COMMS_DOWN);
+		BOOST_REQUIRE_EQUAL(obs.mQueue.front(), SS_COMMS_DOWN);
 		obs.mQueue.pop_front();
 	}
 

@@ -55,7 +55,7 @@ Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IData
 	mpTask(NULL),
 	mpScheduledTask(NULL),
 	mpObserver(aCfg.mpObserver),
-	mState(MS_UNKNOWN),
+	mState(SS_UNKNOWN),
 	mSchedule(MasterSchedule::GetSchedule(aCfg, this, apTaskGroup)),
 	mClassPoll(apLogger, apPublisher, &mVtoReader),
 	mClearRestart(apLogger),
@@ -98,16 +98,16 @@ Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IData
 	/*
 	 * Set the initial state of the communication link.
 	 */
-	this->UpdateState(MS_COMMS_DOWN);
+	this->UpdateState(SS_COMMS_DOWN);
 }
 
-void Master::UpdateState(MasterStates aState)
+void Master::UpdateState(StackStates aState)
 {
 	if(mState != aState) {
-		LOG_BLOCK(LEV_INFO, "MasterState: " << aState);
+		LOG_BLOCK(LEV_INFO, "StackState: " << aState);
 		mState = aState;
 		if(mpObserver != NULL) mpObserver->OnStateChange(aState);
-		if(mState == MS_COMMS_UP){
+		if(mState == SS_COMMS_UP){
 			mSchedule.mpVtoTransmitTask->Enable();
 		}
 	}
@@ -230,7 +230,7 @@ void Master::TransmitVtoData(ITask* apTask)
 
 	// only start the task if we are in comms_up
 	// TODO: should this just be Enable?
-	if(this->mState == MS_COMMS_UP){
+	if(this->mState == SS_COMMS_UP){
 
 		/* Any data to transmit? */
 		if (mVtoTransmitTask.mBuffer.Size() > 0)
@@ -258,7 +258,7 @@ void Master::OnLowerLayerDown()
 {
 	mpState->OnLowerLayerDown(this);
 	mSchedule.DisableOnlineTasks();
-	this->UpdateState(MS_COMMS_DOWN);
+	this->UpdateState(SS_COMMS_DOWN);
 }
 
 void Master::OnSolSendSuccess()
@@ -268,7 +268,7 @@ void Master::OnSolSendSuccess()
 
 void Master::OnSolFailure()
 {
-	this->UpdateState(MS_COMMS_DOWN);
+	this->UpdateState(SS_COMMS_DOWN);
 	mpState->OnFailure(this);
 }
 
@@ -291,7 +291,7 @@ void Master::OnPartialResponse(const APDU& arAPDU)
 
 void Master::OnFinalResponse(const APDU& arAPDU)
 {
-	this->UpdateState(MS_COMMS_UP);
+	this->UpdateState(SS_COMMS_UP);
 	mLastIIN = arAPDU.GetIIN();
 	this->ProcessIIN(arAPDU.GetIIN());
 	mpState->OnFinalResponse(this, arAPDU);

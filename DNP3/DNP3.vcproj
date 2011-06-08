@@ -588,7 +588,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\MasterObserver.h"
+					RelativePath=".\IStackObserver.h"
 					>
 				</File>
 				<File
