@@ -87,7 +87,7 @@ class Slave : public Loggable, public IAppUser
 	public:
 
 		Slave(Logger*, IAppLayer*, ITimerSource*, ITimeManager* apTime, Database*, IDNPCommandMaster*, const SlaveConfig& arCfg);
-		virtual ~Slave() {}
+		~Slave();
 
 		////////////////////////
 		// External events
@@ -170,6 +170,8 @@ class Slave : public Loggable, public IAppUser
 		SlaveResponseTypes mRspTypes;			// converts the group/var in the config to dnp singletons
 
 		ITimer* mpUnsolTimer;					// timer for sending unsol responsess
+
+		INotifier* mpVtoNotifier;
 
 		IINField mIIN;							// IIN bits that persist between requests (i.e. NeedsTime/Restart/Etc)
 		IINField mRspIIN;						// Transient IIN bits that get merged before a response is issued

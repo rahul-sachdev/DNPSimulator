@@ -49,7 +49,7 @@ namespace apl { namespace dnp {
 
 class Port;
 class Stack;
-class VtoRouterSettings;
+struct VtoRouterSettings;
 
 struct SlaveStackConfig;
 struct MasterStackConfig;

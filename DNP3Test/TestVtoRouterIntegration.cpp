@@ -21,6 +21,7 @@
 
 #include <APL/Log.h>
 #include <APL/LogToStdio.h>
+#include <APL/LogToFile.h>
 #include <APL/FlexibleDataObserver.h>
 
 #include <DNP3/AsyncStackManager.h>
@@ -46,10 +47,11 @@ BOOST_AUTO_TEST_SUITE(VtoRouterIntegrationSuite)
 BOOST_AUTO_TEST_CASE(MasterToSlave)
 {
 	const boost::uint16_t port = PORT_VALUE;
-	const FilterLevel level = LEV_WARNING;
+	const FilterLevel level = LEV_INFO;
 
 	EventLog log;
-	log.AddLogSubscriber(LogToStdio::Inst());
+	//log.AddLogSubscriber(LogToStdio::Inst());
+	LogToFile ltf(&log, "integration.log");
 	FlexibleDataObserver fdo;
 	FlexibleDataObserver tunneledData;
 	MockCommandAcceptor cmdAcceptor;
@@ -58,80 +60,47 @@ BOOST_AUTO_TEST_CASE(MasterToSlave)
 	mgr.AddTCPClient("client", PhysLayerSettings(), "127.0.0.1", port);
 	mgr.AddTCPServer("server", PhysLayerSettings(), "127.0.0.1", port);
 	
-	mgr.AddSlave("client", "slave", level, &cmdAcceptor, SlaveStackConfig());
+	SlaveStackConfig slave = SlaveStackConfig();
+	slave.device = DeviceTemplate(10,10,10,10,10,10,10);
+
+	mgr.AddSlave("client", "slave", level, &cmdAcceptor, slave);
 	mgr.AddMaster("server", "master", level, &fdo, MasterStackConfig());
 	
-	mgr.AddTCPServer("vtoserver1", PhysLayerSettings(), "127.0.0.1", port+10);
-	mgr.AddTCPClient("vtoserver2", PhysLayerSettings(), "127.0.0.1", port+20);
+	mgr.AddTCPClient("vtoserver1", PhysLayerSettings(), "127.0.0.1", port+10);
+	mgr.AddTCPServer("vtoserver2", PhysLayerSettings(), "127.0.0.1", port+20);
 	
-	mgr.StartVtoRouter("vtoserver1", "master", VtoRouterSettings(0));
-	mgr.StartVtoRouter("vtoserver2", "slave", VtoRouterSettings(0));
+	mgr.StartVtoRouter("vtoserver1", "master", VtoRouterSettings(0, false, false));
+	mgr.StartVtoRouter("vtoserver2", "slave", VtoRouterSettings(0, true, false));
 
-	mgr.AddTCPClient("tunneled_client", PhysLayerSettings(), "127.0.0.1", port+10);
-	mgr.AddTCPServer("tunneled_server", PhysLayerSettings(), "127.0.0.1", port+20);
+	mgr.AddTCPClient("tunneled_client", PhysLayerSettings(), "127.0.0.1", port+20);
+	mgr.AddTCPServer("tunneled_server", PhysLayerSettings(), "127.0.0.1", port+10);
 
-	mgr.AddSlave("tunneled_server", "tunneled_slave", level, &cmdAcceptor, SlaveStackConfig());
+	mgr.AddSlave("tunneled_server", "tunneled_slave", level, &cmdAcceptor, slave);
 	mgr.AddMaster("tunneled_client", "tunneled_master", level, &tunneledData, MasterStackConfig());
 	
 	BOOST_REQUIRE_EQUAL(tunneledData.GetTotalCount(),0);
 
 	mgr.Start();
 
-	Thread::SleepFor(1000);
+	Thread::SleepFor(10000);
 
-	BOOST_REQUIRE_GE(tunneledData.GetTotalCount(),0);
+	BOOST_REQUIRE_GT(fdo.GetTotalCount(),0);
 
-	mgr.Stop();
-}
-
-BOOST_AUTO_TEST_CASE(SlaveToMaster)
-{
-	const boost::uint16_t port = PORT_VALUE;
-	const FilterLevel level = LEV_WARNING;
-
-	EventLog log;
-	log.AddLogSubscriber(LogToStdio::Inst());
-	FlexibleDataObserver fdo;
-	FlexibleDataObserver tunneledData;
-	MockCommandAcceptor cmdAcceptor;
-	AsyncStackManager mgr(log.GetLogger(level, "test"));
+	std::cout << "Tunneled: " << tunneledData.GetTotalCount() << std::endl;
+	BOOST_REQUIRE_GT(tunneledData.GetTotalCount(),0);
 	
-	mgr.AddTCPClient("client", PhysLayerSettings(), "127.0.0.1", port);
-	mgr.AddTCPServer("server", PhysLayerSettings(), "127.0.0.1", port);
-	
-	mgr.AddSlave("client", "slave", level, &cmdAcceptor, SlaveStackConfig());
-	mgr.AddMaster("server", "master", level, &fdo, MasterStackConfig());
-	
-	mgr.AddTCPServer("vtoserver1", PhysLayerSettings(), "127.0.0.1", port+10);
-	mgr.AddTCPClient("vtoserver2", PhysLayerSettings(), "127.0.0.1", port+20);
-	
-	mgr.StartVtoRouter("vtoserver1", "master", VtoRouterSettings(0));
-	mgr.StartVtoRouter("vtoserver2", "slave", VtoRouterSettings(0));
-
-	mgr.AddTCPClient("tunneled_client", PhysLayerSettings(), "127.0.0.1", port+10);
-	mgr.AddTCPServer("tunneled_server", PhysLayerSettings(), "127.0.0.1", port+20);
-
-	mgr.AddSlave("tunneled_server", "tunneled_slave", level, &cmdAcceptor, SlaveStackConfig());
-	mgr.AddMaster("tunneled_client", "tunneled_master", level, &tunneledData, MasterStackConfig());
-	
-	BOOST_REQUIRE_EQUAL(tunneledData.GetTotalCount(),0);
-
-	mgr.Start();
-
-	Thread::SleepFor(1000);
-
-	BOOST_REQUIRE_GE(tunneledData.GetTotalCount(),0);
 
 	mgr.Stop();
 }
 /*
-BOOST_AUTO_TEST_CASE(MultiThreadedSlaveToMaster)
+BOOST_AUTO_TEST_CASE(SlaveToMaster)
 {
 	const boost::uint16_t port = PORT_VALUE;
-	const FilterLevel level = LEV_WARNING;
+	const FilterLevel level = LEV_INFO;
 
 	EventLog log;
 	log.AddLogSubscriber(LogToStdio::Inst());
+	LogToFile ltf(&log, "integration.log");
 	FlexibleDataObserver fdo;
 	FlexibleDataObserver tunneledData;
 	MockCommandAcceptor cmdAcceptor;
@@ -140,38 +109,110 @@ BOOST_AUTO_TEST_CASE(MultiThreadedSlaveToMaster)
 	mgr.AddTCPClient("client", PhysLayerSettings(), "127.0.0.1", port);
 	mgr.AddTCPServer("server", PhysLayerSettings(), "127.0.0.1", port);
 	
-	mgr.AddSlave("client", "master", level, &cmdAcceptor, SlaveStackConfig());
-	mgr.AddMaster("server", "slave", level, &fdo, MasterStackConfig());
-	
-	mgr.AddTCPServer("vtoserver1", PhysLayerSettings(), "127.0.0.1", port+10);
-	mgr.AddTCPClient("vtoserver2", PhysLayerSettings(), "127.0.0.1", port+20);
-	
-	mgr.StartVtoRouter("vtoserver1", "master", VtoRouterSettings(0));
-	mgr.StartVtoRouter("vtoserver2", "slave", VtoRouterSettings(0));
+	SlaveStackConfig slave = SlaveStackConfig();
+	slave.device = DeviceTemplate(10,10,10,10,10,10,10);
 
-	AsyncStackManager mgrTunneled(log.GetLogger(level, "tunneled"));
-
-	mgrTunneled.AddTCPClient("tunneled_client", PhysLayerSettings(), "127.0.0.1", port+10);
-	mgrTunneled.AddTCPServer("tunneled_server", PhysLayerSettings(), "127.0.0.1", port+20);
-
-	mgrTunneled.AddSlave("tunneled_server", "tunneled_slave", level, &cmdAcceptor, SlaveStackConfig());
-	mgrTunneled.AddMaster("tunneled_client", "tunneled_master", level, &tunneledData, MasterStackConfig());
+	mgr.AddSlave("client", "slave", level, &cmdAcceptor, slave);
+	mgr.AddMaster("server", "master", level, &fdo, MasterStackConfig());
 	
+	mgr.AddTCPClient("vtoserver1", PhysLayerSettings(), "127.0.0.1", port+10);
+	mgr.AddTCPServer("vtoserver2", PhysLayerSettings(), "127.0.0.1", port+20);
+	
+	mgr.StartVtoRouter("vtoserver1", "slave", VtoRouterSettings(0, false, false));
+	mgr.StartVtoRouter("vtoserver2", "master", VtoRouterSettings(0, true, false));
+
+	mgr.AddTCPClient("tunneled_client", PhysLayerSettings(), "127.0.0.1", port+20);
+	mgr.AddTCPServer("tunneled_server", PhysLayerSettings(), "127.0.0.1", port+10);
+
+	mgr.AddSlave("tunneled_server", "tunneled_slave", level, &cmdAcceptor, slave);
+	mgr.AddMaster("tunneled_client", "tunneled_master", level, &tunneledData, MasterStackConfig());
+	
+	BOOST_REQUIRE_EQUAL(tunneledData.GetTotalCount(),0);
+
 	mgr.Start();
+
+	Thread::SleepFor(10000);
+
+	BOOST_REQUIRE_GT(fdo.GetTotalCount(),0);
+
+	std::cout << "Tunneled: " << tunneledData.GetTotalCount() << std::endl;
+	BOOST_REQUIRE_GT(tunneledData.GetTotalCount(),0);
+
+	mgr.Stop();
+}
+
+
+BOOST_AUTO_TEST_CASE(MultiThreadedSlaveToMaster)
+{
+	const boost::uint16_t port = PORT_VALUE;
+	const FilterLevel level = LEV_INFO;
+
+	EventLog log;
+	EventLog localLog;
+	EventLog remoteLog;
+	EventLog tunneledMaster;
+	EventLog tunneledSlave;
+	localLog.AddLogSubscriber(LogToStdio::Inst());
+	remoteLog.AddLogSubscriber(LogToStdio::Inst());
+	LogToFile ltf(&localLog, "local.log");
+	LogToFile ltf2(&remoteLog, "remote.log");
+	LogToFile ltf3(&tunneledMaster, "tmaster.log");
+	LogToFile ltf4(&tunneledSlave, "tslave.log");
+
+	FlexibleDataObserver fdo;
+	FlexibleDataObserver tunneledData;
+	MockCommandAcceptor cmdAcceptor;
+	AsyncStackManager local(localLog.GetLogger(level, "local"));
+	AsyncStackManager remote(remoteLog.GetLogger(level, "remote"));
+	
+	local.AddTCPClient("client", PhysLayerSettings(), "127.0.0.1", port);
+	remote.AddTCPServer("server", PhysLayerSettings(), "127.0.0.1", port);
+	
+	local.AddMaster("client", "master", level, &fdo, MasterStackConfig());
+	remote.AddSlave("server", "slave", level, &cmdAcceptor, SlaveStackConfig());
+	
+	local.AddTCPServer("vto_server", PhysLayerSettings(), "127.0.0.1", port+10);
+	remote.AddTCPClient("vto_client", PhysLayerSettings(), "127.0.0.1", port+20);
+	
+	local.StartVtoRouter("vto_server", "master", VtoRouterSettings(0, true, false));
+	remote.StartVtoRouter("vto_client", "slave", VtoRouterSettings(0, false, false));
+
+	AsyncStackManager mgrTunneledMaster(tunneledMaster.GetLogger(level, "tmaster"));
+	AsyncStackManager mgrTunneledSlave(tunneledSlave.GetLogger(level, "tslave"));
+
+	mgrTunneledMaster.AddTCPClient("tunneled_client", PhysLayerSettings(), "127.0.0.1", port+10);
+	mgrTunneledSlave.AddTCPServer("tunneled_server", PhysLayerSettings(), "127.0.0.1", port+20);
+
+	mgrTunneledSlave.AddSlave("tunneled_server", "tunneled_slave", level, &cmdAcceptor, SlaveStackConfig());
+	mgrTunneledMaster.AddMaster("tunneled_client", "tunneled_master", level, &tunneledData, MasterStackConfig());
+	
+	local.Start();
+	remote.Start();
+
+	Thread::SleepFor(3000);
 
 	BOOST_REQUIRE_EQUAL(tunneledData.GetTotalCount(),0);
 
-	mgrTunneled.Start();
+	mgrTunneledMaster.Start();
+	mgrTunneledSlave.Start();
 
-	Thread::SleepFor(1000);
+	Thread::SleepFor(5000);
 
-	BOOST_REQUIRE_GE(tunneledData.GetTotalCount(),0);
-
-	mgrTunneled.Stop();
-	mgr.Stop();
+	BOOST_REQUIRE_GT(tunneledData.GetTotalCount(),0);
 	
-}*/
+	std::cout << "Tunneled: " << tunneledData.GetTotalCount() << std::endl;
 
+	remote.Stop();
+	local.Stop();
+	
+	mgrTunneledMaster.Stop();
+	mgrTunneledSlave.Stop();
+	
+	
+
+	
+}
+*/
 BOOST_AUTO_TEST_SUITE_END()
 
 /* vim: set ts=4 sw=4: */

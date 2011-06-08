@@ -16,34 +16,38 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __SLAVE_STACK_CONFIG_H_
-#define __SLAVE_STACK_CONFIG_H_
+#ifndef __VTO_CONFIG_H_
+#define __VTO_CONFIG_H_
 
-#include "SlaveConfig.h"
-#include "DeviceTemplate.h"
-#include "AppConfig.h"
-#include "LinkConfig.h"
-#include "VtoConfig.h"
+#include "VtoRouterSettings.h"
 
 namespace apl { namespace dnp {
 
-/** A composite configuration struct that contains all the config
-	information for a dnp3 slave stack
-*/
-struct SlaveStackConfig
-{
-	SlaveStackConfig() :
-	link(false, false)
-	{}
+	struct VtoRouterConfig
+	{
+		VtoRouterConfig(){}
 
-	SlaveConfig slave;		// Slave config
-	DeviceTemplate device;	// Device template that specifies database layout, control behavior
-	AppConfig app;			// Application layer config
-	LinkConfig link;		// Link layer config
-	VtoConfig vto;
-};
+		std::string mPhysicalLayerName;
+
+		VtoRouterSettings mSettings;
+	};
+
+	struct VtoConfig
+	{
+		VtoConfig(){}
+
+		void AddVtoRouterConfig(VtoRouterConfig& arSetting){
+			mRouterConfigs.push_back(arSetting);
+		}
+
+		std::vector<VtoRouterConfig> mRouterConfigs;
+	};
+
+	
+
 
 }}
 
-#endif
+/* vim: set ts=4 sw=4: */
 
+#endif

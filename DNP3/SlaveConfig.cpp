@@ -39,6 +39,7 @@ namespace apl { namespace dnp {
 	SlaveConfig::SlaveConfig() :
 		mMaxControls(1),
 		mDisableUnsol(false),
+		mUnsolMask(true,true,true),
 		mAllowTimeSync(false),
 		mTimeSyncPeriod(10 * 60 * 1000), //every 10 min
 		mUnsolPackDelay(200),

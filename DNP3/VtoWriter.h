@@ -73,6 +73,12 @@ namespace apl {
 				             boost::uint8_t aChannelId);
 
 				/**
+				 * Implements IVtoWriter::SetLocalVTOState by shunting the state information to
+				 * the magic vto channel 255
+				 */
+				virtual void SetLocalVTOState(bool aLocalVTOConnectionOpened,
+				             boost::uint8_t aChannelId);
+				/**
 				 * Reads one item from the front of the queue.  If no items
 				 * are available, the function returns false.  If an item is
 				 * found in the queue, the item is stored in arEvent and

@@ -22,6 +22,7 @@
 #include "MasterConfig.h"
 #include "AppConfig.h"
 #include "LinkConfig.h"
+#include "VtoConfig.h"
 
 namespace apl { namespace dnp {
 
@@ -37,7 +38,7 @@ struct MasterStackConfig
 	MasterConfig master;  // Master config
 	AppConfig app;		  // Application layer config
 	LinkConfig link;	  // Link layer config
-
+	VtoConfig vto;
 
 };
 

@@ -74,6 +74,7 @@
             <xs:attribute name="Class3" type="xs:boolean" use="required" />
           </xs:complexType>
         </xs:element>
+        <xs:element ref="VtoPorts" maxOccurs="1" minOccurs="1"/>
       </xs:all>
     </xs:complexType>
   </xs:element>
@@ -105,13 +106,15 @@
                   <xs:attribute name="RetryMS" type="xs:int" use="required" />
                 </xs:complexType>
               </xs:element>
+              
             </xs:all>
             <xs:attribute name="MaxBinaryEvents" type="xs:int" use="required" />
             <xs:attribute name="MaxAnalogEvents" type="xs:int" use="required" />
             <xs:attribute name="MaxCounterEvents" type="xs:int" use="required" />            
           </xs:complexType>
+          
         </xs:element>
-
+        <xs:element ref="VtoPorts" maxOccurs="1" minOccurs="1"/>
       </xs:all>
       
     </xs:complexType>
@@ -319,6 +322,28 @@
       <xs:attribute name="Name" type="xs:string" use="required"/>
       <xs:attribute name="ControlMode" type="xs:string" use="required"/>
       <xs:attribute name="SelectTimeoutMS" type="xs:int" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- 
+    type definitions for the vto port configurations
+  -->
+
+    <xs:element name="VtoPorts">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="VtoPort" maxOccurs="unbounded" minOccurs="0" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="VtoPort">
+    <xs:complexType>
+      <xs:attribute name="PhysicalLayer" type="xs:string" use="required" />
+      <xs:attribute name="Index" type="xs:int" use="required" />
+      <xs:attribute name="StartLocal" type ="xs:boolean" use="required" />
+      <xs:attribute name="BufferSize" type ="xs:int" use="required" />
+      <xs:attribute name="OpenRetry" type ="xs:int" use="required" />
     </xs:complexType>
   </xs:element>
 

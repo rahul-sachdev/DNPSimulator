@@ -29,6 +29,7 @@
 #include <DNP3/DNPConstants.h>
 #include <DNP3/LinkConfig.h>
 #include <DNP3/AppConfig.h>
+#include <DNP3/VtoConfig.h>
 #include <DNP3/MasterConfig.h>
 #include <DNP3/SlaveConfig.h>
 #include <DNP3/DeviceTemplate.h>
@@ -71,6 +72,7 @@ namespace apl { namespace dnp {
 		cfg.app = Convert(arCfg.Stack.AppLayer);
 		cfg.link = Convert(arCfg.Stack.LinkLayer);
 		cfg.master = Convert(arCfg);
+		cfg.vto = Convert(arCfg.VtoPorts);
 		return cfg;
 	}
 
@@ -86,6 +88,7 @@ namespace apl { namespace dnp {
 		cfg.app = Convert(arCfg.Stack.AppLayer);
 		cfg.link = Convert(arCfg.Stack.LinkLayer);
 		cfg.slave = Convert(arCfg.SlaveConfig, arCfg.Stack.AppLayer);
+		cfg.vto = Convert(arCfg.VtoPorts);
 		cfg.device = arTmp;
 		return cfg;
 	}
@@ -127,6 +130,21 @@ namespace apl { namespace dnp {
 		for(size_t i=0; i<vec.size();++i) {
 			int mask = ClassMask::GetMask(vec[i]->Class1, vec[i]->Class2, vec[i]->Class3);		
 			cfg.AddExceptionScan(mask, vec[i]->PeriodMS);			
+		}
+		return cfg;
+	}
+
+	VtoConfig XmlToConfig::Convert(const APLXML_DNP::VtoPorts_t& arCfg)
+	{
+		VtoConfig cfg;
+
+		std::vector<APLXML_DNP::VtoPort_t*>& vec = arCfg.VtoPortVector;
+		for(size_t i=0; i<vec.size();++i) {
+			VtoRouterSettings vrs(vec[i]->Index,vec[i]->StartLocal,vec[i]->BufferSize, vec[i]->OpenRetry);
+			VtoRouterConfig c;
+			c.mPhysicalLayerName = vec[i]->PhysicalLayer;
+			c.mSettings = vrs;
+			cfg.AddVtoRouterConfig(c);
 		}
 		return cfg;
 	}

@@ -619,6 +619,10 @@
 					Name="VTO"
 					>
 					<File
+						RelativePath=".\VtoConfig.h"
+						>
+					</File>
+					<File
 						RelativePath=".\VtoData.h"
 						>
 					</File>

@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_CASE(RouterCleansUpAsynchronouslyViaDestructor)
 	{
 		VtoRouterManager mgr(log.GetLogger(LEV_INFO, "test"), &mts, &mpls);
 		VtoWriter writer(100);		
-		mgr.StartRouter("someport", VtoRouterSettings(0), &writer);
+		mgr.StartRouter("someport", VtoRouterSettings(0, true, true), &writer);
 	}
 
 	//the only way you know this test fails is if you get a memory leak warning in boost::test

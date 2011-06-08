@@ -57,6 +57,7 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	mpTimeTimer(NULL),
 	mVtoReader(apLogger),
 	mVtoWriter(arCfg.mVtoWriterQueueSize)
+
 {
 	/* Link the event buffer to the database */
 	mpDatabase->SetEventBuffer(mRspContext.GetBuffer());
@@ -77,16 +78,15 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 		)
 	);
 
+	mpVtoNotifier = mNotifierSource.Get(
+			boost::bind(&Slave::OnVtoUpdate, this),
+			mpTimerSrc
+	);
 	/*
 	 * Incoming data will trigger a POST on the timer source to call
 	 * Slave::OnVtoUpdate().
 	 */
-	mVtoWriter.AddObserver(
-		mNotifierSource.Get(
-				boost::bind(&Slave::OnVtoUpdate, this),
-				mpTimerSrc
-		)
-	);
+	mVtoWriter.AddObserver(mpVtoNotifier);
 
 	/* Cause the slave to go through the null-unsol startup sequence */
 	if (!mConfig.mDisableUnsol)
@@ -95,6 +95,13 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	}
 
 	mCommsStatus.Set(COMMS_DOWN);
+}
+
+Slave::~Slave(){
+	if(mpUnsolTimer) mpUnsolTimer->Cancel();
+	if(mpTimeTimer) mpTimeTimer->Cancel();
+
+	mVtoWriter.RemoveObserver(mpVtoNotifier);
 }
 
 /* Implement IAppUser - external callbacks from the app layer */
@@ -303,12 +310,19 @@ void Slave::ConfigureDelayMeasurement(const APDU& arRequest)
 
 void Slave::HandleWriteVto(HeaderReadIterator& arHdr)
 {
+	Transaction tr(mVtoReader);
 	for (ObjectReadIterator obj = arHdr.BeginRead(); !obj.IsEnd(); ++obj)
 	{
 		/*
-		 * TODO - Look up the IVtoCallbacks instance in the VtoReader for the
-		 * obj->Index(), then send the buffer data up the food chain.
+		 * Pass the data to the vto reader
 		 */
+		size_t size = arHdr->GetVariation();
+		boost::uint8_t* data = new boost::uint8_t[size];
+		Group112Var0::Inst()->Read(*obj, arHdr->GetVariation(), data);
+
+		VtoData vto(data,size);
+		delete data;
+		mVtoReader.Update(vto,obj->Index());
 	}
 }
 

@@ -26,6 +26,7 @@ namespace APLXML_DNP{
 	class Slave_t;
 	class Stack_t;
 	class DeviceTemplate_t;
+	class VtoPorts_t;
 }
 
 namespace apl{ namespace dnp{
@@ -37,6 +38,8 @@ namespace apl{ namespace dnp{
 			static void Configure(APLXML_DNP::Slave_t& arSlave);
 			static void Configure(APLXML_DNP::Stack_t& arStack, bool aSlave = true);
 			static void Configure(APLXML_DNP::DeviceTemplate_t& arTemplate, size_t aBinaries, size_t aAnalogs, size_t aCounters, size_t aControls, size_t aSetpoints, size_t aControlStatuses, size_t aSetpointStatuses);
+
+			static void AddVtoPort(APLXML_DNP::VtoPorts_t& arPorts, std::string aPhysicalLayer, int aChannel, bool aStartLocal, int aBufferSize = 4096, int aOpenRetry = 5000);
 
 			static void AddDeviceTemplateBinary(APLXML_DNP::DeviceTemplate_t& arCfg, size_t aIndex, std::string aName);
 			static void AddDeviceTemplateAnalog(APLXML_DNP::DeviceTemplate_t& arCfg, size_t aIndex, std::string aName);

@@ -32,16 +32,21 @@ VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVto
 	IVtoCallbacks(arSettings.CHANNEL_ID),
 	CleanupHelper(apTimerSrc),
 	mpVtoWriter(apWriter),
-	mVtoTxBuffer(arSettings.VTO_TX_BUFFFER_SIZE_IN_BYTES)
+	mVtoTxBuffer(arSettings.VTO_TX_BUFFFER_SIZE_IN_BYTES),
+	mStartLocal(arSettings.START_LOCAL),
+	mDisableExtensions(arSettings.DISABLE_EXTENSIONS)
 {
 	assert(apLogger != NULL);
 	assert(apWriter != NULL);
 	assert(apPhysLayer != NULL);
-	assert(apTimerSrc != NULL);	
+	assert(apTimerSrc != NULL);
+
+	if(mStartLocal || mDisableExtensions) this->Start();
 }
 
 void VtoRouter::OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength)
 {
+	LOG_BLOCK(LEV_DEBUG, "GotRemoteData: " << aLength);
 	/*
 	 * This will create a container object that allows us to hold the data
 	 * pointer asynchronously.  We need to release the object from the queue in
@@ -50,13 +55,38 @@ void VtoRouter::OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength)
 	 */
 	VtoData vto(apData, aLength);
 	this->mPhysLayerTxBuffer.push(vto);
-	this->CheckForPhysWrite();	
+	this->CheckForPhysWrite();
+}
+
+void VtoRouter::OnVtoRemoteConnectedChanged(bool aOpened)
+{
+	LOG_BLOCK(LEV_INFO, "RemoteConnectionChanged: " << aOpened);
+
+	if(mDisableExtensions){
+		LOG_BLOCK(LEV_DEBUG, "Custom VTO Extensions disabled");
+	}else{
+		if(mStartLocal){
+			if(!aOpened){
+				// if the remote side has closed we should close our 
+				// local connection and then prepare for a new one
+				this->Stop();
+				this->Start();
+			}
+		}else{
+			// if we don't automatically start the VTO router we should 
+			// start as soon as we are told the other side started
+			if(aOpened) this->Start();
+			else this->Stop();
+		}
+	}
 }
 
 void VtoRouter::_OnReceive(const boost::uint8_t* apData, size_t aLength)
 {
 	/* Record how much we actual wrote into the buffer */
 	mVtoTxBuffer.AdvanceWrite(aLength);
+
+	LOG_BLOCK(LEV_DEBUG, "GotLocalData: " << aLength);
 
 	this->CheckForVtoWrite();
 	this->CheckForPhysRead();
@@ -114,6 +144,12 @@ void VtoRouter::OnBufferAvailable()
 
 void VtoRouter::OnPhysicalLayerOpen()
 {
+	LOG_BLOCK(LEV_INFO, "Local Connection Opened");
+
+	if(!mDisableExtensions){
+		mpVtoWriter->SetLocalVTOState(true, this->GetChannelId());
+	}
+	
 	this->CheckForPhysRead();
 	this->CheckForPhysWrite();
 }
@@ -125,9 +161,11 @@ void VtoRouter::OnStateChange(IPhysMonitor::State aState)
 				
 void VtoRouter::OnPhysicalLayerClose()
 {
-
+	LOG_BLOCK(LEV_INFO, "Local Connection Closed");
+	if(!mDisableExtensions && this->IsRunning()){
+		mpVtoWriter->SetLocalVTOState(false, this->GetChannelId());
+	}
 }
-
 }}
 
 /* vim: set ts=4 sw=4: */

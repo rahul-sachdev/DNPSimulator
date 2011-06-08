@@ -75,11 +75,13 @@ namespace apl {
 				
 				/**
 				 * Adds a VtoEvent object to be delivered back to user code.
-				 * Must
-				 * be called from within a transaction block.  If a callback
-				 * handler is not registered for the channel id, a log message
-				 *will
-				 * be recorded.
+				 * Must be called from within a transaction block.  If a
+				 * callback handler is not registered for the channel id,
+				 * a log message will be recorded.
+				 *
+				 * If the aChannelId is the magic 255 we will parse the data
+				 * as a message from a VtoWriter containing the remote vto
+				 * connection state.
 				 *
 				 * @param arData			the data waiting to be delivered
 				 * @param aChannelId		the channel id on which the data was

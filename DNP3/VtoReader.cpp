@@ -77,12 +77,20 @@ namespace apl {
 			/* Make sure we are part of the larger DNP3 transaction */
 			assert( this->InProgress() );
 
+			boost::uint8_t realChannel;
+			if(aChannelId == 255){
+				const boost::uint8_t* data = arData.GetData();
+				realChannel = data[0];
+			}else{
+				realChannel = aChannelId;
+			}
+
 			/*
 			 * Lookup the callback object for the channel id.  If it doesn't
 			 * exist, register an error.  Otherwise, notify the callback
 			 * object.
 			 */
-			ChannelMap::iterator i = mChannelMap.find(aChannelId);
+			ChannelMap::iterator i = mChannelMap.find(realChannel);
 
 			if (i == mChannelMap.end())
 			{
@@ -93,7 +101,12 @@ namespace apl {
 			}
 			else
 			{
-				i->second->OnVtoDataReceived(arData.GetData(), arData.GetSize());
+				if(aChannelId == 255){
+					bool online = arData.GetData()[1] == 0 ? true : false;
+					i->second->OnVtoRemoteConnectedChanged(online);
+				}else{
+					i->second->OnVtoDataReceived(arData.GetData(), arData.GetSize());
+				}
 			}
 		}
 

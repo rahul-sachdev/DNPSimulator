@@ -36,7 +36,7 @@ namespace apl {
 
 		class VtoReader;
 		class VtoWriter;
-		class VtoRouterSettings;		
+		struct VtoRouterSettings;
 
 		/**
 		 * Class used to route data between a VTO channel (made up of both a
@@ -84,6 +84,13 @@ namespace apl {
 				 */
 				void OnVtoDataReceived(const boost::uint8_t* apData,
 				                            size_t aLength);
+
+				/**
+				 * When the remote end indicates a connection state change we need to toggle
+				 * our connection state and setup for a new connection. Behavior will be
+				 * different depending on the mStartLocal setting.
+				 */
+				void OnVtoRemoteConnectedChanged(bool aOpened);
 
 				/**
 				 * Called when the VTO data buffer size changes (startup and
@@ -155,6 +162,16 @@ namespace apl {
 				 * into this buffer was originally received from the physical layer.
 				 */
 				ShiftableBuffer mVtoTxBuffer;
+
+				/**
+				 * determines if we should open our physical layer or wait for the remote
+				 * side to indicate the other side is connected.
+				 * TODO: refactor this class into abstract base class with 2 implementations 
+				 * instead of flag
+				 */
+				bool mStartLocal;
+
+				bool mDisableExtensions;
 		};
 
 	}
