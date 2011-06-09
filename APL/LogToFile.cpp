@@ -71,11 +71,10 @@ namespace apl{
 	{
 		try {
 			// we need to open file in append mode first time only
-			std::ios::open_mode mode = mOverwriteFile ? (std::ios::out) : (std::ios::app | std::ios::out);
-			mOverwriteFile = false;
-
-			std::ofstream file(mFileName.c_str(), mode);
+			std::ofstream file(mFileName.c_str(), mOverwriteFile ? (std::ios::out) : (std::ios::app | std::ios::out));
 			if(!file.is_open()) std::cerr << "Failure to open: " << mFileName << std::endl;
+
+			mOverwriteFile = false;
 
 			LogEntry le;
 			while(ReadLog(le)) file << le.LogString() << std::endl;

@@ -17,6 +17,8 @@
 
 #include "VtoRouter.h"
 
+#include <boost/bind.hpp>
+
 #include <APL/Exception.h>
 #include <APL/IPhysicalLayerAsync.h>
 #include <APL/Util.h>
