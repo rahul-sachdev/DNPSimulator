@@ -31,7 +31,7 @@ enum StackStates
 class IStackObserver
 {
 public:
-	virtual ~IMasterObserver(){};
+	virtual ~IStackObserver() {};
 
 	virtual void OnStateChange(StackStates aState) = 0;
 };
