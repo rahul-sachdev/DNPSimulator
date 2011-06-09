@@ -25,8 +25,8 @@ namespace apl{
 
 
 
-	LogToFile :: LogToFile(EventLog* apLog, const std::string aFileName)
-		: LogEntryCircularBuffer(1000), mpThread(NULL), mpLog(apLog), mFileName(aFileName)
+	LogToFile :: LogToFile(EventLog* apLog, const std::string aFileName, const bool aOverwriteFile)
+		: LogEntryCircularBuffer(1000), mpThread(NULL), mpLog(apLog), mFileName(aFileName), mOverwriteFile(aOverwriteFile)
 	{
 		if(aFileName == "-" || aFileName == ""){
 			mpLog = NULL;
@@ -70,7 +70,11 @@ namespace apl{
 	void LogToFile :: PushItemsToFile()
 	{
 		try {
-			std::ofstream file(mFileName.c_str(), std::ios::app | std::ios::out);
+			// we need to open file in append mode first time only
+			std::ios::open_mode mode = mOverwriteFile ? (std::ios::out) : (std::ios::app | std::ios::out);
+			mOverwriteFile = false;
+
+			std::ofstream file(mFileName.c_str(), mode);
 			if(!file.is_open()) std::cerr << "Failure to open: " << mFileName << std::endl;
 
 			LogEntry le;
