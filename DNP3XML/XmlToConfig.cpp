@@ -140,7 +140,7 @@ namespace apl { namespace dnp {
 
 		std::vector<APLXML_DNP::VtoPort_t*>& vec = arCfg.VtoPortVector;
 		for(size_t i=0; i<vec.size();++i) {
-			VtoRouterSettings vrs(vec[i]->Index,vec[i]->StartLocal,vec[i]->BufferSize, vec[i]->OpenRetry);
+			VtoRouterSettings vrs(vec[i]->Index,vec[i]->StartLocal, false, vec[i]->BufferSize, vec[i]->OpenRetry);
 			VtoRouterConfig c;
 			c.mPhysicalLayerName = vec[i]->PhysicalLayer;
 			c.mSettings = vrs;

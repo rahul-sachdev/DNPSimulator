@@ -32,7 +32,7 @@
 #include "MasterConfig.h"
 #include "ObjectInterfaces.h"
 #include "MasterSchedule.h"
-#include "MasterObserver.h"
+#include "IStackObserver.h"
 #include "VtoReader.h"
 #include "VtoWriter.h"
 
@@ -134,7 +134,7 @@ class Master : public Loggable, public IAppUser
 
 	private:
 
-	void UpdateState(MasterStates aState);
+	void UpdateState(StackStates aState);
 
 	/* Task functions used for scheduling */
 
@@ -181,8 +181,8 @@ class Master : public Loggable, public IAppUser
 	AMS_Base* mpState;						// Pointer to active state, start in TLS_Closed
 	MasterTaskBase* mpTask;					// The current master task
 	ITask* mpScheduledTask;					// The current scheduled task
-	IMasterObserver* mpObserver;		    // Callback for master state enumeration
-	MasterStates mState;					// Current state of the master
+	IStackObserver* mpObserver;		    // Callback for master state enumeration
+	StackStates mState;					// Current state of the master
 
 	/* --- Task plumbing --- */
 

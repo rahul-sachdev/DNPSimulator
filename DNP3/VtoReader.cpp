@@ -110,6 +110,21 @@ namespace apl {
 			}
 		}
 
+		void VtoReader::OnStateChange(StackStates aState)
+		{
+			CriticalSection cs(&mLock);
+
+			ChannelMap::iterator i = mChannelMap.begin();
+
+			// COMMS_DOWN or UNKNOWN are not-connected
+			bool connected = aState == SS_COMMS_UP;
+
+			while(i != mChannelMap.end()){
+				i->second->OnDnpConnectedChanged(connected);
+				i++;
+			}
+		}
+
 		void VtoReader::_Start()
 		{
 			mLock.Lock();

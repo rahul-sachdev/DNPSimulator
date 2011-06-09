@@ -38,6 +38,7 @@
 #include "SlaveResponseTypes.h"
 #include "VtoReader.h"
 #include "VtoWriter.h"
+#include "IStackObserver.h"
 
 namespace apl
 {
@@ -69,12 +70,6 @@ class AS_Base;
  */
 class Slave : public Loggable, public IAppUser
 {
-
-	enum CommsStatus
-	{
-		COMMS_DOWN = 0,
-		COMMS_UP = 2
-	};
 
 	friend class AS_Base; //make the state base class a friend
 	friend class AS_OpenBase;
@@ -196,6 +191,11 @@ class Slave : public Loggable, public IAppUser
 		bool mDeferredUnknown;
 
 		bool mStartupNullUnsol;					// Tracks whether the device has completed the NULL unsol startup message
+
+		IStackObserver* mpObserver;             // update consumers who want to know when dnp3 connection state changes
+		StackStates mState;
+
+		void UpdateState(StackStates aState);
 
 		void OnVtoUpdate();						// internal event dispatched when user code commits an update to mVtoWriter
 		void OnDataUpdate();					// internal event dispatched when user code commits an update to mChangeBuffer

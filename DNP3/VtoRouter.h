@@ -74,6 +74,13 @@ namespace apl {
 				VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc);
 
 				/**
+				 * when we try to stop the router we call this thread safe function which sets a flag and
+				 * then posts a shutdown request to mpTimerSrc.
+				 */
+				void StopRouter();
+				
+
+				/**
 				 * Receives data from the VTO channel and forwards it to the
 				 * IPhysicalLayerAsync instance associated with this VtoRouter.
 				 * Implements IVtoCallbacks::OnVtoDataReceived().
@@ -88,14 +95,20 @@ namespace apl {
 				/**
 				 * When the remote end indicates a connection state change we need to toggle
 				 * our connection state and setup for a new connection. Behavior will be
-				 * different depending on the mStartLocal setting.
+				 * different depending on the mStartLocal setting. Posted to mpTimerSrc.
 				 */
 				void OnVtoRemoteConnectedChanged(bool aOpened);
+				
+				/**
+				 * When the dnp stack changes state to offline we will shutdown any our local physical
+				 * layer. When it comes online we may start our local physical layer, depending on the 
+				 * mStartLocal setting. Posted to mpTimerSrc.
+				 */
+				void OnDnpConnectedChanged(bool aConnected);
 
 				/**
 				 * Called when the VTO data buffer size changes (startup and
-				 * successuly transmission).
-				 *				 
+				 * successuly transmission).		 
 				 */
 				void OnBufferAvailable();
 
@@ -111,6 +124,8 @@ namespace apl {
 				void OnPhysicalLayerOpen();
 
 				void OnPhysicalLayerClose();
+
+				void OnPhysicalLayerOpenFailure();
 
 				/**
 				 * Receives data from the physical layer and forwards it to the
@@ -142,6 +157,18 @@ namespace apl {
 				 */
 				void OnStateChange(IPhysMonitor::State);
 
+				void DoStart();
+				void DoStop();
+
+				void SetLocalConnected(bool aConnected);
+				
+				/**
+				 * actually do the work for the external calls
+				 */ 
+				void DoStopRouter();
+				void DoVtoRemoteConnectedChanged(bool aOpened);
+				void DoDnpConnectedChanged(bool aConnected);
+
 			private:
 
 				/**
@@ -162,6 +189,14 @@ namespace apl {
 				 * into this buffer was originally received from the physical layer.
 				 */
 				ShiftableBuffer mVtoTxBuffer;
+
+				bool mDnpConnected;
+				bool mRemoteConnected;
+				bool mLocalConnected;
+
+				bool mPermanentlyStopped;
+				bool mStarted;
+				bool mCleanedup;
 
 				/**
 				 * determines if we should open our physical layer or wait for the remote

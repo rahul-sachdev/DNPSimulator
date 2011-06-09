@@ -17,8 +17,6 @@
 // under the License.
 // 
 
-#include "AsyncPhysTestObject.h"
-
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/test/unit_test.hpp>
@@ -31,6 +29,7 @@
 #include <APLTestTools/TestHelpers.h>
 #include <APLTestTools/BufferHelpers.h>
 #include <APLTestTools/AsyncTestObjectASIO.h>
+#include <APLTestTools/AsyncPhysTestObject.h>
 
 #include <iostream>
 

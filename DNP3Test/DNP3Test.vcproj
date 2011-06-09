@@ -350,7 +350,7 @@
 						>
 					</File>
 					<File
-						RelativePath=".\QueueingMasterObserver.h"
+						RelativePath=".\QueueingStackObserver.h"
 						>
 					</File>
 					<File

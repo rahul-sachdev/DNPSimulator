@@ -16,20 +16,24 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __QUEUEING_MASTER_OBSERVER_H_
-#define __QUEUEING_MASTER_OBSERVER_H_
-
-#include <DNP3/MasterObserver.h>
-#include <deque>
+#ifndef __STACK_OBSERVER_H_
+#define __STACK_OBSERVER_H_
 
 namespace apl { namespace dnp {
 
-class QueueingMasterObserver : public IMasterObserver
+enum StackStates
 {
-	public:
-	void OnStateChange(MasterStates aState) { mQueue.push_back(aState); }
+	SS_COMMS_UP,
+	SS_COMMS_DOWN,
+	SS_UNKNOWN
+};
 
-	std::deque<MasterStates> mQueue;
+class IStackObserver
+{
+public:
+	virtual ~IMasterObserver(){};
+
+	virtual void OnStateChange(StackStates aState) = 0;
 };
 
 }}

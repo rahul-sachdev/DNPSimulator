@@ -28,6 +28,8 @@
 
 namespace apl { namespace dnp {
 
+	class IStackObserver;
+
 	// Group/Variation pair
 	struct GrpVar
 	{
@@ -130,6 +132,8 @@ namespace apl { namespace dnp {
 
 		// The default group/variation to use for VTO event responses
 		GrpVar mEventVto;
+
+		IStackObserver* mpObserver;
 	};
 
 }}

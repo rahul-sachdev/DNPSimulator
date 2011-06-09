@@ -72,6 +72,7 @@ void AsyncPhysLayerMonitor::Notify(IPhysMonitor::State aState)
 
 void AsyncPhysLayerMonitor::Start()
 {
+	LOG_BLOCK(LEV_INFO,"Start");
 	assert(!mOpening);
 	if(mpOpenTimer) mpOpenTimer = NULL;
 	mOpening = true;
@@ -82,25 +83,35 @@ void AsyncPhysLayerMonitor::Start()
 
 void AsyncPhysLayerMonitor::Stop()
 {
-	mStopOpenRetry = true;
-
+	LOG_BLOCK(LEV_INFO,"Stop");
 	if(!this->IsRunning()) {
+		mStopOpenRetry = true;
 		this->Notify(IPhysMonitor::Stopped);
 	}
 	else {
-		if(mOpen || mOpening) {
-			mpPhys->AsyncClose();
+		if(!mStopOpenRetry){
+			mStopOpenRetry = true;
+			if(mOpen || mOpening) {
+				mpPhys->AsyncClose();
+			}
+			if(mpOpenTimer) {
+				mpOpenTimer->Cancel();
+				mpOpenTimer = NULL;
+			}
 		}
-		if(mpOpenTimer) {
-			mpOpenTimer->Cancel();
-			mpOpenTimer = NULL;
-		}
+	}
+}
+
+void AsyncPhysLayerMonitor::Reconnect(){
+	if(mOpen || mOpening) {
+		mpPhys->AsyncClose();
 	}
 }
 
 void AsyncPhysLayerMonitor::_OnOpenFailure()
 {
 	mOpening = false;
+	OnPhysicalLayerOpenFailure();
 	if(mStopOpenRetry) {
 		this->Notify(IPhysMonitor::Stopped); //we're done!
 	}

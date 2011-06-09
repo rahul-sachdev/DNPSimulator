@@ -61,11 +61,6 @@ AsyncStackManager::~AsyncStackManager()
 	 */
 	this->Stop();
 
-	/*
-	 * Run out the io_service to verify that all the delete operations are
-	 * called, just in case the io_service wasn't running before.
-	 */
-	this->Run();
 }
 
 std::vector<std::string> AsyncStackManager::GetStackNames()
@@ -205,7 +200,11 @@ void AsyncStackManager::RemoveStack(const std::string& arStackName)
 void AsyncStackManager::SeverStack(Port* apPort, const std::string& arStackName)
 {
 	IVtoWriter* pWriter = this->GetStackByName(arStackName)->GetVtoWriter();	
-	mVtoManager.StopAllRoutersOnWriter(pWriter);
+	std::vector<VtoRouterManager::RouterRecord> records = mVtoManager.GetAllRoutersOnWriter(pWriter);
+	BOOST_FOREACH(VtoRouterManager::RouterRecord rec, records){
+		this->RemoveVtoChannel(arStackName, rec.mpRouter);
+		mVtoManager.StopRouter(pWriter, rec.mVtoChannelId);
+	}
 	//this will cause the stack to be pulled off the port and deleted on the io_service thread
 	mTimerSrc.Post(boost::bind(&Port::Disassociate, apPort, arStackName));
 	mStackNameToPort.erase(arStackName);
@@ -232,20 +231,28 @@ Stack* AsyncStackManager::GetStackByName(const std::string& arStackName)
 
 void AsyncStackManager::Stop()
 {
-	LOG_BLOCK(LEV_DEBUG, "enter stop");
+	LOG_BLOCK(LEV_INFO, "enter stop");
 	vector<string> ports = this->GetPortNames();
 	BOOST_FOREACH(string s, ports) {
-		LOG_BLOCK(LEV_DEBUG, "Removing port: " << s);
+		LOG_BLOCK(LEV_INFO, "Removing port: " << s);
 		this->RemovePort(s);
-		LOG_BLOCK(LEV_DEBUG, "Done removing Port: " << s);
+		LOG_BLOCK(LEV_INFO, "Done removing Port: " << s);
 	}
 	if(mRunning) {
-		LOG_BLOCK(LEV_DEBUG, "Joining on io_service thread");
+		LOG_BLOCK(LEV_INFO, "Joining on io_service thread");
 		mThread.WaitForStop();
 		mRunning = false;
-		LOG_BLOCK(LEV_DEBUG, "Done joining");
+		LOG_BLOCK(LEV_INFO, "Done joining");
 	}
-	LOG_BLOCK(LEV_DEBUG, "exit stop");
+
+	/*
+	 * Run out the io_service to verify that all the delete operations are
+	 * called, just in case the io_service wasn't running before.
+	 */
+	LOG_BLOCK(LEV_INFO, "extra run");
+	this->Run();
+
+	LOG_BLOCK(LEV_INFO, "exit stop");
 }
 
 void AsyncStackManager::Start()

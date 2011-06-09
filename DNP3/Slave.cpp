@@ -54,6 +54,8 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	mDeferredUnsol(false),
 	mDeferredUnknown(false),
 	mStartupNullUnsol(false),
+	mpObserver(arCfg.mpObserver),
+	mState(SS_UNKNOWN),
 	mpTimeTimer(NULL),
 	mVtoReader(apLogger),
 	mVtoWriter(arCfg.mVtoWriterQueueSize)
@@ -94,7 +96,7 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 		mDeferredUnsol = true;
 	}
 
-	mCommsStatus.Set(COMMS_DOWN);
+	this->UpdateState(SS_COMMS_DOWN);
 }
 
 Slave::~Slave(){
@@ -102,6 +104,17 @@ Slave::~Slave(){
 	if(mpTimeTimer) mpTimeTimer->Cancel();
 
 	mVtoWriter.RemoveObserver(mpVtoNotifier);
+}
+
+void Slave::UpdateState(StackStates aState)
+{
+	if(mState != aState) {
+		mCommsStatus.Set(aState);
+		LOG_BLOCK(LEV_INFO, "StackState: " << aState);
+		mState = aState;
+		if(mpObserver != NULL) mpObserver->OnStateChange(aState);
+		mVtoReader.OnStateChange(aState);
+	}
 }
 
 /* Implement IAppUser - external callbacks from the app layer */
@@ -116,14 +129,14 @@ void Slave::OnLowerLayerDown()
 {
 	mpState->OnLowerLayerDown(this);
 	this->FlushDeferredEvents();
-	mCommsStatus.Set(COMMS_DOWN);
+	this->UpdateState(SS_COMMS_DOWN);
 }
 
 void Slave::OnSolSendSuccess()
 {
 	mpState->OnSolSendSuccess(this);
 	this->FlushDeferredEvents();
-	mCommsStatus.Set(COMMS_UP);
+	this->UpdateState(SS_COMMS_UP);
 }
 
 void Slave::OnSolFailure()
@@ -137,7 +150,7 @@ void Slave::OnUnsolSendSuccess()
 {
 	mpState->OnUnsolSendSuccess(this);
 	this->FlushDeferredEvents();
-	mCommsStatus.Set(COMMS_UP);
+	this->UpdateState(SS_COMMS_UP);
 }
 
 void Slave::OnUnsolFailure()

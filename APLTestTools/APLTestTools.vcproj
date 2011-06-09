@@ -187,6 +187,14 @@
 				Name="PhysicalLayer"
 				>
 				<File
+					RelativePath=".\AsyncPhysTestObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\AsyncPhysTestObject.h"
+					>
+				</File>
+				<File
 					RelativePath=".\AsyncTestObjectASIO.cpp"
 					>
 				</File>

@@ -64,9 +64,6 @@ public:
 		IVtoWriter* apWriter);
 		
 	void StopRouter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
-	void StopAllRoutersOnWriter(IVtoWriter* apWriter);
-	void StopAllRouters();
-	
 
 	RouterRecord GetRouterOnWriter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
 	std::vector<RouterRecord> GetAllRoutersOnWriter(IVtoWriter* apWriter);	
@@ -77,8 +74,6 @@ private:
 	void StopRouter(VtoRouter* apRouter);
 
 	static void ClenupAfterRouter(IPhysicalLayerAsync* apPhys, VtoRouter* apRouter);	
-
-	void StopRouters(const std::vector<RouterRecord>& arRouters);
 
 	typedef std::vector<RouterRecord> RouterRecordVector;
 

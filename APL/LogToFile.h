@@ -38,7 +38,7 @@ namespace apl{
 class LogToFile: public LogEntryCircularBuffer, public Threadable
 {
 public:
-	LogToFile(EventLog* apLog, const std::string aFileName);
+	LogToFile(EventLog* apLog, const std::string aFileName, const bool aOverwriteFile = false);
 	~LogToFile();
 	void Run();
 
@@ -51,6 +51,7 @@ private:
 	Thread* mpThread;
 	EventLog* mpLog;
 	std::string mFileName;
+	bool mOverwriteFile;
 };
 
 }

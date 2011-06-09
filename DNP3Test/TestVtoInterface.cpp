@@ -54,6 +54,8 @@ class VtoCallbackTest : public IVtoCallbacks
 
 		void OnVtoRemoteConnectedChanged(bool aIsRemoteOpen);
 
+		void OnDnpConnectedChanged(bool aIsRemoteOpen){}
+
 		void OnBufferAvailable();
 
 		void Reset() {
