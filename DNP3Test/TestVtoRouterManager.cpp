@@ -39,44 +39,6 @@ BOOST_AUTO_TEST_CASE(Construction)
 	VtoRouterManager mgr(log.GetLogger(LEV_INFO, "test"), &mts, &mpls);	
 }
 
-BOOST_AUTO_TEST_CASE(RouterCleansUpAsynchronouslyViaDestructor)
-{
-	EventLog log;
-	MockTimerSource mts;
-	MockPhysicalLayerSource mpls(log.GetLogger(LEV_INFO, "source"), &mts);
-	
-	{
-		VtoRouterManager mgr(log.GetLogger(LEV_INFO, "test"), &mts, &mpls);
-		VtoWriter writer(100);		
-		mgr.StartRouter("someport", VtoRouterSettings(0, true, true), &writer);
-	}
-
-	//the only way you know this test fails is if you get a memory leak warning in boost::test
-	size_t num = mts.Dispatch();
-}
-
-/*
-BOOST_AUTO_TEST_CASE(RouterCleansUpAsynchronouslyViaDestructor)
-{
-	EventLog log;
-	MockTimerSource mts;
-	MockPhysicalLayerSource mpls(log.GetLogger(LEV_INFO, "source"), &mts);
-	
-	
-	VtoRouterManager mgr(log.GetLogger(LEV_INFO, "test"), &mts, &mpls);
-	VtoWriter writer(100);		
-	mgr.StartRouter("someport", VtoRouterSettings(0), &writer);
-
-	
-
-
-	//the only way you know this test fails is if you get a memory leak warning in boost::test
-	size_t num = mts.Dispatch();
-}
-*/
-
-
-
 BOOST_AUTO_TEST_SUITE_END()
 
 /* vim: set ts=4 sw=4: */

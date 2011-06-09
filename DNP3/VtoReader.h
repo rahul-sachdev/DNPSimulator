@@ -26,6 +26,7 @@
 
 #include "VtoDataInterface.h"
 #include "VtoData.h"
+#include "IStackObserver.h"
 
 namespace apl {
 	namespace dnp {
@@ -35,7 +36,7 @@ namespace apl {
 		 * objects back into contigous streams, and deliver to the correct
 		 * channel
 		 */
-		class VtoReader : private Loggable, public ITransactable, public IVtoReader
+		class VtoReader : private Loggable, public ITransactable, public IVtoReader, public IStackObserver
 		{
 			public:
 
@@ -88,6 +89,12 @@ namespace apl {
 				 *                          received
 				 */
 				void Update(const VtoData& arData, boost::uint8_t aChannelId);
+
+				/**
+				 * When the Dnp connection changes state it informs the reader so
+				 * we can inform all attached VtoChannels that the stack is down/up
+				 */
+				void OnStateChange(StackStates aState);
 
 			protected:
 

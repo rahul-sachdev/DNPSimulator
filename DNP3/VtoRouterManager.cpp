@@ -50,7 +50,7 @@ VtoRouterManager::VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, I
 
 VtoRouterManager::~VtoRouterManager()
 {
-	this->StopAllRouters();
+	assert(mRecords.size() == 0);
 }
 
 void VtoRouterManager::ClenupAfterRouter(IPhysicalLayerAsync* apPhys, VtoRouter* apRouter)
@@ -89,26 +89,9 @@ std::vector<VtoRouterManager::RouterRecord> VtoRouterManager::GetAllRouters()
 	return ret;
 }
 
-void VtoRouterManager::StopRouters(const std::vector<RouterRecord>& arRouters)
-{
-	for(size_t i=0; i< arRouters.size(); ++i) this->StopRouter(arRouters[i].mpRouter);
-}
-	
-void VtoRouterManager::StopAllRouters()
-{
-	std::vector<VtoRouterManager::RouterRecord> routers = this->GetAllRouters();
-	this->StopRouters(routers);
-}
-
 void VtoRouterManager::StopRouter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId)
 {
 	this->StopRouter(this->GetRouterOnWriter(apWriter, aVtoChannelId).mpRouter);
-}
-
-void VtoRouterManager::StopAllRoutersOnWriter(IVtoWriter* apWriter)
-{
-	std::vector<RouterRecord> routers = this->GetAllRoutersOnWriter(apWriter);
-	this->StopRouters(routers);
 }
 
 std::vector<VtoRouterManager::RouterRecord> VtoRouterManager::GetAllRoutersOnWriter(IVtoWriter* apWriter)
@@ -160,8 +143,8 @@ void VtoRouterManager::StopRouter(VtoRouter* apRouter)
 	{
 		if(i->mpRouter == apRouter) {
 			LOG_BLOCK(LEV_INFO, "Releasing layer: " << i->mPortName);
+			i->mpRouter->StopRouter();
 			mpPhysSource->ReleaseLayer(i->mPortName);
-			mpTimerSrc->Post(boost::bind(&VtoRouter::Stop, i->mpRouter));
 			mRecords.erase(i);
 			return;
 		}

@@ -33,6 +33,12 @@ VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVto
 	CleanupHelper(apTimerSrc),
 	mpVtoWriter(apWriter),
 	mVtoTxBuffer(arSettings.VTO_TX_BUFFFER_SIZE_IN_BYTES),
+	mDnpConnected(false),
+	mRemoteConnected(false),
+	mLocalConnected(false),
+	mPermanentlyStopped(false),
+	mStarted(false),
+	mCleanedup(false),
 	mStartLocal(arSettings.START_LOCAL),
 	mDisableExtensions(arSettings.DISABLE_EXTENSIONS)
 {
@@ -41,7 +47,31 @@ VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVto
 	assert(apPhysLayer != NULL);
 	assert(apTimerSrc != NULL);
 
-	if(mStartLocal || mDisableExtensions) this->Start();
+	if(mDisableExtensions) this->DoStart();
+}
+
+void VtoRouter::StopRouter()
+{
+	mPermanentlyStopped = true;
+	mpTimerSrc->Post(boost::bind(&VtoRouter::DoStopRouter, this));
+}
+
+void VtoRouter::OnDnpConnectedChanged(bool aConnected){
+	if(!mPermanentlyStopped){
+		mpTimerSrc->Post(boost::bind(&VtoRouter::DoDnpConnectedChanged, this, aConnected));
+	}
+}
+
+void VtoRouter::OnVtoRemoteConnectedChanged(bool aConnected){
+	if(!mPermanentlyStopped){
+		mpTimerSrc->Post(boost::bind(&VtoRouter::DoVtoRemoteConnectedChanged, this, aConnected));
+	}
+}
+
+void VtoRouter::DoStopRouter()
+{
+	
+	this->Stop();
 }
 
 void VtoRouter::OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength)
@@ -58,25 +88,94 @@ void VtoRouter::OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength)
 	this->CheckForPhysWrite();
 }
 
-void VtoRouter::OnVtoRemoteConnectedChanged(bool aOpened)
+void VtoRouter::DoStart()
 {
-	LOG_BLOCK(LEV_INFO, "RemoteConnectionChanged: " << aOpened);
-
-	if(mDisableExtensions){
-		LOG_BLOCK(LEV_DEBUG, "Custom VTO Extensions disabled");
+	if(mPermanentlyStopped){
+		LOG_BLOCK(LEV_INFO, "Permenantly Stopped")
 	}else{
-		if(mStartLocal){
-			if(!aOpened){
-				// if the remote side has closed we should close our 
-				// local connection and then prepare for a new one
-				this->Stop();
-				this->Start();
-			}
+		if(!mStarted){
+			mStarted = true;
+			LOG_BLOCK(LEV_INFO, "Starting VtoRouted Port")
+			this->Start();
 		}else{
-			// if we don't automatically start the VTO router we should 
-			// start as soon as we are told the other side started
-			if(aOpened) this->Start();
-			else this->Stop();
+			LOG_BLOCK(LEV_INFO, "Already started")
+		}
+	}
+}
+
+void VtoRouter::DoStop()
+{
+	if(mStarted){
+		mStarted = false;
+		LOG_BLOCK(LEV_INFO, "Stopping VtoRouted Port")
+		this->Stop();
+	}else{
+		LOG_BLOCK(LEV_INFO, "Already stopped")
+	}
+}
+
+
+
+void VtoRouter::DoVtoRemoteConnectedChanged(bool aOpened)
+{
+
+	LOG_BLOCK(LEV_INFO, "RemoteConnectionChanged: " << std::boolalpha << aOpened);
+
+	if(mRemoteConnected != aOpened){
+		mRemoteConnected = aOpened;
+		if(mDisableExtensions){
+			LOG_BLOCK(LEV_DEBUG, "Custom VTO Extensions disabled");
+		}else{
+			if(mStartLocal){
+				if(!aOpened){
+					// if the remote side has closed we should close our 
+					// local connection and then prepare for a new one
+					this->Reconnect();
+				}
+			}else{
+				if(mDnpConnected){
+					// if we don't automatically start the VTO router we should 
+					// start as soon as we are told the other side started
+					if(aOpened){
+						// pretend we are online, so an open failure looks like a close
+						this->SetLocalConnected(true);
+						this->DoStart();
+					}
+					else this->DoStop();
+				}
+			}
+		}
+	}
+}
+
+void VtoRouter::DoDnpConnectedChanged(bool aConnected)
+{
+
+	if(mDnpConnected != aConnected){
+		LOG_BLOCK(LEV_INFO, "Dnp Connection changed: " << std::boolalpha << aConnected);
+		mDnpConnected = aConnected;
+		if(mLocalConnected && !mDisableExtensions && !mPermanentlyStopped){
+			mpVtoWriter->SetLocalVtoState(mLocalConnected, this->GetChannelId());
+		}
+		if(mDisableExtensions){
+			LOG_BLOCK(LEV_DEBUG, "Custom VTO Extensions disabled");
+		}else{
+			if(aConnected){
+				if(mStartLocal) this->DoStart();
+			}else{
+				this->DoStop();
+			}
+		}
+	}
+}
+
+void VtoRouter::SetLocalConnected(bool aConnected)
+{
+	if(mLocalConnected != aConnected){
+		LOG_BLOCK(LEV_INFO, "Local Connection changed: " << std::boolalpha << aConnected);
+		mLocalConnected = aConnected;
+		if(mDnpConnected && !mDisableExtensions && !mPermanentlyStopped){
+			mpVtoWriter->SetLocalVtoState(mLocalConnected, this->GetChannelId());
 		}
 	}
 }
@@ -145,10 +244,7 @@ void VtoRouter::OnBufferAvailable()
 void VtoRouter::OnPhysicalLayerOpen()
 {
 	LOG_BLOCK(LEV_INFO, "Local Connection Opened");
-
-	if(!mDisableExtensions){
-		mpVtoWriter->SetLocalVtoState(true, this->GetChannelId());
-	}
+	this->SetLocalConnected(true);
 	
 	this->CheckForPhysRead();
 	this->CheckForPhysWrite();
@@ -156,16 +252,29 @@ void VtoRouter::OnPhysicalLayerOpen()
 
 void VtoRouter::OnStateChange(IPhysMonitor::State aState)
 {
-	if(aState == IPhysMonitor::Stopped) this->Cleanup();
+	if(mPermanentlyStopped && aState == IPhysMonitor::Stopped && !mCleanedup) {
+		mCleanedup = true;
+		this->Cleanup();
+	}
 }
 				
 void VtoRouter::OnPhysicalLayerClose()
 {
 	LOG_BLOCK(LEV_INFO, "Local Connection Closed");
-	if(!mDisableExtensions && this->IsRunning()){
-		mpVtoWriter->SetLocalVtoState(false, this->GetChannelId());
-	}
+	this->SetLocalConnected(false);
+
+	if(!mStartLocal) DoStop();
 }
+
+void VtoRouter::OnPhysicalLayerOpenFailure()
+{
+	LOG_BLOCK(LEV_INFO, "Local Connection Open Failed");
+
+	this->SetLocalConnected(false);
+
+	if(!mStartLocal) DoStop();
+}
+
 }}
 
 /* vim: set ts=4 sw=4: */

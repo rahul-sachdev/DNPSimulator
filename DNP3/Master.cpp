@@ -107,6 +107,7 @@ void Master::UpdateState(StackStates aState)
 		LOG_BLOCK(LEV_INFO, "StackState: " << aState);
 		mState = aState;
 		if(mpObserver != NULL) mpObserver->OnStateChange(aState);
+		mVtoReader.OnStateChange(aState);
 		if(mState == SS_COMMS_UP){
 			mSchedule.mpVtoTransmitTask->Enable();
 		}
@@ -115,6 +116,8 @@ void Master::UpdateState(StackStates aState)
 
 void Master::ProcessIIN(const IINField& arIIN)
 {
+	this->UpdateState(SS_COMMS_UP);
+
 	bool check_state = false;
 
 	//The clear IIN task only happens in response to detecting an IIN bit.
@@ -291,7 +294,6 @@ void Master::OnPartialResponse(const APDU& arAPDU)
 
 void Master::OnFinalResponse(const APDU& arAPDU)
 {
-	this->UpdateState(SS_COMMS_UP);
 	mLastIIN = arAPDU.GetIIN();
 	this->ProcessIIN(arAPDU.GetIIN());
 	mpState->OnFinalResponse(this, arAPDU);

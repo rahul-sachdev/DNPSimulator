@@ -41,6 +41,9 @@ namespace apl {
 			void Start();
 			void Stop();
 
+			/// will close if we are open, since we will auto reconnect
+			void Reconnect();
+
 			bool IsRunning();
 			bool IsOpen();
 
@@ -57,6 +60,8 @@ namespace apl {
 
 			virtual void OnPhysicalLayerOpen() = 0;
 			virtual void OnPhysicalLayerClose() = 0;
+
+			virtual void OnPhysicalLayerOpenFailure(){};
 
 		private:
 
