@@ -232,14 +232,6 @@
 						>
 					</File>
 					<File
-						RelativePath=".\AsyncPhysTestObject.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\AsyncPhysTestObject.h"
-						>
-					</File>
-					<File
 						RelativePath=".\AsyncSerialTestObject.cpp"
 						>
 					</File>
