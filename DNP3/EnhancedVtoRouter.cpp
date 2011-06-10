@@ -49,7 +49,7 @@ void EnhancedVtoRouter::DoDnpConnectedChanged(bool aConnected)
 
 		// if we are already connected locally we need to inform remote side
 		// now that we have a dnp connection to tunnel that across
-		if(mLocalConnected && !mPermanentlyStopped){
+		if(!mPermanentlyStopped){
 			mpVtoWriter->SetLocalVtoState(mLocalConnected, this->GetChannelId());
 		}
 

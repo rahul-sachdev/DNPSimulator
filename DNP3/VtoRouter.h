@@ -190,8 +190,23 @@ namespace apl {
 				 */
 				ShiftableBuffer mVtoTxBuffer;
 
+				/**
+				 * while true we will let the AsyncPhysLayerMonitor implementation try
+				 * to keep reconnecting the local physical layer if it gets disconnected
+				 * for any reason
+				 */
+				bool mReopenPhysicalLayer;
+
+				/**
+				 * when StopRouter is called we start shutting down the vto router and
+				 * don't reconnect or send local connected callbacks
+				 */
 				bool mPermanentlyStopped;
-				bool mStarted;
+
+				/**
+				 * we use a delayed cleanup mechanism which we need to make sure we only
+				 * call once.
+				 */
 				bool mCleanedup;
 
 		};

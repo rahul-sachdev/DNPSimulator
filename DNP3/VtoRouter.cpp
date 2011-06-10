@@ -38,8 +38,8 @@ VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVto
 	CleanupHelper(apTimerSrc),
 	mpVtoWriter(apWriter),
 	mVtoTxBuffer(arSettings.VTO_TX_BUFFFER_SIZE_IN_BYTES),
+	mReopenPhysicalLayer(false),
 	mPermanentlyStopped(false),
-	mStarted(false),
 	mCleanedup(false)
 {
 	assert(apLogger != NULL);
@@ -92,10 +92,9 @@ void VtoRouter::DoStart()
 {
 	if(mPermanentlyStopped) {
 		LOG_BLOCK(LEV_INFO, "Permenantly Stopped")
-	}
-	else {
-		if(!mStarted) {
-			mStarted = true;
+	}else{
+		if(!mReopenPhysicalLayer){
+			mReopenPhysicalLayer = true;
 			LOG_BLOCK(LEV_INFO, "Starting VtoRouted Port")
 			this->Start();
 		}
@@ -107,8 +106,9 @@ void VtoRouter::DoStart()
 
 void VtoRouter::DoStop()
 {
-	if(mStarted) {
-		mStarted = false;
+
+	if(mReopenPhysicalLayer){
+		mReopenPhysicalLayer = false;
 		LOG_BLOCK(LEV_INFO, "Stopping VtoRouted Port")
 		this->Stop();
 	}

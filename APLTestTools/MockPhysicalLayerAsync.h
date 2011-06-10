@@ -24,79 +24,67 @@
 
 #include "BufferTestObject.h"
 
-namespace apl
-{
+namespace apl {
 
-class ITimerSource;
+	class ITimerSource;
 
-// Provides a backend for testing physical layers
-class MockPhysicalLayerAsync : public PhysicalLayerAsyncBase, public BufferTestObject
-{
-public:
-	MockPhysicalLayerAsync(Logger*, ITimerSource* apTimerSource = NULL);
+	// Provides a backend for testing physical layers
+	class MockPhysicalLayerAsync : public PhysicalLayerAsyncBase, public BufferTestObject
+	{
+		public:
+			MockPhysicalLayerAsync(Logger*, ITimerSource* apTimerSource = NULL);
 
-	void SignalOpenSuccess();
-	void SignalOpenFailure();
-	void SignalSendSuccess();
-	void SignalSendFailure();
-	void SignalReadFailure();
+			void SignalOpenSuccess();
+			void SignalOpenFailure();
+			void SignalSendSuccess();
+			void SignalSendFailure();
+			void SignalReadFailure();
 
-	void TriggerRead(const std::string& arData);
+			void TriggerRead(const std::string& arData);
+			void TriggerClose();
 
-	size_t NumWrites() {
-		return mNumWrites;
-	}
-	size_t NumOpen() {
-		return mNumOpen;
-	}
-	size_t NumOpenSuccess() {
-		return mNumOpenSuccess;
-	}
-	size_t NumOpenFailure() {
-		return mNumOpenFailure;
-	}
-	size_t NumClose() {
-		return mNumClose;
-	}
+			size_t NumWrites() { return mNumWrites; }
+			size_t NumOpen() { return mNumOpen; }
+			size_t NumOpenSuccess() { return mNumOpenSuccess; }
+			size_t NumOpenFailure() { return mNumOpenFailure; }
+			size_t NumClose() {  return mNumClose; }
 
-	void SetAutoOpen(bool aSuccess);
+			void SetAutoOpen(bool aSuccess);
 
-private:
+		private:
+			
+			void DoOpen();
+			void DoClose();
+			void DoOpenSuccess() { ++mNumOpenSuccess; }
+			void DoOpenFailure() { ++mNumOpenFailure; }
 
-	void DoOpen();
-	void DoClose();
-	void DoOpenSuccess() {
-		++mNumOpenSuccess;
-	}
-	void DoOpenFailure() {
-		++mNumOpenFailure;
-	}
+			void DoAsyncRead(boost::uint8_t* apBuff, size_t aNumBytes) 
+			{ 
+				mpWriteBuff = apBuff;
+				mNumToRead = aNumBytes; 
+			}
 
-	void DoAsyncRead(boost::uint8_t* apBuff, size_t aNumBytes) {
-		mpWriteBuff = apBuff;
-		mNumToRead = aNumBytes;
-	}
+			void DoAsyncWrite(const boost::uint8_t* apData, size_t aNumBytes) {
+				mNumToWrite = aNumBytes;
+				++mNumWrites;
+				WriteToBuffer(apData, aNumBytes);
+			}
 
-	void DoAsyncWrite(const boost::uint8_t* apData, size_t aNumBytes) {
-		mNumToWrite = aNumBytes;
-		++mNumWrites;
-		WriteToBuffer(apData, aNumBytes);
-	}
+			boost::uint8_t* mpWriteBuff;
 
-	boost::uint8_t* mpWriteBuff;
+			size_t mNumToRead;
+			size_t mNumToWrite;
+			size_t mNumWrites;
+			size_t mNumOpen;
+			size_t mNumOpenSuccess;
+			size_t mNumOpenFailure;
+			size_t mNumClose;
+			
+			bool mIsAutoOpenSuccess;
 
-	size_t mNumToRead;
-	size_t mNumToWrite;
-	size_t mNumWrites;
-	size_t mNumOpen;
-	size_t mNumOpenSuccess;
-	size_t mNumOpenFailure;
-	size_t mNumClose;
+			ITimerSource* mpTimerSource;
+	};
 
-	bool mIsAutoOpenSuccess;
-
-	ITimerSource* mpTimerSource;
-};
 }
 
 #endif
