@@ -51,12 +51,10 @@ end
 desc 'Formats all of the C++ h/cpp files with uncrustify'
 format_dirs = ['DNP3', 'APL', 'DNP3Test', 'TestAPL', 'APLTestTools', 'Terminal', 'TerminalTest', 'SlaveDemo']
 task :format do
-  format_dirs.each do |dir|
-   FileList["#{dir}/*.h"].each do |file|
-    cmd = "uncrustify -c config/uncrustify.cfg  -f #{file} > #{file}"
+  format_dirs.each do |dir|   
+    cmd = "asytle #{dir}/*.h #{dir}/*.cpp"
     puts cmd
-    `cmd`
-   end
+    `cmd`   
   end
 end
 
