@@ -21,7 +21,8 @@
 
 #include "IPhysicalLayerAsync.h"
 
-namespace apl {
+namespace apl
+{
 
 LowerLayerToPhysAdapter::LowerLayerToPhysAdapter(Logger* apLogger, IPhysicalLayerAsync* apPhys, bool aAutoRead) :
 	Loggable(apLogger),

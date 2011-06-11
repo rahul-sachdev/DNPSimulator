@@ -19,172 +19,176 @@
 
 #include <APL/Exception.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	SlaveEventBuffer::SlaveEventBuffer(const EventMaxConfig& arEventMaxConfig) :
-		mBinaryEvents(arEventMaxConfig.mMaxBinaryEvents),
-		mAnalogEvents(arEventMaxConfig.mMaxAnalogEvents),
-		mCounterEvents(arEventMaxConfig.mMaxCounterEvents),
-		mVtoEvents(arEventMaxConfig.mMaxVtoEvents)
-	{}
+SlaveEventBuffer::SlaveEventBuffer(const EventMaxConfig& arEventMaxConfig) :
+	mBinaryEvents(arEventMaxConfig.mMaxBinaryEvents),
+	mAnalogEvents(arEventMaxConfig.mMaxAnalogEvents),
+	mCounterEvents(arEventMaxConfig.mMaxCounterEvents),
+	mVtoEvents(arEventMaxConfig.mMaxVtoEvents)
+{}
 
-	void SlaveEventBuffer::Update(const Binary& arEvent, PointClass aClass, size_t aIndex)
-	{
-		mBinaryEvents.Update(arEvent, aClass, aIndex);
+void SlaveEventBuffer::Update(const Binary& arEvent, PointClass aClass, size_t aIndex)
+{
+	mBinaryEvents.Update(arEvent, aClass, aIndex);
+}
+
+void SlaveEventBuffer::Update(const Analog& arEvent, PointClass aClass, size_t aIndex)
+{
+	mAnalogEvents.Update(arEvent, aClass, aIndex);
+}
+
+void SlaveEventBuffer::Update(const Counter& arEvent, PointClass aClass, size_t aIndex)
+{
+	mCounterEvents.Update(arEvent, aClass, aIndex);
+}
+
+void SlaveEventBuffer::Update(VtoEvent& arEvent)
+{
+	this->mVtoEvents.Update(arEvent);
+}
+
+size_t SlaveEventBuffer::NumSelected(BufferTypes aType)
+{
+	switch(aType) {
+	case BT_BINARY:
+		return mBinaryEvents.NumSelected();
+	case BT_ANALOG:
+		return mAnalogEvents.NumSelected();
+	case BT_COUNTER:
+		return mCounterEvents.NumSelected();
+	case BT_VTO:
+		return mVtoEvents.NumSelected();
+	default:
+		throw ArgumentException(LOCATION, "Invalid BufferType");
 	}
+}
 
-	void SlaveEventBuffer::Update(const Analog& arEvent, PointClass aClass, size_t aIndex)
-	{
-		mAnalogEvents.Update(arEvent, aClass, aIndex);
+size_t SlaveEventBuffer::NumType(BufferTypes aType)
+{
+	switch(aType) {
+	case BT_BINARY:
+		return mBinaryEvents.Size();
+	case BT_ANALOG:
+		return mAnalogEvents.Size();
+	case BT_COUNTER:
+		return mCounterEvents.Size();
+	case BT_VTO:
+		return mVtoEvents.Size();
+	default:
+		throw ArgumentException(LOCATION, "Invalid BufferType");
 	}
+}
 
-	void SlaveEventBuffer::Update(const Counter& arEvent, PointClass aClass, size_t aIndex)
-	{
-		mCounterEvents.Update(arEvent, aClass, aIndex);
+size_t SlaveEventBuffer::NumSelected()
+{
+	size_t num = 0;
+
+	num += mBinaryEvents.NumSelected();
+	num += mAnalogEvents.NumSelected();
+	num += mCounterEvents.NumSelected();
+	num += mVtoEvents.NumSelected();
+
+	return num;
+}
+
+bool SlaveEventBuffer::IsOverflow()
+{
+	return	mBinaryEvents.IsOverflown()
+	        || mAnalogEvents.IsOverflown()
+	        || mCounterEvents.IsOverflown()
+	        || mVtoEvents.IsOverflown();
+}
+
+bool SlaveEventBuffer::HasEventData()
+{
+	return mBinaryEvents.NumUnselected() > 0
+	       || mAnalogEvents.NumUnselected() > 0
+	       || mCounterEvents.NumUnselected() > 0
+	       || mVtoEvents.NumUnselected() > 0;
+}
+
+bool SlaveEventBuffer::HasClassData(PointClass aClass)
+{
+	return mBinaryEvents.HasClassData(aClass)
+	       || mAnalogEvents.HasClassData(aClass)
+	       || mCounterEvents.HasClassData(aClass)
+	       || mVtoEvents.HasClassData(aClass);
+}
+
+size_t SlaveEventBuffer::Select(BufferTypes aType, PointClass aClass, size_t aMaxEvent)
+{
+	switch(aType) {
+	case BT_BINARY:
+		return mBinaryEvents.Select(aClass, aMaxEvent);
+	case BT_ANALOG:
+		return mAnalogEvents.Select(aClass, aMaxEvent);
+	case BT_COUNTER:
+		return mCounterEvents.Select(aClass, aMaxEvent);
+	case BT_VTO:
+		return mVtoEvents.Select(aClass, aMaxEvent);
+	default:
+		throw ArgumentException(LOCATION, "Invalid BufferType");
 	}
+}
 
-	void SlaveEventBuffer::Update(VtoEvent& arEvent)
-	{
-		this->mVtoEvents.Update(arEvent);
+size_t SlaveEventBuffer::Select(PointClass aClass, size_t aMaxEvent)
+{
+	size_t left = aMaxEvent;
+
+	/*
+	 * The following implies a natural order of importance.  From 'most
+	 * important' to 'least important', the order is:
+	 *
+	 *    1. Binary
+	 *    2. Analog
+	 *    3. Counter
+	 *    4. Virtual Terminal
+	 */
+	if (left > 0) left -= mBinaryEvents.Select(aClass, left);
+	if (left > 0) left -= mAnalogEvents.Select(aClass, left);
+	if (left > 0) left -= mCounterEvents.Select(aClass, left);
+	if (left > 0) left -= mVtoEvents.Select(aClass, left);
+
+	return aMaxEvent - left;
+}
+
+void SlaveEventBuffer::ClearWritten()
+{
+	mBinaryEvents.ClearWrittenEvents();
+	mAnalogEvents.ClearWrittenEvents();
+	mCounterEvents.ClearWrittenEvents();
+	mVtoEvents.ClearWrittenEvents();
+}
+
+void SlaveEventBuffer::Deselect()
+{
+	mBinaryEvents.Deselect();
+	mAnalogEvents.Deselect();
+	mCounterEvents.Deselect();
+	mVtoEvents.Deselect();
+}
+
+bool SlaveEventBuffer::IsFull(BufferTypes aType)
+{
+	switch (aType) {
+	case BT_BINARY:
+		return mBinaryEvents.IsFull();
+	case BT_ANALOG:
+		return mAnalogEvents.IsFull();
+	case BT_COUNTER:
+		return mCounterEvents.IsFull();
+	case BT_VTO:
+		return mVtoEvents.IsFull();
+	default:
+		throw ArgumentException(LOCATION, "Invalid BufferType");
 	}
+}
 
-	size_t SlaveEventBuffer::NumSelected(BufferTypes aType)
-	{
-		switch(aType){
-			case BT_BINARY:
-				return mBinaryEvents.NumSelected();
-			case BT_ANALOG:
-				return mAnalogEvents.NumSelected();
-			case BT_COUNTER:
-				return mCounterEvents.NumSelected();
-			case BT_VTO:
-				return mVtoEvents.NumSelected();
-			default:
-				throw ArgumentException(LOCATION, "Invalid BufferType");
-		}
-	}
-
-	size_t SlaveEventBuffer::NumType(BufferTypes aType)
-	{
-		switch(aType){
-			case BT_BINARY:
-				return mBinaryEvents.Size();
-			case BT_ANALOG:
-				return mAnalogEvents.Size();
-			case BT_COUNTER:
-				return mCounterEvents.Size();
-			case BT_VTO:
-				return mVtoEvents.Size();
-			default:
-				throw ArgumentException(LOCATION, "Invalid BufferType");
-		}
-	}
-
-	size_t SlaveEventBuffer::NumSelected()
-	{
-		size_t num = 0;
-
-		num += mBinaryEvents.NumSelected();
-		num += mAnalogEvents.NumSelected();
-		num += mCounterEvents.NumSelected();
-		num += mVtoEvents.NumSelected();
-
-		return num;
-	}
-
-	bool SlaveEventBuffer::IsOverflow()
-	{
-		return	mBinaryEvents.IsOverflown()
-				|| mAnalogEvents.IsOverflown()
-				|| mCounterEvents.IsOverflown()
-				|| mVtoEvents.IsOverflown();
-	}
-
-	bool SlaveEventBuffer::HasEventData()
-	{
-		return mBinaryEvents.NumUnselected() > 0
-				|| mAnalogEvents.NumUnselected() > 0
-				|| mCounterEvents.NumUnselected() > 0
-				|| mVtoEvents.NumUnselected() > 0;
-	}
-
-	bool SlaveEventBuffer::HasClassData(PointClass aClass)
-	{
-		return mBinaryEvents.HasClassData(aClass)
-				|| mAnalogEvents.HasClassData(aClass)
-				|| mCounterEvents.HasClassData(aClass)
-				|| mVtoEvents.HasClassData(aClass);
-	}
-
-	size_t SlaveEventBuffer::Select(BufferTypes aType, PointClass aClass, size_t aMaxEvent)
-	{
-		switch(aType){
-			case BT_BINARY:
-				return mBinaryEvents.Select(aClass, aMaxEvent);
-			case BT_ANALOG:
-				return mAnalogEvents.Select(aClass, aMaxEvent);
-			case BT_COUNTER:
-				return mCounterEvents.Select(aClass, aMaxEvent);
-			case BT_VTO:
-				return mVtoEvents.Select(aClass, aMaxEvent);
-			default:
-				throw ArgumentException(LOCATION, "Invalid BufferType");
-		}
-	}
-
-	size_t SlaveEventBuffer::Select(PointClass aClass, size_t aMaxEvent)
-	{
-		size_t left = aMaxEvent;
-
-		/*
-		 * The following implies a natural order of importance.  From 'most
-		 * important' to 'least important', the order is:
-		 *
-		 *    1. Binary
-		 *    2. Analog
-		 *    3. Counter
-		 *    4. Virtual Terminal
-		 */
-		if (left > 0) left -= mBinaryEvents.Select(aClass, left);
-		if (left > 0) left -= mAnalogEvents.Select(aClass, left);
-		if (left > 0) left -= mCounterEvents.Select(aClass, left);
-		if (left > 0) left -= mVtoEvents.Select(aClass, left);
-
-		return aMaxEvent - left;
-	}
-
-	void SlaveEventBuffer::ClearWritten()
-	{
-		mBinaryEvents.ClearWrittenEvents();
-		mAnalogEvents.ClearWrittenEvents();
-		mCounterEvents.ClearWrittenEvents();
-		mVtoEvents.ClearWrittenEvents();
-	}
-
-	void SlaveEventBuffer::Deselect()
-	{
-		mBinaryEvents.Deselect();
-		mAnalogEvents.Deselect();
-		mCounterEvents.Deselect();
-		mVtoEvents.Deselect();
-	}
-
-	bool SlaveEventBuffer::IsFull(BufferTypes aType)
-	{
-		switch (aType) {
-			case BT_BINARY:
-				return mBinaryEvents.IsFull();
-			case BT_ANALOG:
-				return mAnalogEvents.IsFull();
-			case BT_COUNTER:
-				return mCounterEvents.IsFull();
-			case BT_VTO:
-				return mVtoEvents.IsFull();
-			default:
-				throw ArgumentException(LOCATION, "Invalid BufferType");
-		}
-	}
-
-}} //end NS
+}
+} //end NS
 
 /* vim: set ts=4 sw=4: */

@@ -25,221 +25,222 @@
 #include "EventTypes.h"
 #include "ObjectInterfaces.h"
 
-namespace apl {
-	namespace dnp {
-		
-		/**
-		 * The abstract base class for all VTO interface handlers.
-		 */
-		class IVtoChannel
-		{
-			public:
+namespace apl
+{
+namespace dnp
+{
 
-				/**
-				 * Creates a new IVtoBase instance configured for Virtual
-				 * Terminal channel id matching aChannelId.
-				 *
-				 * @param aChannelId	the DNP3 Virtual Terminal port (channel
-				 *						id)
-				 *
-				 * @return				the new IVtoBase instance
-				 */
-				IVtoChannel(boost::uint8_t aChannelId) : mChannelId(aChannelId) {}
+/**
+ * The abstract base class for all VTO interface handlers.
+ */
+class IVtoChannel
+{
+public:
 
-				/**
-				 * Returns the Virtual Terminal channel id for the object.
-				 *
-				 * @return the DNP3 Virtual Terminal port (channel id)
-				 */
-				boost::uint8_t GetChannelId()
-				{
-					return this->mChannelId;
-				}
+	/**
+	 * Creates a new IVtoBase instance configured for Virtual
+	 * Terminal channel id matching aChannelId.
+	 *
+	 * @param aChannelId	the DNP3 Virtual Terminal port (channel
+	 *						id)
+	 *
+	 * @return				the new IVtoBase instance
+	 */
+	IVtoChannel(boost::uint8_t aChannelId) : mChannelId(aChannelId) {}
 
-			private:
-
-				/**
-				 * A hidden default constructor.
-				 *
-				 * @deprecated			Use IVtoChannel(boost::uint8_t) instead.
-				 */
-				IVtoChannel() {}
-
-				/**
-				 * The DNP3 Virtual Terminal port (channel id) for this object.
-				 */
-				boost::uint8_t mChannelId;
-		};
-
-		/**
-		*  Callback that notifies when space is available to write vto objects.
-		*/
-		class IVtoBufferHandler
-		{
-			public:
-							
-				/**
-				 * Called when an IVtoWriter has space available for writing
-				 */
-				virtual void OnBufferAvailable() = 0;
-		};
-
-		/**
-		 * IVTOWriter is returned by the stack for write operations to a Vto
-		 * stream.  The Write() function should be used in conjunction with the
-		 * OnBufferAvailable() callback on the IVTOCallbacks interface provided
-		 * to the stack.
-		 */
-		class IVtoWriter
-		{
-			public:
-
-				/**
-				 * Writes a stream of data to the remote VTO endpoint.
-				 *
-				 * @param apData		The data to write to the VTO stream.
-				 * @param aLength		The length of the data to write (in
-				 *						bytes).
-				 * @param aChannelId	The channel id for the vto stream
-				 *
-				 * @return				The number of bytes that were
-				 *                      successfully queued into the VTO
-				 *                      transmission queue.  This number may be
-				 *                      less than the length request if the
-				 *                      buffer has insufficient space.
-				 */
-				virtual size_t Write(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId) = 0;
-
-				/**
-				 * Sends an indication to the remote vto consumer that the VTO connection
-				 * on this side of the dnp3 connection has changed.
-				 *
-				 * @param aLocalVtoConnectionOpened  Whether the local connection
-				 *                                   should be considered to be online
-				 * @param aChannelId                 The channel id for the vto stream
-				 */
-				virtual void SetLocalVtoState(bool aLocalVtoConnectionOpened, boost::uint8_t aChannelId) = 0;
-								
-				/**
-				 * Returns the number of bytes that the writer can currently accept
-				 *
-				 * @return				the number of objects in the
-				 *						transmission queue
-				 */
-				virtual size_t NumBytesAvailable() = 0;
-
-				/**
-				* Registers an IVtoCallbacks to receive OnBufferAvailable() notifications
-				* @param apCallbacks The interface to invoke when space is made available
-				*/
-				virtual void AddVtoCallback(IVtoBufferHandler* apHandler) = 0;
-
-				/**
-				* Stops an IVtoCallbacks from receiving OnBufferAvailable() notifications
-				* @param apCallbacks The interface to stop calling when space is available
-				*/
-				virtual void RemoveVtoCallback(IVtoBufferHandler* apHandler) = 0;
-		};
-
-		/**
-		 * Receives data from the stack for a particular channel and is notified
-		 * when buffer space becomes available.  Applications that wish to use
-		 * the AsyncStackManager::AddVtoChannel() hook must implement a concrete
-		 * subclass of this class and register an instance of that subclass
-		 * during the function call.
-		 */
-		class IVtoDataHandler : public IVtoChannel
-		{
-			public:
-
-				/**
-				 * Creates a new IVtoCallbacks instance configured for Virtual
-				 * Terminal channel id matching aChannelId.
-				 *
-				 * @param aChannelId	the DNP3 Virtual Terminal port (channel
-				 *						id)
-				 *
-				 * @return				the new IVtoCallbacks instance
-				 */
-				IVtoDataHandler(boost::uint8_t aChannelId) : IVtoChannel(aChannelId) {}
-
-				/**
-				 * Called when data arrives from stack and needs to be handled.
-				 *
-				 * @param apData		The data received from the VTO stream.
-				 * @param aLength		The length of the data received (in
-				 *						bytes).
-				 */
-				virtual void OnVtoDataReceived(const boost::uint8_t* apData,
-				                            size_t aLength) = 0;
-
-				/**
-				 * This callback is called when we have detected that the remote
-				 * connection state has changed. It will change if the client of
-				 * the remote connection drops the connection or the dnp3
-				 * connection drops.
-				 *
-				 * @param aIsRemoteOpen  whether we should act if the remote side is open
-				 */
-				virtual void OnVtoRemoteConnectedChanged(bool aIsRemoteOpen) = 0;
-
-				/**
-				 * Called when the dnp connected state changes. This allows us to only
-				 * open the local port after we are connected via Dnp so client applications
-				 * dont connect to a vto port that can't possibly satisfy their requests. It
-				 * also allows us to drop the local socket when we lose the underlying dnp3
-				 * link.
-				 *
-				 * @param aDnpIsConencted dnp3 comms connection state
-				 */
-				virtual void OnDnpConnectedChanged(bool aDnpIsConencted) = 0;
-		};
-
-		class IVtoReader
-		{
-			public:
-
-				/**
-				 * Register an IVtoCallbacks instance with the VtoReader
-				 * instance.  The IVtoCallbacks instance is self-aware of its
-				 * channel id.
-				 *
-				 * @param apCallbacks		The callback handler for the channel
-				 *
-				 * @throw ArgumentException	if the channel id is already
-				 *registered
-				 *                          with this reader
-				 */
-				virtual void AddVtoChannel(IVtoDataHandler* apCallbacks) = 0;
-
-				/**
-				 * Unregister an IVtoCallbacks instance with the VtoReader
-				 * instance.
-				 *
-				 * @param apCallbacks		The callback handler to unregister
-				 *
-				 * @throw ArgumentException	if the channel id is not registered
-				 *                          with this reader
-				 */
-				virtual void RemoveVtoChannel(IVtoDataHandler* apCallbacks) = 0;
-		};
-
-		class IVtoCallbacks : public IVtoDataHandler, public IVtoBufferHandler
-		{
-		public:
-			/**
-				 * Creates a new IVtoCallbacks instance configured for Virtual
-				 * Terminal channel id matching aChannelId.
-				 *
-				 * @param aChannelId	the DNP3 Virtual Terminal port (channel
-				 *						id)
-				 *
-				 * @return				the new IVtoCallbacks instance
-				 */
-				IVtoCallbacks(boost::uint8_t aChannelId) : IVtoDataHandler(aChannelId) {}
-		};
-
+	/**
+	 * Returns the Virtual Terminal channel id for the object.
+	 *
+	 * @return the DNP3 Virtual Terminal port (channel id)
+	 */
+	boost::uint8_t GetChannelId() {
+		return this->mChannelId;
 	}
+
+private:
+
+	/**
+	 * A hidden default constructor.
+	 *
+	 * @deprecated			Use IVtoChannel(boost::uint8_t) instead.
+	 */
+	IVtoChannel() {}
+
+	/**
+	 * The DNP3 Virtual Terminal port (channel id) for this object.
+	 */
+	boost::uint8_t mChannelId;
+};
+
+/**
+*  Callback that notifies when space is available to write vto objects.
+*/
+class IVtoBufferHandler
+{
+public:
+
+	/**
+	 * Called when an IVtoWriter has space available for writing
+	 */
+	virtual void OnBufferAvailable() = 0;
+};
+
+/**
+ * IVTOWriter is returned by the stack for write operations to a Vto
+ * stream.  The Write() function should be used in conjunction with the
+ * OnBufferAvailable() callback on the IVTOCallbacks interface provided
+ * to the stack.
+ */
+class IVtoWriter
+{
+public:
+
+	/**
+	 * Writes a stream of data to the remote VTO endpoint.
+	 *
+	 * @param apData		The data to write to the VTO stream.
+	 * @param aLength		The length of the data to write (in
+	 *						bytes).
+	 * @param aChannelId	The channel id for the vto stream
+	 *
+	 * @return				The number of bytes that were
+	 *                      successfully queued into the VTO
+	 *                      transmission queue.  This number may be
+	 *                      less than the length request if the
+	 *                      buffer has insufficient space.
+	 */
+	virtual size_t Write(const boost::uint8_t* apData, size_t aLength, boost::uint8_t aChannelId) = 0;
+
+	/**
+	 * Sends an indication to the remote vto consumer that the VTO connection
+	 * on this side of the dnp3 connection has changed.
+	 *
+	 * @param aLocalVtoConnectionOpened  Whether the local connection
+	 *                                   should be considered to be online
+	 * @param aChannelId                 The channel id for the vto stream
+	 */
+	virtual void SetLocalVtoState(bool aLocalVtoConnectionOpened, boost::uint8_t aChannelId) = 0;
+
+	/**
+	 * Returns the number of bytes that the writer can currently accept
+	 *
+	 * @return				the number of objects in the
+	 *						transmission queue
+	 */
+	virtual size_t NumBytesAvailable() = 0;
+
+	/**
+	* Registers an IVtoCallbacks to receive OnBufferAvailable() notifications
+	* @param apCallbacks The interface to invoke when space is made available
+	*/
+	virtual void AddVtoCallback(IVtoBufferHandler* apHandler) = 0;
+
+	/**
+	* Stops an IVtoCallbacks from receiving OnBufferAvailable() notifications
+	* @param apCallbacks The interface to stop calling when space is available
+	*/
+	virtual void RemoveVtoCallback(IVtoBufferHandler* apHandler) = 0;
+};
+
+/**
+ * Receives data from the stack for a particular channel and is notified
+ * when buffer space becomes available.  Applications that wish to use
+ * the AsyncStackManager::AddVtoChannel() hook must implement a concrete
+ * subclass of this class and register an instance of that subclass
+ * during the function call.
+ */
+class IVtoDataHandler : public IVtoChannel
+{
+public:
+
+	/**
+	 * Creates a new IVtoCallbacks instance configured for Virtual
+	 * Terminal channel id matching aChannelId.
+	 *
+	 * @param aChannelId	the DNP3 Virtual Terminal port (channel
+	 *						id)
+	 *
+	 * @return				the new IVtoCallbacks instance
+	 */
+	IVtoDataHandler(boost::uint8_t aChannelId) : IVtoChannel(aChannelId) {}
+
+	/**
+	 * Called when data arrives from stack and needs to be handled.
+	 *
+	 * @param apData		The data received from the VTO stream.
+	 * @param aLength		The length of the data received (in
+	 *						bytes).
+	 */
+	virtual void OnVtoDataReceived(const boost::uint8_t* apData,
+	                               size_t aLength) = 0;
+
+	/**
+	 * This callback is called when we have detected that the remote
+	 * connection state has changed. It will change if the client of
+	 * the remote connection drops the connection or the dnp3
+	 * connection drops.
+	 *
+	 * @param aIsRemoteOpen  whether we should act if the remote side is open
+	 */
+	virtual void OnVtoRemoteConnectedChanged(bool aIsRemoteOpen) = 0;
+
+	/**
+	 * Called when the dnp connected state changes. This allows us to only
+	 * open the local port after we are connected via Dnp so client applications
+	 * dont connect to a vto port that can't possibly satisfy their requests. It
+	 * also allows us to drop the local socket when we lose the underlying dnp3
+	 * link.
+	 *
+	 * @param aDnpIsConencted dnp3 comms connection state
+	 */
+	virtual void OnDnpConnectedChanged(bool aDnpIsConencted) = 0;
+};
+
+class IVtoReader
+{
+public:
+
+	/**
+	 * Register an IVtoCallbacks instance with the VtoReader
+	 * instance.  The IVtoCallbacks instance is self-aware of its
+	 * channel id.
+	 *
+	 * @param apCallbacks		The callback handler for the channel
+	 *
+	 * @throw ArgumentException	if the channel id is already
+	 *registered
+	 *                          with this reader
+	 */
+	virtual void AddVtoChannel(IVtoDataHandler* apCallbacks) = 0;
+
+	/**
+	 * Unregister an IVtoCallbacks instance with the VtoReader
+	 * instance.
+	 *
+	 * @param apCallbacks		The callback handler to unregister
+	 *
+	 * @throw ArgumentException	if the channel id is not registered
+	 *                          with this reader
+	 */
+	virtual void RemoveVtoChannel(IVtoDataHandler* apCallbacks) = 0;
+};
+
+class IVtoCallbacks : public IVtoDataHandler, public IVtoBufferHandler
+{
+public:
+	/**
+		 * Creates a new IVtoCallbacks instance configured for Virtual
+		 * Terminal channel id matching aChannelId.
+		 *
+		 * @param aChannelId	the DNP3 Virtual Terminal port (channel
+		 *						id)
+		 *
+		 * @return				the new IVtoCallbacks instance
+		 */
+	IVtoCallbacks(boost::uint8_t aChannelId) : IVtoDataHandler(aChannelId) {}
+};
+
+}
 }
 
 /* vim: set ts=4 sw=4: */

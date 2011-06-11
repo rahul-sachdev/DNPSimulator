@@ -31,18 +31,21 @@ using namespace std;
 using namespace boost;
 using namespace boost::posix_time;
 
-namespace apl {
+namespace apl
+{
 
 AsyncTaskScheduler::AsyncTaskScheduler(ITimerSource* apTimerSrc, ITimeSource* apTimeSrc) :
-mpTimerSrc(apTimerSrc),
-mpTimeSrc(apTimeSrc)
+	mpTimerSrc(apTimerSrc),
+	mpTimeSrc(apTimeSrc)
 {
 
 }
 
 AsyncTaskScheduler::~AsyncTaskScheduler()
 {
-	BOOST_FOREACH(AsyncTaskGroup* p, mGroupSet) { delete p; }
+	BOOST_FOREACH(AsyncTaskGroup * p, mGroupSet) {
+		delete p;
+	}
 }
 
 AsyncTaskGroup* AsyncTaskScheduler::CreateNewGroup()
@@ -57,9 +60,9 @@ void AsyncTaskScheduler::ReleaseGroup(AsyncTaskGroup* apGroup)
 {
 	CriticalSection cs(&mLock);
 	GroupSet::iterator i = mGroupSet.find(apGroup);
-	if( i != mGroupSet.end() ) {		
+	if( i != mGroupSet.end() ) {
 		delete *i;
-		mGroupSet.erase(i);		
+		mGroupSet.erase(i);
 	}
 	else throw ArgumentException(LOCATION, "Group not associated with this scheduler");
 }

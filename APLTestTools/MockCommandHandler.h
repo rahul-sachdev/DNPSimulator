@@ -21,15 +21,23 @@
 
 #include <APL/CommandInterfaces.h>
 
-namespace apl {
+namespace apl
+{
 
-	class MockCommandHandler : public ICommandHandler {
-	public:
+class MockCommandHandler : public ICommandHandler
+{
+public:
 
 	MockCommandHandler() : num_bo(0), num_sp(0) {}
 
-	CommandStatus HandleControl(BinaryOutput& aControl, size_t aIndex) { ++num_bo; return CS_SUCCESS; }
-	CommandStatus HandleControl(Setpoint& aControl, size_t aIndex) { ++num_sp;  return CS_SUCCESS; }
+	CommandStatus HandleControl(BinaryOutput& aControl, size_t aIndex) {
+		++num_bo;
+		return CS_SUCCESS;
+	}
+	CommandStatus HandleControl(Setpoint& aControl, size_t aIndex) {
+		++num_sp;
+		return CS_SUCCESS;
+	}
 
 	size_t num_bo;
 	size_t num_sp;

@@ -24,8 +24,8 @@ namespace apl
 {
 
 Threadable::Threadable() :
-mIsExitRequested(false),
-mIsRunning(false)
+	mIsExitRequested(false),
+	mIsRunning(false)
 {
 
 }

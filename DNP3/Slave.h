@@ -42,10 +42,13 @@
 
 namespace apl
 {
-	class ITimerSource;
+class ITimerSource;
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class AS_Base;
 
@@ -79,178 +82,173 @@ class Slave : public Loggable, public IAppUser
 	friend class AS_WaitForUnsolSuccess;
 	friend class AS_WaitForSolUnsolSuccess;
 
-	public:
+public:
 
-		Slave(Logger*, IAppLayer*, ITimerSource*, ITimeManager* apTime, Database*, IDNPCommandMaster*, const SlaveConfig& arCfg);
-		~Slave();
+	Slave(Logger*, IAppLayer*, ITimerSource*, ITimeManager* apTime, Database*, IDNPCommandMaster*, const SlaveConfig& arCfg);
+	~Slave();
 
-		////////////////////////
-		// External events
-		////////////////////////
+	////////////////////////
+	// External events
+	////////////////////////
 
-		/* Implement IAppUser - callbacks from the app layer */
-		void OnLowerLayerUp();
-		void OnLowerLayerDown();
+	/* Implement IAppUser - callbacks from the app layer */
+	void OnLowerLayerUp();
+	void OnLowerLayerDown();
 
-		void OnUnsolSendSuccess();
-		void OnSolSendSuccess();
+	void OnUnsolSendSuccess();
+	void OnSolSendSuccess();
 
-		void OnUnsolFailure();
-		void OnSolFailure();
+	void OnUnsolFailure();
+	void OnSolFailure();
 
-		// Only have to override OnRequest since we're a slave
-		void OnRequest(const APDU&, SequenceInfo);
-		void OnUnknownObject();
+	// Only have to override OnRequest since we're a slave
+	void OnRequest(const APDU&, SequenceInfo);
+	void OnUnknownObject();
 
-		/**
-		 * Implements IAppUser::IsMaster().
-		 *
-		 * @return			'false' since this is a Slave (outstation)
-		 *					implementation
-		 */
-		bool IsMaster()
-		{
-			return false;
-		}
+	/**
+	 * Implements IAppUser::IsMaster().
+	 *
+	 * @return			'false' since this is a Slave (outstation)
+	 *					implementation
+	 */
+	bool IsMaster() {
+		return false;
+	}
 
-		/**
-		 * Returns the buffer that is used for data updates by the user
-		 * application.  Writing new entries to this buffer will result in the
-		 * Slave doing things.
-		 *
-		 * @return			a pointer to the buffer
-		 */
-		IDataObserver* GetDataObserver()
-		{
-			return &mChangeBuffer;
-		}
+	/**
+	 * Returns the buffer that is used for data updates by the user
+	 * application.  Writing new entries to this buffer will result in the
+	 * Slave doing things.
+	 *
+	 * @return			a pointer to the buffer
+	 */
+	IDataObserver* GetDataObserver() {
+		return &mChangeBuffer;
+	}
 
-		/**
-		 * Returns a pointer to the VTO reader object.  This should only be
-		 * used by internal subsystems in the library.  External user
-		 * applications should associate IVtoCallbacks objects using the
-		 * AsyncStackManager.
-		 *
-		 * @return			a pointer to the VtoReader instance for this stack
-		 */
-		VtoReader* GetVtoReader()
-		{
-			return &mVtoReader;
-		}
+	/**
+	 * Returns a pointer to the VTO reader object.  This should only be
+	 * used by internal subsystems in the library.  External user
+	 * applications should associate IVtoCallbacks objects using the
+	 * AsyncStackManager.
+	 *
+	 * @return			a pointer to the VtoReader instance for this stack
+	 */
+	VtoReader* GetVtoReader() {
+		return &mVtoReader;
+	}
 
-		/**
-		 * Returns a pointer to the VtoWriter instance for this stack.
-		 * External user applications should use this hook to write new data
-		 * to the Master via the Slave (outstation).
-		 *
-		 * @return			a pointer to the VtoWriter instance for this stack
-		 */
-		IVtoWriter* GetVtoWriter()
-		{
-			return &mVtoWriter;
-		}
+	/**
+	 * Returns a pointer to the VtoWriter instance for this stack.
+	 * External user applications should use this hook to write new data
+	 * to the Master via the Slave (outstation).
+	 *
+	 * @return			a pointer to the VtoWriter instance for this stack
+	 */
+	IVtoWriter* GetVtoWriter() {
+		return &mVtoWriter;
+	}
 
-	private:
+private:
 
-		ChangeBuffer<SigLock> mChangeBuffer;	// how client code gives us updates
-		PostingNotifierSource mNotifierSource;	// way to get special notifiers for the change queue / vto
-		IAppLayer* mpAppLayer;					// lower application layer
-		ITimerSource* mpTimerSrc;				// used for post and timers
-		Database* mpDatabase;					// holds static data
-		IDNPCommandMaster* mpCmdMaster;			// how commands are selected/operated
-		int mSequence;							// control sequence
-		CommandResponseQueue mRspQueue;			// how command responses are received
-		AS_Base* mpState;						// current state for the state pattern
-		SlaveConfig mConfig;					// houses the configurable paramters of the outstation
-		SlaveResponseTypes mRspTypes;			// converts the group/var in the config to dnp singletons
+	ChangeBuffer<SigLock> mChangeBuffer;	// how client code gives us updates
+	PostingNotifierSource mNotifierSource;	// way to get special notifiers for the change queue / vto
+	IAppLayer* mpAppLayer;					// lower application layer
+	ITimerSource* mpTimerSrc;				// used for post and timers
+	Database* mpDatabase;					// holds static data
+	IDNPCommandMaster* mpCmdMaster;			// how commands are selected/operated
+	int mSequence;							// control sequence
+	CommandResponseQueue mRspQueue;			// how command responses are received
+	AS_Base* mpState;						// current state for the state pattern
+	SlaveConfig mConfig;					// houses the configurable paramters of the outstation
+	SlaveResponseTypes mRspTypes;			// converts the group/var in the config to dnp singletons
 
-		ITimer* mpUnsolTimer;					// timer for sending unsol responsess
+	ITimer* mpUnsolTimer;					// timer for sending unsol responsess
 
-		INotifier* mpVtoNotifier;
+	INotifier* mpVtoNotifier;
 
-		IINField mIIN;							// IIN bits that persist between requests (i.e. NeedsTime/Restart/Etc)
-		IINField mRspIIN;						// Transient IIN bits that get merged before a response is issued
-		APDU mResponse;							// APDU used to form responses
-		APDU mRequest;							// APDU used to save Deferred requests
-		SequenceInfo mSeqInfo;
-		APDU mUnsol;							// APDY used to form unsol respones
-		ResponseContext mRspContext;			// Used to track and construct response fragments
+	IINField mIIN;							// IIN bits that persist between requests (i.e. NeedsTime/Restart/Etc)
+	IINField mRspIIN;						// Transient IIN bits that get merged before a response is issued
+	APDU mResponse;							// APDU used to form responses
+	APDU mRequest;							// APDU used to save Deferred requests
+	SequenceInfo mSeqInfo;
+	APDU mUnsol;							// APDY used to form unsol respones
+	ResponseContext mRspContext;			// Used to track and construct response fragments
 
-		bool mHaveLastRequest;
-		APDU mLastRequest;						// APDU used to form responses
+	bool mHaveLastRequest;
+	APDU mLastRequest;						// APDU used to form responses
 
-		ITimeManager* mpTime;
-		CachedLogVariable mCommsStatus;
+	ITimeManager* mpTime;
+	CachedLogVariable mCommsStatus;
 
-		// Flags that tell us that some action has been Deferred
-		// until the slave is in a state capable of handling it.
+	// Flags that tell us that some action has been Deferred
+	// until the slave is in a state capable of handling it.
 
-		bool mDeferredUpdate;					// Indicates that a data update has been Deferred
-		bool mDeferredRequest;					// Indicates that a request has been Deferred
-		bool mDeferredUnsol;					// Indicates that the unsol timer expired, but the event was Deferred
-		bool mDeferredUnknown;
+	bool mDeferredUpdate;					// Indicates that a data update has been Deferred
+	bool mDeferredRequest;					// Indicates that a request has been Deferred
+	bool mDeferredUnsol;					// Indicates that the unsol timer expired, but the event was Deferred
+	bool mDeferredUnknown;
 
-		bool mStartupNullUnsol;					// Tracks whether the device has completed the NULL unsol startup message
+	bool mStartupNullUnsol;					// Tracks whether the device has completed the NULL unsol startup message
 
-		IStackObserver* mpObserver;             // update consumers who want to know when dnp3 connection state changes
-		StackStates mState;
+	IStackObserver* mpObserver;             // update consumers who want to know when dnp3 connection state changes
+	StackStates mState;
 
-		void UpdateState(StackStates aState);
+	void UpdateState(StackStates aState);
 
-		void OnVtoUpdate();						// internal event dispatched when user code commits an update to mVtoWriter
-		void OnDataUpdate();					// internal event dispatched when user code commits an update to mChangeBuffer
-		void OnUnsolTimerExpiration();			// internal event dispatched when the unsolicted pack/retry timer expires
+	void OnVtoUpdate();						// internal event dispatched when user code commits an update to mVtoWriter
+	void OnDataUpdate();					// internal event dispatched when user code commits an update to mChangeBuffer
+	void OnUnsolTimerExpiration();			// internal event dispatched when the unsolicted pack/retry timer expires
 
-		void ConfigureAndSendSimpleResponse();
-		void Send(APDU&);
-		void Send(APDU& arAPDU, const IINField& arIIN); // overload with additional IIN data
-		void SendUnsolicited(APDU& arAPDU);
+	void ConfigureAndSendSimpleResponse();
+	void Send(APDU&);
+	void Send(APDU& arAPDU, const IINField& arIIN); // overload with additional IIN data
+	void SendUnsolicited(APDU& arAPDU);
 
-		void HandleWrite(const APDU& arRequest);
-		void HandleWriteIIN(HeaderReadIterator& arHdr);
-		void HandleWriteTimeDate(HeaderReadIterator& arHWI);
-		void HandleWriteVto(HeaderReadIterator& arHdr);
-		void HandleSelect(const APDU& arRequest, SequenceInfo aSeqInfo);
-		void HandleOperate(const APDU& arRequest, SequenceInfo aSeqInfo);
-		void HandleDirectOperate(const APDU& arRequest, SequenceInfo aSeqInfo);
-		void HandleEnableUnsolicited(const APDU& arRequest, bool aIsEnable);
-		void HandleUnknown();
+	void HandleWrite(const APDU& arRequest);
+	void HandleWriteIIN(HeaderReadIterator& arHdr);
+	void HandleWriteTimeDate(HeaderReadIterator& arHWI);
+	void HandleWriteVto(HeaderReadIterator& arHdr);
+	void HandleSelect(const APDU& arRequest, SequenceInfo aSeqInfo);
+	void HandleOperate(const APDU& arRequest, SequenceInfo aSeqInfo);
+	void HandleDirectOperate(const APDU& arRequest, SequenceInfo aSeqInfo);
+	void HandleEnableUnsolicited(const APDU& arRequest, bool aIsEnable);
+	void HandleUnknown();
 
-		void ConfigureDelayMeasurement(const APDU& arRequest);
-		void CreateResponseContext(const APDU& arRequest);
+	void ConfigureDelayMeasurement(const APDU& arRequest);
+	void CreateResponseContext(const APDU& arRequest);
 
-		// Helpers
+	// Helpers
 
-		size_t FlushUpdates();
-		void FlushDeferredEvents();
-		void StartUnsolTimer(millis_t aTimeout);
+	size_t FlushUpdates();
+	void FlushDeferredEvents();
+	void StartUnsolTimer(millis_t aTimeout);
 
-		// Task handlers
+	// Task handlers
 
-		void ResetTimeIIN();
-		ITimer* mpTimeTimer;
+	void ResetTimeIIN();
+	ITimer* mpTimeTimer;
 
-		/**
-		 * The VtoReader instance for this stack which will direct received
-		 * VTO data to the user application.  The user application should
-		 * register an IVtoCallbacks instance for the desired virtual channel
-		 * id(s) using AsyncStackManager::AddVtoChannel().
-		 */
-		VtoReader mVtoReader;
+	/**
+	 * The VtoReader instance for this stack which will direct received
+	 * VTO data to the user application.  The user application should
+	 * register an IVtoCallbacks instance for the desired virtual channel
+	 * id(s) using AsyncStackManager::AddVtoChannel().
+	 */
+	VtoReader mVtoReader;
 
-		/**
-		 * The VtoWriter instance for this stack which will buffer new data
-		 * from the user application to the DNP3 stream.  This handler is
-		 * thread-safe.
-		 */
-		VtoWriter mVtoWriter;
+	/**
+	 * The VtoWriter instance for this stack which will buffer new data
+	 * from the user application to the DNP3 stream.  This handler is
+	 * thread-safe.
+	 */
+	VtoWriter mVtoWriter;
 
 	/**
 	 * A structure to provide the C++ equivalent of templated typedefs.
 	 */
 	template <class T>
-	struct CommandFunc
-	{
+	struct CommandFunc {
 		typedef boost::function<CommandStatus (T&, size_t)> Type;
 	};
 
@@ -309,16 +307,13 @@ void Slave::RespondToCommands(const StreamObject<T>* apObj, ObjectReadIterator& 
 {
 	IndexedWriteIterator i = mResponse.WriteIndexed(apObj, arIter.Count(), arIter.Header().GetQualifier());
 	size_t count = 1;
-	while (!arIter.IsEnd())
-	{
+	while (!arIter.IsEnd()) {
 		T val = apObj->Read(*arIter);
 		size_t index = arIter->Index();
-		if (count > mConfig.mMaxControls)
-		{
+		if (count > mConfig.mMaxControls) {
 			val.mStatus = CS_TOO_MANY_OPS;
 		}
-		else
-		{
+		else {
 			val.mStatus = arFunc(val, index);
 		}
 		i.SetIndex(index);
@@ -334,12 +329,10 @@ CommandStatus Slave::Select(T& arCmd, size_t aIndex, const HeaderInfo& aHdr, Seq
 {
 	CommandStatus res = mpCmdMaster->Select(CommandRequestInfo<T>(arCmd, aHdr.GetObjectType(), aHdr.GetVariation(), aHdr.GetQualifier(), aSeqInfo, aSeqNum), aIndex) ? CS_SUCCESS : CS_NOT_SUPPORTED;
 	LOG_BLOCK(LEV_INFO, "Selecting " << arCmd.ToString() << " Index: " << aIndex << " Result: " << ToString(res));
-	if (res == CS_NOT_SUPPORTED)
-	{
+	if (res == CS_NOT_SUPPORTED) {
 		mRspIIN.SetParameterError(true);
 	}
-	if (res == CS_TOO_MANY_OPS)
-	{
+	if (res == CS_TOO_MANY_OPS) {
 		mpCmdMaster->DeselectAll(); // 4.4.3 rule 3
 	}
 	return res;
@@ -350,25 +343,20 @@ CommandStatus Slave::Operate(T& arCmd, size_t aIndex, bool aDirect, const Header
 {
 	++mSequence;
 	CommandStatus res;
-	if (aDirect)
-	{
+	if (aDirect) {
 		res = mpCmdMaster->DirectOperate(CommandRequestInfo<T>(arCmd, aHdr.GetObjectType(), aHdr.GetVariation(), aHdr.GetQualifier(), aSeqInfo, aSeqNum), aIndex, mSequence);
 	}
-	else
-	{
+	else {
 		res = mpCmdMaster->Operate(CommandRequestInfo<T>(arCmd, aHdr.GetObjectType(), aHdr.GetVariation(), aHdr.GetQualifier(), aSeqInfo, aSeqNum), aIndex, mSequence);
 	}
 
-	if (res != CS_SUCCESS)
-	{
-		if (res == CS_NOT_SUPPORTED)
-		{
+	if (res != CS_SUCCESS) {
+		if (res == CS_NOT_SUPPORTED) {
 			mRspIIN.SetParameterError(true);
 		}
 		return res;
 	}
-	else
-	{
+	else {
 		CommandResponse cr(CS_HARDWARE_ERROR);
 		mRspQueue.WaitForResponse(cr, mSequence); // wait forever on a response from user space
 		LOG_BLOCK(LEV_INFO, arCmd.ToString() << " Index: " << aIndex << " Result: " << ToString(cr.mResult));
@@ -376,7 +364,8 @@ CommandStatus Slave::Operate(T& arCmd, size_t aIndex, bool aDirect, const Header
 	}
 }
 
-}}
+}
+}
 
 /* vim: set ts=4 sw=4: */
 

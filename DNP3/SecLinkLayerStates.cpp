@@ -25,7 +25,10 @@
 #include "DNPConstants.h"
 #include "LinkLayer.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 ////////////////////////////////////////
 // SecStateBase
@@ -94,4 +97,5 @@ void SLLS_Reset::ConfirmedUserData(LinkLayer* apLL, bool aFcb, const boost::uint
 	}
 }
 
-}} //end namepsace
+}
+} //end namepsace

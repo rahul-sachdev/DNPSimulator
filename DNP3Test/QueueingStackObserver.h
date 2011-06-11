@@ -22,16 +22,22 @@
 #include <DNP3/IStackObserver.h>
 #include <deque>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class QueueingStackObserver : public IStackObserver
 {
-	public:
-	void OnStateChange(StackStates aState) { mQueue.push_back(aState); }
+public:
+	void OnStateChange(StackStates aState) {
+		mQueue.push_back(aState);
+	}
 
 	std::deque<StackStates> mQueue;
 };
 
-}}
+}
+}
 
 #endif

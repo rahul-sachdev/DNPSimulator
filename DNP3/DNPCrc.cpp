@@ -22,35 +22,39 @@
 
 #include <APL/PackingUnpacking.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	unsigned int DNPCrc::mpCrcTable[256];
+unsigned int DNPCrc::mpCrcTable[256];
 
-	//initialize the table
-	bool DNPCrc::mIsInitialized = DNPCrc::InitCrcTable();
+//initialize the table
+bool DNPCrc::mIsInitialized = DNPCrc::InitCrcTable();
 
-	unsigned int DNPCrc::CalcCrc(const boost::uint8_t* aInput, size_t aLength)
-	{
-		return CRC::CalcCRC(aInput, aLength, mpCrcTable, 0x0000, true);
-	}
+unsigned int DNPCrc::CalcCrc(const boost::uint8_t* aInput, size_t aLength)
+{
+	return CRC::CalcCRC(aInput, aLength, mpCrcTable, 0x0000, true);
+}
 
-	void DNPCrc::AddCrc(boost::uint8_t* aInput, size_t aLength)
-	{
-		unsigned int crc = DNPCrc::CalcCrc(aInput, aLength);
+void DNPCrc::AddCrc(boost::uint8_t* aInput, size_t aLength)
+{
+	unsigned int crc = DNPCrc::CalcCrc(aInput, aLength);
 
-		aInput[aLength] = crc & 0xFF; //set the LSB
-		aInput[aLength+1] = (crc >> 8) & 0xFF; //set the MSB
-	}
+	aInput[aLength] = crc & 0xFF; //set the LSB
+	aInput[aLength + 1] = (crc >> 8) & 0xFF; //set the MSB
+}
 
-	bool DNPCrc::IsCorrectCRC(const boost::uint8_t* aInput, size_t aLength)
-	{
-		return CalcCrc(aInput, aLength) == UInt16LE::Read(aInput+aLength);
-	}
+bool DNPCrc::IsCorrectCRC(const boost::uint8_t* aInput, size_t aLength)
+{
+	return CalcCrc(aInput, aLength) == UInt16LE::Read(aInput + aLength);
+}
 
-	bool DNPCrc::InitCrcTable()
-	{
-		CRC::PrecomputeCRC(mpCrcTable, 0xA6BC);
-		return true;
-	}
+bool DNPCrc::InitCrcTable()
+{
+	CRC::PrecomputeCRC(mpCrcTable, 0xA6BC);
+	return true;
+}
 
-}}
+}
+}

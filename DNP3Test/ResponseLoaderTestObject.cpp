@@ -25,7 +25,10 @@
 
 #include <memory.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 ResponseLoaderTestObject::ResponseLoaderTestObject() :
 	log(),
@@ -43,8 +46,7 @@ void ResponseLoaderTestObject::Load(const std::string& arAPDU)
 	f.Interpret();
 
 	ResponseLoader rl(mpLogger, &fdo, &vto);
-	for(HeaderReadIterator hdr = f.BeginRead(); !hdr.IsEnd(); ++hdr)
-	{
+	for(HeaderReadIterator hdr = f.BeginRead(); !hdr.IsEnd(); ++hdr) {
 		rl.Process(hdr);
 	}
 }
@@ -94,4 +96,5 @@ void ResponseLoaderTestObject::CheckSetpointStatii(const std::string& arAPDU)
 	BOOST_REQUIRE(fdo.Check(9, PQ_ONLINE, 1));
 }
 
-}}
+}
+}

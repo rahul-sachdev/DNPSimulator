@@ -41,33 +41,34 @@
 #include <boost/thread/tss.hpp>
 #endif
 
-namespace apl{
-	class SigLock_Boost : public ILockBase, private Uncopyable
-	{
-	public:
+namespace apl
+{
+class SigLock_Boost : public ILockBase, private Uncopyable
+{
+public:
 
-		SigLock_Boost();
-		virtual ~SigLock_Boost();
+	SigLock_Boost();
+	virtual ~SigLock_Boost();
 
-		////////////////////////////
-		// Base class interface functions
-		////////////////////////////
+	////////////////////////////
+	// Base class interface functions
+	////////////////////////////
 
-		void Lock();
-		void Unlock();
-		void Wait();
-		bool TimedWait(millis_t aMillisec);
-		void Signal();
-		void Broadcast();
+	void Lock();
+	void Unlock();
+	void Wait();
+	bool TimedWait(millis_t aMillisec);
+	void Signal();
+	void Broadcast();
 
-	private:
+private:
 
-		int mLockCount;
-		boost::condition_variable_any mCondition;
-		boost::shared_mutex mMutex;
+	int mLockCount;
+	boost::condition_variable_any mCondition;
+	boost::shared_mutex mMutex;
 #ifdef DEBUG_LOCKS
-		boost::thread_specific_ptr< boost::mutex::scoped_lock > mLockPtr;
+	boost::thread_specific_ptr< boost::mutex::scoped_lock > mLockPtr;
 #endif
-	};
+};
 };
 #endif

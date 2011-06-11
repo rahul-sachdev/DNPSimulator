@@ -26,11 +26,11 @@
 #include <string>
 #include <sstream>
 
-namespace apl {
+namespace apl
+{
 
 template <class T, size_t N>
-struct QualityInfo
-{
+struct QualityInfo {
 	const static size_t NUM = N;
 	const static boost::uint8_t masks[N];
 	const static std::string names[N];
@@ -47,34 +47,30 @@ typedef QualityInfo<VtoQuality, 4> VtoQualInfo;					/* TODO - what is the proper
 template <class T>
 class QualityConverter
 {
-	public:
+public:
 
-	static char GetSymbol(boost::uint8_t aMask)
-	{
+	static char GetSymbol(boost::uint8_t aMask) {
 		for (size_t i = 0; i < T::NUM; ++i)
 			if(T::masks[i] == aMask) return T::symbols[i];
 		return '.';
 	}
 
-	static std::string GetName(boost::uint8_t aMask)
-	{
+	static std::string GetName(boost::uint8_t aMask) {
 		for (size_t i = 0; i < T::NUM; ++i)
 			if(T::masks[i] == aMask) return T::names[i];
 		return "Reserved";
 	}
 
-	static boost::uint8_t GetMask(char aSymbol)
-	{
-		for (size_t i=0; i < T::NUM; ++i)
+	static boost::uint8_t GetMask(char aSymbol) {
+		for (size_t i = 0; i < T::NUM; ++i)
 			if(T::symbols[i] == aSymbol) return T::masks[i];
 		return 0;
 	}
 
-	static std::string GetSymbolString(boost::uint8_t aQual)
-	{
+	static std::string GetSymbolString(boost::uint8_t aQual) {
 		std::ostringstream oss;
 		oss << "{";
-		for (size_t i=0; i < 8; ++i) {
+		for (size_t i = 0; i < 8; ++i) {
 			if(i < T::NUM && (aQual & T::masks[i])) oss << T::symbols[i];
 			else oss << ' ';
 		}
@@ -82,15 +78,16 @@ class QualityConverter
 		return oss.str();
 	}
 
-	static std::string GetNameString(boost::uint8_t aQual)
-	{
+	static std::string GetNameString(boost::uint8_t aQual) {
 		std::ostringstream oss;
-		for (size_t i=0; i < T::NUM; ++i)
+		for (size_t i = 0; i < T::NUM; ++i)
 			if(aQual & T::masks[i]) oss << " " << T::names[i];
 		return oss.str();
 	}
 
-	static std::string GetAllSymbols() { return GetSymbolString(~0); }
+	static std::string GetAllSymbols() {
+		return GetSymbolString(~0);
+	}
 };
 
 }

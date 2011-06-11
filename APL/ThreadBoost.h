@@ -24,9 +24,11 @@
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
-namespace apl {
+namespace apl
+{
 
-class ThreadBoost : public ThreadBase {
+class ThreadBoost : public ThreadBase
+{
 
 public:
 	ThreadBoost(Threadable* apObj);

@@ -26,7 +26,8 @@
 #include "TimeSource.h"
 #include "Lock.h"
 
-namespace apl {
+namespace apl
+{
 
 class AsyncTaskBase;
 class AsyncTaskGroup;
@@ -39,15 +40,15 @@ class AsyncTaskScheduler
 {
 	friend class AsyncTaskGroup;
 
-	public:
+public:
 
 	AsyncTaskScheduler(ITimerSource* apTimerSrc, ITimeSource* apTimeSrc = TimeSource::Inst());
 	~AsyncTaskScheduler();
 
 	AsyncTaskGroup* CreateNewGroup();
-	void ReleaseGroup(AsyncTaskGroup*);	
+	void ReleaseGroup(AsyncTaskGroup*);
 
-	private:
+private:
 	SigLock mLock;
 
 	ITimerSource* mpTimerSrc;

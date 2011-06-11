@@ -25,7 +25,10 @@
 #include "APDUConstants.h"
 #include "AppLayerChannel.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class APDU;
 
@@ -35,7 +38,7 @@ class APDU;
 */
 class ACS_Base
 {
-	public:
+public:
 
 	virtual void Send(AppLayerChannel*, APDU&, size_t aNumRetry);
 	virtual void Cancel(AppLayerChannel*); //cancel the outbound transaction
@@ -48,9 +51,11 @@ class ACS_Base
 	virtual void OnTimeout(AppLayerChannel*);
 
 	virtual std::string Name() const = 0;
-	virtual bool AcceptsResponse() { return false; }
+	virtual bool AcceptsResponse() {
+		return false;
+	}
 
-	protected:
+protected:
 
 	void ThrowInvalidState(const std::string& arLocation);
 
@@ -63,14 +68,14 @@ class ACS_Idle : public ACS_Base
 	MACRO_NAME_SINGLETON_INSTANCE(ACS_Idle)
 	void Send(AppLayerChannel*, APDU&, size_t aNumRetry);
 
-	private:
+private:
 	ACS_Base* NextState(AppLayerChannel* c, FunctionCodes, bool aConfirm);
 };
 
 //default implementations for failure and cancel events
 class ACS_SendBase : public ACS_Base
 {
-	public:
+public:
 
 	void OnSendFailure(AppLayerChannel*);
 	void Cancel(AppLayerChannel* c);
@@ -118,9 +123,11 @@ class ACS_WaitForConfirm : public ACS_Base
 
 class ACS_WaitForResponseBase : public ACS_Base
 {
-	public:
-		void OnTimeout(AppLayerChannel*);
-		bool AcceptsResponse() { return true; }
+public:
+	void OnTimeout(AppLayerChannel*);
+	bool AcceptsResponse() {
+		return true;
+	}
 };
 
 
@@ -139,7 +146,8 @@ class ACS_WaitForFinalResponse : public ACS_WaitForResponseBase
 	void OnResponse(AppLayerChannel*, APDU&);
 };
 
-}}
+}
+}
 
 #endif
 

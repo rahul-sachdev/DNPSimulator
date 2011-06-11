@@ -22,10 +22,13 @@
 #include <APL/Logger.h>
 #include <APL/AsyncTaskInterfaces.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 MasterTaskBase::MasterTaskBase(Logger* apLogger) :
-Loggable(apLogger)
+	Loggable(apLogger)
 {}
 
 TaskResult MasterTaskBase::OnPartialResponse(const APDU& arAPDU)
@@ -66,4 +69,5 @@ TaskResult SimpleRspBase::_OnFinalResponse(const APDU& arAPDU)
 	return TR_SUCCESS;
 }
 
-}} //ens ns
+}
+} //ens ns

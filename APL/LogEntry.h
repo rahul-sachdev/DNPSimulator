@@ -26,63 +26,74 @@
 
 #include <map>
 
-namespace apl {
+namespace apl
+{
 
-	class LogEntry
-	{
-		typedef std::map<std::string, std::string> KeyValueMap;
+class LogEntry
+{
+	typedef std::map<std::string, std::string> KeyValueMap;
 
-		public:
+public:
 
-			LogEntry():mTime(TimeStamp::GetUTCTimeStamp()){};
+	LogEntry(): mTime(TimeStamp::GetUTCTimeStamp()) {};
 
-			LogEntry( FilterLevel aLevel, const std::string& aDeviceName, const std::string& aLocation, const std::string& aMessage, int aErrorCode);
+	LogEntry( FilterLevel aLevel, const std::string& aDeviceName, const std::string& aLocation, const std::string& aMessage, int aErrorCode);
 
-			const std::string&	GetDeviceName() const { return mDeviceName; }
-			const std::string&	GetLocation() const { return mLocation; }
-			const std::string&	GetMessage() const { return mMessage; }
-			FilterLevel			GetFilterLevel() const { return mFilterLevel; }
-			std::string			GetTimeString() const { return TimeStamp::UTCTimeStampToString(mTime);}
-			int					GetErrorCode() const {return mErrorCode; }
-			std::string			LogString() const;
-			
-			bool GetValue(const std::string& arKey, std::string& arValue) const;
-			bool GetValue(const std::string& arKey, int& arValue) const;
+	const std::string&	GetDeviceName() const {
+		return mDeviceName;
+	}
+	const std::string&	GetLocation() const {
+		return mLocation;
+	}
+	const std::string&	GetMessage() const {
+		return mMessage;
+	}
+	FilterLevel			GetFilterLevel() const {
+		return mFilterLevel;
+	}
+	std::string			GetTimeString() const {
+		return TimeStamp::UTCTimeStampToString(mTime);
+	}
+	int					GetErrorCode() const {
+		return mErrorCode;
+	}
+	std::string			LogString() const;
 
-			void AddValue(const std::string& arKey, int aValue);
-			void AddValue(const std::string& arKey, const std::string& arValue);
+	bool GetValue(const std::string& arKey, std::string& arValue) const;
+	bool GetValue(const std::string& arKey, int& arValue) const;
 
-		private:
+	void AddValue(const std::string& arKey, int aValue);
+	void AddValue(const std::string& arKey, const std::string& arValue);
 
-			void AddKeyValue(const std::string& arKey, const std::string& arValue);
+private:
 
-			template <class T>
-			void AddAnyValue(const std::string& arKey, const T& arValue)
-			{
-				std::ostringstream oss;
-				oss << arValue;
-				AddKeyValue(arKey, oss.str());
-			}
+	void AddKeyValue(const std::string& arKey, const std::string& arValue);
 
-			template <class T>
-			bool GetAnyValue(const std::string& arKey, T& arValue) const
-			{
-				std::string text;
-				if(GetValue(arKey, text)) {
-					Parsing::Get(text, arValue);
-					return true;
-				}
-				else return false;
-			}
-						
-			FilterLevel		mFilterLevel;
-			std::string		mDeviceName;
-			std::string		mLocation;
-			std::string		mMessage;
-			apl::UTCTimeStamp_t	mTime;
-			int				mErrorCode;
-			KeyValueMap		mKeyValues;
-	};
+	template <class T>
+	void AddAnyValue(const std::string& arKey, const T& arValue) {
+		std::ostringstream oss;
+		oss << arValue;
+		AddKeyValue(arKey, oss.str());
+	}
+
+	template <class T>
+	bool GetAnyValue(const std::string& arKey, T& arValue) const {
+		std::string text;
+		if(GetValue(arKey, text)) {
+			Parsing::Get(text, arValue);
+			return true;
+		}
+		else return false;
+	}
+
+	FilterLevel		mFilterLevel;
+	std::string		mDeviceName;
+	std::string		mLocation;
+	std::string		mMessage;
+	apl::UTCTimeStamp_t	mTime;
+	int				mErrorCode;
+	KeyValueMap		mKeyValues;
+};
 
 }
 

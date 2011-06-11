@@ -34,149 +34,161 @@
 
 #include "APDUConstants.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	class ObjectBase;
+class ObjectBase;
 
-	enum ObjectHeaderMasks
-	{
-		OHM_OBJECT_PREFIX = 0x70,
-		OHM_RANGE_SPECIFIER = 0x0F
-	};
+enum ObjectHeaderMasks {
+    OHM_OBJECT_PREFIX = 0x70,
+    OHM_RANGE_SPECIFIER = 0x0F
+};
 
-	struct ObjectHeaderField
-	{
-		ObjectHeaderField(){};
-		ObjectHeaderField(boost::uint8_t aGroup, boost::uint8_t aVariation, QualifierCode aQualifier) :
+struct ObjectHeaderField {
+	ObjectHeaderField() {};
+	ObjectHeaderField(boost::uint8_t aGroup, boost::uint8_t aVariation, QualifierCode aQualifier) :
 		Group(aGroup),
 		Variation(aVariation),
 		Qualifier(aQualifier)
-		{}
+	{}
 
-		boost::uint8_t Group;
-		boost::uint8_t Variation;
-		QualifierCode Qualifier;
-	};
+	boost::uint8_t Group;
+	boost::uint8_t Variation;
+	QualifierCode Qualifier;
+};
 
-	enum ObjectHeaderTypes
-	{
-		OHT_ALL_OBJECTS,
-		OHT_RANGED_2_OCTET,
-		OHT_RANGED_4_OCTET,
-		OHT_RANGED_8_OCTET,
-		OHT_COUNT_1_OCTET,
-		OHT_COUNT_2_OCTET,
-		OHT_COUNT_4_OCTET
-	};
+enum ObjectHeaderTypes {
+    OHT_ALL_OBJECTS,
+    OHT_RANGED_2_OCTET,
+    OHT_RANGED_4_OCTET,
+    OHT_RANGED_8_OCTET,
+    OHT_COUNT_1_OCTET,
+    OHT_COUNT_2_OCTET,
+    OHT_COUNT_4_OCTET
+};
 
-	class IObjectHeader
-	{
-		public:
-			virtual ~IObjectHeader(){}
-			virtual size_t GetSize() const = 0; // depends on the subtype, default size is 3
-			virtual ObjectHeaderTypes GetType() const = 0;
+class IObjectHeader
+{
+public:
+	virtual ~IObjectHeader() {}
+	virtual size_t GetSize() const = 0; // depends on the subtype, default size is 3
+	virtual ObjectHeaderTypes GetType() const = 0;
 
-			void Get(const boost::uint8_t* apStart, ObjectHeaderField& arData) const;
-			void Set(boost::uint8_t* apStart,boost::uint8_t aGrp,boost::uint8_t aVar, QualifierCode aQual) const;
+	void Get(const boost::uint8_t* apStart, ObjectHeaderField& arData) const;
+	void Set(boost::uint8_t* apStart, boost::uint8_t aGrp, boost::uint8_t aVar, QualifierCode aQual) const;
 
-			static QualifierCode ByteToQualifierCode(boost::uint8_t aCode);
-	};
+	static QualifierCode ByteToQualifierCode(boost::uint8_t aCode);
+};
 
-	struct RangeInfo
-	{
-		size_t Start;
-		size_t Stop;
-	};
+struct RangeInfo {
+	size_t Start;
+	size_t Stop;
+};
 
-	class IRangeHeader : public IObjectHeader
-	{
-		public:
-			virtual void GetRange(const boost::uint8_t* apStart, RangeInfo& arInfo) const = 0;
-			virtual void SetRange(boost::uint8_t* apStart, const RangeInfo& arInfo) const = 0;
-	};
+class IRangeHeader : public IObjectHeader
+{
+public:
+	virtual void GetRange(const boost::uint8_t* apStart, RangeInfo& arInfo) const = 0;
+	virtual void SetRange(boost::uint8_t* apStart, const RangeInfo& arInfo) const = 0;
+};
 
-	class ICountHeader : public IObjectHeader
-	{
-		public:
-			virtual size_t GetCount(const boost::uint8_t* apStart) const = 0;
-			virtual void SetCount(boost::uint8_t* apStart, size_t aCount) const = 0;
-	};
+class ICountHeader : public IObjectHeader
+{
+public:
+	virtual size_t GetCount(const boost::uint8_t* apStart) const = 0;
+	virtual void SetCount(boost::uint8_t* apStart, size_t aCount) const = 0;
+};
 
-	class AllObjectsHeader : public IObjectHeader
-	{
-		MACRO_SINGLETON_INSTANCE(AllObjectsHeader)
+class AllObjectsHeader : public IObjectHeader
+{
+	MACRO_SINGLETON_INSTANCE(AllObjectsHeader)
 
-		size_t GetSize() const { return 3; }
-		ObjectHeaderTypes GetType() const { return OHT_ALL_OBJECTS; }
-	};
+	size_t GetSize() const {
+		return 3;
+	}
+	ObjectHeaderTypes GetType() const {
+		return OHT_ALL_OBJECTS;
+	}
+};
 
-	template <class T, ObjectHeaderTypes U>
-	class RangedHeader : public IRangeHeader
-	{
-		MACRO_SINGLETON_INSTANCE(RangedHeader)
+template <class T, ObjectHeaderTypes U>
+class RangedHeader : public IRangeHeader
+{
+	MACRO_SINGLETON_INSTANCE(RangedHeader)
 
-		size_t GetSize() const { return Size; }
-		ObjectHeaderTypes GetType() const { return U; }
+	size_t GetSize() const {
+		return Size;
+	}
+	ObjectHeaderTypes GetType() const {
+		return U;
+	}
 
-		void GetRange(const boost::uint8_t* apStart, RangeInfo& arInfo) const
-		{
-			arInfo.Start = T::Read(apStart+3);
-			arInfo.Stop = T::Read(apStart+3+T::Size);
-		}
+	void GetRange(const boost::uint8_t* apStart, RangeInfo& arInfo) const {
+		arInfo.Start = T::Read(apStart + 3);
+		arInfo.Stop = T::Read(apStart + 3 + T::Size);
+	}
 
-		void SetRange(boost::uint8_t* apStart, const RangeInfo& arInfo) const
-		{
-			if(arInfo.Start > arInfo.Stop) throw ArgumentException(LOCATION, "stop > start");
-			if(arInfo.Stop > T::Max) throw ArgumentException(LOCATION, "stop > max");
+	void SetRange(boost::uint8_t* apStart, const RangeInfo& arInfo) const {
+		if(arInfo.Start > arInfo.Stop) throw ArgumentException(LOCATION, "stop > start");
+		if(arInfo.Stop > T::Max) throw ArgumentException(LOCATION, "stop > max");
 
-			T::Write(apStart+3, static_cast<typename T::Type>(arInfo.Start));
-			T::Write(apStart+3+T::Size, static_cast<typename T::Type>(arInfo.Stop));
-		}
+		T::Write(apStart + 3, static_cast<typename T::Type>(arInfo.Start));
+		T::Write(apStart + 3 + T::Size, static_cast<typename T::Type>(arInfo.Stop));
+	}
 
-		static size_t MaxRange()
-		{ return T::Max; }
+	static size_t MaxRange() {
+		return T::Max;
+	}
 
-		const static size_t Size = 3+2*T::Size;
-	};
+	const static size_t Size = 3 + 2 * T::Size;
+};
 
-	template <class T, ObjectHeaderTypes U>
-	RangedHeader<T,U> RangedHeader<T,U>::mInstance;
+template <class T, ObjectHeaderTypes U>
+RangedHeader<T, U> RangedHeader<T, U>::mInstance;
 
-	template <class T, ObjectHeaderTypes U>
-	class CountHeader : public ICountHeader
-	{
-		MACRO_SINGLETON_INSTANCE(CountHeader)
+template <class T, ObjectHeaderTypes U>
+class CountHeader : public ICountHeader
+{
+	MACRO_SINGLETON_INSTANCE(CountHeader)
 
-		size_t GetSize() const { return Size; }
-		ObjectHeaderTypes GetType() const { return U; }
+	size_t GetSize() const {
+		return Size;
+	}
+	ObjectHeaderTypes GetType() const {
+		return U;
+	}
 
-		size_t GetCount(const boost::uint8_t* apStart) const
-		{ return T::Read(apStart+3); }
+	size_t GetCount(const boost::uint8_t* apStart) const {
+		return T::Read(apStart + 3);
+	}
 
-		void SetCount(boost::uint8_t* apStart, size_t aCount) const
-		{
-			if(aCount > T::Max) throw ArgumentException(LOCATION);
-			T::Write(apStart+3, static_cast<typename T::Type>(aCount));
-		}
+	void SetCount(boost::uint8_t* apStart, size_t aCount) const {
+		if(aCount > T::Max) throw ArgumentException(LOCATION);
+		T::Write(apStart + 3, static_cast<typename T::Type>(aCount));
+	}
 
-		static size_t MaxCount()
-		{ return T::Max; }
+	static size_t MaxCount() {
+		return T::Max;
+	}
 
-		const static size_t Size = 3 + T::Size;
-	};
+	const static size_t Size = 3 + T::Size;
+};
 
-	template <class T, ObjectHeaderTypes U>
-	CountHeader<T,U> CountHeader<T,U>::mInstance;
+template <class T, ObjectHeaderTypes U>
+CountHeader<T, U> CountHeader<T, U>::mInstance;
 
-	//Typedefs so you don't have to direcly use the templates
-	typedef RangedHeader<apl::UInt8, OHT_RANGED_2_OCTET>	Ranged2OctetHeader;
-	typedef RangedHeader<apl::UInt16LE, OHT_RANGED_4_OCTET> Ranged4OctetHeader;
-	typedef RangedHeader<apl::UInt32LE, OHT_RANGED_8_OCTET> Ranged8OctetHeader;
+//Typedefs so you don't have to direcly use the templates
+typedef RangedHeader<apl::UInt8, OHT_RANGED_2_OCTET>	Ranged2OctetHeader;
+typedef RangedHeader<apl::UInt16LE, OHT_RANGED_4_OCTET> Ranged4OctetHeader;
+typedef RangedHeader<apl::UInt32LE, OHT_RANGED_8_OCTET> Ranged8OctetHeader;
 
-	typedef CountHeader<apl::UInt8, OHT_COUNT_1_OCTET>		Count1OctetHeader;
-	typedef CountHeader<apl::UInt16LE, OHT_COUNT_2_OCTET>	Count2OctetHeader;
-	typedef CountHeader<apl::UInt32LE, OHT_COUNT_4_OCTET>	Count4OctetHeader;
+typedef CountHeader<apl::UInt8, OHT_COUNT_1_OCTET>		Count1OctetHeader;
+typedef CountHeader<apl::UInt16LE, OHT_COUNT_2_OCTET>	Count2OctetHeader;
+typedef CountHeader<apl::UInt32LE, OHT_COUNT_4_OCTET>	Count4OctetHeader;
 
-}}
+}
+}
 
 #endif

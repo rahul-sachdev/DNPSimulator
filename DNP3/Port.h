@@ -27,14 +27,18 @@
 #include <APL/Loggable.h>
 #include <vector>
 
-namespace apl {
-	class Logger;
-	class IPhysicalLayerAsync;
-	class ITimerSource;
-	class AsyncTaskGroup;
+namespace apl
+{
+class Logger;
+class IPhysicalLayerAsync;
+class ITimerSource;
+class AsyncTaskGroup;
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class Stack;
 class AsyncStackManager;
@@ -44,43 +48,50 @@ template <class T, class U>
 static std::vector<U> GetKeys(T& arMap)
 {
 	std::vector<U> ret;
-	for(typename T::iterator i = arMap.begin(); i != arMap.end(); ++i) { ret.push_back(i->first); }
+	for(typename T::iterator i = arMap.begin(); i != arMap.end(); ++i) {
+		ret.push_back(i->first);
+	}
 	return ret;
 }
 
 class Port : public Loggable, public IPhysMonitor, public CleanupHelper
-{	
-	struct StackRecord
-	{
+{
+	struct StackRecord {
 		StackRecord() : pStack(NULL), route()
 		{}
 
 		StackRecord(Stack* apStack, const LinkRoute& arRoute) :
-		pStack(apStack), route(arRoute)
+			pStack(apStack), route(arRoute)
 		{}
 
 		Stack* pStack;
 		LinkRoute route;
 	};
 
-	public:
+public:
 
-	static void Delete(Port* apPort) { delete apPort; }
+	static void Delete(Port* apPort) {
+		delete apPort;
+	}
 
 	Port(const std::string& arName, Logger*, AsyncTaskGroup*, ITimerSource* apTimerSrc, IPhysicalLayerAsync*, millis_t aOpenDelay, IPhysMonitor*);
-	
-	AsyncTaskGroup* GetGroup() { return mpGroup; }
+
+	AsyncTaskGroup* GetGroup() {
+		return mpGroup;
+	}
 	void Associate(const std::string& arStackName, Stack* apStack, const LinkRoute& arRoute);
 	void Disassociate(const std::string& arStackName);
 
-	std::string Name() { return mName; }
+	std::string Name() {
+		return mName;
+	}
 
 	void Release();
 
 	//Events from the router
 	void OnStateChange(IPhysMonitor::State);
 
-	private:
+private:
 
 	std::string mName;
 	LinkLayerRouter mRouter;
@@ -89,14 +100,15 @@ class Port : public Loggable, public IPhysMonitor, public CleanupHelper
 	IPhysMonitor* mpObserver;
 	bool mRelease;
 
-	private:
+private:
 
 	typedef std::map<std::string, StackRecord> StackMap;
 	StackMap mStackMap;
 
 };
 
-}}
+}
+}
 
 
 #endif

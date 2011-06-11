@@ -38,14 +38,18 @@
 #include "LinkRoute.h"
 #include "VtoRouterManager.h"
 
-namespace apl {
-	class IPhysicalLayerAsync;
-	class Logger;
-	class ICommandAcceptor;
-	class IDataObserver;
+namespace apl
+{
+class IPhysicalLayerAsync;
+class Logger;
+class ICommandAcceptor;
+class IDataObserver;
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class Port;
 class Stack;
@@ -61,237 +65,240 @@ struct MasterStackConfig;
 	from a single thread at at a time.
 */
 class AsyncStackManager : private Threadable, private Loggable
-{	
-	public:
-		/**
-			@param apLogger - Logger to use for all other loggers
-			@param aAutoRun	- Stacks begin execution immediately after being added
-		*/
-		AsyncStackManager(Logger* apLogger, bool aAutoRun = false);
-		~AsyncStackManager();
+{
+public:
+	/**
+		@param apLogger - Logger to use for all other loggers
+		@param aAutoRun	- Stacks begin execution immediately after being added
+	*/
+	AsyncStackManager(Logger* apLogger, bool aAutoRun = false);
+	~AsyncStackManager();
 
-		// All the io_service marshalling now occurs here. It's now safe to add/remove while the manager is running.
+	// All the io_service marshalling now occurs here. It's now safe to add/remove while the manager is running.
 
-		// Adds a TCPClient port, excepts if the port already exists
-		void AddTCPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort);
+	// Adds a TCPClient port, excepts if the port already exists
+	void AddTCPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort);
 
-		// Adds a TCPServer port, excepts if the port already exists
-		void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
+	// Adds a TCPServer port, excepts if the port already exists
+	void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
 
-		// Adds a Serial port, excepts if the port already exists
-		void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
+	// Adds a Serial port, excepts if the port already exists
+	void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
 
-		/**
-			Adds a master stack - Stack will automatically start running if
-			Start() has been called or aAutoRun is true.
+	/**
+		Adds a master stack - Stack will automatically start running if
+		Start() has been called or aAutoRun is true.
 
-			@param arPortName			Unique name of the port with which to
-										associate the stack.
-			@param arStackName			Unique name of the stack.
-			@param aLevel				Log filter level to use.
-			@param apPublisher			Interface to callback with measurements.
-										The callback comes from an unknown
-										network thread and should not be
-										blocked.
-			@param arCfg				Configuration data for the master stack
+		@param arPortName			Unique name of the port with which to
+									associate the stack.
+		@param arStackName			Unique name of the stack.
+		@param aLevel				Log filter level to use.
+		@param apPublisher			Interface to callback with measurements.
+									The callback comes from an unknown
+									network thread and should not be
+									blocked.
+		@param arCfg				Configuration data for the master stack
 
-			@return						Thread-safe interface to use for
-										dispatching commands to the master.
+		@return						Thread-safe interface to use for
+									dispatching commands to the master.
 
-			@throw ArgumentException	if arPortName doesn't exist or if
-										arStackName already exists
-		*/
-		ICommandAcceptor* AddMaster(const std::string& arPortName,
-									const std::string& arStackName,
-									FilterLevel aLevel,
-									IDataObserver* apPublisher,
-									const MasterStackConfig& arCfg);
+		@throw ArgumentException	if arPortName doesn't exist or if
+									arStackName already exists
+	*/
+	ICommandAcceptor* AddMaster(const std::string& arPortName,
+	                            const std::string& arStackName,
+	                            FilterLevel aLevel,
+	                            IDataObserver* apPublisher,
+	                            const MasterStackConfig& arCfg);
 
-		/**
-			Adds a slave stack - Stack will automatically start running if
-			Start() has been called or aAutoRun is true.
+	/**
+		Adds a slave stack - Stack will automatically start running if
+		Start() has been called or aAutoRun is true.
 
-			@param arPortName			Unique name of the port with which to
-										associate the stack.
-			@param arStackName			Unique name of the stack.
-			@param aLevel				Log filter level to use.
-			@param apCmdAcceptor		Interface to callback with measurements.
-										The callback comes from an unknown
-										network thread and should not be
-										blocked.
-			@param arCfg				Configuration data for the master stack
+		@param arPortName			Unique name of the port with which to
+									associate the stack.
+		@param arStackName			Unique name of the stack.
+		@param aLevel				Log filter level to use.
+		@param apCmdAcceptor		Interface to callback with measurements.
+									The callback comes from an unknown
+									network thread and should not be
+									blocked.
+		@param arCfg				Configuration data for the master stack
 
-			@return						Thread-safe interface to use for
-										writing new measurement values to the
-										slave
+		@return						Thread-safe interface to use for
+									writing new measurement values to the
+									slave
 
-			@throw ArgumentException	if arPortName doesn't exist or if
-										arStackName already exists
-		*/
-		IDataObserver* AddSlave(const std::string& arPortName,
-								const std::string& arStackName,
-								FilterLevel aLevel,
-								ICommandAcceptor* apCmdAcceptor,
-								const SlaveStackConfig&);
+		@throw ArgumentException	if arPortName doesn't exist or if
+									arStackName already exists
+	*/
+	IDataObserver* AddSlave(const std::string& arPortName,
+	                        const std::string& arStackName,
+	                        FilterLevel aLevel,
+	                        ICommandAcceptor* apCmdAcceptor,
+	                        const SlaveStackConfig&);
 
-		/**
-			Adds a VTO channel to a prexisting stack (master or slave).
-			This function should be used for advanced control of a VTO channel,
-			where the implementer wants to control the end VTO stream as a byte
-			array.  Otherwise, the implementer should look at
-			AsyncStackManager::StartVtoRouter() as a simpler way of connecting a
-			port (such as a local TCP service) to the VTO stream.
+	/**
+		Adds a VTO channel to a prexisting stack (master or slave).
+		This function should be used for advanced control of a VTO channel,
+		where the implementer wants to control the end VTO stream as a byte
+		array.  Otherwise, the implementer should look at
+		AsyncStackManager::StartVtoRouter() as a simpler way of connecting a
+		port (such as a local TCP service) to the VTO stream.
 
-			@param arStackName			Unique name of the stack.
-			@param apOnDataCallback		Interface to callback with received
-										data.  The callback comes from an
-										unknown network thread, and should not
-										be blocked.
+		@param arStackName			Unique name of the stack.
+		@param apOnDataCallback		Interface to callback with received
+									data.  The callback comes from an
+									unknown network thread, and should not
+									be blocked.
 
-			@return						Interface to use for writing
-										new VTO data from the master to the
-										slave.
+		@return						Interface to use for writing
+									new VTO data from the master to the
+									slave.
 
-			@throw ArgumentException	if arPortName/arStackName doesn't exist
-										or if the VTO channel ID is already
-										bound for that stack
-		 */
-		void AddVtoChannel(const std::string& arStackName,
-						IVtoCallbacks* apOnDataCallback);
+		@throw ArgumentException	if arPortName/arStackName doesn't exist
+									or if the VTO channel ID is already
+									bound for that stack
+	 */
+	void AddVtoChannel(const std::string& arStackName,
+	                   IVtoCallbacks* apOnDataCallback);
 
-		/**
-			Removes an existing VTO channel that was created using
-			AsyncStackManager::AddVtoChannel(), stopping callbacks.
+	/**
+		Removes an existing VTO channel that was created using
+		AsyncStackManager::AddVtoChannel(), stopping callbacks.
 
-			@param arStackName			Unique name of the stack.
-			@param apOnDataCallback		Callback interface previously registered
-										in AddVtoChannel()
+		@param arStackName			Unique name of the stack.
+		@param apOnDataCallback		Callback interface previously registered
+									in AddVtoChannel()
 
-			@throw ArgumentException if apOnDataCallback doesn't exist
-		*/
-		void RemoveVtoChannel(const std::string& arStackName, IVtoCallbacks* apOnDataCallback);
+		@throw ArgumentException if apOnDataCallback doesn't exist
+	*/
+	void RemoveVtoChannel(const std::string& arStackName, IVtoCallbacks* apOnDataCallback);
 
-		/**
-			Starts the VtoRouter for the specified port and stack.
-			A VtoRouter acts as a conduit, where the VTO stream is funneled
-			between the arStackName (which also defines a master/slave port) and
-			the arPortName (such as a TCP/IP daemon).  If the implementer wants
-			to terminate the VTO stream in the application itself, he/she should
-			look at the AsyncStackManager::AddVtoChannel() routine.
+	/**
+		Starts the VtoRouter for the specified port and stack.
+		A VtoRouter acts as a conduit, where the VTO stream is funneled
+		between the arStackName (which also defines a master/slave port) and
+		the arPortName (such as a TCP/IP daemon).  If the implementer wants
+		to terminate the VTO stream in the application itself, he/she should
+		look at the AsyncStackManager::AddVtoChannel() routine.
 
-			@param arPortName			Unique name of the port to which the
-										router should associate.
-			@param arStackName			Unique name of the stack.
-			@param arSettings			Configuration class for the router.
+		@param arPortName			Unique name of the port to which the
+									router should associate.
+		@param arStackName			Unique name of the stack.
+		@param arSettings			Configuration class for the router.
 
-			@return						Interface to use for writing
-										new VTO data from the master to the
-										slave.
+		@return						Interface to use for writing
+									new VTO data from the master to the
+									slave.
 
-			@throw ArgumentException	if arPortName/arStackName doesn't exist
-										or if the VTO channel ID is already
-										bound for that stack
-		 */
-		void StartVtoRouter(const std::string& arPortName,
-						const std::string& arStackName,
-						const VtoRouterSettings& arSettings);
+		@throw ArgumentException	if arPortName/arStackName doesn't exist
+									or if the VTO channel ID is already
+									bound for that stack
+	 */
+	void StartVtoRouter(const std::string& arPortName,
+	                    const std::string& arStackName,
+	                    const VtoRouterSettings& arSettings);
 
-		/**
-			Shutdown a VtoRouter for the VTO channel on the specified stack.
+	/**
+		Shutdown a VtoRouter for the VTO channel on the specified stack.
 
-			@param arStackName			Unique name of the stack.
-			@param aVtoChannelId		Unique channel ID for the VTO circuit.
+		@param arStackName			Unique name of the stack.
+		@param aVtoChannelId		Unique channel ID for the VTO circuit.
 
-			@throw ArgumentException	if arStackName or the VTO channel ID
-										does not exist
-		*/
-		void StopVtoRouter(const std::string& arStackName,
-						boost::uint8_t aVtoChannelId);
+		@throw ArgumentException	if arStackName or the VTO channel ID
+									does not exist
+	*/
+	void StopVtoRouter(const std::string& arStackName,
+	                   boost::uint8_t aVtoChannelId);
 
-		/**
-			Shutdown all VtoRouter instances on the specified stack.
+	/**
+		Shutdown all VtoRouter instances on the specified stack.
 
-			@param arStackName			Unique name of the stack.
+		@param arStackName			Unique name of the stack.
 
-			@throw ArgumentException	if arStackName doesn't exist
-		*/
-		void StopAllRoutersOnStack(const std::string& arStackName);
+		@throw ArgumentException	if arStackName doesn't exist
+	*/
+	void StopAllRoutersOnStack(const std::string& arStackName);
 
-		/**
-			Get the vto writer by stack name
+	/**
+		Get the vto writer by stack name
 
-			@param arStackName Unique name of the stack
+		@param arStackName Unique name of the stack
 
-			@throw ArgumentException if arStackName doesn't exist
+		@throw ArgumentException if arStackName doesn't exist
 
-			@return The IVtoWriter interface for the named stack
-		*/
-		IVtoWriter* GetVtoWriter(const std::string& arStackName);
+		@return The IVtoWriter interface for the named stack
+	*/
+	IVtoWriter* GetVtoWriter(const std::string& arStackName);
 
-		// Remove a port and all associated stacks
-		void RemovePort(const std::string& arPortName);
+	// Remove a port and all associated stacks
+	void RemovePort(const std::string& arPortName);
 
-		// Remove only a single stack
-		void RemoveStack(const std::string& arStackName);
+	// Remove only a single stack
+	void RemoveStack(const std::string& arStackName);
 
-		// @return a vector of all the stack names
-		std::vector<std::string> GetStackNames();
+	// @return a vector of all the stack names
+	std::vector<std::string> GetStackNames();
 
-		// @return a vector of all the port names
-		std::vector<std::string> GetPortNames();
+	// @return a vector of all the port names
+	std::vector<std::string> GetPortNames();
 
-		// Start the thead if it isn't running
-		void Start();
+	// Start the thead if it isn't running
+	void Start();
 
-		// Stop all running stacks and synchronously wait for a join		
-		void Stop();
+	// Stop all running stacks and synchronously wait for a join
+	void Stop();
 
-	private:
+private:
 
-		static void DeletePort(Port* apPort);
-		static void DeleteLayer(IPhysicalLayerAsync* apLayer);
+	static void DeletePort(Port* apPort);
+	static void DeleteLayer(IPhysicalLayerAsync* apLayer);
 
-		Port* AllocatePort(const std::string& arName);
-		Port* CreatePort(const std::string& arName);
-		Port* GetPort(const std::string& arName);
-		Port* GetPortByStackName(const std::string& arStackName);
-		Port* GetPortPointer(const std::string& arName);
-		Stack* GetStackByName(const std::string& arStackName);
+	Port* AllocatePort(const std::string& arName);
+	Port* CreatePort(const std::string& arName);
+	Port* GetPort(const std::string& arName);
+	Port* GetPortByStackName(const std::string& arStackName);
+	Port* GetPortPointer(const std::string& arName);
+	Stack* GetStackByName(const std::string& arStackName);
 
-		void Run();
+	void Run();
 
-		// Remove a stack
-		void SeverStack(Port* apPort, const std::string& arStackName);
+	// Remove a stack
+	void SeverStack(Port* apPort, const std::string& arStackName);
 
-		void OnAddStack(const std::string& arStackName, Stack* apStack, Port* apPort, const LinkRoute&);
-		void CheckForJoin();
+	void OnAddStack(const std::string& arStackName, Stack* apStack, Port* apPort, const LinkRoute&);
+	void CheckForJoin();
 
-		bool mRunASIO;
-		bool mRunning;
-		size_t NumStacks() { return mStackNameToPort.size(); }
+	bool mRunASIO;
+	bool mRunning;
+	size_t NumStacks() {
+		return mStackNameToPort.size();
+	}
 
-		std::vector<std::string> StacksOnPort(const std::string& arPortName);
+	std::vector<std::string> StacksOnPort(const std::string& arPortName);
 
-	protected:
-		IOService mService;
-		TimerSourceASIO mTimerSrc;
+protected:
+	IOService mService;
+	TimerSourceASIO mTimerSrc;
 
-	private:
-		PhysicalLayerManager mMgr;
-		AsyncTaskScheduler mScheduler;
-		VtoRouterManager mVtoManager;
-		Thread mThread;
+private:
+	PhysicalLayerManager mMgr;
+	AsyncTaskScheduler mScheduler;
+	VtoRouterManager mVtoManager;
+	Thread mThread;
 
-		typedef std::map<std::string, Stack*> StackMap;
-		StackMap mStackNameToStack;		// maps a stack name a Stack instance
+	typedef std::map<std::string, Stack*> StackMap;
+	StackMap mStackNameToStack;		// maps a stack name a Stack instance
 
-		typedef std::map<std::string, Port*> PortMap;
-		PortMap mStackNameToPort;		// maps a stack name a port instance
-		PortMap mPortNameToPort;		// maps a port name to a port instance
-		
+	typedef std::map<std::string, Port*> PortMap;
+	PortMap mStackNameToPort;		// maps a stack name a port instance
+	PortMap mPortNameToPort;		// maps a port name to a port instance
+
 };
 
-}}
+}
+}
 
 /* vim: set ts=4 sw=4: */
 

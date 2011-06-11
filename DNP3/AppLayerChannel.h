@@ -22,13 +22,17 @@
 #include <APL/Types.h>
 #include <APL/Loggable.h>
 
-namespace apl {
-	class Logger;
-	class ITimerSource;
-	class ITimer;
+namespace apl
+{
+class Logger;
+class ITimerSource;
+class ITimer;
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class AppLayer;
 class ACS_Base;
@@ -54,9 +58,9 @@ class AppLayerChannel : public Loggable
 	friend class ACS_WaitForFirstResponse;
 	friend class ACS_WaitForFinalResponse;
 
-	public:
+public:
 	AppLayerChannel(const std::string& arName, Logger*, AppLayer*, ITimerSource*, millis_t aTimeout);
-	virtual ~AppLayerChannel(){}
+	virtual ~AppLayerChannel() {}
 
 	// Resets the channel to the initial state
 	void Reset();
@@ -70,14 +74,20 @@ class AppLayerChannel : public Loggable
 	void OnSendFailure();
 	void OnConfirm(int aSeq);
 
-	protected:
+protected:
 
 	// functions for the states to access
-	int Sequence() { return mSequence; }
-	int IncrSequence() { return mSequence = NextSeq(mSequence); }
+	int Sequence() {
+		return mSequence;
+	}
+	int IncrSequence() {
+		return mSequence = NextSeq(mSequence);
+	}
 	void QueueSend(APDU&);
 	void ChangeState(ACS_Base*);
-	void SetRetry(size_t aNumRetry) { mNumRetry = aNumRetry; }
+	void SetRetry(size_t aNumRetry) {
+		mNumRetry = aNumRetry;
+	}
 	bool Retry(ACS_Base*);
 
 	virtual void DoSendSuccess() = 0;
@@ -88,15 +98,19 @@ class AppLayerChannel : public Loggable
 
 	void StartTimer();
 	void CancelTimer();
-	Logger* GetLogger() { return mpLogger; }
+	Logger* GetLogger() {
+		return mpLogger;
+	}
 
 	AppLayer* mpAppLayer;
 	int mSequence;	// Rotating sequence number for the channel
 	ACS_Base* mpState;
 
-	static int NextSeq(int s) { return (s+1)%16; }
+	static int NextSeq(int s) {
+		return (s + 1) % 16;
+	}
 
-	private:
+private:
 
 	void Timeout();
 
@@ -109,6 +123,7 @@ class AppLayerChannel : public Loggable
 	const std::string M_NAME;
 };
 
-}}
+}
+}
 
 #endif

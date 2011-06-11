@@ -21,17 +21,17 @@
 
 #include <string>
 
-namespace apl {
-
-enum FilterLevel
+namespace apl
 {
-	LEV_EVENT =		0x01,
-	LEV_ERROR =		0x02,
-	LEV_WARNING =	0x04,
-	LEV_INFO  =		0x08,
-	LEV_INTERPRET =	0x10,
-	LEV_COMM =		0x20,
-	LEV_DEBUG =		0x40
+
+enum FilterLevel {
+    LEV_EVENT =		0x01,
+    LEV_ERROR =		0x02,
+    LEV_WARNING =	0x04,
+    LEV_INFO  =		0x08,
+    LEV_INTERPRET =	0x10,
+    LEV_COMM =		0x20,
+    LEV_DEBUG =		0x40
 };
 
 struct FilterAssoc {
@@ -40,28 +40,29 @@ struct FilterAssoc {
 };
 
 // Contains helper functions for manipulating, levels, filters, and strings
-class LogTypes {
+class LogTypes
+{
 
 public:
 
-static const size_t NUM_FILTER = 7;
-static const FilterAssoc filters[NUM_FILTER];
+	static const size_t NUM_FILTER = 7;
+	static const FilterAssoc filters[NUM_FILTER];
 
 // Mask for all of the values
-static const int MASK_ALL_LEVELS = LEV_DEBUG | LEV_INFO | LEV_COMM | LEV_INTERPRET | LEV_WARNING | LEV_ERROR | LEV_EVENT;
+	static const int MASK_ALL_LEVELS = LEV_DEBUG | LEV_INFO | LEV_COMM | LEV_INTERPRET | LEV_WARNING | LEV_ERROR | LEV_EVENT;
 
 // Converts a filter level enumeration to a mask with all higher levels set
-static int FilterLevelToMask(FilterLevel);
+	static int FilterLevelToMask(FilterLevel);
 
 // converts a single character to a filter level, returns -1 if an invalid character
-static int GetFilterMask(char c);
+	static int GetFilterMask(char c);
 
 // converts a string of filter characters, ORing the values, returns -1 if an invalid character is present
-static int GetFilterMask(const std::string& arg);
+	static int GetFilterMask(const std::string& arg);
 
-static std::string GetLevelString(FilterLevel aLevel);
+	static std::string GetLevelString(FilterLevel aLevel);
 
-static std::string GetFilterString(int aLevel);
+	static std::string GetFilterString(int aLevel);
 
 };
 

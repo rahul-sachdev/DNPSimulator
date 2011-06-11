@@ -30,29 +30,30 @@
 #include "SubjectBase.h"
 #include "LogBase.h"
 
-namespace apl {
+namespace apl
+{
 
 class LogEntryCircularBuffer : public ILogBase, public SubjectBase<SigLock>, private Uncopyable
 {
-	public:
-		LogEntryCircularBuffer(size_t aMaxEntries = 100);
+public:
+	LogEntryCircularBuffer(size_t aMaxEntries = 100);
 
-		bool ReadLog(LogEntry&, int aTimeout = 0);
-		void SetMaxEntries(size_t aMax);
-		void Log( const LogEntry& arEntry );
-		void SetVar(const std::string& aSource, const std::string& aVarName, int aValue) {}
-		size_t Count();
-		void AddIgnoreCode(int aCode);
+	bool ReadLog(LogEntry&, int aTimeout = 0);
+	void SetMaxEntries(size_t aMax);
+	void Log( const LogEntry& arEntry );
+	void SetVar(const std::string& aSource, const std::string& aVarName, int aValue) {}
+	size_t Count();
+	void AddIgnoreCode(int aCode);
 
-	protected:
-		void BlockUntilEntry();
-		SigLock mLock;
+protected:
+	void BlockUntilEntry();
+	SigLock mLock;
 
-	private:
-		bool CheckRead(LogEntry& aEntry);
-		size_t mMaxEntries;
-		std::deque<LogEntry> mItemQueue;
-		std::set<int> mIgnoreCodes;
+private:
+	bool CheckRead(LogEntry& aEntry);
+	size_t mMaxEntries;
+	std::deque<LogEntry> mItemQueue;
+	std::set<int> mIgnoreCodes;
 };
 
 }

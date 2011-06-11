@@ -24,15 +24,17 @@
 #include "LinkConfig.h"
 #include "VtoConfig.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /** A composite configuration struct that contains all the config
 	information for a dnp3 master stack
 */
-struct MasterStackConfig
-{
+struct MasterStackConfig {
 	MasterStackConfig() :
-	link(true, false)
+		link(true, false)
 	{}
 
 	MasterConfig master;  // Master config
@@ -42,7 +44,8 @@ struct MasterStackConfig
 
 };
 
-}}
+}
+}
 
 #endif
 

@@ -25,51 +25,58 @@
 #include <assert.h>
 #include <stddef.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	/**
-	Buffer iterator to write objects prefixed with specific indices.
-	*/
-	class IndexedWriteIterator
-	{
-		friend class APDU;
+/**
+Buffer iterator to write objects prefixed with specific indices.
+*/
+class IndexedWriteIterator
+{
+	friend class APDU;
 
-		public:
+public:
 
-		IndexedWriteIterator();
+	IndexedWriteIterator();
 
-		const IndexedWriteIterator& operator++();
-		const IndexedWriteIterator operator++(int);
-		boost::uint8_t* operator*() const;
+	const IndexedWriteIterator& operator++();
+	const IndexedWriteIterator operator++(int);
+	boost::uint8_t* operator*() const;
 
-		void SetIndex(size_t aIndex);
-		bool IsEnd() { return mIndex >= mCount; }
-		size_t Count() { return mCount; }
+	void SetIndex(size_t aIndex);
+	bool IsEnd() {
+		return mIndex >= mCount;
+	}
+	size_t Count() {
+		return mCount;
+	}
 
-		private:
+private:
 
-		IndexedWriteIterator(boost::uint8_t* apPos, size_t aCount, QualifierCode aCode, size_t aObjectSize);
+	IndexedWriteIterator(boost::uint8_t* apPos, size_t aCount, QualifierCode aCode, size_t aObjectSize);
 
-		enum IndexMode
-		{
-			IM_NONE,
-			IM_1B,
-			IM_2B,
-			IM_4B
-		};
-
-		static IndexMode GetIndexMode(QualifierCode aCode);
-		static size_t GetPrefixSize(IndexMode);
-
-		boost::uint8_t* mpPos;
-		IndexMode mIndexMode;
-		size_t mIndex;
-		size_t mCount;
-		size_t mObjectSize;
-		bool mIndexSet;
+	enum IndexMode {
+	    IM_NONE,
+	    IM_1B,
+	    IM_2B,
+	    IM_4B
 	};
 
-}}
+	static IndexMode GetIndexMode(QualifierCode aCode);
+	static size_t GetPrefixSize(IndexMode);
+
+	boost::uint8_t* mpPos;
+	IndexMode mIndexMode;
+	size_t mIndex;
+	size_t mCount;
+	size_t mObjectSize;
+	bool mIndexSet;
+};
+
+}
+}
 
 #endif
 

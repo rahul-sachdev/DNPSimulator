@@ -24,16 +24,16 @@
 
 namespace apl
 {
-	class IPhysicalLayerAsync;
+class IPhysicalLayerAsync;
 
-	class IPhysicalLayerSource
-	{
-		public:
-		virtual ~IPhysicalLayerSource(){}
-		
-		virtual IPhysicalLayerAsync* AcquireLayer(const std::string& arName, bool aAutoDelete = true) = 0;
-		virtual void ReleaseLayer(const std::string& arName) = 0;
-	};
+class IPhysicalLayerSource
+{
+public:
+	virtual ~IPhysicalLayerSource() {}
+
+	virtual IPhysicalLayerAsync* AcquireLayer(const std::string& arName, bool aAutoDelete = true) = 0;
+	virtual void ReleaseLayer(const std::string& arName) = 0;
+};
 }
 
 #endif

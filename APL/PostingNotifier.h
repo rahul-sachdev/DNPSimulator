@@ -22,19 +22,20 @@
 #include "INotifier.h"
 #include "TimerInterfaces.h"
 
-namespace apl {
+namespace apl
+{
 
 class PostingNotifier : public INotifier
 {
-	public:
+public:
 
 	PostingNotifier(ITimerSource* apTimerSrc, const ExpirationHandler& arHandler);
 
-	virtual ~PostingNotifier(){}
+	virtual ~PostingNotifier() {}
 
 	void Notify();
 
-	private:
+private:
 	ITimerSource* mpTimerSrc;
 	ExpirationHandler mHandler;
 };

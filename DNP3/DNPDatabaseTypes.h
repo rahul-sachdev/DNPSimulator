@@ -28,7 +28,10 @@
 
 #include <vector>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /**
  * Common base class for point information and associated meta-data needed for
@@ -36,8 +39,7 @@ namespace apl { namespace dnp {
  * performed on static and event types.
  */
 template<typename T>
-struct PointInfoBase
-{
+struct PointInfoBase {
 	PointInfoBase(const T& arValue, PointClass aClass, size_t aIndex) :
 		mValue(arValue),
 		mClass(aClass),
@@ -60,8 +62,7 @@ struct PointInfoBase
  * event value to the base class.
  */
 template<typename T>
-struct PointInfo : public PointInfoBase<T>
-{
+struct PointInfo : public PointInfoBase<T> {
 	PointInfo(const T& arVal, PointClass aClass, size_t aIndex) :
 		PointInfoBase<T>(arVal, aClass, aIndex),
 		mDeadband(0),
@@ -81,8 +82,7 @@ struct PointInfo : public PointInfoBase<T>
 };
 
 template <class DataInfoType>
-struct StaticIter
-{
+struct StaticIter {
 	typedef typename std::vector< DataInfoType >::const_iterator Type;
 };
 
@@ -99,7 +99,8 @@ typedef StaticIter<ControlStatusInfo>::Type		ControlIterator;
 typedef StaticIter<SetpointStatusInfo>::Type	SetpointIterator;
 
 
-}} //end namespace
+}
+} //end namespace
 
 /* vim: set ts=4 sw=4: */
 

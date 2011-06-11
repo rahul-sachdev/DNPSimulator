@@ -29,121 +29,123 @@
 #include "VtoDataInterface.h"
 #include "VtoData.h"
 
-namespace apl {
-	namespace dnp {
-		
-		/**
-		 * Implements the IVTOWriter interface that is handed out by the
-		 * stack.  Responsible for UserCode -> Stack thread marshalling and
-		 * stream decomposition.
-		 */
-		class VtoWriter : public IVtoWriter, public SubjectBase<NullLock>
-		{
-			public:
+namespace apl
+{
+namespace dnp
+{
 
-				/**
-				 * Creates a new VtoQueue instance.  The aMaxVtoChunks
-				 * parameter defines the maximum number of 255-byte blocks
-				 * that can be buffered at a time.
-				 *
-				 * @param aMaxVtoChunks	Maximum number of 255-byte blocks that
-				 *                      can be stored at a time
-				 *
-				 * @return				the new VtoQueue instance
-				 */
-				VtoWriter(size_t aMaxVtoChunks);
-				
-				/**
-				* Registers an IVtoCallbacks to receive OnBufferAvailable() notifications
-				* @param apHandler The interface to invoke when space is made available
-				*/
-				void AddVtoCallback(IVtoBufferHandler* apHandler);
+/**
+ * Implements the IVTOWriter interface that is handed out by the
+ * stack.  Responsible for UserCode -> Stack thread marshalling and
+ * stream decomposition.
+ */
+class VtoWriter : public IVtoWriter, public SubjectBase<NullLock>
+{
+public:
 
-				/**
-				* Stops an IVtoCallbacks from receiving OnBufferAvailable() notifications
-				* @param apHandler The interface to stop calling when space is available
-				*/
-				void RemoveVtoCallback(IVtoBufferHandler* apHandler);
+	/**
+	 * Creates a new VtoQueue instance.  The aMaxVtoChunks
+	 * parameter defines the maximum number of 255-byte blocks
+	 * that can be buffered at a time.
+	 *
+	 * @param aMaxVtoChunks	Maximum number of 255-byte blocks that
+	 *                      can be stored at a time
+	 *
+	 * @return				the new VtoQueue instance
+	 */
+	VtoWriter(size_t aMaxVtoChunks);
 
-				/**
-				 * Implements IVtoWriter::Write().
-				 */
-				size_t Write(const boost::uint8_t* apData,
-				             size_t aLength,
-				             boost::uint8_t aChannelId);
+	/**
+	* Registers an IVtoCallbacks to receive OnBufferAvailable() notifications
+	* @param apHandler The interface to invoke when space is made available
+	*/
+	void AddVtoCallback(IVtoBufferHandler* apHandler);
 
-				/**
-				 * Implements IVtoWriter::SetLocalVtoState by shunting the state information to
-				 * the magic vto channel 255
-				 */
-				virtual void SetLocalVtoState(bool aLocalVtoConnectionOpened,
-				             boost::uint8_t aChannelId);
-				/**
-				 * Reads one item from the front of the queue.  If no items
-				 * are available, the function returns false.  If an item is
-				 * found in the queue, the item is stored in arEvent and
-				 * removed from the queue, and the function returns true.
-				 *
-				 * @param arEvent		The destination store for the queue
-				 * 						data
-				 *
-				 * @return				true if data is returned, false
-				 * 						otherwise
-				 */
-				bool Read(VtoEvent& arEvent);
+	/**
+	* Stops an IVtoCallbacks from receiving OnBufferAvailable() notifications
+	* @param apHandler The interface to stop calling when space is available
+	*/
+	void RemoveVtoCallback(IVtoBufferHandler* apHandler);
 
-				/**
-				 * Implements IVtoWriter::Size().
-				 */
-				size_t Size();
+	/**
+	 * Implements IVtoWriter::Write().
+	 */
+	size_t Write(const boost::uint8_t* apData,
+	             size_t aLength,
+	             boost::uint8_t aChannelId);
 
-				/**
-				 * Returns the number of bytes available to the user
-				 * application.  This is a sliding window, so the user
-				 * application must manage the data length when calling
-				 * VtoWriter::Write().
-				 *
-				 * @returns				the number of bytes free in the
-				 *                      transmission queue
-				 */
-				size_t NumBytesAvailable();
+	/**
+	 * Implements IVtoWriter::SetLocalVtoState by shunting the state information to
+	 * the magic vto channel 255
+	 */
+	virtual void SetLocalVtoState(bool aLocalVtoConnectionOpened,
+	                              boost::uint8_t aChannelId);
+	/**
+	 * Reads one item from the front of the queue.  If no items
+	 * are available, the function returns false.  If an item is
+	 * found in the queue, the item is stored in arEvent and
+	 * removed from the queue, and the function returns true.
+	 *
+	 * @param arEvent		The destination store for the queue
+	 * 						data
+	 *
+	 * @return				true if data is returned, false
+	 * 						otherwise
+	 */
+	bool Read(VtoEvent& arEvent);
 
-			protected:
+	/**
+	 * Implements IVtoWriter::Size().
+	 */
+	size_t Size();
 
-				/**
-				 * Lock used for thread safety
-				 */
-				SigLock mLock;
+	/**
+	 * Returns the number of bytes available to the user
+	 * application.  This is a sliding window, so the user
+	 * application must manage the data length when calling
+	 * VtoWriter::Write().
+	 *
+	 * @returns				the number of bytes free in the
+	 *                      transmission queue
+	 */
+	size_t NumBytesAvailable();
 
-			private:
+protected:
 
-				bool ReadWithoutNotifying(VtoEvent& arEvent);
+	/**
+	 * Lock used for thread safety
+	 */
+	SigLock mLock;
 
-				void NotifyAllCallbacks();
-				
-				/**
-				 * Returns the number of object chunks available in the
-				 * transmission queue.
-				 *
-				 * @return			the free space available in the queue
-				 */
-				size_t NumChunksAvailable();
+private:
 
-				void Commit(const boost::uint8_t* apData,
-				            size_t aLength,
-				            boost::uint8_t aChannelId);
+	bool ReadWithoutNotifying(VtoEvent& arEvent);
 
-				void QueueVtoObject(const boost::uint8_t* apData,
-				                    size_t aLength,
-				                    boost::uint8_t aChannelId);
+	void NotifyAllCallbacks();
 
-				const size_t mMaxVtoChunks;
-				std::queue<VtoEvent> mQueue;
+	/**
+	 * Returns the number of object chunks available in the
+	 * transmission queue.
+	 *
+	 * @return			the free space available in the queue
+	 */
+	size_t NumChunksAvailable();
 
-				typedef std::set<IVtoBufferHandler*> CallbackSet;
-				CallbackSet mCallbacks;
-		};
-	}
+	void Commit(const boost::uint8_t* apData,
+	            size_t aLength,
+	            boost::uint8_t aChannelId);
+
+	void QueueVtoObject(const boost::uint8_t* apData,
+	                    size_t aLength,
+	                    boost::uint8_t aChannelId);
+
+	const size_t mMaxVtoChunks;
+	std::queue<VtoEvent> mQueue;
+
+	typedef std::set<IVtoBufferHandler*> CallbackSet;
+	CallbackSet mCallbacks;
+};
+}
 }
 
 /* vim: set ts=4 sw=4: */

@@ -23,41 +23,49 @@
 
 #include <queue>
 
-namespace boost {
+namespace boost
+{
 
-namespace asio { class io_service; }
-namespace system { class error_code; }
+namespace asio
+{
+class io_service;
+}
+namespace system
+{
+class error_code;
+}
 
 }
 
-namespace apl {
+namespace apl
+{
 
-	class TimerASIO;
+class TimerASIO;
 
-	class TimerSourceASIO : public ITimerSource
-	{
-		public:
-			TimerSourceASIO(boost::asio::io_service*);
-			~TimerSourceASIO();
+class TimerSourceASIO : public ITimerSource
+{
+public:
+	TimerSourceASIO(boost::asio::io_service*);
+	~TimerSourceASIO();
 
-			ITimer* Start(millis_t, const ExpirationHandler&);
-			ITimer* Start(const boost::posix_time::ptime&, const ExpirationHandler&);
-			void Post(const ExpirationHandler&);
+	ITimer* Start(millis_t, const ExpirationHandler&);
+	ITimer* Start(const boost::posix_time::ptime&, const ExpirationHandler&);
+	void Post(const ExpirationHandler&);
 
-		private:
+private:
 
-			TimerASIO* GetTimer();
-			void StartTimer(TimerASIO*, const ExpirationHandler&);
+	TimerASIO* GetTimer();
+	void StartTimer(TimerASIO*, const ExpirationHandler&);
 
-			boost::asio::io_service* mpService;
+	boost::asio::io_service* mpService;
 
-			typedef std::deque<TimerASIO*> TimerQueue;
+	typedef std::deque<TimerASIO*> TimerQueue;
 
-			TimerQueue mAllTimers;
-			TimerQueue mIdleTimers;
+	TimerQueue mAllTimers;
+	TimerQueue mIdleTimers;
 
-			void OnTimerCallback(const boost::system::error_code&, TimerASIO*, ExpirationHandler);
-	};
+	void OnTimerCallback(const boost::system::error_code&, TimerASIO*, ExpirationHandler);
+};
 }
 
 #endif

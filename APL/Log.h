@@ -34,50 +34,50 @@
 namespace apl
 {
 
-	class EventLog : public ILogBase, private Uncopyable
-	{
-		public:
+class EventLog : public ILogBase, private Uncopyable
+{
+public:
 
-			/** Immediate printing to minimize effect of debugging output on execution timing. */
-			//EventLog();
-			virtual ~EventLog();
+	/** Immediate printing to minimize effect of debugging output on execution timing. */
+	//EventLog();
+	virtual ~EventLog();
 
-			Logger* GetLogger( FilterLevel aFilter, const std::string& aLoggerID );
-			Logger* GetExistingLogger( const std::string& aLoggerID );
-			void GetAllLoggers( std::vector<Logger*>& apLoggers);
+	Logger* GetLogger( FilterLevel aFilter, const std::string& aLoggerID );
+	Logger* GetExistingLogger( const std::string& aLoggerID );
+	void GetAllLoggers( std::vector<Logger*>& apLoggers);
 
-			/**
-			* Binds a listener to ALL log messages
-			*/
-			void AddLogSubscriber(ILogBase* apSubscriber);
+	/**
+	* Binds a listener to ALL log messages
+	*/
+	void AddLogSubscriber(ILogBase* apSubscriber);
 
-			/**
-			* Binds a listener to only certain error messages
-			*/
-			void AddLogSubscriber(ILogBase* apSubscriber, int aErrorCode);
+	/**
+	* Binds a listener to only certain error messages
+	*/
+	void AddLogSubscriber(ILogBase* apSubscriber, int aErrorCode);
 
-			/**
-			* Cancels a previous binding
-			*/
-			void RemoveLogSubscriber(ILogBase* apBase);
+	/**
+	* Cancels a previous binding
+	*/
+	void RemoveLogSubscriber(ILogBase* apBase);
 
-			//implement the log function from ILogBase
-			void Log( const LogEntry& arEntry );
-			void SetVar(const std::string& aSource, const std::string& aVarName, int aValue);
+	//implement the log function from ILogBase
+	void Log( const LogEntry& arEntry );
+	void SetVar(const std::string& aSource, const std::string& aVarName, int aValue);
 
-		private:
+private:
 
-			bool SetContains(const std::set<int>& arSet, int aValue);
+	bool SetContains(const std::set<int>& arSet, int aValue);
 
-			SigLock mLock;
+	SigLock mLock;
 
-			//holds pointers to the loggers that have been distributed
-			typedef std::map<std::string, Logger*> LoggerMap;
-			LoggerMap mLogMap;
-			typedef std::map<ILogBase*, std::set<int> > SubscriberMap;
-			SubscriberMap mSubscribers;
+	//holds pointers to the loggers that have been distributed
+	typedef std::map<std::string, Logger*> LoggerMap;
+	LoggerMap mLogMap;
+	typedef std::map<ILogBase*, std::set<int> > SubscriberMap;
+	SubscriberMap mSubscribers;
 
-	};
+};
 
 
 }

@@ -19,13 +19,15 @@
 #ifndef __STACK_OBSERVER_H_
 #define __STACK_OBSERVER_H_
 
-namespace apl { namespace dnp {
-
-enum StackStates
+namespace apl
 {
-	SS_COMMS_UP,
-	SS_COMMS_DOWN,
-	SS_UNKNOWN
+namespace dnp
+{
+
+enum StackStates {
+    SS_COMMS_UP,
+    SS_COMMS_DOWN,
+    SS_UNKNOWN
 };
 
 class IStackObserver
@@ -36,6 +38,7 @@ public:
 	virtual void OnStateChange(StackStates aState) = 0;
 };
 
-}}
+}
+}
 
 #endif

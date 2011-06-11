@@ -25,11 +25,13 @@
 #include <APL/CommandTypes.h>
 #include "PointClass.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 // base class - all point types have a name
-struct PointRecord
-{
+struct PointRecord {
 	PointRecord(const std::string& arName) : Name(arName) {}
 	PointRecord() {}
 
@@ -37,11 +39,10 @@ struct PointRecord
 };
 
 // Event point records also have a class
-struct EventPointRecord : public PointRecord
-{
+struct EventPointRecord : public PointRecord {
 	EventPointRecord(const std::string& arName, PointClass aPointClass) :
-	PointRecord(arName),
-	EventClass(aPointClass)
+		PointRecord(arName),
+		EventClass(aPointClass)
 	{}
 
 	EventPointRecord() : EventClass(PC_CLASS_1) {}
@@ -51,11 +52,10 @@ struct EventPointRecord : public PointRecord
 };
 
 // Adds a deadband parameter
-struct DeadbandPointRecord : public EventPointRecord
-{
+struct DeadbandPointRecord : public EventPointRecord {
 	DeadbandPointRecord(const std::string& arName, PointClass aPointClass, double aDeadband) :
-	EventPointRecord(arName, aPointClass),
-	Deadband(aDeadband)
+		EventPointRecord(arName, aPointClass),
+		Deadband(aDeadband)
 	{}
 
 	DeadbandPointRecord() : Deadband(0) {}
@@ -65,10 +65,9 @@ struct DeadbandPointRecord : public EventPointRecord
 };
 
 // Todo - Add properties that determine how controls are handled - i.e. DO/SBO/etc
-struct ControlRecord : public PointRecord
-{
+struct ControlRecord : public PointRecord {
 	ControlRecord(const std::string& arName = "", CommandModes aMode = CM_SBO_ONLY, millis_t aSelectTimeoutMS = 5000) :
-	PointRecord(arName),
+		PointRecord(arName),
 		CommandMode(aMode),
 		SelectTimeoutMS(aSelectTimeoutMS)
 	{}
@@ -78,6 +77,7 @@ struct ControlRecord : public PointRecord
 };
 
 
-}}
+}
+}
 
 #endif

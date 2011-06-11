@@ -34,17 +34,18 @@ using namespace boost::asio;
 using namespace boost::system;
 using namespace std;
 
-namespace apl {
+namespace apl
+{
 
 PhysicalLayerAsyncSerial::PhysicalLayerAsyncSerial(
-	Logger* apLogger,
-	boost::asio::io_service* apIOService,
-	const SerialSettings& arSettings) :
+    Logger* apLogger,
+    boost::asio::io_service* apIOService,
+    const SerialSettings& arSettings) :
 
-PhysicalLayerAsyncASIO(apLogger, apIOService),
-mSettings(arSettings),
-mpService(apIOService),
-mPort(*apIOService)
+	PhysicalLayerAsyncASIO(apLogger, apIOService),
+	mSettings(arSettings),
+	mpService(apIOService),
+	mPort(*apIOService)
 {
 
 }
@@ -77,13 +78,13 @@ void PhysicalLayerAsyncSerial::DoOpenSuccess()
 void PhysicalLayerAsyncSerial::DoAsyncRead(boost::uint8_t* apBuffer, size_t aMaxBytes)
 {
 	mPort.async_read_some(buffer(apBuffer, aMaxBytes),
-		boost::bind(&PhysicalLayerAsyncSerial::OnReadCallback, this, placeholders::error, apBuffer, placeholders::bytes_transferred));
+	                      boost::bind(&PhysicalLayerAsyncSerial::OnReadCallback, this, placeholders::error, apBuffer, placeholders::bytes_transferred));
 }
 
 void PhysicalLayerAsyncSerial::DoAsyncWrite(const boost::uint8_t* apBuffer, size_t aNumBytes)
 {
 	async_write(mPort, buffer(apBuffer, aNumBytes),
-		boost::bind(&PhysicalLayerAsyncSerial::OnWriteCallback, this, placeholders::error, aNumBytes));
+	            boost::bind(&PhysicalLayerAsyncSerial::OnWriteCallback, this, placeholders::error, aNumBytes));
 }
 
 }

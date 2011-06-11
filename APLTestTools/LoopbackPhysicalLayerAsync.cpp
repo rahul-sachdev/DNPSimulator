@@ -26,13 +26,14 @@
 using namespace boost;
 using namespace boost::system;
 
-namespace apl {
+namespace apl
+{
 
 LoopbackPhysicalLayerAsync::LoopbackPhysicalLayerAsync(Logger* apLogger, boost::asio::io_service* apSrv) :
-PhysicalLayerAsyncBase(apLogger),
-mpService(apSrv),
-mReadSize(0),
-mpReadBuff(NULL)
+	PhysicalLayerAsyncBase(apLogger),
+	mpService(apSrv),
+	mReadSize(0),
+	mpReadBuff(NULL)
 {
 
 }
@@ -73,7 +74,7 @@ void LoopbackPhysicalLayerAsync::DoAsyncRead(boost::uint8_t* apBuff, size_t aNum
 
 void LoopbackPhysicalLayerAsync::DoAsyncWrite(const boost::uint8_t* apData, size_t aNumBytes)
 {
-	for(size_t i=0; i<aNumBytes; ++i) mWritten.push_back(apData[i]);
+	for(size_t i = 0; i < aNumBytes; ++i) mWritten.push_back(apData[i]);
 
 	//always write successfully
 	error_code ec(errc::success, get_generic_category());
@@ -88,7 +89,7 @@ void LoopbackPhysicalLayerAsync::CheckForReadDispatch()
 	if(mReadSize > 0 && mWritten.size() > 0) {
 		size_t num = (mReadSize < mWritten.size()) ? mReadSize : mWritten.size();
 
-		for(size_t i=0; i<num; ++i) {
+		for(size_t i = 0; i < num; ++i) {
 			mpReadBuff[i] = mWritten.front();
 			mWritten.pop_front();
 		}

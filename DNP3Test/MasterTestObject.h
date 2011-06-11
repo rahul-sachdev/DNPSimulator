@@ -27,13 +27,16 @@
 
 #include "MockAppLayer.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 struct MasterConfig;
 
 class MasterTestObject : public LogTester
 {
-	public:
+public:
 	MasterTestObject(MasterConfig, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
 
 	void RespondToMaster(const std::string& arData, bool aFinal = true);
@@ -49,6 +52,7 @@ class MasterTestObject : public LogTester
 	APDU mAPDU;
 };
 
-}}
+}
+}
 
 #endif

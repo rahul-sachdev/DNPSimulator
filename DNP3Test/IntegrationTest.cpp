@@ -46,8 +46,7 @@ IntegrationTest::IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::ui
 	mChange(false),
 	mNotifier(boost::bind(&IntegrationTest::RegisterChange, this))
 {
-	for (size_t i = 0; i < aNumPairs; ++i)
-	{
+	for (size_t i = 0; i < aNumPairs; ++i) {
 		AddStackPair(aLevel, aNumPoints);
 	}
 	mFanout.Add(&mLocalFDO);
@@ -55,10 +54,15 @@ IntegrationTest::IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::ui
 
 IntegrationTest::~IntegrationTest()
 {
-	BOOST_FOREACH(FlexibleDataObserver* pFDO, mMasterObservers) { delete pFDO; }
+	BOOST_FOREACH(FlexibleDataObserver * pFDO, mMasterObservers) {
+		delete pFDO;
+	}
 }
 
-void IntegrationTest::Next() { AsyncTestObject::Next(this->mService.Get(), 10); }
+void IntegrationTest::Next()
+{
+	AsyncTestObject::Next(this->mService.Get(), 10);
+}
 
 bool IntegrationTest::SameData()
 {
@@ -66,8 +70,7 @@ bool IntegrationTest::SameData()
 
 	mChange = false;
 
-	BOOST_FOREACH(FlexibleDataObserver* pObs, mMasterObservers)
-	{
+	BOOST_FOREACH(FlexibleDataObserver * pObs, mMasterObservers) {
 		if(!FlexibleDataObserver::StrictEquality(*pObs, mLocalFDO)) return false;
 	}
 
@@ -76,7 +79,7 @@ bool IntegrationTest::SameData()
 
 Binary IntegrationTest::RandomBinary()
 {
-    boost::uniform_int<> num(0,1);
+	boost::uniform_int<> num(0, 1);
 	boost::variate_generator<boost::mt19937&, boost::uniform_int<> > val(rng, num);
 	Binary v(val() ? true : false, BQ_ONLINE);
 	return v;
@@ -84,7 +87,7 @@ Binary IntegrationTest::RandomBinary()
 
 Analog IntegrationTest::RandomAnalog()
 {
-    boost::uniform_int<boost::int32_t> num;
+	boost::uniform_int<boost::int32_t> num;
 	boost::variate_generator<boost::mt19937&, boost::uniform_int<boost::int32_t> > val(rng, num);
 	Analog v(val(), AQ_ONLINE);
 	return v;
@@ -92,7 +95,7 @@ Analog IntegrationTest::RandomAnalog()
 
 Counter IntegrationTest::RandomCounter()
 {
-    boost::uniform_int<boost::uint32_t> num;
+	boost::uniform_int<boost::uint32_t> num;
 	boost::variate_generator<boost::mt19937&, boost::uniform_int<boost::uint32_t> > val(rng, num);
 	Counter v(val(), CQ_ONLINE);
 	return v;
@@ -122,8 +125,8 @@ void IntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 		MasterStackConfig cfg;
 		cfg.app.RspTimeout = 20000;
 		cfg.master.IntegrityRate = 60000;	// set this to retry, if the task
-											// timer doesn't close properly,
-											// this will seal the deal
+		// timer doesn't close properly,
+		// this will seal the deal
 		cfg.master.EnableUnsol = true;
 		cfg.master.DoUnsolOnStartup = true;
 		cfg.master.UnsolClassMask = PC_ALL_EVENTS;

@@ -21,11 +21,12 @@
 
 #include <boost/function.hpp>
 
-namespace apl {
+namespace apl
+{
 
 class ITask
 {
-	public:
+public:
 
 	virtual void OnComplete(bool aSuccess) = 0;
 
@@ -33,7 +34,7 @@ class ITask
 	virtual void Enable() = 0;
 
 	// Disable ''
-	virtual void Disable()= 0;
+	virtual void Disable() = 0;
 
 	// Enable without notifying the task group
 	virtual void SilentEnable() = 0;

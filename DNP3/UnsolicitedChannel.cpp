@@ -21,23 +21,24 @@
 #include <APL/Logger.h>
 #include "AppLayer.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 
 UnsolicitedChannel::UnsolicitedChannel(Logger* apLogger, AppLayer* apApp, ITimerSource* apTimerSrc, millis_t aTimeout) :
-AppLayerChannel("Unsolicited", apLogger, apApp, apTimerSrc, aTimeout)
+	AppLayerChannel("Unsolicited", apLogger, apApp, apTimerSrc, aTimeout)
 {}
 
 void UnsolicitedChannel::OnUnsol(APDU& arAPDU)
 {
 	AppControlField acf = arAPDU.GetControl();
 
-	if(acf.SEQ == mSequence)
-	{
+	if(acf.SEQ == mSequence) {
 		LOG_BLOCK(LEV_INFO, "Ignoring repeat unsol seq: " << acf.SEQ)
 	}
-	else // only process the data if the sequence number is new
-	{
+	else { // only process the data if the sequence number is new
 		mSequence = acf.SEQ;
 		mpAppLayer->mpUser->OnUnsolResponse(arAPDU);
 	}
@@ -53,6 +54,7 @@ void UnsolicitedChannel::DoFailure()
 	mpAppLayer->mpUser->OnUnsolFailure();
 }
 
-}}
+}
+}
 
 

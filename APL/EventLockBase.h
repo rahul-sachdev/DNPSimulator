@@ -35,7 +35,7 @@ namespace apl
 template<class T>
 class EventLockBase : public IEventLock<T>, public SigLock
 {
-	public:
+public:
 
 	EventLockBase();
 	virtual ~EventLockBase();
@@ -46,31 +46,41 @@ class EventLockBase : public IEventLock<T>, public SigLock
 
 	INotifier* GetNotifier(const T& arEvent);
 
-	protected:
+protected:
 
 	// Inherited classes must implement the following
 	virtual void RecordEventCode(const T& arEvent) = 0;
 
-	private:
+private:
 	std::vector< Notifier<T>* > mNotifiers;
 };
 
 template<class T>
 EventLockBase<T>::EventLockBase() :
-SigLock()
+	SigLock()
 {}
 
 template<class T>
 EventLockBase<T>::~EventLockBase()
-{ for(size_t i=0; i<mNotifiers.size(); i++) delete mNotifiers[i]; }
+{
+	for(size_t i = 0; i < mNotifiers.size(); i++) delete mNotifiers[i];
+}
 
 template<class T>
 void EventLockBase<T>::SignalEvent(const T& arEvent)
-{ CriticalSection cs(this); this->RecordEventCode(arEvent); SigLock::Signal(); }
+{
+	CriticalSection cs(this);
+	this->RecordEventCode(arEvent);
+	SigLock::Signal();
+}
 
 template<class T>
 void EventLockBase<T>::BroadcastEvent(const T& arEvent)
-{ CriticalSection cs(this); this->RecordEventCode(arEvent); SigLock::Broadcast(); }
+{
+	CriticalSection cs(this);
+	this->RecordEventCode(arEvent);
+	SigLock::Broadcast();
+}
 
 template<class T>
 INotifier* EventLockBase<T>::GetNotifier(const T& arEvent)

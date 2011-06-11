@@ -21,22 +21,31 @@
 
 #include <APL/INotifier.h>
 
-namespace apl{
+namespace apl
+{
 
-	class MockNotifier : public INotifier
-	{
-	public:
-		MockNotifier(){	Reset(); }
+class MockNotifier : public INotifier
+{
+public:
+	MockNotifier() {
+		Reset();
+	}
 
-		void Notify(){ mNotifications++; }
+	void Notify() {
+		mNotifications++;
+	}
 
-		void Reset(){ mNotifications = 0; }
+	void Reset() {
+		mNotifications = 0;
+	}
 
-		size_t GetNotifications(){ return mNotifications; };
-
-	private:
-		size_t mNotifications;
+	size_t GetNotifications() {
+		return mNotifications;
 	};
+
+private:
+	size_t mNotifications;
+};
 }
 
 #endif

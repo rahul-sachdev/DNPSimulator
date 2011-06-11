@@ -25,10 +25,10 @@ namespace apl
 {
 
 #ifndef SIZE_MAX
-	#define SIZE_MAX ~0
+#define SIZE_MAX ~0
 #endif
 
-	typedef boost::int64_t millis_t;
+typedef boost::int64_t millis_t;
 
 #ifdef _DEBUG
 //#define STRONGLY_TYPED_TIMESTAMPS
@@ -36,33 +36,39 @@ namespace apl
 
 #ifdef STRONGLY_TYPED_TIMESTAMPS
 
-	class TimeStamp_t_Explicit{
-		millis_t value;
-	public:
-		explicit TimeStamp_t_Explicit(millis_t aT):value(aT){}
-		operator millis_t () const { return value;}
+class TimeStamp_t_Explicit
+{
+	millis_t value;
+public:
+	explicit TimeStamp_t_Explicit(millis_t aT): value(aT) {}
+	operator millis_t () const {
+		return value;
+	}
 
-	};
+};
 
-	class UTCTimeStamp_t_Explicit{
-		millis_t value;
-	public:
-		explicit UTCTimeStamp_t_Explicit(millis_t aT):value(aT){}
-		operator millis_t () const { return value;}
+class UTCTimeStamp_t_Explicit
+{
+	millis_t value;
+public:
+	explicit UTCTimeStamp_t_Explicit(millis_t aT): value(aT) {}
+	operator millis_t () const {
+		return value;
+	}
 
-	};
+};
 
-	//this is some c++ trickery to make sure that we get strong
-	//typesaftey on the 2 different types of timestamp
-	typedef TimeStamp_t_Explicit TimeStamp_t;
-	typedef UTCTimeStamp_t_Explicit UTCTimeStamp_t;
+//this is some c++ trickery to make sure that we get strong
+//typesaftey on the 2 different types of timestamp
+typedef TimeStamp_t_Explicit TimeStamp_t;
+typedef UTCTimeStamp_t_Explicit UTCTimeStamp_t;
 
 #else
-	//if we are not using the strong typing it should be faster
-	//since the values are all simple 64bit value types rather than
-	//overloaded classes.
-	typedef millis_t TimeStamp_t;
-	typedef millis_t UTCTimeStamp_t;
+//if we are not using the strong typing it should be faster
+//since the values are all simple 64bit value types rather than
+//overloaded classes.
+typedef millis_t TimeStamp_t;
+typedef millis_t UTCTimeStamp_t;
 
 #endif
 } //end namespace

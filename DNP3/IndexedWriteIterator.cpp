@@ -24,7 +24,10 @@
 #include <APL/Exception.h>
 #include <APL/PackingUnpacking.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 IndexedWriteIterator::IndexedWriteIterator() :
 	mpPos(NULL),
@@ -55,19 +58,18 @@ boost::uint8_t* IndexedWriteIterator::operator*() const
 
 IndexedWriteIterator::IndexMode IndexedWriteIterator::GetIndexMode(QualifierCode aCode)
 {
-	switch(aCode)
-	{
-		case(QC_1B_CNT_1B_INDEX): return IM_1B;
-		case(QC_2B_CNT_2B_INDEX): return IM_2B;
-		case(QC_4B_CNT_4B_INDEX): return IM_4B;
+	switch(aCode) {
+	case(QC_1B_CNT_1B_INDEX): return IM_1B;
+	case(QC_2B_CNT_2B_INDEX): return IM_2B;
+	case(QC_4B_CNT_4B_INDEX): return IM_4B;
 
-		case(QC_1B_CNT):
-		case(QC_2B_CNT):
-		case(QC_4B_CNT):
-			return IM_NONE;
+	case(QC_1B_CNT):
+	case(QC_2B_CNT):
+	case(QC_4B_CNT):
+		return IM_NONE;
 
-		default:
-			throw Exception(LOCATION, "Illegal qualifer for packed indexed");
+	default:
+		throw Exception(LOCATION, "Illegal qualifer for packed indexed");
 	}
 }
 
@@ -76,22 +78,21 @@ void IndexedWriteIterator::SetIndex(size_t aIndex)
 	if(mIndexSet) throw InvalidStateException(LOCATION, "Index already set");
 	if(IsEnd()) throw InvalidStateException(LOCATION, "End of iteration");
 
-	switch(mIndexMode)
-	{
-		case(IM_1B):
-			if(aIndex > UInt8::Max) throw ArgumentException(LOCATION);
-			UInt8::Write(mpPos, static_cast<boost::uint8_t>(aIndex));
-			break;
-		case(IM_2B):
-			if(aIndex > UInt16LE::Max) throw ArgumentException(LOCATION);
-			UInt16LE::Write(mpPos, static_cast<boost::uint16_t>(aIndex));
-			break;
-		case(IM_4B):
-			if(aIndex > UInt32LE::Max) throw ArgumentException(LOCATION);
-			UInt32LE::Write(mpPos, static_cast<boost::uint32_t>(aIndex));
-			break;
-		default:
-			break;
+	switch(mIndexMode) {
+	case(IM_1B):
+		if(aIndex > UInt8::Max) throw ArgumentException(LOCATION);
+		UInt8::Write(mpPos, static_cast<boost::uint8_t>(aIndex));
+		break;
+	case(IM_2B):
+		if(aIndex > UInt16LE::Max) throw ArgumentException(LOCATION);
+		UInt16LE::Write(mpPos, static_cast<boost::uint16_t>(aIndex));
+		break;
+	case(IM_4B):
+		if(aIndex > UInt32LE::Max) throw ArgumentException(LOCATION);
+		UInt32LE::Write(mpPos, static_cast<boost::uint32_t>(aIndex));
+		break;
+	default:
+		break;
 	}
 
 	mIndexSet = true;
@@ -116,5 +117,6 @@ const IndexedWriteIterator IndexedWriteIterator::operator++(int)
 	return tmp;
 }
 
-}}
+}
+}
 

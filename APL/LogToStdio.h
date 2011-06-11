@@ -23,18 +23,19 @@
 #include "LogBase.h"
 #include "Singleton.h"
 
-namespace apl {
+namespace apl
+{
 
 class LogToStdio : public ILogBase
 {
 	MACRO_SINGLETON_INSTANCE(LogToStdio);
 
-	public:
-		void Log( const LogEntry& arEntry );
-		void SetVar(const std::string& aSource, const std::string& aVarName, int aValue) {}
+public:
+	void Log( const LogEntry& arEntry );
+	void SetVar(const std::string& aSource, const std::string& aVarName, int aValue) {}
 
-	private:
-		SigLock mLock;
+private:
+	SigLock mLock;
 };
 
 }

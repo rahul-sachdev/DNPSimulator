@@ -27,21 +27,22 @@
 
 #include <boost/cstdint.hpp>
 
-namespace apl{
+namespace apl
+{
 
-	class PhysicalLayerFactory
-	{
-	public:
+class PhysicalLayerFactory
+{
+public:
 
-		static IPhysicalLayerAsyncFactory GetSerialAsync(SerialSettings s);
-		static IPhysicalLayerAsyncFactory GetTCPClientAsync(std::string aAddress, boost::uint16_t aPort);
-		static IPhysicalLayerAsyncFactory GetTCPServerAsync(std::string aEndpoint, boost::uint16_t aPort);
+	static IPhysicalLayerAsyncFactory GetSerialAsync(SerialSettings s);
+	static IPhysicalLayerAsyncFactory GetTCPClientAsync(std::string aAddress, boost::uint16_t aPort);
+	static IPhysicalLayerAsyncFactory GetTCPServerAsync(std::string aEndpoint, boost::uint16_t aPort);
 
-		//normal factory functions
-		static IPhysicalLayerAsync* FGetSerialAsync(SerialSettings s, boost::asio::io_service* apSrv, Logger* apLogger);
-		static IPhysicalLayerAsync* FGetTCPClientAsync(std::string aAddress, boost::uint16_t aPort, boost::asio::io_service* apSrv, Logger* apLogger);
-		static IPhysicalLayerAsync* FGetTCPServerAsync(std::string aEndpoint, boost::uint16_t aPort, boost::asio::io_service* apSrv, Logger* apLogger);
-	};
+	//normal factory functions
+	static IPhysicalLayerAsync* FGetSerialAsync(SerialSettings s, boost::asio::io_service* apSrv, Logger* apLogger);
+	static IPhysicalLayerAsync* FGetTCPClientAsync(std::string aAddress, boost::uint16_t aPort, boost::asio::io_service* apSrv, Logger* apLogger);
+	static IPhysicalLayerAsync* FGetTCPServerAsync(std::string aEndpoint, boost::uint16_t aPort, boost::asio::io_service* apSrv, Logger* apLogger);
+};
 }
 
 #endif

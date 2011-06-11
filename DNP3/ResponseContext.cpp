@@ -36,7 +36,10 @@ using namespace boost;
 			break; \
 		}
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 ResponseContext::ResponseContext(Logger* apLogger, Database* apDB, SlaveResponseTypes* apRspTypes, const EventMaxConfig& arEventMaxConfig) :
 	Loggable(apLogger),
@@ -82,11 +85,11 @@ void ResponseContext::ClearAndReset()
 inline size_t GetEventCount(const HeaderInfo& arHeader)
 {
 	switch(arHeader.GetQualifier()) {
-		case QC_1B_CNT:
-		case QC_2B_CNT:
-			return arHeader.GetCount();
-		default:
-			return std::numeric_limits<size_t>::max();
+	case QC_1B_CNT:
+	case QC_2B_CNT:
+		return arHeader.GetCount();
+	default:
+		return std::numeric_limits<size_t>::max();
 	}
 }
 
@@ -95,8 +98,7 @@ IINField ResponseContext::Configure(const APDU& arRequest)
 	this->Reset();
 	mMode = SOLICITED;
 
-	for (HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr)
-	{
+	for (HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr) {
 		/*
 		 * Handle all of the objects that only use a Group identifier.  The
 		 * switch statement is responsible for selecting all of the events
@@ -107,79 +109,77 @@ IINField ResponseContext::Configure(const APDU& arRequest)
 		 * For this first switch statement set, use "continue" rather than
 		 * "break" so that control loops back around to the for loop.
 		 */
-		switch (hdr->GetGroup())
-		{
-			/* Virtual Terminal Objects */			
-			case 113:
-				this->SelectVtoEvents(PC_ALL_EVENTS, Group113Var0::Inst(), GetEventCount(hdr.info()));
-				continue;
-			default:
-				/*
-				 * Note: the next switch statement's default statement will
-				 * catch unknown object types.
-				 */
-				break;
+		switch (hdr->GetGroup()) {
+			/* Virtual Terminal Objects */
+		case 113:
+			this->SelectVtoEvents(PC_ALL_EVENTS, Group113Var0::Inst(), GetEventCount(hdr.info()));
+			continue;
+		default:
+			/*
+			 * Note: the next switch statement's default statement will
+			 * catch unknown object types.
+			 */
+			break;
 		}
 
 		/* Handle all of the objects that have a Group/Variation tuple */
-		switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation()))
-		{
+		switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation())) {
 			// static objects, all variations
-			case(MACRO_DNP_RADIX(1,0)):
-				this->AddIntegrity(mStaticBinaries, mpRspTypes->mpStaticBinary);
-				break;
-			case(MACRO_DNP_RADIX(10,0)):
-				this->AddIntegrity(mStaticControls, mpRspTypes->mpStaticControlStatus);
-				break;
-			case(MACRO_DNP_RADIX(20,0)):
-				this->AddIntegrity(mStaticCounters, mpRspTypes->mpStaticCounter);
-				break;
-			case(MACRO_DNP_RADIX(30,0)):
-				this->AddIntegrity(mStaticAnalogs, mpRspTypes->mpStaticAnalog);
-				break;
-			case(MACRO_DNP_RADIX(40,0)):
-				this->AddIntegrity(mStaticSetpoints, mpRspTypes->mpStaticSetpointStatus);
-				break;
+		case(MACRO_DNP_RADIX(1, 0)):
+			this->AddIntegrity(mStaticBinaries, mpRspTypes->mpStaticBinary);
+			break;
+		case(MACRO_DNP_RADIX(10, 0)):
+			this->AddIntegrity(mStaticControls, mpRspTypes->mpStaticControlStatus);
+			break;
+		case(MACRO_DNP_RADIX(20, 0)):
+			this->AddIntegrity(mStaticCounters, mpRspTypes->mpStaticCounter);
+			break;
+		case(MACRO_DNP_RADIX(30, 0)):
+			this->AddIntegrity(mStaticAnalogs, mpRspTypes->mpStaticAnalog);
+			break;
+		case(MACRO_DNP_RADIX(40, 0)):
+			this->AddIntegrity(mStaticSetpoints, mpRspTypes->mpStaticSetpointStatus);
+			break;
 
 			// event objects
-			case(MACRO_DNP_RADIX(2,0)):
-				this->SelectEvents(PC_ALL_EVENTS, mpRspTypes->mpEventBinary, mBinaryEvents, GetEventCount(hdr.info()));
-				break;
-			case(MACRO_DNP_RADIX(22,0)):
-				this->SelectEvents(PC_ALL_EVENTS, mpRspTypes->mpEventCounter, mCounterEvents, GetEventCount(hdr.info()));
-				break;
-			case(MACRO_DNP_RADIX(32,0)):
-				this->SelectEvents(PC_ALL_EVENTS, mpRspTypes->mpEventAnalog, mAnalogEvents, GetEventCount(hdr.info()));
-				break;
+		case(MACRO_DNP_RADIX(2, 0)):
+			this->SelectEvents(PC_ALL_EVENTS, mpRspTypes->mpEventBinary, mBinaryEvents, GetEventCount(hdr.info()));
+			break;
+		case(MACRO_DNP_RADIX(22, 0)):
+			this->SelectEvents(PC_ALL_EVENTS, mpRspTypes->mpEventCounter, mCounterEvents, GetEventCount(hdr.info()));
+			break;
+		case(MACRO_DNP_RADIX(32, 0)):
+			this->SelectEvents(PC_ALL_EVENTS, mpRspTypes->mpEventAnalog, mAnalogEvents, GetEventCount(hdr.info()));
+			break;
 
 			//specific objects
-			case(MACRO_DNP_RADIX(2,1)):
-				this->SelectEvents(PC_ALL_EVENTS, Group2Var1::Inst(), mBinaryEvents, GetEventCount(hdr.info()));
-				break;
-			case(MACRO_DNP_RADIX(2,2)):
-				this->SelectEvents(PC_ALL_EVENTS, Group2Var2::Inst(), mBinaryEvents, GetEventCount(hdr.info()));
-				break;
-			case(MACRO_DNP_RADIX(2,3)):
-				this->SelectEvents(PC_ALL_EVENTS, Group2Var3::Inst(), mBinaryEvents, GetEventCount(hdr.info()));
-				break;
+		case(MACRO_DNP_RADIX(2, 1)):
+			this->SelectEvents(PC_ALL_EVENTS, Group2Var1::Inst(), mBinaryEvents, GetEventCount(hdr.info()));
+			break;
+		case(MACRO_DNP_RADIX(2, 2)):
+			this->SelectEvents(PC_ALL_EVENTS, Group2Var2::Inst(), mBinaryEvents, GetEventCount(hdr.info()));
+			break;
+		case(MACRO_DNP_RADIX(2, 3)):
+			this->SelectEvents(PC_ALL_EVENTS, Group2Var3::Inst(), mBinaryEvents, GetEventCount(hdr.info()));
+			break;
 
 			// Class Objects
-			case(MACRO_DNP_RADIX(60,1)):
-				this->AddIntegrityPoll();
-				break;
-			case(MACRO_DNP_RADIX(60,2)):
-				this->SelectEvents(PC_CLASS_1, GetEventCount(hdr.info()));
-				break;
-			case(MACRO_DNP_RADIX(60,3)):
-				this->SelectEvents(PC_CLASS_2, GetEventCount(hdr.info()));
-				break;
-			case(MACRO_DNP_RADIX(60,4)):
-				this->SelectEvents(PC_CLASS_3, GetEventCount(hdr.info()));
-				break;
-			default:
-				LOG_BLOCK(LEV_WARNING, "READ for obj " << hdr->GetGroup() << " var " << hdr->GetVariation() << " not supported.");
-				this->mTempIIN.SetFuncNotSupported(true);
-				break;
+		case(MACRO_DNP_RADIX(60, 1)):
+			this->AddIntegrityPoll();
+			break;
+		case(MACRO_DNP_RADIX(60, 2)):
+			this->SelectEvents(PC_CLASS_1, GetEventCount(hdr.info()));
+			break;
+		case(MACRO_DNP_RADIX(60, 3)):
+			this->SelectEvents(PC_CLASS_2, GetEventCount(hdr.info()));
+			break;
+		case(MACRO_DNP_RADIX(60, 4)):
+			this->SelectEvents(PC_CLASS_3, GetEventCount(hdr.info()));
+			break;
+		default:
+			LOG_BLOCK(LEV_WARNING, "READ for obj " << hdr->GetGroup() << " var " << hdr->GetVariation() << " not supported.");
+			this->mTempIIN.SetFuncNotSupported(true);
+			break;
 		}
 	}
 
@@ -190,8 +190,7 @@ void ResponseContext::SelectEvents(PointClass aClass, size_t aNum)
 {
 	size_t remain = aNum;
 
-	if (mBuffer.IsOverflow())
-	{
+	if (mBuffer.IsOverflow()) {
 		mTempIIN.SetEventBufferOverflow(true);
 	}
 
@@ -282,32 +281,27 @@ bool ResponseContext::LoadVtoEvents(APDU& arAPDU, bool& arEventsLoaded)
 	mBuffer.Begin(itr);
 	size_t remain = mBuffer.NumSelected(BT_VTO);
 
-	while (this->mVtoEvents.size() > 0)
-	{
+	while (this->mVtoEvents.size() > 0) {
 		/* Get the number of events requested */
 		VtoEventRequest& r = this->mVtoEvents.front();
 
-		if (r.count > remain)
-		{
+		if (r.count > remain) {
 			r.count = remain;
 		}
 
 		size_t written = this->IterateIndexed(r, itr, arAPDU);
 		remain -= written;
 
-		if (written > 0)
-		{
+		if (written > 0) {
 			/* At least one event was loaded */
 			arEventsLoaded = true;
 		}
 
-		if (written == r.count)
-		{
+		if (written == r.count) {
 			/* all events were written, finished with request */
 			this->mVtoEvents.pop_front();
 		}
-		else
-		{
+		else {
 			/* more event data remains in the queue */
 			r.count -= written;
 			return false;
@@ -319,21 +313,19 @@ bool ResponseContext::LoadVtoEvents(APDU& arAPDU, bool& arEventsLoaded)
 
 size_t ResponseContext::IterateIndexed(VtoEventRequest& arRequest, VtoDataEventIter& arIter, APDU& arAPDU)
 {
-	for (size_t i = 0; i < arRequest.count; ++i)
-	{
+	for (size_t i = 0; i < arRequest.count; ++i) {
 		IndexedWriteIterator itr = arAPDU.WriteIndexed(
-				arRequest.pObj,
-				arIter->mValue.GetSize(),
-				arIter->mIndex
-		);
+		                               arRequest.pObj,
+		                               arIter->mValue.GetSize(),
+		                               arIter->mIndex
+		                           );
 
 		/*
 		 * Check to see if the APDU fragment has enough room for the
 		 * data segment.  If the fragment is full, return out of this
 		 * function and let the fragment send.
 		 */
-		if (itr.IsEnd())
-		{
+		if (itr.IsEnd()) {
 			return i;
 		}
 
@@ -342,9 +334,9 @@ size_t ResponseContext::IterateIndexed(VtoEventRequest& arRequest, VtoDataEventI
 
 		/* Write the data to the APDU message */
 		arRequest.pObj->Write(
-				*itr,
-				arIter->mValue.GetSize(),
-				arIter->mValue.GetData()
+		    *itr,
+		    arIter->mValue.GetSize(),
+		    arIter->mValue.mpData
 		);
 
 		/* Mark the data segment as being written */
@@ -365,8 +357,8 @@ bool ResponseContext::IsEmpty()
 bool ResponseContext::IsStaticEmpty()
 {
 	return this->mStaticBinaries.empty() && this->mStaticCounters.empty() &&
-		   this->mStaticAnalogs.empty() && this->mStaticControls.empty() &&
-		   this->mStaticSetpoints.empty();
+	       this->mStaticAnalogs.empty() && this->mStaticControls.empty() &&
+	       this->mStaticSetpoints.empty();
 }
 
 bool ResponseContext::IsEventEmpty()
@@ -385,14 +377,12 @@ void ResponseContext::FinalizeResponse(APDU& arAPDU, bool aHasEventData, bool aF
 
 bool ResponseContext::LoadStaticBinaries(APDU& arAPDU)
 {
-	while(!mStaticBinaries.empty())
-	{
+	while(!mStaticBinaries.empty()) {
 		IterRecord<BinaryInfo>& iter = this->mStaticBinaries.front();
 		int grp = iter.pObject->GetGroup();
 		int var = iter.pObject->GetVariation();
 
-		switch(MACRO_DNP_RADIX(grp, var))
-		{
+		switch(MACRO_DNP_RADIX(grp, var)) {
 			//special case for the bitfield
 			/*case(MACRO_DNP_RADIX(1,1)):
 			{
@@ -401,10 +391,10 @@ bool ResponseContext::LoadStaticBinaries(APDU& arAPDU)
 				break;
 			}*/
 
-			MACRO_CONTINUOUS_CASE(1,2);
+			MACRO_CONTINUOUS_CASE(1, 2);
 
-			default:
-				break;
+		default:
+			break;
 		}
 
 		this->mStaticBinaries.pop_front();
@@ -415,23 +405,21 @@ bool ResponseContext::LoadStaticBinaries(APDU& arAPDU)
 
 bool ResponseContext::LoadStaticAnalogs(APDU& arAPDU)
 {
-	while(!mStaticAnalogs.empty())
-	{
+	while(!mStaticAnalogs.empty()) {
 		IterRecord<AnalogInfo>& iter = this->mStaticAnalogs.front();
 		int grp = iter.pObject->GetGroup();
 		int var = iter.pObject->GetVariation();
 
-		switch(MACRO_DNP_RADIX(grp, var))
-		{
-			MACRO_CONTINUOUS_CASE(30,1);
-			MACRO_CONTINUOUS_CASE(30,2);
-			MACRO_CONTINUOUS_CASE(30,3);
-			MACRO_CONTINUOUS_CASE(30,4);
-			MACRO_CONTINUOUS_CASE(30,5);
-			MACRO_CONTINUOUS_CASE(30,6);
+		switch(MACRO_DNP_RADIX(grp, var)) {
+			MACRO_CONTINUOUS_CASE(30, 1);
+			MACRO_CONTINUOUS_CASE(30, 2);
+			MACRO_CONTINUOUS_CASE(30, 3);
+			MACRO_CONTINUOUS_CASE(30, 4);
+			MACRO_CONTINUOUS_CASE(30, 5);
+			MACRO_CONTINUOUS_CASE(30, 6);
 
-			default:
-				break;
+		default:
+			break;
 		}
 
 		this->mStaticAnalogs.pop_front();
@@ -442,22 +430,20 @@ bool ResponseContext::LoadStaticAnalogs(APDU& arAPDU)
 
 bool ResponseContext::LoadStaticCounters(APDU& arAPDU)
 {
-	while(!mStaticCounters.empty())
-	{
+	while(!mStaticCounters.empty()) {
 		IterRecord<CounterInfo>& iter = this->mStaticCounters.front();
 		int grp = iter.pObject->GetGroup();
 		int var = iter.pObject->GetVariation();
 
 		// Delta counters omitted
-		switch(MACRO_DNP_RADIX(grp, var))
-		{
-			MACRO_CONTINUOUS_CASE(20,1);
-			MACRO_CONTINUOUS_CASE(20,2);
-			MACRO_CONTINUOUS_CASE(20,5);
-			MACRO_CONTINUOUS_CASE(20,6);
+		switch(MACRO_DNP_RADIX(grp, var)) {
+			MACRO_CONTINUOUS_CASE(20, 1);
+			MACRO_CONTINUOUS_CASE(20, 2);
+			MACRO_CONTINUOUS_CASE(20, 5);
+			MACRO_CONTINUOUS_CASE(20, 6);
 
-			default:
-				break;
+		default:
+			break;
 		}
 
 		this->mStaticCounters.pop_front();
@@ -468,18 +454,16 @@ bool ResponseContext::LoadStaticCounters(APDU& arAPDU)
 
 bool ResponseContext::LoadStaticControlStatii(APDU& arAPDU)
 {
-	while(!mStaticControls.empty())
-	{
+	while(!mStaticControls.empty()) {
 		IterRecord<ControlStatusInfo>& iter = this->mStaticControls.front();
 		int grp = iter.pObject->GetGroup();
 		int var = iter.pObject->GetVariation();
 
-		switch(MACRO_DNP_RADIX(grp, var))
-		{
-			MACRO_CONTINUOUS_CASE(10,2);
+		switch(MACRO_DNP_RADIX(grp, var)) {
+			MACRO_CONTINUOUS_CASE(10, 2);
 
-			default:
-				break;
+		default:
+			break;
 		}
 
 		this->mStaticControls.pop_front();
@@ -500,21 +484,19 @@ bool ResponseContext::WriteCTO(const TimeStamp_t& arTime, APDU& arAPDU)
 
 bool ResponseContext::LoadStaticSetpointStatii(APDU& arAPDU)
 {
-	while(!mStaticSetpoints.empty())
-	{
+	while(!mStaticSetpoints.empty()) {
 		IterRecord<SetpointStatusInfo>& iter = this->mStaticSetpoints.front();
 		int grp = iter.pObject->GetGroup();
 		int var = iter.pObject->GetVariation();
 
-		switch(MACRO_DNP_RADIX(grp, var))
-		{
-			MACRO_CONTINUOUS_CASE(40,1);
-			MACRO_CONTINUOUS_CASE(40,2);
-			MACRO_CONTINUOUS_CASE(40,3);
-			MACRO_CONTINUOUS_CASE(40,4);
+		switch(MACRO_DNP_RADIX(grp, var)) {
+			MACRO_CONTINUOUS_CASE(40, 1);
+			MACRO_CONTINUOUS_CASE(40, 2);
+			MACRO_CONTINUOUS_CASE(40, 3);
+			MACRO_CONTINUOUS_CASE(40, 4);
 
-			default:
-				break;
+		default:
+			break;
 		}
 
 		this->mStaticSetpoints.pop_front();
@@ -532,6 +514,7 @@ void ResponseContext::AddIntegrityPoll()
 	this->AddIntegrity(mStaticSetpoints, mpRspTypes->mpStaticSetpointStatus);
 }
 
-}}
+}
+}
 
 /* vim: set ts=4 sw=4: */

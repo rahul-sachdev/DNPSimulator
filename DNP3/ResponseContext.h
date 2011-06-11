@@ -29,7 +29,10 @@
 #include "DNPDatabaseTypes.h"
 #include "SlaveEventBuffer.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class Database;
 class SlaveEventBuffer;
@@ -37,8 +40,7 @@ class ObjectBase;
 class SlaveResponseTypes;
 
 template <class T>
-struct WriteFunc
-{
+struct WriteFunc {
 	typedef boost::function<void (boost::uint8_t*, const T& arValue, size_t aIndex)> Type;
 };
 
@@ -50,19 +52,22 @@ struct WriteFunc
  */
 class ResponseContext : public Loggable
 {
-	enum Mode
-	{
-		UNDEFINED,
-		SOLICITED,
-		UNSOLICITED
+	enum Mode {
+	    UNDEFINED,
+	    SOLICITED,
+	    UNSOLICITED
 	};
 
-	public:
+public:
 	ResponseContext(Logger*, Database*, SlaveResponseTypes* apRspTypes, const EventMaxConfig& arEventMaxConfig);
 
-	Mode GetMode() { return mMode; }
+	Mode GetMode() {
+		return mMode;
+	}
 
-	IEventBuffer* GetBuffer() { return &mBuffer; }
+	IEventBuffer* GetBuffer() {
+		return &mBuffer;
+	}
 
 	// Setup the response context with a new read request
 	IINField Configure(const APDU& arRequest);
@@ -78,7 +83,9 @@ class ResponseContext : public Loggable
 	bool LoadUnsol(APDU&, const IINField& arIIN, ClassMask aMask);
 
 	// @return TRUE is all of the response data has already been written
-	bool IsComplete() { return IsEmpty(); }
+	bool IsComplete() {
+		return IsEmpty();
+	}
 
 	// Reset the state of the object to the initial state
 	void Reset();
@@ -89,7 +96,7 @@ class ResponseContext : public Loggable
 	// Clear written events and reset the state of the object
 	void ClearAndReset();
 
-	private:
+private:
 
 	// configure the state for unsol, return true of events exist
 	bool SelectUnsol(ClassMask aMask);
@@ -132,8 +139,7 @@ class ResponseContext : public Loggable
 	IINField mTempIIN;
 
 	template <class T>
-	struct IterRecord
-	{
+	struct IterRecord {
 		IterRecord() : pObject(NULL) {}
 
 		typename StaticIter<T>::Type first;				// Begining of iteration
@@ -142,8 +148,7 @@ class ResponseContext : public Loggable
 	};
 
 	template<class T>
-	struct EventRequest
-	{
+	struct EventRequest {
 		EventRequest(const StreamObject<T>* apObj, size_t aCount = std::numeric_limits<size_t>::max()) :
 			pObj(apObj),
 			count(aCount)
@@ -153,8 +158,7 @@ class ResponseContext : public Loggable
 		size_t count;						// Number of events to read
 	};
 
-	struct VtoEventRequest
-	{
+	struct VtoEventRequest {
 		VtoEventRequest(const SizeByVariationObject* apObj, size_t aCount = std::numeric_limits<size_t>::max()) :
 			pObj(apObj),
 			count(aCount)
@@ -214,7 +218,7 @@ class ResponseContext : public Loggable
 	// templated function for writing APDUs
 	/*template <class T>
 	bool IterateContiguous(IterRecord<T>& arIters, APDU& arAPDU, typename WriteFunc<typename T::MeasType>::Type& arWriter);
-*/
+	*/
 	template <class T>
 	bool IterateContiguous(IterRecord<T>& arIters, APDU& arAPDU);
 
@@ -248,10 +252,9 @@ template <class T>
 void ResponseContext::AddIntegrity(std::deque< IterRecord<T> >& arQueue, StreamObject<typename T::MeasType>* apObject)
 {
 	size_t num = mpDB->NumType(T::MeasType::MeasEnum);
-	if(num > 0)
-	{
+	if(num > 0) {
 		IterRecord<T> record;
-		mpDB->Begin(record.first); record.last = record.first + (num-1);
+		mpDB->Begin(record.first); record.last = record.first + (num - 1);
 		record.pObject = apObject;
 		arQueue.push_back(record);
 	}
@@ -264,32 +267,27 @@ bool ResponseContext::LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> >& ar
 	mBuffer.Begin(itr);
 	size_t remain = mBuffer.NumSelected(Convert(T::MeasEnum));
 
-	while (arQueue.size() > 0)
-	{
+	while (arQueue.size() > 0) {
 		/* Get the number of events requested */
 		EventRequest<T>& r = arQueue.front();
 
-		if (r.count > remain)
-		{
+		if (r.count > remain) {
 			r.count = remain;
 		}
 
 		size_t written = r.pObj->UseCTO() ? this->IterateCTO<T>(r.pObj, r.count, itr, arAPDU) : this->IterateIndexed<T>(r, itr, arAPDU);
 		remain -= written;
 
-		if (written > 0)
-		{
+		if (written > 0) {
 			/* At least one event was loaded */
 			arEventsLoaded = true;
 		}
 
-		if (written == r.count)
-		{
+		if (written == r.count) {
 			/* all events were written, finished with request */
 			arQueue.pop_front();
 		}
-		else
-		{
+		else {
 			/* more event data remains in the queue */
 			r.count -= written;
 			return false;
@@ -308,8 +306,7 @@ bool ResponseContext::IterateContiguous(IterRecord<T>& arIters, APDU& arAPDU)
 
 	ObjectWriteIterator owi = arAPDU.WriteContiguous(arIters.pObject, start, stop);
 
-	for(size_t i=start; i<=stop; ++i)
-	{
+	for(size_t i = start; i <= stop; ++i) {
 		if(owi.IsEnd()) return false; // out of space in the fragment
 		pObj->Write(*owi, arIters.first->mValue);
 		++arIters.first; //increment the iterators
@@ -327,8 +324,7 @@ size_t ResponseContext::IterateIndexed(EventRequest<T>& arRequest, typename EvtI
 	size_t max_index = mpDB->MaxIndex(T::MeasEnum);
 	IndexedWriteIterator write = arAPDU.WriteIndexed(arRequest.pObj, arRequest.count, max_index);
 
-	for(size_t i = 0; i < arRequest.count; ++i)
-	{
+	for(size_t i = 0; i < arRequest.count; ++i) {
 		if(write.IsEnd()) return i;										//that's all we can get into this fragment
 
 		write.SetIndex(arIter->mIndex);
@@ -373,12 +369,11 @@ size_t ResponseContext::IterateCTO(const StreamObject<T>* apObj, size_t aCount, 
 	size_t num = this->CalcPossibleCTO<T>(arIter, aCount);
 	IndexedWriteIterator write = arAPDU.WriteIndexed(apObj, num, max_index); //start the object write
 
-	for(size_t i = 0; i < num; ++i)
-	{
+	for(size_t i = 0; i < num; ++i) {
 		if(write.IsEnd()) return i;										// that's all we can get into this fragment
 
 		T tmp = arIter->mValue;											// make a copy and adjust the time
-		tmp.SetTime(tmp.GetTime()-start);
+		tmp.SetTime(tmp.GetTime() - start);
 
 		write.SetIndex(arIter->mIndex);
 		apObj->Write(*write, tmp);										// do the write, with the tmp
@@ -391,7 +386,8 @@ size_t ResponseContext::IterateCTO(const StreamObject<T>* apObj, size_t aCount, 
 	else return num + this->IterateCTO(apObj, aCount - num, arIter, arAPDU); //recurse, and do another CTO header
 }
 
-}}
+}
+}
 
 /* vim: set ts=4 sw=4: */
 

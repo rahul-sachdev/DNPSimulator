@@ -21,26 +21,35 @@
 
 #include <APLTestTools/AsyncTestObject.h>
 
-namespace boost { namespace asio {
-	class io_service;
-}}
+namespace boost
+{
+namespace asio
+{
+class io_service;
+}
+}
 
-namespace apl {
+namespace apl
+{
 
-	class AsyncTestObjectASIO : public AsyncTestObject
-	{
-		public:
-			AsyncTestObjectASIO();
-			AsyncTestObjectASIO(boost::asio::io_service*);
-			virtual ~AsyncTestObjectASIO();
+class AsyncTestObjectASIO : public AsyncTestObject
+{
+public:
+	AsyncTestObjectASIO();
+	AsyncTestObjectASIO(boost::asio::io_service*);
+	virtual ~AsyncTestObjectASIO();
 
-			boost::asio::io_service* GetService() { return mpTestObjectService; }
+	boost::asio::io_service* GetService() {
+		return mpTestObjectService;
+	}
 
-		private:
-			boost::asio::io_service* mpTestObjectService;
-			bool mOwner;
-			void Next() { AsyncTestObject::Next(this->GetService(), 10); }
-	};
+private:
+	boost::asio::io_service* mpTestObjectService;
+	bool mOwner;
+	void Next() {
+		AsyncTestObject::Next(this->GetService(), 10);
+	}
+};
 
 }
 

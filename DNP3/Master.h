@@ -42,18 +42,22 @@
 #include "ControlTasks.h"
 #include "VtoTransmitTask.h"
 
-namespace apl {
-	class IDataObserver;
-	class ITask;
-	class AsyncTaskGroup;
-	class ITimerSource;
-	class ITimeSource;
-	class AsyncTaskContinuous;
-	class AsyncTaskBase;
-	class CopyableBuffer;
+namespace apl
+{
+class IDataObserver;
+class ITask;
+class AsyncTaskGroup;
+class ITimerSource;
+class ITimeSource;
+class AsyncTaskContinuous;
+class AsyncTaskBase;
+class CopyableBuffer;
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class AMS_Base;
 
@@ -71,13 +75,12 @@ class Master : public Loggable, public IAppUser
 	friend class AMS_Waiting;
 	friend class MasterSchedule;
 
-	public:
+public:
 
 	Master(Logger*, MasterConfig aCfg, IAppLayer*, IDataObserver*, AsyncTaskGroup*, ITimerSource*, ITimeSource* apTimeSrc = TimeSource::Inst());
 	virtual ~Master() {}
 
-	ICommandAcceptor* GetCmdAcceptor()
-	{
+	ICommandAcceptor* GetCmdAcceptor() {
 		return &mCommandQueue;
 	}
 
@@ -89,8 +92,7 @@ class Master : public Loggable, public IAppUser
 	 *
 	 * @return			a pointer to the VtoReader instance for this stack
 	 */
-	VtoReader* GetVtoReader()
-	{
+	VtoReader* GetVtoReader() {
 		return &mVtoReader;
 	}
 
@@ -101,8 +103,7 @@ class Master : public Loggable, public IAppUser
 	 *
 	 * @return			a pointer to the VtoWriter instance for this stack
 	 */
-	IVtoWriter* GetVtoWriter()
-	{
+	IVtoWriter* GetVtoWriter() {
 		return &mVtoWriter;
 	}
 
@@ -127,12 +128,11 @@ class Master : public Loggable, public IAppUser
 	 *
 	 * @return			'true' since this is a Master implementation
 	 */
-	bool IsMaster()
-	{
+	bool IsMaster() {
 		return true;
 	}
 
-	private:
+private:
 
 	void UpdateState(StackStates aState);
 
@@ -198,7 +198,8 @@ class Master : public Loggable, public IAppUser
 
 };
 
-}}
+}
+}
 
 /* vim: set ts=4 sw=4: */
 

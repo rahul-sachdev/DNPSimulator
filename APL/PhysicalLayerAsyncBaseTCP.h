@@ -23,28 +23,29 @@
 #include <boost/asio/ip/tcp.hpp>
 #include <memory>
 
-namespace apl {
+namespace apl
+{
 
-	/**
-	Common socket object and some shared implementations for server/client.
-	*/
-	class PhysicalLayerAsyncBaseTCP : public PhysicalLayerAsyncASIO
-	{
-		public:
-			PhysicalLayerAsyncBaseTCP(Logger*, boost::asio::io_service* apIOService);
+/**
+Common socket object and some shared implementations for server/client.
+*/
+class PhysicalLayerAsyncBaseTCP : public PhysicalLayerAsyncASIO
+{
+public:
+	PhysicalLayerAsyncBaseTCP(Logger*, boost::asio::io_service* apIOService);
 
-			virtual ~PhysicalLayerAsyncBaseTCP(){}
+	virtual ~PhysicalLayerAsyncBaseTCP() {}
 
-			/* Implement the shared client/server actions */
-			void DoClose();
-			void DoOpenSuccess();
-			void DoAsyncRead(boost::uint8_t*, size_t);
-			void DoAsyncWrite(const boost::uint8_t*, size_t);
-			void DoOpenFailure();
+	/* Implement the shared client/server actions */
+	void DoClose();
+	void DoOpenSuccess();
+	void DoAsyncRead(boost::uint8_t*, size_t);
+	void DoAsyncWrite(const boost::uint8_t*, size_t);
+	void DoOpenFailure();
 
-		protected:
-			boost::asio::ip::tcp::socket mSocket;
-	};
+protected:
+	boost::asio::ip::tcp::socket mSocket;
+};
 }
 
 #endif

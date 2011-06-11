@@ -23,7 +23,8 @@
 #include "IHandlerAsync.h"
 #include "AsyncLayerInterfaces.h"
 
-namespace apl {
+namespace apl
+{
 
 class IPhysicalLayerAsync;
 
@@ -31,44 +32,52 @@ class IPhysicalLayerAsync;
 */
 class LowerLayerToPhysAdapter : public IHandlerAsync, public ILowerLayer
 {
-	public:
-		LowerLayerToPhysAdapter(Logger*, IPhysicalLayerAsync*, bool aAutoRead = true);
-		~LowerLayerToPhysAdapter();
+public:
+	LowerLayerToPhysAdapter(Logger*, IPhysicalLayerAsync*, bool aAutoRead = true);
+	~LowerLayerToPhysAdapter();
 
-		size_t GetNumOpenFailure() { return mNumOpenFailure; }
-		bool OpenFailureEquals(size_t aNum) { return GetNumOpenFailure() == aNum; }
+	size_t GetNumOpenFailure() {
+		return mNumOpenFailure;
+	}
+	bool OpenFailureEquals(size_t aNum) {
+		return GetNumOpenFailure() == aNum;
+	}
 
-		void StartRead();
+	void StartRead();
 
 
 
-	private:
+private:
 
-		virtual std::string RecvString() const { return "Adapter <-"; }
-		virtual std::string SendString() const { return "Adapter ->"; }
+	virtual std::string RecvString() const {
+		return "Adapter <-";
+	}
+	virtual std::string SendString() const {
+		return "Adapter ->";
+	}
 
-		bool mAutoRead;
-		size_t mNumOpenFailure;
+	bool mAutoRead;
+	size_t mNumOpenFailure;
 
-		static const size_t BUFFER_SIZE = 1 << 16; // 65,536
+	static const size_t BUFFER_SIZE = 1 << 16; // 65,536
 
-		boost::uint8_t mpBuff[BUFFER_SIZE]; // Temporary buffer since IPhysicalLayerAsync now directly supports a read operation
+	boost::uint8_t mpBuff[BUFFER_SIZE]; // Temporary buffer since IPhysicalLayerAsync now directly supports a read operation
 
-		/* Implement IAsyncHandler */
-		void _OnOpenFailure();
+	/* Implement IAsyncHandler */
+	void _OnOpenFailure();
 
-		/* Implement IUpperLayer */
-		void _OnReceive(const boost::uint8_t*, size_t);
-		void _OnSendSuccess();
-		void _OnSendFailure();
-		void _OnLowerLayerUp();
-		void _OnLowerLayerDown();
-		void _OnLowerLayerShutdown();
+	/* Implement IUpperLayer */
+	void _OnReceive(const boost::uint8_t*, size_t);
+	void _OnSendSuccess();
+	void _OnSendFailure();
+	void _OnLowerLayerUp();
+	void _OnLowerLayerDown();
+	void _OnLowerLayerShutdown();
 
-		IPhysicalLayerAsync* mpPhys;
+	IPhysicalLayerAsync* mpPhys;
 
-		/* Implement ILowerLayer */
-		void _Send(const boost::uint8_t*, size_t);
+	/* Implement ILowerLayer */
+	void _Send(const boost::uint8_t*, size_t);
 };
 
 }

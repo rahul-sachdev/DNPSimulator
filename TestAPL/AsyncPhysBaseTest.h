@@ -25,11 +25,12 @@
 #include <APLTestTools/MockUpperLayer.h>
 #include <APLTestTools/MockPhysicalLayerAsync.h>
 
-namespace apl {
+namespace apl
+{
 
 class AsyncPhysBaseTest : public LogTester
 {
-	public:
+public:
 	AsyncPhysBaseTest(FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
 
 	MockPhysicalLayerAsync phys;

@@ -22,7 +22,10 @@
 
 #include <stddef.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class APDU;
 
@@ -34,7 +37,7 @@ class APDU;
 */
 class IAppLayer
 {
-	public:
+public:
 
 	/** Start a response transaction with optional confirmation.
 
@@ -104,41 +107,41 @@ class IAppLayer
 };
 
 
-enum SequenceInfo
-{
-	SI_OTHER,
-	SI_PREV,
-	SI_CORRECT
+enum SequenceInfo {
+    SI_OTHER,
+    SI_PREV,
+    SI_CORRECT
 };
 
 // Interface for callbacks from an application layer
 class IAppUser
 {
-	public:
-		virtual void OnLowerLayerUp() = 0;					// The app layer is online
-		virtual void OnLowerLayerDown() = 0;				// The app layer is offline
+public:
+	virtual void OnLowerLayerUp() = 0;					// The app layer is online
+	virtual void OnLowerLayerDown() = 0;				// The app layer is offline
 
-		virtual void OnUnsolSendSuccess() = 0;					// A Send operation has completed
-		virtual void OnUnsolFailure() = 0;						// A transaction has failed for some reason
+	virtual void OnUnsolSendSuccess() = 0;					// A Send operation has completed
+	virtual void OnUnsolFailure() = 0;						// A transaction has failed for some reason
 
-		virtual void OnSolSendSuccess() = 0;					// A Send operation has completed
-		virtual void OnSolFailure() = 0;						// A transaction has failed for some reason
+	virtual void OnSolSendSuccess() = 0;					// A Send operation has completed
+	virtual void OnSolFailure() = 0;						// A transaction has failed for some reason
 
-		virtual bool IsMaster() = 0;						// controls which types of messages are sent upwards
+	virtual bool IsMaster() = 0;						// controls which types of messages are sent upwards
 
-		// A non-final response has been received
-		virtual void OnPartialResponse(const APDU&);
-		// A final response has been received
-		virtual void OnFinalResponse(const APDU&);
+	// A non-final response has been received
+	virtual void OnPartialResponse(const APDU&);
+	// A final response has been received
+	virtual void OnFinalResponse(const APDU&);
 
-		// Process unsolicited data
-		virtual void OnUnsolResponse(const APDU&);
-		// Process request fragment
-		virtual void OnRequest(const APDU&, SequenceInfo);
-		// Unknown Object
-		virtual void OnUnknownObject();
+	// Process unsolicited data
+	virtual void OnUnsolResponse(const APDU&);
+	// Process request fragment
+	virtual void OnRequest(const APDU&, SequenceInfo);
+	// Unknown Object
+	virtual void OnUnknownObject();
 };
 
-}} //end ns
+}
+} //end ns
 
 #endif

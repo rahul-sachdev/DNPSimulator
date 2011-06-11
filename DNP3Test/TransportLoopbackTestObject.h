@@ -29,48 +29,54 @@
 #include <DNP3/LinkLayer.h>
 #include <DNP3/TransportLayer.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class TransportLoopbackTestObject : public LogTester, public AsyncTestObjectASIO
 {
-	public:
-		TransportLoopbackTestObject(
-			boost::asio::io_service*,
-			IPhysicalLayerAsync*,
-			LinkConfig,
-			LinkConfig,
-			FilterLevel aLevel = LEV_INFO,
-			bool aImmediate = false);
+public:
+	TransportLoopbackTestObject(
+	    boost::asio::io_service*,
+	    IPhysicalLayerAsync*,
+	    LinkConfig,
+	    LinkConfig,
+	    FilterLevel aLevel = LEV_INFO,
+	    bool aImmediate = false);
 
-		~TransportLoopbackTestObject();
+	~TransportLoopbackTestObject();
 
-		Logger* GetLogger() { return mpLogger; }
+	Logger* GetLogger() {
+		return mpLogger;
+	}
 
-		bool LayersUp();
+	bool LayersUp();
 
-		void Start();
-
-
-	private:
-		Logger* mpLogger;
-		TimerSourceASIO mTimerSource;
+	void Start();
 
 
-		LinkConfig mCfgA;
-		LinkConfig mCfgB;
+private:
+	Logger* mpLogger;
+	TimerSourceASIO mTimerSource;
 
-		LinkLayer mLinkA;
-		LinkLayer mLinkB;
-		TransportLayer mTransA;
-		TransportLayer mTransB;
-		LinkLayerRouter mRouter;
 
-	public:
-		MockUpperLayer mUpperA;
-		MockUpperLayer mUpperB;
+	LinkConfig mCfgA;
+	LinkConfig mCfgB;
+
+	LinkLayer mLinkA;
+	LinkLayer mLinkB;
+	TransportLayer mTransA;
+	TransportLayer mTransB;
+	LinkLayerRouter mRouter;
+
+public:
+	MockUpperLayer mUpperA;
+	MockUpperLayer mUpperB;
 
 };
 
-}}
+}
+}
 
 #endif

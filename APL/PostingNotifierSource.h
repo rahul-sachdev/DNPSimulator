@@ -23,19 +23,20 @@
 
 #include <vector>
 
-namespace apl {
+namespace apl
+{
 
 class INotifier;
 class PostingNotifier;
 
 class PostingNotifierSource
 {
-	public:
+public:
 	~PostingNotifierSource();
 
 	INotifier* Get(const ExpirationHandler&, ITimerSource*);
 
-	private:
+private:
 	std::vector<PostingNotifier*> mNotifiers;
 };
 

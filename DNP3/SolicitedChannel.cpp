@@ -21,15 +21,20 @@
 #include "AppLayer.h"
 #include "AppChannelStates.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 
 SolicitedChannel::SolicitedChannel(Logger* apLogger, AppLayer* apApp, ITimerSource* apTimerSrc, millis_t aTimeout) :
-AppLayerChannel("Solicited", apLogger, apApp, apTimerSrc, aTimeout)
+	AppLayerChannel("Solicited", apLogger, apApp, apTimerSrc, aTimeout)
 {}
 
 bool SolicitedChannel::AcceptsResponse()
-{ return mpState->AcceptsResponse(); }
+{
+	return mpState->AcceptsResponse();
+}
 
 void SolicitedChannel::DoSendSuccess()
 {
@@ -70,6 +75,7 @@ void SolicitedChannel::OnUnknownObjectInRequest(const AppControlField& acf)
 }
 
 
-}}
+}
+}
 
 

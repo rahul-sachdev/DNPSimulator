@@ -23,29 +23,30 @@
 #include <string>
 #include <sstream>
 
-namespace apl {
+namespace apl
+{
 
-	char toHex(char c);
-	std::string ByteToHex(boost::uint8_t b);
+char toHex(char c);
+std::string ByteToHex(boost::uint8_t b);
 
-	template<typename T>
-	std::string toHex(T aBuff, size_t aLength, bool spaced = false)
-	{
-		std::ostringstream oss;
-		size_t last = aLength - 1;
-		for(size_t i=0; i < aLength; i++){
-			char c = aBuff[i];
-			oss << toHex((c&0xf0)>>4) << toHex(c&0xf);
-			if(spaced && i!=last)oss << " ";
-		}
-		return oss.str();
-	};
-
-	template<class T>
-	std::string TypeToHex(T x)
-	{
-		return toHex(reinterpret_cast<boost::uint8_t*>(&x), sizeof(T), true);
+template<typename T>
+std::string toHex(T aBuff, size_t aLength, bool spaced = false)
+{
+	std::ostringstream oss;
+	size_t last = aLength - 1;
+	for(size_t i = 0; i < aLength; i++) {
+		char c = aBuff[i];
+		oss << toHex((c & 0xf0) >> 4) << toHex(c & 0xf);
+		if(spaced && i != last)oss << " ";
 	}
+	return oss.str();
+};
+
+template<class T>
+std::string TypeToHex(T x)
+{
+	return toHex(reinterpret_cast<boost::uint8_t*>(&x), sizeof(T), true);
+}
 }
 
 #endif

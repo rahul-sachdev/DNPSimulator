@@ -24,47 +24,53 @@
 
 #include "TimingTools.h"
 
-namespace apl{
+namespace apl
+{
 
-	///////////////////////////////////////////////
-	//	StopWatch
-	///////////////////////////////////////////////
+///////////////////////////////////////////////
+//	StopWatch
+///////////////////////////////////////////////
 
-	apl::millis_t StopWatch :: Elapsed(bool aReset){
-		apl::millis_t ret = mStartTime.GetElapsedMS();
-		if(aReset) mStartTime.SetToNow();
-		return ret;
-	}
+apl::millis_t StopWatch :: Elapsed(bool aReset)
+{
+	apl::millis_t ret = mStartTime.GetElapsedMS();
+	if(aReset) mStartTime.SetToNow();
+	return ret;
+}
 
-	void StopWatch :: Restart(){
-		mStartTime.SetToNow();
-	}
+void StopWatch :: Restart()
+{
+	mStartTime.SetToNow();
+}
 
-	///////////////////////////////////////////////
-	//	TimeStamp
-	///////////////////////////////////////////////
+///////////////////////////////////////////////
+//	TimeStamp
+///////////////////////////////////////////////
 
-	//millis_t TimeStamp :: mOffset = TimeStamp::UTCUnset;
+//millis_t TimeStamp :: mOffset = TimeStamp::UTCUnset;
 
-	//StaticSubject TimeStamp :: mTimeNotifier ;
+//StaticSubject TimeStamp :: mTimeNotifier ;
 
-	const TimeStamp_t TimeStamp::MAX = std::numeric_limits<TimeStamp_t>::max();
-	const TimeStamp_t TimeStamp::MIN = std::numeric_limits<TimeStamp_t>::min();
+const TimeStamp_t TimeStamp::MAX = std::numeric_limits<TimeStamp_t>::max();
+const TimeStamp_t TimeStamp::MIN = std::numeric_limits<TimeStamp_t>::min();
 
-	TimeStamp_t TimeStamp :: GetTimeStamp(const millis_t aInFuture){
-		Time dt; // need faster calls
-		return (TimeStamp_t)(dt.GetValueMS() + aInFuture);
-	}
+TimeStamp_t TimeStamp :: GetTimeStamp(const millis_t aInFuture)
+{
+	Time dt; // need faster calls
+	return (TimeStamp_t)(dt.GetValueMS() + aInFuture);
+}
 
-	UTCTimeStamp_t TimeStamp :: GetUTCTimeStamp(const millis_t aInFuture){
-		Time dt; // need faster calls
-		return (UTCTimeStamp_t) (dt.GetValueMS() + aInFuture);
-	}
+UTCTimeStamp_t TimeStamp :: GetUTCTimeStamp(const millis_t aInFuture)
+{
+	Time dt; // need faster calls
+	return (UTCTimeStamp_t) (dt.GetValueMS() + aInFuture);
+}
 
-	std::string TimeStamp :: UTCTimeStampToString(const UTCTimeStamp_t aTime){
-		Time dt; // need faster calls
-		dt.SetTo(aTime);
-		return dt.GetTimeString();
-	}
+std::string TimeStamp :: UTCTimeStampToString(const UTCTimeStamp_t aTime)
+{
+	Time dt; // need faster calls
+	dt.SetTo(aTime);
+	return dt.GetTimeString();
+}
 
 }

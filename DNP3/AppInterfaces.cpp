@@ -21,22 +21,36 @@
 #include <APL/Configure.h>
 #include <APL/Exception.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 void IAppUser::OnPartialResponse(const APDU&)
-{ throw Exception(LOCATION, "Unhandled frame"); }
+{
+	throw Exception(LOCATION, "Unhandled frame");
+}
 
 void IAppUser::OnFinalResponse(const APDU&)
-{ throw Exception(LOCATION, "Unhandled frame"); }
+{
+	throw Exception(LOCATION, "Unhandled frame");
+}
 
 void IAppUser::OnUnsolResponse(const APDU&)
-{ throw Exception(LOCATION, "Unhandled frame"); }
+{
+	throw Exception(LOCATION, "Unhandled frame");
+}
 
 void IAppUser::OnRequest(const APDU&, SequenceInfo)
-{ throw Exception(LOCATION, "Unhandled frame"); }
+{
+	throw Exception(LOCATION, "Unhandled frame");
+}
 
 
 void IAppUser::OnUnknownObject()
-{ throw Exception(LOCATION, "Unhandled frame"); }
+{
+	throw Exception(LOCATION, "Unhandled frame");
+}
 
-}} //end ns
+}
+} //end ns

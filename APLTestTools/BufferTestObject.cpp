@@ -26,10 +26,11 @@
 
 #include <APL/Exception.h>
 
-namespace apl {
+namespace apl
+{
 
 BufferTestObject::BufferTestObject() :
-mNumWrites(0)
+	mNumWrites(0)
 {
 
 }
@@ -49,7 +50,7 @@ bool BufferTestObject::BufferEquals(const boost::uint8_t* apData, size_t aNumByt
 {
 
 	if(aNumBytes != mBuffer.size()) return false;
-	for(size_t i=0; i< aNumBytes; i++)
+	for(size_t i = 0; i < aNumBytes; i++)
 		if(apData[i] != mBuffer[i]) {
 			return false;
 		}
@@ -75,7 +76,7 @@ bool BufferTestObject::BufferEquals(const std::string& arData)
 bool BufferTestObject::BufferEqualsString(const std::string& arData)
 {
 	if(arData.size() != mBuffer.size()) return false;
-	for(size_t i=0; i< mBuffer.size(); i++)
+	for(size_t i = 0; i < mBuffer.size(); i++)
 		if(arData[i] != mBuffer[i]) {
 			return false;
 		}
@@ -86,7 +87,7 @@ void BufferTestObject::WriteToBuffer(const boost::uint8_t* apData, size_t aNumBy
 {
 	if( (mBuffer.size() + aNumBytes) > MAX_SIZE ) throw Exception(LOCATION, "Max size exceeded");
 	++mNumWrites;
-	for(size_t i=0; i<aNumBytes; ++i) mBuffer.push_back(apData[i]);
+	for(size_t i = 0; i < aNumBytes; ++i) mBuffer.push_back(apData[i]);
 }
 
 } //end namespace

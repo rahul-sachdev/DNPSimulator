@@ -26,33 +26,33 @@
 #include <map>
 
 namespace apl
-{	
-	class MockPhysicalLayerAsync;
-	class ITimerSource;
+{
+class MockPhysicalLayerAsync;
+class ITimerSource;
 
-	class MockPhysicalLayerSource : public IPhysicalLayerSource
-	{
-		public:
+class MockPhysicalLayerSource : public IPhysicalLayerSource
+{
+public:
 
-		MockPhysicalLayerSource(Logger* apLogger, ITimerSource* apTimerSrc = NULL);
+	MockPhysicalLayerSource(Logger* apLogger, ITimerSource* apTimerSrc = NULL);
 
-		MockPhysicalLayerAsync* GetMock(const std::string& arName);
-	
-		IPhysicalLayerAsync* AcquireLayer(const std::string& arName, bool aAutoDelete);
-		void ReleaseLayer(const std::string& arName);
+	MockPhysicalLayerAsync* GetMock(const std::string& arName);
 
-		private:
+	IPhysicalLayerAsync* AcquireLayer(const std::string& arName, bool aAutoDelete);
+	void ReleaseLayer(const std::string& arName);
 
-		Logger* mpLogger;
-		ITimerSource* mpTimerSrc;
+private:
 
-		typedef std::map<std::string, PhysLayerInstance> InstanceMap;
-		typedef std::map<std::string, MockPhysicalLayerAsync*> MockMap;
+	Logger* mpLogger;
+	ITimerSource* mpTimerSrc;
 
-		InstanceMap mInstanceMap;
-		MockMap mMockMap;
+	typedef std::map<std::string, PhysLayerInstance> InstanceMap;
+	typedef std::map<std::string, MockPhysicalLayerAsync*> MockMap;
 
-	};
+	InstanceMap mInstanceMap;
+	MockMap mMockMap;
+
+};
 }
 
 #endif

@@ -26,17 +26,20 @@
 #include <APL/IPhysicalLayerAsync.h>
 #include <APL/AsyncTaskGroup.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 Port::Port(const std::string& arName, Logger* apLogger, AsyncTaskGroup* apGroup, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, millis_t aOpenDelay, IPhysMonitor* apObserver) :
-Loggable(apLogger->GetSubLogger("port")),
-CleanupHelper(apTimerSrc),
-mName(arName),
-mRouter(apLogger, apPhys, apTimerSrc, aOpenDelay),
-mpGroup(apGroup),
-mpPhys(apPhys),
-mpObserver(apObserver),
-mRelease(false)
+	Loggable(apLogger->GetSubLogger("port")),
+	CleanupHelper(apTimerSrc),
+	mName(arName),
+	mRouter(apLogger, apPhys, apTimerSrc, aOpenDelay),
+	mpGroup(apGroup),
+	mpPhys(apPhys),
+	mpObserver(apObserver),
+	mRelease(false)
 {
 	mRouter.SetMonitor(this);
 }
@@ -44,9 +47,8 @@ mRelease(false)
 // Releases the port now or when the router finall stops
 void Port::Release()
 {
-	if(!mRelease)
-	{
-		mRelease = true;	
+	if(!mRelease) {
+		mRelease = true;
 		if(!mRouter.IsRunning()) this->Cleanup();
 	}
 }
@@ -85,4 +87,5 @@ void Port::Disassociate(const std::string& arStackName)
 	mStackMap.erase(i);
 }
 
-}}
+}
+}

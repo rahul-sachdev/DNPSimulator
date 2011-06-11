@@ -21,13 +21,16 @@
 
 using namespace std;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 SlaveDemoBase::SlaveDemoBase(Logger* apLogger) :
-Loggable(apLogger),
-IOService(),
-IOServiceThread(this->Get()),
-mTimerSource(this->Get())
+	Loggable(apLogger),
+	IOService(),
+	IOServiceThread(this->Get()),
+	mTimerSource(this->Get())
 {
 	// Start a timer that will do nothing but keep the boost asio service from returning when it has no work to do
 	mpInfiniteTimer = mTimerSource.StartInfinite(boost::bind(&SlaveDemoBase::Timeout, this));
@@ -53,13 +56,16 @@ void SlaveDemoBase::OnCommandNotify()
 }
 
 SlaveDemoApp::SlaveDemoApp(Logger* apLogger) :
-SlaveDemoBase(apLogger),
-mCountSetPoints(0),
-mCountBinaryOutput(0),
-mpObserver(NULL)
+	SlaveDemoBase(apLogger),
+	mCountSetPoints(0),
+	mCountBinaryOutput(0),
+	mpObserver(NULL)
 {}
 
-void SlaveDemoApp::SetDataObserver(IDataObserver* apObserver) { mpObserver = apObserver; }
+void SlaveDemoApp::SetDataObserver(IDataObserver* apObserver)
+{
+	mpObserver = apObserver;
+}
 
 CommandStatus SlaveDemoApp::HandleControl(Setpoint& aControl, size_t aIndex)
 {
@@ -110,4 +116,5 @@ CommandStatus SlaveDemoApp::HandleControl(BinaryOutput& aControl, size_t aIndex)
 	return CS_SUCCESS;
 }
 
-}}
+}
+}

@@ -19,7 +19,10 @@
 
 #include <APL/Util.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 VtoWriter::VtoWriter(size_t aMaxVtoChunks) :
 	mMaxVtoChunks(aMaxVtoChunks)
@@ -61,14 +64,9 @@ void VtoWriter::SetLocalVtoState(bool aLocalVtoConnectionOpened, boost::uint8_t 
 	 */
 	CriticalSection cs(&mLock);
 
-	boost::uint8_t* data = new boost::uint8_t[2];
-
-	data[0] = aChannelId;
-	data[1] = aLocalVtoConnectionOpened ? 0 : 1;
-
-	VtoData vto(data, 2);
-
-	delete data;
+	VtoData vto(2);
+	vto.mpData[0] = aChannelId;
+	vto.mpData[1] = aLocalVtoConnectionOpened ? 0 : 1;
 
 	VtoEvent evt(vto, PC_CLASS_1, 255);
 	this->mQueue.push(evt);
@@ -90,8 +88,7 @@ void VtoWriter::Commit(const boost::uint8_t* apData,
 	size_t partial = aLength % VtoData::MAX_SIZE;
 
 	/* First, write the full-sized blocks */
-	for (size_t i = 0; i < complete; ++i)
-	{
+	for (size_t i = 0; i < complete; ++i) {
 		this->QueueVtoObject(apData, VtoData::MAX_SIZE, aChannelId);
 		apData += VtoData::MAX_SIZE;
 	}
@@ -116,7 +113,7 @@ void VtoWriter::QueueVtoObject(const boost::uint8_t* apData,
 }
 
 bool VtoWriter::Read(VtoEvent& arEvent)
-{	
+{
 	bool readValue = this->ReadWithoutNotifying(arEvent);
 
 	if(readValue) this->NotifyAllCallbacks();
@@ -124,7 +121,7 @@ bool VtoWriter::Read(VtoEvent& arEvent)
 	return readValue;
 }
 
-bool VtoWriter::ReadWithoutNotifying(VtoEvent& arEvent) 
+bool VtoWriter::ReadWithoutNotifying(VtoEvent& arEvent)
 {
 	CriticalSection cs(&mLock);
 
@@ -192,7 +189,8 @@ size_t VtoWriter::NumBytesAvailable()
 	return this->NumChunksAvailable() * VtoData::MAX_SIZE;
 }
 
-}}
+}
+}
 
 /* vim: set ts=4 sw=4: */
 

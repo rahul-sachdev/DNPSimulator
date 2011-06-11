@@ -27,57 +27,65 @@
 
 namespace apl
 {
-	class TimeSource : public ITimeSource
-	{
-		MACRO_SINGLETON_INSTANCE(TimeSource)
+class TimeSource : public ITimeSource
+{
+	MACRO_SINGLETON_INSTANCE(TimeSource)
 
-		// Implement ITimeSource
-		boost::posix_time::ptime GetUTC();
-		TimeStamp_t GetTimeStampUTC();
-	};
+	// Implement ITimeSource
+	boost::posix_time::ptime GetUTC();
+	TimeStamp_t GetTimeStampUTC();
+};
 
-	class MockTimeSource : public ITimeSource
-	{
-		public:
+class MockTimeSource : public ITimeSource
+{
+public:
 
-		MockTimeSource();
+	MockTimeSource();
 
-		// Implement ITimeSource
-		boost::posix_time::ptime GetUTC() { return mTime; }
-		TimeStamp_t GetTimeStampUTC();
+	// Implement ITimeSource
+	boost::posix_time::ptime GetUTC() {
+		return mTime;
+	}
+	TimeStamp_t GetTimeStampUTC();
 
-		void SetTime(const boost::posix_time::ptime& arTime) { mTime = arTime; }
-		void SetTime(TimeStamp_t aTime);
-		void Advance(millis_t aDuration);
-		void SetToNow();
+	void SetTime(const boost::posix_time::ptime& arTime) {
+		mTime = arTime;
+	}
+	void SetTime(TimeStamp_t aTime);
+	void Advance(millis_t aDuration);
+	void SetToNow();
 
-		private:
+private:
 
-		boost::posix_time::ptime mTime;
-	};
+	boost::posix_time::ptime mTime;
+};
 
-	/** Maintains an external time by keeping an offset from system time.
-	*/
-	class TimeSourceSystemOffset : public  ITimeManager
-	{
-	public:
-		TimeSourceSystemOffset();
+/** Maintains an external time by keeping an offset from system time.
+*/
+class TimeSourceSystemOffset : public  ITimeManager
+{
+public:
+	TimeSourceSystemOffset();
 
-		millis_t GetTime();
-		void SetTime(millis_t aTime);
-	private:
-		boost::int64_t mOffset;
-	};
+	millis_t GetTime();
+	void SetTime(millis_t aTime);
+private:
+	boost::int64_t mOffset;
+};
 
-	class MockTimeManager : public ITimeManager
-	{
-	public:
-		MockTimeManager() : mTime(0) {}
-		millis_t GetTime() { return mTime; }
-		void SetTime(millis_t aTime) { mTime = aTime; }
-	private:
-		millis_t mTime;
-	};
+class MockTimeManager : public ITimeManager
+{
+public:
+	MockTimeManager() : mTime(0) {}
+	millis_t GetTime() {
+		return mTime;
+	}
+	void SetTime(millis_t aTime) {
+		mTime = aTime;
+	}
+private:
+	millis_t mTime;
+};
 }
 
 #endif

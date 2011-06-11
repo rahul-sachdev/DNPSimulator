@@ -26,17 +26,20 @@
 
 #include <boost/bind.hpp>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 AppLayerChannel::AppLayerChannel(const std::string& arName, Logger* apLogger, AppLayer* apAppLayer, ITimerSource* apTimerSrc, millis_t aTimeout) :
-Loggable(apLogger),
-mpAppLayer(apAppLayer),
-mpSendAPDU(NULL),
-mNumRetry(0),
-mpTimerSrc(apTimerSrc),
-mpTimer(NULL),
-M_TIMEOUT(aTimeout),
-M_NAME(arName)
+	Loggable(apLogger),
+	mpAppLayer(apAppLayer),
+	mpSendAPDU(NULL),
+	mNumRetry(0),
+	mpTimerSrc(apTimerSrc),
+	mpTimer(NULL),
+	M_TIMEOUT(aTimeout),
+	M_NAME(arName)
 {
 	this->Reset();
 }
@@ -139,6 +142,7 @@ void AppLayerChannel::Timeout()
 	mpState->OnTimeout(this);
 }
 
-}}
+}
+}
 
 

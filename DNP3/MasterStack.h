@@ -23,19 +23,22 @@
 #include "Master.h"
 #include "MasterStackConfig.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /** @section desc A stack object for a master */
 class MasterStack : public Stack
 {
-	public:
+public:
 
 	MasterStack(
-		Logger*,
-		ITimerSource* apTimerSrc,
-		IDataObserver* apPublisher,
-		AsyncTaskGroup* apTaskGroup,
-		const MasterStackConfig& arCfg);
+	    Logger*,
+	    ITimerSource* apTimerSrc,
+	    IDataObserver* apPublisher,
+	    AsyncTaskGroup* apTaskGroup,
+	    const MasterStackConfig& arCfg);
 
 	IVtoWriter* GetVtoWriter();
 	IVtoReader* GetVtoReader();
@@ -43,6 +46,7 @@ class MasterStack : public Stack
 	Master mMaster;
 };
 
-}}
+}
+}
 
 #endif

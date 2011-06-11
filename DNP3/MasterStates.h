@@ -28,14 +28,17 @@
 
 namespace apl
 {
-	class ITaskCompletion;
-	class Logger;
-	class BinaryOutput;
-	class Setpoint;
-	class ITask;
+class ITaskCompletion;
+class Logger;
+class BinaryOutput;
+class Setpoint;
+class ITask;
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class Master;
 class MasterTaskBase;
@@ -43,7 +46,7 @@ class APDU;
 
 class AMS_Base
 {
-	public:
+public:
 
 	// called when a new task should be started
 	virtual void StartTask(Master* c, ITask*, MasterTaskBase*);
@@ -63,7 +66,7 @@ class AMS_Base
 
 	virtual std::string Name() const = 0;
 
-	protected:
+protected:
 
 	void ChangeState(Master*, AMS_Base*);
 	void ChangeTask(Master*, MasterTaskBase*);
@@ -82,7 +85,7 @@ class AMS_Closed : public AMS_Base
 
 class AMS_OpenBase : public AMS_Base
 {
-	public:
+public:
 	void OnUnsolResponse(Master*, const APDU&);
 	virtual void OnLowerLayerDown(Master* c);
 };
@@ -112,6 +115,7 @@ class AMS_Waiting : public AMS_OpenBase
 	void OnLowerLayerDown(Master* c);
 };
 
-}} //ens ns
+}
+} //ens ns
 
 #endif

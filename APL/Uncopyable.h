@@ -19,20 +19,21 @@
 #ifndef __UNCOPYABLE_H_
 #define __UNCOPYABLE_H_
 
-namespace apl {
+namespace apl
+{
 
-	/** Inherited classes will not have default copy/assignment.
-	*/
-	class Uncopyable
-	{
-		protected:
-			Uncopyable(){}  //allow construction/destruction
-			~Uncopyable(){}
+/** Inherited classes will not have default copy/assignment.
+*/
+class Uncopyable
+{
+protected:
+	Uncopyable() {} //allow construction/destruction
+	~Uncopyable() {}
 
-		private:
-			Uncopyable(const Uncopyable&); //prevent copy constructor
-			Uncopyable& operator=(const Uncopyable&); //prevent assignment
-	};
+private:
+	Uncopyable(const Uncopyable&); //prevent copy constructor
+	Uncopyable& operator=(const Uncopyable&); //prevent assignment
+};
 
 }
 

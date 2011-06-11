@@ -21,15 +21,15 @@
 
 namespace apl
 {
-	template<class T>
-	class IEventLock
-	{
-		public:
-			virtual ~IEventLock(){}
+template<class T>
+class IEventLock
+{
+public:
+	virtual ~IEventLock() {}
 
-			virtual void SignalEvent(const T& arEvent) = 0;
-			virtual void BroadcastEvent(const T& arEvent) = 0;
-	};
+	virtual void SignalEvent(const T& arEvent) = 0;
+	virtual void BroadcastEvent(const T& arEvent) = 0;
+};
 }
 
 #endif

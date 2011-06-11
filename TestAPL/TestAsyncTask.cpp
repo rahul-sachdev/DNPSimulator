@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #include <boost/test/unit_test.hpp>
 
 
@@ -40,35 +40,37 @@ using namespace boost::posix_time;
 
 class MockTaskHandler
 {
-	public:
+public:
 
-	TaskHandler GetHandler()
-	{ return bind(&MockTaskHandler::OnTask, this, _1); }
+	TaskHandler GetHandler() {
+		return bind(&MockTaskHandler::OnTask, this, _1);
+	}
 
-	size_t Size() { return mTasks.size(); }
+	size_t Size() {
+		return mTasks.size();
+	}
 
-	ITask* Front()
-	{ 
+	ITask* Front() {
 		return (Size() > 0) ? mTasks.front() : NULL;
 	}
 
-	void Pop()
-	{ 
+	void Pop() {
 		mTasks.pop_front();
 	}
 
-	void Complete(bool aSuccess)
-	{
+	void Complete(bool aSuccess) {
 		ITask* p = mTasks.front();
 		Pop();
 		p->OnComplete(aSuccess);
 	}
 
-	private:
+private:
 
 	std::deque<ITask*> mTasks;
 
-	void OnTask(ITask* apTask) { mTasks.push_back(apTask); }
+	void OnTask(ITask* apTask) {
+		mTasks.push_back(apTask);
+	}
 };
 
 BOOST_AUTO_TEST_SUITE(AsyncTaskSuite)
@@ -78,7 +80,7 @@ BOOST_AUTO_TEST_CASE(DependencyAnalysis)
 	MockTaskHandler mth;
 	MockTimerSource mts;
 	AsyncTaskScheduler ats(&mts);
-	
+
 	AsyncTaskGroup* pGroup = ats.CreateNewGroup();
 
 	AsyncTaskBase* pT1 = pGroup->Add(1000, 1000, 0, mth.GetHandler());
@@ -87,11 +89,11 @@ BOOST_AUTO_TEST_CASE(DependencyAnalysis)
 
 	// try self-assignemt
 	BOOST_REQUIRE_THROW(pT1->AddDependency(pT1), ArgumentException);
-	
+
 	BOOST_REQUIRE(!pT2->IsDependency(pT1));
 	pT2->AddDependency(pT1);
 	BOOST_REQUIRE(pT2->IsDependency(pT1));
-	
+
 	BOOST_REQUIRE(!pT3->IsDependency(pT2));
 	pT3->AddDependency(pT2);
 	BOOST_REQUIRE(pT3->IsDependency(pT2));
@@ -109,35 +111,35 @@ BOOST_AUTO_TEST_CASE(ContinousTask)
 	MockTaskHandler mth;
 	MockTimerSource mts;
 	AsyncTaskScheduler ats(&mts);
-	
+
 	AsyncTaskGroup* pGroup = ats.CreateNewGroup();
 
 	AsyncTaskContinuous* pT1 = pGroup->AddContinuous(0, mth.GetHandler());
 	AsyncTaskBase* pT2 = pGroup->Add(1000, 1000, 1, mth.GetHandler());
 
 	pT1->Enable();
-	BOOST_REQUIRE_EQUAL(mth.Size(), 1); 
+	BOOST_REQUIRE_EQUAL(mth.Size(), 1);
 	BOOST_REQUIRE_EQUAL(mth.Front(), pT1);
 	pGroup->Enable();
 	mth.Complete(true);
 
-	BOOST_REQUIRE_EQUAL(mth.Size(), 1); 
+	BOOST_REQUIRE_EQUAL(mth.Size(), 1);
 	BOOST_REQUIRE_EQUAL(mth.Front(), pT2);
 	mth.Complete(true);
 
-	for(size_t i=0; i<5; ++i) {
-		BOOST_REQUIRE_EQUAL(mth.Size(), 1); 
+	for(size_t i = 0; i < 5; ++i) {
+		BOOST_REQUIRE_EQUAL(mth.Size(), 1);
 		BOOST_REQUIRE_EQUAL(mth.Front(), pT1);
 		mth.Complete(true);
 	}
 
-	BOOST_REQUIRE_EQUAL(mth.Size(), 1); 
+	BOOST_REQUIRE_EQUAL(mth.Size(), 1);
 	BOOST_REQUIRE_EQUAL(mth.Front(), pT1);
 	pT1->Disable();
-	
-	
 
-	
+
+
+
 }
 
 // Two groups that execute independently of one another
@@ -146,7 +148,7 @@ BOOST_AUTO_TEST_CASE(DecoupledGroupsMode)
 	MockTaskHandler mth;
 	MockTimerSource mts;
 	AsyncTaskScheduler ats(&mts);
-	
+
 	AsyncTaskGroup* pGroup1 = ats.CreateNewGroup();
 	AsyncTaskGroup* pGroup2 = ats.CreateNewGroup();
 
@@ -156,7 +158,7 @@ BOOST_AUTO_TEST_CASE(DecoupledGroupsMode)
 	pGroup1->Enable();
 	BOOST_REQUIRE_EQUAL(mth.Size(), 1);
 	pGroup2->Enable();
-	
+
 	BOOST_REQUIRE_EQUAL(mth.Size(), 2);
 	BOOST_REQUIRE_EQUAL(mth.Front(), pT1);
 	mth.Pop();
@@ -177,7 +179,7 @@ BOOST_AUTO_TEST_CASE(NonPeriodic)
 	AsyncTaskBase* pT2 = pGroup->Add(2000, 100, 0, mth.GetHandler());
 
 	pGroup->Enable();
-	
+
 	//complete both the tasks
 	BOOST_REQUIRE_EQUAL(mth.Size(), 1);
 	BOOST_REQUIRE_EQUAL(mth.Front(), pT1);
@@ -208,7 +210,7 @@ BOOST_AUTO_TEST_CASE(PriorityBreaksTies)
 	AsyncTaskBase* pT2 = pGroup->Add(100, 100, 1, mth.GetHandler()); // higher priority
 
 	pGroup->Enable();
-	
+
 	BOOST_REQUIRE_EQUAL(mth.Size(), 1);
 	BOOST_REQUIRE_EQUAL(mth.Front(), pT2);
 }
@@ -218,7 +220,7 @@ BOOST_AUTO_TEST_CASE(DependenciesEnforced)
 	MockTaskHandler mth;
 	MockTimerSource mts;
 	AsyncTaskScheduler ats(&mts);
-	
+
 	AsyncTaskGroup* pGroup = ats.CreateNewGroup();
 	AsyncTaskBase* pT1 = pGroup->Add(100, 100, 0, mth.GetHandler());
 	AsyncTaskBase* pT2 = pGroup->Add(100, 100, 0, mth.GetHandler());
@@ -239,11 +241,11 @@ BOOST_AUTO_TEST_CASE(TimerUsage)
 	AsyncTaskScheduler ats(&mts, &fake_time);
 
 	fake_time.SetToNow();
-	
+
 	AsyncTaskGroup* pGroup = ats.CreateNewGroup();
 	AsyncTaskBase* pT1 = pGroup->Add(1000, 100, 0, mth.GetHandler());
 	AsyncTaskBase* pT2 = pGroup->Add(1500, 100, 0, mth.GetHandler());
-	
+
 	pGroup->Enable();
 
 	// complete the two periodic tasks

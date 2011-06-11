@@ -22,20 +22,20 @@
 #include "Types.h"
 #include "LogTypes.h"
 
-namespace apl {
+namespace apl
+{
 
 class IPhysMonitor;
 
-struct PhysLayerSettings
-{
-	public:
+struct PhysLayerSettings {
+public:
 	PhysLayerSettings() : LogLevel(LEV_INFO), RetryTimeout(5000), mpObserver(NULL) {}
 
 
 	PhysLayerSettings(FilterLevel aLevel, millis_t aRetryTimeout, IPhysMonitor* apObserver = NULL) :
-	LogLevel(aLevel),
-	RetryTimeout(aRetryTimeout),
-	mpObserver(apObserver)
+		LogLevel(aLevel),
+		RetryTimeout(aRetryTimeout),
+		mpObserver(apObserver)
 	{}
 
 	FilterLevel LogLevel;

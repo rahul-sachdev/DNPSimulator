@@ -32,33 +32,57 @@
 #include <boost/random/mersenne_twister.hpp>
 #include <memory>
 
-namespace boost { namespace asio { class io_service; } }
+namespace boost
+{
+namespace asio
+{
+class io_service;
+}
+}
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class ObserverFanout : public IDataObserver
 {
-	public:
+public:
 
-	void Add(IDataObserver* apObserver) { mObservers.push_back(apObserver); }
+	void Add(IDataObserver* apObserver) {
+		mObservers.push_back(apObserver);
+	}
 
-	void _Start() { mBuffer.Start(); }
-	void _End()
-	{
+	void _Start() {
+		mBuffer.Start();
+	}
+	void _End() {
 		mBuffer.End();
 
-		BOOST_FOREACH(IDataObserver* p, mObservers) { mBuffer.FlushUpdates(p, false); }
+		BOOST_FOREACH(IDataObserver * p, mObservers) {
+			mBuffer.FlushUpdates(p, false);
+		}
 
 		Transaction tr(&mBuffer); mBuffer.Clear();
 	}
 
-	void _Update(const Binary& arPoint, size_t aIndex) { mBuffer.Update(arPoint, aIndex); }
-	void _Update(const Analog& arPoint, size_t aIndex) { mBuffer.Update(arPoint, aIndex); }
-	void _Update(const Counter& arPoint, size_t aIndex) { mBuffer.Update(arPoint, aIndex); }
-	void _Update(const ControlStatus& arPoint, size_t aIndex) { mBuffer.Update(arPoint, aIndex); }
-	void _Update(const SetpointStatus& arPoint, size_t aIndex) { mBuffer.Update(arPoint, aIndex); }
+	void _Update(const Binary& arPoint, size_t aIndex) {
+		mBuffer.Update(arPoint, aIndex);
+	}
+	void _Update(const Analog& arPoint, size_t aIndex) {
+		mBuffer.Update(arPoint, aIndex);
+	}
+	void _Update(const Counter& arPoint, size_t aIndex) {
+		mBuffer.Update(arPoint, aIndex);
+	}
+	void _Update(const ControlStatus& arPoint, size_t aIndex) {
+		mBuffer.Update(arPoint, aIndex);
+	}
+	void _Update(const SetpointStatus& arPoint, size_t aIndex) {
+		mBuffer.Update(arPoint, aIndex);
+	}
 
-	private:
+private:
 	ChangeBuffer<NullLock> mBuffer;
 	std::vector<IDataObserver*> mObservers;
 
@@ -66,38 +90,43 @@ class ObserverFanout : public IDataObserver
 
 class IntegrationTest : public AsyncTestObject, public AsyncStackManager
 {
-	public:
+public:
 
-		IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints);
-		virtual ~IntegrationTest();
+	IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints);
+	virtual ~IntegrationTest();
 
-		IDataObserver* GetFanout() { return &mFanout; }
+	IDataObserver* GetFanout() {
+		return &mFanout;
+	}
 
-		bool SameData();
+	bool SameData();
 
-		Binary RandomBinary();
-		Analog RandomAnalog();
-		Counter RandomCounter();
+	Binary RandomBinary();
+	Analog RandomAnalog();
+	Counter RandomCounter();
 
-	private:
+private:
 
-		void RegisterChange() { mChange = true; }
-		void AddStackPair(FilterLevel aLevel, size_t aNumPoints);
-		void Next();
+	void RegisterChange() {
+		mChange = true;
+	}
+	void AddStackPair(FilterLevel aLevel, size_t aNumPoints);
+	void Next();
 
-		ObserverFanout mFanout;
-		const boost::uint16_t M_START_PORT;
-		Logger* mpLogger;
+	ObserverFanout mFanout;
+	const boost::uint16_t M_START_PORT;
+	Logger* mpLogger;
 
-		bool mChange;
-		BoundNotifier mNotifier;
-		std::vector<FlexibleDataObserver*> mMasterObservers;
-		FlexibleDataObserver mLocalFDO;
-		MockCommandAcceptor mCmdAcceptor;
-		boost::mt19937 rng; //random number generator
+	bool mChange;
+	BoundNotifier mNotifier;
+	std::vector<FlexibleDataObserver*> mMasterObservers;
+	FlexibleDataObserver mLocalFDO;
+	MockCommandAcceptor mCmdAcceptor;
+	boost::mt19937 rng; //random number generator
 };
 
-}}
+}
+}
 
 /* vim: set ts=4 sw=4: */
 

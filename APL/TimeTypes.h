@@ -21,8 +21,9 @@
 
 #include "TimeBoost.h"
 
-namespace apl{
-	typedef TimeBoost Time;
+namespace apl
+{
+typedef TimeBoost Time;
 };
 
 #endif

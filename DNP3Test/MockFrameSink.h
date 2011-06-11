@@ -25,11 +25,14 @@
 #include <boost/function.hpp>
 #include <queue>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class MockFrameSink : public ILinkContext, public BufferTestObject
 {
-	public:
+public:
 
 	MockFrameSink();
 
@@ -73,7 +76,7 @@ class MockFrameSink : public ILinkContext, public BufferTestObject
 	// This allows us to test re-entrant behaviors
 	void AddAction(boost::function<void ()> aFunc);
 
-	private:
+private:
 
 	// Executes one action, if one is available
 	void ExecuteAction();
@@ -83,6 +86,7 @@ class MockFrameSink : public ILinkContext, public BufferTestObject
 	void Update(FuncCodes aCode, bool aIsMaster, boost::uint16_t aSrc, boost::uint16_t aDest);
 };
 
-}}
+}
+}
 
 #endif

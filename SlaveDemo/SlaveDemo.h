@@ -34,7 +34,10 @@
 #include <DNP3/SlaveStackConfig.h>
 #include <DNP3/AsyncStackManager.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /**
 	This class takes care of all the plumbing and bingings between application code and the stack.
@@ -42,16 +45,18 @@ namespace apl { namespace dnp {
 */
 class SlaveDemoBase : protected Loggable, protected ICommandHandler, private IOService, public IOServiceThread
 {
-	public:
+public:
 	SlaveDemoBase(Logger* apLogger);
 
 	// returns an interface the slave stack can use to notify when a command arrives
-	ICommandAcceptor* GetCmdAcceptor() { return &mCommandQueue; }
+	ICommandAcceptor* GetCmdAcceptor() {
+		return &mCommandQueue;
+	}
 
 	// Tell the io_service to exit
 	void Shutdown();
 
-	private:
+private:
 
 	/** OnCommandNotify has been marshalled to the application thread. It
 		causes a single command to be processed */
@@ -103,6 +108,7 @@ private:
 	IDataObserver* mpObserver;  // The data sink for updating the slave database.
 };
 
-}}
+}
+}
 
 #endif

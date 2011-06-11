@@ -23,14 +23,17 @@
 #include <APL/ToHex.h>
 
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 MockAppLayer::MockAppLayer(Logger* apLogger) :
-Loggable(apLogger),
-mNumCancel(0),
-mpUser(NULL),
-mAutoSendCallback(true),
-mIsSuccess(true)
+	Loggable(apLogger),
+	mNumCancel(0),
+	mpUser(NULL),
+	mAutoSendCallback(true),
+	mIsSuccess(true)
 {
 
 }
@@ -105,8 +108,7 @@ APDU MockAppLayer::Read()
 FunctionCodes MockAppLayer::ReadFunction()
 {
 	if(mFragments.size() == 0) throw InvalidStateException(LOCATION, "No more fragments");
-	else
-	{
+	else {
 		FunctionCodes func = mFragments.front().GetFunction();
 		mFragments.pop_front();
 		return func;
@@ -118,4 +120,5 @@ void MockAppLayer::CancelResponse()
 	++mNumCancel;
 }
 
-}}
+}
+}

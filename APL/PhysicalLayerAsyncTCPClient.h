@@ -21,20 +21,21 @@
 
 #include "PhysicalLayerAsyncBaseTCP.h"
 
-namespace apl {
+namespace apl
+{
 
-	class PhysicalLayerAsyncTCPClient : public PhysicalLayerAsyncBaseTCP
-	{
-		public:
-			PhysicalLayerAsyncTCPClient(Logger*, boost::asio::io_service* apIOService, const std::string&, boost::uint16_t aPort);
+class PhysicalLayerAsyncTCPClient : public PhysicalLayerAsyncBaseTCP
+{
+public:
+	PhysicalLayerAsyncTCPClient(Logger*, boost::asio::io_service* apIOService, const std::string&, boost::uint16_t aPort);
 
-			/* Implement the remaining actions */
-			void DoOpen();
+	/* Implement the remaining actions */
+	void DoOpen();
 
-		private:
-			std::string mAddr;
-			boost::uint16_t mPort;
-	};
+private:
+	std::string mAddr;
+	boost::uint16_t mPort;
+};
 }
 
 #endif

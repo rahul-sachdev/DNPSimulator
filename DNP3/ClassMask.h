@@ -21,28 +21,29 @@
 
 #include "PointClass.h"
 
-namespace apl { namespace dnp {
-
-struct ClassMask
+namespace apl
 {
+namespace dnp
+{
+
+struct ClassMask {
 	ClassMask(bool c1, bool c2, bool c3) :
-	class1(c1),
-	class2(c2),
-	class3(c3)
+		class1(c1),
+		class2(c2),
+		class3(c3)
 	{}
 
 	ClassMask() :
-	class1(false),
-	class2(false),
-	class3(false)
+		class1(false),
+		class2(false),
+		class3(false)
 	{}
 
 	bool class1;
 	bool class2;
 	bool class3;
 
-	static int GetMask(bool c1, bool c2, bool c3)
-	{
+	static int GetMask(bool c1, bool c2, bool c3) {
 		int m = 0;
 		if(c1) m |= PC_CLASS_1;
 		if(c2) m |= PC_CLASS_2;
@@ -50,9 +51,12 @@ struct ClassMask
 		return m;
 	}
 
-	bool IsEnabled() { return class1 || class2 || class3; }
+	bool IsEnabled() {
+		return class1 || class2 || class3;
+	}
 };
 
-}}
+}
+}
 
 #endif

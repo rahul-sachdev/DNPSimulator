@@ -24,37 +24,39 @@
 #include <APLTestTools/BufferHelpers.h>
 #include "MockFrameSink.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	class LinkReceiverTest : public LogTester
-	{
-		public:
-		LinkReceiverTest(FilterLevel aLevel = LEV_WARNING, bool aImmediate = false) :
+class LinkReceiverTest : public LogTester
+{
+public:
+	LinkReceiverTest(FilterLevel aLevel = LEV_WARNING, bool aImmediate = false) :
 		LogTester(aImmediate),
 		mSink(),
 		mRx(mLog.GetLogger(aLevel, "ReceiverTest"), &mSink)
-		{}
+	{}
 
-		void WriteData(const LinkFrame& arFrame)
-		{
-			assert(arFrame.GetSize() <= mRx.NumWriteBytes());
-			memcpy(mRx.WriteBuff(), arFrame.GetBuffer(), arFrame.GetSize());
-			mRx.OnRead(arFrame.GetSize());
-		}
+	void WriteData(const LinkFrame& arFrame) {
+		assert(arFrame.GetSize() <= mRx.NumWriteBytes());
+		memcpy(mRx.WriteBuff(), arFrame.GetBuffer(), arFrame.GetSize());
+		mRx.OnRead(arFrame.GetSize());
+	}
 
-		void WriteData(const std::string& arHex)
-		{
-			HexSequence hs(arHex);
-			assert(hs.Size() <= mRx.NumWriteBytes());
-			memcpy(mRx.WriteBuff(), hs, hs.Size());
-			mRx.OnRead(hs.Size());
-		}
+	void WriteData(const std::string& arHex) {
+		HexSequence hs(arHex);
+		assert(hs.Size() <= mRx.NumWriteBytes());
+		memcpy(mRx.WriteBuff(), hs, hs.Size());
+		mRx.OnRead(hs.Size());
+	}
 
-		MockFrameSink mSink;
-		LinkLayerReceiver mRx;
-	};
+	MockFrameSink mSink;
+	LinkLayerReceiver mRx;
+};
 
-}}
+}
+}
 
 #endif
 

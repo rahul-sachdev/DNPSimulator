@@ -21,37 +21,38 @@
 #include <sstream>
 #include <boost/numeric/conversion/converter.hpp>
 
-namespace apl {
+namespace apl
+{
 
-	bool Parsing::Get(const std::string& aArg, bool& arValue)
-	{
-		if(aArg == "true") {
-			arValue = true;
-			return true;
-		}
-		else if(aArg == "false") {
-			arValue = false;
-			return true;
-		}
-		else {
-			return Get<bool>(aArg, arValue);
-		}
+bool Parsing::Get(const std::string& aArg, bool& arValue)
+{
+	if(aArg == "true") {
+		arValue = true;
+		return true;
 	}
+	else if(aArg == "false") {
+		arValue = false;
+		return true;
+	}
+	else {
+		return Get<bool>(aArg, arValue);
+	}
+}
 
-	bool Parsing::Get(const std::string& aArg,boost::uint8_t& arValue)
-	{
-		int value;
-		if(Parsing::Get(aArg, value)) {
-			try {
-				arValue = boost::numeric::converter<boost::uint8_t,int>::convert(value);
-			}
-			catch(...) {
-				return false;
-			}
-			return true;
+bool Parsing::Get(const std::string& aArg, boost::uint8_t& arValue)
+{
+	int value;
+	if(Parsing::Get(aArg, value)) {
+		try {
+			arValue = boost::numeric::converter<boost::uint8_t, int>::convert(value);
 		}
-		else return false;
+		catch(...) {
+			return false;
+		}
+		return true;
 	}
+	else return false;
+}
 
 }
 

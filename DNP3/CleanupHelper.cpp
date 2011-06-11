@@ -23,9 +23,12 @@
 
 #include <boost/foreach.hpp>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-CleanupHelper::CleanupHelper(ITimerSource* apTimerSource) : 
+CleanupHelper::CleanupHelper(ITimerSource* apTimerSource) :
 	mpTimerSource(apTimerSource)
 {
 
@@ -46,5 +49,6 @@ void CleanupHelper::Cleanup()
 	}
 }
 
-}}
+}
+}
 

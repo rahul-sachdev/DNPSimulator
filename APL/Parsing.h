@@ -24,31 +24,30 @@
 
 #include <boost/cstdint.hpp>
 
-namespace apl {
+namespace apl
+{
 
-	class Parsing
-	{
-		public:
+class Parsing
+{
+public:
 
-		template <class T>
-		static bool Get(const std::string& aArg, T& arValue)
-		{
-			std::stringstream ss;
-			ss << aArg;
-			ss.peek();
-			return !(ss >> arValue).fail() && ss.eof();
-		}
+	template <class T>
+	static bool Get(const std::string& aArg, T& arValue) {
+		std::stringstream ss;
+		ss << aArg;
+		ss.peek();
+		return !(ss >> arValue).fail() && ss.eof();
+	}
 
-		static bool Get(const std::string& aArg, bool& arValue);
+	static bool Get(const std::string& aArg, bool& arValue);
 
-		static bool Get(const std::string& aArg, boost::uint8_t& arValue);
+	static bool Get(const std::string& aArg, boost::uint8_t& arValue);
 
-		template <class T>
-		static bool GetPositive(const std::string& aArg, T& arValue)
-		{
-			return Get(aArg,arValue) && arValue >= 0;
-		}
-	};
+	template <class T>
+	static bool GetPositive(const std::string& aArg, T& arValue) {
+		return Get(aArg, arValue) && arValue >= 0;
+	}
+};
 }
 
 #endif

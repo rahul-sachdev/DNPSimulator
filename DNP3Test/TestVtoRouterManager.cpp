@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(Construction)
 	EventLog log;
 	MockTimerSource mts;
 	MockPhysicalLayerSource mpls(log.GetLogger(LEV_INFO, "source"));
-	VtoRouterManager mgr(log.GetLogger(LEV_INFO, "test"), &mts, &mpls);	
+	VtoRouterManager mgr(log.GetLogger(LEV_INFO, "test"), &mts, &mpls);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

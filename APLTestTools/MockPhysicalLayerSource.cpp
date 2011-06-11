@@ -23,46 +23,46 @@
 #include <APL/Logger.h>
 #include <APL/Exception.h>
 
-namespace apl 
-{	
-	MockPhysicalLayerSource::MockPhysicalLayerSource(Logger* apLogger, ITimerSource* apTimerSrc) :
-		mpLogger(apLogger),
-		mpTimerSrc(apTimerSrc)
-	{
-	
-	}
+namespace apl
+{
+MockPhysicalLayerSource::MockPhysicalLayerSource(Logger* apLogger, ITimerSource* apTimerSrc) :
+	mpLogger(apLogger),
+	mpTimerSrc(apTimerSrc)
+{
 
-	MockPhysicalLayerAsync* MockPhysicalLayerSource::GetMock(const std::string& arName)
-	{
-		MockMap::iterator i = mMockMap.find(arName);
-		if(i == this->mMockMap.end()) return NULL;
-		else return i->second;
+}
+
+MockPhysicalLayerAsync* MockPhysicalLayerSource::GetMock(const std::string& arName)
+{
+	MockMap::iterator i = mMockMap.find(arName);
+	if(i == this->mMockMap.end()) return NULL;
+	else return i->second;
+}
+
+IPhysicalLayerAsync* MockPhysicalLayerSource::AcquireLayer(const std::string& arName, bool aAutoDelete)
+{
+	InstanceMap::iterator i = mInstanceMap.find(arName);
+	if(i == this->mInstanceMap.end()) {
+		Logger* pLogger = mpLogger->GetSubLogger(arName);
+		MockPhysicalLayerAsync* pLayer = new MockPhysicalLayerAsync(pLogger, mpTimerSrc);
+		PhysLayerInstance pli(pLayer, pLogger, aAutoDelete);
+		mInstanceMap.insert(InstanceMap::value_type(arName, pli));
+		mMockMap.insert(MockMap::value_type(arName, pLayer));
+		return pLayer;
 	}
-	
-	IPhysicalLayerAsync* MockPhysicalLayerSource::AcquireLayer(const std::string& arName, bool aAutoDelete)
-	{
-		InstanceMap::iterator i = mInstanceMap.find(arName);
-		if(i == this->mInstanceMap.end()) {
-			Logger* pLogger = mpLogger->GetSubLogger(arName);
-			MockPhysicalLayerAsync* pLayer = new MockPhysicalLayerAsync(pLogger, mpTimerSrc);
-			PhysLayerInstance pli(pLayer, pLogger, aAutoDelete);
-			mInstanceMap.insert(InstanceMap::value_type(arName, pli));
-			mMockMap.insert(MockMap::value_type(arName, pLayer));
-			return pLayer;
-		}
-		else throw ArgumentException(LOCATION, "Layer already acquired: " + arName);
+	else throw ArgumentException(LOCATION, "Layer already acquired: " + arName);
+}
+
+void MockPhysicalLayerSource::ReleaseLayer(const std::string& arName)
+{
+	InstanceMap::iterator i = mInstanceMap.find(arName);
+	if(i == this->mInstanceMap.end()) throw ArgumentException(LOCATION, "Layer not acquired: " + arName);
+	else {
+		i->second.Release();
+		this->mInstanceMap.erase(i);
+		this->mMockMap.erase(arName);
 	}
-	
-	void MockPhysicalLayerSource::ReleaseLayer(const std::string& arName)
-	{
-		InstanceMap::iterator i = mInstanceMap.find(arName);
-		if(i == this->mInstanceMap.end()) throw ArgumentException(LOCATION, "Layer not acquired: " + arName);
-		else {
-			i->second.Release();
-			this->mInstanceMap.erase(i);
-			this->mMockMap.erase(arName);
-		}		
-	}
+}
 
 }
 

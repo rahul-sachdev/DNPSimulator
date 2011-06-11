@@ -26,28 +26,45 @@
 
 #include <sstream>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 void AS_Base::OnLowerLayerUp(Slave*)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 void AS_Base::OnLowerLayerDown(Slave*)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 void AS_Base::OnSolSendSuccess(Slave*)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 void AS_Base::OnSolFailure(Slave*)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 void AS_Base::OnUnsolSendSuccess(Slave*)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 void AS_Base::OnUnsolFailure(Slave*)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 void AS_Base::OnRequest(Slave*, const APDU&, SequenceInfo)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 void AS_Base::OnUnknown(Slave* c)
 {
@@ -68,10 +85,8 @@ void AS_Base::OnUnsolExpiration(Slave* c)
 
 void AS_Base::SwitchOnFunction(Slave* c, AS_Base* apNext, const APDU& arRequest, SequenceInfo aSeqInfo)
 {
-	switch (arRequest.GetFunction())
-	{
-		case (FC_READ):
-		{
+	switch (arRequest.GetFunction()) {
+	case (FC_READ): {
 			ChangeState(c, apNext);
 			c->mRspContext.Reset();
 			IINField iin = c->mRspContext.Configure(arRequest);
@@ -79,46 +94,45 @@ void AS_Base::SwitchOnFunction(Slave* c, AS_Base* apNext, const APDU& arRequest,
 			c->Send(c->mResponse, iin);
 			break;
 		}
-		case (FC_WRITE):
-			ChangeState(c, apNext);
-			c->HandleWrite(arRequest);
-			c->ConfigureAndSendSimpleResponse();
-			break;
-		case (FC_SELECT):
-			ChangeState(c, apNext);
-			c->HandleSelect(arRequest, aSeqInfo);
-			c->Send(c->mResponse);
-			break;
-		case (FC_OPERATE):
-			ChangeState(c, apNext);
-			c->HandleOperate(arRequest, aSeqInfo);
-			c->Send(c->mResponse);
-			break;
-		case (FC_DIRECT_OPERATE):
-			ChangeState(c, apNext);
-			c->HandleDirectOperate(arRequest, aSeqInfo);
-			c->Send(c->mResponse);
-			break;
-		case (FC_DIRECT_OPERATE_NO_ACK):
-			c->HandleDirectOperate(arRequest, aSeqInfo);
-			break;
-		case (FC_ENABLE_UNSOLICITED):
-			ChangeState(c, apNext);
-			c->HandleEnableUnsolicited(arRequest, true);
-			c->Send(c->mResponse);
-			break;
-		case (FC_DISABLE_UNSOLICITED):
-			ChangeState(c, apNext);
-			c->HandleEnableUnsolicited(arRequest, false);
-			c->Send(c->mResponse);
-			break;
-		case (FC_DELAY_MEASURE):
-			ChangeState(c, apNext);
-			c->ConfigureDelayMeasurement(arRequest);
-			c->Send(c->mResponse);
-			break;
-		default:
-		{
+	case (FC_WRITE):
+		ChangeState(c, apNext);
+		c->HandleWrite(arRequest);
+		c->ConfigureAndSendSimpleResponse();
+		break;
+	case (FC_SELECT):
+		ChangeState(c, apNext);
+		c->HandleSelect(arRequest, aSeqInfo);
+		c->Send(c->mResponse);
+		break;
+	case (FC_OPERATE):
+		ChangeState(c, apNext);
+		c->HandleOperate(arRequest, aSeqInfo);
+		c->Send(c->mResponse);
+		break;
+	case (FC_DIRECT_OPERATE):
+		ChangeState(c, apNext);
+		c->HandleDirectOperate(arRequest, aSeqInfo);
+		c->Send(c->mResponse);
+		break;
+	case (FC_DIRECT_OPERATE_NO_ACK):
+		c->HandleDirectOperate(arRequest, aSeqInfo);
+		break;
+	case (FC_ENABLE_UNSOLICITED):
+		ChangeState(c, apNext);
+		c->HandleEnableUnsolicited(arRequest, true);
+		c->Send(c->mResponse);
+		break;
+	case (FC_DISABLE_UNSOLICITED):
+		ChangeState(c, apNext);
+		c->HandleEnableUnsolicited(arRequest, false);
+		c->Send(c->mResponse);
+		break;
+	case (FC_DELAY_MEASURE):
+		ChangeState(c, apNext);
+		c->ConfigureDelayMeasurement(arRequest);
+		c->Send(c->mResponse);
+		break;
+	default: {
 			std::ostringstream oss;
 			oss << "Function not supported: " << arRequest.GetFunction();
 			throw NotSupportedException(LOCATION, oss.str(), SERR_FUNC_NOT_SUPPORTED);
@@ -130,19 +144,16 @@ void AS_Base::DoRequest(Slave* c, AS_Base* apNext, const APDU& arAPDU, SequenceI
 {
 	c->mRspIIN.Zero();
 
-	try
-	{
+	try {
 		this->SwitchOnFunction(c, apNext, arAPDU, aSeqInfo);
 	}
-	catch (ParameterException ex)
-	{
+	catch (ParameterException ex) {
 		ChangeState(c, apNext);
 		ERROR_LOGGER_BLOCK(c->mpLogger, LEV_ERROR, ex.Message(), ex.ErrorCode());
 		c->mRspIIN.SetParameterError(true);
 		c->ConfigureAndSendSimpleResponse();
 	}
-	catch (NotSupportedException ex)
-	{
+	catch (NotSupportedException ex) {
 		ChangeState(c, apNext);
 		ERROR_LOGGER_BLOCK(c->mpLogger, LEV_ERROR, ex.Message(), ex.ErrorCode());
 		c->mRspIIN.SetFuncNotSupported(true);
@@ -157,8 +168,7 @@ void AS_Base::DoRequest(Slave* c, AS_Base* apNext, const APDU& arAPDU, SequenceI
 
 void AS_Base::ChangeState(Slave* c, AS_Base* apState)
 {
-	if (apState == AS_Closed::Inst() && c->mpTimeTimer)
-	{
+	if (apState == AS_Closed::Inst() && c->mpTimeTimer) {
 		c->mpTimeTimer->Cancel();
 		c->mpTimeTimer = NULL;
 	}
@@ -214,16 +224,13 @@ void AS_Idle::OnDataUpdate(Slave* c)
 	c->FlushUpdates();
 
 	// start the unsol timer or act immediately if there's no pack timer
-	if (!c->mConfig.mDisableUnsol && c->mStartupNullUnsol && c->mRspContext.HasEvents(c->mConfig.mUnsolMask))
-	{
-		if (c->mConfig.mUnsolPackDelay == 0)
-		{
+	if (!c->mConfig.mDisableUnsol && c->mStartupNullUnsol && c->mRspContext.HasEvents(c->mConfig.mUnsolMask)) {
+		if (c->mConfig.mUnsolPackDelay == 0) {
 			ChangeState(c, AS_WaitForUnsolSuccess::Inst());
 			c->mRspContext.LoadUnsol(c->mUnsol, c->mIIN, c->mConfig.mUnsolMask);
 			c->SendUnsolicited(c->mUnsol);
 		}
-		else if (c->mpUnsolTimer == NULL)
-		{
+		else if (c->mpUnsolTimer == NULL) {
 			c->StartUnsolTimer(c->mConfig.mUnsolPackDelay);
 		}
 	}
@@ -231,17 +238,14 @@ void AS_Idle::OnDataUpdate(Slave* c)
 
 void AS_Idle::OnUnsolExpiration(Slave* c)
 {
-	if (c->mStartupNullUnsol)
-	{
-		if (c->mRspContext.HasEvents(c->mConfig.mUnsolMask))
-		{
+	if (c->mStartupNullUnsol) {
+		if (c->mRspContext.HasEvents(c->mConfig.mUnsolMask)) {
 			ChangeState(c, AS_WaitForUnsolSuccess::Inst());
 			c->mRspContext.LoadUnsol(c->mUnsol, c->mIIN, c->mConfig.mUnsolMask);
 			c->SendUnsolicited(c->mUnsol);
 		}
 	}
-	else
-	{
+	else {
 		// do the startup null unsol task
 		ChangeState(c, AS_WaitForUnsolSuccess::Inst());
 		c->mRspContext.LoadUnsol(c->mUnsol, c->mIIN, ClassMask(false, false, false));
@@ -270,12 +274,10 @@ void AS_WaitForRspSuccess::OnSolSendSuccess(Slave* c)
 {
 	c->mRspContext.ClearWritten();
 
-	if (c->mRspContext.IsComplete())
-	{
+	if (c->mRspContext.IsComplete()) {
 		ChangeState(c, AS_Idle::Inst());
 	}
-	else
-	{
+	else {
 		c->mRspContext.LoadResponse(c->mResponse);
 		c->Send(c->mResponse);
 	}
@@ -313,15 +315,13 @@ void AS_WaitForUnsolSuccess::OnUnsolSendSuccess(Slave* c)
 
 void AS_WaitForUnsolSuccess::OnRequest(Slave* c, const APDU& arAPDU, SequenceInfo aSeqInfo)
 {
-	if (arAPDU.GetFunction() == FC_READ)
-	{
+	if (arAPDU.GetFunction() == FC_READ) {
 		//read requests should be defered until after the unsol
 		c->mRequest = arAPDU;
 		c->mSeqInfo = aSeqInfo;
 		c->mDeferredRequest = true;
 	}
-	else
-	{
+	else {
 		// all other requests should be handled immediately
 		c->mDeferredRequest = false;
 		this->DoRequest(c, AS_WaitForSolUnsolSuccess::Inst(), arAPDU, aSeqInfo);
@@ -366,6 +366,7 @@ void AS_WaitForSolUnsolSuccess::OnUnsolSendSuccess(Slave* c)
 	this->DoUnsolSuccess(c);
 }
 
-}} //ens ns
+}
+} //ens ns
 
 /* vim: set ts=4 sw=4: */

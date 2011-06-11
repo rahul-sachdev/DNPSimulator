@@ -22,18 +22,21 @@
 #include <APL/Types.h>
 #include <stddef.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 // @section DESCRIPTION Interface that receives parsed FT3 frame information
 class IFrameSink
 {
-  public:
+public:
 
-	 virtual ~IFrameSink() {}
+	virtual ~IFrameSink() {}
 
 	//	Sec to Pri
 
-    virtual void Ack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc) = 0;
+	virtual void Ack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc) = 0;
 	virtual void Nack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc) = 0;
 	virtual void LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc) = 0;
 	virtual void NotSupported (bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc) = 0;
@@ -48,7 +51,8 @@ class IFrameSink
 	virtual void UnconfirmedUserData(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength) = 0;
 };
 
-}}
+}
+}
 
 #endif
 

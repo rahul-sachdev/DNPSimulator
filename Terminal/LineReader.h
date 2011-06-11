@@ -6,7 +6,8 @@
 #include <APL/CopyableBuffer.h>
 #include <string>
 
-namespace apl {
+namespace apl
+{
 
 class IPhysicalLayerAsync;
 class ITimerSource;
@@ -15,25 +16,25 @@ class ITimerSource;
 */
 class LineReader : public AsyncPhysLayerMonitor, private Uncopyable
 {
-	public:
-		LineReader(Logger* apLogger, IPhysicalLayerAsync* apPhysical, ITimerSource* apTimerSrc, size_t aBuffSize);
+public:
+	LineReader(Logger* apLogger, IPhysicalLayerAsync* apPhysical, ITimerSource* apTimerSrc, size_t aBuffSize);
 
-		virtual void AcceptLine(const std::string&) = 0;
-		virtual void _Up() = 0;
-		virtual void _Down() = 0;
+	virtual void AcceptLine(const std::string&) = 0;
+	virtual void _Up() = 0;
+	virtual void _Down() = 0;
 
-	private:
-		CopyableBuffer mBuffer;
-		size_t mNumBytes;
-		bool mHasCR;
+private:
+	CopyableBuffer mBuffer;
+	size_t mNumBytes;
+	bool mHasCR;
 
-		void Read();
-		void OnPhysicalLayerOpen();
-		void OnPhysicalLayerClose();
-		void Reset();
+	void Read();
+	void OnPhysicalLayerOpen();
+	void OnPhysicalLayerClose();
+	void Reset();
 
-		void _OnReceive(const boost::uint8_t*, size_t aNum);
-		void ReadBuffer();
+	void _OnReceive(const boost::uint8_t*, size_t aNum);
+	void ReadBuffer();
 };
 
 

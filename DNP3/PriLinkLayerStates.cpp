@@ -25,29 +25,46 @@
 #include "DNPConstants.h"
 #include "LinkLayer.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 ////////////////////////////////////////
 // PriStateBase
 ////////////////////////////////////////
 
 void PriStateBase::Ack(LinkLayer* apLL, bool aIsRcvBuffFull)
-{ ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "Frame context not understood", DLERR_UNEXPECTED_FRAME); }
+{
+	ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "Frame context not understood", DLERR_UNEXPECTED_FRAME);
+}
 void PriStateBase::Nack(LinkLayer* apLL, bool aIsRcvBuffFull)
-{ ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "Frame context not understood", DLERR_UNEXPECTED_FRAME); }
+{
+	ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "Frame context not understood", DLERR_UNEXPECTED_FRAME);
+}
 void PriStateBase::LinkStatus(LinkLayer* apLL, bool aIsRcvBuffFull)
-{ ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "Frame context not understood", DLERR_UNEXPECTED_FRAME); }
+{
+	ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "Frame context not understood", DLERR_UNEXPECTED_FRAME);
+}
 void PriStateBase::NotSupported (LinkLayer* apLL, bool aIsRcvBuffFull)
-{ ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "Frame context not understood", DLERR_UNEXPECTED_FRAME); }
+{
+	ERROR_LOGGER_BLOCK(apLL->GetLogger(), LEV_WARNING, "Frame context not understood", DLERR_UNEXPECTED_FRAME);
+}
 
 void PriStateBase::OnTimeout(LinkLayer* apLL)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 void PriStateBase::SendConfirmed(LinkLayer*, const boost::uint8_t*, size_t)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 void PriStateBase::SendUnconfirmed(LinkLayer*, const boost::uint8_t*, size_t)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 ////////////////////////////////////////////////////////
 //	Class PLLS_SecNotResetIdle
@@ -165,4 +182,5 @@ void PLLS_ConfDataWait::OnTimeout(LinkLayer* apLL)
 	}
 }
 
-}} //end namepsace
+}
+} //end namepsace

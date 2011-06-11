@@ -27,41 +27,42 @@
 
 #include "BufferTestObject.h"
 
-namespace apl {
+namespace apl
+{
 
-	class MockTimerSource;
-	class ITimer;
+class MockTimerSource;
+class ITimer;
 
-	// Provides a backend for testing physical layers
-	class MockPhysicalLayerAsyncTS : public PhysicalLayerAsyncBase, public BufferTestObject
-	{
-		public:
-			MockPhysicalLayerAsyncTS(Logger*, MockTimerSource*);
+// Provides a backend for testing physical layers
+class MockPhysicalLayerAsyncTS : public PhysicalLayerAsyncBase, public BufferTestObject
+{
+public:
+	MockPhysicalLayerAsyncTS(Logger*, MockTimerSource*);
 
-			void WriteToLayer(const boost::uint8_t* apData, size_t aNumBytes);
-			void Advance();
+	void WriteToLayer(const boost::uint8_t* apData, size_t aNumBytes);
+	void Advance();
 
-		private:
+private:
 
-			void DoOpen();
-			void DoClose();
-			void DoOpeningClose();
-			void DoOpenSuccess();
-			void DoOpenFailure();
-			void DoAsyncRead(boost::uint8_t* apBuff, size_t aNumBytes);
-			void DoAsyncWrite(const boost::uint8_t* apData, size_t aNumBytes);
+	void DoOpen();
+	void DoClose();
+	void DoOpeningClose();
+	void DoOpenSuccess();
+	void DoOpenFailure();
+	void DoAsyncRead(boost::uint8_t* apBuff, size_t aNumBytes);
+	void DoAsyncWrite(const boost::uint8_t* apData, size_t aNumBytes);
 
-			void Reset();
-			void CheckForRead();
+	void Reset();
+	void CheckForRead();
 
-			MockTimerSource* mpTimerSrc;
-			ITimer* mpOpenTimer;
-			boost::system::error_code mSuccessCode;
-			boost::system::error_code mErrorCode;
-			boost::uint8_t* mpBuff;
-			size_t mNumBytes;
-			ShiftableBuffer mWriteBuffer;
-	};
+	MockTimerSource* mpTimerSrc;
+	ITimer* mpOpenTimer;
+	boost::system::error_code mSuccessCode;
+	boost::system::error_code mErrorCode;
+	boost::uint8_t* mpBuff;
+	size_t mNumBytes;
+	ShiftableBuffer mWriteBuffer;
+};
 }
 
 #endif

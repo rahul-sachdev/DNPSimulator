@@ -25,15 +25,18 @@
 
 using namespace std;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-LinkHeader::LinkHeader(){}
+LinkHeader::LinkHeader() {}
 
 LinkHeader::LinkHeader(boost::uint8_t aLen, boost::uint16_t aSrc, boost::uint16_t aDest, bool aMaster, bool aFcvDfc, bool aFcb, FuncCodes aCode) :
-length(aLen),
-src(aSrc),
-dest(aDest),
-ctrl(ControlByte(aMaster, aFcb, aFcvDfc, aCode))
+	length(aLen),
+	src(aSrc),
+	dest(aDest),
+	ctrl(ControlByte(aMaster, aFcb, aFcvDfc, aCode))
 {
 
 }
@@ -79,11 +82,11 @@ void LinkHeader::Read(const boost::uint8_t* apBuff)
 void LinkHeader::Write(boost::uint8_t* apBuff) const
 {
 	apBuff[LI_START_05] = 0x05;
-	apBuff[LI_START_64]= 0x64;
+	apBuff[LI_START_64] = 0x64;
 
 	apBuff[LI_LENGTH] = length;
-	UInt16LE::Write(apBuff+LI_DESTINATION, dest);
-	UInt16LE::Write(apBuff+LI_SOURCE, src);
+	UInt16LE::Write(apBuff + LI_DESTINATION, dest);
+	UInt16LE::Write(apBuff + LI_SOURCE, src);
 	apBuff[LI_CONTROL] = ctrl;
 
 	DNPCrc::AddCrc(apBuff, LI_CRC);
@@ -95,14 +98,12 @@ std::string LinkHeader::ToString() const
 	oss << "DL " << this->GetSrc() << " to " << this->GetDest();
 	oss << " : " << FuncCodeToString(this->GetFuncEnum());
 	oss << " PayloadSize: " << (this->GetLength() - 5);
-	oss << ((this->IsFromMaster())?" From Master":" From Outstation");
-	if(this->IsPriToSec())
-	{
+	oss << ((this->IsFromMaster()) ? " From Master" : " From Outstation");
+	if(this->IsPriToSec()) {
 		oss << " Pri->Sec";
 		oss << " FCB=" << this->IsFcbSet() << " FCV=" << this->IsFcvDfcSet();
 	}
-	else
-	{
+	else {
 		oss << " Sec->Pri";
 		if(this->IsFcbSet()) oss << " ERROR: FCB not Blank!!";
 		oss << " DFC=" << this->IsFcvDfcSet();
@@ -111,5 +112,6 @@ std::string LinkHeader::ToString() const
 	return oss.str();
 }
 
-}}
+}
+}
 

@@ -19,24 +19,24 @@
 #ifndef __I_PHYS_MONITOR_H_
 #define __I_PHYS_MONITOR_H_
 
-namespace apl {
+namespace apl
+{
 
 class IPhysMonitor
 {
-	public:
+public:
 
-		enum State
-		{
-			Closed,		// layer is offline and idle
-			Opening,	// layer is trying to open
-			Waiting,
-			Open,		// layer is open
-			Stopped		// stopped and will no longer dispatch events
-		};
+	enum State {
+	    Closed,		// layer is offline and idle
+	    Opening,	// layer is trying to open
+	    Waiting,
+	    Open,		// layer is open
+	    Stopped		// stopped and will no longer dispatch events
+	};
 
-		virtual ~IPhysMonitor(){}
+	virtual ~IPhysMonitor() {}
 
-		virtual void OnStateChange(State) = 0;
+	virtual void OnStateChange(State) = 0;
 
 };
 

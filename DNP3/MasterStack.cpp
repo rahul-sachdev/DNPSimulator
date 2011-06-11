@@ -20,7 +20,10 @@
 
 #include <APL/Logger.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 MasterStack::MasterStack(Logger* apLogger, ITimerSource* apTimerSrc, IDataObserver* apPublisher, AsyncTaskGroup* apTaskGroup, const MasterStackConfig& arCfg) :
 	Stack(apLogger, apTimerSrc, arCfg.app, arCfg.link),
@@ -40,4 +43,5 @@ IVtoReader* MasterStack::GetVtoReader()
 }
 
 
-}}
+}
+}

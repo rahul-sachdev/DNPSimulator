@@ -29,59 +29,59 @@ namespace apl
 {
 
 
-	LogEntry::LogEntry( FilterLevel aLevel, const std::string& aDeviceName, const std::string& aLocation, const std::string& aMessage, int aErrorCode)
-		:
-		mFilterLevel(aLevel),
-		mDeviceName(aDeviceName),
-		mLocation(aLocation),
-		mMessage(aMessage),
-		mTime(TimeStamp::GetUTCTimeStamp()),
-		mErrorCode(aErrorCode)
-	{
-	}
+LogEntry::LogEntry( FilterLevel aLevel, const std::string& aDeviceName, const std::string& aLocation, const std::string& aMessage, int aErrorCode)
+	:
+	mFilterLevel(aLevel),
+	mDeviceName(aDeviceName),
+	mLocation(aLocation),
+	mMessage(aMessage),
+	mTime(TimeStamp::GetUTCTimeStamp()),
+	mErrorCode(aErrorCode)
+{
+}
 
-	void LogEntry :: AddKeyValue(const std::string& arKey, const std::string& arValue)
-	{
-		mKeyValues.insert(KeyValueMap::value_type(arKey, arValue));
-	}
+void LogEntry :: AddKeyValue(const std::string& arKey, const std::string& arValue)
+{
+	mKeyValues.insert(KeyValueMap::value_type(arKey, arValue));
+}
 
-	void LogEntry :: AddValue(const std::string& arKey, int aValue)
-	{
-		this->AddAnyValue(arKey, aValue);
-	}
-	
-	void LogEntry :: AddValue(const std::string& arKey, const std::string& arValue)
-	{
-		this->AddKeyValue(arKey, arValue);
-	}
+void LogEntry :: AddValue(const std::string& arKey, int aValue)
+{
+	this->AddAnyValue(arKey, aValue);
+}
 
-	bool LogEntry :: GetValue(const std::string& arKey, std::string& arValue) const
-	{
-		KeyValueMap::const_iterator i = mKeyValues.find(arKey);
-		if(i == mKeyValues.end()) return false;
-		else {
-			arValue = i->second;
-			return true;
-		}		
+void LogEntry :: AddValue(const std::string& arKey, const std::string& arValue)
+{
+	this->AddKeyValue(arKey, arValue);
+}
+
+bool LogEntry :: GetValue(const std::string& arKey, std::string& arValue) const
+{
+	KeyValueMap::const_iterator i = mKeyValues.find(arKey);
+	if(i == mKeyValues.end()) return false;
+	else {
+		arValue = i->second;
+		return true;
 	}
+}
 
-	bool LogEntry :: GetValue(const std::string& arKey, int& arValue) const
-	{
-		return GetAnyValue<int>(arKey, arValue);
-	}
+bool LogEntry :: GetValue(const std::string& arKey, int& arValue) const
+{
+	return GetAnyValue<int>(arKey, arValue);
+}
 
-	string LogEntry :: LogString() const
-	{
-		ostringstream oss;
-		oss << GetTimeString() << " - "
-			<< LogTypes::GetLevelString( mFilterLevel ) << " - "
-			<< mDeviceName << " - "
-			<< mMessage;
+string LogEntry :: LogString() const
+{
+	ostringstream oss;
+	oss << GetTimeString() << " - "
+	    << LogTypes::GetLevelString( mFilterLevel ) << " - "
+	    << mDeviceName << " - "
+	    << mMessage;
 
-		if(this->GetErrorCode() != -1) oss << " - " << this->GetErrorCode();
+	if(this->GetErrorCode() != -1) oss << " - " << this->GetErrorCode();
 
-		return oss.str();
-	}
+	return oss.str();
+}
 
 }
 

@@ -23,33 +23,42 @@
 #include <string>
 #include <vector>
 
-namespace apl {
-	class ByteStr;
+namespace apl
+{
+class ByteStr;
 
 class BufferTestObject
 {
-	static const size_t MAX_SIZE = 1024*1024;
+	static const size_t MAX_SIZE = 1024 * 1024;
 
-	public:
-		BufferTestObject();
-		~BufferTestObject();
+public:
+	BufferTestObject();
+	~BufferTestObject();
 
-		bool BufferEquals(const boost::uint8_t*, size_t);
-		bool BufferEquals(const std::string& arData);
-		bool BufferEqualsString(const std::string& arData);
-		bool BufferContains(const std::string& arData);
-		bool IsBufferEmpty() { return mBuffer.size() == 0; }
-		void ClearBuffer();
-		size_t Size() { return mBuffer.size(); }
-		bool SizeEquals(size_t aNum) { return aNum == Size(); }
-		size_t NumWrites() { return mNumWrites; }
+	bool BufferEquals(const boost::uint8_t*, size_t);
+	bool BufferEquals(const std::string& arData);
+	bool BufferEqualsString(const std::string& arData);
+	bool BufferContains(const std::string& arData);
+	bool IsBufferEmpty() {
+		return mBuffer.size() == 0;
+	}
+	void ClearBuffer();
+	size_t Size() {
+		return mBuffer.size();
+	}
+	bool SizeEquals(size_t aNum) {
+		return aNum == Size();
+	}
+	size_t NumWrites() {
+		return mNumWrites;
+	}
 
-	protected:
-		void WriteToBuffer(const boost::uint8_t*, size_t);
+protected:
+	void WriteToBuffer(const boost::uint8_t*, size_t);
 
-	private:
-		size_t mNumWrites;
-		std::vector<boost::uint8_t> mBuffer;
+private:
+	size_t mNumWrites;
+	std::vector<boost::uint8_t> mBuffer;
 };
 
 }

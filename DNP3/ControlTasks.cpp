@@ -23,20 +23,23 @@
 #include <boost/bind.hpp>
 #include <APL/Logger.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 ControlTaskBase::ControlTaskBase(Logger* apLogger) :
-MasterTaskBase(apLogger),
-mState(INVALID)
+	MasterTaskBase(apLogger),
+	mState(INVALID)
 {}
 
 bool ControlTaskBase::GetSelectBit()
 {
 	switch(mState) {
-		case(SELECT): return true;
-		case(OPERATE): return false;
-		default:
-			throw InvalidStateException(LOCATION, "INVALID");
+	case(SELECT): return true;
+	case(OPERATE): return false;
+	default:
+		throw InvalidStateException(LOCATION, "INVALID");
 	}
 }
 
@@ -74,27 +77,29 @@ TaskResult ControlTaskBase::_OnFinalResponse(const APDU& arAPDU)
 /* -------- BinaryOutputTask -------- */
 
 BinaryOutputTask::BinaryOutputTask(Logger* apLogger) :
-ControlTask<BinaryOutput>(apLogger)
+	ControlTask<BinaryOutput>(apLogger)
 {}
 
 CommandObject<BinaryOutput>* BinaryOutputTask::GetObject(const BinaryOutput&)
-{ return Group12Var1::Inst(); }
+{
+	return Group12Var1::Inst();
+}
 
 /* -------- SetpointTask -------- */
 
 SetpointTask::SetpointTask(Logger* apLogger) :
-ControlTask<Setpoint>(apLogger)
+	ControlTask<Setpoint>(apLogger)
 {}
 
 CommandObject<Setpoint>* SetpointTask::GetOptimalEncoder(SetpointEncodingType aType)
 {
 	switch(aType) {
-		case SPET_INT16: return Group41Var2::Inst();
-		case SPET_INT32: return Group41Var1::Inst();
-		case SPET_FLOAT: return Group41Var3::Inst();
-		case SPET_DOUBLE: return Group41Var4::Inst();
-		default:
-			throw ArgumentException(LOCATION, "Enum not handled");
+	case SPET_INT16: return Group41Var2::Inst();
+	case SPET_INT32: return Group41Var1::Inst();
+	case SPET_FLOAT: return Group41Var3::Inst();
+	case SPET_DOUBLE: return Group41Var4::Inst();
+	default:
+		throw ArgumentException(LOCATION, "Enum not handled");
 	}
 }
 
@@ -105,4 +110,5 @@ CommandObject<Setpoint>* SetpointTask::GetObject(const Setpoint& arSetpoint)
 
 
 
-}} //ens ns
+}
+} //ens ns

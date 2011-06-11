@@ -24,67 +24,74 @@
 
 #include "BufferTestObject.h"
 
-namespace apl {
+namespace apl
+{
 
 class MockUpperLayer : public IUpperLayer, public BufferTestObject
 {
-	public:
+public:
 
-		typedef boost::function<void (const boost::uint8_t*, size_t)> OnReceiveHandler;
+	typedef boost::function<void (const boost::uint8_t*, size_t)> OnReceiveHandler;
 
-		struct State
-		{
+	struct State {
 
-			State() { Reset(); }
-
-			size_t mSuccessCnt;
-			size_t mFailureCnt;
-			size_t mNumLayerUp;
-			size_t mNumLayerDown;
-
-			void Reset()
-			{
-				mSuccessCnt = mFailureCnt = mNumLayerUp = mNumLayerDown = 0;
-			}
-		};
-
-		MockUpperLayer(Logger*);
-		virtual ~MockUpperLayer(){}
-
-		void SendDown(const std::string&);
-		void SendDown(const boost::uint8_t* apData, size_t aNumBytes);
-
-		bool CountersEqual(size_t success, size_t failure)
-		{
-			return mState.mSuccessCnt == success && mState.mFailureCnt == failure;
+		State() {
+			Reset();
 		}
 
-		bool StateEquals(const State& s)
-		{
-			return (mState.mSuccessCnt == s.mSuccessCnt)
-				 && (mState.mFailureCnt == s.mFailureCnt)
-				 && (mState.mNumLayerUp == s.mNumLayerUp)
-				 && (mState.mNumLayerDown == s.mNumLayerDown);
+		size_t mSuccessCnt;
+		size_t mFailureCnt;
+		size_t mNumLayerUp;
+		size_t mNumLayerDown;
+
+		void Reset() {
+			mSuccessCnt = mFailureCnt = mNumLayerUp = mNumLayerDown = 0;
 		}
+	};
 
-		void Reset() { mState.Reset(); }
-		State GetState() { return mState; }
+	MockUpperLayer(Logger*);
+	virtual ~MockUpperLayer() {}
 
-		void SetReceiveHandler(const OnReceiveHandler& arHandler) { mOnReceiveHandler = arHandler; }
+	void SendDown(const std::string&);
+	void SendDown(const boost::uint8_t* apData, size_t aNumBytes);
 
-		private:
+	bool CountersEqual(size_t success, size_t failure) {
+		return mState.mSuccessCnt == success && mState.mFailureCnt == failure;
+	}
 
-		virtual std::string RecvString() const { return "MockUpperLayer <-"; }
+	bool StateEquals(const State& s) {
+		return (mState.mSuccessCnt == s.mSuccessCnt)
+		       && (mState.mFailureCnt == s.mFailureCnt)
+		       && (mState.mNumLayerUp == s.mNumLayerUp)
+		       && (mState.mNumLayerDown == s.mNumLayerDown);
+	}
 
-		OnReceiveHandler mOnReceiveHandler;
-		State mState;
+	void Reset() {
+		mState.Reset();
+	}
+	State GetState() {
+		return mState;
+	}
 
-		//these are the NVII delegates
-		void _OnReceive(const boost::uint8_t*, size_t);
-		void _OnSendSuccess();
-		void _OnSendFailure();
-		void _OnLowerLayerUp();
-		void _OnLowerLayerDown();
+	void SetReceiveHandler(const OnReceiveHandler& arHandler) {
+		mOnReceiveHandler = arHandler;
+	}
+
+private:
+
+	virtual std::string RecvString() const {
+		return "MockUpperLayer <-";
+	}
+
+	OnReceiveHandler mOnReceiveHandler;
+	State mState;
+
+	//these are the NVII delegates
+	void _OnReceive(const boost::uint8_t*, size_t);
+	void _OnSendSuccess();
+	void _OnSendFailure();
+	void _OnLowerLayerUp();
+	void _OnLowerLayerDown();
 };
 
 

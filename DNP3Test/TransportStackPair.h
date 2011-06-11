@@ -19,9 +19,13 @@
 #ifndef __TRANSPORT_STACK_PAIR_H_
 #define __TRANSPORT_STACK_PAIR_H_
 
-namespace boost { namespace asio {
-	class io_service;
-}}
+namespace boost
+{
+namespace asio
+{
+class io_service;
+}
+}
 
 
 #include <APL/PhysicalLayerAsyncTCPClient.h>
@@ -30,33 +34,37 @@ namespace boost { namespace asio {
 
 #include "TransportIntegrationStack.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class TransportStackPair
 {
-	public:
-		TransportStackPair(
-			LinkConfig aClientCfg,
-			LinkConfig aServerCfg,
-			Logger* apLogger,
-			boost::asio::io_service* apService,
-			ITimerSource* apTimerSrc,
-			boost::uint16_t aPort);
+public:
+	TransportStackPair(
+	    LinkConfig aClientCfg,
+	    LinkConfig aServerCfg,
+	    Logger* apLogger,
+	    boost::asio::io_service* apService,
+	    ITimerSource* apTimerSrc,
+	    boost::uint16_t aPort);
 
-		void Start();
+	void Start();
 
-		//test helper functions
-		bool BothLayersUp();
+	//test helper functions
+	bool BothLayersUp();
 
-	public:
-		PhysicalLayerAsyncTCPClient mClient;
-		PhysicalLayerAsyncTCPServer mServer;
+public:
+	PhysicalLayerAsyncTCPClient mClient;
+	PhysicalLayerAsyncTCPServer mServer;
 
-		TransportIntegrationStack mClientStack;
-		TransportIntegrationStack mServerStack;
+	TransportIntegrationStack mClientStack;
+	TransportIntegrationStack mServerStack;
 
 };
 
-}}
+}
+}
 
 #endif

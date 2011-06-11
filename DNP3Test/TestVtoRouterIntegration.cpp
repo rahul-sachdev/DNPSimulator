@@ -41,27 +41,26 @@ using namespace apl;
 using namespace apl::dnp;
 
 /** Platforms have different reserved port ranges */
- 
+
 #if defined(WIN32)
-	/* Windows platform */
-	#define PORT_VALUE			(50000)
+/* Windows platform */
+#define PORT_VALUE			(50000)
 #else
-	/* Generic Linux platform */
-	#define PORT_VALUE			(30000)	
+/* Generic Linux platform */
+#define PORT_VALUE			(30000)
 #endif
 
 class MockClientConnection : public AsyncPhysLayerMonitor
 {
 public:
 	MockClientConnection(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimer, millis_t aOpenRetry) :
-	AsyncPhysLayerMonitor(apLogger, apPhys, apTimer, aOpenRetry),
-	Loggable(apLogger),
-	mOpens(0),
-	mCloses(0),
-	mOpenFailures(0),
-	mRead(1024),
-	mLastRead(0)
-	{
+		AsyncPhysLayerMonitor(apLogger, apPhys, apTimer, aOpenRetry),
+		Loggable(apLogger),
+		mOpens(0),
+		mCloses(0),
+		mOpenFailures(0),
+		mRead(1024),
+		mLastRead(0) {
 		mState.push(IPhysMonitor::Closed);
 	}
 
@@ -73,76 +72,79 @@ public:
 	CopyableBuffer mLastRead;
 
 	std::queue< IPhysMonitor::State > mState;
-	
-	void OnPhysicalLayerOpen(){
+
+	void OnPhysicalLayerOpen() {
 		mOpens++;
 		mpPhys->AsyncRead(mRead, mRead.Size());
 	}
-	void OnPhysicalLayerClose(){
+	void OnPhysicalLayerClose() {
 		mCloses++;
 	}
 
-	void OnPhysicalLayerOpenFailure(){
+	void OnPhysicalLayerOpenFailure() {
 		mOpenFailures++;
 	}
 
-	void OnStateChange(IPhysMonitor::State aState){
+	void OnStateChange(IPhysMonitor::State aState) {
 		LOG_BLOCK(LEV_INFO, "State: " << aState);
 		mState.push(aState);
 	}
 
-	void _OnReceive(const boost::uint8_t* apData, size_t aNumBytes){
-		CopyableBuffer cb(apData,aNumBytes);
+	void _OnReceive(const boost::uint8_t* apData, size_t aNumBytes) {
+		CopyableBuffer cb(apData, aNumBytes);
 		mLastRead = cb;
 		mpPhys->AsyncRead(mRead, mRead.Size());
 	}
 
-	void WriteData(CopyableBuffer& aData){
+	void WriteData(CopyableBuffer& aData) {
 		mpPhys->AsyncWrite(aData, aData.Size());
 	}
 
-	void _OnSendSuccess(void){}
-	void _OnSendFailure(void){}
+	void _OnSendSuccess(void) {}
+	void _OnSendFailure(void) {}
 
-	bool StateIs(IPhysMonitor::State aState) { 
+	bool StateIs(IPhysMonitor::State aState) {
 		if(mState.empty()) return false;
 		bool matchedState = mState.front() == aState;
 		if(mState.size() > 1) mState.pop();
-		return matchedState; 
+		return matchedState;
 	}
-	bool CountsAre(size_t aOpens, size_t aCloses, size_t aOpenFails) { return mOpens == aOpens && mCloses == aCloses && mOpenFailures == aOpenFails; }
-	bool DataIs(CopyableBuffer& cb) { return cb == mLastRead;}
+	bool CountsAre(size_t aOpens, size_t aCloses, size_t aOpenFails) {
+		return mOpens == aOpens && mCloses == aCloses && mOpenFailures == aOpenFails;
+	}
+	bool DataIs(CopyableBuffer& cb) {
+		return cb == mLastRead;
+	}
 
 };
 
-class VtoTestStack{
+class VtoTestStack
+{
 public:
 	VtoTestStack(FilterLevel level = LEV_INFO, boost::uint16_t port = PORT_VALUE) :
-	  main(log.GetLogger(level, "main")),
-	  ltf(&log, "integration.log", true),
-	  slaveMgr(log.GetLogger(level, "slave"), false),
-	  masterMgr(log.GetLogger(level, "master"), false),
-	  timerSource(testObj.GetService()),
-	  client(log.GetLogger(level, "local"), testObj.GetService(), "127.0.0.1", port+20),
-	  server(log.GetLogger(level, "remote"), testObj.GetService(), "0.0.0.0", port+10),
-	  loopback(log.GetLogger(level, "loopback"), &server, &timerSource),
-	  local(log.GetLogger(level, "mock"), &client, &timerSource, 50)
-	{
+		main(log.GetLogger(level, "main")),
+		ltf(&log, "integration.log", true),
+		slaveMgr(log.GetLogger(level, "slave"), false),
+		masterMgr(log.GetLogger(level, "master"), false),
+		timerSource(testObj.GetService()),
+		client(log.GetLogger(level, "local"), testObj.GetService(), "127.0.0.1", port + 20),
+		server(log.GetLogger(level, "remote"), testObj.GetService(), "0.0.0.0", port + 10),
+		loopback(log.GetLogger(level, "loopback"), &server, &timerSource),
+		local(log.GetLogger(level, "mock"), &client, &timerSource, 50) {
 		//log.AddLogSubscriber(LogToStdio::Inst());
 
 		slaveMgr.AddTCPServer("dnp_server", PhysLayerSettings(), "127.0.0.1", port);
-		slaveMgr.AddTCPClient("vto_client", PhysLayerSettings(), "127.0.0.1", port+10);
+		slaveMgr.AddTCPClient("vto_client", PhysLayerSettings(), "127.0.0.1", port + 10);
 		slaveMgr.AddSlave("dnp_server", "slave", level, &cmdAcceptor, SlaveStackConfig());
 		slaveMgr.StartVtoRouter("vto_client", "slave", VtoRouterSettings(88, false, false, 4096, 1000));
 
 		masterMgr.AddTCPClient("dnp_client", PhysLayerSettings(), "127.0.0.1", port);
-		masterMgr.AddTCPServer("vto_server", PhysLayerSettings(), "127.0.0.1", port+20);
+		masterMgr.AddTCPServer("vto_server", PhysLayerSettings(), "127.0.0.1", port + 20);
 		masterMgr.AddMaster("dnp_client", "master", level, &fdo, MasterStackConfig());
 		masterMgr.StartVtoRouter("vto_server", "master", VtoRouterSettings(88, true, false, 4096, 1000));
 	}
 
-	~VtoTestStack()
-	{
+	~VtoTestStack() {
 		masterMgr.Stop();
 		slaveMgr.Stop();
 
@@ -150,15 +152,15 @@ public:
 		loopback.Stop();
 	}
 
-	bool checkState(IPhysMonitor::State aState){
+	bool checkState(IPhysMonitor::State aState) {
 		return testObj.ProceedUntil(boost::bind(&MockClientConnection::StateIs, &local, aState), 10000);
 	}
-	bool checkData(CopyableBuffer& cb){
+	bool checkData(CopyableBuffer& cb) {
 		return testObj.ProceedUntil(boost::bind(&MockClientConnection::DataIs, &local, cb), 10000);
 	}
 
 	EventLog log;
-	
+
 	Logger* main;
 	LogToFile ltf;
 	FlexibleDataObserver fdo;
@@ -191,7 +193,7 @@ BOOST_AUTO_TEST_CASE(Reconnect)
 	stack.slaveMgr.Start();
 	// startup the loopback server on the slave side
 	stack.loopback.Start();
-	
+
 	// startup the local connection to the vto socket, since the whole stack is up we should connect
 	stack.local.Start();
 	BOOST_REQUIRE(stack.checkState(IPhysMonitor::Open));

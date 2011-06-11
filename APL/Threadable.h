@@ -30,43 +30,49 @@ namespace apl
 */
 class Threadable
 {
-	public:
+public:
 
-		Threadable();
-		virtual ~Threadable();
+	Threadable();
+	virtual ~Threadable();
 
-		// /These are provided
-		// This way any pre/post conditions of Start() can be enforced by the base class
-		void Start();
-		void RequestStop();
+	// /These are provided
+	// This way any pre/post conditions of Start() can be enforced by the base class
+	void Start();
+	void RequestStop();
 
-		//allows a client to see if the thread is running
-		inline bool IsRunning() { return mIsRunning; }
+	//allows a client to see if the thread is running
+	inline bool IsRunning() {
+		return mIsRunning;
+	}
 
-		//allows a client to see fi the thread has been "canceled"
-		inline bool IsExitRequested(){return mIsExitRequested;}
+	//allows a client to see fi the thread has been "canceled"
+	inline bool IsExitRequested() {
+		return mIsExitRequested;
+	}
 
-		void ResetStopRequest();
+	void ResetStopRequest();
 
-		virtual std::string Description() const { return "Undescribed threadable"; }
+	virtual std::string Description() const {
+		return "Undescribed threadable";
+	}
 
-	protected:
-
-
-
-		// allows inherited classes to override and do something to wake the thread
-		virtual void SignalStop();
-
-	private:
-		// implemented Run() should check for this condition
-		// and shutdown when requested to do so
-		bool mIsExitRequested;
-
-		bool mIsRunning;
+protected:
 
 
-		// inherited objects must implement a run function
-		virtual void Run() = 0;
+
+	// allows inherited classes to override and do something to wake the thread
+	virtual void SignalStop();
+
+private:
+	// implemented Run() should check for this condition
+	// and shutdown when requested to do so
+	bool mIsExitRequested;
+
+	bool mIsRunning;
+
+
+	// inherited objects must implement a run function
+	virtual void Run() = 0;
 
 };
 

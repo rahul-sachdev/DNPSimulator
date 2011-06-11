@@ -20,31 +20,34 @@
 
 #include <APL/Types.h>
 
-namespace apl { namespace dnp {
-		
+namespace apl
+{
+namespace dnp
+{
+
+/**
+ * Settings classes used to configure the router.
+ */
+struct VtoRouterSettings {
+	VtoRouterSettings() {}
+
 	/**
-	 * Settings classes used to configure the router.
+	 * @param aChannelId Each dnp index for Vto data events is a channel id
+	 * @param aStartLocal If true we allways try to keep the local connection online, otherwise we only connect when the remote side connects
+	 * @param aVtoTxBufferSizeInBytes number of bytes to buffer locally
+	 * @param aOpenRetryMs how long to wait before retrying opening the physical layer after a failure
 	 */
-	struct VtoRouterSettings
-	{
-		VtoRouterSettings(){}
+	VtoRouterSettings(boost::uint8_t aChannelId, bool aStartLocal, bool aDisableExtensions, size_t aVtoTxBufferSizeInBytes = 4096, millis_t aOpenRetryMs = 5000);
 
-		/**
-		 * @param aChannelId Each dnp index for Vto data events is a channel id
-		 * @param aStartLocal If true we allways try to keep the local connection online, otherwise we only connect when the remote side connects
-		 * @param aVtoTxBufferSizeInBytes number of bytes to buffer locally
-		 * @param aOpenRetryMs how long to wait before retrying opening the physical layer after a failure
-		 */
-		VtoRouterSettings(boost::uint8_t aChannelId, bool aStartLocal, bool aDisableExtensions, size_t aVtoTxBufferSizeInBytes = 4096, millis_t aOpenRetryMs = 5000);
+	boost::uint8_t CHANNEL_ID;
+	size_t VTO_TX_BUFFFER_SIZE_IN_BYTES;
+	millis_t OPEN_RETRY_MS;
+	bool START_LOCAL;
+	bool DISABLE_EXTENSIONS;
+};
 
-		boost::uint8_t CHANNEL_ID;
-		size_t VTO_TX_BUFFFER_SIZE_IN_BYTES;
-		millis_t OPEN_RETRY_MS;
-		bool START_LOCAL;
-		bool DISABLE_EXTENSIONS;
-	};
-
-}}
+}
+}
 
 /* vim: set ts=4 sw=4: */
 

@@ -12,69 +12,73 @@
 #include <string>
 #include <map>
 
-namespace apl {
+namespace apl
+{
 
-	//class FlexibleDataObserver;
-	class QueueingFDO;
+//class FlexibleDataObserver;
+class QueueingFDO;
 
-namespace dnp {
+namespace dnp
+{
 
-	struct ShowRange
-	{
-		enum Type { ST_ALL, ST_BI, ST_AI, ST_C, ST_BOS, ST_SS };
-		ShowRange() : type(ST_ALL), start(0), stop(0) {}
-		Type type;
-		bool allOfType;
-		size_t start;
-		size_t stop;
-	};
+struct ShowRange {
+	enum Type { ST_ALL, ST_BI, ST_AI, ST_C, ST_BOS, ST_SS };
+	ShowRange() : type(ST_ALL), start(0), stop(0) {}
+	Type type;
+	bool allOfType;
+	size_t start;
+	size_t stop;
+};
 
 
-	/** Terminal extension for interacting with a submaster via a flexible data observer
-	*/
-	class FlexibleObserverTerminalExtension : public ITerminalExtension, public INotifier
-	{
-		public:
+/** Terminal extension for interacting with a submaster via a flexible data observer
+*/
+class FlexibleObserverTerminalExtension : public ITerminalExtension, public INotifier
+{
+public:
 
-			FlexibleObserverTerminalExtension(QueueingFDO* apObserver);
+	FlexibleObserverTerminalExtension(QueueingFDO* apObserver);
 
-			FlexibleObserverTerminalExtension(QueueingFDO* apObserver, const DeviceTemplate& arTmp);
+	FlexibleObserverTerminalExtension(QueueingFDO* apObserver, const DeviceTemplate& arTmp);
 
-			virtual ~FlexibleObserverTerminalExtension() {}
+	virtual ~FlexibleObserverTerminalExtension() {}
 
-			std::string Name() { return "FlexibleObserverTerminalExtension"; }
+	std::string Name() {
+		return "FlexibleObserverTerminalExtension";
+	}
 
-			typedef std::map<size_t, std::string> NameMap;
+	typedef std::map<size_t, std::string> NameMap;
 
-			void Notify();
-		private:
+	void Notify();
+private:
 
-			QueueingFDO* mpObserver;
+	QueueingFDO* mpObserver;
 
-			ShowRange mRange;
+	ShowRange mRange;
 
-			NameMap mBinaryNames;
-			NameMap mAnalogNames;
-			NameMap mCounterNames;
-			NameMap mControlStatusNames;
-			NameMap mSetpointStatusNames;
+	NameMap mBinaryNames;
+	NameMap mAnalogNames;
+	NameMap mCounterNames;
+	NameMap mControlStatusNames;
+	NameMap mSetpointStatusNames;
 
-			size_t mLongestName;
-			
-			retcode HandleShow(std::vector<std::string>& arArgs, bool aLogToFile, bool aClearScreenAfter);
-			retcode HandleRunUpdates(std::vector<std::string>& arArgs);
-			retcode HandleShowUpdates(std::vector<std::string>& arArgs);
-			retcode HandleSetShow(std::vector<std::string>& arArgs);
-			retcode HandleShowStats(std::vector<std::string>& arArgs);
+	size_t mLongestName;
 
-			void PrintUpdates(bool aWithCount);
+	retcode HandleShow(std::vector<std::string>& arArgs, bool aLogToFile, bool aClearScreenAfter);
+	retcode HandleRunUpdates(std::vector<std::string>& arArgs);
+	retcode HandleShowUpdates(std::vector<std::string>& arArgs);
+	retcode HandleSetShow(std::vector<std::string>& arArgs);
+	retcode HandleShowStats(std::vector<std::string>& arArgs);
 
-			void OnRedirectedLine(const std::string&);
+	void PrintUpdates(bool aWithCount);
 
-			//implement from ITerminalExtension
-			void _BindToTerminal(ITerminal* apTerminal);
-	};
+	void OnRedirectedLine(const std::string&);
 
-}}
+	//implement from ITerminalExtension
+	void _BindToTerminal(ITerminal* apTerminal);
+};
+
+}
+}
 
 #endif

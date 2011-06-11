@@ -36,17 +36,17 @@ using namespace std;
  * and use the macros in the test cases below.
  */
 #if defined(WIN32)
-	/* Windows platform */
-	#define MACRO_PORT_START	(50000)
-	#define MACRO_NUM_PAIRS		(10)
+/* Windows platform */
+#define MACRO_PORT_START	(50000)
+#define MACRO_NUM_PAIRS		(10)
 #elif defined(ARM)
-	/* Linux on ARM platform */
-	#define MACRO_PORT_START	(30000)
-	#define MACRO_NUM_PAIRS		(10)
+/* Linux on ARM platform */
+#define MACRO_PORT_START	(30000)
+#define MACRO_NUM_PAIRS		(10)
 #else
-	/* Generic Linux platform */
-	#define MACRO_PORT_START	(30000)
-	#define MACRO_NUM_PAIRS		(100)
+/* Generic Linux platform */
+#define MACRO_PORT_START	(30000)
+#define MACRO_NUM_PAIRS		(100)
 #endif
 
 BOOST_AUTO_TEST_SUITE(IntegrationSuite)
@@ -57,19 +57,18 @@ const size_t NUM_POINTS = 500;
 const size_t NUM_CHANGES = 10;
 
 BOOST_AUTO_TEST_CASE(MasterToSlaveThroughput)
-{	
+{
 	EventLog log;
 	if (EXTRA_DEBUG)
 		log.AddLogSubscriber(LogToStdio::Inst());
 
 	IntegrationTest t(log.GetLogger(LEV_WARNING, "test"), LEV_WARNING, START_PORT,
-			NUM_PAIRS, NUM_POINTS);
+	                  NUM_PAIRS, NUM_POINTS);
 
 	IDataObserver* pObs = t.GetFanout();
-	
+
 	StopWatch sw;
-	for (size_t j = 0; j < NUM_CHANGES; ++j)
-	{
+	for (size_t j = 0; j < NUM_CHANGES; ++j) {
 		/*
 		 * Resource Acquisition Is Initialization (RAII) Pattern.
 		 * When the Transaction instance is created, it acquires the resource.
@@ -100,9 +99,9 @@ BOOST_AUTO_TEST_CASE(MasterToSlaveThroughput)
 		size_t points = 3 * NUM_POINTS * NUM_CHANGES * NUM_PAIRS * 2;
 		cout << "num points: " << points << endl;
 		cout << "elapsed seconds: " << elapsed_sec << endl;
-		cout << "points/sec: " << points/elapsed_sec << endl;
+		cout << "points/sec: " << points / elapsed_sec << endl;
 	}
-	
+
 }
 
 BOOST_AUTO_TEST_CASE(IntegrationTestConstructionDestruction)
@@ -112,7 +111,7 @@ BOOST_AUTO_TEST_CASE(IntegrationTestConstructionDestruction)
 		log.AddLogSubscriber(LogToStdio::Inst());
 
 	IntegrationTest t(log.GetLogger(LEV_WARNING, "test"), LEV_WARNING, START_PORT,
-		NUM_PAIRS, NUM_POINTS);
+	                  NUM_PAIRS, NUM_POINTS);
 
 	/* Verify that the Master and Slave stacks were created */
 	{

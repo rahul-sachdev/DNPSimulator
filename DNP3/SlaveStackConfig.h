@@ -25,15 +25,17 @@
 #include "LinkConfig.h"
 #include "VtoConfig.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /** A composite configuration struct that contains all the config
 	information for a dnp3 slave stack
 */
-struct SlaveStackConfig
-{
+struct SlaveStackConfig {
 	SlaveStackConfig() :
-	link(false, false)
+		link(false, false)
 	{}
 
 	SlaveConfig slave;		// Slave config
@@ -43,7 +45,8 @@ struct SlaveStackConfig
 	VtoConfig vto;
 };
 
-}}
+}
+}
 
 #endif
 

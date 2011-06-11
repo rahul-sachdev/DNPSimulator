@@ -32,58 +32,69 @@
 #undef min
 
 using namespace boost::posix_time;
-namespace apl{
+namespace apl
+{
 
 
-	class TimeBoost
-	{
-		public:
+class TimeBoost
+{
+public:
 
-			TimeBoost();
-			TimeBoost(apl::millis_t aTime);
-			TimeBoost(ptime aTime);
-			~TimeBoost();
+	TimeBoost();
+	TimeBoost(apl::millis_t aTime);
+	TimeBoost(ptime aTime);
+	~TimeBoost();
 
-			void SetToNow();
+	void SetToNow();
 
-			apl::millis_t GetElapsedMS() const;
+	apl::millis_t GetElapsedMS() const;
 
-			void SetTo(millis_t aTimeMS);
+	void SetTo(millis_t aTimeMS);
 
-			void AddMS(millis_t aAddMS);
-			boost::int64_t GetValueMS() const;
+	void AddMS(millis_t aAddMS);
+	boost::int64_t GetValueMS() const;
 
-			static millis_t CalcDeltaMS(const TimeBoost& now, const TimeBoost& start);
-			static ptime GetPTimeFromMS(millis_t aTimeMS);
+	static millis_t CalcDeltaMS(const TimeBoost& now, const TimeBoost& start);
+	static ptime GetPTimeFromMS(millis_t aTimeMS);
 
-			static const TimeBoost Max;
-			static const TimeBoost Min;
+	static const TimeBoost Max;
+	static const TimeBoost Min;
 
-			friend class TimeStamp;
+	friend class TimeStamp;
 
-			bool operator <(const TimeBoost& arRHS) { return mTime < arRHS.mTime; }
-			bool operator <=(const TimeBoost& arRHS) { return mTime <= arRHS.mTime; }
-			bool operator >(const TimeBoost& arRHS) { return mTime > arRHS.mTime; }
-			bool operator >=(const TimeBoost& arRHS) { return mTime >= arRHS.mTime; }
-			bool operator ==(const TimeBoost& arRHS) {  return mTime == arRHS.mTime; }
+	bool operator <(const TimeBoost& arRHS) {
+		return mTime < arRHS.mTime;
+	}
+	bool operator <=(const TimeBoost& arRHS) {
+		return mTime <= arRHS.mTime;
+	}
+	bool operator >(const TimeBoost& arRHS) {
+		return mTime > arRHS.mTime;
+	}
+	bool operator >=(const TimeBoost& arRHS) {
+		return mTime >= arRHS.mTime;
+	}
+	bool operator ==(const TimeBoost& arRHS) {
+		return mTime == arRHS.mTime;
+	}
 
-			std::string GetTimeString() const;
+	std::string GetTimeString() const;
 
-	private:
+private:
 
-		ptime mTime;
+	ptime mTime;
 
-		static boost::gregorian::date msEpochDate;
-		static ptime msEpoch;
-	};
+	static boost::gregorian::date msEpochDate;
+	static ptime msEpoch;
+};
 
-	/*
-	bool operator <(const TimeBoost& arLHS, const TimeBoost& arRHS);
-	bool operator <=(const TimeBoost& arLHS, const TimeBoost& arRHS);
-	bool operator >(const TimeBoost& arLHS, const TimeBoost& arRHS);
-	bool operator >=(const TimeBoost& arLHS, const TimeBoost& arRHS);
-	bool operator ==(const TimeBoost& arLHS, const TimeBoost& arRHS);
-	*/
+/*
+bool operator <(const TimeBoost& arLHS, const TimeBoost& arRHS);
+bool operator <=(const TimeBoost& arLHS, const TimeBoost& arRHS);
+bool operator >(const TimeBoost& arLHS, const TimeBoost& arRHS);
+bool operator >=(const TimeBoost& arLHS, const TimeBoost& arRHS);
+bool operator ==(const TimeBoost& arLHS, const TimeBoost& arRHS);
+*/
 
 }
 

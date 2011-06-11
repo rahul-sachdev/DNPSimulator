@@ -22,19 +22,21 @@
 
 #include "DNPConstants.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /** Configuration structure for the dnp3 application layer
 */
-struct AppConfig
-{
+struct AppConfig {
 	// Default constructor
 	AppConfig() : RspTimeout(5000), NumRetry(0), FragSize(DEFAULT_FRAG_SIZE) {}
 
 	AppConfig(millis_t aRspTimeout, size_t aNumRetry = 0, size_t aFragSize = DEFAULT_FRAG_SIZE) :
-	RspTimeout(aRspTimeout),
-	NumRetry(aNumRetry),
-	FragSize(aFragSize)
+		RspTimeout(aRspTimeout),
+		NumRetry(aNumRetry),
+		FragSize(aFragSize)
 	{}
 
 	// The response/confirm timeout in millisec
@@ -48,6 +50,7 @@ struct AppConfig
 
 };
 
-}}
+}
+}
 
 #endif

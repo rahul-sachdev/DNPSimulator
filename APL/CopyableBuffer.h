@@ -23,7 +23,8 @@
 #include <stddef.h>
 #include <memory>
 
-namespace apl {
+namespace apl
+{
 
 /** Implements a dynamic buffer with a safe
 	copy constructor. This makes it easier to compose with
@@ -31,32 +32,44 @@ namespace apl {
 */
 class CopyableBuffer
 {
-	public:
-		// Construct null bufer
-		CopyableBuffer();
-		// Construct based on starting size of buffer
-		CopyableBuffer(size_t aSize);
-		CopyableBuffer(const boost::uint8_t*, size_t aSize);
-		CopyableBuffer(const CopyableBuffer&);
-		CopyableBuffer& operator=(const CopyableBuffer&);
-		~CopyableBuffer();
+public:
+	// Construct null bufer
+	CopyableBuffer();
+	// Construct based on starting size of buffer
+	CopyableBuffer(size_t aSize);
+	CopyableBuffer(const boost::uint8_t*, size_t aSize);
+	CopyableBuffer(const CopyableBuffer&);
+	CopyableBuffer& operator=(const CopyableBuffer&);
+	~CopyableBuffer();
 
-		bool operator==( const CopyableBuffer& other) const;
-		bool operator!=( const CopyableBuffer& other) const { return ! (*this == other); }
+	bool operator==( const CopyableBuffer& other) const;
+	bool operator!=( const CopyableBuffer& other) const {
+		return ! (*this == other);
+	}
 
-		const boost::uint8_t* Buffer() const { return mpBuff; }
-		const boost::uint8_t* WriteBuffer() const { return mpBuff; }
-		operator const boost::uint8_t* () const { return mpBuff; }
-		operator boost::uint8_t* () { return mpBuff; }
+	const boost::uint8_t* Buffer() const {
+		return mpBuff;
+	}
+	const boost::uint8_t* WriteBuffer() const {
+		return mpBuff;
+	}
+	operator const boost::uint8_t* () const {
+		return mpBuff;
+	}
+	operator boost::uint8_t* () {
+		return mpBuff;
+	}
 
-		size_t Size() const { return mSize; }
-		void Zero();
+	size_t Size() const {
+		return mSize;
+	}
+	void Zero();
 
-	protected:
-		boost::uint8_t* mpBuff;
+protected:
+	boost::uint8_t* mpBuff;
 
-	private:
-		size_t mSize;
+private:
+	size_t mSize;
 };
 
 }

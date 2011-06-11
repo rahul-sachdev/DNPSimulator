@@ -21,8 +21,9 @@
 
 #include "LockBoost.h"
 
-namespace apl{
-	typedef SigLock_Boost SigLock;
+namespace apl
+{
+typedef SigLock_Boost SigLock;
 };
 
 #endif

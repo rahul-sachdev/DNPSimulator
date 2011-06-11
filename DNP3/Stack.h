@@ -25,38 +25,43 @@
 #include "VtoDataInterface.h"
 #include "VtoReader.h"
 
-namespace apl {
-	class Logger;
-	class ITimerSource;
+namespace apl
+{
+class Logger;
+class ITimerSource;
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class Stack
 {
-	public:
-		Stack(Logger*, ITimerSource* apTimerSrc, AppConfig aAppCfg, LinkConfig aCfg);
-		virtual ~Stack() {}
+public:
+	Stack(Logger*, ITimerSource* apTimerSrc, AppConfig aAppCfg, LinkConfig aCfg);
+	virtual ~Stack() {}
 
-		/**
-		 * Returns a pointer to the IVtoWriter instance for the layer.
-		 *
-		 * @return		a pointer to the IVtoWriter for the layer
-		 */
-		virtual IVtoWriter* GetVtoWriter() = 0;
+	/**
+	 * Returns a pointer to the IVtoWriter instance for the layer.
+	 *
+	 * @return		a pointer to the IVtoWriter for the layer
+	 */
+	virtual IVtoWriter* GetVtoWriter() = 0;
 
-		/**
-		 * Returns a pointer to the IVtoReader instance for the layer.
-		 *
-		 * @return		a pointer to the IVtoReader for the layer
-		 */
-		virtual IVtoReader* GetVtoReader() = 0;
+	/**
+	 * Returns a pointer to the IVtoReader instance for the layer.
+	 *
+	 * @return		a pointer to the IVtoReader for the layer
+	 */
+	virtual IVtoReader* GetVtoReader() = 0;
 
-		LinkLayer mLink;
-		TransportLayer mTransport;
-		AppLayer mApplication;
+	LinkLayer mLink;
+	TransportLayer mTransport;
+	AppLayer mApplication;
 };
 
-}}
+}
+}
 
 #endif

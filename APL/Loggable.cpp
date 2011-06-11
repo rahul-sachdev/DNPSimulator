@@ -27,7 +27,7 @@ namespace apl
 {
 
 Loggable::Loggable( Logger* apLogger )
-: mpLogger(apLogger)
+	: mpLogger(apLogger)
 {
 	assert(apLogger != NULL);
 }

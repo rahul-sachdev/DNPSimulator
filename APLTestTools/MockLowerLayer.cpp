@@ -21,13 +21,14 @@
 #include "BufferHelpers.h"
 #include <assert.h>
 
-namespace apl {
+namespace apl
+{
 
 MockLowerLayer::MockLowerLayer(Logger* apLogger) :
-Loggable(apLogger),
-ILowerLayer(apLogger),
-mAutoSendCallback(true),
-mIsSuccess(true)
+	Loggable(apLogger),
+	ILowerLayer(apLogger),
+	mAutoSendCallback(true),
+	mIsSuccess(true)
 {
 
 }

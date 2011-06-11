@@ -27,19 +27,20 @@
 
 using namespace boost::asio;
 
-namespace apl {
+namespace apl
+{
 
 class IOServiceExitException : public Exception
 {
-	public:
-		IOServiceExitException(const std::string& aSource) throw() :
+public:
+	IOServiceExitException(const std::string& aSource) throw() :
 		Exception(aSource, "")
-		{}
+	{}
 };
 
 IOServiceThread::IOServiceThread(boost::asio::io_service* apService) :
-mpService(apService),
-mThread(this)
+	mpService(apService),
+	mThread(this)
 {
 
 }

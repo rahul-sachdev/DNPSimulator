@@ -22,10 +22,11 @@
 
 #include <sstream>
 
-namespace apl {
+namespace apl
+{
 
 const FilterAssoc LogTypes::filters[LogTypes::NUM_FILTER] = {
-	{LEV_DEBUG,'d'},
+	{LEV_DEBUG, 'd'},
 	{LEV_COMM, 'c'},
 	{LEV_INTERPRET, 'p'},
 	{LEV_INFO, 'i'},
@@ -39,23 +40,23 @@ int LogTypes::FilterLevelToMask(FilterLevel aFilter)
 	//since FilterLevel is a power of 2 (single bit), subtracting 1 will
 	//set all the bits below the set bit.
 	//set the filter bit and all the bits below it
-	return aFilter | (aFilter-1);
+	return aFilter | (aFilter - 1);
 }
 
 int LogTypes::GetFilterMask(char c)
 {
 	switch(c) {
-			case('a'): return MASK_ALL_LEVELS;
-			case('d'): return LEV_DEBUG;
-			case('c'): return LEV_COMM;
-			case('p'): return LEV_INTERPRET;
-			case('i'): return LEV_INFO;
-			case('w'): return LEV_WARNING;
-			case('e'): return LEV_ERROR;
-			case('v'): return LEV_EVENT;
-			case('n'): return 0;
-			default:
-				return -1;
+	case('a'): return MASK_ALL_LEVELS;
+	case('d'): return LEV_DEBUG;
+	case('c'): return LEV_COMM;
+	case('p'): return LEV_INTERPRET;
+	case('i'): return LEV_INFO;
+	case('w'): return LEV_WARNING;
+	case('e'): return LEV_ERROR;
+	case('v'): return LEV_EVENT;
+	case('n'): return 0;
+	default:
+		return -1;
 	}
 }
 
@@ -64,21 +65,21 @@ int LogTypes::GetFilterMask(const std::string& arg)
 	std::string copy(arg);
 	toLowerCase(copy);
 	int ret = 0;
-	for(size_t i=0; i<copy.size(); ++i) ret |= GetFilterMask(copy[i]);
+	for(size_t i = 0; i < copy.size(); ++i) ret |= GetFilterMask(copy[i]);
 	return ret;
 }
 
 std::string LogTypes::GetLevelString( FilterLevel aLevel )
 {
 	switch(aLevel) {
-		case(LEV_DEBUG): return "DEBUG";
-		case(LEV_COMM): return "COMM";
-		case(LEV_INTERPRET): return "INTERPRET";
-		case(LEV_INFO): return "INFO";
-		case(LEV_WARNING):return "WARNING";
-		case(LEV_ERROR): return "ERROR";
-		case(LEV_EVENT): return "EVENT";
-		default: return "UNKNOWN";
+	case(LEV_DEBUG): return "DEBUG";
+	case(LEV_COMM): return "COMM";
+	case(LEV_INTERPRET): return "INTERPRET";
+	case(LEV_INFO): return "INFO";
+	case(LEV_WARNING):return "WARNING";
+	case(LEV_ERROR): return "ERROR";
+	case(LEV_EVENT): return "EVENT";
+	default: return "UNKNOWN";
 	}
 }
 
@@ -88,7 +89,7 @@ std::string LogTypes::GetFilterString(int aLevel)
 
 	oss << "{";
 
-	for(size_t i=0; i<LogTypes::NUM_FILTER; ++i) {
+	for(size_t i = 0; i < LogTypes::NUM_FILTER; ++i) {
 		oss << static_cast<boost::uint8_t>((aLevel & filters[i].lev) ? filters[i].id : ' ');
 	}
 

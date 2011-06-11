@@ -25,49 +25,53 @@
 
 #include "LinkLayer.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	class SecStateBase
-	{
-		public:
+class SecStateBase
+{
+public:
 
-		/* Incoming messages to secondary station */
+	/* Incoming messages to secondary station */
 
-		void ResetLinkStates(LinkLayer*);
-		void RequestLinkStatus(LinkLayer*);
-		void UnconfirmedUserData(LinkLayer*, const boost::uint8_t* apData, size_t aDataLength);
+	void ResetLinkStates(LinkLayer*);
+	void RequestLinkStatus(LinkLayer*);
+	void UnconfirmedUserData(LinkLayer*, const boost::uint8_t* apData, size_t aDataLength);
 
-		virtual void TestLinkStatus(LinkLayer*, bool aFcb) = 0;
-		virtual void ConfirmedUserData(LinkLayer*, bool aFcb, const boost::uint8_t* apData, size_t aDataLength) = 0;
+	virtual void TestLinkStatus(LinkLayer*, bool aFcb) = 0;
+	virtual void ConfirmedUserData(LinkLayer*, bool aFcb, const boost::uint8_t* apData, size_t aDataLength) = 0;
 
 
-		//every concrete state implements this for logging purposes
-		virtual std::string Name() const = 0;
-	};
+	//every concrete state implements this for logging purposes
+	virtual std::string Name() const = 0;
+};
 
-	////////////////////////////////////////////////////////
-	//	Class SLLS_UnReset
-	////////////////////////////////////////////////////////
-	class SLLS_NotReset : public SecStateBase
-	{
-		MACRO_STATE_SINGLETON_INSTANCE(SLLS_NotReset);
+////////////////////////////////////////////////////////
+//	Class SLLS_UnReset
+////////////////////////////////////////////////////////
+class SLLS_NotReset : public SecStateBase
+{
+	MACRO_STATE_SINGLETON_INSTANCE(SLLS_NotReset);
 
-		void TestLinkStatus(LinkLayer*, bool aFcb);
-		void ConfirmedUserData(LinkLayer*, bool aFcb, const boost::uint8_t* apData, size_t aDataLength);
-	};
+	void TestLinkStatus(LinkLayer*, bool aFcb);
+	void ConfirmedUserData(LinkLayer*, bool aFcb, const boost::uint8_t* apData, size_t aDataLength);
+};
 
-	////////////////////////////////////////////////////////
-	//	Class SLLS_Reset
-	////////////////////////////////////////////////////////
-	class SLLS_Reset : public SecStateBase
-	{
-		MACRO_STATE_SINGLETON_INSTANCE(SLLS_Reset);
+////////////////////////////////////////////////////////
+//	Class SLLS_Reset
+////////////////////////////////////////////////////////
+class SLLS_Reset : public SecStateBase
+{
+	MACRO_STATE_SINGLETON_INSTANCE(SLLS_Reset);
 
-		void TestLinkStatus(LinkLayer*, bool aFcb);
-		void ConfirmedUserData(LinkLayer*, bool aFcb, const boost::uint8_t* apData, size_t aDataLength);
-	};
+	void TestLinkStatus(LinkLayer*, bool aFcb);
+	void ConfirmedUserData(LinkLayer*, bool aFcb, const boost::uint8_t* apData, size_t aDataLength);
+};
 
-}} //end namepsace
+}
+} //end namepsace
 
 
 #endif

@@ -22,12 +22,16 @@
 
 #include "MasterConfig.h"
 
-namespace apl {
-	class AsyncTaskGroup;
-	class AsyncTaskBase;
+namespace apl
+{
+class AsyncTaskGroup;
+class AsyncTaskBase;
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class Master;
 
@@ -37,7 +41,7 @@ class Master;
  */
 class MasterSchedule
 {
-	public:
+public:
 
 	/**
 	 * A task to read the Master::mCommandQueue and pass objects to
@@ -72,30 +76,29 @@ class MasterSchedule
 	// Returns a configured MasterSchedule
 	static MasterSchedule GetSchedule(MasterConfig aCfg, Master*, AsyncTaskGroup*);
 
-	private:
+private:
 
 	MasterSchedule(AsyncTaskGroup*);
 
 	AsyncTaskGroup* mpGroup;
 
-	enum MasterPriority
-	{
-		AMP_POLL,
-		AMP_TIME_SYNC,
-		AMP_CLEAR_RESTART,
-		AMP_UNSOL_CHANGE,
-		AMP_COMMAND,
-		AMP_VTO_TRANSMIT
+	enum MasterPriority {
+	    AMP_POLL,
+	    AMP_TIME_SYNC,
+	    AMP_CLEAR_RESTART,
+	    AMP_UNSOL_CHANGE,
+	    AMP_COMMAND,
+	    AMP_VTO_TRANSMIT
 	};
 
-	enum TaskTypes
-	{
-		ONLINE_ONLY_TASKS = 1,
-		START_UP_TASKS = 2
+	enum TaskTypes {
+	    ONLINE_ONLY_TASKS = 1,
+	    START_UP_TASKS = 2
 	};
 };
 
-}}
+}
+}
 
 /* vim: set ts=4 sw=4: */
 

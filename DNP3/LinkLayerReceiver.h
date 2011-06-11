@@ -27,7 +27,10 @@
 #include "DNPConstants.h"
 #include "LinkHeader.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class IFrameSink;
 class LRS_Base;
@@ -36,66 +39,77 @@ class LRS_Base;
 */
 class LinkLayerReceiver : public Loggable
 {
-	static const size_t BUFFER_SIZE = (4096/249+1)*292;
+	static const size_t BUFFER_SIZE = (4096 / 249 + 1) * 292;
 
-	public:
-		/**
-			@param apLogger Logger that the receiver is to use.
-			@param apSink Complete frames are sent to this interface.
-		*/
-		LinkLayerReceiver(Logger* apLogger, IFrameSink* apSink);
+public:
+	/**
+		@param apLogger Logger that the receiver is to use.
+		@param apSink Complete frames are sent to this interface.
+	*/
+	LinkLayerReceiver(Logger* apLogger, IFrameSink* apSink);
 
-		/**
-			Called when valid data has been written to the current buffer write position
-			@param aNumBytes Number of bytes written
-		*/
-		void OnRead(size_t aNumBytes);
+	/**
+		Called when valid data has been written to the current buffer write position
+		@param aNumBytes Number of bytes written
+	*/
+	void OnRead(size_t aNumBytes);
 
-		/*
-		// @return Returns true if a call to PushFrame() will succeed
-		bool HasFrame();
+	/*
+	// @return Returns true if a call to PushFrame() will succeed
+	bool HasFrame();
 
-		// Calls the router with the next frames header and/or payload
-		void PushFrame();
-		*/
+	// Calls the router with the next frames header and/or payload
+	void PushFrame();
+	*/
 
-		size_t NumWriteBytes() const { return mBuffer.NumWriteBytes(); }
-		boost::uint8_t* WriteBuff() const { return mBuffer.WriteBuff(); }
+	size_t NumWriteBytes() const {
+		return mBuffer.NumWriteBytes();
+	}
+	boost::uint8_t* WriteBuff() const {
+		return mBuffer.WriteBuff();
+	}
 
-		//size_t NumReadBytes() const { return mBuffer.NumReadBytes(); }
+	//size_t NumReadBytes() const { return mBuffer.NumReadBytes(); }
 
 
-		private:
+private:
 
-		friend class LRS_Sync;
-		friend class LRS_Header;
-		friend class LRS_Body;
+	friend class LRS_Sync;
+	friend class LRS_Header;
+	friend class LRS_Body;
 
-		//actions/helpers used by the states
-		void ChangeState(LRS_Base* apState) { mpState = apState; }
-		bool Sync0564() { return mBuffer.Sync(M_SYNC_PATTERN,2); }
-		bool ReadHeader();
-		bool ValidateBody();
-		bool ValidateHeader();
-		bool ValidateFunctionCode();
-		void FailFrame();
-		void PushFrame();
-		size_t TransferUserData();
-		size_t NumReadBytes() { return mBuffer.NumReadBytes(); }
+	//actions/helpers used by the states
+	void ChangeState(LRS_Base* apState) {
+		mpState = apState;
+	}
+	bool Sync0564() {
+		return mBuffer.Sync(M_SYNC_PATTERN, 2);
+	}
+	bool ReadHeader();
+	bool ValidateBody();
+	bool ValidateHeader();
+	bool ValidateFunctionCode();
+	void FailFrame();
+	void PushFrame();
+	size_t TransferUserData();
+	size_t NumReadBytes() {
+		return mBuffer.NumReadBytes();
+	}
 
-		LinkHeader mHeader;
-		size_t mFrameSize;
-		static const boost::uint8_t M_SYNC_PATTERN[2];
+	LinkHeader mHeader;
+	size_t mFrameSize;
+	static const boost::uint8_t M_SYNC_PATTERN[2];
 
-		IFrameSink* mpSink;  // pointer to interface to push complete frames
-		LRS_Base* mpState;
+	IFrameSink* mpSink;  // pointer to interface to push complete frames
+	LRS_Base* mpState;
 
-		// Buffer to which user data is extracted, this is necessary since CRC checks are interlaced
-		boost::uint8_t mpUserData[LS_MAX_USER_DATA_SIZE];
-		ShiftableBuffer mBuffer; //Buffer used to cache frames data as it arrives
-		LogCounter mCrcFailures;
+	// Buffer to which user data is extracted, this is necessary since CRC checks are interlaced
+	boost::uint8_t mpUserData[LS_MAX_USER_DATA_SIZE];
+	ShiftableBuffer mBuffer; //Buffer used to cache frames data as it arrives
+	LogCounter mCrcFailures;
 };
 
-}}
+}
+}
 
 #endif

@@ -27,11 +27,14 @@
 #include <DNP3/LinkLayerRouter.h>
 
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class LinkLayerRouterTest : public LogTester
 {
-	public:
+public:
 	LinkLayerRouterTest(FilterLevel aLevel = LEV_WARNING, bool aImmediate = false);
 
 	MockTimerSource mts;
@@ -39,6 +42,7 @@ class LinkLayerRouterTest : public LogTester
 	LinkLayerRouter router;
 };
 
-}}
+}
+}
 
 #endif

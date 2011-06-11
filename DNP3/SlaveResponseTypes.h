@@ -22,7 +22,10 @@
 #include "ObjectInterfaces.h"
 #include <APL/DataTypes.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 struct SlaveConfig;
 struct GrpVar;
@@ -33,7 +36,7 @@ struct GrpVar;
  */
 class SlaveResponseTypes
 {
-	public:
+public:
 
 	SlaveResponseTypes(const SlaveConfig& arCfg);
 
@@ -49,7 +52,7 @@ class SlaveResponseTypes
 
 	SizeByVariationObject* mpEventVto;
 
-	private:
+private:
 
 	static StreamObject<Binary>* GetStaticBinary(GrpVar);
 	static StreamObject<Analog>* GetStaticAnalog(GrpVar);
@@ -58,10 +61,11 @@ class SlaveResponseTypes
 
 	static StreamObject<Binary>* GetEventBinary(GrpVar);
 	static StreamObject<Analog>* GetEventAnalog(GrpVar);
-	static StreamObject<Counter>* GetEventCounter(GrpVar);	
+	static StreamObject<Counter>* GetEventCounter(GrpVar);
 
 };
 
-}}
+}
+}
 
 #endif

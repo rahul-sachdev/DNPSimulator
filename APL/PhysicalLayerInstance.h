@@ -22,7 +22,8 @@
 
 #include "PhysicalLayerFunctors.h"
 
-namespace apl {
+namespace apl
+{
 
 class IPhysicalLayer;
 
@@ -30,28 +31,28 @@ class IPhysicalLayer;
 */
 class PhysLayerInstance
 {
-	public:
+public:
 
-		PhysLayerInstance() : mpLayer(NULL), mpLogger(NULL) {}
+	PhysLayerInstance() : mpLayer(NULL), mpLogger(NULL) {}
 
-		PhysLayerInstance(IPhysicalLayerAsyncFactory);
-		PhysLayerInstance(IPhysicalLayerAsync* apPhys, Logger*, bool aAutoDelete);
+	PhysLayerInstance(IPhysicalLayerAsyncFactory);
+	PhysLayerInstance(IPhysicalLayerAsync* apPhys, Logger*, bool aAutoDelete);
 
-		IPhysicalLayerAsync* GetLayer(Logger*, boost::asio::io_service*, bool aAutoDelete);		
+	IPhysicalLayerAsync* GetLayer(Logger*, boost::asio::io_service*, bool aAutoDelete);
 
-		void Release();
+	void Release();
 
-		bool IsCreated();
+	bool IsCreated();
 
-	private:
+private:
 
-		IPhysicalLayerAsyncFactory mFactoryAsync;
-		IPhysicalLayerAsync* mpLayer;
+	IPhysicalLayerAsyncFactory mFactoryAsync;
+	IPhysicalLayerAsync* mpLayer;
 
-		Logger* mpLogger;
-		bool mAutoDelete;
+	Logger* mpLogger;
+	bool mAutoDelete;
 
-		void SetLayer(IPhysicalLayerAsync* apLayer, Logger* apLogger, bool aAutoDelete);
+	void SetLayer(IPhysicalLayerAsync* apLayer, Logger* apLogger, bool aAutoDelete);
 };
 
 }

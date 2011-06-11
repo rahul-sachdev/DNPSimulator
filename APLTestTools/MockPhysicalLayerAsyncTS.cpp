@@ -24,14 +24,15 @@
 
 using namespace boost::system;
 
-namespace apl {
+namespace apl
+{
 
 MockPhysicalLayerAsyncTS::MockPhysicalLayerAsyncTS(Logger* apLogger, MockTimerSource* apTimerSrc) :
-PhysicalLayerAsyncBase(apLogger),
-mpTimerSrc(apTimerSrc),
-mpOpenTimer(NULL),
-mErrorCode(errc::permission_denied, get_generic_category()),
-mWriteBuffer(1024)
+	PhysicalLayerAsyncBase(apLogger),
+	mpTimerSrc(apTimerSrc),
+	mpOpenTimer(NULL),
+	mErrorCode(errc::permission_denied, get_generic_category()),
+	mWriteBuffer(1024)
 {
 	this->Reset();
 }

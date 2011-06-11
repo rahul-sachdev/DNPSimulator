@@ -20,70 +20,73 @@
 
 #include "TransportLayer.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	//////////////////////////////////////////////////////
-	//	TLS_Closed
-	//////////////////////////////////////////////////////
-	TLS_Closed TLS_Closed::mInstance;
+//////////////////////////////////////////////////////
+//	TLS_Closed
+//////////////////////////////////////////////////////
+TLS_Closed TLS_Closed::mInstance;
 
-	void TLS_Closed::LowerLayerUp(TransportLayer* apContext)
-	{
-		apContext->ChangeState(TLS_Ready::Inst());
-		apContext->ThisLayerUp();
+void TLS_Closed::LowerLayerUp(TransportLayer* apContext)
+{
+	apContext->ChangeState(TLS_Ready::Inst());
+	apContext->ThisLayerUp();
+}
+
+//////////////////////////////////////////////////////
+//	TLS_Ready
+//////////////////////////////////////////////////////
+TLS_Ready TLS_Ready::mInstance;
+
+void TLS_Ready::Send(const boost::uint8_t* apData, size_t aNumBytes, TransportLayer* apContext)
+{
+	apContext->ChangeState(TLS_Sending::Inst());
+	apContext->TransmitAPDU(apData, aNumBytes);
+}
+
+void TLS_Ready::LowerLayerDown(TransportLayer* apContext)
+{
+	apContext->ChangeState(TLS_Closed::Inst());
+	apContext->ThisLayerDown();
+}
+
+void TLS_Ready::HandleReceive(const boost::uint8_t* apData, size_t aNumBytes, TransportLayer* apContext)
+{
+	apContext->ReceiveTPDU(apData, aNumBytes);
+}
+
+//////////////////////////////////////////////////////
+//	TLS_Sending
+//////////////////////////////////////////////////////
+TLS_Sending TLS_Sending::mInstance;
+
+void TLS_Sending::HandleReceive(const boost::uint8_t* apData, size_t aNumBytes, TransportLayer* apContext)
+{
+	apContext->ReceiveTPDU(apData, aNumBytes);
+}
+
+void TLS_Sending::HandleSendSuccess(TransportLayer* apContext)
+{
+	if(!apContext->ContinueSend()) {
+		apContext->ChangeState(TLS_Ready::Inst()); // order important here
+		apContext->SignalSendSuccess();
 	}
+}
 
-	//////////////////////////////////////////////////////
-	//	TLS_Ready
-	//////////////////////////////////////////////////////
-	TLS_Ready TLS_Ready::mInstance;
+void TLS_Sending::LowerLayerDown(TransportLayer* apContext)
+{
+	apContext->ChangeState(TLS_Closed::Inst());
+	apContext->ThisLayerDown();
+}
 
-	void TLS_Ready::Send(const boost::uint8_t* apData, size_t aNumBytes, TransportLayer* apContext)
-	{
-		apContext->ChangeState(TLS_Sending::Inst());
-		apContext->TransmitAPDU(apData, aNumBytes);
-	}
+void TLS_Sending::HandleSendFailure(TransportLayer* apContext)
+{
+	apContext->ChangeState(TLS_Ready::Inst());
+	apContext->SignalSendFailure();
+}
 
-	void TLS_Ready::LowerLayerDown(TransportLayer* apContext)
-	{
-		apContext->ChangeState(TLS_Closed::Inst());
-		apContext->ThisLayerDown();
-	}
-
-	void TLS_Ready::HandleReceive(const boost::uint8_t* apData, size_t aNumBytes, TransportLayer* apContext)
-	{
-		apContext->ReceiveTPDU(apData, aNumBytes);
-	}
-
-	//////////////////////////////////////////////////////
-	//	TLS_Sending
-	//////////////////////////////////////////////////////
-	TLS_Sending TLS_Sending::mInstance;
-
-	void TLS_Sending::HandleReceive(const boost::uint8_t* apData, size_t aNumBytes, TransportLayer* apContext)
-	{
-		apContext->ReceiveTPDU(apData, aNumBytes);
-	}
-
-	void TLS_Sending::HandleSendSuccess(TransportLayer* apContext)
-	{
-		if(!apContext->ContinueSend())
-		{
-			apContext->ChangeState(TLS_Ready::Inst()); // order important here
-			apContext->SignalSendSuccess();
-		}
-	}
-
-	void TLS_Sending::LowerLayerDown(TransportLayer* apContext)
-	{
-		apContext->ChangeState(TLS_Closed::Inst());
-		apContext->ThisLayerDown();
-	}
-
-	void TLS_Sending::HandleSendFailure(TransportLayer* apContext)
-	{
-		apContext->ChangeState(TLS_Ready::Inst());
-		apContext->SignalSendFailure();
-	}
-
-}} //end namespaces
+}
+} //end namespaces

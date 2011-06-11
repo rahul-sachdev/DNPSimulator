@@ -26,64 +26,65 @@ using namespace std;
 
 namespace apl
 {
-	std::string GetDataTypeName(DataTypes aType)
-	{
-		switch(aType)
-		{
-			case(DT_BINARY):
-				return "Binary";
-			case(DT_ANALOG):
-				return "Analog";
-			case(DT_COUNTER):
-				return "Counter";
-			case(DT_CONTROL_STATUS):
-				return "ControlStatus";
-			case(DT_SETPOINT_STATUS):
-				return "SetpointStatus";
-			default:
-				return "Unknown";
-		}
+std::string GetDataTypeName(DataTypes aType)
+{
+	switch(aType) {
+	case(DT_BINARY):
+		return "Binary";
+	case(DT_ANALOG):
+		return "Analog";
+	case(DT_COUNTER):
+		return "Counter";
+	case(DT_CONTROL_STATUS):
+		return "ControlStatus";
+	case(DT_SETPOINT_STATUS):
+		return "SetpointStatus";
+	default:
+		return "Unknown";
 	}
+}
 
 
 
-	// DataPoint
+// DataPoint
 
 
-	DataPoint::DataPoint(boost::uint8_t aQuality, DataTypes aType) :
+DataPoint::DataPoint(boost::uint8_t aQuality, DataTypes aType) :
 	mQuality(aQuality), mTime(0),
 	mType(aType)
-	{}
+{}
 
-	void DataPoint :: SetToNow() { mTime = TimeStamp::GetTimeStamp(); }
+void DataPoint :: SetToNow()
+{
+	mTime = TimeStamp::GetTimeStamp();
+}
 
 
-	// BoolDataPoint
+// BoolDataPoint
 
 
-	BoolDataPoint::BoolDataPoint(boost::uint8_t aQuality, DataTypes aType,boost::uint8_t aValueMask) :
+BoolDataPoint::BoolDataPoint(boost::uint8_t aQuality, DataTypes aType, boost::uint8_t aValueMask) :
 	DataPoint(aQuality, aType),
 	mValueMask(aValueMask)
-	{}
+{}
 
-	std::string BoolDataPoint::ToString() const
-	{
-		std::ostringstream oss;
-		oss << "Value: " << (GetValue() ? "true" : "false") << " Quality: " << static_cast<int>(GetQuality());
-		return oss.str();
+std::string BoolDataPoint::ToString() const
+{
+	std::ostringstream oss;
+	oss << "Value: " << (GetValue() ? "true" : "false") << " Quality: " << static_cast<int>(GetQuality());
+	return oss.str();
+}
+
+template<>
+bool ExceedsDeadband<double>(const double& val1, const double& val2, double aDeadband)
+{
+	double val = fabs(val1 - val2);
+
+	if(val == std::numeric_limits<double>::infinity()) return true;
+	else {
+		return fabs(val) > aDeadband;
 	}
 
-	template<>
-	bool ExceedsDeadband<double>(const double& val1, const double& val2, double aDeadband)
-	{
-		double val = fabs(val1-val2);
-
-		if(val == std::numeric_limits<double>::infinity()) return true;
-		else
-		{
-			return fabs(val) > aDeadband;
-		}
-
-	}
+}
 }
 

@@ -26,11 +26,14 @@
 #include <DNP3/LinkLayer.h>
 #include <DNP3/ILinkRouter.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class LinkLayerTest : public LogTester, public ILinkRouter
 {
-	public:
+public:
 
 	LinkLayerTest(LinkConfig arCfg = DefaultConfig(), FilterLevel aLevel = LEV_WARNING, bool aImmediate = false);
 
@@ -47,6 +50,7 @@ class LinkLayerTest : public LogTester, public ILinkRouter
 	size_t mNumSend;
 };
 
-}}
+}
+}
 
 #endif

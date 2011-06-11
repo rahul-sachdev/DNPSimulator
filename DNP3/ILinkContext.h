@@ -21,20 +21,24 @@
 
 #include "IFrameSink.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 // @section DESCRIPTION Interface from the link router to the link layer
 class ILinkContext : public IFrameSink
 {
-  public:
+public:
 
-	 virtual ~ILinkContext() {}
+	virtual ~ILinkContext() {}
 
-	 virtual void OnLowerLayerUp() = 0;
-	 virtual void OnLowerLayerDown() = 0;
+	virtual void OnLowerLayerUp() = 0;
+	virtual void OnLowerLayerDown() = 0;
 };
 
-}}
+}
+}
 
 #endif
 

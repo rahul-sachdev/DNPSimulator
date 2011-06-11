@@ -26,24 +26,25 @@
 
 using namespace boost::posix_time;
 
-namespace apl {
+namespace apl
+{
 
 AsyncTaskBase::AsyncTaskBase(int aPriority,
-		const TaskHandler& arCallback,
-		AsyncTaskGroup* apGroup,
-		const boost::posix_time::ptime& arInitialTime,
-		const std::string& arName) :
-mName(arName),
-mIsEnabled(false),
-mIsComplete(false),
-mIsExpired(false),
-mIsRunning(false),
-mPriority(aPriority),
-mHandler(arCallback),
-mpGroup(apGroup),
-mNextRunTime(arInitialTime),
-M_INITIAL_TIME(arInitialTime),
-mFlags(0)
+                             const TaskHandler& arCallback,
+                             AsyncTaskGroup* apGroup,
+                             const boost::posix_time::ptime& arInitialTime,
+                             const std::string& arName) :
+	mName(arName),
+	mIsEnabled(false),
+	mIsComplete(false),
+	mIsExpired(false),
+	mIsRunning(false),
+	mPriority(aPriority),
+	mHandler(arCallback),
+	mpGroup(apGroup),
+	mNextRunTime(arInitialTime),
+	M_INITIAL_TIME(arInitialTime),
+	mFlags(0)
 {
 
 }
@@ -95,8 +96,7 @@ void AsyncTaskBase::AddDependency(const AsyncTaskBase* apTask)
 
 bool AsyncTaskBase::IsDependency(const AsyncTaskBase* apTask) const
 {
-	BOOST_FOREACH(const AsyncTaskBase* p, mDependencies)
-	{
+	BOOST_FOREACH(const AsyncTaskBase * p, mDependencies) {
 		if(p == apTask) return true;
 		if(p->IsDependency(apTask)) return true;
 	}
@@ -129,8 +129,7 @@ void AsyncTaskBase::UpdateTime(const boost::posix_time::ptime& arTime)
 		mIsComplete = false;
 		mIsExpired = true;
 	}
-	else
-	{
+	else {
 		mIsExpired = false;
 	}
 }
@@ -144,23 +143,18 @@ bool AsyncTaskBase::LessThan(const AsyncTaskBase* l, const AsyncTaskBase* r)
 	if(!l->IsEnabled() && r->IsEnabled()) return true;
 	if(!r->IsEnabled() && l->IsEnabled()) return false;
 
-	if(l->IsExpired())
-	{
-		if(r->IsExpired()) //if they're both expired, resolve using priority
-		{
+	if(l->IsExpired()) {
+		if(r->IsExpired()) { //if they're both expired, resolve using priority
 			return l->Priority() < r->Priority();
 		}
-		else
-		{
+		else {
 			return false; // left expired but right is not
 		}
 	}
-	else if(r->IsExpired())
-	{
+	else if(r->IsExpired()) {
 		return true; // right expired but left is not
 	}
-	else // if they're both not expired, the one with the lowest run time is higher
-	{
+	else { // if they're both not expired, the one with the lowest run time is higher
 		return l->NextRunTime() > r->NextRunTime();
 	}
 }

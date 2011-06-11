@@ -25,58 +25,58 @@ using namespace std;
 
 namespace apl
 {
-	Logger::Logger(EventLog* apLog, FilterLevel aFilter, const std::string& aName)
-		:
-		mLevel(0),
-		mpLog(apLog),
-		mName(aName),
-		mVarName(aName)
-	{
-		this->SetFilterLevel(aFilter);
-	}
+Logger::Logger(EventLog* apLog, FilterLevel aFilter, const std::string& aName)
+	:
+	mLevel(0),
+	mpLog(apLog),
+	mName(aName),
+	mVarName(aName)
+{
+	this->SetFilterLevel(aFilter);
+}
 
-	void Logger::SetFilterLevel(FilterLevel aFilter)
-	{
-		mLevel = LogTypes::FilterLevelToMask(aFilter);
-	}
+void Logger::SetFilterLevel(FilterLevel aFilter)
+{
+	mLevel = LogTypes::FilterLevelToMask(aFilter);
+}
 
-	Logger* Logger::GetSubLogger(std::string aSubName, int aFilterBits)
-	{
-		std::ostringstream oss;
-		oss << mName << "." << aSubName;
-		Logger* pLogger = mpLog->GetLogger(LEV_WARNING, oss.str());
-		pLogger->SetVarName(mVarName);
-		pLogger->mLevel = aFilterBits;
-		return pLogger;
-	}
+Logger* Logger::GetSubLogger(std::string aSubName, int aFilterBits)
+{
+	std::ostringstream oss;
+	oss << mName << "." << aSubName;
+	Logger* pLogger = mpLog->GetLogger(LEV_WARNING, oss.str());
+	pLogger->SetVarName(mVarName);
+	pLogger->mLevel = aFilterBits;
+	return pLogger;
+}
 
-	Logger* Logger::GetSubLogger(std::string aSubName, FilterLevel aFilter)
-	{
-		return this->GetSubLogger(aSubName, LogTypes::FilterLevelToMask(aFilter));
-	}
+Logger* Logger::GetSubLogger(std::string aSubName, FilterLevel aFilter)
+{
+	return this->GetSubLogger(aSubName, LogTypes::FilterLevelToMask(aFilter));
+}
 
-	Logger* Logger::GetSubLogger(std::string aSubName)
-	{
-		return this->GetSubLogger(aSubName, this->mLevel);
-	}
+Logger* Logger::GetSubLogger(std::string aSubName)
+{
+	return this->GetSubLogger(aSubName, this->mLevel);
+}
 
-	void Logger::Log( const LogEntry& arEntry)
-	{
-		if(this->IsEnabled(arEntry.GetFilterLevel())) mpLog->Log(arEntry);		
-	}
+void Logger::Log( const LogEntry& arEntry)
+{
+	if(this->IsEnabled(arEntry.GetFilterLevel())) mpLog->Log(arEntry);
+}
 
-	void Logger::Log( FilterLevel aFilterLevel, const std::string& arLocation, const std::string& aMessage, int aErrorCode)
-	{
-		if(this->IsEnabled(aFilterLevel)) {
-			LogEntry le(aFilterLevel, mName, arLocation, aMessage, aErrorCode);
-			mpLog->Log(le);
-		}
+void Logger::Log( FilterLevel aFilterLevel, const std::string& arLocation, const std::string& aMessage, int aErrorCode)
+{
+	if(this->IsEnabled(aFilterLevel)) {
+		LogEntry le(aFilterLevel, mName, arLocation, aMessage, aErrorCode);
+		mpLog->Log(le);
 	}
+}
 
-	void Logger::Set(const std::string& aVar, int aValue)
-	{
-		mpLog->SetVar(mVarName, aVar, aValue);
-	}
+void Logger::Set(const std::string& aVar, int aValue)
+{
+	mpLog->SetVar(mVarName, aVar, aValue);
+}
 
 }
 

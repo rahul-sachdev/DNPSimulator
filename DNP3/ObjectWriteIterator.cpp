@@ -25,22 +25,25 @@
 #include <APL/Exception.h>
 
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 ObjectWriteIterator::ObjectWriteIterator() :
-mpPos(NULL),
-mIndex(1),
-mStart(0),
-mStop(0),
-mObjectSize(0)
+	mpPos(NULL),
+	mIndex(1),
+	mStart(0),
+	mStop(0),
+	mObjectSize(0)
 {}
 
 ObjectWriteIterator::ObjectWriteIterator(boost::uint8_t* apPos, size_t aStart, size_t aStop, size_t aObjectSize) :
-mpPos(apPos),
-mIndex(aStart),
-mStart(aStart),
-mStop(aStop),
-mObjectSize(aObjectSize)
+	mpPos(apPos),
+	mIndex(aStart),
+	mStart(aStart),
+	mStop(aStop),
+	mObjectSize(aObjectSize)
 {
 
 }
@@ -62,5 +65,6 @@ const ObjectWriteIterator ObjectWriteIterator::operator++(int)
 	return tmp;
 }
 
-}}
+}
+}
 

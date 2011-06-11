@@ -24,12 +24,15 @@
 #include <APL/ITimeSource.h>
 #include <APL/Logger.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /* ------ Clear Restart ------- */
 
 ClearRestartIIN::ClearRestartIIN(Logger* apLogger) :
-SimpleRspBase(apLogger)
+	SimpleRspBase(apLogger)
 {}
 
 void ClearRestartIIN::ConfigureRequest(APDU& arAPDU)
@@ -43,9 +46,9 @@ void ClearRestartIIN::ConfigureRequest(APDU& arAPDU)
 /* ------ Configure Unsol ------- */
 
 ConfigureUnsol::ConfigureUnsol(Logger* apLogger) :
-SimpleRspBase(apLogger),
-mIsEnable(false),
-mClassMask(0)
+	SimpleRspBase(apLogger),
+	mIsEnable(false),
+	mClassMask(0)
 {}
 
 void ConfigureUnsol::Set(bool aIsEnable, int aClassMask)
@@ -66,12 +69,15 @@ void ConfigureUnsol::ConfigureRequest(APDU& arAPDU)
 /* ------ Time Sync ------- */
 
 TimeSync::TimeSync(Logger* apLogger, ITimeSource* apTimeSrc) :
-SingleRspBase(apLogger),
-mpTimeSrc(apTimeSrc),
-mDelay(-1)
+	SingleRspBase(apLogger),
+	mpTimeSrc(apTimeSrc),
+	mDelay(-1)
 {}
 
-void TimeSync::Init() { mDelay = -1; }
+void TimeSync::Init()
+{
+	mDelay = -1;
+}
 
 void TimeSync::ConfigureRequest(APDU& arAPDU)
 {
@@ -113,7 +119,7 @@ TaskResult TimeSync::_OnFinalResponse(const APDU& arAPDU)
 
 		// The later shouldn't happen, but could cause a negative delay which would
 		// result in a weird time setting
-		mDelay = (send_rcv_time >= rtu_turn_around) ? (send_rcv_time - rtu_turn_around)/2 : 0;
+		mDelay = (send_rcv_time >= rtu_turn_around) ? (send_rcv_time - rtu_turn_around) / 2 : 0;
 
 		return TR_CONTINUE;
 	}
@@ -123,6 +129,7 @@ TaskResult TimeSync::_OnFinalResponse(const APDU& arAPDU)
 	}
 }
 
-}} //ens ns
+}
+} //ens ns
 
 

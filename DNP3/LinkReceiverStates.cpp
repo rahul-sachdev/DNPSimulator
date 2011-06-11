@@ -25,7 +25,10 @@
 #include <APL/Logger.h>
 
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 ////////////////////////////////////
 // Base class
@@ -89,4 +92,5 @@ bool LRS_Body::Parse(LinkLayerReceiver* c)
 
 
 
-}}
+}
+}

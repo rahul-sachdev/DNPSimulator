@@ -20,32 +20,33 @@
 
 #include <memory.h>
 
-namespace apl {
+namespace apl
+{
 
 CopyableBuffer::CopyableBuffer() :
-mpBuff(NULL),
-mSize(0)
+	mpBuff(NULL),
+	mSize(0)
 {
 
 }
 
 CopyableBuffer::CopyableBuffer(size_t aSize) :
-mpBuff(new boost::uint8_t[aSize]),
-mSize(aSize)
+	mpBuff(new boost::uint8_t[aSize]),
+	mSize(aSize)
 {
 	this->Zero();
 }
 
 CopyableBuffer::CopyableBuffer(const boost::uint8_t* apData, size_t aSize) :
-mpBuff(new boost::uint8_t[aSize]),
-mSize(aSize)
+	mpBuff(new boost::uint8_t[aSize]),
+	mSize(aSize)
 {
 	memcpy(mpBuff, apData, mSize);
 }
 
 CopyableBuffer::CopyableBuffer(const CopyableBuffer& arBuffer) :
-mpBuff(new boost::uint8_t[arBuffer.Size()]),
-mSize(arBuffer.Size())
+	mpBuff(new boost::uint8_t[arBuffer.Size()]),
+	mSize(arBuffer.Size())
 {
 	memcpy(mpBuff, arBuffer, mSize);
 }
@@ -72,14 +73,15 @@ CopyableBuffer& CopyableBuffer::operator=(const CopyableBuffer& arRHS)
 }
 
 CopyableBuffer::~CopyableBuffer()
-{ delete [] mpBuff; }
+{
+	delete [] mpBuff;
+}
 
 bool CopyableBuffer::operator==( const CopyableBuffer& other) const
 {
 	if(other.Size() != this->Size()) return false;
-	else
-	{
-		for(size_t i=0; i<this->Size(); ++i) {
+	else {
+		for(size_t i = 0; i < this->Size(); ++i) {
 			if(this->mpBuff[i] != other.mpBuff[i]) return false;
 		}
 

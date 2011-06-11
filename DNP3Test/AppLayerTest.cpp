@@ -20,14 +20,17 @@
 
 #include <APLTestTools/BufferHelpers.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 AppLayerTest::AppLayerTest(bool aIsMaster, size_t aNumRetry, FilterLevel aLevel, bool aImmediate) :
-LogTester(aImmediate),
-user(aIsMaster),
-lower(mLog.GetLogger(aLevel, "lower")),
-mts(),
-app(mLog.GetLogger(aLevel, "app"), &mts, AppConfig(1000, aNumRetry))
+	LogTester(aImmediate),
+	user(aIsMaster),
+	lower(mLog.GetLogger(aLevel, "lower")),
+	mts(),
+	app(mLog.GetLogger(aLevel, "app"), &mts, AppConfig(1000, aNumRetry))
 {
 	lower.SetUpperLayer(&app);
 	app.SetUser(&user);
@@ -85,8 +88,7 @@ bool AppLayerTest::CheckSentAPDU(FunctionCodes aCode, bool aFIR, bool aFIN, bool
 	APDU f;
 	f.SetFunction(aCode);
 	f.SetControl(aFIR, aFIN, aCON, aUNS, aSEQ);
-	if(aCode == FC_UNSOLICITED_RESPONSE || aCode == FC_RESPONSE)
-	{
+	if(aCode == FC_UNSOLICITED_RESPONSE || aCode == FC_RESPONSE) {
 		IINField iin;
 		f.SetIIN(iin);
 	}
@@ -95,4 +97,5 @@ bool AppLayerTest::CheckSentAPDU(FunctionCodes aCode, bool aFIR, bool aFIN, bool
 	return ret;
 }
 
-}}
+}
+}

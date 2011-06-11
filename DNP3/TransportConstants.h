@@ -22,19 +22,22 @@
 
 #include "DNPConstants.h"
 
-namespace apl { namespace dnp {
-
-enum TransportHeader
+namespace apl
 {
-	TL_HDR_FIN = 0x80,
-	TL_HDR_FIR = 0x40,
-	TL_HDR_SEQ = 0x3F
+namespace dnp
+{
+
+enum TransportHeader {
+    TL_HDR_FIN = 0x80,
+    TL_HDR_FIR = 0x40,
+    TL_HDR_SEQ = 0x3F
 };
 
 // The macro MACRO_DNP_MAX_FRAG_SIZE controls the maximum size of application layer frames
 const size_t TL_MAX_TPDU_LENGTH = 250;
 const size_t TL_MAX_TPDU_PAYLOAD = 249;
 
-}}
+}
+}
 
 #endif

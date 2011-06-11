@@ -19,78 +19,80 @@
 #include "LogEntryCircularBuffer.h"
 #include <iostream>
 
-namespace apl{
+namespace apl
+{
 
-	LogEntryCircularBuffer :: LogEntryCircularBuffer(size_t aMaxEntries) :
+LogEntryCircularBuffer :: LogEntryCircularBuffer(size_t aMaxEntries) :
 	mMaxEntries(aMaxEntries)
-	{
+{
 
-	}
+}
 
-	size_t LogEntryCircularBuffer :: Count()
-	{
-		CriticalSection cs(&mLock);
-		return mItemQueue.size();
-	}
+size_t LogEntryCircularBuffer :: Count()
+{
+	CriticalSection cs(&mLock);
+	return mItemQueue.size();
+}
 
-	bool LogEntryCircularBuffer :: ReadLog(LogEntry& mEntry, int aTimeout)
-	{
-		CriticalSection cs(&mLock);
+bool LogEntryCircularBuffer :: ReadLog(LogEntry& mEntry, int aTimeout)
+{
+	CriticalSection cs(&mLock);
 
+	if(CheckRead(mEntry)) return true;
+	else {
+		if(aTimeout < 0) cs.Wait();
+		else if(aTimeout > 0) cs.TimedWait(aTimeout);
 		if(CheckRead(mEntry)) return true;
-		else {
-			if(aTimeout < 0) cs.Wait();
-			else if(aTimeout > 0) cs.TimedWait(aTimeout);
-			if(CheckRead(mEntry)) return true;
-		}
-
-		return false;
 	}
 
-	void LogEntryCircularBuffer :: BlockUntilEntry()
-	{
-		CriticalSection cs(&mLock);
-		if(mItemQueue.size() == 0) cs.Wait();
-	}
+	return false;
+}
 
-	bool LogEntryCircularBuffer :: CheckRead(LogEntry& aEntry)
-	{
-		if(mItemQueue.size() > 0) {
-			aEntry = mItemQueue.front(); //make a copy of the front of the queue
-			mItemQueue.pop_front();
-			return true;
-		}
-		else return false;
-	}
+void LogEntryCircularBuffer :: BlockUntilEntry()
+{
+	CriticalSection cs(&mLock);
+	if(mItemQueue.size() == 0) cs.Wait();
+}
 
-	void LogEntryCircularBuffer :: AddIgnoreCode(int aCode)
-	{
-		mIgnoreCodes.insert(aCode);
+bool LogEntryCircularBuffer :: CheckRead(LogEntry& aEntry)
+{
+	if(mItemQueue.size() > 0) {
+		aEntry = mItemQueue.front(); //make a copy of the front of the queue
+		mItemQueue.pop_front();
+		return true;
 	}
+	else return false;
+}
 
-	void LogEntryCircularBuffer :: Log( const apl::LogEntry& arEntry )
-	{
-		if(mIgnoreCodes.find(arEntry.GetErrorCode()) == mIgnoreCodes.end()) { //only log messages that aren't ignored
-			
-			size_t num = 0;
-			{
-				CriticalSection cs(&mLock);
-				num = mItemQueue.size();
-				mItemQueue.push_back(arEntry);
-				if(mItemQueue.size() > mMaxEntries)
-				{ mItemQueue.pop_front(); }
-				cs.Signal();
+void LogEntryCircularBuffer :: AddIgnoreCode(int aCode)
+{
+	mIgnoreCodes.insert(aCode);
+}
+
+void LogEntryCircularBuffer :: Log( const apl::LogEntry& arEntry )
+{
+	if(mIgnoreCodes.find(arEntry.GetErrorCode()) == mIgnoreCodes.end()) { //only log messages that aren't ignored
+
+		size_t num = 0;
+		{
+			CriticalSection cs(&mLock);
+			num = mItemQueue.size();
+			mItemQueue.push_back(arEntry);
+			if(mItemQueue.size() > mMaxEntries) {
+				mItemQueue.pop_front();
 			}
-
-			// only notify if the queue was empty
-			if(num == 0) this->NotifyAll();
+			cs.Signal();
 		}
-	}
 
-	void LogEntryCircularBuffer :: SetMaxEntries(size_t aMax)
-	{
-		CriticalSection cs(&mLock);
-		mMaxEntries = aMax;
-		while(mItemQueue.size() > aMax) mItemQueue.pop_front();
+		// only notify if the queue was empty
+		if(num == 0) this->NotifyAll();
 	}
+}
+
+void LogEntryCircularBuffer :: SetMaxEntries(size_t aMax)
+{
+	CriticalSection cs(&mLock);
+	mMaxEntries = aMax;
+	while(mItemQueue.size() > aMax) mItemQueue.pop_front();
+}
 }

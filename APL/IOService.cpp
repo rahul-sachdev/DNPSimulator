@@ -20,7 +20,8 @@
 #include "IOService.h"
 #include <boost/asio.hpp>
 
-namespace apl {
+namespace apl
+{
 
 IOService::IOService() : mpService(new boost::asio::io_service())
 {

@@ -28,45 +28,51 @@
 #include <assert.h>
 #include <stddef.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	/**
-	Buffer iterator to write objects with continuous indices.
-	*/
-	class ObjectWriteIterator
-	{
+/**
+Buffer iterator to write objects with continuous indices.
+*/
+class ObjectWriteIterator
+{
 
-		friend class APDU;
+	friend class APDU;
 
-		public:
+public:
 
-		ObjectWriteIterator();
+	ObjectWriteIterator();
 
-		const ObjectWriteIterator& operator++();
-		const ObjectWriteIterator operator++(int);
-		bool IsEnd() const { return mIndex > mStop; };
-
-		boost::uint8_t* operator*() const;
-
-		private:
-
-		ObjectWriteIterator(boost::uint8_t* apPos, size_t aStart, size_t aStop, size_t aObjectSize);
-
-		boost::uint8_t* mpPos;
-
-		size_t mIndex;
-		size_t mStart;
-		size_t mStop;
-		size_t mObjectSize;
+	const ObjectWriteIterator& operator++();
+	const ObjectWriteIterator operator++(int);
+	bool IsEnd() const {
+		return mIndex > mStop;
 	};
 
-	inline boost::uint8_t* ObjectWriteIterator::operator*() const
-	{
-		if(this->IsEnd()) throw InvalidStateException(LOCATION, "End of iteration");
-		return mpPos;
-	}
+	boost::uint8_t* operator*() const;
 
-}}
+private:
+
+	ObjectWriteIterator(boost::uint8_t* apPos, size_t aStart, size_t aStop, size_t aObjectSize);
+
+	boost::uint8_t* mpPos;
+
+	size_t mIndex;
+	size_t mStart;
+	size_t mStop;
+	size_t mObjectSize;
+};
+
+inline boost::uint8_t* ObjectWriteIterator::operator*() const
+{
+	if(this->IsEnd()) throw InvalidStateException(LOCATION, "End of iteration");
+	return mpPos;
+}
+
+}
+}
 
 #endif
 

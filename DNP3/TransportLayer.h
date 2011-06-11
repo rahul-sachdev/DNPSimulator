@@ -28,61 +28,65 @@
 
 #include <APL/AsyncLayerInterfaces.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	class TLS_Base;
+class TLS_Base;
 
-	/** Implements the DNP3 transport layer as a generic
-	asynchronous protocol stack layer
-	*/
-	class TransportLayer : public IUpperLayer, public ILowerLayer
-	{
-		public:
+/** Implements the DNP3 transport layer as a generic
+asynchronous protocol stack layer
+*/
+class TransportLayer : public IUpperLayer, public ILowerLayer
+{
+public:
 
-		TransportLayer(apl::Logger* apLogger, size_t aFragSize = DEFAULT_FRAG_SIZE);
-		virtual ~TransportLayer(){}
+	TransportLayer(apl::Logger* apLogger, size_t aFragSize = DEFAULT_FRAG_SIZE);
+	virtual ~TransportLayer() {}
 
-		/* Actions - Taken by the states/transmitter/receiver in response to events */
+	/* Actions - Taken by the states/transmitter/receiver in response to events */
 
-		void ThisLayerUp();
-		void ThisLayerDown();
-		void ChangeState(TLS_Base* apNewState);
+	void ThisLayerUp();
+	void ThisLayerDown();
+	void ChangeState(TLS_Base* apNewState);
 
-		void TransmitAPDU(const boost::uint8_t* apData, size_t aNumBytes);
-		void TransmitTPDU(const boost::uint8_t* apData, size_t aNumBytes);
-		void ReceiveAPDU(const boost::uint8_t* apData, size_t aNumBytes);
-		void ReceiveTPDU(const boost::uint8_t* apData, size_t aNumBytes);
+	void TransmitAPDU(const boost::uint8_t* apData, size_t aNumBytes);
+	void TransmitTPDU(const boost::uint8_t* apData, size_t aNumBytes);
+	void ReceiveAPDU(const boost::uint8_t* apData, size_t aNumBytes);
+	void ReceiveTPDU(const boost::uint8_t* apData, size_t aNumBytes);
 
-		bool ContinueSend(); // return true if
-		void SignalSendSuccess();
-		void SignalSendFailure();
+	bool ContinueSend(); // return true if
+	void SignalSendSuccess();
+	void SignalSendFailure();
 
-		/* Events - NVII delegates from ILayerUp/ILayerDown and Events produced internally */
-		static std::string ToString(boost::uint8_t aHeader);
+	/* Events - NVII delegates from ILayerUp/ILayerDown and Events produced internally */
+	static std::string ToString(boost::uint8_t aHeader);
 
-		private:
+private:
 
-		//delegated to the states
-		void _Send(const boost::uint8_t*, size_t); //Implement ILowerLayer
-		void _OnReceive(const boost::uint8_t*, size_t); //Implement IUpperLayer
-		void _OnLowerLayerUp();
-		void _OnLowerLayerDown();
-		void _OnSendSuccess();
-		void _OnSendFailure();
-		void _OnLowerLayerShutdown();
+	//delegated to the states
+	void _Send(const boost::uint8_t*, size_t); //Implement ILowerLayer
+	void _OnReceive(const boost::uint8_t*, size_t); //Implement IUpperLayer
+	void _OnLowerLayerUp();
+	void _OnLowerLayerDown();
+	void _OnSendSuccess();
+	void _OnSendFailure();
+	void _OnLowerLayerShutdown();
 
-		/* Members and Helpers */
-		TLS_Base* mpState;
+	/* Members and Helpers */
+	TLS_Base* mpState;
 
-		const size_t M_FRAG_SIZE;
+	const size_t M_FRAG_SIZE;
 
-		/* Transmitter and Receiver Classes */
-		TransportRx mReceiver;
-		TransportTx mTransmitter;
+	/* Transmitter and Receiver Classes */
+	TransportRx mReceiver;
+	TransportTx mTransmitter;
 
-		bool mThisLayerUp;
-	};
+	bool mThisLayerUp;
+};
 
-}}
+}
+}
 
 #endif

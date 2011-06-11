@@ -25,20 +25,21 @@
 #include <assert.h>
 #include "Logger.h"
 
-namespace apl {
+namespace apl
+{
 
 AsyncPhysLayerMonitor::AsyncPhysLayerMonitor(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc, millis_t aOpenRetry) :
-Loggable(apLogger),
-IHandlerAsync(apLogger),
-mpPhys(apPhys),
-mpTimerSrc(apTimerSrc),
-mpOpenTimer(NULL),
-mPortState(apLogger, "port_state"),
-mOpening(false),
-mOpen(false),
-mStopOpenRetry(false),
-M_OPEN_RETRY(aOpenRetry),
-mpMonitor(NULL)
+	Loggable(apLogger),
+	IHandlerAsync(apLogger),
+	mpPhys(apPhys),
+	mpTimerSrc(apTimerSrc),
+	mpOpenTimer(NULL),
+	mPortState(apLogger, "port_state"),
+	mOpening(false),
+	mOpen(false),
+	mStopOpenRetry(false),
+	M_OPEN_RETRY(aOpenRetry),
+	mpMonitor(NULL)
 {
 	assert(apPhys != NULL);
 	assert(apTimerSrc != NULL);
@@ -72,7 +73,7 @@ void AsyncPhysLayerMonitor::Notify(IPhysMonitor::State aState)
 
 void AsyncPhysLayerMonitor::Start()
 {
-	LOG_BLOCK(LEV_INFO,"Start");
+	LOG_BLOCK(LEV_INFO, "Start");
 	assert(!mOpening);
 	if(mpOpenTimer) mpOpenTimer = NULL;
 	mOpening = true;
@@ -83,13 +84,13 @@ void AsyncPhysLayerMonitor::Start()
 
 void AsyncPhysLayerMonitor::Stop()
 {
-	LOG_BLOCK(LEV_INFO,"Stop");
+	LOG_BLOCK(LEV_INFO, "Stop");
 	if(!this->IsRunning()) {
 		mStopOpenRetry = true;
 		this->Notify(IPhysMonitor::Stopped);
 	}
 	else {
-		if(!mStopOpenRetry){
+		if(!mStopOpenRetry) {
 			mStopOpenRetry = true;
 			if(mOpen || mOpening) {
 				mpPhys->AsyncClose();
@@ -102,7 +103,8 @@ void AsyncPhysLayerMonitor::Stop()
 	}
 }
 
-void AsyncPhysLayerMonitor::Reconnect(){
+void AsyncPhysLayerMonitor::Reconnect()
+{
 	if(mOpen || mOpening) {
 		mpPhys->AsyncClose();
 	}

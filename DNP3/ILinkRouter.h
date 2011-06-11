@@ -19,21 +19,25 @@
 #ifndef __I_LINK_ROUTER_H_
 #define __I_LINK_ROUTER_H_
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class LinkFrame;
 
 // @section DESCRIPTION Interface from the link layer to the link router
 class ILinkRouter
 {
-  public:
+public:
 
-	 virtual ~ILinkRouter() {}
+	virtual ~ILinkRouter() {}
 
-	 virtual void Transmit(const LinkFrame&) = 0;
+	virtual void Transmit(const LinkFrame&) = 0;
 };
 
-}}
+}
+}
 
 #endif
 

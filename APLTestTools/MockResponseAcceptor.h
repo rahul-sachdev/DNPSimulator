@@ -28,30 +28,29 @@
 
 namespace apl
 {
-	struct MockResponse
-	{
-		MockResponse(const apl::CommandResponse& aResponse, int aSequence) :
+struct MockResponse {
+	MockResponse(const apl::CommandResponse& aResponse, int aSequence) :
 		Response(aResponse),
 		Sequence(aSequence)
-		{}
+	{}
 
-		apl::CommandResponse Response;
-		int Sequence;
-	};
+	apl::CommandResponse Response;
+	int Sequence;
+};
 
-	class MockResponseAcceptor : public apl::IResponseAcceptor
-	{
-		public:
+class MockResponseAcceptor : public apl::IResponseAcceptor
+{
+public:
 
-		void AcceptResponse(const apl::CommandResponse& aResponse, int aSequence);
+	void AcceptResponse(const apl::CommandResponse& aResponse, int aSequence);
 
-		MockResponse PopResponse();
-		size_t NumResponses();
+	MockResponse PopResponse();
+	size_t NumResponses();
 
-		private:
-		apl::SigLock mLock;
-		std::deque<MockResponse> mResponses;
-	};
+private:
+	apl::SigLock mLock;
+	std::deque<MockResponse> mResponses;
+};
 }
 
 #endif

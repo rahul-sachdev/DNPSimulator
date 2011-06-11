@@ -18,16 +18,20 @@
 //
 #include "IHandlerAsync.h"
 
-namespace apl {
+namespace apl
+{
 
 IHandlerAsync::IHandlerAsync(Logger* apLogger) :
-Loggable(apLogger),
-IUpperLayer(apLogger)
+	Loggable(apLogger),
+	IUpperLayer(apLogger)
 {
 
 }
 
 // For consistency sake, use NVII pattern in case we want pre/post conditions in the future
-void IHandlerAsync::OnOpenFailure() { this->_OnOpenFailure(); }
+void IHandlerAsync::OnOpenFailure()
+{
+	this->_OnOpenFailure();
+}
 
 }

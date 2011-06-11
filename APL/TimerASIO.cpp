@@ -18,11 +18,12 @@
 //
 #include "TimerASIO.h"
 
-namespace apl {
+namespace apl
+{
 
 TimerASIO::TimerASIO(boost::asio::io_service& arService) :
-mCanceled(false),
-mTimer(arService)
+	mCanceled(false),
+	mTimer(arService)
 {
 
 }

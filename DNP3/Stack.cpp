@@ -20,16 +20,20 @@
 
 #include <APL/Logger.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 Stack::Stack(Logger* apLogger, ITimerSource* apTimerSrc, AppConfig aAppCfg, LinkConfig aCfg) :
-mLink(apLogger->GetSubLogger("link"), apTimerSrc, aCfg),
-mTransport(apLogger->GetSubLogger("transport")),
-mApplication(apLogger->GetSubLogger("app"), apTimerSrc, aAppCfg)
+	mLink(apLogger->GetSubLogger("link"), apTimerSrc, aCfg),
+	mTransport(apLogger->GetSubLogger("transport")),
+	mApplication(apLogger->GetSubLogger("app"), apTimerSrc, aAppCfg)
 {
 	mLink.SetUpperLayer(&mTransport);
 	mTransport.SetUpperLayer(&mApplication);
 }
 
-}}
+}
+}
 

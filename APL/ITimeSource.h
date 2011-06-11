@@ -21,26 +21,30 @@
 
 #include "Types.h"
 
-namespace boost { namespace posix_time {
+namespace boost
+{
+namespace posix_time
+{
 
-	class ptime;
+class ptime;
 
-}}
+}
+}
 
 namespace apl
 {
-	class ITimeManager
-	{
-	public:
-		virtual millis_t GetTime() = 0;
-		virtual void SetTime(millis_t aTime) = 0;
-	};
-	class ITimeSource
-	{
-		public:
-			virtual boost::posix_time::ptime GetUTC() = 0;
-			virtual TimeStamp_t GetTimeStampUTC() = 0;
-	};
+class ITimeManager
+{
+public:
+	virtual millis_t GetTime() = 0;
+	virtual void SetTime(millis_t aTime) = 0;
+};
+class ITimeSource
+{
+public:
+	virtual boost::posix_time::ptime GetUTC() = 0;
+	virtual TimeStamp_t GetTimeStampUTC() = 0;
+};
 }
 
 #endif

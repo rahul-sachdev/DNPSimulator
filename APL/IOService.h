@@ -19,22 +19,30 @@
 #ifndef __IO_SERVICE_H_
 #define __IO_SERVICE_H_
 
-namespace boost { namespace asio {
-	class io_service;
-}}
+namespace boost
+{
+namespace asio
+{
+class io_service;
+}
+}
 
 
-namespace apl {
+namespace apl
+{
 
-class IOService {
+class IOService
+{
 
-	public:
-		IOService();
-		~IOService();
-		boost::asio::io_service* Get() { return mpService; }
+public:
+	IOService();
+	~IOService();
+	boost::asio::io_service* Get() {
+		return mpService;
+	}
 
-	private:
-		boost::asio::io_service* mpService;
+private:
+	boost::asio::io_service* mpService;
 };
 
 }

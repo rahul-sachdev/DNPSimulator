@@ -23,7 +23,8 @@
 #include <boost/asio.hpp>
 #include "TimerInterfaces.h"
 
-namespace apl {
+namespace apl
+{
 
 /**
  * This is a wrapper for ASIO timers that are used to post events
@@ -43,22 +44,22 @@ class TimerASIO : public ITimer
 {
 	friend class TimerSourceASIO;
 
-	public:
-		TimerASIO(boost::asio::io_service&);
+public:
+	TimerASIO(boost::asio::io_service&);
 
-		// Implement ITimer
-		void Cancel();
+	// Implement ITimer
+	void Cancel();
 
-		/**
-		 * Return the timer's expiry time as an absolute time.
-		 */
-		boost::posix_time::ptime ExpiresAt();
+	/**
+	 * Return the timer's expiry time as an absolute time.
+	 */
+	boost::posix_time::ptime ExpiresAt();
 
-	private:
+private:
 
-		bool mCanceled;
+	bool mCanceled;
 
-		boost::asio::deadline_timer mTimer;
+	boost::asio::deadline_timer mTimer;
 };
 
 }

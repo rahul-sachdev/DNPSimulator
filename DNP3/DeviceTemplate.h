@@ -25,7 +25,10 @@
 #include <APL/DataInterfaces.h>
 #include "DeviceTemplateTypes.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /** Configuration structure that defines:
 	1) the default layout of the database
@@ -34,15 +37,14 @@ namespace apl { namespace dnp {
 	The indices of the points are implicit based on their
 	position within the vectors below.
 */
-struct DeviceTemplate
-{
+struct DeviceTemplate {
 	DeviceTemplate(size_t aNumBinary = 0,
-			size_t aNumAnalog = 0,
-			size_t aNumCounter = 0,
-			size_t aNumControlStatus = 0,
-			size_t aNumSetpointStatus = 0,
-			size_t aNumControls = 0,
-			size_t aNumSetpoints = 0);
+	               size_t aNumAnalog = 0,
+	               size_t aNumCounter = 0,
+	               size_t aNumControlStatus = 0,
+	               size_t aNumSetpointStatus = 0,
+	               size_t aNumControls = 0,
+	               size_t aNumSetpoints = 0);
 
 	//Measurements
 	std::vector<EventPointRecord> mBinary;		// list of binary point properties
@@ -61,12 +63,11 @@ struct DeviceTemplate
 	// Write the initial state of a database to an observer
 	void Publish(IDataObserver*);
 
-	private:
+private:
 
 	template <class T>
-	static void InitObserver(IDataObserver* apObs, size_t aNum)
-	{
-		for(size_t i=0; i<aNum; ++i) {
+	static void InitObserver(IDataObserver* apObs, size_t aNum) {
+		for(size_t i = 0; i < aNum; ++i) {
 			T val;
 			apObs->Update(val, i);
 		}
@@ -74,9 +75,8 @@ struct DeviceTemplate
 
 	// Helper function for setting up default names
 	template <class T>
-	void InitNames(const std::string& arName, std::vector<T>& arVec)
-	{
-		for(size_t i=0; i<arVec.size(); ++i) {
+	void InitNames(const std::string& arName, std::vector<T>& arVec) {
+		for(size_t i = 0; i < arVec.size(); ++i) {
 			std::ostringstream oss;
 			oss << arName << i;
 			arVec[i].Name = oss.str();
@@ -85,6 +85,7 @@ struct DeviceTemplate
 
 };
 
-}}
+}
+}
 
 #endif

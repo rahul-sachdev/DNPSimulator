@@ -22,36 +22,45 @@
 #include "Thread.h"
 #include "TimerSourceASIO.h"
 
-namespace boost { namespace asio {
-	class io_service;
-}}
+namespace boost
+{
+namespace asio
+{
+class io_service;
+}
+}
 
-namespace apl {
+namespace apl
+{
 
 class Logger;
 class Timer;
 
 class IOServiceThread : public Threadable
 {
-	public:
-		IOServiceThread(boost::asio::io_service* apService);
+public:
+	IOServiceThread(boost::asio::io_service* apService);
 
-		void Start() { mThread.Start(); }
-		void Stop();
+	void Start() {
+		mThread.Start();
+	}
+	void Stop();
 
-		boost::asio::io_service* GetService() { return mpService; }
+	boost::asio::io_service* GetService() {
+		return mpService;
+	}
 
-		void Run();
-		void SignalStop();
+	void Run();
+	void SignalStop();
 
-	protected:
+protected:
 
-		boost::asio::io_service* mpService;
-		void Throw(); //need something to bind the hold timer to
+	boost::asio::io_service* mpService;
+	void Throw(); //need something to bind the hold timer to
 
-	private:
+private:
 
-		Thread mThread;
+	Thread mThread;
 };
 
 }

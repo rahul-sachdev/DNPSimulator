@@ -19,7 +19,10 @@
 
 #include "LinkRoute.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 LinkRoute::LinkRoute(const boost::uint16_t aRemoteAddr, const boost::uint16_t aLocalAddr) :
 	remote(aRemoteAddr),
@@ -31,7 +34,7 @@ LinkRoute::LinkRoute() :
 	local(0)
 {}
 
-bool LinkRoute::LessThan::operator ()(const LinkRoute &a, const LinkRoute &b) const
+bool LinkRoute::LessThan::operator ()(const LinkRoute& a, const LinkRoute& b) const
 {
 	if(a.remote < b.remote) return true;
 	else if(b.remote < a.remote) return false;
@@ -43,5 +46,6 @@ std::ostream& operator<<(std::ostream& oss, const LinkRoute& arRoute)
 	return oss << " Local: " << arRoute.local << " Remote: " << arRoute.remote;
 }
 
-}}
+}
+}
 

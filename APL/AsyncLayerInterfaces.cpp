@@ -23,7 +23,8 @@
 #include "Logger.h"
 #include "ToHex.h"
 
-namespace apl {
+namespace apl
+{
 
 //////////////////////////////////
 // IUpDown
@@ -48,8 +49,8 @@ void IUpDown::OnLowerLayerDown()
 // IUpperLayer
 //////////////////////////////////
 IUpperLayer::IUpperLayer(Logger* apLogger) :
-Loggable(apLogger),
-mpLowerLayer(NULL)
+	Loggable(apLogger),
+	mpLowerLayer(NULL)
 {
 
 }
@@ -83,8 +84,8 @@ void IUpperLayer::OnSendFailure()
 //////////////////////////////////
 
 ILowerLayer::ILowerLayer(Logger* apLogger) :
-Loggable(apLogger),
-mpUpperLayer(NULL)
+	Loggable(apLogger),
+	mpUpperLayer(NULL)
 {
 
 }

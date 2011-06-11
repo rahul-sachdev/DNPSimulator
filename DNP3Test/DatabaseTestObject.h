@@ -23,28 +23,28 @@
 #include <DNP3/Database.h>
 #include <APL/Log.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class MockEventBuffer : public IEventBuffer
 {
-	public:
+public:
 
 	virtual ~MockEventBuffer() {}
 
-	void Update(const Binary& arEvent, PointClass aClass, size_t aIndex)
-	{
+	void Update(const Binary& arEvent, PointClass aClass, size_t aIndex) {
 		BinaryInfo v(arEvent, aClass, aIndex);
 		mBinaryEvents.push_back(v);
 	}
 
-	void Update(const Analog& arEvent, PointClass aClass, size_t aIndex)
-	{
+	void Update(const Analog& arEvent, PointClass aClass, size_t aIndex) {
 		AnalogInfo v(arEvent, aClass, aIndex);
 		mAnalogEvents.push_back(v);
 	}
 
-	void Update(const Counter& arEvent, PointClass aClass, size_t aIndex)
-	{
+	void Update(const Counter& arEvent, PointClass aClass, size_t aIndex) {
 		CounterInfo v(arEvent, aClass, aIndex);
 		mCounterEvents.push_back(v);
 	}
@@ -56,10 +56,9 @@ class MockEventBuffer : public IEventBuffer
 
 class DatabaseTestObject
 {
-	public:
+public:
 	DatabaseTestObject(FilterLevel aLevel = LEV_INFO) :
-	db(log.GetLogger(aLevel, "test"))
-	{
+		db(log.GetLogger(aLevel, "test")) {
 		db.SetEventBuffer(&buffer);
 	}
 
@@ -68,7 +67,8 @@ class DatabaseTestObject
 	Database db;
 };
 
-}}
+}
+}
 
 #endif
 

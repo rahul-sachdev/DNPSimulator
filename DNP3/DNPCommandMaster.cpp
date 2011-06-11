@@ -27,70 +27,74 @@
 
 using namespace std;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	IDNPCommandMaster::~IDNPCommandMaster(){}
+IDNPCommandMaster::~IDNPCommandMaster() {}
 
-	////////////////////////////////////////
-	// DNPCommandMaster
-	////////////////////////////////////////
+////////////////////////////////////////
+// DNPCommandMaster
+////////////////////////////////////////
 
-	DNPCommandMaster::DNPCommandMaster(apl::millis_t aSelectTimeout, CommandModes aMode) :
+DNPCommandMaster::DNPCommandMaster(apl::millis_t aSelectTimeout, CommandModes aMode) :
 	mSelectTimeout(aSelectTimeout),
 	mpRspAcceptor(NULL),
 	mCommandMode(aMode)
-	{
+{
 
+}
+
+void DNPCommandMaster::Configure(const DeviceTemplate& arTmp, ICommandAcceptor* apAcceptor)
+{
+	for(size_t j = 0; j < arTmp.mControls.size(); ++j) {
+		this->BindCommand(CT_BINARY_OUTPUT, j, j, arTmp.mControls[j].CommandMode, arTmp.mControls[j].SelectTimeoutMS, apAcceptor);
 	}
 
-	void DNPCommandMaster::Configure(const DeviceTemplate& arTmp, ICommandAcceptor* apAcceptor)
-	{
-		for(size_t j=0; j<arTmp.mControls.size(); ++j)
-		{ this->BindCommand(CT_BINARY_OUTPUT, j, j, arTmp.mControls[j].CommandMode, arTmp.mControls[j].SelectTimeoutMS, apAcceptor); }
-
-		for(size_t j=0; j<arTmp.mSetpoints.size(); ++j)
-		{ this->BindCommand(CT_SETPOINT, j, j, arTmp.mSetpoints[j].CommandMode, arTmp.mSetpoints[j].SelectTimeoutMS, apAcceptor); }
+	for(size_t j = 0; j < arTmp.mSetpoints.size(); ++j) {
+		this->BindCommand(CT_SETPOINT, j, j, arTmp.mSetpoints[j].CommandMode, arTmp.mSetpoints[j].SelectTimeoutMS, apAcceptor);
 	}
+}
 
-	void DNPCommandMaster::DeselectAll()
-	{
-		for(SetpointMap::iterator i = mSetpointMap.begin(); i != mSetpointMap.end(); ++i)
-		{
-			i->second.mIsSelected = false;
-		}
-		for(ControlMap::iterator i = mControlMap.begin(); i != mControlMap.end(); ++i)
-		{
-			i->second.mIsSelected = false;
-		}
+void DNPCommandMaster::DeselectAll()
+{
+	for(SetpointMap::iterator i = mSetpointMap.begin(); i != mSetpointMap.end(); ++i) {
+		i->second.mIsSelected = false;
 	}
-
-	void DNPCommandMaster::SetResponseObserver(IResponseAcceptor* apAcceptor)
-	{
-		assert(mpRspAcceptor == NULL);
-		mpRspAcceptor = apAcceptor;
+	for(ControlMap::iterator i = mControlMap.begin(); i != mControlMap.end(); ++i) {
+		i->second.mIsSelected = false;
 	}
+}
 
-	//Implement the ResponseAcceptor interface
-	void DNPCommandMaster::AcceptResponse(const apl::CommandResponse& arResponse, int aSequence)
-	{
-		assert(mpRspAcceptor != NULL);
-		mpRspAcceptor->AcceptResponse(arResponse, aSequence);
-	}
+void DNPCommandMaster::SetResponseObserver(IResponseAcceptor* apAcceptor)
+{
+	assert(mpRspAcceptor == NULL);
+	mpRspAcceptor = apAcceptor;
+}
 
-	void DNPCommandMaster::BindCommand(CommandTypes aType, size_t aLocalIndex, size_t aRemoteIndex, ICommandAcceptor* apAcceptor)
-	{
-		BindCommand(aType, aLocalIndex, aRemoteIndex, mCommandMode, 5000, apAcceptor);
-	}
-	void DNPCommandMaster::BindCommand(CommandTypes aType, size_t aLocalIndex, size_t aRemoteIndex, CommandModes aMode, millis_t aSelectTimeoutMS, ICommandAcceptor* apAcceptor)
-	{
-		assert(apAcceptor != NULL);
+//Implement the ResponseAcceptor interface
+void DNPCommandMaster::AcceptResponse(const apl::CommandResponse& arResponse, int aSequence)
+{
+	assert(mpRspAcceptor != NULL);
+	mpRspAcceptor->AcceptResponse(arResponse, aSequence);
+}
 
-		if ( aType == CT_BINARY_OUTPUT )
-			BindCommand<BinaryOutput>(mControlMap, aType, aLocalIndex, aRemoteIndex, aMode, aSelectTimeoutMS, apAcceptor);
-		else if ( aType == CT_SETPOINT )
-			BindCommand<Setpoint>(mSetpointMap, aType, aLocalIndex, aRemoteIndex, aMode, aSelectTimeoutMS, apAcceptor);
-		else
-			throw Exception(LOCATION, "Command type invalid");
-	}
+void DNPCommandMaster::BindCommand(CommandTypes aType, size_t aLocalIndex, size_t aRemoteIndex, ICommandAcceptor* apAcceptor)
+{
+	BindCommand(aType, aLocalIndex, aRemoteIndex, mCommandMode, 5000, apAcceptor);
+}
+void DNPCommandMaster::BindCommand(CommandTypes aType, size_t aLocalIndex, size_t aRemoteIndex, CommandModes aMode, millis_t aSelectTimeoutMS, ICommandAcceptor* apAcceptor)
+{
+	assert(apAcceptor != NULL);
 
-}}
+	if ( aType == CT_BINARY_OUTPUT )
+		BindCommand<BinaryOutput>(mControlMap, aType, aLocalIndex, aRemoteIndex, aMode, aSelectTimeoutMS, apAcceptor);
+	else if ( aType == CT_SETPOINT )
+		BindCommand<Setpoint>(mSetpointMap, aType, aLocalIndex, aRemoteIndex, aMode, aSelectTimeoutMS, apAcceptor);
+	else
+		throw Exception(LOCATION, "Command type invalid");
+}
+
+}
+}

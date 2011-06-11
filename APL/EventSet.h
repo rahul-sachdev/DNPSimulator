@@ -26,36 +26,35 @@
 namespace apl
 {
 
-	class EventSet
-	{
-		public:
+class EventSet
+{
+public:
 
-		EventSet(boost::int64_t aEventFlags)
-		{
-			const int64_t ONE = static_cast<boost::int64_t>(1);
+	EventSet(boost::int64_t aEventFlags) {
+		const int64_t ONE = static_cast<boost::int64_t>(1);
 
-			for(size_t i = 0; i < 64; i++)
-			{
-				if( (aEventFlags & (ONE << i)) != 0) mEvents.push(i);
-			}
+		for(size_t i = 0; i < 64; i++) {
+			if( (aEventFlags & (ONE << i)) != 0) mEvents.push(i);
 		}
+	}
 
-		inline bool HasEvents(){ return mEvents.size() != 0; }
+	inline bool HasEvents() {
+		return mEvents.size() != 0;
+	}
 
-		inline size_t GetNextEvent()
-		{
-			assert(HasEvents());
+	inline size_t GetNextEvent() {
+		assert(HasEvents());
 
-			size_t ret = mEvents.front();
-			mEvents.pop();
-			return ret;
-		}
+		size_t ret = mEvents.front();
+		mEvents.pop();
+		return ret;
+	}
 
-		private:
+private:
 
-		std::queue<size_t> mEvents;
+	std::queue<size_t> mEvents;
 
-	};
+};
 
 }
 

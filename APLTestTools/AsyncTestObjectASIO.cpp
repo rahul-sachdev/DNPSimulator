@@ -20,16 +20,17 @@
 #include "AsyncTestObjectASIO.h"
 #include <boost/asio.hpp>
 
-namespace apl {
+namespace apl
+{
 
 AsyncTestObjectASIO::AsyncTestObjectASIO() :
-mpTestObjectService(new boost::asio::io_service()),
-mOwner(true)
+	mpTestObjectService(new boost::asio::io_service()),
+	mOwner(true)
 {}
 
 AsyncTestObjectASIO::AsyncTestObjectASIO(boost::asio::io_service* apService) :
-mpTestObjectService(apService),
-mOwner(false)
+	mpTestObjectService(apService),
+	mOwner(false)
 {
 
 }

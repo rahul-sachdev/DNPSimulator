@@ -23,24 +23,40 @@
 #include "TransportLayer.h"
 #include <APL/Exception.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	void TLS_Base::Send(const boost::uint8_t*, size_t, TransportLayer*)
-	{ throw InvalidStateException(LOCATION, this->Name() ); }
+void TLS_Base::Send(const boost::uint8_t*, size_t, TransportLayer*)
+{
+	throw InvalidStateException(LOCATION, this->Name() );
+}
 
-	void TLS_Base::HandleReceive(const boost::uint8_t*, size_t, TransportLayer*)
-	{ throw InvalidStateException(LOCATION, this->Name() ); }
+void TLS_Base::HandleReceive(const boost::uint8_t*, size_t, TransportLayer*)
+{
+	throw InvalidStateException(LOCATION, this->Name() );
+}
 
-	void TLS_Base::HandleSendSuccess(TransportLayer*)
-	{ throw InvalidStateException(LOCATION, this->Name() ); }
+void TLS_Base::HandleSendSuccess(TransportLayer*)
+{
+	throw InvalidStateException(LOCATION, this->Name() );
+}
 
-	void TLS_Base::HandleSendFailure(TransportLayer*)
-	{ throw InvalidStateException(LOCATION, this->Name() ); }
+void TLS_Base::HandleSendFailure(TransportLayer*)
+{
+	throw InvalidStateException(LOCATION, this->Name() );
+}
 
-	void TLS_Base::LowerLayerUp(TransportLayer*)
-	{ throw InvalidStateException(LOCATION, this->Name() ); }
+void TLS_Base::LowerLayerUp(TransportLayer*)
+{
+	throw InvalidStateException(LOCATION, this->Name() );
+}
 
-	void TLS_Base::LowerLayerDown(TransportLayer*)
-	{ throw InvalidStateException(LOCATION, this->Name() ); }
+void TLS_Base::LowerLayerDown(TransportLayer*)
+{
+	throw InvalidStateException(LOCATION, this->Name() );
+}
 
-}}
+}
+}

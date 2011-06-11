@@ -23,53 +23,56 @@
 
 using namespace apl;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	AllObjectsHeader AllObjectsHeader::mInstance;
+AllObjectsHeader AllObjectsHeader::mInstance;
 
 #define MACRO_CASE_DEFINE(enm) case(enm): return enm;
 
-	QualifierCode IObjectHeader::ByteToQualifierCode(boost::uint8_t aCode)
-	{
-		switch(aCode)
-		{
-			MACRO_CASE_DEFINE(QC_1B_START_STOP)
-			MACRO_CASE_DEFINE(QC_2B_START_STOP)
-			MACRO_CASE_DEFINE(QC_4B_START_STOP)
+QualifierCode IObjectHeader::ByteToQualifierCode(boost::uint8_t aCode)
+{
+	switch(aCode) {
+		MACRO_CASE_DEFINE(QC_1B_START_STOP)
+		MACRO_CASE_DEFINE(QC_2B_START_STOP)
+		MACRO_CASE_DEFINE(QC_4B_START_STOP)
 
-			MACRO_CASE_DEFINE(QC_ALL_OBJ)
+		MACRO_CASE_DEFINE(QC_ALL_OBJ)
 
-			MACRO_CASE_DEFINE(QC_1B_CNT)
-			MACRO_CASE_DEFINE(QC_2B_CNT)
-			MACRO_CASE_DEFINE(QC_4B_CNT)
+		MACRO_CASE_DEFINE(QC_1B_CNT)
+		MACRO_CASE_DEFINE(QC_2B_CNT)
+		MACRO_CASE_DEFINE(QC_4B_CNT)
 
-			MACRO_CASE_DEFINE(QC_1B_CNT_1B_INDEX)
-			MACRO_CASE_DEFINE(QC_2B_CNT_2B_INDEX)
-			MACRO_CASE_DEFINE(QC_4B_CNT_4B_INDEX)
+		MACRO_CASE_DEFINE(QC_1B_CNT_1B_INDEX)
+		MACRO_CASE_DEFINE(QC_2B_CNT_2B_INDEX)
+		MACRO_CASE_DEFINE(QC_4B_CNT_4B_INDEX)
 
-			MACRO_CASE_DEFINE(QC_1B_VCNT_1B_SIZE)
-			MACRO_CASE_DEFINE(QC_1B_VCNT_2B_SIZE)
-			MACRO_CASE_DEFINE(QC_1B_VCNT_4B_SIZE)
+		MACRO_CASE_DEFINE(QC_1B_VCNT_1B_SIZE)
+		MACRO_CASE_DEFINE(QC_1B_VCNT_2B_SIZE)
+		MACRO_CASE_DEFINE(QC_1B_VCNT_4B_SIZE)
 
-			default:
-			return QC_UNDEFINED;
-		}
+	default:
+		return QC_UNDEFINED;
 	}
+}
 
 
-	void IObjectHeader::Get(const boost::uint8_t* apStart, ObjectHeaderField& arData) const
-	{
-		arData.Group = *(apStart);
-		arData.Variation = *(++apStart);
-		arData.Qualifier = IObjectHeader::ByteToQualifierCode(*(++apStart));
-	}
+void IObjectHeader::Get(const boost::uint8_t* apStart, ObjectHeaderField& arData) const
+{
+	arData.Group = *(apStart);
+	arData.Variation = *(++apStart);
+	arData.Qualifier = IObjectHeader::ByteToQualifierCode(*(++apStart));
+}
 
-	void IObjectHeader::Set(boost::uint8_t* apStart,boost::uint8_t aGrp,boost::uint8_t aVar, QualifierCode aQual) const
-	{
-		*(apStart) = aGrp;
-		*(++apStart) = aVar;
-		*(++apStart) = aQual;
-	}
+void IObjectHeader::Set(boost::uint8_t* apStart, boost::uint8_t aGrp, boost::uint8_t aVar, QualifierCode aQual) const
+{
+	*(apStart) = aGrp;
+	*(++apStart) = aVar;
+	*(++apStart) = aQual;
+}
 
 
-}}
+}
+}

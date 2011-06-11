@@ -11,53 +11,57 @@
 namespace apl
 {
 
-	/** Terminal extension that allows you to set the response to controlsor setpoints from a master.
-	*/
-	class CommandResponder : public ICommandAcceptor, public Loggable
-	{
-	public:
+/** Terminal extension that allows you to set the response to controlsor setpoints from a master.
+*/
+class CommandResponder : public ICommandAcceptor, public Loggable
+{
+public:
 
-		CommandResponder(Logger* apLogger, bool aLinkStatuses = false, IDataObserver* apObs = NULL);
+	CommandResponder(Logger* apLogger, bool aLinkStatuses = false, IDataObserver* apObs = NULL);
 
-		void AcceptCommand(const BinaryOutput&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor);
-		void AcceptCommand(const Setpoint&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor);
+	void AcceptCommand(const BinaryOutput&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor);
+	void AcceptCommand(const Setpoint&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor);
 
-		CommandStatus HandleControl(const BinaryOutput& aControl, size_t aIndex);
-		CommandStatus HandleControl(const Setpoint& aControl, size_t aIndex);
+	CommandStatus HandleControl(const BinaryOutput& aControl, size_t aIndex);
+	CommandStatus HandleControl(const Setpoint& aControl, size_t aIndex);
 
-		void SetResponseCode(bool aType, size_t aIndex, CommandStatus aCode);
+	void SetResponseCode(bool aType, size_t aIndex, CommandStatus aCode);
 
-		CommandStatus GetResponseCode(bool aType, size_t aIndex);
+	CommandStatus GetResponseCode(bool aType, size_t aIndex);
 
-	private:
+private:
 
-		SigLock mLock;
-		typedef std::map<size_t, CommandStatus> CommandMap;
-		CommandMap mBinaryResponses;
-		CommandMap mSetpointResponses;
+	SigLock mLock;
+	typedef std::map<size_t, CommandStatus> CommandMap;
+	CommandMap mBinaryResponses;
+	CommandMap mSetpointResponses;
 
-		ICommandSource* mpSource;
-		IDataObserver* mpObs;
-		bool mLinkStatuses;
-	};
+	ICommandSource* mpSource;
+	IDataObserver* mpObs;
+	bool mLinkStatuses;
+};
 
-	class ControlResponseTE : public ITerminalExtension
-	{
-		public:
+class ControlResponseTE : public ITerminalExtension
+{
+public:
 
-			ControlResponseTE(Logger* apLogger, bool aLinkStatuses = false, IDataObserver* apObs = NULL);
+	ControlResponseTE(Logger* apLogger, bool aLinkStatuses = false, IDataObserver* apObs = NULL);
 
-			std::string Name() { return "ControlResponseTE"; }
-			ICommandAcceptor* GetCmdAcceptor() { return &mHandler; }
+	std::string Name() {
+		return "ControlResponseTE";
+	}
+	ICommandAcceptor* GetCmdAcceptor() {
+		return &mHandler;
+	}
 
-		private:
+private:
 
-			void _BindToTerminal(ITerminal* apTerminal);
+	void _BindToTerminal(ITerminal* apTerminal);
 
-			retcode HandleSetResponse(std::vector<std::string>& arArgs);
+	retcode HandleSetResponse(std::vector<std::string>& arArgs);
 
-			CommandResponder mHandler;
-	};
+	CommandResponder mHandler;
+};
 }
 
 #endif

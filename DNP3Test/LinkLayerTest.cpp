@@ -18,30 +18,34 @@
 //
 #include "LinkLayerTest.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	LinkLayerTest::LinkLayerTest(LinkConfig arCfg, FilterLevel aLevel, bool aImmediate) :
+LinkLayerTest::LinkLayerTest(LinkConfig arCfg, FilterLevel aLevel, bool aImmediate) :
 	LogTester(aImmediate),
 	mts(),
 	upper(mLog.GetLogger(aLevel, "MockUpperLayer")),
 	link(mLog.GetLogger(aLevel, "LinkLayer"), &mts, arCfg),
 	mNumSend(0)
-	{
-		link.SetUpperLayer(&upper);
-		link.SetRouter(this);
-	}
+{
+	link.SetUpperLayer(&upper);
+	link.SetRouter(this);
+}
 
-	void LinkLayerTest::Transmit(const LinkFrame& arFrame)
-	{
-		mLastSend = arFrame;
-		++mNumSend;
-	}
+void LinkLayerTest::Transmit(const LinkFrame& arFrame)
+{
+	mLastSend = arFrame;
+	++mNumSend;
+}
 
-	LinkConfig LinkLayerTest::DefaultConfig()
-	{
-		LinkConfig cfg(true, false);
-		return cfg;
-	}
+LinkConfig LinkLayerTest::DefaultConfig()
+{
+	LinkConfig cfg(true, false);
+	return cfg;
+}
 
-}}
+}
+}
 

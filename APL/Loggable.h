@@ -25,16 +25,16 @@
 
 namespace apl
 {
-	class Logger;
+class Logger;
 
-	class Loggable
-	{
-		public:
-			Loggable( Logger* apLogger );
+class Loggable
+{
+public:
+	Loggable( Logger* apLogger );
 
-		protected:
-			Logger* mpLogger;
-	};
+protected:
+	Logger* mpLogger;
+};
 
 //macro to remove boiler-plate code for logging messages
 #define LOG_BLOCK(severity, string) ERROR_BLOCK(severity, string, -1)

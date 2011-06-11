@@ -23,59 +23,72 @@
 #include "MasterTaskBase.h"
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
-namespace apl { class ITimeSource; }
+namespace apl
+{
+class ITimeSource;
+}
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 // Clears the outstation IIN restart bit
 class ClearRestartIIN : public SimpleRspBase
 {
-	public:
-		ClearRestartIIN(Logger*);
+public:
+	ClearRestartIIN(Logger*);
 
-		void ConfigureRequest(APDU& arAPDU);
-		std::string Name() const { return "ClearRestartIIN"; }
+	void ConfigureRequest(APDU& arAPDU);
+	std::string Name() const {
+		return "ClearRestartIIN";
+	}
 };
 
 // Enables or disables unsolicited reporting
 class ConfigureUnsol : public SimpleRspBase
 {
-	public:
-		ConfigureUnsol(Logger*);
+public:
+	ConfigureUnsol(Logger*);
 
-		void Set(bool aIsEnable, int aClassMask);
+	void Set(bool aIsEnable, int aClassMask);
 
-		void ConfigureRequest(APDU& arAPDU);
-		std::string Name() const { return "ConfigureUnsol"; }
+	void ConfigureRequest(APDU& arAPDU);
+	std::string Name() const {
+		return "ConfigureUnsol";
+	}
 
-	private:
-		bool mIsEnable;
-		int mClassMask;
+private:
+	bool mIsEnable;
+	int mClassMask;
 };
 
 // Synchronizes the time on the outstation
 class TimeSync : public SingleRspBase
 {
-	public:
-		TimeSync(Logger*, ITimeSource*);
+public:
+	TimeSync(Logger*, ITimeSource*);
 
-		// override Init
-		void Init();
-		void ConfigureRequest(APDU& arAPDU);
-		TaskResult _OnFinalResponse(const APDU&);
+	// override Init
+	void Init();
+	void ConfigureRequest(APDU& arAPDU);
+	TaskResult _OnFinalResponse(const APDU&);
 
-		std::string Name() const { return "TimeSync"; }
+	std::string Name() const {
+		return "TimeSync";
+	}
 
-	private:
-		ITimeSource* mpTimeSrc;
+private:
+	ITimeSource* mpTimeSrc;
 
-		// < 0 implies the delay measure hasn't happened yet
-		millis_t mDelay;
+	// < 0 implies the delay measure hasn't happened yet
+	millis_t mDelay;
 
-		// what time we sent the delay meas
-		boost::posix_time::ptime mStart;
+	// what time we sent the delay meas
+	boost::posix_time::ptime mStart;
 };
 
-}} //ens ns
+}
+} //ens ns
 
 #endif

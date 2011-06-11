@@ -19,65 +19,81 @@
 
 #include "MultiplexingDataObserver.h"
 
-namespace apl{
+namespace apl
+{
 
-	MultiplexingDataObserver :: MultiplexingDataObserver()
-	{}
+MultiplexingDataObserver :: MultiplexingDataObserver()
+{}
 
-	MultiplexingDataObserver :: MultiplexingDataObserver(IDataObserver* apObserver1)
-	{
-		AddObserver(apObserver1);
+MultiplexingDataObserver :: MultiplexingDataObserver(IDataObserver* apObserver1)
+{
+	AddObserver(apObserver1);
+}
+
+MultiplexingDataObserver :: MultiplexingDataObserver(IDataObserver* apObserver1, IDataObserver* apObserver2)
+{
+	AddObserver(apObserver1);
+	AddObserver(apObserver2);
+}
+
+void MultiplexingDataObserver :: AddObserver(IDataObserver* apObserver)
+{
+	mObservers.push_back(apObserver);
+}
+
+void MultiplexingDataObserver :: _Start()
+{
+	mLock.Lock();
+	StartOrEnd(true);
+}
+
+void MultiplexingDataObserver :: _End()
+{
+	StartOrEnd(false);
+	mLock.Unlock();
+}
+
+void MultiplexingDataObserver :: StartOrEnd(bool aStart)
+{
+	std::vector<IDataObserver*>::iterator iter = mObservers.begin();
+
+	while(iter != mObservers.end()) {
+		if(aStart) (*iter)->Start();
+		else (*iter)->End();
+		++iter;
 	}
+}
 
-	MultiplexingDataObserver :: MultiplexingDataObserver(IDataObserver* apObserver1, IDataObserver* apObserver2)
-	{
-		AddObserver(apObserver1);
-		AddObserver(apObserver2);
+void MultiplexingDataObserver :: _Update(const Binary& arPoint, size_t aIndex)
+{
+	PassThrough<Binary>(arPoint, aIndex);
+}
+void MultiplexingDataObserver :: _Update(const Analog& arPoint, size_t aIndex)
+{
+	PassThrough<Analog>(arPoint, aIndex);
+}
+void MultiplexingDataObserver :: _Update(const Counter& arPoint, size_t aIndex)
+{
+	PassThrough<Counter>(arPoint, aIndex);
+}
+void MultiplexingDataObserver :: _Update(const ControlStatus& arPoint, size_t aIndex)
+{
+	PassThrough<ControlStatus>(arPoint, aIndex);
+}
+void MultiplexingDataObserver :: _Update(const SetpointStatus& arPoint, size_t aIndex)
+{
+	PassThrough<SetpointStatus>(arPoint, aIndex);
+}
+
+template <typename T>
+void MultiplexingDataObserver :: PassThrough(const T& arPoint, size_t aIndex)
+{
+	std::vector<IDataObserver*>::iterator iter = mObservers.begin();
+
+	while(iter != mObservers.end()) {
+		(*iter)->Update(arPoint, aIndex);
+		++iter;
 	}
-
-	void MultiplexingDataObserver :: AddObserver(IDataObserver* apObserver)
-	{
-		mObservers.push_back(apObserver);
-	}
-
-	void MultiplexingDataObserver :: _Start()
-	{
-		mLock.Lock();
-		StartOrEnd(true);
-	}
-
-	void MultiplexingDataObserver :: _End()
-	{
-		StartOrEnd(false);
-		mLock.Unlock();
-	}
-
-	void MultiplexingDataObserver :: StartOrEnd(bool aStart)
-	{
-		std::vector<IDataObserver*>::iterator iter = mObservers.begin();
-
-		while(iter != mObservers.end()){
-			if(aStart) (*iter)->Start();
-			else (*iter)->End();
-			++iter;
-		}
-	}
-
-	void MultiplexingDataObserver :: _Update(const Binary& arPoint, size_t aIndex) { PassThrough<Binary>(arPoint, aIndex); }
-	void MultiplexingDataObserver :: _Update(const Analog& arPoint, size_t aIndex) { PassThrough<Analog>(arPoint, aIndex); }
-	void MultiplexingDataObserver :: _Update(const Counter& arPoint, size_t aIndex) { PassThrough<Counter>(arPoint, aIndex); }
-	void MultiplexingDataObserver :: _Update(const ControlStatus& arPoint, size_t aIndex) { PassThrough<ControlStatus>(arPoint, aIndex); }
-	void MultiplexingDataObserver :: _Update(const SetpointStatus& arPoint, size_t aIndex) { PassThrough<SetpointStatus>(arPoint, aIndex); }
-
-	template <typename T>
-	void MultiplexingDataObserver :: PassThrough(const T& arPoint, size_t aIndex)
-	{
-		std::vector<IDataObserver*>::iterator iter = mObservers.begin();
-
-		while(iter != mObservers.end()){
-			(*iter)->Update(arPoint, aIndex);
-			++iter;
-		}
-	}
+}
 
 }

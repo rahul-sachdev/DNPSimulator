@@ -29,16 +29,19 @@
 
 using namespace std;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 TransportTx::TransportTx(Logger* apLogger, TransportLayer* apContext, size_t aFragSize) :
-Loggable(apLogger),
-mpContext(apContext),
-mBufferAPDU(aFragSize),
-mBufferTPDU(TL_MAX_TPDU_LENGTH),
-mNumBytesSent(0),
-mNumBytesToSend(0),
-mSeq(0)
+	Loggable(apLogger),
+	mpContext(apContext),
+	mBufferAPDU(aFragSize),
+	mBufferTPDU(TL_MAX_TPDU_LENGTH),
+	mNumBytesSent(0),
+	mNumBytesToSend(0),
+	mSeq(0)
 {}
 
 void TransportTx::Send(const boost::uint8_t* apData, size_t aNumBytes)
@@ -57,10 +60,9 @@ bool TransportTx::CheckForSend()
 {
 	size_t remainder = this->BytesRemaining();
 
-	if(remainder > 0)
-	{
+	if(remainder > 0) {
 		size_t num_to_send = remainder < TL_MAX_TPDU_PAYLOAD ? remainder : TL_MAX_TPDU_PAYLOAD;
-		memcpy(mBufferTPDU+1,mBufferAPDU+mNumBytesSent, num_to_send);
+		memcpy(mBufferTPDU + 1, mBufferAPDU + mNumBytesSent, num_to_send);
 
 		bool fir = (mNumBytesSent == 0);
 		mNumBytesSent += num_to_send;
@@ -71,8 +73,7 @@ bool TransportTx::CheckForSend()
 		mpContext->TransmitTPDU(mBufferTPDU, num_to_send + 1);
 		return false;
 	}
-	else
-	{
+	else {
 		mNumBytesSent = mNumBytesToSend = 0;
 		return true;
 	}
@@ -80,7 +81,7 @@ bool TransportTx::CheckForSend()
 
 bool TransportTx::SendSuccess()
 {
-	mSeq = (mSeq+1)%64;
+	mSeq = (mSeq + 1) % 64;
 
 	return this->CheckForSend();
 }
@@ -97,5 +98,6 @@ boost::uint8_t TransportTx::GetHeader(bool aFir, bool aFin, int aSeq)
 	return hdr;
 }
 
-}}
+}
+}
 

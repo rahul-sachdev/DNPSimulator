@@ -33,11 +33,12 @@ using namespace boost::asio;
 using namespace boost::system;
 using namespace std;
 
-namespace apl {
+namespace apl
+{
 
 PhysicalLayerAsyncBaseTCP::PhysicalLayerAsyncBaseTCP(Logger* apLogger, boost::asio::io_service* apIOService) :
-PhysicalLayerAsyncASIO(apLogger, apIOService),
-mSocket(*apIOService)
+	PhysicalLayerAsyncASIO(apLogger, apIOService),
+	mSocket(*apIOService)
 {
 	//mSocket.set_option(ip::tcp::no_delay(true));
 }
@@ -60,13 +61,13 @@ void PhysicalLayerAsyncBaseTCP::DoOpenSuccess()
 void PhysicalLayerAsyncBaseTCP::DoAsyncRead(boost::uint8_t* apBuffer, size_t aMaxBytes)
 {
 	mSocket.async_read_some(buffer(apBuffer, aMaxBytes),
-		boost::bind(&PhysicalLayerAsyncBaseTCP::OnReadCallback, this, placeholders::error, apBuffer, placeholders::bytes_transferred));
+	                        boost::bind(&PhysicalLayerAsyncBaseTCP::OnReadCallback, this, placeholders::error, apBuffer, placeholders::bytes_transferred));
 }
 
 void PhysicalLayerAsyncBaseTCP::DoAsyncWrite(const boost::uint8_t* apBuffer, size_t aNumBytes)
 {
 	async_write(mSocket, buffer(apBuffer, aNumBytes),
-		boost::bind(&PhysicalLayerAsyncBaseTCP::OnWriteCallback, this, placeholders::error, aNumBytes));
+	            boost::bind(&PhysicalLayerAsyncBaseTCP::OnWriteCallback, this, placeholders::error, aNumBytes));
 }
 
 void PhysicalLayerAsyncBaseTCP::DoOpenFailure()

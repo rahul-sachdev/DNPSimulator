@@ -25,40 +25,43 @@
 #include "Types.h"
 #include "Timeout.h"
 
-namespace apl{
+namespace apl
+{
 
-	/**
-		This class is designed to make it easier to do simple timing tests
-		and make it easier to replace with better implementation (if one
-		presents itself.)
-	*/
-	class StopWatch{
-	public:
+/**
+	This class is designed to make it easier to do simple timing tests
+	and make it easier to replace with better implementation (if one
+	presents itself.)
+*/
+class StopWatch
+{
+public:
 
-		//get the elapsed time since creation or the last restart
-		//by default each call to Elapsed restarts the timer.
-		apl::millis_t Elapsed(bool aReset = true);
+	//get the elapsed time since creation or the last restart
+	//by default each call to Elapsed restarts the timer.
+	apl::millis_t Elapsed(bool aReset = true);
 
-		//restart or re-zero the StopWatch.
-		void Restart();
+	//restart or re-zero the StopWatch.
+	void Restart();
 
-	private:
-		apl::Time mStartTime;
-	};
+private:
+	apl::Time mStartTime;
+};
 
-	/** Light-weight alternative to Time class.
-	*/
-	class TimeStamp{
-	public:
-		static TimeStamp_t GetTimeStamp(const millis_t aInFuture = 0);
-		static UTCTimeStamp_t GetUTCTimeStamp(const millis_t aInFuture = 0);
+/** Light-weight alternative to Time class.
+*/
+class TimeStamp
+{
+public:
+	static TimeStamp_t GetTimeStamp(const millis_t aInFuture = 0);
+	static UTCTimeStamp_t GetUTCTimeStamp(const millis_t aInFuture = 0);
 
-		static std::string UTCTimeStampToString(const UTCTimeStamp_t aTime);
+	static std::string UTCTimeStampToString(const UTCTimeStamp_t aTime);
 
-		const static TimeStamp_t MAX;
-		const static TimeStamp_t MIN;
+	const static TimeStamp_t MAX;
+	const static TimeStamp_t MIN;
 
-	};
+};
 }
 
 #endif

@@ -26,49 +26,58 @@
 #include <APL/Loggable.h>
 #include <queue>
 
-namespace apl {
-	class Logger;
+namespace apl
+{
+class Logger;
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /**	@section desc Test class to mock async app layer for master/slave */
 class MockAppLayer : public IAppLayer, public Loggable
 {
-	public:
-		MockAppLayer(Logger*);
-		virtual ~MockAppLayer() {}
+public:
+	MockAppLayer(Logger*);
+	virtual ~MockAppLayer() {}
 
 
-		void SetUser(IAppUser*);
+	void SetUser(IAppUser*);
 
-		void SendResponse(APDU&);
-		void SendUnsolicited(APDU&);
-		void SendRequest(APDU&);
-		void CancelResponse();
+	void SendResponse(APDU&);
+	void SendUnsolicited(APDU&);
+	void SendRequest(APDU&);
+	void CancelResponse();
 
-		size_t mNumCancel;
+	size_t mNumCancel;
 
-		void EnableAutoSendCallback(bool aIsSuccess);
-		void DisableAutoSendCallback();
+	void EnableAutoSendCallback(bool aIsSuccess);
+	void DisableAutoSendCallback();
 
-		APDU Read();
-		size_t Count() { return mFragments.size(); }
-		FunctionCodes ReadFunction();
-		size_t NumAPDU() { return mFragments.size(); }
+	APDU Read();
+	size_t Count() {
+		return mFragments.size();
+	}
+	FunctionCodes ReadFunction();
+	size_t NumAPDU() {
+		return mFragments.size();
+	}
 
-	private:
+private:
 
-		void DoSendUnsol();
-		void DoSendSol();
+	void DoSendUnsol();
+	void DoSendSol();
 
-		IAppUser* mpUser;
-		bool mAutoSendCallback;
-		bool mIsSuccess;
-		std::deque<APDU> mFragments;
+	IAppUser* mpUser;
+	bool mAutoSendCallback;
+	bool mIsSuccess;
+	std::deque<APDU> mFragments;
 };
 
-}}
+}
+}
 
 #endif
 

@@ -18,21 +18,25 @@
 //
 #include "PointClass.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-PointClass IntToPointClass(int aClass) {
-	switch(aClass)
-	{
-		case(1):
-			return PC_CLASS_1;
-		case(2):
-			return PC_CLASS_2;
-		case(3):
-			return PC_CLASS_3;
-		default:
-			return PC_CLASS_0;
+PointClass IntToPointClass(int aClass)
+{
+	switch(aClass) {
+	case(1):
+		return PC_CLASS_1;
+	case(2):
+		return PC_CLASS_2;
+	case(3):
+		return PC_CLASS_3;
+	default:
+		return PC_CLASS_0;
 	}
 }
 
-}}
+}
+}
 
