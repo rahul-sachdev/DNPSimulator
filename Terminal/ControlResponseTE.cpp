@@ -97,7 +97,7 @@ CommandStatus CommandResponder :: GetResponseCode(bool aType, size_t aIndex)
 	CommandMap::iterator iter = m.find(aIndex);
 	if(iter != m.end()) return iter->second;
 
-	return CS_NOT_SUPPORTED; //return default
+	return CS_SUCCESS; //return default
 }
 
 
