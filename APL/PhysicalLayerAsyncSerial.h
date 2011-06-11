@@ -25,29 +25,30 @@
 
 #include <memory>
 
-namespace apl {
+namespace apl
+{
 
-	/** Serial implementation of PhysicalLayerAsyncASIO
-	*/
-	class PhysicalLayerAsyncSerial : public PhysicalLayerAsyncASIO
-	{
-		public:
-			PhysicalLayerAsyncSerial(Logger*, boost::asio::io_service* apIOService, const SerialSettings& arSettings);
+/** Serial implementation of PhysicalLayerAsyncASIO
+*/
+class PhysicalLayerAsyncSerial : public PhysicalLayerAsyncASIO
+{
+public:
+	PhysicalLayerAsyncSerial(Logger*, boost::asio::io_service* apIOService, const SerialSettings& arSettings);
 
-			/* Implement the shared client/server actions */
-			void DoClose();
-			void DoOpenSuccess();
-			void DoAsyncRead(boost::uint8_t*, size_t);
-			void DoAsyncWrite(const boost::uint8_t*, size_t);
+	/* Implement the shared client/server actions */
+	void DoClose();
+	void DoOpenSuccess();
+	void DoAsyncRead(boost::uint8_t*, size_t);
+	void DoAsyncWrite(const boost::uint8_t*, size_t);
 
-			void DoOpen();
+	void DoOpen();
 
-		protected:
+protected:
 
-			SerialSettings mSettings;
-			boost::asio::io_service* mpService;
-			boost::asio::serial_port mPort;
-	};
+	SerialSettings mSettings;
+	boost::asio::io_service* mpService;
+	boost::asio::serial_port mPort;
+};
 }
 
 #endif

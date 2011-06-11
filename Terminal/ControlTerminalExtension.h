@@ -10,43 +10,44 @@
 
 namespace apl
 {
-	class ICommandAcceptor;
+class ICommandAcceptor;
 
 
-	class ControlTerminalExtension : public ITerminalExtension
-	{
-		public:
+class ControlTerminalExtension : public ITerminalExtension
+{
+public:
 
-			ControlTerminalExtension(ICommandAcceptor* apCmdAcceptor) :
-			mSequence(0),
-			mpCmdAcceptor(apCmdAcceptor),
-			mRspQueue()
-			{
+	ControlTerminalExtension(ICommandAcceptor* apCmdAcceptor) :
+		mSequence(0),
+		mpCmdAcceptor(apCmdAcceptor),
+		mRspQueue() {
 
-			}
+	}
 
-			std::string Name() { return "ControlTerminalExtension"; }
+	std::string Name() {
+		return "ControlTerminalExtension";
+	}
 
-			virtual ~ControlTerminalExtension() {}
+	virtual ~ControlTerminalExtension() {}
 
-			static ControlCode ParseControlCode( const std::string& arString );
+	static ControlCode ParseControlCode( const std::string& arString );
 
-		private:
+private:
 
-			int mSequence;
+	int mSequence;
 
-			ICommandAcceptor* mpCmdAcceptor;
-			CommandResponseQueue mRspQueue;
+	ICommandAcceptor* mpCmdAcceptor;
+	CommandResponseQueue mRspQueue;
 
-			void WaitForResponse();
-			retcode HandleIssueBO(std::vector<std::string>& arArgs);
-			retcode HandleIssueST(std::vector<std::string>& arArgs);
+	void WaitForResponse();
+	retcode HandleIssueBO(std::vector<std::string>& arArgs);
+	retcode HandleIssueST(std::vector<std::string>& arArgs);
 
-			//implement from ITerminalExtension
-			void _BindToTerminal(ITerminal* apTerminal);
+	//implement from ITerminalExtension
+	void _BindToTerminal(ITerminal* apTerminal);
 
 
-	};
+};
 }
 
 #endif

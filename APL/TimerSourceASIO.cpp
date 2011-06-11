@@ -25,15 +25,18 @@
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
-namespace apl {
+namespace apl
+{
 
 TimerSourceASIO::TimerSourceASIO(boost::asio::io_service* apService) :
-mpService(apService)
+	mpService(apService)
 {}
 
 TimerSourceASIO::~TimerSourceASIO()
 {
-	BOOST_FOREACH(TimerASIO* pTimer, mAllTimers) { delete pTimer; }
+	BOOST_FOREACH(TimerASIO * pTimer, mAllTimers) {
+		delete pTimer;
+	}
 }
 
 ITimer* TimerSourceASIO::Start(millis_t aDelay, const ExpirationHandler& arCallback)

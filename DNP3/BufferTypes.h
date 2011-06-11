@@ -20,38 +20,39 @@
 
 #include <APL/DataTypes.h>
 
-namespace apl {
-	namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-		/**
-		 * An enumeration that lists the various types of buffers that a
-		 * SlaveEventBuffer implements.  Note that each has a corresponding
-		 * data type in the enumeration DataTypes, with the exception of
-		 * BT_VTO.
-		 */
-		enum BufferTypes
-		{
-			BT_BINARY,
-			BT_ANALOG,
-			BT_COUNTER,
-			BT_VTO,
-			BT_INVALID		/* used for unit testing only, keep as last */
-		};
+/**
+ * An enumeration that lists the various types of buffers that a
+ * SlaveEventBuffer implements.  Note that each has a corresponding
+ * data type in the enumeration DataTypes, with the exception of
+ * BT_VTO.
+ */
+enum BufferTypes {
+    BT_BINARY,
+    BT_ANALOG,
+    BT_COUNTER,
+    BT_VTO,
+    BT_INVALID		/* used for unit testing only, keep as last */
+};
 
-		/**
-		 * Maps a DataTypes enumeration value to a BufferTypes enumeration
-		 * value.
-		 *
-		 * @param aType			the DataTypes enumeration value
-		 *
-		 * @return				the corresponding BufferTypes enumeration
-		 * 						value
-		 *
-		 * @throw ArgumentException		if the aType value is invalid
-		 */
-		BufferTypes Convert(DataTypes aType);
+/**
+ * Maps a DataTypes enumeration value to a BufferTypes enumeration
+ * value.
+ *
+ * @param aType			the DataTypes enumeration value
+ *
+ * @return				the corresponding BufferTypes enumeration
+ * 						value
+ *
+ * @throw ArgumentException		if the aType value is invalid
+ */
+BufferTypes Convert(DataTypes aType);
 
-	}
+}
 }
 
 /* vim: set ts=4 sw=4: */

@@ -32,13 +32,14 @@
 
 using namespace boost::posix_time;
 
-namespace apl {
+namespace apl
+{
 
 AsyncTaskGroup::AsyncTaskGroup(ITimerSource* apTimerSrc, ITimeSource* apTimeSrc) :
-mIsRunning(false),
-mpTimerSrc(apTimerSrc),
-mpTimeSrc(apTimeSrc),
-mpTimer(NULL)
+	mIsRunning(false),
+	mpTimerSrc(apTimerSrc),
+	mpTimeSrc(apTimeSrc),
+	mpTimer(NULL)
 {
 
 }
@@ -49,7 +50,9 @@ AsyncTaskGroup::~AsyncTaskGroup()
 		mpTimer->Cancel();
 		mpTimer = NULL;
 	}
-	BOOST_FOREACH(AsyncTaskBase* p, mTaskVec) { delete p; }
+	BOOST_FOREACH(AsyncTaskBase * p, mTaskVec) {
+		delete p;
+	}
 }
 
 AsyncTaskBase* AsyncTaskGroup::Add(millis_t aPeriod, millis_t aRetryDelay, int aPriority, const TaskHandler& arCallback, const std::string& arName)
@@ -66,8 +69,7 @@ AsyncTaskBase* AsyncTaskGroup::Add(millis_t aPeriod, millis_t aRetryDelay, int a
 
 void AsyncTaskGroup::ResetTasks(int aMask)
 {
-	BOOST_FOREACH(AsyncTaskBase* p, mTaskVec)
-	{
+	BOOST_FOREACH(AsyncTaskBase * p, mTaskVec) {
 		if(!p->IsRunning() && (p->GetFlags() & aMask)) p->Reset();
 	}
 }
@@ -81,20 +83,23 @@ AsyncTaskContinuous* AsyncTaskGroup::AddContinuous(int aPriority, const TaskHand
 
 void AsyncTaskGroup::Enable()
 {
-	BOOST_FOREACH(AsyncTaskBase* p, mTaskVec) { p->SilentEnable(); }
+	BOOST_FOREACH(AsyncTaskBase * p, mTaskVec) {
+		p->SilentEnable();
+	}
 	this->CheckState();
 }
 
 void AsyncTaskGroup::Disable()
 {
-	BOOST_FOREACH(AsyncTaskBase* p, mTaskVec) { p->SilentDisable(); }
+	BOOST_FOREACH(AsyncTaskBase * p, mTaskVec) {
+		p->SilentDisable();
+	}
 	this->CheckState();
 }
 
 void AsyncTaskGroup::Enable(int aMask)
 {
-	BOOST_FOREACH(AsyncTaskBase* p, mTaskVec)
-	{
+	BOOST_FOREACH(AsyncTaskBase * p, mTaskVec) {
 		if((p->GetFlags() & aMask) != 0) p->SilentEnable();
 	}
 	this->CheckState();
@@ -102,8 +107,7 @@ void AsyncTaskGroup::Enable(int aMask)
 
 void AsyncTaskGroup::Disable(int aMask)
 {
-	BOOST_FOREACH(AsyncTaskBase* p, mTaskVec)
-	{
+	BOOST_FOREACH(AsyncTaskBase * p, mTaskVec) {
 		if((p->GetFlags() & aMask) != 0) p->SilentDisable();
 	}
 	this->CheckState();
@@ -131,13 +135,11 @@ void AsyncTaskGroup::CheckState()
 	if(pTask == NULL) return;
 	if(pTask->NextRunTime() == max_date_time) return;
 
-	if(pTask->NextRunTime() <= now)
-	{
+	if(pTask->NextRunTime() <= now) {
 		mIsRunning = true;
 		pTask->Dispatch();
 	}
-	else
-	{
+	else {
 		this->RestartTimer(pTask->NextRunTime());
 	}
 }
@@ -156,7 +158,9 @@ boost::posix_time::ptime AsyncTaskGroup::GetUTC() const
 
 void AsyncTaskGroup::Update(const boost::posix_time::ptime& arTime)
 {
-	BOOST_FOREACH(AsyncTaskBase* p, mTaskVec) { p->UpdateTime(arTime); }
+	BOOST_FOREACH(AsyncTaskBase * p, mTaskVec) {
+		p->UpdateTime(arTime);
+	}
 }
 
 void AsyncTaskGroup::RestartTimer(const boost::posix_time::ptime& arTime)

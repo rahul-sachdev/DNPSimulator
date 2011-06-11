@@ -21,15 +21,15 @@
 namespace apl
 {
 
-	CriticalSection::CriticalSection(ILockBase* apLock) : mIsLocked(true), mpLock(apLock)
-	{
-		mpLock->Lock();
-	}
+CriticalSection::CriticalSection(ILockBase* apLock) : mIsLocked(true), mpLock(apLock)
+{
+	mpLock->Lock();
+}
 
-	CriticalSection::~CriticalSection()
-	{
-		if(mIsLocked) mpLock->Unlock();
-	}
+CriticalSection::~CriticalSection()
+{
+	if(mIsLocked) mpLock->Unlock();
+}
 
 }
 

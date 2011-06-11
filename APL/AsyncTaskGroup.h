@@ -28,7 +28,8 @@
 #include <queue>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
-namespace apl {
+namespace apl
+{
 
 class AsyncTaskBase;
 class AsyncTaskPeriodic;
@@ -48,7 +49,7 @@ class AsyncTaskGroup : private Uncopyable
 	friend class AsyncTaskContinuous;
 	friend class AsyncTaskScheduler;
 
-	public:
+public:
 
 	~AsyncTaskGroup();
 
@@ -65,11 +66,13 @@ class AsyncTaskGroup : private Uncopyable
 
 	void CheckState();
 
-	bool IsRunning() { return mIsRunning; }
+	bool IsRunning() {
+		return mIsRunning;
+	}
 
 	boost::posix_time::ptime GetUTC() const;
 
-	private:
+private:
 
 	void OnCompletion();
 	void RestartTimer(const boost::posix_time::ptime& arTime);

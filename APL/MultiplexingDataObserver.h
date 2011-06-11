@@ -26,39 +26,39 @@
 
 namespace apl
 {
-	/** DataObserver for sending updates to multiple data observers.
-	*/
-	class MultiplexingDataObserver : public apl::IDataObserver
-	{
-		public:
+/** DataObserver for sending updates to multiple data observers.
+*/
+class MultiplexingDataObserver : public apl::IDataObserver
+{
+public:
 
-			MultiplexingDataObserver();
-			MultiplexingDataObserver(IDataObserver* apObserver1);
-			MultiplexingDataObserver(IDataObserver* apObserver1, IDataObserver* apObserver2);
+	MultiplexingDataObserver();
+	MultiplexingDataObserver(IDataObserver* apObserver1);
+	MultiplexingDataObserver(IDataObserver* apObserver1, IDataObserver* apObserver2);
 
-			void AddObserver(IDataObserver* apObserver1);
+	void AddObserver(IDataObserver* apObserver1);
 
-		private:
+private:
 
-			std::vector<IDataObserver*> mObservers;
+	std::vector<IDataObserver*> mObservers;
 
-			SigLock mLock;
+	SigLock mLock;
 
-			void _Start();
+	void _Start();
 
-			void _End();
+	void _End();
 
-			void StartOrEnd(bool aStart);
+	void StartOrEnd(bool aStart);
 
-			void _Update(const Binary& arPoint, size_t aIndex);
-			void _Update(const Analog& arPoint, size_t aIndex);
-			void _Update(const Counter& arPoint, size_t aIndex);
-			void _Update(const ControlStatus& arPoint, size_t aIndex);
-			void _Update(const SetpointStatus& arPoint, size_t aIndex);
+	void _Update(const Binary& arPoint, size_t aIndex);
+	void _Update(const Analog& arPoint, size_t aIndex);
+	void _Update(const Counter& arPoint, size_t aIndex);
+	void _Update(const ControlStatus& arPoint, size_t aIndex);
+	void _Update(const SetpointStatus& arPoint, size_t aIndex);
 
-			template <typename T>
-			void PassThrough(const T& arPoint, size_t aIndex);
-	};
+	template <typename T>
+	void PassThrough(const T& arPoint, size_t aIndex);
+};
 
 }
 

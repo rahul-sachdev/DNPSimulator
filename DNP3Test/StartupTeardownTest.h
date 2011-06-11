@@ -24,32 +24,45 @@
 #include <DNP3/AsyncStackManager.h>
 
 
-namespace boost { namespace asio { class io_service; } }
-
-namespace apl {
-	class IPhysicalLayerAsync;
+namespace boost
+{
+namespace asio
+{
+class io_service;
+}
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+class IPhysicalLayerAsync;
+}
+
+namespace apl
+{
+namespace dnp
+{
 
 class StartupTeardownTest
 {
-	public:
+public:
 
-		StartupTeardownTest(FilterLevel aLevel, bool aAutoStart);
+	StartupTeardownTest(FilterLevel aLevel, bool aAutoStart);
 
-		void CreatePort(const std::string& arName, FilterLevel aLevel);
-		void AddMaster(const std::string& arName, const std::string& arPortName, boost::uint16_t aLocalAddress, FilterLevel aLevel);
+	void CreatePort(const std::string& arName, FilterLevel aLevel);
+	void AddMaster(const std::string& arName, const std::string& arPortName, boost::uint16_t aLocalAddress, FilterLevel aLevel);
 
-		void StartService() { mMgr.Start(); }
+	void StartService() {
+		mMgr.Start();
+	}
 
-		EventLog mLog;
-		FilterLevel mLevel;
-		AsyncStackManager mMgr;
-		FlexibleDataObserver mFDO;
+	EventLog mLog;
+	FilterLevel mLevel;
+	AsyncStackManager mMgr;
+	FlexibleDataObserver mFDO;
 };
 
-}}
+}
+}
 
 #endif
 

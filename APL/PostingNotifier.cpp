@@ -18,11 +18,12 @@
 //
 #include "PostingNotifier.h"
 
-namespace apl {
+namespace apl
+{
 
 PostingNotifier::PostingNotifier(ITimerSource* apTimerSrc, const ExpirationHandler& arHandler) :
-mpTimerSrc(apTimerSrc),
-mHandler(arHandler)
+	mpTimerSrc(apTimerSrc),
+	mHandler(arHandler)
 {
 
 }

@@ -25,63 +25,66 @@
 #include "IPhysMonitor.h"
 #include "Logger.h"
 
-namespace apl {
+namespace apl
+{
 
-	class IPhysicalLayerAsync;
+class IPhysicalLayerAsync;
 
-	/** Class keeps a physical layer open by kicking off
-	  *	AsyncOpen requests on a timer
-	  */
-	class AsyncPhysLayerMonitor : public IHandlerAsync
-	{
-		public:
-			AsyncPhysLayerMonitor(Logger*, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);
-			~AsyncPhysLayerMonitor();
+/** Class keeps a physical layer open by kicking off
+  *	AsyncOpen requests on a timer
+  */
+class AsyncPhysLayerMonitor : public IHandlerAsync
+{
+public:
+	AsyncPhysLayerMonitor(Logger*, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);
+	~AsyncPhysLayerMonitor();
 
-			void Start();
-			void Stop();
+	void Start();
+	void Stop();
 
-			/// will close if we are open, since we will auto reconnect
-			void Reconnect();
+	/// will close if we are open, since we will auto reconnect
+	void Reconnect();
 
-			bool IsRunning();
-			bool IsOpen();
+	bool IsRunning();
+	bool IsOpen();
 
-			void SetMonitor(IPhysMonitor* apMonitor);
+	void SetMonitor(IPhysMonitor* apMonitor);
 
-		protected:
+protected:
 
-			bool Opening() const { return mOpening; }
+	bool Opening() const {
+		return mOpening;
+	}
 
-			IPhysicalLayerAsync* mpPhys;
-			ITimerSource* mpTimerSrc;
-			ITimer* mpOpenTimer;
-			LogVariable mPortState;
+	IPhysicalLayerAsync* mpPhys;
+	ITimerSource* mpTimerSrc;
+	ITimer* mpOpenTimer;
+	LogVariable mPortState;
 
-			virtual void OnPhysicalLayerOpen() = 0;
-			virtual void OnPhysicalLayerClose() = 0;
+	virtual void OnPhysicalLayerOpen() = 0;
+	virtual void OnPhysicalLayerClose() = 0;
 
-			virtual void OnPhysicalLayerOpenFailure(){};
+	virtual void OnPhysicalLayerOpenFailure() {};
 
-		private:
+private:
 
-			void Notify(IPhysMonitor::State);
+	void Notify(IPhysMonitor::State);
 
-			virtual void OnStateChange(IPhysMonitor::State) = 0;
+	virtual void OnStateChange(IPhysMonitor::State) = 0;
 
-			bool mOpening;
-			bool mOpen;
-			bool mStopOpenRetry;
-			const millis_t M_OPEN_RETRY;
+	bool mOpening;
+	bool mOpen;
+	bool mStopOpenRetry;
+	const millis_t M_OPEN_RETRY;
 
-			// Implement from IHandlerAsync - Try to reconnect using a timer
-			void _OnOpenFailure();
-			void _OnLowerLayerUp();
-			void _OnLowerLayerDown();
+	// Implement from IHandlerAsync - Try to reconnect using a timer
+	void _OnOpenFailure();
+	void _OnLowerLayerUp();
+	void _OnLowerLayerDown();
 
-			IPhysMonitor* mpMonitor;
+	IPhysMonitor* mpMonitor;
 
-	};
+};
 }
 
 #endif

@@ -23,27 +23,29 @@
 
 #include <APL/INodeSaver.h>
 
-namespace apl{
+namespace apl
+{
 
-	template <class RootNode>
-	class MockNodeSaver : public INodeSaver<RootNode>{
-	public:
-		MockNodeSaver():mFailLoad(false), mFailSave(false){}
-	protected:
-		bool _LoadNode(RootNode& aNode){
-			aNode = mLocalCopy; //copy
-			return !mFailLoad;
-		}
-		bool _SaveNode(RootNode& aNode){
-			mLocalCopy = aNode; //copy
-			return !mFailSave;
-		}
+template <class RootNode>
+class MockNodeSaver : public INodeSaver<RootNode>
+{
+public:
+	MockNodeSaver(): mFailLoad(false), mFailSave(false) {}
+protected:
+	bool _LoadNode(RootNode& aNode) {
+		aNode = mLocalCopy; //copy
+		return !mFailLoad;
+	}
+	bool _SaveNode(RootNode& aNode) {
+		mLocalCopy = aNode; //copy
+		return !mFailSave;
+	}
 
-	public:
-		RootNode mLocalCopy;
-		bool mFailLoad;
-		bool mFailSave;
-	};
+public:
+	RootNode mLocalCopy;
+	bool mFailLoad;
+	bool mFailSave;
+};
 
 }
 

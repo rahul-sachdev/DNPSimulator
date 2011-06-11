@@ -25,42 +25,40 @@
 #include "LockBase.h"
 #include <set>
 
-namespace apl {
+namespace apl
+{
 
 template <class LockType>
 class SubjectBase : public ISubject
 {
 	typedef std::set<INotifier*> NotifierSet;
 
-	public:
-		virtual ~SubjectBase() {}
+public:
+	virtual ~SubjectBase() {}
 
-		// implement the ISubject interface
-		void AddObserver(INotifier* apNotifier)
-		{
-			CriticalSection cs(&mSubjectLock);
-			mNotifiers.insert(apNotifier);
+	// implement the ISubject interface
+	void AddObserver(INotifier* apNotifier) {
+		CriticalSection cs(&mSubjectLock);
+		mNotifiers.insert(apNotifier);
+	}
+
+	void RemoveObserver(INotifier* apNotifier) {
+		CriticalSection cs(&mSubjectLock);
+		mNotifiers.erase(apNotifier);
+	}
+
+protected:
+
+	void NotifyAll() {
+		CriticalSection cs(&mSubjectLock);
+		for(NotifierSet::iterator i = mNotifiers.begin(); i != mNotifiers.end(); ++i) {
+			(*i)->Notify();
 		}
+	}
 
-		void RemoveObserver(INotifier* apNotifier)
-		{
-			CriticalSection cs(&mSubjectLock);
-			mNotifiers.erase(apNotifier);
-		}
-
-	protected:
-
-		void NotifyAll()
-		{
-			CriticalSection cs(&mSubjectLock);
-			for(NotifierSet::iterator i = mNotifiers.begin(); i != mNotifiers.end(); ++i) {
-				(*i)->Notify();
-			}
-		}
-
-	private:
-		LockType mSubjectLock;
-		NotifierSet mNotifiers;
+private:
+	LockType mSubjectLock;
+	NotifierSet mNotifiers;
 };
 
 }

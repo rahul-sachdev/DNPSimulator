@@ -21,12 +21,13 @@
 #include "LogEntry.h"
 #include <iostream>
 
-namespace apl {
+namespace apl
+{
 
 LogToStdio LogToStdio::mInstance;
 
 void LogToStdio::Log(const LogEntry& arEntry)
-{	
+{
 	CriticalSection cs(&mLock);
 	std::cout << "IMMEDIATE: " << arEntry.LogString() << std::endl;
 }

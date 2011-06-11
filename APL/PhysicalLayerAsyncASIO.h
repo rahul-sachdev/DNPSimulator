@@ -21,29 +21,34 @@
 
 #include "PhysicalLayerAsyncBase.h"
 
-namespace boost { namespace asio {
-	class io_service;
-}}
+namespace boost
+{
+namespace asio
+{
+class io_service;
+}
+}
 
-namespace apl {
+namespace apl
+{
 
-	// This is the base class for the new async physical layers. It assumes that all of the functions
-	// are called from a single thread.
+// This is the base class for the new async physical layers. It assumes that all of the functions
+// are called from a single thread.
 
-	class PhysicalLayerAsyncASIO : public PhysicalLayerAsyncBase
-	{
-		public:
-			PhysicalLayerAsyncASIO(Logger* apLogger, boost::asio::io_service* apService) :
-			PhysicalLayerAsyncBase(apLogger),
-			mpService(apService)
-			{}
+class PhysicalLayerAsyncASIO : public PhysicalLayerAsyncBase
+{
+public:
+	PhysicalLayerAsyncASIO(Logger* apLogger, boost::asio::io_service* apService) :
+		PhysicalLayerAsyncBase(apLogger),
+		mpService(apService)
+	{}
 
-			virtual ~PhysicalLayerAsyncASIO(){}
+	virtual ~PhysicalLayerAsyncASIO() {}
 
-		protected:
-			// reference to the io_service object that is driving the class
-			// Use this for any required post operations
-			boost::asio::io_service* mpService;
-	};
+protected:
+	// reference to the io_service object that is driving the class
+	// Use this for any required post operations
+	boost::asio::io_service* mpService;
+};
 }
 #endif

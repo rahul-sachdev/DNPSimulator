@@ -41,7 +41,7 @@ TimeStamp_t TimeSource::GetTimeStampUTC()
 
 //mock time source
 MockTimeSource::MockTimeSource() :
-mTime(min_date_time)
+	mTime(min_date_time)
 {
 
 }
@@ -68,7 +68,7 @@ void MockTimeSource::SetToNow()
 
 
 TimeSourceSystemOffset::TimeSourceSystemOffset()
-: mOffset(0)
+	: mOffset(0)
 {
 }
 

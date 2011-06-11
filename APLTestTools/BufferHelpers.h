@@ -22,18 +22,19 @@
 #include <APL/CopyableBuffer.h>
 #include <string>
 
-namespace apl {
+namespace apl
+{
 
 
 class ByteStr : public CopyableBuffer
 {
 
-	public:
-		ByteStr(size_t aLength);
-		ByteStr(size_t aLength,boost::uint8_t aSeed);
-		ByteStr(const boost::uint8_t* apData, size_t aLength);
-		ByteStr(const std::string& aChars);
-		bool operator==(const ByteStr& arRHS) const;
+public:
+	ByteStr(size_t aLength);
+	ByteStr(size_t aLength, boost::uint8_t aSeed);
+	ByteStr(const boost::uint8_t* apData, size_t aLength);
+	ByteStr(const std::string& aChars);
+	bool operator==(const ByteStr& arRHS) const;
 };
 
 /**
@@ -43,13 +44,13 @@ class ByteStr : public CopyableBuffer
  */
 class HexSequence : public ByteStr
 {
-	public:
-		HexSequence(const std::string& aSequence);
+public:
+	HexSequence(const std::string& aSequence);
 
-	private:
-		std::string RemoveSpaces(const std::string& aSequence);
-		void RemoveSpacesInPlace(std::string& aSequence);
-		static size_t Validate(const std::string& aSequence);
+private:
+	std::string RemoveSpaces(const std::string& aSequence);
+	void RemoveSpacesInPlace(std::string& aSequence);
+	static size_t Validate(const std::string& aSequence);
 };
 
 

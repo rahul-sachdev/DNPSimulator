@@ -25,13 +25,16 @@
 
 namespace apl
 {
-	class ITaskCompletion;
-	class Logger;
-	class BinaryOutput;
-	class Setpoint;
+class ITaskCompletion;
+class Logger;
+class BinaryOutput;
+class Setpoint;
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class Slave;
 class APDU;
@@ -41,48 +44,56 @@ class APDU;
  */
 class AS_Base
 {
-	public:
+public:
 
-		/* Events from application layer */
+	/* Events from application layer */
 
-		virtual void OnLowerLayerUp(Slave*);
-		virtual void OnLowerLayerDown(Slave*);
+	virtual void OnLowerLayerUp(Slave*);
+	virtual void OnLowerLayerDown(Slave*);
 
-		virtual void OnSolSendSuccess(Slave*);
-		virtual void OnSolFailure(Slave*);
+	virtual void OnSolSendSuccess(Slave*);
+	virtual void OnSolFailure(Slave*);
 
-		virtual void OnUnsolSendSuccess(Slave*);
-		virtual void OnUnsolFailure(Slave*);
+	virtual void OnUnsolSendSuccess(Slave*);
+	virtual void OnUnsolFailure(Slave*);
 
-		virtual void OnRequest(Slave*, const APDU&, SequenceInfo);
+	virtual void OnRequest(Slave*, const APDU&, SequenceInfo);
 
-		virtual void OnUnknown(Slave*);
+	virtual void OnUnknown(Slave*);
 
-		/* Events produced from the user layer */
+	/* Events produced from the user layer */
 
-		// Called when a data update is received from the user layer
-		virtual void OnDataUpdate(Slave*);
+	// Called when a data update is received from the user layer
+	virtual void OnDataUpdate(Slave*);
 
-		// Called when a data update is received from the user layer
-		virtual void OnUnsolExpiration(Slave*);
+	// Called when a data update is received from the user layer
+	virtual void OnUnsolExpiration(Slave*);
 
-		// @return The name associated with the state
-		virtual std::string Name() const = 0;
+	// @return The name associated with the state
+	virtual std::string Name() const = 0;
 
-		virtual bool AcceptsDeferredRequests() { return false; }
-		virtual bool AcceptsDeferredUpdates()  { return false; }
-		virtual bool AcceptsDeferredUnsolExpiration()  { return false; }
-		virtual bool AcceptsDeferredUnknown()  { return false; }
+	virtual bool AcceptsDeferredRequests() {
+		return false;
+	}
+	virtual bool AcceptsDeferredUpdates()  {
+		return false;
+	}
+	virtual bool AcceptsDeferredUnsolExpiration()  {
+		return false;
+	}
+	virtual bool AcceptsDeferredUnknown()  {
+		return false;
+	}
 
-	protected:
+protected:
 
-		void SwitchOnFunction(Slave*, AS_Base* apNext, const APDU& arRequest, SequenceInfo aSeqInfo);
-		void DoUnsolSuccess(Slave*);
-		void DoRequest(Slave* c, AS_Base* apNext, const APDU& arAPDU, SequenceInfo aSeqInfo);
+	void SwitchOnFunction(Slave*, AS_Base* apNext, const APDU& arRequest, SequenceInfo aSeqInfo);
+	void DoUnsolSuccess(Slave*);
+	void DoRequest(Slave* c, AS_Base* apNext, const APDU& arAPDU, SequenceInfo aSeqInfo);
 
-		//Work functions
+	//Work functions
 
-		void ChangeState(Slave*, AS_Base*);
+	void ChangeState(Slave*, AS_Base*);
 
 };
 
@@ -92,22 +103,24 @@ class AS_Base
  */
 class AS_Closed : public AS_Base
 {
-	public:
+public:
 
-		MACRO_STATE_SINGLETON_INSTANCE(AS_Closed);
+	MACRO_STATE_SINGLETON_INSTANCE(AS_Closed);
 
-		void OnLowerLayerUp(Slave*);
-		void OnDataUpdate(Slave*);
+	void OnLowerLayerUp(Slave*);
+	void OnDataUpdate(Slave*);
 
-		bool AcceptsDeferUpdates() { return true; }
+	bool AcceptsDeferUpdates() {
+		return true;
+	}
 
 };
 
 class AS_OpenBase : public AS_Base
 {
-	public:
+public:
 
-		void OnLowerLayerDown(Slave*);
+	void OnLowerLayerDown(Slave*);
 
 };
 
@@ -117,18 +130,24 @@ class AS_OpenBase : public AS_Base
  */
 class AS_Idle : public AS_OpenBase
 {
-	public:
+public:
 
-		MACRO_STATE_SINGLETON_INSTANCE(AS_Idle);
+	MACRO_STATE_SINGLETON_INSTANCE(AS_Idle);
 
-		void OnRequest(Slave*, const APDU&, SequenceInfo);
-		void OnDataUpdate(Slave*);
-		void OnUnsolExpiration(Slave*);
-		void OnUnknown(Slave*);
+	void OnRequest(Slave*, const APDU&, SequenceInfo);
+	void OnDataUpdate(Slave*);
+	void OnUnsolExpiration(Slave*);
+	void OnUnknown(Slave*);
 
-		bool AcceptsDeferredRequests() { return true; }
-		bool AcceptsDeferredUpdates() { return true; }
-		bool AcceptsDeferredUnsolExpiration()  { return true; }
+	bool AcceptsDeferredRequests() {
+		return true;
+	}
+	bool AcceptsDeferredUpdates() {
+		return true;
+	}
+	bool AcceptsDeferredUnsolExpiration()  {
+		return true;
+	}
 
 };
 
@@ -139,13 +158,13 @@ class AS_Idle : public AS_OpenBase
  */
 class AS_WaitForRspSuccess : public AS_OpenBase
 {
-	public:
+public:
 
-		MACRO_STATE_SINGLETON_INSTANCE(AS_WaitForRspSuccess);
+	MACRO_STATE_SINGLETON_INSTANCE(AS_WaitForRspSuccess);
 
-		void OnRequest(Slave*, const APDU&, SequenceInfo);
-		void OnSolFailure(Slave*);
-		void OnSolSendSuccess(Slave*);
+	void OnRequest(Slave*, const APDU&, SequenceInfo);
+	void OnSolFailure(Slave*);
+	void OnSolSendSuccess(Slave*);
 
 };
 
@@ -155,13 +174,13 @@ class AS_WaitForRspSuccess : public AS_OpenBase
  */
 class AS_WaitForUnsolSuccess : public AS_OpenBase
 {
-	public:
+public:
 
-		MACRO_STATE_SINGLETON_INSTANCE(AS_WaitForUnsolSuccess);
+	MACRO_STATE_SINGLETON_INSTANCE(AS_WaitForUnsolSuccess);
 
-		void OnRequest(Slave*, const APDU&, SequenceInfo);
-		void OnUnsolFailure(Slave*);
-		void OnUnsolSendSuccess(Slave*);
+	void OnRequest(Slave*, const APDU&, SequenceInfo);
+	void OnUnsolFailure(Slave*);
+	void OnUnsolSendSuccess(Slave*);
 
 };
 
@@ -171,19 +190,20 @@ class AS_WaitForUnsolSuccess : public AS_OpenBase
  */
 class AS_WaitForSolUnsolSuccess : public AS_OpenBase
 {
-	public:
+public:
 
-		MACRO_STATE_SINGLETON_INSTANCE(AS_WaitForSolUnsolSuccess);
+	MACRO_STATE_SINGLETON_INSTANCE(AS_WaitForSolUnsolSuccess);
 
-		void OnRequest(Slave*, const APDU&, SequenceInfo);
-		void OnSolFailure(Slave*);
-		void OnSolSendSuccess(Slave*);
-		void OnUnsolFailure(Slave*);
-		void OnUnsolSendSuccess(Slave*);
+	void OnRequest(Slave*, const APDU&, SequenceInfo);
+	void OnSolFailure(Slave*);
+	void OnSolSendSuccess(Slave*);
+	void OnUnsolFailure(Slave*);
+	void OnUnsolSendSuccess(Slave*);
 
 };
 
-}} //ens ns
+}
+} //ens ns
 
 /* vim: set ts=4 sw=4: */
 

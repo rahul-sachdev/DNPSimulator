@@ -19,22 +19,23 @@
 
 #include "BufferTypes.h"
 
-namespace apl {
-	namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-		BufferTypes Convert(DataTypes aType)
-		{
-			switch(aType)
-			{
-				case(DT_BINARY):	return BT_BINARY;
-				case(DT_ANALOG):	return BT_ANALOG;
-				case(DT_COUNTER):	return BT_COUNTER;
-				default:
-					throw ArgumentException("Invalid conversion to BufferType: " + aType);
-			}
-		}
-
+BufferTypes Convert(DataTypes aType)
+{
+	switch(aType) {
+	case(DT_BINARY):	return BT_BINARY;
+	case(DT_ANALOG):	return BT_ANALOG;
+	case(DT_COUNTER):	return BT_COUNTER;
+	default:
+		throw ArgumentException("Invalid conversion to BufferType: " + aType);
 	}
+}
+
+}
 }
 
 /* vim: set ts=4 sw=4: */

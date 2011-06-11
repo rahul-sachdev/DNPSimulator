@@ -24,17 +24,20 @@
 #include "LinkReceiverStates.h"
 #include "IFrameSink.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 const boost::uint8_t LinkLayerReceiver::M_SYNC_PATTERN[2] = {0x05, 0x64};
 
 LinkLayerReceiver::LinkLayerReceiver(Logger* apLogger, IFrameSink* apSink) :
-Loggable(apLogger),
-mFrameSize(0),
-mpSink(apSink),
-mpState(LRS_Sync::Inst()),
-mBuffer(BUFFER_SIZE),
-mCrcFailures(apLogger, "crc_failure")
+	Loggable(apLogger),
+	mFrameSize(0),
+	mpSink(apSink),
+	mpState(LRS_Sync::Inst()),
+	mBuffer(BUFFER_SIZE),
+	mCrcFailures(apLogger, "crc_failure")
 {
 
 }
@@ -57,37 +60,37 @@ void LinkLayerReceiver::OnRead(size_t aNumBytes)
 void LinkLayerReceiver::PushFrame()
 {
 	switch(mHeader.GetFuncEnum()) {
-		case(FC_PRI_RESET_LINK_STATES):
-			mpSink->ResetLinkStates(mHeader.IsFromMaster(), mHeader.GetDest(), mHeader.GetSrc());
-			break;
-		case(FC_PRI_TEST_LINK_STATES):
-			mpSink->TestLinkStatus(mHeader.IsFromMaster(), mHeader.IsFcbSet(), mHeader.GetDest(), mHeader.GetSrc());
-			break;
-		case(FC_PRI_CONFIRMED_USER_DATA):
-			mpSink->ConfirmedUserData(mHeader.IsFromMaster(), mHeader.IsFcbSet(), mHeader.GetDest(), mHeader.GetSrc(),
-				mpUserData, TransferUserData());
-			break;
-		case(FC_PRI_UNCONFIRMED_USER_DATA):
-			mpSink->UnconfirmedUserData(mHeader.IsFromMaster(), mHeader.GetDest(), mHeader.GetSrc(),
-				mpUserData, TransferUserData());
-			break;
-		case(FC_PRI_REQUEST_LINK_STATUS):
-			mpSink->RequestLinkStatus(mHeader.IsFromMaster(), mHeader.GetDest(), mHeader.GetSrc());
-			break;
-		case(FC_SEC_ACK):
-			mpSink->Ack(mHeader.IsFromMaster(), mHeader.IsFcvDfcSet(), mHeader.GetDest(), mHeader.GetSrc());
-			break;
-		case(FC_SEC_NACK):
-			mpSink->Nack(mHeader.IsFromMaster(), mHeader.IsFcvDfcSet(), mHeader.GetDest(), mHeader.GetSrc());
-			break;
-		case(FC_SEC_LINK_STATUS):
-			mpSink->LinkStatus(mHeader.IsFromMaster(), mHeader.IsFcvDfcSet(), mHeader.GetDest(), mHeader.GetSrc());
-			break;
-		case(FC_SEC_NOT_SUPPORTED):
-			mpSink->NotSupported(mHeader.IsFromMaster(), mHeader.IsFcvDfcSet(), mHeader.GetDest(), mHeader.GetSrc());
-			break;
-		default:
-			break;
+	case(FC_PRI_RESET_LINK_STATES):
+		mpSink->ResetLinkStates(mHeader.IsFromMaster(), mHeader.GetDest(), mHeader.GetSrc());
+		break;
+	case(FC_PRI_TEST_LINK_STATES):
+		mpSink->TestLinkStatus(mHeader.IsFromMaster(), mHeader.IsFcbSet(), mHeader.GetDest(), mHeader.GetSrc());
+		break;
+	case(FC_PRI_CONFIRMED_USER_DATA):
+		mpSink->ConfirmedUserData(mHeader.IsFromMaster(), mHeader.IsFcbSet(), mHeader.GetDest(), mHeader.GetSrc(),
+		                          mpUserData, TransferUserData());
+		break;
+	case(FC_PRI_UNCONFIRMED_USER_DATA):
+		mpSink->UnconfirmedUserData(mHeader.IsFromMaster(), mHeader.GetDest(), mHeader.GetSrc(),
+		                            mpUserData, TransferUserData());
+		break;
+	case(FC_PRI_REQUEST_LINK_STATUS):
+		mpSink->RequestLinkStatus(mHeader.IsFromMaster(), mHeader.GetDest(), mHeader.GetSrc());
+		break;
+	case(FC_SEC_ACK):
+		mpSink->Ack(mHeader.IsFromMaster(), mHeader.IsFcvDfcSet(), mHeader.GetDest(), mHeader.GetSrc());
+		break;
+	case(FC_SEC_NACK):
+		mpSink->Nack(mHeader.IsFromMaster(), mHeader.IsFcvDfcSet(), mHeader.GetDest(), mHeader.GetSrc());
+		break;
+	case(FC_SEC_LINK_STATUS):
+		mpSink->LinkStatus(mHeader.IsFromMaster(), mHeader.IsFcvDfcSet(), mHeader.GetDest(), mHeader.GetSrc());
+		break;
+	case(FC_SEC_NOT_SUPPORTED):
+		mpSink->NotSupported(mHeader.IsFromMaster(), mHeader.IsFcvDfcSet(), mHeader.GetDest(), mHeader.GetSrc());
+		break;
+	default:
+		break;
 	}
 
 	mBuffer.AdvanceRead(mFrameSize);
@@ -96,7 +99,7 @@ void LinkLayerReceiver::PushFrame()
 size_t LinkLayerReceiver::TransferUserData()
 {
 	size_t len = mHeader.GetLength() - LS_MIN_LENGTH;
-	LinkFrame::ReadUserData(mBuffer.ReadBuff()+LS_HEADER_SIZE, mpUserData, len);
+	LinkFrame::ReadUserData(mBuffer.ReadBuff() + LS_HEADER_SIZE, mpUserData, len);
 	return len;
 }
 
@@ -109,9 +112,8 @@ bool LinkLayerReceiver::ReadHeader()
 bool LinkLayerReceiver::ValidateBody()
 {
 	size_t len = mHeader.GetLength() - LS_MIN_LENGTH;
-	if(LinkFrame::ValidateBodyCRC(mBuffer.ReadBuff()+LS_HEADER_SIZE, len)) return true;
-	else
-	{
+	if(LinkFrame::ValidateBodyCRC(mBuffer.ReadBuff() + LS_HEADER_SIZE, len)) return true;
+	else {
 		mCrcFailures.Increment();
 		ERROR_BLOCK(LEV_ERROR, "CRC failure in body", DLERR_CRC);
 		return false;
@@ -121,7 +123,7 @@ bool LinkLayerReceiver::ValidateBody()
 bool LinkLayerReceiver::ValidateHeader()
 {
 	//first thing to do is check the CRC
-	if(!DNPCrc::IsCorrectCRC(mBuffer.ReadBuff(),LI_CRC)) {
+	if(!DNPCrc::IsCorrectCRC(mBuffer.ReadBuff(), LI_CRC)) {
 		mCrcFailures.Increment();
 		ERROR_BLOCK(LEV_ERROR, "CRC failure in header", DLERR_CRC);
 		return false;
@@ -155,8 +157,7 @@ bool LinkLayerReceiver::ValidateHeader()
 			return false;
 		}
 	}
-	else
-	{
+	else {
 		if(user_data_length > 0) {
 			ERROR_BLOCK(LEV_ERROR, "Unexpected LENGTH in frame: " << static_cast<int>(user_data_length) << " with FUNCTION: " << func, DLERR_UNEXPECTED_DATA);
 			return false;
@@ -183,7 +184,8 @@ bool LinkLayerReceiver::ValidateHeader()
 	return true;
 }
 
-void LinkLayerReceiver::FailFrame() {
+void LinkLayerReceiver::FailFrame()
+{
 	// All you have to do is advance the reader by one, when the resync happens the data will disappear
 	mBuffer.AdvanceRead(1);
 }
@@ -191,30 +193,26 @@ void LinkLayerReceiver::FailFrame() {
 bool LinkLayerReceiver::ValidateFunctionCode()
 {
 	//Now make sure that the function code is known and that the FCV is appropriate
-	if(mHeader.IsPriToSec())
-	{
+	if(mHeader.IsPriToSec()) {
 		bool fcv_set = false;
 
-		switch(mHeader.GetFuncEnum())
-		{
-			case(FC_PRI_CONFIRMED_USER_DATA):
-			case(FC_PRI_TEST_LINK_STATES):
-				fcv_set = true;
-				break;
-			case(FC_PRI_REQUEST_LINK_STATUS):
-			case(FC_PRI_RESET_LINK_STATES):
-			case(FC_PRI_UNCONFIRMED_USER_DATA):
-				break;
-			default:
-			{
+		switch(mHeader.GetFuncEnum()) {
+		case(FC_PRI_CONFIRMED_USER_DATA):
+		case(FC_PRI_TEST_LINK_STATES):
+			fcv_set = true;
+			break;
+		case(FC_PRI_REQUEST_LINK_STATUS):
+		case(FC_PRI_RESET_LINK_STATES):
+		case(FC_PRI_UNCONFIRMED_USER_DATA):
+			break;
+		default: {
 				ERROR_BLOCK(LEV_WARNING, "Unknown PriToSec FUNCTION: " << mHeader.GetFuncEnum(), DLERR_UNKNOWN_FUNC);
 				return false;
 			}
 		}
 
 		//now check the fcv
-		if(fcv_set != mHeader.IsFcvDfcSet())
-		{
+		if(fcv_set != mHeader.IsFcvDfcSet()) {
 			ERROR_BLOCK(LEV_WARNING, "Bad FCV for FUNCTION: " << mHeader.GetFuncEnum(), DLERR_UNEXPECTED_FCV);
 			return false;
 		}
@@ -222,25 +220,21 @@ bool LinkLayerReceiver::ValidateFunctionCode()
 		//if fcv isn't expected to be set, fcb can be either 1 or 0, doesn't matter
 
 	}
-	else // SecToPri - just validate the function codes and that FCB is 0
-	{
-		switch(mHeader.GetFuncEnum())
-		{
-			case(FC_SEC_ACK):
-			case(FC_SEC_NACK):
-			case(FC_SEC_LINK_STATUS):
-			case(FC_SEC_NOT_SUPPORTED):
-				break;
-			default:
-			{
+	else { // SecToPri - just validate the function codes and that FCB is 0
+		switch(mHeader.GetFuncEnum()) {
+		case(FC_SEC_ACK):
+		case(FC_SEC_NACK):
+		case(FC_SEC_LINK_STATUS):
+		case(FC_SEC_NOT_SUPPORTED):
+			break;
+		default: {
 				ERROR_BLOCK(LEV_ERROR, "Unknown SecToPri FUNCTION: " << mHeader.GetFuncEnum(), DLERR_UNKNOWN_FUNC);
 				return false;
 			}
 		}
 
 		//now check the fcb, it should always be zero
-		if(mHeader.IsFcbSet())
-		{
+		if(mHeader.IsFcbSet()) {
 			ERROR_BLOCK(LEV_ERROR, "FCB set for SecToPri FUNCTION: " << mHeader.GetFuncEnum(), DLERR_UNEXPECTED_FCB);
 			return false;
 		}
@@ -251,4 +245,5 @@ bool LinkLayerReceiver::ValidateFunctionCode()
 
 
 
-}}
+}
+}

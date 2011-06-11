@@ -22,16 +22,19 @@
 #include <APL/ToHex.h>
 
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 SlaveTestObject::SlaveTestObject(const SlaveConfig& arCfg, FilterLevel aLevel, bool aImmediate) :
-LogTester(aImmediate),
-mts(),
-app(mLog.GetLogger(aLevel, "app")),
-db(mLog.GetLogger(aLevel, "db")),
-cmd_master(10000),
-slave(mLog.GetLogger(aLevel, "slave"), &app, &mts, &fakeTime, &db, &cmd_master, arCfg),
-mpLogger(mLog.GetLogger(aLevel, "test"))
+	LogTester(aImmediate),
+	mts(),
+	app(mLog.GetLogger(aLevel, "app")),
+	db(mLog.GetLogger(aLevel, "db")),
+	cmd_master(10000),
+	slave(mLog.GetLogger(aLevel, "slave"), &app, &mts, &fakeTime, &db, &cmd_master, arCfg),
+	mpLogger(mLog.GetLogger(aLevel, "test"))
 {
 	app.SetUser(&slave);
 }
@@ -53,5 +56,6 @@ std::string SlaveTestObject::Read()
 	return hex;
 }
 
-}}
+}
+}
 

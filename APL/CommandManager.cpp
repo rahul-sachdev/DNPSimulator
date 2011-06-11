@@ -27,26 +27,27 @@ using namespace std;
 
 namespace apl
 {
-	void CommandManager::DefineCommand(const string& arName, CommandTypes aType, size_t aIndex, ICommandAcceptor* apCmdAcceptor)
-	{
-		assert(apCmdAcceptor != NULL);
+void CommandManager::DefineCommand(const string& arName, CommandTypes aType, size_t aIndex, ICommandAcceptor* apCmdAcceptor)
+{
+	assert(apCmdAcceptor != NULL);
 
-		CommandInfo info;
-		info.mType = aType;
-		info.mpCmdAcceptor = apCmdAcceptor;
-		info.mIndex = aIndex;
-		pair<string, CommandInfo> entry(arName, info);
+	CommandInfo info;
+	info.mType = aType;
+	info.mpCmdAcceptor = apCmdAcceptor;
+	info.mIndex = aIndex;
+	pair<string, CommandInfo> entry(arName, info);
 
-		if(!this->mCmdMap.insert(entry).second)
-		{ throw Exception(LOCATION, "Command already defined with name: " + arName); }
+	if(!this->mCmdMap.insert(entry).second) {
+		throw Exception(LOCATION, "Command already defined with name: " + arName);
 	}
+}
 
-	CommandInfo CommandManager::GetMapping(const std::string& arName)
-	{
-		CmdMap::iterator i = mCmdMap.find(arName);
-		if(i == mCmdMap.end()) throw Exception(LOCATION, "Command not previously mapped");
-		return i->second;
-	}
+CommandInfo CommandManager::GetMapping(const std::string& arName)
+{
+	CmdMap::iterator i = mCmdMap.find(arName);
+	if(i == mCmdMap.end()) throw Exception(LOCATION, "Command not previously mapped");
+	return i->second;
+}
 
 }
 

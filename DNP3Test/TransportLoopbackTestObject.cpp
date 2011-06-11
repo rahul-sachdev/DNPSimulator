@@ -25,29 +25,32 @@
 
 using namespace std;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 TransportLoopbackTestObject::TransportLoopbackTestObject(
-	boost::asio::io_service* apService,
-	IPhysicalLayerAsync* apPhys,
-	LinkConfig aCfgA,
-	LinkConfig aCfgB,
-	FilterLevel aLevel,
-	bool aImmediate) :
+    boost::asio::io_service* apService,
+    IPhysicalLayerAsync* apPhys,
+    LinkConfig aCfgA,
+    LinkConfig aCfgB,
+    FilterLevel aLevel,
+    bool aImmediate) :
 
-LogTester(aImmediate),
-AsyncTestObjectASIO(apService),
-mpLogger(mLog.GetLogger(aLevel, "test")),
-mTimerSource(this->GetService()),
-mCfgA(aCfgA),
-mCfgB(aCfgB),
-mLinkA(mpLogger, &mTimerSource, aCfgA),
-mLinkB(mpLogger, &mTimerSource, aCfgB),
-mTransA(mpLogger),
-mTransB(mpLogger),
-mRouter(mpLogger, apPhys, &mTimerSource, 1000),
-mUpperA(mpLogger),
-mUpperB(mpLogger)
+	LogTester(aImmediate),
+	AsyncTestObjectASIO(apService),
+	mpLogger(mLog.GetLogger(aLevel, "test")),
+	mTimerSource(this->GetService()),
+	mCfgA(aCfgA),
+	mCfgB(aCfgB),
+	mLinkA(mpLogger, &mTimerSource, aCfgA),
+	mLinkB(mpLogger, &mTimerSource, aCfgB),
+	mTransA(mpLogger),
+	mTransB(mpLogger),
+	mRouter(mpLogger, apPhys, &mTimerSource, 1000),
+	mUpperA(mpLogger),
+	mUpperB(mpLogger)
 {
 	mRouter.AddContext(&mLinkA, LinkRoute(mCfgA.RemoteAddr, mCfgA.LocalAddr));
 	mRouter.AddContext(&mLinkB, LinkRoute(mCfgB.RemoteAddr, mCfgB.LocalAddr));
@@ -77,6 +80,7 @@ void TransportLoopbackTestObject::Start()
 	mRouter.Start();
 }
 
-}}
+}
+}
 
 

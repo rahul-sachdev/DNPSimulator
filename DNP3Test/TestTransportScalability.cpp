@@ -38,44 +38,44 @@ using namespace apl::dnp;
 
 
 
-	BOOST_AUTO_TEST_SUITE(AsyncTransportScalability)
+BOOST_AUTO_TEST_SUITE(AsyncTransportScalability)
 
 
-		BOOST_AUTO_TEST_CASE(TestSimpleSend)
-		{
-			LinkConfig client(true, true);
-			LinkConfig server(false, true);
+BOOST_AUTO_TEST_CASE(TestSimpleSend)
+{
+	LinkConfig client(true, true);
+	LinkConfig server(false, true);
 
-			// Ubuntu and windows use different ephemeral port ranges...
+	// Ubuntu and windows use different ephemeral port ranges...
 
-			#ifdef WIN32
-			uint32_t port = 50000;
-			#else
-			uint32_t port = 30000;
-			#endif
+#ifdef WIN32
+	uint32_t port = 50000;
+#else
+	uint32_t port = 30000;
+#endif
 
-			// turned down the number of pairs for arm b/c of how long it takes to run.
-			#ifdef ARM
-			size_t NUM_PAIRS = 50;
-			#else
-			size_t NUM_PAIRS = 100;
-			#endif
+	// turned down the number of pairs for arm b/c of how long it takes to run.
+#ifdef ARM
+	size_t NUM_PAIRS = 50;
+#else
+	size_t NUM_PAIRS = 100;
+#endif
 
-			TransportScalabilityTestObject t(client, server, port, NUM_PAIRS);
+	TransportScalabilityTestObject t(client, server, port, NUM_PAIRS);
 
-			t.Start();
+	t.Start();
 
-			BOOST_REQUIRE(t.ProceedUntil(bind(&TransportScalabilityTestObject::AllLayersUp, &t)));
+	BOOST_REQUIRE(t.ProceedUntil(bind(&TransportScalabilityTestObject::AllLayersUp, &t)));
 
-			ByteStr b(2048, 0);
+	ByteStr b(2048, 0);
 
-			t.SendToAll(b, b.Size());
+	t.SendToAll(b, b.Size());
 
-			BOOST_REQUIRE(t.ProceedUntil(bind(&TransportScalabilityTestObject::AllLayerReceived, &t, b.Size()), 120000));
-			BOOST_REQUIRE(t.AllLayerEqual(b, b.Size()));
-		}
-
-
+	BOOST_REQUIRE(t.ProceedUntil(bind(&TransportScalabilityTestObject::AllLayerReceived, &t, b.Size()), 120000));
+	BOOST_REQUIRE(t.AllLayerEqual(b, b.Size()));
+}
 
 
-	BOOST_AUTO_TEST_SUITE_END()
+
+
+BOOST_AUTO_TEST_SUITE_END()

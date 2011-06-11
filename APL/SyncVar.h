@@ -26,83 +26,87 @@
 
 namespace apl
 {
-	/** Simple single synchronized value that provides notification capabilities.
-	*/
-	template <class T>
-	class SyncVar : public SubjectBase<SigLock>
-	{
-		public:
+/** Simple single synchronized value that provides notification capabilities.
+*/
+template <class T>
+class SyncVar : public SubjectBase<SigLock>
+{
+public:
 
-			SyncVar(const T& arInitial) :
-			mChange(false),
-			mValue(arInitial)
-			{}
+	SyncVar(const T& arInitial) :
+		mChange(false),
+		mValue(arInitial)
+	{}
 
-			SyncVar() :
-			mChange(false)
-			{}
+	SyncVar() :
+		mChange(false)
+	{}
 
-			virtual ~SyncVar() {}
+	virtual ~SyncVar() {}
 
-			bool ChangeSinceRead() { return mChange; }
+	bool ChangeSinceRead() {
+		return mChange;
+	}
 
-			// sets the value to arVal and returns whether the new value == the previous value.
-			bool Set(const T& arVal)
-			{
-				bool changed;
-				{
-					CriticalSection cs(&mLock);
-					changed = !(mValue == arVal);
-					if(changed){
-						mChange = true;
-						mLock.Broadcast();
-					}
-					mValue = arVal;
-				}
-				if(changed) this->NotifyAll();
-				return changed;
+	// sets the value to arVal and returns whether the new value == the previous value.
+	bool Set(const T& arVal) {
+		bool changed;
+		{
+			CriticalSection cs(&mLock);
+			changed = !(mValue == arVal);
+			if(changed) {
+				mChange = true;
+				mLock.Broadcast();
 			}
+			mValue = arVal;
+		}
+		if(changed) this->NotifyAll();
+		return changed;
+	}
 
-			T Get()
-			{ CriticalSection cs(&mLock); mChange = false; return mValue; }
+	T Get() {
+		CriticalSection cs(&mLock);
+		mChange = false;
+		return mValue;
+	}
 
-			bool WaitUntil(const T& arVal, millis_t aTimeout)
-			{
-				CriticalSection cs(&mLock);
-				if(mValue == arVal) return true;
+	bool WaitUntil(const T& arVal, millis_t aTimeout) {
+		CriticalSection cs(&mLock);
+		if(mValue == arVal) return true;
 
-				if(aTimeout >= 0){
-					Timeout dt(aTimeout);
-					while(!dt.IsExpired() && !(mValue == arVal)) mLock.TimedWait(dt.Remaining());
-				}else{
-					while(!(mValue == arVal)) mLock.Wait();
-				}
+		if(aTimeout >= 0) {
+			Timeout dt(aTimeout);
+			while(!dt.IsExpired() && !(mValue == arVal)) mLock.TimedWait(dt.Remaining());
+		}
+		else {
+			while(!(mValue == arVal)) mLock.Wait();
+		}
 
-				return (mValue == arVal);
-			}
+		return (mValue == arVal);
+	}
 
-			bool WaitWhile(const T& arVal, millis_t aTimeout)
-			{
-				CriticalSection cs(&mLock);
-				if(!(mValue == arVal)) return true;
+	bool WaitWhile(const T& arVal, millis_t aTimeout) {
+		CriticalSection cs(&mLock);
+		if(!(mValue == arVal)) return true;
 
-				if(aTimeout >= 0){
-					Timeout dt(aTimeout);
-					while(!dt.IsExpired() && (mValue == arVal)) mLock.TimedWait(dt.Remaining());
-				}else{
-					while(mValue == arVal) mLock.Wait();
-				}
+		if(aTimeout >= 0) {
+			Timeout dt(aTimeout);
+			while(!dt.IsExpired() && (mValue == arVal)) mLock.TimedWait(dt.Remaining());
+		}
+		else {
+			while(mValue == arVal) mLock.Wait();
+		}
 
-				return !(mValue == arVal);
-			}
-		protected:
-			SigLock mLock;
+		return !(mValue == arVal);
+	}
+protected:
+	SigLock mLock;
 
-			bool mChange;
-			// protects the variable. The variable may be something may not be atomically writable.
-			T mValue;
+	bool mChange;
+	// protects the variable. The variable may be something may not be atomically writable.
+	T mValue;
 
-	};
+};
 
 
 }

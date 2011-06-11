@@ -19,28 +19,29 @@
 #include "MockResponseAcceptor.h"
 
 
-namespace apl {
+namespace apl
+{
 
-	void MockResponseAcceptor::AcceptResponse(const CommandResponse& aResponse, int aSequence)
-	{
-		CriticalSection cs(&mLock);
-		MockResponse mr(aResponse, aSequence);
-		mResponses.push_back(mr);
-		mLock.Broadcast();
-	}
+void MockResponseAcceptor::AcceptResponse(const CommandResponse& aResponse, int aSequence)
+{
+	CriticalSection cs(&mLock);
+	MockResponse mr(aResponse, aSequence);
+	mResponses.push_back(mr);
+	mLock.Broadcast();
+}
 
-	MockResponse MockResponseAcceptor::PopResponse()
-	{
-		CriticalSection cs(&mLock);
-		//if(mResponse.size() == 0) throw ArgumentException(LOCATION,
-		MockResponse mr = mResponses.front();
-		mResponses.pop_front();
-		return mr;
-	}
+MockResponse MockResponseAcceptor::PopResponse()
+{
+	CriticalSection cs(&mLock);
+	//if(mResponse.size() == 0) throw ArgumentException(LOCATION,
+	MockResponse mr = mResponses.front();
+	mResponses.pop_front();
+	return mr;
+}
 
-	size_t MockResponseAcceptor::NumResponses()
-	{
-		CriticalSection cs(&mLock);
-		return mResponses.size();
-	}
+size_t MockResponseAcceptor::NumResponses()
+{
+	CriticalSection cs(&mLock);
+	return mResponses.size();
+}
 }

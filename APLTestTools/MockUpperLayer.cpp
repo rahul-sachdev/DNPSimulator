@@ -24,11 +24,12 @@
 #include <APL/Logger.h>
 #include <memory>
 
-namespace apl {
+namespace apl
+{
 
 MockUpperLayer::MockUpperLayer(Logger* apLogger) :
-Loggable(apLogger),
-IUpperLayer(apLogger)
+	Loggable(apLogger),
+	IUpperLayer(apLogger)
 {}
 
 void MockUpperLayer::_OnReceive(const boost::uint8_t* apData, size_t aLength)

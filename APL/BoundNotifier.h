@@ -22,19 +22,22 @@
 #include "INotifier.h"
 #include <boost/function.hpp>
 
-namespace apl {
+namespace apl
+{
 
-	class BoundNotifier : public INotifier
-	{
-		public:
-			BoundNotifier(boost::function<void ()> aFunc) : mFunc(aFunc) {}
-			virtual ~BoundNotifier(){}
+class BoundNotifier : public INotifier
+{
+public:
+	BoundNotifier(boost::function<void ()> aFunc) : mFunc(aFunc) {}
+	virtual ~BoundNotifier() {}
 
-			void Notify() { mFunc(); }
+	void Notify() {
+		mFunc();
+	}
 
-		private:
-			boost::function<void ()> mFunc;
-	};
+private:
+	boost::function<void ()> mFunc;
+};
 }
 
 #endif

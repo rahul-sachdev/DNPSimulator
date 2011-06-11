@@ -25,66 +25,67 @@
 
 namespace apl
 {
-	template <class T, int U>
-	class Pack
-	{
-		public:
-			typename T::Type Get(const boost::uint8_t* apBuffer) const
-			{ return T::Read(apBuffer+U); }
+template <class T, int U>
+class Pack
+{
+public:
+	typename T::Type Get(const boost::uint8_t* apBuffer) const {
+		return T::Read(apBuffer + U);
+	}
 
-			void Set(boost::uint8_t* apBuffer, typename T::Type aValue) const
-			{ T::Write(apBuffer+U, aValue); }
+	void Set(boost::uint8_t* apBuffer, typename T::Type aValue) const {
+		T::Write(apBuffer + U, aValue);
+	}
 
-			typename T::Type Max() const
-			{ return T::Max; }
+	typename T::Type Max() const {
+		return T::Max;
+	}
 
-			typename T::Type Min() const
-			{ return T::Min; }
-	};
+	typename T::Type Min() const {
+		return T::Min;
+	}
+};
 
-	template <class T, int U, boost::uint8_t V>
-	class PackOverRange : public Pack<T,U>
-	{
-		public:
-		boost::uint8_t OverRangeMask() const
-		{ return V; }
-	};
+template <class T, int U, boost::uint8_t V>
+class PackOverRange : public Pack<T, U>
+{
+public:
+	boost::uint8_t OverRangeMask() const {
+		return V;
+	}
+};
 
-	class BitfieldPacker
-	{
-	public:
-		size_t GetSize(size_t aNumValues) const
-		{
-			size_t ret = (aNumValues >> 3); //integer division by eight
-			if( (aNumValues & 0x07) != 0) ++ret; //if it's not an even multiple of 8 add an extra byte
-			return ret;
-		}
+class BitfieldPacker
+{
+public:
+	size_t GetSize(size_t aNumValues) const {
+		size_t ret = (aNumValues >> 3); //integer division by eight
+		if( (aNumValues & 0x07) != 0) ++ret; //if it's not an even multiple of 8 add an extra byte
+		return ret;
+	}
 
-		void Zero(boost::uint8_t* apPos, size_t aNumValues) const
-		{
-			size_t num_bytes = GetSize(aNumValues);
-			for(size_t i=0; i<num_bytes; i++)
-				*(apPos++) = 0;
-		}
+	void Zero(boost::uint8_t* apPos, size_t aNumValues) const {
+		size_t num_bytes = GetSize(aNumValues);
+		for(size_t i = 0; i < num_bytes; i++)
+			*(apPos++) = 0;
+	}
 
-		bool Read(const boost::uint8_t* apPos,size_t aStartIndex, size_t aIndex) const
-		{
-			assert(aIndex >= aStartIndex);
-			size_t pos =  aIndex - aStartIndex;
-			apPos += (pos >> 3); //figure out which byte you are on and advance the pointer
-			return ((*apPos) & (1 << (pos & 0x07))) != 0;
-		}
+	bool Read(const boost::uint8_t* apPos, size_t aStartIndex, size_t aIndex) const {
+		assert(aIndex >= aStartIndex);
+		size_t pos =  aIndex - aStartIndex;
+		apPos += (pos >> 3); //figure out which byte you are on and advance the pointer
+		return ((*apPos) & (1 << (pos & 0x07))) != 0;
+	}
 
-		void Write(boost::uint8_t* apPos, size_t aStartIndex, size_t aIndex, bool aValue) const
-		{
-			assert(aIndex >= aStartIndex);
-			size_t pos =  aIndex - aStartIndex;
-			apPos += (pos >> 3); //figure out which byte you are on and advance the pointer
-			size_t bit_mask = 1 << (pos & 0x07);
-			if (aValue) *apPos |= bit_mask;
-			else *apPos &= ~bit_mask;
-		}
-	};
+	void Write(boost::uint8_t* apPos, size_t aStartIndex, size_t aIndex, bool aValue) const {
+		assert(aIndex >= aStartIndex);
+		size_t pos =  aIndex - aStartIndex;
+		apPos += (pos >> 3); //figure out which byte you are on and advance the pointer
+		size_t bit_mask = 1 << (pos & 0x07);
+		if (aValue) *apPos |= bit_mask;
+		else *apPos &= ~bit_mask;
+	}
+};
 
 }
 

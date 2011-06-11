@@ -25,21 +25,26 @@
 #include <APL/Singleton.h>
 #include "LinkLayerReceiver.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /** Base class for the receiver state */
 class LRS_Base : private Uncopyable
 {
-	public:
+public:
 
-	virtual ~LRS_Base(){}
+	virtual ~LRS_Base() {}
 
 	/** Perform a bit of work towards reading a frame.
 		@return True if the function can be called again to make further progress */
 	virtual bool Parse(LinkLayerReceiver*);
 
 	/** @return True if the receiver has a complete frame */
-	virtual bool HasFrame() { return false; }
+	virtual bool HasFrame() {
+		return false;
+	}
 
 	/** Implemented by the inherited state
 		@return Name of the state */
@@ -55,20 +60,21 @@ class name : public LRS_Base \
 
 /** @section DESCRIPTION Defines actions for the initial state of the receiver */
 MACRO_LRS_STATE(LRS_Sync,
-	bool Parse(LinkLayerReceiver*);
-)
+                bool Parse(LinkLayerReceiver*);
+               )
 
 MACRO_LRS_STATE(LRS_Header,
-	bool Parse(LinkLayerReceiver*);
-)
+                bool Parse(LinkLayerReceiver*);
+               )
 
 MACRO_LRS_STATE(LRS_Body,
-	bool Parse(LinkLayerReceiver*);
-)
+                bool Parse(LinkLayerReceiver*);
+               )
 
 
 
 
-}}
+}
+}
 
 #endif

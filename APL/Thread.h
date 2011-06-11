@@ -25,8 +25,9 @@
 
 #include "ThreadBoost.h"
 
-namespace apl{
-	typedef ThreadBoost Thread;
+namespace apl
+{
+typedef ThreadBoost Thread;
 };
 
 #endif

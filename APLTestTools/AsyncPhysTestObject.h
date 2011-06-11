@@ -29,48 +29,49 @@
 #include <APL/CopyableBuffer.h>
 #include <APLTestTools/MockUpperLayer.h>
 
-namespace apl {
+namespace apl
+{
 
-	class AsyncPhysTestObject : public AsyncTestObjectASIO, public LogTester
-	{
-		public:
-			AsyncPhysTestObject(FilterLevel aLevel = LEV_INFO, bool aImmediate = false, bool aAutoRead = true);
+class AsyncPhysTestObject : public AsyncTestObjectASIO, public LogTester
+{
+public:
+	AsyncPhysTestObject(FilterLevel aLevel = LEV_INFO, bool aImmediate = false, bool aAutoRead = true);
 
-		private:
-			Logger* mpLogger;
+private:
+	Logger* mpLogger;
 
-		public:
-			PhysicalLayerAsyncTCPClient mTCPClient;
-			PhysicalLayerAsyncTCPServer mTCPServer;
+public:
+	PhysicalLayerAsyncTCPClient mTCPClient;
+	PhysicalLayerAsyncTCPServer mTCPServer;
 
-			LowerLayerToPhysAdapter mClientAdapter;
-			LowerLayerToPhysAdapter mServerAdapter;
+	LowerLayerToPhysAdapter mClientAdapter;
+	LowerLayerToPhysAdapter mServerAdapter;
 
-			MockUpperLayer mClientUpper;
-			MockUpperLayer mServerUpper;
-	};
+	MockUpperLayer mClientUpper;
+	MockUpperLayer mServerUpper;
+};
 
-	class AsyncLoopback : public AsyncPhysLayerMonitor
-	{
-		public:
-			AsyncLoopback(Logger*, IPhysicalLayerAsync*, ITimerSource*, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
+class AsyncLoopback : public AsyncPhysLayerMonitor
+{
+public:
+	AsyncLoopback(Logger*, IPhysicalLayerAsync*, ITimerSource*, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
 
-		private:
+private:
 
-			CopyableBuffer mRead;
-			CopyableBuffer mWrite;
+	CopyableBuffer mRead;
+	CopyableBuffer mWrite;
 
-			void OnStateChange(IPhysMonitor::State) {}
+	void OnStateChange(IPhysMonitor::State) {}
 
-			void _OnReceive(const boost::uint8_t *,size_t);
-			void _OnSendSuccess(void){}
-			void _OnSendFailure(void){}
+	void _OnReceive(const boost::uint8_t*, size_t);
+	void _OnSendSuccess(void) {}
+	void _OnSendFailure(void) {}
 
-			void OnPhysicalLayerOpen(void);
-			void OnPhysicalLayerClose(void);
+	void OnPhysicalLayerOpen(void);
+	void OnPhysicalLayerClose(void);
 
-			void StartRead();
-	};
+	void StartRead();
+};
 
 }
 

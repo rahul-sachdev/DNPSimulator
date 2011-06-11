@@ -20,22 +20,26 @@
 #include "ObjectReadIterator.h"
 
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	HeaderReadIterator::HeaderReadIterator(const std::vector<HeaderInfo>* apHeaders, const boost::uint8_t* apBuffer, bool aHasData) :
+HeaderReadIterator::HeaderReadIterator(const std::vector<HeaderInfo>* apHeaders, const boost::uint8_t* apBuffer, bool aHasData) :
 	mpHeaders(apHeaders),
 	mpBuffer(apBuffer),
 	mHasData(aHasData),
 	mIndex(0)
-	{
+{
 
-	}
+}
 
 
-	ObjectReadIterator HeaderReadIterator::BeginRead()
-	{
-		return ObjectReadIterator((*mpHeaders)[mIndex], mpBuffer, mHasData);
-	}
+ObjectReadIterator HeaderReadIterator::BeginRead()
+{
+	return ObjectReadIterator((*mpHeaders)[mIndex], mpBuffer, mHasData);
+}
 
-}}
+}
+}
 

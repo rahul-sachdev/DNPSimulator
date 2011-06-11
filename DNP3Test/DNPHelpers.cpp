@@ -28,16 +28,20 @@
 using namespace apl;
 using namespace apl::dnp;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 
-bool IsFrameEqual(LinkFrame& frame, const std::string& arData) {
+bool IsFrameEqual(LinkFrame& frame, const std::string& arData)
+{
 
 	HexSequence hs(arData);
 	if(frame.GetSize() != hs.Size()) return false;
 	boost::uint8_t* buff = frame.GetBuffer();
 
-	for(size_t i=0; i<hs.Size(); i++) {
+	for(size_t i = 0; i < hs.Size(); i++) {
 		if(buff[i] != hs[i]) return false;
 	}
 
@@ -67,15 +71,16 @@ std::string RepairCRC(const std::string& arData)
 	boost::uint8_t* ptr = hs + 10;
 
 	// repair the full blocks
-	for(size_t i=0; i < full_blocks; i++) {
+	for(size_t i = 0; i < full_blocks; i++) {
 		DNPCrc::AddCrc(ptr, 16);
 		ptr += 18;
 	}
 
 	//repair the partial block
-	if(partial_size > 0) DNPCrc::AddCrc(ptr, partial_size-2);
+	if(partial_size > 0) DNPCrc::AddCrc(ptr, partial_size - 2);
 
 	return apl::toHex(hs, hs.Size(), true);
 }
 
-}}
+}
+}

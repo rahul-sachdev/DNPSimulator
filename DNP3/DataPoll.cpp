@@ -26,7 +26,10 @@
 #include "PointClass.h"
 #include "VtoReader.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /* DataPoll - base class */
 
@@ -52,8 +55,7 @@ void DataPoll::ReadData(const APDU& f)
 {
 	ResponseLoader loader(mpLogger, mpObs, mpVtoReader);
 	HeaderReadIterator hdr = f.BeginRead();
-	for ( ; !hdr.IsEnd(); ++hdr)
-	{
+	for ( ; !hdr.IsEnd(); ++hdr) {
 		loader.Process(hdr);
 	}
 }
@@ -72,8 +74,7 @@ void ClassPoll::Set(int aClassMask)
 
 void ClassPoll::ConfigureRequest(APDU& arAPDU)
 {
-	if (mClassMask == PC_INVALID)
-	{
+	if (mClassMask == PC_INVALID) {
 		throw InvalidStateException(LOCATION, "Class mask has not been set");
 	}
 
@@ -85,6 +86,7 @@ void ClassPoll::ConfigureRequest(APDU& arAPDU)
 }
 
 
-}} //end ns
+}
+} //end ns
 
 /* vim: set ts=4 sw=4: */

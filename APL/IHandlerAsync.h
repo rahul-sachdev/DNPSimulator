@@ -21,11 +21,12 @@
 
 #include "AsyncLayerInterfaces.h"
 
-namespace apl {
+namespace apl
+{
 
 class IHandlerAsync : public IUpperLayer
 {
-	public:
+public:
 	IHandlerAsync(Logger*);
 	virtual ~IHandlerAsync() {}
 
@@ -33,7 +34,7 @@ class IHandlerAsync : public IUpperLayer
 	// For consistency sake, use NVII pattern in case we want pre/post conditions in the future
 	void OnOpenFailure();
 
-	private:
+private:
 
 	// called when the layer didn't make a connection and has given up trying, safe to delete.
 	virtual void _OnOpenFailure() = 0;

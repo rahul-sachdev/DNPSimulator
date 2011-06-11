@@ -26,14 +26,17 @@
 
 #include <string>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class LinkFrame
 {
 	friend std::ostream& operator<<(std::ostream&, const LinkFrame&);
 	friend class FrameReaderDNP;
 
-	public:
+public:
 
 	bool operator==(const LinkFrame& arRHS) const;
 
@@ -41,28 +44,54 @@ class LinkFrame
 	~LinkFrame();
 
 	/* implement pure virtual functions from base class */
-	boost::uint8_t* GetBuffer() { return mpBuffer; }
-	const boost::uint8_t* GetBuffer() const { return mpBuffer; }
-	size_t  GetSize() const { return mSize; }
+	boost::uint8_t* GetBuffer() {
+		return mpBuffer;
+	}
+	const boost::uint8_t* GetBuffer() const {
+		return mpBuffer;
+	}
+	size_t  GetSize() const {
+		return mSize;
+	}
 
-	bool IsComplete() const { return mIsComplete; }
+	bool IsComplete() const {
+		return mIsComplete;
+	}
 
 	bool ValidateHeaderCRC() const;
 	bool ValidateBodyCRC() const;
 
 	// Helpers for extracting data
-	inline bool Valid_0564() const { return mpBuffer[LI_START_05] == 0x05 && mpBuffer[LI_START_64] == 0x64; }
+	inline bool Valid_0564() const {
+		return mpBuffer[LI_START_05] == 0x05 && mpBuffer[LI_START_64] == 0x64;
+	}
 
-	inline boost::uint8_t	GetLength() const { return mHeader.GetLength(); }
-	inline FuncCodes	GetFunc() const { return mHeader.GetFuncEnum(); }
+	inline boost::uint8_t	GetLength() const {
+		return mHeader.GetLength();
+	}
+	inline FuncCodes	GetFunc() const {
+		return mHeader.GetFuncEnum();
+	}
 
-	inline boost::uint16_t  GetDest() const { return mHeader.GetDest(); }
-	inline boost::uint16_t GetSrc() const { return mHeader.GetSrc(); }
+	inline boost::uint16_t  GetDest() const {
+		return mHeader.GetDest();
+	}
+	inline boost::uint16_t GetSrc() const {
+		return mHeader.GetSrc();
+	}
 
-	inline bool IsFromMaster() const { return mHeader.IsFromMaster(); }
-	inline bool IsPriToSec() const { return mHeader.IsPriToSec(); }
-	inline bool IsFcbSet() const { return mHeader.IsFcbSet(); }
-	inline bool IsFcvDfcSet() const { return mHeader.IsFcvDfcSet(); }
+	inline bool IsFromMaster() const {
+		return mHeader.IsFromMaster();
+	}
+	inline bool IsPriToSec() const {
+		return mHeader.IsPriToSec();
+	}
+	inline bool IsFcbSet() const {
+		return mHeader.IsFcbSet();
+	}
+	inline bool IsFcvDfcSet() const {
+		return mHeader.IsFcvDfcSet();
+	}
 
 	size_t ReadUserData(boost::uint8_t* apBuffer) const;
 
@@ -108,16 +137,16 @@ class LinkFrame
 		@param apDest Destination buffer to which the data is extracted
 		@param aLength Length of user data to read to the dest buffer. The source buffer must be larger b/c of crc bytes.
 	*/
-	static void ReadUserData(const boost::uint8_t* apSrc,boost::uint8_t* apDest, size_t aLength);
+	static void ReadUserData(const boost::uint8_t* apSrc, boost::uint8_t* apDest, size_t aLength);
 
-	private:
+private:
 
 	/** Writes data from src to dest interlacing 2 byte CRC checks every 16 data bytes
 		@param apSrc Source buffer full of user data
 		@param apDest Destination buffer where the data + CRC is written
 		@param aLength Number of user data bytes
 	*/
-	static void WriteUserData(const boost::uint8_t* apSrc,boost::uint8_t* apDest, size_t aLength);
+	static void WriteUserData(const boost::uint8_t* apSrc, boost::uint8_t* apDest, size_t aLength);
 
 	/** Write 10 header bytes to to buffer including 0x0564, all fields, and CRC */
 	void FormatHeader(size_t aDataLength, bool aIsMaster, bool aFcb, bool aFcvDfc, FuncCodes aCode, boost::uint16_t aDest, boost::uint16_t aSrc);
@@ -129,7 +158,8 @@ class LinkFrame
 
 };
 
-}}
+}
+}
 
 #endif
 

@@ -22,14 +22,17 @@
 #include <APL/Types.h>
 #include <boost/function.hpp>
 
-namespace apl { class FlexibleDataObserver; }
+namespace apl
+{
+class FlexibleDataObserver;
+}
 
 namespace apl
 {
-	const millis_t G_TEST_TIMEOUT = 40000;
+const millis_t G_TEST_TIMEOUT = 40000;
 
-	typedef boost::function<bool ()> EvalFunc;
-	typedef boost::function<bool (apl::FlexibleDataObserver*)> OutputEvalFunc;
+typedef boost::function<bool ()> EvalFunc;
+typedef boost::function<bool (apl::FlexibleDataObserver*)> OutputEvalFunc;
 }
 
 #endif

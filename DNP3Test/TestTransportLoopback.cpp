@@ -39,62 +39,62 @@ using namespace apl::dnp;
 
 BOOST_AUTO_TEST_SUITE(AsyncTransportLoopback)
 
-	// Do a bidirectional send operation and proceed until both sides have correctly
-	// received all the data
-	void TestLoopback(TransportLoopbackTestObject* apTest, size_t aNumBytes)
-	{
-		apTest->Start();
+// Do a bidirectional send operation and proceed until both sides have correctly
+// received all the data
+void TestLoopback(TransportLoopbackTestObject* apTest, size_t aNumBytes)
+{
+	apTest->Start();
 
-		BOOST_REQUIRE(apTest->ProceedUntil(bind(&TransportLoopbackTestObject::LayersUp, apTest)));
+	BOOST_REQUIRE(apTest->ProceedUntil(bind(&TransportLoopbackTestObject::LayersUp, apTest)));
 
-		ByteStr b(aNumBytes, 0);
+	ByteStr b(aNumBytes, 0);
 
-		apTest->mUpperA.SendDown(b, b.Size());
-		apTest->mUpperB.SendDown(b, b.Size());
+	apTest->mUpperA.SendDown(b, b.Size());
+	apTest->mUpperB.SendDown(b, b.Size());
 
-		BOOST_REQUIRE(apTest->ProceedUntil(bind(&MockUpperLayer::SizeEquals, &(apTest->mUpperA), b.Size())));
-		BOOST_REQUIRE(apTest->ProceedUntil(bind(&MockUpperLayer::SizeEquals, &(apTest->mUpperB), b.Size())));
-		BOOST_REQUIRE(apTest->mUpperA.BufferEquals(b, b.Size()));
-		BOOST_REQUIRE(apTest->mUpperB.BufferEquals(b, b.Size()));
-	}
+	BOOST_REQUIRE(apTest->ProceedUntil(bind(&MockUpperLayer::SizeEquals, &(apTest->mUpperA), b.Size())));
+	BOOST_REQUIRE(apTest->ProceedUntil(bind(&MockUpperLayer::SizeEquals, &(apTest->mUpperB), b.Size())));
+	BOOST_REQUIRE(apTest->mUpperA.BufferEquals(b, b.Size()));
+	BOOST_REQUIRE(apTest->mUpperB.BufferEquals(b, b.Size()));
+}
 
-	BOOST_AUTO_TEST_CASE(TestTransportWithMockLoopback)
-	{
-		LinkConfig cfgA(true, true);
-		LinkConfig cfgB(false, true);
+BOOST_AUTO_TEST_CASE(TestTransportWithMockLoopback)
+{
+	LinkConfig cfgA(true, true);
+	LinkConfig cfgB(false, true);
 
-		EventLog log;
-		boost::asio::io_service service;
-		LoopbackPhysicalLayerAsync phys(log.GetLogger(LEV_WARNING, "loopback"), &service);
-		TransportLoopbackTestObject t(&service, &phys, cfgA, cfgB);
+	EventLog log;
+	boost::asio::io_service service;
+	LoopbackPhysicalLayerAsync phys(log.GetLogger(LEV_WARNING, "loopback"), &service);
+	TransportLoopbackTestObject t(&service, &phys, cfgA, cfgB);
 
-		TestLoopback(&t, DEFAULT_FRAG_SIZE);
-	}
+	TestLoopback(&t, DEFAULT_FRAG_SIZE);
+}
 
 // Run this test on ARM to give us some regression protection for serial
 #ifdef SERIAL_PORT
-	BOOST_AUTO_TEST_CASE(TestTransportWithSerialLoopback)
-	{
-		LinkConfig cfgA(true, true);
-		LinkConfig cfgB(false, true);
+BOOST_AUTO_TEST_CASE(TestTransportWithSerialLoopback)
+{
+	LinkConfig cfgA(true, true);
+	LinkConfig cfgB(false, true);
 
-		cfgA.NumRetry = cfgB.NumRetry = 3;
+	cfgA.NumRetry = cfgB.NumRetry = 3;
 
-		SerialSettings s;
-		s.mDevice = TOSTRING(SERIAL_PORT);
-		s.mBaud = 57600;
-		s.mDataBits = 8;
-		s.mStopBits = 1;
-		s.mParity = PAR_NONE;
-		s.mFlowType = FLOW_NONE;
+	SerialSettings s;
+	s.mDevice = TOSTRING(SERIAL_PORT);
+	s.mBaud = 57600;
+	s.mDataBits = 8;
+	s.mStopBits = 1;
+	s.mParity = PAR_NONE;
+	s.mFlowType = FLOW_NONE;
 
-		EventLog log;
-		boost::asio::io_service service;
-		PhysicalLayerAsyncSerial phys(log.GetLogger(LEV_WARNING, "serial"), &service, s);
-		TransportLoopbackTestObject t(&service, &phys, cfgA, cfgB);
+	EventLog log;
+	boost::asio::io_service service;
+	PhysicalLayerAsyncSerial phys(log.GetLogger(LEV_WARNING, "serial"), &service, s);
+	TransportLoopbackTestObject t(&service, &phys, cfgA, cfgB);
 
-		TestLoopback(&t, DEFAULT_FRAG_SIZE);
-	}
+	TestLoopback(&t, DEFAULT_FRAG_SIZE);
+}
 #endif
 
 BOOST_AUTO_TEST_SUITE_END()

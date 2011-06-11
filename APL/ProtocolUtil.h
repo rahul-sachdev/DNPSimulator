@@ -22,7 +22,8 @@
 #include <stddef.h>
 
 
-namespace apl {
+namespace apl
+{
 
 // Given a buffer and max packet size, calculcate the
 // maximum number of packets the buffer can hold

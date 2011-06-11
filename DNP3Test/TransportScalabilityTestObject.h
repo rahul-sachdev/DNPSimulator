@@ -25,37 +25,41 @@
 #include <APL/TimerSourceASIO.h>
 #include <APLTestTools/LogTester.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class TransportScalabilityTestObject : public LogTester, public AsyncTestObjectASIO
 {
-	public:
-		TransportScalabilityTestObject(
-			LinkConfig aClientCfg,
-			LinkConfig aServerCfg,
-			boost::uint16_t aPortStart,
-			boost::uint16_t aNumPair,
-			FilterLevel aLevel = LEV_INFO,
-			bool aImmediate = false);
+public:
+	TransportScalabilityTestObject(
+	    LinkConfig aClientCfg,
+	    LinkConfig aServerCfg,
+	    boost::uint16_t aPortStart,
+	    boost::uint16_t aNumPair,
+	    FilterLevel aLevel = LEV_INFO,
+	    bool aImmediate = false);
 
-		~TransportScalabilityTestObject();
+	~TransportScalabilityTestObject();
 
-		void Start();
+	void Start();
 
 
-		// Test helpers
-		bool AllLayersUp();
-		bool AllLayerReceived(size_t aNumBytes);
-		bool AllLayerEqual(const boost::uint8_t*, size_t);
+	// Test helpers
+	bool AllLayersUp();
+	bool AllLayerReceived(size_t aNumBytes);
+	bool AllLayerEqual(const boost::uint8_t*, size_t);
 
-		void SendToAll(const boost::uint8_t*, size_t);
+	void SendToAll(const boost::uint8_t*, size_t);
 
-	public:
-		Logger* mpLogger;
-		TimerSourceASIO mTimerSource;
-		std::vector<TransportStackPair*> mPairs;
+public:
+	Logger* mpLogger;
+	TimerSourceASIO mTimerSource;
+	std::vector<TransportStackPair*> mPairs;
 };
 
-}}
+}
+}
 
 #endif

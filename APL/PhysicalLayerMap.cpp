@@ -24,86 +24,86 @@
 
 namespace apl
 {
-	PhysicalLayerMap::PhysicalLayerMap(Logger* apBaseLogger, boost::asio::io_service* apService) : 
-		Loggable(apBaseLogger),
-		mpBaseLogger(apBaseLogger),
-		mpService(apService)
-	{
+PhysicalLayerMap::PhysicalLayerMap(Logger* apBaseLogger, boost::asio::io_service* apService) :
+	Loggable(apBaseLogger),
+	mpBaseLogger(apBaseLogger),
+	mpService(apService)
+{
 
+}
+
+PhysicalLayerMap::~PhysicalLayerMap()
+{
+
+}
+
+PhysLayerSettings PhysicalLayerMap ::GetSettings(const std::string& arName)
+{
+	CriticalSection cs(&mLock);
+	return _GetSettings(arName);
+}
+
+IPhysicalLayerAsync* PhysicalLayerMap::AcquireLayer(const std::string& arName, bool aAutoDelete)
+{
+	CriticalSection cs(&mLock);
+	PhysLayerSettings s = this->_GetSettings(arName);
+	PhysLayerInstance* pInstance = this->_GetInstance(arName);
+	if(pInstance->IsCreated()) throw ArgumentException("Layer with name has already been acquired: " + arName);
+	else {
+		IPhysicalLayerAsync* pLayer = pInstance->GetLayer(this->MakeLogger(arName, s.LogLevel), mpService, aAutoDelete);
+		mLayerToNameMap.insert(LayerToNameMap::value_type(pLayer, arName));
+		LOG_BLOCK(LEV_DEBUG, "Physical layer acquired: " << arName);
+		return pLayer;
 	}
+}
 
-	PhysicalLayerMap::~PhysicalLayerMap()
-	{
-	
+void PhysicalLayerMap::ReleaseLayer(const std::string& arName)
+{
+	CriticalSection cs(&mLock);
+	NameToInstanceMap::iterator i = mNameToInstanceMap.find(arName);
+	if(i == mNameToInstanceMap.end()) {
+		throw ArgumentException(LOCATION, "Physical layer not managed by this map: " + arName);
 	}
-
-	PhysLayerSettings PhysicalLayerMap ::GetSettings(const std::string& arName)
-	{
-		CriticalSection cs(&mLock);
-		return _GetSettings(arName);		
+	else {
+		PhysLayerInstance* pInst = &i->second;
+		pInst->Release();
+		LOG_BLOCK(LEV_DEBUG, "Physical layer released: " << arName);
 	}
-	
-	IPhysicalLayerAsync* PhysicalLayerMap::AcquireLayer(const std::string& arName, bool aAutoDelete)
-	{	
-		CriticalSection cs(&mLock);
-		PhysLayerSettings s = this->_GetSettings(arName);				
-		PhysLayerInstance* pInstance = this->_GetInstance(arName);
-		if(pInstance->IsCreated()) throw ArgumentException("Layer with name has already been acquired: " + arName);
-		else {			
-			IPhysicalLayerAsync* pLayer = pInstance->GetLayer(this->MakeLogger(arName, s.LogLevel), mpService, aAutoDelete);
-			mLayerToNameMap.insert(LayerToNameMap::value_type(pLayer, arName));
-			LOG_BLOCK(LEV_DEBUG, "Physical layer acquired: " << arName);
-			return pLayer;
-		}
-	}
+}
 
-	void PhysicalLayerMap::ReleaseLayer(const std::string& arName)
-	{
-		CriticalSection cs(&mLock);
-		NameToInstanceMap::iterator i = mNameToInstanceMap.find(arName);
-		if(i == mNameToInstanceMap.end()) {
-			throw ArgumentException(LOCATION, "Physical layer not managed by this map: " + arName);		
-		}
-		else {			
-			PhysLayerInstance* pInst = &i->second;			
-			pInst->Release();				
-			LOG_BLOCK(LEV_DEBUG, "Physical layer released: " << arName);
-		}
-	}
+PhysLayerSettings PhysicalLayerMap ::_GetSettings(const std::string& arName)
+{
+	NameToSettingsMap::iterator i = mNameToSettingsMap.find(arName);
+	if(i == mNameToSettingsMap.end())
+		throw ArgumentException(LOCATION, "Settings with name doesn't exist: " + arName);
 
-	PhysLayerSettings PhysicalLayerMap ::_GetSettings(const std::string& arName)
-	{	
-		NameToSettingsMap::iterator i = mNameToSettingsMap.find(arName);
-		if(i == mNameToSettingsMap.end())
-			throw ArgumentException(LOCATION, "Settings with name doesn't exist: " + arName);
+	return i->second;
+}
 
-		return i->second;
-	}
+PhysLayerInstance* PhysicalLayerMap ::_GetInstance(const std::string& arName)
+{
+	NameToInstanceMap::iterator i = mNameToInstanceMap.find(arName);
+	if(i == mNameToInstanceMap.end())
+		throw ArgumentException(LOCATION, "Instance with name doesn't exist: " + arName);
 
-	PhysLayerInstance* PhysicalLayerMap ::_GetInstance(const std::string& arName)
-	{
-		NameToInstanceMap::iterator i = mNameToInstanceMap.find(arName);
-		if(i == mNameToInstanceMap.end())
-			throw ArgumentException(LOCATION, "Instance with name doesn't exist: " + arName);
+	return &(i->second);
+}
 
-		return &(i->second);
-	}
+void PhysicalLayerMap ::AddLayer(const std::string& arName, PhysLayerSettings aSettings, PhysLayerInstance aInstance)
+{
+	CriticalSection cs(&mLock);
 
-	void PhysicalLayerMap ::AddLayer(const std::string& arName, PhysLayerSettings aSettings, PhysLayerInstance aInstance)
-	{
-		CriticalSection cs(&mLock);
+	if(mNameToSettingsMap.find(arName) != mNameToSettingsMap.end())
+		throw Exception(LOCATION, "Layer with that name already exists");
 
-		if(mNameToSettingsMap.find(arName) != mNameToSettingsMap.end())
-			throw Exception(LOCATION, "Layer with that name already exists");
+	mNameToSettingsMap.insert(NameToSettingsMap::value_type(arName, aSettings));
+	mNameToInstanceMap.insert(NameToInstanceMap::value_type(arName, aInstance));
+}
 
-		mNameToSettingsMap.insert(NameToSettingsMap::value_type(arName, aSettings));
-		mNameToInstanceMap.insert(NameToInstanceMap::value_type(arName, aInstance));
-	}
-
-	Logger* PhysicalLayerMap ::MakeLogger(const std::string& arName, FilterLevel aLevel)
-	{
-		Logger* ret = mpBaseLogger->GetSubLogger(arName);		
-		ret->SetFilterLevel(aLevel);
-		return ret;
-	}
+Logger* PhysicalLayerMap ::MakeLogger(const std::string& arName, FilterLevel aLevel)
+{
+	Logger* ret = mpBaseLogger->GetSubLogger(arName);
+	ret->SetFilterLevel(aLevel);
+	return ret;
+}
 }

@@ -25,32 +25,36 @@
 
 #include <string>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	class TransportLayer;
-
-
-	/**
-	Base class for all TransportLayerStates (TLS)
-	*/
-	class TLS_Base
-	{
-		public:
-			virtual void Send(const boost::uint8_t*, size_t, TransportLayer*);
-			virtual void HandleReceive(const boost::uint8_t*, size_t, TransportLayer*);
-
-			// TPDU failure/success handlers
-			virtual void HandleSendSuccess(TransportLayer*);
-			virtual void HandleSendFailure(TransportLayer*);
-
-			virtual void LowerLayerUp(TransportLayer*);
-			virtual void LowerLayerDown(TransportLayer*);
-
-			virtual std::string Name() const = 0;
-	};
+class TransportLayer;
 
 
+/**
+Base class for all TransportLayerStates (TLS)
+*/
+class TLS_Base
+{
+public:
+	virtual void Send(const boost::uint8_t*, size_t, TransportLayer*);
+	virtual void HandleReceive(const boost::uint8_t*, size_t, TransportLayer*);
 
-}}
+	// TPDU failure/success handlers
+	virtual void HandleSendSuccess(TransportLayer*);
+	virtual void HandleSendFailure(TransportLayer*);
+
+	virtual void LowerLayerUp(TransportLayer*);
+	virtual void LowerLayerDown(TransportLayer*);
+
+	virtual std::string Name() const = 0;
+};
+
+
+
+}
+}
 
 #endif

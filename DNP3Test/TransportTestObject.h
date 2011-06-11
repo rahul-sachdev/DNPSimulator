@@ -29,11 +29,14 @@
 #include <DNP3/TransportLayer.h>
 #include <APLTestTools/LogTester.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class TransportTestObject : public LogTester
 {
-	public:
+public:
 	TransportTestObject(bool aOpenOnStart = false, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
 
 	// Generate a complete packet sequence inside the vector and
@@ -41,13 +44,13 @@ class TransportTestObject : public LogTester
 	std::string GeneratePacketSequence(std::vector<std::string>&, size_t aNumPackets, size_t aLastPacketLength);
 
 	// Get a Sequence of data w/ optional header
-	std::string GetData(const std::string& arHdr,boost::uint8_t aSeed = 0, size_t aLength = TL_MAX_TPDU_PAYLOAD);
+	std::string GetData(const std::string& arHdr, boost::uint8_t aSeed = 0, size_t aLength = TL_MAX_TPDU_PAYLOAD);
 
-	private:
+private:
 	Logger* mpLogger;
 	TransportLayer transport;
 
-	public:
+public:
 
 	MockLowerLayer lower;
 	MockUpperLayer upper;
@@ -55,6 +58,7 @@ class TransportTestObject : public LogTester
 
 };
 
-}}
+}
+}
 
 #endif

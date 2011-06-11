@@ -26,20 +26,23 @@
 
 using namespace std;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 TransportScalabilityTestObject::TransportScalabilityTestObject(
-	LinkConfig aClientCfg,
-	LinkConfig aServerCfg,
-	boost::uint16_t aPortStart,
-	boost::uint16_t aNumPair,
-	FilterLevel aLevel,
-	bool aImmediate) :
+    LinkConfig aClientCfg,
+    LinkConfig aServerCfg,
+    boost::uint16_t aPortStart,
+    boost::uint16_t aNumPair,
+    FilterLevel aLevel,
+    bool aImmediate) :
 
-LogTester(aImmediate),
-AsyncTestObjectASIO(),
-mpLogger(mLog.GetLogger(aLevel, "test")),
-mTimerSource(this->GetService())
+	LogTester(aImmediate),
+	AsyncTestObjectASIO(),
+	mpLogger(mLog.GetLogger(aLevel, "test")),
+	mTimerSource(this->GetService())
 {
 	const boost::uint16_t START = aPortStart;
 	const boost::uint16_t STOP = START + aNumPair;
@@ -55,12 +58,12 @@ mTimerSource(this->GetService())
 
 TransportScalabilityTestObject::~TransportScalabilityTestObject()
 {
-	BOOST_FOREACH(TransportStackPair* pPair, mPairs) delete pPair;
+	BOOST_FOREACH(TransportStackPair * pPair, mPairs) delete pPair;
 }
 
 bool TransportScalabilityTestObject::AllLayersUp()
 {
-	BOOST_FOREACH(TransportStackPair* pPair, mPairs) {
+	BOOST_FOREACH(TransportStackPair * pPair, mPairs) {
 		if(!pPair->BothLayersUp()) return false;
 	}
 
@@ -69,7 +72,7 @@ bool TransportScalabilityTestObject::AllLayersUp()
 
 bool TransportScalabilityTestObject::AllLayerEqual(const boost::uint8_t* apData, size_t aNumBytes)
 {
-	BOOST_FOREACH(TransportStackPair* pPair, mPairs) {
+	BOOST_FOREACH(TransportStackPair * pPair, mPairs) {
 		if(! pPair->mServerStack.mUpper.BufferEquals(apData, aNumBytes)) return false;
 		if(! pPair->mClientStack.mUpper.BufferEquals(apData, aNumBytes)) return false;
 	}
@@ -79,7 +82,7 @@ bool TransportScalabilityTestObject::AllLayerEqual(const boost::uint8_t* apData,
 
 bool TransportScalabilityTestObject::AllLayerReceived(size_t aNumBytes)
 {
-	BOOST_FOREACH(TransportStackPair* pPair, mPairs) {
+	BOOST_FOREACH(TransportStackPair * pPair, mPairs) {
 		if(pPair->mServerStack.mUpper.Size() != aNumBytes) return false;
 		if(pPair->mClientStack.mUpper.Size() != aNumBytes) return false;
 	}
@@ -89,7 +92,7 @@ bool TransportScalabilityTestObject::AllLayerReceived(size_t aNumBytes)
 
 void TransportScalabilityTestObject::SendToAll(const boost::uint8_t* apData, size_t aNumBytes)
 {
-	BOOST_FOREACH(TransportStackPair* pPair, mPairs) {
+	BOOST_FOREACH(TransportStackPair * pPair, mPairs) {
 		pPair->mClientStack.mUpper.SendDown(apData, aNumBytes);
 		pPair->mServerStack.mUpper.SendDown(apData, aNumBytes);
 	}
@@ -97,9 +100,12 @@ void TransportScalabilityTestObject::SendToAll(const boost::uint8_t* apData, siz
 
 void TransportScalabilityTestObject::Start()
 {
-	BOOST_FOREACH(TransportStackPair* pPair, mPairs) { pPair->Start(); }
+	BOOST_FOREACH(TransportStackPair * pPair, mPairs) {
+		pPair->Start();
+	}
 }
 
-}}
+}
+}
 
 

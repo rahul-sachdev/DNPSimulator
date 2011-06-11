@@ -22,47 +22,47 @@
 #include <assert.h>
 #include <APL/TimingTools.h>
 
-namespace apl {
+namespace apl
+{
 
-	CommandResponseQueue::CommandResponseQueue() {}
+CommandResponseQueue::CommandResponseQueue() {}
 
-	void CommandResponseQueue::AcceptResponse(const CommandResponse& arRsp, int aSequence)
-	{
-		{
-			CriticalSection cs(&mLock);
-			mResponseQueue.push_front(RspInfo(arRsp, aSequence));
-			cs.Signal();
-		}
-		this->NotifyAll();
-	}
-
-	bool CommandResponseQueue::WaitForResponse(CommandResponse& arRsp, int aSeq, millis_t aTimeout)
+void CommandResponseQueue::AcceptResponse(const CommandResponse& arRsp, int aSequence)
+{
 	{
 		CriticalSection cs(&mLock);
-
-		//first try to fun the response, maybe it already got put in before we waited
-		if(FindResponse(aSeq, arRsp)) return true;
-
-		if(aTimeout < 0) cs.Wait();
-		else cs.TimedWait(aTimeout);
-
-		return FindResponse(aSeq, arRsp);
+		mResponseQueue.push_front(RspInfo(arRsp, aSequence));
+		cs.Signal();
 	}
+	this->NotifyAll();
+}
 
-	bool CommandResponseQueue::FindResponse(int aSeq, CommandResponse& arRsp)
-	{
-		while(mResponseQueue.size() > 0)
-		{
-			RspInfo rsp = mResponseQueue.front();
-			mResponseQueue.pop_front();
-			if(rsp.mSequence == aSeq) {
-				arRsp = rsp.mResponse;
-				return true;
-			}
+bool CommandResponseQueue::WaitForResponse(CommandResponse& arRsp, int aSeq, millis_t aTimeout)
+{
+	CriticalSection cs(&mLock);
+
+	//first try to fun the response, maybe it already got put in before we waited
+	if(FindResponse(aSeq, arRsp)) return true;
+
+	if(aTimeout < 0) cs.Wait();
+	else cs.TimedWait(aTimeout);
+
+	return FindResponse(aSeq, arRsp);
+}
+
+bool CommandResponseQueue::FindResponse(int aSeq, CommandResponse& arRsp)
+{
+	while(mResponseQueue.size() > 0) {
+		RspInfo rsp = mResponseQueue.front();
+		mResponseQueue.pop_front();
+		if(rsp.mSequence == aSeq) {
+			arRsp = rsp.mResponse;
+			return true;
 		}
-
-		return false;
 	}
+
+	return false;
+}
 
 }
 

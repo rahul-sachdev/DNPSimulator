@@ -24,15 +24,25 @@
 #include <APL/Loggable.h>
 #include <APL/IPhysMonitor.h>
 
-namespace apl {
-	class ITimerSource;
-	class IPhysicalLayerAsync;
-	class IPhysicalLayerSource;
+namespace apl
+{
+class ITimerSource;
+class IPhysicalLayerAsync;
+class IPhysicalLayerSource;
 }
 
-namespace boost { namespace asio { class io_service; } }
+namespace boost
+{
+namespace asio
+{
+class io_service;
+}
+}
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class VtoRouter;
 struct VtoRouterSettings;
@@ -44,9 +54,9 @@ class VtoRouterManager : private Loggable
 public:
 	class RouterRecord
 	{
-		public:	
+	public:
 		RouterRecord(const std::string& arPortName, VtoRouter* apRouter, IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
-		
+
 		std::string mPortName;
 		VtoRouter* mpRouter;
 		IVtoWriter* mpWriter;
@@ -58,39 +68,40 @@ public:
 
 	~VtoRouterManager();
 
-	VtoRouter* StartRouter(		
-		const std::string& arPortName,
-		const VtoRouterSettings& arSettings, 
-		IVtoWriter* apWriter);
-		
+	VtoRouter* StartRouter(
+	    const std::string& arPortName,
+	    const VtoRouterSettings& arSettings,
+	    IVtoWriter* apWriter);
+
 	void StopRouter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
 
 	RouterRecord GetRouterOnWriter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
-	std::vector<RouterRecord> GetAllRoutersOnWriter(IVtoWriter* apWriter);	
+	std::vector<RouterRecord> GetAllRoutersOnWriter(IVtoWriter* apWriter);
 	std::vector<RouterRecord> GetAllRouters();
-	
+
 private:
 
 	void StopRouter(VtoRouter* apRouter);
 
-	static void ClenupAfterRouter(IPhysicalLayerAsync* apPhys, VtoRouter* apRouter);	
+	static void ClenupAfterRouter(IPhysicalLayerAsync* apPhys, VtoRouter* apRouter);
 
 	typedef std::vector<RouterRecord> RouterRecordVector;
 
 	RouterRecordVector::iterator Find(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
 
 	RouterRecordVector::iterator Find(IVtoWriter* apWriter);
-	
+
 	Logger* GetSubLogger(const std::string& arId, boost::uint8_t aVtoChannelId);
-			
+
 	void StopRouter(const RouterRecordVector::iterator& arIter);
 
 	RouterRecordVector mRecords;
-		
+
 	ITimerSource* mpTimerSrc;
-	IPhysicalLayerSource* mpPhysSource;	
+	IPhysicalLayerSource* mpPhysSource;
 };
 
-}}
+}
+}
 
 #endif

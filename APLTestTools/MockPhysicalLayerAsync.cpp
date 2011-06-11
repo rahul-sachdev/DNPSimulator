@@ -26,21 +26,22 @@
 
 using namespace boost::system;
 
-namespace apl {
+namespace apl
+{
 
 MockPhysicalLayerAsync::MockPhysicalLayerAsync(Logger* apLogger, ITimerSource* apTimerSource) :
-PhysicalLayerAsyncBase(apLogger),
-mpWriteBuff(NULL),
-mNumToRead(0),
-mNumToWrite(0),
-mNumWrites(0),
-mNumOpen(0),
-mNumOpenSuccess(0),
-mNumOpenFailure(0),
-mNumClose(0),
+	PhysicalLayerAsyncBase(apLogger),
+	mpWriteBuff(NULL),
+	mNumToRead(0),
+	mNumToWrite(0),
+	mNumWrites(0),
+	mNumOpen(0),
+	mNumOpenSuccess(0),
+	mNumOpenFailure(0),
+	mNumClose(0),
 
-mIsAutoOpenSuccess(true),
-mpTimerSource(apTimerSource)
+	mIsAutoOpenSuccess(true),
+	mpTimerSource(apTimerSource)
 {
 
 }
@@ -50,9 +51,9 @@ void MockPhysicalLayerAsync::SetAutoOpen(bool aIsSuccess)
 	mIsAutoOpenSuccess = aIsSuccess;
 }
 
-void MockPhysicalLayerAsync::DoOpen() 
+void MockPhysicalLayerAsync::DoOpen()
 {
-	++mNumOpen; 
+	++mNumOpen;
 	if(mpTimerSource) {
 		if(this->mIsAutoOpenSuccess) mpTimerSource->Post(boost::bind(&MockPhysicalLayerAsync::SignalOpenSuccess, this));
 		else mpTimerSource->Post(boost::bind(&MockPhysicalLayerAsync::SignalOpenFailure, this));
@@ -60,7 +61,7 @@ void MockPhysicalLayerAsync::DoOpen()
 }
 
 void MockPhysicalLayerAsync::DoClose()
-{ 
+{
 	++mNumClose;
 	if(mpTimerSource) {
 		mpTimerSource->Post(boost::bind(&MockPhysicalLayerAsync::DoThisLayerDown, this));

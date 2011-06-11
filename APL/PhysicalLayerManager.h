@@ -25,26 +25,26 @@
 
 namespace apl
 {
-	class EventLog;
-	class IPhysMonitor;
+class EventLog;
+class IPhysMonitor;
 
-	class PhysicalLayerManager : public PhysicalLayerMap
-	{
-		public:
+class PhysicalLayerManager : public PhysicalLayerMap
+{
+public:
 
-			// Constructor can specify whether or not the class will delete it's own physical layers via aOwnsLayer.
-			PhysicalLayerManager(Logger*, boost::asio::io_service* apService);
-			virtual ~PhysicalLayerManager();			
+	// Constructor can specify whether or not the class will delete it's own physical layers via aOwnsLayer.
+	PhysicalLayerManager(Logger*, boost::asio::io_service* apService);
+	virtual ~PhysicalLayerManager();
 
-			//function for manually adding entires
+	//function for manually adding entires
 
-			void AddTCPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort);
-			void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
-			void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
+	void AddTCPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort);
+	void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
+	void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
 
-			// Removes a physical layer and deletes it if the manager has ownership.
-			void Remove(const std::string& arName);		
-	};
+	// Removes a physical layer and deletes it if the manager has ownership.
+	void Remove(const std::string& arName);
+};
 }
 
 #endif

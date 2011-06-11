@@ -23,51 +23,56 @@
 #include <APL/Exception.h>
 #include <queue>
 
-namespace apl {
+namespace apl
+{
 
-	class MockCommandAcceptor : public ICommandAcceptor
-	{
-		public:
+class MockCommandAcceptor : public ICommandAcceptor
+{
+public:
 
-		void AcceptCommand(const BinaryOutput& aBo, size_t, int aSequence, IResponseAcceptor* apRspAcceptor)
-		{ mBinaryOutputs.push(aBo); this->AcceptCommand(aSequence, apRspAcceptor); }
+	void AcceptCommand(const BinaryOutput& aBo, size_t, int aSequence, IResponseAcceptor* apRspAcceptor) {
+		mBinaryOutputs.push(aBo);
+		this->AcceptCommand(aSequence, apRspAcceptor);
+	}
 
-		void AcceptCommand(const Setpoint& aSt, size_t, int aSequence, IResponseAcceptor* apRspAcceptor)
-		{ mSetpoints.push(aSt); this->AcceptCommand(aSequence, apRspAcceptor); }
+	void AcceptCommand(const Setpoint& aSt, size_t, int aSequence, IResponseAcceptor* apRspAcceptor) {
+		mSetpoints.push(aSt);
+		this->AcceptCommand(aSequence, apRspAcceptor);
+	}
 
-		void Queue(CommandStatus aStatus) { mResponses.push(aStatus); }
+	void Queue(CommandStatus aStatus) {
+		mResponses.push(aStatus);
+	}
 
-		Setpoint NextSetpoint(){
-			if(mSetpoints.size() == 0) throw Exception(LOCATION, "no setpoints recieved");
-			Setpoint s = mSetpoints.front();
-			mSetpoints.pop();
-			return s;
+	Setpoint NextSetpoint() {
+		if(mSetpoints.size() == 0) throw Exception(LOCATION, "no setpoints recieved");
+		Setpoint s = mSetpoints.front();
+		mSetpoints.pop();
+		return s;
+	}
+	BinaryOutput NextBinaryOutput() {
+		if(mBinaryOutputs.size() == 0) throw Exception(LOCATION, "no binary outputs recieved");
+		BinaryOutput b = mBinaryOutputs.front();
+		mBinaryOutputs.pop();
+		return b;
+	}
+
+private:
+
+	void AcceptCommand(int aSeq, IResponseAcceptor* apRspAcceptor) {
+		if(mResponses.empty()) throw Exception(LOCATION, "response queue is empty");
+		else {
+			CommandResponse rsp(mResponses.front());
+			mResponses.pop();
+			apRspAcceptor->AcceptResponse(rsp, aSeq);
 		}
-		BinaryOutput NextBinaryOutput(){
-			if(mBinaryOutputs.size() == 0) throw Exception(LOCATION, "no binary outputs recieved");
-			BinaryOutput b = mBinaryOutputs.front();
-			mBinaryOutputs.pop();
-			return b;
-		}
 
-		private:
+	}
 
-		void AcceptCommand(int aSeq, IResponseAcceptor* apRspAcceptor)
-		{
-			if(mResponses.empty()) throw Exception(LOCATION, "response queue is empty");
-			else
-			{
-				CommandResponse rsp(mResponses.front());
-				mResponses.pop();
-				apRspAcceptor->AcceptResponse(rsp, aSeq);
-			}
-
-		}
-
-		std::queue<CommandStatus> mResponses;
-		std::queue<Setpoint> mSetpoints;
-		std::queue<BinaryOutput> mBinaryOutputs;
-	};
+	std::queue<CommandStatus> mResponses;
+	std::queue<Setpoint> mSetpoints;
+	std::queue<BinaryOutput> mBinaryOutputs;
+};
 
 }
 

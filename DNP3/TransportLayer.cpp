@@ -32,9 +32,12 @@
 
 using namespace std;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	TransportLayer::TransportLayer(apl::Logger* apLogger, size_t aFragSize) :
+TransportLayer::TransportLayer(apl::Logger* apLogger, size_t aFragSize) :
 	Loggable(apLogger),
 	IUpperLayer(apLogger),
 	ILowerLayer(apLogger),
@@ -43,124 +46,124 @@ namespace apl { namespace dnp {
 	mReceiver(apLogger, this, aFragSize),
 	mTransmitter(apLogger, this, aFragSize),
 	mThisLayerUp(false)
-	{
+{
 
+}
+
+///////////////////////////////////////
+// Actions
+///////////////////////////////////////
+
+void TransportLayer::ThisLayerUp()
+{
+	mThisLayerUp = true;
+	if(mpUpperLayer != NULL) mpUpperLayer->OnLowerLayerUp();
+}
+
+void TransportLayer::ThisLayerDown()
+{
+	mReceiver.Reset();
+	mThisLayerUp = false;
+	if(mpUpperLayer != NULL) mpUpperLayer->OnLowerLayerDown();
+}
+
+void TransportLayer::ChangeState(TLS_Base* apNewState)
+{
+	LOG_BLOCK(LEV_DEBUG, "State Change: " << mpState->Name() << " -> " << apNewState->Name());
+	mpState = apNewState;
+}
+
+void TransportLayer::TransmitAPDU(const boost::uint8_t* apData, size_t aNumBytes)
+{
+	mTransmitter.Send(apData, aNumBytes);
+}
+
+void TransportLayer::TransmitTPDU(const boost::uint8_t* apData, size_t aNumBytes)
+{
+	if(mpLowerLayer != NULL) mpLowerLayer->Send(apData, aNumBytes);
+}
+
+void TransportLayer::ReceiveTPDU(const boost::uint8_t* apData, size_t aNumBytes)
+{
+	mReceiver.HandleReceive(apData, aNumBytes);
+}
+
+void TransportLayer::ReceiveAPDU(const boost::uint8_t* apData, size_t aNumBytes)
+{
+	if(mpUpperLayer != NULL) mpUpperLayer->OnReceive(apData, aNumBytes);
+}
+
+bool TransportLayer::ContinueSend()
+{
+	return !mTransmitter.SendSuccess();
+}
+
+void TransportLayer::SignalSendSuccess()
+{
+	if(mpUpperLayer != NULL) mpUpperLayer->OnSendSuccess();
+}
+
+void TransportLayer::SignalSendFailure()
+{
+	if(mpUpperLayer != NULL) mpUpperLayer->OnSendFailure();
+}
+
+///////////////////////////////////////
+// ILayerDown NVII implementations
+///////////////////////////////////////
+void TransportLayer::_Send(const boost::uint8_t* apData, size_t aNumBytes)
+{
+	if(aNumBytes == 0 || aNumBytes > M_FRAG_SIZE) {
+		ostringstream oss;
+		oss << "Illegal arg: " << aNumBytes << ", Array length must be in the range [1," << M_FRAG_SIZE << "]";
+		throw ArgumentException(LOCATION, oss.str());
 	}
 
-	///////////////////////////////////////
-	// Actions
-	///////////////////////////////////////
+	mpState->Send(apData, aNumBytes, this);
+}
 
-	void TransportLayer::ThisLayerUp()
-	{
-		mThisLayerUp = true;
-		if(mpUpperLayer != NULL) mpUpperLayer->OnLowerLayerUp();
-	}
+///////////////////////////////////////
+// ILayerUp NVII implementations
+///////////////////////////////////////
+void TransportLayer::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
+{
+	mpState->HandleReceive(apData, aNumBytes, this);
+}
 
-	void TransportLayer::ThisLayerDown()
-	{
-		mReceiver.Reset();
-		mThisLayerUp = false;
-		if(mpUpperLayer != NULL) mpUpperLayer->OnLowerLayerDown();
-	}
+void TransportLayer::_OnSendSuccess()
+{
+	mpState->HandleSendSuccess(this);
+}
 
-	void TransportLayer::ChangeState(TLS_Base* apNewState)
-	{
-		LOG_BLOCK(LEV_DEBUG, "State Change: " << mpState->Name() << " -> " << apNewState->Name());
-		mpState = apNewState;
-	}
+void TransportLayer::_OnSendFailure()
+{
+	mpState->HandleSendFailure(this);
+}
 
-	void TransportLayer::TransmitAPDU(const boost::uint8_t* apData, size_t aNumBytes)
-	{
-		mTransmitter.Send(apData, aNumBytes);
-	}
+void TransportLayer::_OnLowerLayerUp()
+{
+	mpState->LowerLayerUp(this);
+}
 
-	void TransportLayer::TransmitTPDU(const boost::uint8_t* apData, size_t aNumBytes)
-	{
-		if(mpLowerLayer != NULL) mpLowerLayer->Send(apData, aNumBytes);
-	}
+void TransportLayer::_OnLowerLayerDown()
+{
+	mpState->LowerLayerDown(this);
+}
 
-	void TransportLayer::ReceiveTPDU(const boost::uint8_t* apData, size_t aNumBytes)
-	{
-		mReceiver.HandleReceive(apData, aNumBytes);
-	}
+///////////////////////////////////////
+// Helpers
+///////////////////////////////////////
 
-	void TransportLayer::ReceiveAPDU(const boost::uint8_t* apData, size_t aNumBytes)
-	{
-		if(mpUpperLayer != NULL) mpUpperLayer->OnReceive(apData, aNumBytes);
-	}
-
-	bool TransportLayer::ContinueSend()
-	{
-		return !mTransmitter.SendSuccess();
-	}
-
-	void TransportLayer::SignalSendSuccess()
-	{
-		if(mpUpperLayer != NULL) mpUpperLayer->OnSendSuccess();
-	}
-
-	void TransportLayer::SignalSendFailure()
-	{
-		if(mpUpperLayer != NULL) mpUpperLayer->OnSendFailure();
-	}
-
-	///////////////////////////////////////
-	// ILayerDown NVII implementations
-	///////////////////////////////////////
-	void TransportLayer::_Send(const boost::uint8_t* apData, size_t aNumBytes)
-	{
-		if(aNumBytes == 0 || aNumBytes > M_FRAG_SIZE)
-		{
-			ostringstream oss;
-			oss << "Illegal arg: " << aNumBytes << ", Array length must be in the range [1," << M_FRAG_SIZE << "]";
-			throw ArgumentException(LOCATION, oss.str());
-		}
-
-		mpState->Send(apData, aNumBytes, this);
-	}
-
-	///////////////////////////////////////
-	// ILayerUp NVII implementations
-	///////////////////////////////////////
-	void TransportLayer::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
-	{
-		mpState->HandleReceive(apData, aNumBytes, this);
-	}
-
-	void TransportLayer::_OnSendSuccess()
-	{
-		mpState->HandleSendSuccess(this);
-	}
-
-	void TransportLayer::_OnSendFailure()
-	{
-		mpState->HandleSendFailure(this);
-	}
-
-	void TransportLayer::_OnLowerLayerUp()
-	{
-		mpState->LowerLayerUp(this);
-	}
-
-	void TransportLayer::_OnLowerLayerDown()
-	{
-		mpState->LowerLayerDown(this);
-	}
-
-	///////////////////////////////////////
-	// Helpers
-	///////////////////////////////////////
-
-	std::string TransportLayer::ToString(boost::uint8_t aHeader)
-	{
-		std::ostringstream oss;
-		oss << "TL: ";
-		if((aHeader & TL_HDR_FIR) != 0) oss << "FIR ";
-		if((aHeader & TL_HDR_FIN)!= 0) oss << "FIN ";
-		oss << "#" << static_cast<int>(aHeader & TL_HDR_SEQ);
-		return oss.str();
-	}
+std::string TransportLayer::ToString(boost::uint8_t aHeader)
+{
+	std::ostringstream oss;
+	oss << "TL: ";
+	if((aHeader & TL_HDR_FIR) != 0) oss << "FIR ";
+	if((aHeader & TL_HDR_FIN) != 0) oss << "FIN ";
+	oss << "#" << static_cast<int>(aHeader & TL_HDR_SEQ);
+	return oss.str();
+}
 
 
-}} //end namespaces
+}
+} //end namespaces

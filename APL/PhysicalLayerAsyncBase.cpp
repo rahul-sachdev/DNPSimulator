@@ -27,34 +27,45 @@
 
 using namespace std;
 
-namespace apl {
+namespace apl
+{
 
 ///////////////////////////////////
 // State object
 ///////////////////////////////////
 
 PhysicalLayerAsyncBase::State::State() :
-mOpen(false),
-mOpening(false),
-mReading(false),
-mWriting(false),
-mClosing(false)
+	mOpen(false),
+	mOpening(false),
+	mReading(false),
+	mWriting(false),
+	mClosing(false)
 {}
 
 bool PhysicalLayerAsyncBase::State::CanOpen()
-{ return !(mOpen || mOpening || mClosing); }
+{
+	return !(mOpen || mOpening || mClosing);
+}
 
 bool PhysicalLayerAsyncBase::State::CanClose()
-{ return (mOpen || mOpening) && !mClosing; }
+{
+	return (mOpen || mOpening) && !mClosing;
+}
 
 bool PhysicalLayerAsyncBase::State::CanRead()
-{ return mOpen && !mClosing && !mReading; }
+{
+	return mOpen && !mClosing && !mReading;
+}
 
 bool PhysicalLayerAsyncBase::State::CanWrite()
-{ return mOpen && !mClosing && !mWriting; }
+{
+	return mOpen && !mClosing && !mWriting;
+}
 
 bool PhysicalLayerAsyncBase::State::CallbacksPending()
-{ return mOpening || mReading || mWriting; }
+{
+	return mOpening || mReading || mWriting;
+}
 
 bool PhysicalLayerAsyncBase::State::CheckForClose()
 {
@@ -69,8 +80,8 @@ std::string PhysicalLayerAsyncBase::State::ToString()
 {
 	std::ostringstream oss;
 	oss << "Open: " << mOpen << " Opening: " << mOpening
-		<< " Reading: " << mReading << " Writing: " << mWriting
-		<< " Closing: " << mClosing;
+	    << " Reading: " << mReading << " Writing: " << mWriting
+	    << " Closing: " << mClosing;
 
 	return oss.str();
 }
@@ -80,8 +91,8 @@ std::string PhysicalLayerAsyncBase::State::ToString()
 ///////////////////////////////////
 
 PhysicalLayerAsyncBase::PhysicalLayerAsyncBase(Logger* apLogger) :
-Loggable(apLogger),
-mpHandler(NULL)
+	Loggable(apLogger),
+	mpHandler(NULL)
 {
 
 }
@@ -157,16 +168,16 @@ void PhysicalLayerAsyncBase::OnOpenCallback(const boost::system::error_code& arE
 			this->DoOpenFailure();
 			if(mpHandler) mpHandler->OnOpenFailure();
 		}
-		else { // successful connection			
+		else { // successful connection
 			if(this->IsClosing()) { // but the connection was closed
 				this->DoClose();
 				if(mpHandler) mpHandler->OnOpenFailure();
 			}
-			else {			
+			else {
 				mState.mOpen = true;
 				this->DoOpenSuccess();
 				if(mpHandler) mpHandler->OnLowerLayerUp();
-			}			
+			}
 		}
 	}
 	else throw InvalidStateException(LOCATION, "OnOpenCallback: " + mState.ToString());

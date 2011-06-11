@@ -21,15 +21,18 @@
 
 #include <APL/Types.h>
 
-namespace apl { namespace dnp {
-
-struct ExceptionScan
+namespace apl
 {
+namespace dnp
+{
+
+struct ExceptionScan {
 	int ClassMask;
 	millis_t ScanRate;
 };
 
-}}
+}
+}
 
 #endif
 

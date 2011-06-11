@@ -21,21 +21,21 @@
 
 namespace apl
 {
-	/**
-		A generic interface that defines a notification function. Modeled loosly on a lock
-		type interaction. Generally used for the multi-threaded observer pattern to indicate
-		that a shared _thread_safe_ object has had a change occur. The application then knows
-		that it needs to look at that shared object which it can do immediatley or at some point
-		in the future (ie. when the "application" thread is ready).
+/**
+	A generic interface that defines a notification function. Modeled loosly on a lock
+	type interaction. Generally used for the multi-threaded observer pattern to indicate
+	that a shared _thread_safe_ object has had a change occur. The application then knows
+	that it needs to look at that shared object which it can do immediatley or at some point
+	in the future (ie. when the "application" thread is ready).
 
-		It is critical to remember that the calls to Notify() can potentially come from any thread!
-	 */
-	class INotifier
-	{
-		public:
-			virtual ~INotifier(){}
-			virtual void Notify() = 0;
-	};
+	It is critical to remember that the calls to Notify() can potentially come from any thread!
+ */
+class INotifier
+{
+public:
+	virtual ~INotifier() {}
+	virtual void Notify() = 0;
+};
 }
 
 #endif

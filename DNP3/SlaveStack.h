@@ -26,12 +26,15 @@
 #include "SlaveStackConfig.h"
 #include <APL/TimeSource.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /** @section desc A stack object for a master */
 class SlaveStack : public Stack
 {
-	public:
+public:
 
 	/**
 		@param apLogger			Logger used by the stack
@@ -40,10 +43,10 @@ class SlaveStack : public Stack
 		@param arCfg			Configuration struct that holds parameters for the stack
 	*/
 	SlaveStack(
-		Logger* apLogger,
-		ITimerSource* apTimerSrc,
-		ICommandAcceptor* apCmdAcceptor,
-		const SlaveStackConfig& arCfg);
+	    Logger* apLogger,
+	    ITimerSource* apTimerSrc,
+	    ICommandAcceptor* apCmdAcceptor,
+	    const SlaveStackConfig& arCfg);
 
 	IVtoWriter* GetVtoWriter();
 
@@ -55,6 +58,7 @@ class SlaveStack : public Stack
 	Slave mSlave;				// The dnp3 outstation class
 };
 
-}}
+}
+}
 
 #endif

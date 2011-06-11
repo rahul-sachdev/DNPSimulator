@@ -27,35 +27,39 @@
 
 namespace apl
 {
-	/** Provides an interface to which any platform-specific
-	*/
-	class TimeBase
-	{
-		public:
+/** Provides an interface to which any platform-specific
+*/
+class TimeBase
+{
+public:
 
-			TimeBase();
-			virtual ~TimeBase(){}
+	TimeBase();
+	virtual ~TimeBase() {}
 
-			virtual void SetToNow() = 0;
-			virtual apl::millis_t GetElapsedMS() const = 0;
-			virtual std::string GetTimeString() const = 0;
+	virtual void SetToNow() = 0;
+	virtual apl::millis_t GetElapsedMS() const = 0;
+	virtual std::string GetTimeString() const = 0;
 
-			inline size_t GetSecSinceEpoch() const { return mSec; }
-			inline size_t GetUsecSinceEpoch() const { return mUsec; }
+	inline size_t GetSecSinceEpoch() const {
+		return mSec;
+	}
+	inline size_t GetUsecSinceEpoch() const {
+		return mUsec;
+	}
 
-			void SetTo(apl::millis_t aTime);
-			void AddMS(apl::millis_t aAdd);
-			apl::millis_t GetValueMS() const;
+	void SetTo(apl::millis_t aTime);
+	void AddMS(apl::millis_t aAdd);
+	apl::millis_t GetValueMS() const;
 
-			static apl::millis_t CalcDeltaMS(const TimeBase& aTime1, const TimeBase& aTime2);
+	static apl::millis_t CalcDeltaMS(const TimeBase& aTime1, const TimeBase& aTime2);
 
 
-		protected:
+protected:
 
-			size_t mSec;	// seconds since epoch
-			size_t mUsec;   // additional micro seconds
+	size_t mSec;	// seconds since epoch
+	size_t mUsec;   // additional micro seconds
 
-	};
+};
 
 }
 

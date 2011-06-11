@@ -6,64 +6,64 @@ using namespace std;
 
 namespace apl
 {
-	LineReader::LineReader(Logger* apLogger, IPhysicalLayerAsync* apPhysical, ITimerSource* apTimerSrc, size_t aBuffSize) :
+LineReader::LineReader(Logger* apLogger, IPhysicalLayerAsync* apPhysical, ITimerSource* apTimerSrc, size_t aBuffSize) :
 	Loggable(apLogger),
 	AsyncPhysLayerMonitor(apLogger, apPhysical, apTimerSrc, 5000),
-	mBuffer(aBuffSize)	
-	{
-		this->Reset();
-	}
-	
-	void LineReader::OnPhysicalLayerOpen()
-	{
-		this->Read();
-		this->_Up();
-	}
+	mBuffer(aBuffSize)
+{
+	this->Reset();
+}
 
-	void LineReader::OnPhysicalLayerClose()
-	{
-		this->Reset();
-		this->_Down();
-	}
+void LineReader::OnPhysicalLayerOpen()
+{
+	this->Read();
+	this->_Up();
+}
 
-	void LineReader::Reset()
-	{
-		mNumBytes = 0;
-		mHasCR = false;
-	}
+void LineReader::OnPhysicalLayerClose()
+{
+	this->Reset();
+	this->_Down();
+}
 
-	void LineReader::Read()
-	{
-		if( (mBuffer.Size()-mNumBytes) == 0) this->Reset();
-		mpPhys->AsyncRead(mBuffer + mNumBytes, mBuffer.Size()-mNumBytes);	
-	}
+void LineReader::Reset()
+{
+	mNumBytes = 0;
+	mHasCR = false;
+}
 
-	void LineReader::_OnReceive(const boost::uint8_t*, size_t aNum)
-	{
-		mNumBytes += aNum;
-		assert(mNumBytes <= mBuffer.Size());		
-		this->ReadBuffer();		
-		if(mpPhys->CanRead()) this->Read();
-	}
+void LineReader::Read()
+{
+	if( (mBuffer.Size() - mNumBytes) == 0) this->Reset();
+	mpPhys->AsyncRead(mBuffer + mNumBytes, mBuffer.Size() - mNumBytes);
+}
 
-	void LineReader::ReadBuffer()
-	{
-		size_t pos = 0;
-		while(pos < (mNumBytes-1)) {
-			if(mBuffer[pos] == '\r' && mBuffer[pos+1] == '\n') {
-				size_t length = pos + 2;
-				size_t remain = mNumBytes - length;
-				std::string s(reinterpret_cast<const char*>(mBuffer.Buffer()), length - 2);
-				mNumBytes -= length;								
-				this->AcceptLine(s);				
-				if(remain > 0) {
-					memmove(mBuffer, mBuffer + length, remain);
-					ReadBuffer();
-				}
-				break;				
+void LineReader::_OnReceive(const boost::uint8_t*, size_t aNum)
+{
+	mNumBytes += aNum;
+	assert(mNumBytes <= mBuffer.Size());
+	this->ReadBuffer();
+	if(mpPhys->CanRead()) this->Read();
+}
+
+void LineReader::ReadBuffer()
+{
+	size_t pos = 0;
+	while(pos < (mNumBytes - 1)) {
+		if(mBuffer[pos] == '\r' && mBuffer[pos + 1] == '\n') {
+			size_t length = pos + 2;
+			size_t remain = mNumBytes - length;
+			std::string s(reinterpret_cast<const char*>(mBuffer.Buffer()), length - 2);
+			mNumBytes -= length;
+			this->AcceptLine(s);
+			if(remain > 0) {
+				memmove(mBuffer, mBuffer + length, remain);
+				ReadBuffer();
 			}
-			++pos;
+			break;
 		}
+		++pos;
 	}
+}
 }
 

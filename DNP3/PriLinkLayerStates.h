@@ -25,80 +25,96 @@
 
 #include "LinkLayer.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	class LinkLayer;
+class LinkLayer;
 
-	class PriStateBase
-	{
-		public:
+class PriStateBase
+{
+public:
 
-		/* Incoming messages for primary station */
-		virtual void Ack(LinkLayer*, bool aIsRcvBuffFull);
-		virtual void Nack(LinkLayer*, bool aIsRcvBuffFull);
-		virtual void LinkStatus(LinkLayer*, bool aIsRcvBuffFull);
-		virtual void NotSupported (LinkLayer*, bool aIsRcvBuffFull);
+	/* Incoming messages for primary station */
+	virtual void Ack(LinkLayer*, bool aIsRcvBuffFull);
+	virtual void Nack(LinkLayer*, bool aIsRcvBuffFull);
+	virtual void LinkStatus(LinkLayer*, bool aIsRcvBuffFull);
+	virtual void NotSupported (LinkLayer*, bool aIsRcvBuffFull);
 
-		virtual void OnTimeout(LinkLayer*);
+	virtual void OnTimeout(LinkLayer*);
 
-		/*Upper layer events to handle */
-		virtual void SendConfirmed(LinkLayer*, const boost::uint8_t*, size_t);
-		virtual void SendUnconfirmed(LinkLayer*, const boost::uint8_t*, size_t);
+	/*Upper layer events to handle */
+	virtual void SendConfirmed(LinkLayer*, const boost::uint8_t*, size_t);
+	virtual void SendUnconfirmed(LinkLayer*, const boost::uint8_t*, size_t);
 
-		//every concrete state implements this for logging purposes
-		virtual std::string Name() const = 0;
-	};
+	//every concrete state implements this for logging purposes
+	virtual std::string Name() const = 0;
+};
 
-	//	@section desc Entry state for primary station
-	class PLLS_SecNotReset : public PriStateBase
-	{
-		MACRO_STATE_SINGLETON_INSTANCE(PLLS_SecNotReset);
-		void SendUnconfirmed(LinkLayer*, const boost::uint8_t*, size_t);
-		void SendConfirmed(LinkLayer*, const boost::uint8_t*, size_t);
-	};
+//	@section desc Entry state for primary station
+class PLLS_SecNotReset : public PriStateBase
+{
+	MACRO_STATE_SINGLETON_INSTANCE(PLLS_SecNotReset);
+	void SendUnconfirmed(LinkLayer*, const boost::uint8_t*, size_t);
+	void SendConfirmed(LinkLayer*, const boost::uint8_t*, size_t);
+};
 
-	//	@section desc for reset state
-	class PLLS_SecReset : public PriStateBase
-	{
-		MACRO_STATE_SINGLETON_INSTANCE(PLLS_SecReset);
-		void SendUnconfirmed(LinkLayer*, const boost::uint8_t*, size_t);
-		void SendConfirmed(LinkLayer*, const boost::uint8_t*, size_t);
-	};
+//	@section desc for reset state
+class PLLS_SecReset : public PriStateBase
+{
+	MACRO_STATE_SINGLETON_INSTANCE(PLLS_SecReset);
+	void SendUnconfirmed(LinkLayer*, const boost::uint8_t*, size_t);
+	void SendConfirmed(LinkLayer*, const boost::uint8_t*, size_t);
+};
 
-	//	@section desc As soon as we get an ACK, send the delayed pri frame
-	class PLLS_ResetLinkWait : public PriStateBase
-	{
-		MACRO_STATE_SINGLETON_INSTANCE(PLLS_ResetLinkWait);
+//	@section desc As soon as we get an ACK, send the delayed pri frame
+class PLLS_ResetLinkWait : public PriStateBase
+{
+	MACRO_STATE_SINGLETON_INSTANCE(PLLS_ResetLinkWait);
 
-		void Ack(LinkLayer*, bool aIsRcvBuffFull);
-		void Nack(LinkLayer*  apLL, bool) { Failure(apLL); }
-		void LinkStatus(LinkLayer* apLL, bool) { Failure(apLL); }
-		void NotSupported (LinkLayer*  apLL, bool) { Failure(apLL); }
+	void Ack(LinkLayer*, bool aIsRcvBuffFull);
+	void Nack(LinkLayer*  apLL, bool) {
+		Failure(apLL);
+	}
+	void LinkStatus(LinkLayer* apLL, bool) {
+		Failure(apLL);
+	}
+	void NotSupported (LinkLayer*  apLL, bool) {
+		Failure(apLL);
+	}
 
-		void OnTimeout(LinkLayer*);
+	void OnTimeout(LinkLayer*);
 
-		private:
-		void Failure(LinkLayer*);
-	};
+private:
+	void Failure(LinkLayer*);
+};
 
-	//	@section desc As soon as we get an ACK, send the delayed pri frame
-	class PLLS_ConfDataWait : public PriStateBase
-	{
-		MACRO_STATE_SINGLETON_INSTANCE(PLLS_ConfDataWait);
+//	@section desc As soon as we get an ACK, send the delayed pri frame
+class PLLS_ConfDataWait : public PriStateBase
+{
+	MACRO_STATE_SINGLETON_INSTANCE(PLLS_ConfDataWait);
 
-		void Ack(LinkLayer*, bool aIsRcvBuffFull);
-		void Nack(LinkLayer* apLL, bool) { Failure(apLL); }
-		void LinkStatus(LinkLayer* apLL, bool) { Failure(apLL); }
-		void NotSupported (LinkLayer* apLL, bool) { Failure(apLL); }
-		void OnTimeout(LinkLayer*);
+	void Ack(LinkLayer*, bool aIsRcvBuffFull);
+	void Nack(LinkLayer* apLL, bool) {
+		Failure(apLL);
+	}
+	void LinkStatus(LinkLayer* apLL, bool) {
+		Failure(apLL);
+	}
+	void NotSupported (LinkLayer* apLL, bool) {
+		Failure(apLL);
+	}
+	void OnTimeout(LinkLayer*);
 
-		private:
-		void Failure(LinkLayer*);
-	};
+private:
+	void Failure(LinkLayer*);
+};
 
 
 
-}} //end namepsace
+}
+} //end namepsace
 
 
 #endif

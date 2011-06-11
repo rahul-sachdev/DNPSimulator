@@ -22,22 +22,23 @@
 
 #include <memory.h>
 
-namespace apl {
+namespace apl
+{
 
 ShiftableBuffer::ShiftableBuffer(size_t aSize) :
-mpBuffer(new boost::uint8_t[aSize]),
-M_SIZE(aSize),
-mWritePos(0),
-mReadPos(0)
+	mpBuffer(new boost::uint8_t[aSize]),
+	M_SIZE(aSize),
+	mWritePos(0),
+	mReadPos(0)
 {
 }
 
 
-ShiftableBuffer::ShiftableBuffer( const boost::uint8_t * aBuffer, size_t aSize) :
-mpBuffer(new boost::uint8_t[aSize]),
-M_SIZE(aSize),
-mWritePos(0),
-mReadPos(0)
+ShiftableBuffer::ShiftableBuffer( const boost::uint8_t* aBuffer, size_t aSize) :
+	mpBuffer(new boost::uint8_t[aSize]),
+	M_SIZE(aSize),
+	mWritePos(0),
+	mReadPos(0)
 {
 	if( aBuffer) {
 		memcpy( mpBuffer, aBuffer, aSize) ;
@@ -55,7 +56,9 @@ void ShiftableBuffer::Shift()
 }
 
 ShiftableBuffer::~ShiftableBuffer()
-{ delete[] mpBuffer; }
+{
+	delete[] mpBuffer;
+}
 
 
 void ShiftableBuffer::AdvanceRead(size_t aNumBytes)
@@ -93,9 +96,9 @@ size_t ShiftableBuffer::SyncSubsequence(const boost::uint8_t* apPattern, size_t 
 
 	const boost::uint8_t* pRead = this->ReadBuff() + aOffset;
 
-	for(size_t i=0; i<aNumPatternBytes; ++i) {
+	for(size_t i = 0; i < aNumPatternBytes; ++i) {
 		if(apPattern[i] != pRead[i])
-			return SyncSubsequence(apPattern, aNumPatternBytes, aOffset+1);
+			return SyncSubsequence(apPattern, aNumPatternBytes, aOffset + 1);
 	}
 
 	return aOffset;

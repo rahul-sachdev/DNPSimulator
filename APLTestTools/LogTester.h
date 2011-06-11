@@ -21,11 +21,12 @@
 
 #include <APL/Log.h>
 
-namespace apl {
+namespace apl
+{
 
 class LogTester : public ILogBase
 {
-	public:
+public:
 	LogTester(bool aImmediate);
 
 	// updating a variable/metric in the system
@@ -39,7 +40,7 @@ class LogTester : public ILogBase
 
 	EventLog mLog;
 
-	protected:
+protected:
 	LogEntryCircularBuffer mBuffer;
 
 };

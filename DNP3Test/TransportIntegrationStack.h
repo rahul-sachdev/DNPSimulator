@@ -25,7 +25,8 @@
 
 #include <APLTestTools/MockUpperLayer.h>
 
-namespace apl {
+namespace apl
+{
 
 class Logger;
 class ITimerSource;
@@ -33,19 +34,23 @@ class IPhysicalLayerAsync;
 
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class TransportIntegrationStack
 {
-	public:
-		TransportIntegrationStack(Logger*, ITimerSource*, IPhysicalLayerAsync*, LinkConfig);
+public:
+	TransportIntegrationStack(Logger*, ITimerSource*, IPhysicalLayerAsync*, LinkConfig);
 
-		LinkLayerRouter mRouter;
-		LinkLayer mLink;
-		TransportLayer mTransport;
-		MockUpperLayer mUpper;
+	LinkLayerRouter mRouter;
+	LinkLayer mLink;
+	TransportLayer mTransport;
+	MockUpperLayer mUpper;
 };
 
-}}
+}
+}
 
 #endif

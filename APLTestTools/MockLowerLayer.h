@@ -23,33 +23,36 @@
 
 #include "BufferTestObject.h"
 
-namespace apl {
+namespace apl
+{
 
 class MockLowerLayer : public ILowerLayer, public BufferTestObject
 {
-	public:
-		MockLowerLayer(Logger*);
-		virtual ~MockLowerLayer(){}
+public:
+	MockLowerLayer(Logger*);
+	virtual ~MockLowerLayer() {}
 
-		void SendUp(const boost::uint8_t*, size_t);
-		void SendUp(const std::string&);
-		void SendSuccess();
-		void SendFailure();
-		void ThisLayerUp();
-		void ThisLayerDown();
+	void SendUp(const boost::uint8_t*, size_t);
+	void SendUp(const std::string&);
+	void SendSuccess();
+	void SendFailure();
+	void ThisLayerUp();
+	void ThisLayerDown();
 
-		void EnableAutoSendCallback(bool aIsSuccess);
-		void DisableAutoSendCallback();
+	void EnableAutoSendCallback(bool aIsSuccess);
+	void DisableAutoSendCallback();
 
-	private:
+private:
 
-		bool mAutoSendCallback;
-		bool mIsSuccess;
+	bool mAutoSendCallback;
+	bool mIsSuccess;
 
-		virtual std::string SendString() const { return " MockLowerLayer ->"; }
+	virtual std::string SendString() const {
+		return " MockLowerLayer ->";
+	}
 
-		//these are the NVII delegates
-		void _Send(const boost::uint8_t*, size_t);
+	//these are the NVII delegates
+	void _Send(const boost::uint8_t*, size_t);
 };
 
 }

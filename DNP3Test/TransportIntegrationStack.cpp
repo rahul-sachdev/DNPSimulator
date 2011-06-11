@@ -20,13 +20,16 @@
 
 #include <DNP3/LinkRoute.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 TransportIntegrationStack::TransportIntegrationStack(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, LinkConfig aCfg) :
-mRouter(apLogger, apPhys, apTimerSrc, 1000),
-mLink(apLogger, apTimerSrc, aCfg),
-mTransport(apLogger),
-mUpper(apLogger)
+	mRouter(apLogger, apPhys, apTimerSrc, 1000),
+	mLink(apLogger, apTimerSrc, aCfg),
+	mTransport(apLogger),
+	mUpper(apLogger)
 {
 	LinkRoute route(aCfg.RemoteAddr, aCfg.LocalAddr);
 	mRouter.AddContext(&mLink, route);
@@ -36,4 +39,5 @@ mUpper(apLogger)
 }
 
 
-}}
+}
+}

@@ -23,17 +23,17 @@
 
 namespace apl
 {
-	class ILogBase
-	{
-		public:
-			virtual ~ILogBase(){}
+class ILogBase
+{
+public:
+	virtual ~ILogBase() {}
 
-			// logging error messages, etc
-			virtual void Log( const apl::LogEntry& arEntry ) = 0;
+	// logging error messages, etc
+	virtual void Log( const apl::LogEntry& arEntry ) = 0;
 
-			// updating a variable/metric in the system
-			virtual void SetVar(const std::string& aSource, const std::string& aVarName, int aValue) = 0;
-	};
+	// updating a variable/metric in the system
+	virtual void SetVar(const std::string& aSource, const std::string& aVarName, int aValue) = 0;
+};
 
 }
 

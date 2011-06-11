@@ -28,29 +28,28 @@
 
 namespace apl
 {
-	class CommandResponseQueue : public IResponseAcceptor, public SubjectBase<SigLock>
-	{
-		public:
-			CommandResponseQueue();
+class CommandResponseQueue : public IResponseAcceptor, public SubjectBase<SigLock>
+{
+public:
+	CommandResponseQueue();
 
-			void AcceptResponse(const CommandResponse&, int aSequence);
-			bool WaitForResponse(CommandResponse&, int, millis_t aTimeout = -1);
+	void AcceptResponse(const CommandResponse&, int aSequence);
+	bool WaitForResponse(CommandResponse&, int, millis_t aTimeout = -1);
 
-		private:
+private:
 
-			bool FindResponse(int aSeq, CommandResponse& arRsp);
+	bool FindResponse(int aSeq, CommandResponse& arRsp);
 
-			CommandResponse cr;
-			int mSequence;
-			SigLock mLock;
+	CommandResponse cr;
+	int mSequence;
+	SigLock mLock;
 
-			struct RspInfo
-			{
-				RspInfo(const CommandResponse& arRsp, int aSequence) : mResponse(arRsp), mSequence(aSequence) {}
-				CommandResponse mResponse; int mSequence;
-			};
-
-			std::deque<RspInfo> mResponseQueue;
+	struct RspInfo {
+		RspInfo(const CommandResponse& arRsp, int aSequence) : mResponse(arRsp), mSequence(aSequence) {}
+		CommandResponse mResponse; int mSequence;
 	};
+
+	std::deque<RspInfo> mResponseQueue;
+};
 }
 #endif

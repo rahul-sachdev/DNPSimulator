@@ -4,30 +4,34 @@
 
 #include "PhysicalLayerSyncProxy.h"
 
-namespace boost { namespace asio {
+namespace boost
+{
+namespace asio
+{
 class io_service;
-}}
+}
+}
 
 namespace apl
 {
 
 class Logger;
 
-	/** Simple thread object that allows for non-blocking read of std input.
-	*/
-	class PhysicalLayerIOStreamAsync : public PhysicalLayerSyncProxy
-	{
-		public:
-			PhysicalLayerIOStreamAsync(Logger*, boost::asio::io_service*);
+/** Simple thread object that allows for non-blocking read of std input.
+*/
+class PhysicalLayerIOStreamAsync : public PhysicalLayerSyncProxy
+{
+public:
+	PhysicalLayerIOStreamAsync(Logger*, boost::asio::io_service*);
 
-		private:
+private:
 
 
-			//implement virtual members of PhysicalLayerSyncProxy
+	//implement virtual members of PhysicalLayerSyncProxy
 
-			std::string Read();
-			void Write(const std::string&);
-	};
+	std::string Read();
+	void Write(const std::string&);
+};
 }
 
 #endif

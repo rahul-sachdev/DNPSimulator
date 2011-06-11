@@ -40,7 +40,10 @@
 
 using namespace std;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 AsyncStackManager::AsyncStackManager(Logger* apLogger, bool aAutoRun) :
 	Loggable(apLogger),
@@ -89,7 +92,7 @@ void AsyncStackManager::AddSerial(const std::string& arName, PhysLayerSettings a
 }
 
 ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel, IDataObserver* apPublisher,
-											    const MasterStackConfig& arCfg)
+        const MasterStackConfig& arCfg)
 {
 	Port* pPort = this->AllocatePort(arPortName);
 	Logger* pLogger = mpLogger->GetSubLogger(arStackName, aLevel);
@@ -99,13 +102,15 @@ ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, c
 	this->OnAddStack(arStackName, pMaster, pPort, route);
 
 	// add any vto routers we've configured
-	BOOST_FOREACH(VtoRouterConfig s, arCfg.vto.mRouterConfigs) { this->StartVtoRouter(s.mPhysicalLayerName, arStackName, s.mSettings); }
+	BOOST_FOREACH(VtoRouterConfig s, arCfg.vto.mRouterConfigs) {
+		this->StartVtoRouter(s.mPhysicalLayerName, arStackName, s.mSettings);
+	}
 
 	return pMaster->mMaster.GetCmdAcceptor();
 }
 
 IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel, ICommandAcceptor* apCmdAcceptor,
-											const SlaveStackConfig& arCfg)
+        const SlaveStackConfig& arCfg)
 {
 	Port* pPort = this->AllocatePort(arPortName);
 	Logger* pLogger = mpLogger->GetSubLogger(arStackName, aLevel);
@@ -115,13 +120,15 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 	this->OnAddStack(arStackName, pSlave, pPort, route);
 
 	// add any vto routers we've configured
-	BOOST_FOREACH(VtoRouterConfig s, arCfg.vto.mRouterConfigs) { this->StartVtoRouter(s.mPhysicalLayerName, arStackName, s.mSettings); }
+	BOOST_FOREACH(VtoRouterConfig s, arCfg.vto.mRouterConfigs) {
+		this->StartVtoRouter(s.mPhysicalLayerName, arStackName, s.mSettings);
+	}
 
 	return pSlave->mSlave.GetDataObserver();
 }
 
 void AsyncStackManager::AddVtoChannel(const std::string& arStackName,
-				IVtoCallbacks* apCallbacks)
+                                      IVtoCallbacks* apCallbacks)
 {
 	Stack* pStack = this->GetStackByName(arStackName);
 	pStack->GetVtoWriter()->AddVtoCallback(apCallbacks);
@@ -132,14 +139,14 @@ void AsyncStackManager::RemoveVtoChannel(const std::string& arStackName, IVtoCal
 {
 	Stack* pStack = this->GetStackByName(arStackName);
 	pStack->GetVtoWriter()->RemoveVtoCallback(apCallbacks);
-	pStack->GetVtoReader()->RemoveVtoChannel(apCallbacks);	
+	pStack->GetVtoReader()->RemoveVtoChannel(apCallbacks);
 }
 
 void AsyncStackManager::StartVtoRouter(const std::string& arPortName,
-				const std::string& arStackName, const VtoRouterSettings& arSettings)
+                                       const std::string& arStackName, const VtoRouterSettings& arSettings)
 {
-	Stack* pStack = this->GetStackByName(arStackName);	
-	VtoRouter* pRouter = mVtoManager.StartRouter(arPortName, arSettings, pStack->GetVtoWriter());	
+	Stack* pStack = this->GetStackByName(arStackName);
+	VtoRouter* pRouter = mVtoManager.StartRouter(arPortName, arSettings, pStack->GetVtoWriter());
 	this->AddVtoChannel(arStackName, pRouter);
 }
 
@@ -168,9 +175,11 @@ void AsyncStackManager::RemovePort(const std::string& arPortName)
 {
 	Port* pPort = this->GetPort(arPortName);
 	vector<string> stacks = this->StacksOnPort(arPortName);
-	BOOST_FOREACH(string s, stacks) { this->SeverStack(pPort, s); }
+	BOOST_FOREACH(string s, stacks) {
+		this->SeverStack(pPort, s);
+	}
 	mPortNameToPort.erase(arPortName);
-	
+
 	// this will cause the port to be released on the io_service thread
 	mTimerSrc.Post(boost::bind(&Port::Release, pPort));
 
@@ -184,14 +193,14 @@ void AsyncStackManager::RemovePort(const std::string& arPortName)
 std::vector<std::string> AsyncStackManager::StacksOnPort(const std::string& arPortName)
 {
 	std::vector<std::string> ret;
-	for(PortMap::iterator i = this->mStackNameToPort.begin(); i!=mStackNameToPort.end(); ++i) {
+	for(PortMap::iterator i = this->mStackNameToPort.begin(); i != mStackNameToPort.end(); ++i) {
 		if(i->second->Name() == arPortName) ret.push_back(i->first);
 	}
 	return ret;
 }
 
 void AsyncStackManager::RemoveStack(const std::string& arStackName)
-{		
+{
 	Port* pPort = this->GetPortByStackName(arStackName);
 	this->SeverStack(pPort, arStackName);
 	this->CheckForJoin();
@@ -199,9 +208,9 @@ void AsyncStackManager::RemoveStack(const std::string& arStackName)
 
 void AsyncStackManager::SeverStack(Port* apPort, const std::string& arStackName)
 {
-	IVtoWriter* pWriter = this->GetStackByName(arStackName)->GetVtoWriter();	
+	IVtoWriter* pWriter = this->GetStackByName(arStackName)->GetVtoWriter();
 	std::vector<VtoRouterManager::RouterRecord> records = mVtoManager.GetAllRoutersOnWriter(pWriter);
-	BOOST_FOREACH(VtoRouterManager::RouterRecord rec, records){
+	BOOST_FOREACH(VtoRouterManager::RouterRecord rec, records) {
 		this->RemoveVtoChannel(arStackName, rec.mpRouter);
 		mVtoManager.StopRouter(pWriter, rec.mVtoChannelId);
 	}
@@ -221,8 +230,7 @@ Port* AsyncStackManager::GetPortByStackName(const std::string& arStackName)
 Stack* AsyncStackManager::GetStackByName(const std::string& arStackName)
 {
 	StackMap::iterator i = mStackNameToStack.find(arStackName);
-	if (i == mStackNameToStack.end())
-	{
+	if (i == mStackNameToStack.end()) {
 		throw ArgumentException(LOCATION, "Unknown stack");
 	}
 
@@ -266,8 +274,8 @@ void AsyncStackManager::Start()
 Port* AsyncStackManager::AllocatePort(const std::string& arName)
 {
 	Port* pPort = this->GetPortPointer(arName);
-	if(pPort == NULL) return this->CreatePort(arName);	
-	else return pPort;	
+	if(pPort == NULL) return this->CreatePort(arName);
+	else return pPort;
 }
 
 Port* AsyncStackManager::GetPort(const std::string& arName)
@@ -277,14 +285,14 @@ Port* AsyncStackManager::GetPort(const std::string& arName)
 	return pPort;
 }
 
-void AsyncStackManager::DeletePort(Port* apPort) 
+void AsyncStackManager::DeletePort(Port* apPort)
 {
 	delete apPort;
 }
 
 void AsyncStackManager::DeleteLayer(IPhysicalLayerAsync* apLayer)
 {
-	delete apLayer; 
+	delete apLayer;
 }
 
 Port* AsyncStackManager::CreatePort(const std::string& arName)
@@ -296,15 +304,15 @@ Port* AsyncStackManager::CreatePort(const std::string& arName)
 	Logger* pPortLogger = mpLogger->GetSubLogger(arName, s.LogLevel);
 	pPortLogger->SetVarName(arName);
 
-	AsyncTaskGroup* pGroup = mScheduler.CreateNewGroup(); 
-	
+	AsyncTaskGroup* pGroup = mScheduler.CreateNewGroup();
+
 	Port* pPort = new Port(arName, pPortLogger, pGroup, &mTimerSrc, pPhys, s.RetryTimeout, s.mpObserver);
-	
+
 	// when the port is completely terminated, release these resources
 	pPort->AddCleanupTask(boost::bind(&AsyncTaskScheduler::ReleaseGroup, &mScheduler, pGroup));
 	pPort->AddCleanupTask(boost::bind(&AsyncStackManager::DeletePort, pPort));
 	pPort->AddCleanupTask(boost::bind(&AsyncStackManager::DeleteLayer, pPhys));
-	
+
 	mPortNameToPort[arName] = pPort;
 	return pPort;
 }
@@ -312,7 +320,7 @@ Port* AsyncStackManager::CreatePort(const std::string& arName)
 Port* AsyncStackManager::GetPortPointer(const std::string& arName)
 {
 	PortMap::iterator i = mPortNameToPort.find(arName);
-	return (i==mPortNameToPort.end()) ? NULL : i->second;
+	return (i == mPortNameToPort.end()) ? NULL : i->second;
 }
 
 void AsyncStackManager::Run()
@@ -355,6 +363,7 @@ void AsyncStackManager::CheckForJoin()
 	}
 }
 
-}}
+}
+}
 
 /* vim: set ts=4 sw=4: */

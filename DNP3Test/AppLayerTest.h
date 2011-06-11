@@ -27,12 +27,15 @@
 
 #include "MockAppUser.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 
 class AppLayerTest : public LogTester
 {
-	public:
+public:
 	AppLayerTest(bool aIsMaster = false, size_t aNumRetry = 0, FilterLevel aLevel = LEV_WARNING, bool aImmediate = false);
 
 	void SendUp(const std::string& aBytes);
@@ -53,10 +56,11 @@ class AppLayerTest : public LogTester
 
 	MockAppUser::State state;
 
-	private:
+private:
 	APDU mFragment;
 };
 
-}}
+}
+}
 
 #endif

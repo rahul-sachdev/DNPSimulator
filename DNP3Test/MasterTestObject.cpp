@@ -24,16 +24,19 @@
 
 using namespace std;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 MasterTestObject::MasterTestObject(MasterConfig cfg, FilterLevel aLevel, bool aImmediate) :
-LogTester(aImmediate),
-fake_time(),
-mts(),
-ats(&mts, &fake_time),
-fdo(),
-app(mLog.GetLogger(aLevel, "MockAppLayer")),
-master(mLog.GetLogger(aLevel,"master"), cfg, &app, &fdo, ats.CreateNewGroup(), &mts, &fake_time)
+	LogTester(aImmediate),
+	fake_time(),
+	mts(),
+	ats(&mts, &fake_time),
+	fdo(),
+	app(mLog.GetLogger(aLevel, "MockAppLayer")),
+	master(mLog.GetLogger(aLevel, "master"), cfg, &app, &fdo, ats.CreateNewGroup(), &mts, &fake_time)
 {
 	app.SetUser(&master);
 }
@@ -64,4 +67,5 @@ std::string MasterTestObject::Read()
 	return hex;
 }
 
-}} //end ns
+}
+} //end ns

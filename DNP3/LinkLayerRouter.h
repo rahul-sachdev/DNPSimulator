@@ -30,80 +30,89 @@
 #include "ILinkRouter.h"
 #include "LinkRoute.h"
 
-namespace apl {
-  class IPhysicalLayerAsync;
+namespace apl
+{
+class IPhysicalLayerAsync;
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	class ILinkContext;
-	class LinkFrame;
+class ILinkContext;
+class LinkFrame;
 
-	//	Implements the parsing and de-multiplexing portion of
-	//	of DNP 3 Data Link Layer. AsyncPhysLayerMonitor inherits
-	// from IHandlerAsync, which inherits from IUpperLayer
-	class LinkLayerRouter : public AsyncPhysLayerMonitor, public IFrameSink, public ILinkRouter
-	{
-		public:
+//	Implements the parsing and de-multiplexing portion of
+//	of DNP 3 Data Link Layer. AsyncPhysLayerMonitor inherits
+// from IHandlerAsync, which inherits from IUpperLayer
+class LinkLayerRouter : public AsyncPhysLayerMonitor, public IFrameSink, public ILinkRouter
+{
+public:
 
-		LinkLayerRouter(apl::Logger*, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);
+	LinkLayerRouter(apl::Logger*, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);
 
-		// Ties the lower part of the link layer to the upper part
-		void AddContext(ILinkContext*, const LinkRoute& arRoute);
+	// Ties the lower part of the link layer to the upper part
+	void AddContext(ILinkContext*, const LinkRoute& arRoute);
 
-		// This is safe to do at runtime, so long as the request happens from the io_service thread.
-		void RemoveContext(const LinkRoute& arRoute);
+	// This is safe to do at runtime, so long as the request happens from the io_service thread.
+	void RemoveContext(const LinkRoute& arRoute);
 
-		// Implement the IFrameSink interface - This is how the receiver pushes data
-		void Ack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
-		void Nack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
-		void LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
-		void NotSupported (bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
-		void TestLinkStatus(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc);
-		void ResetLinkStates(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc);
-		void RequestLinkStatus(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc);
-		void ConfirmedUserData(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength);
-		void UnconfirmedUserData(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength);
+	// Implement the IFrameSink interface - This is how the receiver pushes data
+	void Ack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void Nack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void NotSupported (bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void TestLinkStatus(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void ResetLinkStates(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void RequestLinkStatus(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc);
+	void ConfirmedUserData(bool aIsMaster, bool aFcb, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength);
+	void UnconfirmedUserData(bool aIsMaster, boost::uint16_t aDest, boost::uint16_t aSrc, const boost::uint8_t* apData, size_t aDataLength);
 
-		// ILinkRouter interface
-		void Transmit(const LinkFrame&);
+	// ILinkRouter interface
+	void Transmit(const LinkFrame&);
 
-		size_t NumContext() { return mAddressMap.size(); }
+	size_t NumContext() {
+		return mAddressMap.size();
+	}
 
-		private:
+private:
 
-		ILinkContext* GetDestination(boost::uint16_t aDest, boost::uint16_t aSrc);
-		ILinkContext* GetContext(const LinkRoute&);
+	ILinkContext* GetDestination(boost::uint16_t aDest, boost::uint16_t aSrc);
+	ILinkContext* GetContext(const LinkRoute&);
 
-		void CheckForSend();
+	void CheckForSend();
 
 
-		typedef std::map<LinkRoute, ILinkContext*, LinkRoute::LessThan> AddressMap;
-		typedef std::deque<LinkFrame> TransmitQueue;
+	typedef std::map<LinkRoute, ILinkContext*, LinkRoute::LessThan> AddressMap;
+	typedef std::deque<LinkFrame> TransmitQueue;
 
-		AddressMap mAddressMap;
-		TransmitQueue mTransmitQueue;
+	AddressMap mAddressMap;
+	TransmitQueue mTransmitQueue;
 
-		// Handles the parsing of incoming frames
-		LinkLayerReceiver mReceiver;
-		bool mTransmitting;
+	// Handles the parsing of incoming frames
+	LinkLayerReceiver mReceiver;
+	bool mTransmitting;
 
-		/* Events - NVII delegates from IUpperLayer */
+	/* Events - NVII delegates from IUpperLayer */
 
-		// Called when the physical layer has read data into to the requested buffer
-		void _OnReceive(const boost::uint8_t*, size_t);
-		void _OnSendSuccess();
-		void _OnSendFailure();
+	// Called when the physical layer has read data into to the requested buffer
+	void _OnReceive(const boost::uint8_t*, size_t);
+	void _OnSendSuccess();
+	void _OnSendFailure();
 
-		// Implement virtual AsyncPhysLayerMonitor
-		void OnStateChange(IPhysMonitor::State) {}
-		void OnPhysicalLayerOpen();
-		void OnPhysicalLayerClose();
+	// Implement virtual AsyncPhysLayerMonitor
+	void OnStateChange(IPhysMonitor::State) {}
+	void OnPhysicalLayerOpen();
+	void OnPhysicalLayerClose();
 
-		std::string RecvString() { return "<~"; }
-	};
+	std::string RecvString() {
+		return "<~";
+	}
+};
 
-}}
+}
+}
 
 /* vim: set ts=4 sw=4: */
 

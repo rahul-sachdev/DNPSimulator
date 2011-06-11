@@ -26,14 +26,17 @@
 
 using namespace std;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 TransportTestObject::TransportTestObject(bool aOpenOnStart, FilterLevel aLevel, bool aImmediate) :
-LogTester(aImmediate),
-mpLogger(mLog.GetLogger(aLevel, "TransportTestObject")),
-transport(mpLogger),
-lower(mpLogger),
-upper(mpLogger)
+	LogTester(aImmediate),
+	mpLogger(mLog.GetLogger(aLevel, "TransportTestObject")),
+	transport(mpLogger),
+	lower(mpLogger),
+	upper(mpLogger)
 {
 	lower.SetUpperLayer(&transport);
 	transport.SetUpperLayer(&upper);
@@ -41,11 +44,14 @@ upper(mpLogger)
 	if(aOpenOnStart) lower.ThisLayerUp();
 }
 
-std::string TransportTestObject::GetData(const std::string& arHdr,boost::uint8_t aSeed, size_t aLength)
+std::string TransportTestObject::GetData(const std::string& arHdr, boost::uint8_t aSeed, size_t aLength)
 {
 	ByteStr buff(aLength);
 	boost::uint8_t val = aSeed;
-	for(size_t i=0; i<aLength; ++i){ buff[i] = val; ++val; }
+	for(size_t i = 0; i < aLength; ++i) {
+		buff[i] = val;
+		++val;
+	}
 
 	ostringstream oss;
 	if(arHdr.size() > 0) oss << arHdr << " ";
@@ -56,19 +62,19 @@ std::string TransportTestObject::GetData(const std::string& arHdr,boost::uint8_t
 std::string TransportTestObject::GeneratePacketSequence(vector< std::string >& arVec, size_t aNumPackets, size_t aLastPacketLength)
 {
 	ostringstream oss;
-	for(size_t i=0; i<aNumPackets; ++i)
-	{
-		bool fir = i==0;
-		bool fin = i==(aNumPackets-1);
-		int seq = static_cast<int>(i%64);
+	for(size_t i = 0; i < aNumPackets; ++i) {
+		bool fir = i == 0;
+		bool fin = i == (aNumPackets - 1);
+		int seq = static_cast<int>(i % 64);
 		size_t len = fin ? aLastPacketLength : TL_MAX_TPDU_PAYLOAD;
 		boost::uint8_t hdr = TransportTx::GetHeader(fir, fin, seq);
 		std::string data = this->GetData("", 0, len); //raw data with no header
-		oss << ((i==0) ? "" : " ") << data; //cache the data in the string stream
+		oss << ((i == 0) ? "" : " ") << data; //cache the data in the string stream
 		arVec.push_back(toHex(&hdr, 1, true) + " " + data);
 	}
 
 	return oss.str();
 }
 
-}}
+}
+}

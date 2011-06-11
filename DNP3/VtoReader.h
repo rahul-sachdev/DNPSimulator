@@ -28,99 +28,101 @@
 #include "VtoData.h"
 #include "IStackObserver.h"
 
-namespace apl {
-	namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-		/**
-		 * Class used to track registered VTO Channels, assemble VtoData
-		 * objects back into contigous streams, and deliver to the correct
-		 * channel
-		 */
-		class VtoReader : private Loggable, public ITransactable, public IVtoReader, public IStackObserver
-		{
-			public:
+/**
+ * Class used to track registered VTO Channels, assemble VtoData
+ * objects back into contigous streams, and deliver to the correct
+ * channel
+ */
+class VtoReader : private Loggable, public ITransactable, public IVtoReader, public IStackObserver
+{
+public:
 
-				/**
-				 * Create a new VtoReader instance.
-				 *
-				 * @param apLogger			the Logger that the instance
-				 * 							should use for log messages
-				 *
-				 * @return					a new VtoReader instance
-				 */
-				VtoReader(Logger* apLogger) : Loggable(apLogger) {}
+	/**
+	 * Create a new VtoReader instance.
+	 *
+	 * @param apLogger			the Logger that the instance
+	 * 							should use for log messages
+	 *
+	 * @return					a new VtoReader instance
+	 */
+	VtoReader(Logger* apLogger) : Loggable(apLogger) {}
 
-				/**
-				 * Register an IVtoCallbacks instance with the VtoReader
-				 * instance.  The IVtoCallbacks instance is self-aware of its
-				 * channel id.
-				 *
-				 * @param apCallbacks		The callback handler for the channel
-				 *
-				 * @throw ArgumentException	if the channel id is already
-				 *registered
-				 *                          with this reader
-				 */
-				void AddVtoChannel(IVtoDataHandler* apCallbacks);
+	/**
+	 * Register an IVtoCallbacks instance with the VtoReader
+	 * instance.  The IVtoCallbacks instance is self-aware of its
+	 * channel id.
+	 *
+	 * @param apCallbacks		The callback handler for the channel
+	 *
+	 * @throw ArgumentException	if the channel id is already
+	 *registered
+	 *                          with this reader
+	 */
+	void AddVtoChannel(IVtoDataHandler* apCallbacks);
 
-				/**
-				 * Unregister an IVtoCallbacks instance with the VtoReader
-				 * instance.
-				 *
-				 * @param apCallbacks		The callback handler to unregister
-				 *
-				 * @throw ArgumentException	if the channel id is not registered
-				 *                          with this reader
-				 */
-				void RemoveVtoChannel(IVtoDataHandler* apCallbacks);
-				
-				/**
-				 * Adds a VtoEvent object to be delivered back to user code.
-				 * Must be called from within a transaction block.  If a
-				 * callback handler is not registered for the channel id,
-				 * a log message will be recorded.
-				 *
-				 * If the aChannelId is the magic 255 we will parse the data
-				 * as a message from a VtoWriter containing the remote vto
-				 * connection state.
-				 *
-				 * @param arData			the data waiting to be delivered
-				 * @param aChannelId		the channel id on which the data was
-				 *                          received
-				 */
-				void Update(const VtoData& arData, boost::uint8_t aChannelId);
+	/**
+	 * Unregister an IVtoCallbacks instance with the VtoReader
+	 * instance.
+	 *
+	 * @param apCallbacks		The callback handler to unregister
+	 *
+	 * @throw ArgumentException	if the channel id is not registered
+	 *                          with this reader
+	 */
+	void RemoveVtoChannel(IVtoDataHandler* apCallbacks);
 
-				/**
-				 * When the Dnp connection changes state it informs the reader so
-				 * we can inform all attached VtoChannels that the stack is down/up
-				 */
-				void OnStateChange(StackStates aState);
+	/**
+	 * Adds a VtoEvent object to be delivered back to user code.
+	 * Must be called from within a transaction block.  If a
+	 * callback handler is not registered for the channel id,
+	 * a log message will be recorded.
+	 *
+	 * If the aChannelId is the magic 255 we will parse the data
+	 * as a message from a VtoWriter containing the remote vto
+	 * connection state.
+	 *
+	 * @param arData			the data waiting to be delivered
+	 * @param aChannelId		the channel id on which the data was
+	 *                          received
+	 */
+	void Update(const VtoData& arData, boost::uint8_t aChannelId);
 
-			protected:
+	/**
+	 * When the Dnp connection changes state it informs the reader so
+	 * we can inform all attached VtoChannels that the stack is down/up
+	 */
+	void OnStateChange(StackStates aState);
 
-				/**
-				 * The ITransactable transaction lock.
-				 */
-				SigLock mLock;
+protected:
 
-			private:
+	/**
+	 * The ITransactable transaction lock.
+	 */
+	SigLock mLock;
 
-				/**
-				 * Starts the ITransactable transaction lock.
-				 */
-				void _Start();
+private:
 
-				/**
-				 * Ends the ITransactable transaction lock.
-				 */
-				void _End();
+	/**
+	 * Starts the ITransactable transaction lock.
+	 */
+	void _Start();
 
-				typedef std::map<boost::uint8_t, IVtoDataHandler*> ChannelMap;
+	/**
+	 * Ends the ITransactable transaction lock.
+	 */
+	void _End();
 
-				ChannelMap mChannelMap;
-		};
+	typedef std::map<boost::uint8_t, IVtoDataHandler*> ChannelMap;
 
-	}
+	ChannelMap mChannelMap;
+};
+
+}
 }
 
 /* vim: set ts=4 sw=4: */

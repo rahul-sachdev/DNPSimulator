@@ -21,32 +21,34 @@
 
 #include "VtoRouterSettings.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	struct VtoRouterConfig
-	{
-		VtoRouterConfig(){}
+struct VtoRouterConfig {
+	VtoRouterConfig() {}
 
-		std::string mPhysicalLayerName;
+	std::string mPhysicalLayerName;
 
-		VtoRouterSettings mSettings;
-	};
+	VtoRouterSettings mSettings;
+};
 
-	struct VtoConfig
-	{
-		VtoConfig(){}
+struct VtoConfig {
+	VtoConfig() {}
 
-		void AddVtoRouterConfig(VtoRouterConfig& arSetting){
-			mRouterConfigs.push_back(arSetting);
-		}
+	void AddVtoRouterConfig(VtoRouterConfig& arSetting) {
+		mRouterConfigs.push_back(arSetting);
+	}
 
-		std::vector<VtoRouterConfig> mRouterConfigs;
-	};
-
-	
+	std::vector<VtoRouterConfig> mRouterConfigs;
+};
 
 
-}}
+
+
+}
+}
 
 /* vim: set ts=4 sw=4: */
 

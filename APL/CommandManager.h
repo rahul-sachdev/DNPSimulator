@@ -28,31 +28,32 @@
 
 namespace apl
 {
-	struct CommandInfo
-	{
-		CommandTypes mType;
-		ICommandAcceptor* mpCmdAcceptor;
-		size_t mIndex;
-	};
+struct CommandInfo {
+	CommandTypes mType;
+	ICommandAcceptor* mpCmdAcceptor;
+	size_t mIndex;
+};
 
-	/** Used to configure the mappings for controls and setpoints
-	*/
-	class CommandManager : private Uncopyable
-	{
-		typedef std::map<std::string, CommandInfo> CmdMap;
+/** Used to configure the mappings for controls and setpoints
+*/
+class CommandManager : private Uncopyable
+{
+	typedef std::map<std::string, CommandInfo> CmdMap;
 
-		public:
+public:
 
-		void DefineCommand(const std::string& arName, CommandTypes aType, size_t aIndex, ICommandAcceptor* apCmdAcceptor);
-		CommandInfo GetCommandInfo(const std::string& arName) { return GetMapping(arName); }
+	void DefineCommand(const std::string& arName, CommandTypes aType, size_t aIndex, ICommandAcceptor* apCmdAcceptor);
+	CommandInfo GetCommandInfo(const std::string& arName) {
+		return GetMapping(arName);
+	}
 
-		private:
+private:
 
-		CommandInfo GetMapping(const std::string& arName);
+	CommandInfo GetMapping(const std::string& arName);
 
-		CmdMap mCmdMap;
+	CmdMap mCmdMap;
 
-	};
+};
 }
 
 #endif

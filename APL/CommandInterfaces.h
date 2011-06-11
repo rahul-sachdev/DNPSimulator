@@ -25,71 +25,75 @@
 namespace apl
 {
 
-	/** Interface that defines how reponses are reported to an object.
-	*/
-	class IResponseAcceptor
-	{
-		public:
-		virtual ~IResponseAcceptor(){};
+/** Interface that defines how reponses are reported to an object.
+*/
+class IResponseAcceptor
+{
+public:
+	virtual ~IResponseAcceptor() {};
 
-		virtual void AcceptResponse(const CommandResponse&, int aSequence) = 0;
-	};
+	virtual void AcceptResponse(const CommandResponse&, int aSequence) = 0;
+};
 
-	/** Defines the interface an object must implement to handle requests.
-	*/
-	class ICommandAcceptor
-	{
-		public:
-		virtual ~ICommandAcceptor(){};
+/** Defines the interface an object must implement to handle requests.
+*/
+class ICommandAcceptor
+{
+public:
+	virtual ~ICommandAcceptor() {};
 
-		virtual void AcceptCommand(const BinaryOutput&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor) = 0;
-		virtual void AcceptCommand(const Setpoint&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor) = 0;
-	};
-
-
-	/**
-		Defines an interface that an application can implement to handle incoming controls. If the application
-		needs to handle controls that may last for extended periods of time it will need to use the more
-		complicated ICommandAcceptor/IResponseAcceptor interfaces.
-	 */
-	class ICommandHandler
-	{
-	public:
-		virtual ~ICommandHandler(){}
-		virtual CommandStatus HandleControl(BinaryOutput& aControl, size_t aIndex) = 0;
-		virtual CommandStatus HandleControl(Setpoint& aControl, size_t aIndex) = 0;
-	};
-
-	class FixedCommandHandler : public ICommandHandler
-	{
-		public:
-			FixedCommandHandler(CommandStatus aStatus) : mStatus(aStatus) {}
-
-			CommandStatus HandleControl(BinaryOutput&, size_t) { return mStatus; }
-			CommandStatus HandleControl(Setpoint&, size_t) { return mStatus; }
-
-			CommandStatus mStatus;
-	};
+	virtual void AcceptCommand(const BinaryOutput&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor) = 0;
+	virtual void AcceptCommand(const Setpoint&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor) = 0;
+};
 
 
-	/**
-		Interface to the "command source" of the communications stack. When a command is recieved by the stack it
-		will call Notify() on the passed in notifier. When Notify() is called (or on a schedule) the application
-		should call bool moreCommands = ExecuteCommand(&handler); until moreCommands is false, which means that all
-		of the commands available have been handled.
+/**
+	Defines an interface that an application can implement to handle incoming controls. If the application
+	needs to handle controls that may last for extended periods of time it will need to use the more
+	complicated ICommandAcceptor/IResponseAcceptor interfaces.
+ */
+class ICommandHandler
+{
+public:
+	virtual ~ICommandHandler() {}
+	virtual CommandStatus HandleControl(BinaryOutput& aControl, size_t aIndex) = 0;
+	virtual CommandStatus HandleControl(Setpoint& aControl, size_t aIndex) = 0;
+};
 
-	 */
-	class ICommandSource
-	{
-	public:
-		virtual ~ICommandSource(){}
-		virtual void SetNotifier(INotifier* apNotifier) = 0;
+class FixedCommandHandler : public ICommandHandler
+{
+public:
+	FixedCommandHandler(CommandStatus aStatus) : mStatus(aStatus) {}
 
-		//	Grab one command off the queue and call the ICommandHandler for the command.
-		// This is a blocking call.
-		//
-		virtual bool ExecuteCommand(ICommandHandler* apHandler) = 0;
-	};
+	CommandStatus HandleControl(BinaryOutput&, size_t) {
+		return mStatus;
+	}
+	CommandStatus HandleControl(Setpoint&, size_t) {
+		return mStatus;
+	}
+
+	CommandStatus mStatus;
+};
+
+
+/**
+	Interface to the "command source" of the communications stack. When a command is recieved by the stack it
+	will call Notify() on the passed in notifier. When Notify() is called (or on a schedule) the application
+	should call bool moreCommands = ExecuteCommand(&handler); until moreCommands is false, which means that all
+	of the commands available have been handled.
+
+ */
+class ICommandSource
+{
+public:
+	virtual ~ICommandSource() {}
+	virtual void SetNotifier(INotifier* apNotifier) = 0;
+
+	//	Grab one command off the queue and call the ICommandHandler for the command.
+	// This is a blocking call.
+	//
+	virtual bool ExecuteCommand(ICommandHandler* apHandler) = 0;
+};
 
 }
 

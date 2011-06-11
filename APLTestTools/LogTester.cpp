@@ -20,10 +20,11 @@
 
 #include <APL/LogToStdio.h>
 
-namespace apl {
+namespace apl
+{
 
 LogTester::LogTester(bool aImmediate) :
-mBuffer(100)
+	mBuffer(100)
 {
 	mLog.AddLogSubscriber(&mBuffer);
 	if(aImmediate) mLog.AddLogSubscriber(LogToStdio::Inst());
@@ -48,8 +49,7 @@ void LogTester::SetVar(const std::string& aSource, const std::string& aVarName, 
 int LogTester::NextErrorCode()
 {
 	LogEntry le;
-	while(mBuffer.ReadLog(le))
-	{
+	while(mBuffer.ReadLog(le)) {
 		if(le.GetErrorCode() >= 0) return le.GetErrorCode();
 	}
 	return -1;

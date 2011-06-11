@@ -25,7 +25,8 @@
 #include <boost/function.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
-namespace apl {
+namespace apl
+{
 
 /**
  * This is a wrapper for ASIO timers that are used to post events
@@ -44,7 +45,7 @@ namespace apl {
  */
 class ITimer
 {
-	public:
+public:
 	virtual ~ITimer() {}
 	virtual void Cancel() = 0;
 	virtual boost::posix_time::ptime ExpiresAt() = 0;
@@ -70,11 +71,10 @@ typedef boost::function<void ()> ExpirationHandler;
  */
 class ITimerSource
 {
-	public:
+public:
 	virtual ~ITimerSource() {}
 
-	ITimer* StartInfinite(const ExpirationHandler& arHandler)
-	{
+	ITimer* StartInfinite(const ExpirationHandler& arHandler) {
 		boost::posix_time::ptime t(boost::date_time::max_date_time);
 		return this->Start(t, arHandler);
 	}

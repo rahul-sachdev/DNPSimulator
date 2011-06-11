@@ -21,18 +21,23 @@
 
 #include <boost/function.hpp>
 
-namespace boost { namespace asio {
-	class io_service;
-}}
+namespace boost
+{
+namespace asio
+{
+class io_service;
+}
+}
 
-namespace apl {
+namespace apl
+{
 
-	class Logger;
-	class IPhysicalLayerSync;
-	class IPhysicalLayerAsync;
+class Logger;
+class IPhysicalLayerSync;
+class IPhysicalLayerAsync;
 
-	typedef boost::function<IPhysicalLayerSync* (Logger*)> IPhysicalLayerSyncFactory;
-	typedef boost::function<IPhysicalLayerAsync* (Logger*, boost::asio::io_service*)> IPhysicalLayerAsyncFactory;
+typedef boost::function<IPhysicalLayerSync * (Logger*)> IPhysicalLayerSyncFactory;
+typedef boost::function<IPhysicalLayerAsync * (Logger*, boost::asio::io_service*)> IPhysicalLayerAsyncFactory;
 }
 
 #endif

@@ -24,33 +24,38 @@
 
 #include <boost/function.hpp>
 
-namespace apl {
-	class ITimerSource;
+namespace apl
+{
+class ITimerSource;
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class CleanupHelper
 {
 	typedef boost::function<void ()> CleanupTask;
 	typedef std::vector<CleanupTask> CleanupTaskVector;
 
-	public:
+public:
 
-		CleanupHelper(ITimerSource* apTimerSource);
-				
-		void AddCleanupTask(const CleanupTask& arCleanupTask);
+	CleanupHelper(ITimerSource* apTimerSource);
 
-	protected:
+	void AddCleanupTask(const CleanupTask& arCleanupTask);
 
-		void Cleanup();
-		
-	private:
-		SigLock mCleanupHelperLock;
-		CleanupTaskVector mCleanupTasks;
-		ITimerSource* mpTimerSource;
+protected:
+
+	void Cleanup();
+
+private:
+	SigLock mCleanupHelperLock;
+	CleanupTaskVector mCleanupTasks;
+	ITimerSource* mpTimerSource;
 };
 
-}}
+}
+}
 
 #endif

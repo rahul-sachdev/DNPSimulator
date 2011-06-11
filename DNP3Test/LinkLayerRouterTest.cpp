@@ -18,17 +18,21 @@
 //
 #include "LinkLayerRouterTest.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 LinkLayerRouterTest::LinkLayerRouterTest(FilterLevel aLevel, bool aImmediate) :
-LogTester(aImmediate),
-mts(),
-phys(mLog.GetLogger(aLevel, "Physical")),
-router(mLog.GetLogger(aLevel, "Router"), &phys, &mts, 100)
+	LogTester(aImmediate),
+	mts(),
+	phys(mLog.GetLogger(aLevel, "Physical")),
+	router(mLog.GetLogger(aLevel, "Router"), &phys, &mts, 100)
 {
 
 }
 
 
 
-}}
+}
+}

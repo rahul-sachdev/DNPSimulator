@@ -23,73 +23,74 @@
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-namespace apl{
+namespace apl
+{
 
-	boost::gregorian::date TimeBoost::msEpochDate = boost::gregorian::date(1970,1,1);
-	ptime TimeBoost::msEpoch = ptime(msEpochDate);
-	const TimeBoost TimeBoost::Max = ptime(boost::date_time::max_date_time);
-	const TimeBoost TimeBoost::Min = ptime(boost::date_time::min_date_time);
+boost::gregorian::date TimeBoost::msEpochDate = boost::gregorian::date(1970, 1, 1);
+ptime TimeBoost::msEpoch = ptime(msEpochDate);
+const TimeBoost TimeBoost::Max = ptime(boost::date_time::max_date_time);
+const TimeBoost TimeBoost::Min = ptime(boost::date_time::min_date_time);
 
-	TimeBoost::TimeBoost()
-	{
-		SetToNow();
-	}
+TimeBoost::TimeBoost()
+{
+	SetToNow();
+}
 
-	TimeBoost::TimeBoost(millis_t aTimeMS)
-	{
-		this->SetTo(aTimeMS);
-	}
+TimeBoost::TimeBoost(millis_t aTimeMS)
+{
+	this->SetTo(aTimeMS);
+}
 
-	TimeBoost::TimeBoost(ptime aTime) :
+TimeBoost::TimeBoost(ptime aTime) :
 	mTime(aTime)
-	{
+{
 
-	}
+}
 
-	TimeBoost::~TimeBoost()
-	{
+TimeBoost::~TimeBoost()
+{
 
-	}
+}
 
-	void TimeBoost::SetToNow()
-	{
-		ptime t(microsec_clock::universal_time());
-		mTime = t;
-	}
+void TimeBoost::SetToNow()
+{
+	ptime t(microsec_clock::universal_time());
+	mTime = t;
+}
 
-	millis_t TimeBoost::GetElapsedMS() const
-	{
-		TimeBoost now;
-		return static_cast<millis_t>(((now.mTime - mTime).total_milliseconds()));
-	}
+millis_t TimeBoost::GetElapsedMS() const
+{
+	TimeBoost now;
+	return static_cast<millis_t>(((now.mTime - mTime).total_milliseconds()));
+}
 
-	std::string TimeBoost::GetTimeString() const
-	{
-		return apl::ToNormalizedString(mTime);
-	}
-	void TimeBoost::SetTo(millis_t aTimeMS)
-	{
-		mTime = GetPTimeFromMS(aTimeMS);
-	}
+std::string TimeBoost::GetTimeString() const
+{
+	return apl::ToNormalizedString(mTime);
+}
+void TimeBoost::SetTo(millis_t aTimeMS)
+{
+	mTime = GetPTimeFromMS(aTimeMS);
+}
 
-	void TimeBoost::AddMS(millis_t aAddMS)
-	{
-		mTime += milliseconds(aAddMS);
-	}
+void TimeBoost::AddMS(millis_t aAddMS)
+{
+	mTime += milliseconds(aAddMS);
+}
 
-	millis_t TimeBoost::GetValueMS() const
-	{
-		return (mTime-msEpoch).total_milliseconds();
-	}
+millis_t TimeBoost::GetValueMS() const
+{
+	return (mTime - msEpoch).total_milliseconds();
+}
 
-	millis_t TimeBoost::CalcDeltaMS(const TimeBoost& now, const TimeBoost& start)
-	{
-		return static_cast<millis_t>(((now.mTime - start.mTime).total_milliseconds()));
-	}
+millis_t TimeBoost::CalcDeltaMS(const TimeBoost& now, const TimeBoost& start)
+{
+	return static_cast<millis_t>(((now.mTime - start.mTime).total_milliseconds()));
+}
 
-	ptime TimeBoost::GetPTimeFromMS(millis_t aTimeMS)
-	{
-		ptime t(msEpochDate, milliseconds(aTimeMS));
-		return t;
-	}
+ptime TimeBoost::GetPTimeFromMS(millis_t aTimeMS)
+{
+	ptime t(msEpochDate, milliseconds(aTimeMS));
+	return t;
+}
 }

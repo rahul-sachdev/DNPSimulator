@@ -51,16 +51,16 @@ class ITransactable
 {
 	friend class Transaction;
 
-	public:
+public:
 
 	ITransactable() : mInProgress(false) {}
-	virtual ~ITransactable(){}
+	virtual ~ITransactable() {}
 
 	// Enfore pre/post conditions on _Start/_End Operation
 	void Start();
 	void End();
 
-	protected:
+protected:
 
 	bool InProgress();
 
@@ -68,19 +68,30 @@ class ITransactable
 	virtual void _Start() = 0;
 	virtual void _End() = 0;
 
-	private:
+private:
 
 	bool mInProgress;
 
 };
 
-inline bool ITransactable::InProgress(){ return mInProgress; }
+inline bool ITransactable::InProgress()
+{
+	return mInProgress;
+}
 
 inline void ITransactable::Start()
-{ this->_Start(); assert(!mInProgress); mInProgress = true; }
+{
+	this->_Start();
+	assert(!mInProgress);
+	mInProgress = true;
+}
 
 inline void ITransactable::End()
-{ assert(mInProgress); mInProgress = false; this->_End(); }
+{
+	assert(mInProgress);
+	mInProgress = false;
+	this->_End();
+}
 
 
 
@@ -91,41 +102,37 @@ inline void ITransactable::End()
   transaction object the stack unwinding will guarentee that the transaction is
   correctly cleaned up.
 */
-class Transaction{
+class Transaction
+{
 public:
 	Transaction(ITransactable& arTransactable)
-			:mpTransactable(&arTransactable), mIsEnded(false)
-	{
+		: mpTransactable(&arTransactable), mIsEnded(false) {
 		mpTransactable->Start();
 	}
 
 	Transaction(ITransactable* apTransactable)
-		:mpTransactable(apTransactable), mIsEnded(false)
-	{
+		: mpTransactable(apTransactable), mIsEnded(false) {
 		mpTransactable->Start();
 	}
 
 	Transaction()
-		:mpTransactable(NULL), mIsEnded(false)
-	{
+		: mpTransactable(NULL), mIsEnded(false) {
 
 	}
 
-	void Start(ITransactable* apTransactable)
-	{
+	void Start(ITransactable* apTransactable) {
 		assert(mpTransactable == NULL); assert(!mIsEnded);
 		mpTransactable = apTransactable;
 		mpTransactable->Start();
 	}
 
-	void End()
-	{
+	void End() {
 		assert(mpTransactable != NULL); assert(!mIsEnded);
 		mIsEnded = true;
 		mpTransactable->End();
 	}
 
-	~Transaction(){
+	~Transaction() {
 		if(mpTransactable != NULL && !mIsEnded) mpTransactable->End();
 	}
 
@@ -144,9 +151,9 @@ private:
 */
 class IDataObserver : public ITransactable
 {
-	public:
+public:
 
-	virtual ~IDataObserver(){}
+	virtual ~IDataObserver() {}
 
 	// NVII enforces a policy of using these functions only after
 	// a transaction has been initiated
@@ -156,7 +163,7 @@ class IDataObserver : public ITransactable
 	void Update(const ControlStatus&, size_t aIndex);	//!< push a change to the owner of the database, must have transaction started
 	void Update(const SetpointStatus&, size_t aIndex);	//!< push a change to the owner of the database, must have transaction started
 
-	protected:
+protected:
 
 	//concrete class will implement these
 	virtual void _Update(const Binary& arPoint, size_t) = 0;
@@ -169,16 +176,31 @@ class IDataObserver : public ITransactable
 };
 
 //Inline the simple public interface functions
-inline void IDataObserver::Update(const Binary& arPoint,size_t aIndex)
-{ assert(this->InProgress()); this->_Update(arPoint, aIndex); }
+inline void IDataObserver::Update(const Binary& arPoint, size_t aIndex)
+{
+	assert(this->InProgress());
+	this->_Update(arPoint, aIndex);
+}
 inline void IDataObserver::Update(const Analog& arPoint, size_t aIndex)
-{ assert(this->InProgress()); this->_Update(arPoint, aIndex); }
+{
+	assert(this->InProgress());
+	this->_Update(arPoint, aIndex);
+}
 inline void IDataObserver::Update(const Counter& arPoint, size_t aIndex)
-{ assert(this->InProgress()); this->_Update(arPoint, aIndex); }
+{
+	assert(this->InProgress());
+	this->_Update(arPoint, aIndex);
+}
 inline void IDataObserver::Update(const ControlStatus& arPoint, size_t aIndex)
-{ assert(this->InProgress()); this->_Update(arPoint, aIndex); }
+{
+	assert(this->InProgress());
+	this->_Update(arPoint, aIndex);
+}
 inline void IDataObserver::Update(const SetpointStatus& arPoint, size_t aIndex)
-{ assert(this->InProgress()); this->_Update(arPoint, aIndex); }
+{
+	assert(this->InProgress());
+	this->_Update(arPoint, aIndex);
+}
 
 
 }

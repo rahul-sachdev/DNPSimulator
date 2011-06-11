@@ -22,7 +22,8 @@
 #include "AsyncTaskInterfaces.h"
 #include "AsyncTaskBase.h"
 
-namespace apl {
+namespace apl
+{
 
 class AsyncTaskGroup;
 
@@ -33,11 +34,11 @@ class AsyncTaskContinuous : public AsyncTaskBase
 {
 	friend class AsyncTaskGroup;
 
-	public:
+public:
 
-	virtual ~AsyncTaskContinuous(){}
+	virtual ~AsyncTaskContinuous() {}
 
-	private:
+private:
 
 	/**
 		@param aPriority Tie break between non-dependent tasks. Lower is higher priority.

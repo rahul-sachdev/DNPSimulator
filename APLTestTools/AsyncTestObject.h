@@ -21,28 +21,37 @@
 
 #include "TestTypedefs.h"
 
-namespace boost { namespace asio { class io_service; }}
+namespace boost
+{
+namespace asio
+{
+class io_service;
+}
+}
 
-namespace apl {
+namespace apl
+{
 
-	class AsyncTestObject
-	{
-		public:
-			AsyncTestObject(){}
+class AsyncTestObject
+{
+public:
+	AsyncTestObject() {}
 
-			bool ProceedUntil(const EvalFunc& arFunc, millis_t aTimeout = G_TEST_TIMEOUT);
-			bool ProceedUntilFalse(const EvalFunc& arFunc, millis_t aTimeout = G_TEST_TIMEOUT);
+	bool ProceedUntil(const EvalFunc& arFunc, millis_t aTimeout = G_TEST_TIMEOUT);
+	bool ProceedUntilFalse(const EvalFunc& arFunc, millis_t aTimeout = G_TEST_TIMEOUT);
 
-			static bool Negate(const EvalFunc& arFunc) { return !arFunc(); }
+	static bool Negate(const EvalFunc& arFunc) {
+		return !arFunc();
+	}
 
-		protected:
-			// Inherited classes implement this function. Test functions iteratively call this function
-			// to try and make progress
-			virtual void Next()= 0;
+protected:
+	// Inherited classes implement this function. Test functions iteratively call this function
+	// to try and make progress
+	virtual void Next() = 0;
 
-			static void Next(boost::asio::io_service* apSrv, millis_t aSleep);
+	static void Next(boost::asio::io_service* apSrv, millis_t aSleep);
 
-	};
+};
 
 }
 

@@ -31,21 +31,24 @@
 
 using namespace boost;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 LinkLayer::LinkLayer(apl::Logger* apLogger, ITimerSource* apTimerSrc, const LinkConfig& arConfig) :
-Loggable(apLogger),
-ILowerLayer(apLogger),
-mCONFIG(arConfig),
-mRetryRemaining(0),
-mpTimerSrc(apTimerSrc),
-mpTimer(NULL),
-mNextReadFCB(false),
-mNextWriteFCB(false),
-mIsOnline(false),
-mpRouter(NULL),
-mpPriState(PLLS_SecNotReset::Inst()),
-mpSecState(SLLS_NotReset::Inst())
+	Loggable(apLogger),
+	ILowerLayer(apLogger),
+	mCONFIG(arConfig),
+	mRetryRemaining(0),
+	mpTimerSrc(apTimerSrc),
+	mpTimer(NULL),
+	mNextReadFCB(false),
+	mNextWriteFCB(false),
+	mIsOnline(false),
+	mpRouter(NULL),
+	mpPriState(PLLS_SecNotReset::Inst()),
+	mpSecState(SLLS_NotReset::Inst())
 {}
 
 void LinkLayer::SetRouter(ILinkRouter* apRouter)
@@ -55,10 +58,14 @@ void LinkLayer::SetRouter(ILinkRouter* apRouter)
 }
 
 void LinkLayer::ChangeState(PriStateBase* apState)
-{ mpPriState = apState; }
+{
+	mpPriState = apState;
+}
 
 void LinkLayer::ChangeState(SecStateBase* apState)
-{ mpSecState = apState; }
+{
+	mpSecState = apState;
+}
 
 bool LinkLayer::Validate(bool aIsMaster, boost::uint16_t aSrc, boost::uint16_t aDest)
 {
@@ -67,8 +74,8 @@ bool LinkLayer::Validate(bool aIsMaster, boost::uint16_t aSrc, boost::uint16_t a
 
 	if(aIsMaster == mCONFIG.IsMaster) {
 		ERROR_BLOCK(LEV_WARNING,
-		(aIsMaster ? "Master frame received for master" : "Slave frame received for slave"),
-		DLERR_MASTER_BIT_MATCH);
+		            (aIsMaster ? "Master frame received for master" : "Slave frame received for slave"),
+		            DLERR_MASTER_BIT_MATCH);
 		return false;
 	}
 
@@ -250,4 +257,5 @@ void LinkLayer::OnTimeout()
 	mpPriState->OnTimeout(this);
 }
 
-}}
+}
+}

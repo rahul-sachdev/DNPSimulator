@@ -18,49 +18,55 @@
 //
 #include "Timeout.h"
 
-namespace apl{
-	///////////////////////////////////////////////
-	//	Timeout
-	///////////////////////////////////////////////
+namespace apl
+{
+///////////////////////////////////////////////
+//	Timeout
+///////////////////////////////////////////////
 
-	Timeout :: Timeout(apl::millis_t aTimeout)
-		: mTimeout(aTimeout), mRemaining(aTimeout)
-	{
+Timeout :: Timeout(apl::millis_t aTimeout)
+	: mTimeout(aTimeout), mRemaining(aTimeout)
+{
 
-	}
+}
 
-	bool Timeout :: IsExpired(bool aUpdateRemaining){
-		if(mRemaining <= 0) return true;
-		if(aUpdateRemaining) UpdateRemaining();
-		return mRemaining <= 0;
-	}
+bool Timeout :: IsExpired(bool aUpdateRemaining)
+{
+	if(mRemaining <= 0) return true;
+	if(aUpdateRemaining) UpdateRemaining();
+	return mRemaining <= 0;
+}
 
-	apl::millis_t Timeout :: Remaining(bool aUpdateRemaining){
-		if(mRemaining <= 0) return 0;
-		if(aUpdateRemaining) UpdateRemaining();
-		if(mRemaining < 0) return 0;
-		return mRemaining;
-	}
+apl::millis_t Timeout :: Remaining(bool aUpdateRemaining)
+{
+	if(mRemaining <= 0) return 0;
+	if(aUpdateRemaining) UpdateRemaining();
+	if(mRemaining < 0) return 0;
+	return mRemaining;
+}
 
-	void Timeout :: Reset(apl::millis_t aTimeout){
-		mTimeout = aTimeout;
-		mRemaining = aTimeout;
-		mExpireTime.SetToNow();
-	}
+void Timeout :: Reset(apl::millis_t aTimeout)
+{
+	mTimeout = aTimeout;
+	mRemaining = aTimeout;
+	mExpireTime.SetToNow();
+}
 
-	void Timeout :: UpdateRemaining(){
-		mRemaining = mTimeout - mExpireTime.GetElapsedMS();
-	}
-	apl::Time Timeout :: ExpiryTime() {
-		Time t = mExpireTime;
-		t.AddMS(mTimeout);
-		return t;
-	}
+void Timeout :: UpdateRemaining()
+{
+	mRemaining = mTimeout - mExpireTime.GetElapsedMS();
+}
+apl::Time Timeout :: ExpiryTime()
+{
+	Time t = mExpireTime;
+	t.AddMS(mTimeout);
+	return t;
+}
 
-	apl::TimeStamp_t Timeout :: ExpiryTimeStamp()
-	{
-		Time t = mExpireTime;
-		t.AddMS(mTimeout);
-		return static_cast<TimeStamp_t>(t.GetValueMS());
-	}
+apl::TimeStamp_t Timeout :: ExpiryTimeStamp()
+{
+	Time t = mExpireTime;
+	t.AddMS(mTimeout);
+	return static_cast<TimeStamp_t>(t.GetValueMS());
+}
 }

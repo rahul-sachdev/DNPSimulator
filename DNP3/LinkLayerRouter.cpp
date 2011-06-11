@@ -30,13 +30,16 @@
 
 using namespace std;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 LinkLayerRouter::LinkLayerRouter(apl::Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc, millis_t aOpenRetry) :
-Loggable(apLogger),
-AsyncPhysLayerMonitor(apLogger, apPhys, apTimerSrc, aOpenRetry),
-mReceiver(apLogger, this),
-mTransmitting(false)
+	Loggable(apLogger),
+	AsyncPhysLayerMonitor(apLogger, apPhys, apTimerSrc, aOpenRetry),
+	mReceiver(apLogger, this),
+	mTransmitting(false)
 {}
 
 void LinkLayerRouter::AddContext(ILinkContext* apContext, const LinkRoute& arRoute)
@@ -44,9 +47,9 @@ void LinkLayerRouter::AddContext(ILinkContext* apContext, const LinkRoute& arRou
 	assert(apContext != NULL);
 
 	if(mAddressMap.find(arRoute) != mAddressMap.end()) {
-	  ostringstream oss;
-	  oss << "Route already in use: " << arRoute;
-      throw ArgumentException(LOCATION, oss.str());
+		ostringstream oss;
+		oss << "Route already in use: " << arRoute;
+		throw ArgumentException(LOCATION, oss.str());
 	}
 
 	BOOST_FOREACH(AddressMap::value_type v, mAddressMap) {
@@ -85,13 +88,13 @@ ILinkContext* LinkLayerRouter::GetDestination(boost::uint16_t aDest, boost::uint
 
 	ILinkContext* pDest = GetContext(route);
 
-	if(pDest == NULL && mpLogger->IsEnabled(LEV_WARNING)) {		
+	if(pDest == NULL && mpLogger->IsEnabled(LEV_WARNING)) {
 		std::ostringstream oss;
-		oss << "Frame w/ unknown route: " << route;			
-		LogEntry le(LEV_WARNING, mpLogger->GetName(), LOCATION, oss.str(), DLERR_UNKNOWN_ROUTE); 
+		oss << "Frame w/ unknown route: " << route;
+		LogEntry le(LEV_WARNING, mpLogger->GetName(), LOCATION, oss.str(), DLERR_UNKNOWN_ROUTE);
 		le.AddValue("SOURCE", aSrc);
 		le.AddValue("DESTINATION", aDest);
-		mpLogger->Log(le);		
+		mpLogger->Log(le);
 	}
 
 	return pDest;
@@ -162,15 +165,13 @@ void LinkLayerRouter::Transmit(const LinkFrame& arFrame)
 	LinkRoute lr(arFrame.GetDest(), arFrame.GetSrc());
 
 	if (this->GetContext(lr)) {
-		if (!this->IsLowerLayerUp())
-		{
+		if (!this->IsLowerLayerUp()) {
 			throw InvalidStateException(LOCATION, "LowerLayerDown");
 		}
 		this->mTransmitQueue.push_back(arFrame);
 		this->CheckForSend();
 	}
-	else
-	{
+	else {
 		ostringstream oss;
 		oss << "Unassociated context w/ route: " << lr;
 		throw ArgumentException(LOCATION, oss.str());
@@ -212,7 +213,9 @@ void LinkLayerRouter::OnPhysicalLayerOpen()
 	if(mpPhys->CanRead())
 		mpPhys->AsyncRead(mReceiver.WriteBuff(), mReceiver.NumWriteBytes());
 
-	BOOST_FOREACH(AddressMap::value_type p, mAddressMap) { p.second->OnLowerLayerUp(); }
+	BOOST_FOREACH(AddressMap::value_type p, mAddressMap) {
+		p.second->OnLowerLayerUp();
+	}
 }
 
 void LinkLayerRouter::OnPhysicalLayerClose()
@@ -225,6 +228,7 @@ void LinkLayerRouter::OnPhysicalLayerClose()
 
 }
 
-}}
+}
+}
 
 /* vim: set ts=4 sw=4: */

@@ -22,11 +22,13 @@
 
 #include "LinkLayerConstants.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 // Class for dealing with all aspects of FT3 Frame headers
-struct LinkHeader
-{
+struct LinkHeader {
 	LinkHeader();
 
 	LinkHeader(boost::uint8_t aLen, boost::uint16_t aSrc, boost::uint16_t aDest, bool aFromMaster, bool aFcvDfc, bool aFcb, FuncCodes aCode);
@@ -41,17 +43,37 @@ struct LinkHeader
 	void ChangeFCB(bool aFCB);
 
 	// Getters
-	boost::uint8_t GetLength() const { return length; }
-	boost::uint16_t GetDest() const { return dest; }
-	boost::uint16_t GetSrc() const { return src; }
-	bool IsFromMaster() const { return (ctrl & MASK_DIR) != 0; }
-	bool IsPriToSec() const { return (ctrl & MASK_PRM) != 0; }
-	bool IsFcbSet() const { return (ctrl & MASK_FCB) != 0; }
-	bool IsFcvDfcSet() const { return (ctrl & MASK_FCV) != 0; }
-	boost::uint8_t GetFuncByte() const { return ctrl & MASK_FUNC; }
-	FuncCodes GetFuncEnum() const { return ByteToFuncCode(ctrl & MASK_FUNC_OR_PRM); }
+	boost::uint8_t GetLength() const {
+		return length;
+	}
+	boost::uint16_t GetDest() const {
+		return dest;
+	}
+	boost::uint16_t GetSrc() const {
+		return src;
+	}
+	bool IsFromMaster() const {
+		return (ctrl & MASK_DIR) != 0;
+	}
+	bool IsPriToSec() const {
+		return (ctrl & MASK_PRM) != 0;
+	}
+	bool IsFcbSet() const {
+		return (ctrl & MASK_FCB) != 0;
+	}
+	bool IsFcvDfcSet() const {
+		return (ctrl & MASK_FCV) != 0;
+	}
+	boost::uint8_t GetFuncByte() const {
+		return ctrl & MASK_FUNC;
+	}
+	FuncCodes GetFuncEnum() const {
+		return ByteToFuncCode(ctrl & MASK_FUNC_OR_PRM);
+	}
 
-	bool ValidLength() { return length > 4; }
+	bool ValidLength() {
+		return length > 4;
+	}
 
 	/** Reads the header, setting all the fields. Does NOT validate 0x0564 or CRC
 	@param apBuff Buffer of at least 10 bytes */
@@ -65,7 +87,7 @@ struct LinkHeader
 
 	static boost::uint8_t ControlByte(bool aIsMaster, bool aFcb, bool aFcvDfc, FuncCodes aFunc);
 
-	private:
+private:
 
 	// Fields read directly from the header
 	boost::uint8_t length;	// Length of field, range [5,255] valid
@@ -75,6 +97,7 @@ struct LinkHeader
 };
 
 
-}}
+}
+}
 
 #endif

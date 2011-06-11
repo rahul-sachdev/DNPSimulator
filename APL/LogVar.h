@@ -30,16 +30,22 @@ namespace apl
 template<class T>
 class LogVar
 {
-	public:
-		LogVar() : mValue(0) {}
-		LogVar(T aValue) : mValue(aValue) {}
+public:
+	LogVar() : mValue(0) {}
+	LogVar(T aValue) : mValue(aValue) {}
 
-		void Set(T aValue) { mValue = aValue; }
-		T Get() { return mValue; }
-		T Add(T aValue) { return (mValue += aValue); }
+	void Set(T aValue) {
+		mValue = aValue;
+	}
+	T Get() {
+		return mValue;
+	}
+	T Add(T aValue) {
+		return (mValue += aValue);
+	}
 
-	private:
-		T mValue;
+private:
+	T mValue;
 };
 
 

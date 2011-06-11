@@ -31,77 +31,89 @@
 namespace apl
 {
 
-	class EventLog;
-	typedef LogVar<int> IntLogVar;
+class EventLog;
+typedef LogVar<int> IntLogVar;
 
-	class Logger
-	{
-		friend class LogCounter;
-		friend class LogVariable;
+class Logger
+{
+	friend class LogCounter;
+	friend class LogVariable;
 
-		public:
-			Logger( EventLog* apLog, FilterLevel aFilter, const std::string& aName);
+public:
+	Logger( EventLog* apLog, FilterLevel aFilter, const std::string& aName);
 
-			void SetVarName(const std::string& arVarName) { mVarName = arVarName; }
-			void Log( FilterLevel aFilterLevel, const std::string& arLocation, const std::string& aMessage, int aErrorCode = -1);
-			void Log( const LogEntry& arEntry);
-			const std::string& GetName() const { return mName; }
+	void SetVarName(const std::string& arVarName) {
+		mVarName = arVarName;
+	}
+	void Log( FilterLevel aFilterLevel, const std::string& arLocation, const std::string& aMessage, int aErrorCode = -1);
+	void Log( const LogEntry& arEntry);
+	const std::string& GetName() const {
+		return mName;
+	}
 
-			//functions for manipulating filter levels
-			inline bool IsEnabled(FilterLevel aFilter) { return (mLevel & aFilter) != 0; }
-			inline void SetFilters(int aLevel) { mLevel = aLevel; }
-			void SetFilterLevel(FilterLevel aFilter);
-			int GetFilters() { return mLevel; }
+	//functions for manipulating filter levels
+	inline bool IsEnabled(FilterLevel aFilter) {
+		return (mLevel & aFilter) != 0;
+	}
+	inline void SetFilters(int aLevel) {
+		mLevel = aLevel;
+	}
+	void SetFilterLevel(FilterLevel aFilter);
+	int GetFilters() {
+		return mLevel;
+	}
 
-			Logger* GetSubLogger(std::string aName);
-			Logger* GetSubLogger(std::string aSubName, int aFilterBits);
-			Logger* GetSubLogger(std::string aSubName, FilterLevel aFilter);
+	Logger* GetSubLogger(std::string aName);
+	Logger* GetSubLogger(std::string aSubName, int aFilterBits);
+	Logger* GetSubLogger(std::string aSubName, FilterLevel aFilter);
 
-		private:
+private:
 
-			void Set(const std::string& aVar, int aValue);
+	void Set(const std::string& aVar, int aValue);
 
-			int					mLevel;			// bit field describing what is being logged
-			EventLog*			mpLog;
-			std::string			mName;
-			std::string			mVarName;
-	};
+	int					mLevel;			// bit field describing what is being logged
+	EventLog*			mpLog;
+	std::string			mName;
+	std::string			mVarName;
+};
 
-	class LogCounter
-	{
-		public:
-			LogCounter(Logger* apLogger, const std::string& arName) :
-			mpLogger(apLogger),
-			mName(arName),
-			mValue(-1)
-			{
-				this->Increment();
-			}
+class LogCounter
+{
+public:
+	LogCounter(Logger* apLogger, const std::string& arName) :
+		mpLogger(apLogger),
+		mName(arName),
+		mValue(-1) {
+		this->Increment();
+	}
 
-			void Increment() { mpLogger->Set(mName, ++mValue); }
+	void Increment() {
+		mpLogger->Set(mName, ++mValue);
+	}
 
-		private:
-			Logger* mpLogger;
-			std::string mName;
-			int mValue;
-	};
+private:
+	Logger* mpLogger;
+	std::string mName;
+	int mValue;
+};
 
-	class LogVariable
-	{
-		public:
-			LogVariable(Logger* apLogger, const std::string& arName) :
-			mpLogger(apLogger),
-			mName(arName)
-			{
+class LogVariable
+{
+public:
+	LogVariable(Logger* apLogger, const std::string& arName) :
+		mpLogger(apLogger),
+		mName(arName) {
 
-			}
+	}
 
-			void Set(int aVal) { mpLogger->Set(mName, aVal); }
+	void Set(int aVal) {
+		mpLogger->Set(mName, aVal);
+	}
 
-		private:
-			Logger* mpLogger;
-			std::string mName;
-	};
+private:
+	Logger* mpLogger;
+	std::string mName;
+};
 
 }
 

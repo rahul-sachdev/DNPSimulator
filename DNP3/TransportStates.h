@@ -23,41 +23,45 @@
 #include "TLS_Base.h"
 #include <APL/Singleton.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	/** Represents the closed state, only come online
-	*/
-	class TLS_Closed : public TLS_Base
-	{
-		MACRO_STATE_SINGLETON_INSTANCE(TLS_Closed);
+/** Represents the closed state, only come online
+*/
+class TLS_Closed : public TLS_Base
+{
+	MACRO_STATE_SINGLETON_INSTANCE(TLS_Closed);
 
-		void LowerLayerUp(TransportLayer*);
-	};
+	void LowerLayerUp(TransportLayer*);
+};
 
-	/** Represents the ready state
-	*/
-	class TLS_Ready : public TLS_Base
-	{
-		MACRO_STATE_SINGLETON_INSTANCE(TLS_Ready);
+/** Represents the ready state
+*/
+class TLS_Ready : public TLS_Base
+{
+	MACRO_STATE_SINGLETON_INSTANCE(TLS_Ready);
 
-		void Send(const boost::uint8_t*, size_t, TransportLayer*);
-		void HandleReceive(const boost::uint8_t*, size_t, TransportLayer*);
-		void LowerLayerDown(TransportLayer*);
-	};
+	void Send(const boost::uint8_t*, size_t, TransportLayer*);
+	void HandleReceive(const boost::uint8_t*, size_t, TransportLayer*);
+	void LowerLayerDown(TransportLayer*);
+};
 
-	/** Represents the sending state
-	*/
-	class TLS_Sending : public TLS_Base
-	{
-		MACRO_STATE_SINGLETON_INSTANCE(TLS_Sending);
+/** Represents the sending state
+*/
+class TLS_Sending : public TLS_Base
+{
+	MACRO_STATE_SINGLETON_INSTANCE(TLS_Sending);
 
-		void HandleReceive(const boost::uint8_t*, size_t, TransportLayer*);
-		void HandleSendSuccess(TransportLayer*);
-		void HandleSendFailure(TransportLayer*);
-		void LowerLayerDown(TransportLayer*);
-	};
+	void HandleReceive(const boost::uint8_t*, size_t, TransportLayer*);
+	void HandleSendSuccess(TransportLayer*);
+	void HandleSendFailure(TransportLayer*);
+	void LowerLayerDown(TransportLayer*);
+};
 
-}} //end namepsace
+}
+} //end namepsace
 
 
 #endif

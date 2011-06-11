@@ -27,7 +27,8 @@
 #include <vector>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
-namespace apl {
+namespace apl
+{
 
 class AsyncTaskGroup;
 
@@ -40,11 +41,11 @@ class AsyncTaskNonPeriodic : public AsyncTaskBase
 {
 	friend class AsyncTaskGroup;
 
-	public:
+public:
 
-	virtual ~AsyncTaskNonPeriodic(){}
+	virtual ~AsyncTaskNonPeriodic() {}
 
-	private:
+private:
 
 	// Implements ITaskCompletion
 	void _OnComplete(bool aSuccess);

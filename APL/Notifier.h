@@ -22,33 +22,36 @@
 #include "IEventLock.h"
 #include "INotifier.h"
 
-namespace apl {
+namespace apl
+{
 
-	template <class T>
-	class Notifier : public INotifier
-	{
-		public:
-			Notifier(const T& arVal, IEventLock<T>* apEventLock);
-			virtual ~Notifier(){}
+template <class T>
+class Notifier : public INotifier
+{
+public:
+	Notifier(const T& arVal, IEventLock<T>* apEventLock);
+	virtual ~Notifier() {}
 
-			void Notify();
+	void Notify();
 
-		private:
-			const T M_VAL;
-			IEventLock<T>* mpEventLock;
-	};
+private:
+	const T M_VAL;
+	IEventLock<T>* mpEventLock;
+};
 
-	template <class T>
-	Notifier<T>::Notifier(const T& arVal, IEventLock<T>* apEventLock) :
+template <class T>
+Notifier<T>::Notifier(const T& arVal, IEventLock<T>* apEventLock) :
 	M_VAL(arVal),
 	mpEventLock(apEventLock)
-	{
+{
 
-	}
+}
 
-	template <class T>
-	void Notifier<T>::Notify()
-	{ mpEventLock->SignalEvent(M_VAL); }
+template <class T>
+void Notifier<T>::Notify()
+{
+	mpEventLock->SignalEvent(M_VAL);
+}
 
 }
 

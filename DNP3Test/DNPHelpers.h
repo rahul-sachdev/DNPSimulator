@@ -22,13 +22,17 @@
 #include <string>
 
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class LinkFrame;
 
-	std::string RepairCRC(const std::string& arData);
-	bool IsFrameEqual(apl::dnp::LinkFrame& frame, const std::string& arData);
+std::string RepairCRC(const std::string& arData);
+bool IsFrameEqual(apl::dnp::LinkFrame& frame, const std::string& arData);
 
-}}
+}
+}
 
 #endif

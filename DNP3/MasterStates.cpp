@@ -28,33 +28,52 @@
 #include <boost/bind.hpp>
 
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /* AMS_Base */
 
 void AMS_Base::StartTask(Master*, ITask*, MasterTaskBase*)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 void AMS_Base::OnLowerLayerUp(Master*)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 void AMS_Base::OnLowerLayerDown(Master*)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 void AMS_Base::OnSendSuccess(Master*)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 void AMS_Base::OnFailure(Master*)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 void AMS_Base::OnPartialResponse(Master*, const APDU&)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 void AMS_Base::OnFinalResponse(Master*, const APDU&)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 void AMS_Base::OnUnsolResponse(Master*, const APDU&)
-{ throw InvalidStateException(LOCATION, this->Name()); }
+{
+	throw InvalidStateException(LOCATION, this->Name());
+}
 
 
 void AMS_Base::ChangeState(Master* c, AMS_Base* apState)
@@ -121,32 +140,33 @@ void AMS_Waiting::OnFailure(Master* c)
 void AMS_Waiting::OnPartialResponse(Master* c, const APDU& arAPDU)
 {
 	switch(c->mpTask->OnPartialResponse(arAPDU)) {
-		case(TR_FAIL):
-			this->ChangeState(c, AMS_Idle::Inst());
-			c->mpScheduledTask->OnComplete(false);
-			break;
-		case(TR_CONTINUE):			
-			break;
-		default:
-			throw InvalidStateException(LOCATION, "Tasks must return FAIL or CONTINUE in on partial responses");
+	case(TR_FAIL):
+		this->ChangeState(c, AMS_Idle::Inst());
+		c->mpScheduledTask->OnComplete(false);
+		break;
+	case(TR_CONTINUE):
+		break;
+	default:
+		throw InvalidStateException(LOCATION, "Tasks must return FAIL or CONTINUE in on partial responses");
 	}
 }
 
 void AMS_Waiting::OnFinalResponse(Master* c, const APDU& arAPDU)
 {
 	switch(c->mpTask->OnFinalResponse(arAPDU)) {
-		case(TR_FAIL):
-			this->ChangeState(c, AMS_Idle::Inst());
-			c->mpScheduledTask->OnComplete(false);
-			break;
-		case(TR_CONTINUE):	//multi request task!
-			c->StartTask(c->mpTask, false);
-			break;
-		case(TR_SUCCESS):
-			this->ChangeState(c, AMS_Idle::Inst());
-			c->mpScheduledTask->OnComplete(true);
+	case(TR_FAIL):
+		this->ChangeState(c, AMS_Idle::Inst());
+		c->mpScheduledTask->OnComplete(false);
+		break;
+	case(TR_CONTINUE):	//multi request task!
+		c->StartTask(c->mpTask, false);
+		break;
+	case(TR_SUCCESS):
+		this->ChangeState(c, AMS_Idle::Inst());
+		c->mpScheduledTask->OnComplete(true);
 	}
 }
 
-}} //ens ns
+}
+} //ens ns
 

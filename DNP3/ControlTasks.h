@@ -31,43 +31,46 @@
 #include <APL/CommandTypes.h>
 #include <APL/CommandQueue.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 // Base class with machinery for performing control operations
 class ControlTaskBase : public MasterTaskBase
 {
-	public:
-		ControlTaskBase(Logger*);
-		virtual ~ControlTaskBase() {}
+public:
+	ControlTaskBase(Logger*);
+	virtual ~ControlTaskBase() {}
 
-	protected:
+protected:
 
-		// This multi request task requires state
-		enum State {
-			SELECT,
-			OPERATE,
-			INVALID
-		};
+	// This multi request task requires state
+	enum State {
+	    SELECT,
+	    OPERATE,
+	    INVALID
+	};
 
-		State mState;
-		CommandData mData;
+	State mState;
+	CommandData mData;
 
-		boost::function<CommandStatus (const APDU&)> mValidator;
+	boost::function<CommandStatus (const APDU&)> mValidator;
 
-		template <class T>
-		static CommandStatus ValidateCommandResponse(const APDU& arAPDU, CommandObject<T>* apObj, const CopyableBuffer& arData, size_t aIndex);
+	template <class T>
+	static CommandStatus ValidateCommandResponse(const APDU& arAPDU, CommandObject<T>* apObj, const CopyableBuffer& arData, size_t aIndex);
 
-		bool GetSelectBit();
+	bool GetSelectBit();
 
-		// override from base class
-		void OnFailure();
+	// override from base class
+	void OnFailure();
 
-	private:
+private:
 
-		void Respond(CommandStatus aStatus);
+	void Respond(CommandStatus aStatus);
 
-		TaskResult _OnPartialResponse(const APDU&);
-		TaskResult _OnFinalResponse(const APDU&);
+	TaskResult _OnPartialResponse(const APDU&);
+	TaskResult _OnFinalResponse(const APDU&);
 };
 
 // Base class that adds the ConfigureRequest and Set functions.
@@ -75,7 +78,7 @@ class ControlTaskBase : public MasterTaskBase
 template <class T>
 class ControlTask : public ControlTaskBase
 {
-	public:
+public:
 	ControlTask(Logger* apLogger) : ControlTaskBase(apLogger)
 	{}
 
@@ -89,7 +92,7 @@ class ControlTask : public ControlTaskBase
 
 	void ConfigureRequest(APDU& arAPDU);
 
-	protected:
+protected:
 
 	virtual CommandObject<T>* GetObject(const T& arCmd) = 0;
 
@@ -99,25 +102,29 @@ class ControlTask : public ControlTaskBase
 // Concrete class for BinaryOutput commands
 class BinaryOutputTask : public ControlTask<BinaryOutput>
 {
-	public:
-		BinaryOutputTask(Logger*);
+public:
+	BinaryOutputTask(Logger*);
 
-		CommandObject<BinaryOutput>* GetObject(const BinaryOutput&);
+	CommandObject<BinaryOutput>* GetObject(const BinaryOutput&);
 
-		std::string Name() const { return "BinaryOutputTask"; }
+	std::string Name() const {
+		return "BinaryOutputTask";
+	}
 };
 
 // Concrete class for Setpoint commands
 class SetpointTask : public ControlTask<Setpoint>
 {
-	public:
-		SetpointTask(Logger*);
+public:
+	SetpointTask(Logger*);
 
-		CommandObject<Setpoint>* GetObject(const Setpoint&);
+	CommandObject<Setpoint>* GetObject(const Setpoint&);
 
-		std::string Name() const { return "SetpointTask"; }
+	std::string Name() const {
+		return "SetpointTask";
+	}
 
-		static CommandObject<Setpoint>* GetOptimalEncoder(SetpointEncodingType aType);
+	static CommandObject<Setpoint>* GetOptimalEncoder(SetpointEncodingType aType);
 };
 
 template <class T>
@@ -156,6 +163,7 @@ CommandStatus ControlTaskBase::ValidateCommandResponse(const APDU& arAPDU, Comma
 
 
 
-}} //ens ns
+}
+} //ens ns
 
 #endif

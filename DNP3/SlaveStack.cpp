@@ -18,7 +18,10 @@
 //
 #include "SlaveStack.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 SlaveStack::SlaveStack(Logger* apLogger, ITimerSource* apTimerSrc, ICommandAcceptor* apCmdAcceptor, const SlaveStackConfig& arCfg) :
 	Stack(apLogger->GetSubLogger("slave"), apTimerSrc, arCfg.app, arCfg.link),
@@ -41,4 +44,5 @@ IVtoReader* SlaveStack::GetVtoReader()
 	return this->mSlave.GetVtoReader();
 }
 
-}}
+}
+}

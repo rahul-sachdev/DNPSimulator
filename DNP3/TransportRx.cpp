@@ -28,14 +28,17 @@
 
 using namespace std;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 TransportRx::TransportRx(Logger* apLogger, TransportLayer* apContext, size_t aFragSize) :
-Loggable(apLogger),
-mpContext(apContext),
-mBuffer(aFragSize),
-mNumBytesRead(0),
-mSeq(0)
+	Loggable(apLogger),
+	mpContext(apContext),
+	mBuffer(aFragSize),
+	mNumBytesRead(0),
+	mSeq(0)
 {
 
 }
@@ -49,14 +52,13 @@ void TransportRx::Reset()
 void TransportRx::HandleReceive(const boost::uint8_t* apData, size_t aNumBytes)
 {
 	switch(aNumBytes) {
-		case(1):
-			ERROR_BLOCK(LEV_WARNING, "Received tpdu with no payload", TLERR_NO_PAYLOAD);
-			return;
-		case(0):
-			throw ArgumentException(LOCATION, "Zero length invalid");
-		default:
-		if(aNumBytes > TL_MAX_TPDU_LENGTH)
-		{
+	case(1):
+		ERROR_BLOCK(LEV_WARNING, "Received tpdu with no payload", TLERR_NO_PAYLOAD);
+		return;
+	case(0):
+		throw ArgumentException(LOCATION, "Zero length invalid");
+	default:
+		if(aNumBytes > TL_MAX_TPDU_LENGTH) {
 			ostringstream oss;
 			oss << "Illegal arg: " << aNumBytes << " exceeds max tpdu size of " << TL_MAX_TPDU_LENGTH;
 			throw ArgumentException(LOCATION, oss.str());
@@ -70,21 +72,17 @@ void TransportRx::HandleReceive(const boost::uint8_t* apData, size_t aNumBytes)
 	int seq = hdr & TL_HDR_SEQ;
 	size_t payload_len = aNumBytes - 1;
 
-	if(this->ValidateHeader(first, last, seq, payload_len))
-	{
-		if(BufferRemaining() < payload_len)
-		{
+	if(this->ValidateHeader(first, last, seq, payload_len)) {
+		if(BufferRemaining() < payload_len) {
 			ERROR_BLOCK(LEV_WARNING, "Exceeded the buffer size before a complete fragment was read", TLERR_BUFFER_FULL);
 			mNumBytesRead = 0;
 		}
-		else //passed all validation
-		{
-			memcpy(mBuffer+mNumBytesRead, apData+1, payload_len);
+		else { //passed all validation
+			memcpy(mBuffer + mNumBytesRead, apData + 1, payload_len);
 			mNumBytesRead += payload_len;
-			mSeq = (mSeq+1)%64;
+			mSeq = (mSeq + 1) % 64;
 
-			if(last)
-			{
+			if(last) {
 				size_t tmp = mNumBytesRead;
 				mNumBytesRead = 0;
 				mpContext->ReceiveAPDU(mBuffer, tmp);
@@ -107,21 +105,18 @@ bool TransportRx::ValidateHeader(bool aFir, bool aFin, int aSeq, size_t aPayload
 			mNumBytesRead = 0;
 		}
 	}
-	else if(mNumBytesRead == 0) //non-first packet with 0 prior bytes
-	{
+	else if(mNumBytesRead == 0) { //non-first packet with 0 prior bytes
 		ERROR_BLOCK(LEV_WARNING, "non-FIR packet with 0 prior bytes", TLERR_MESSAGE_WITHOUT_FIR);
 		return false;
 	}
 
-	if(!aFin && aPayloadSize != TL_MAX_TPDU_PAYLOAD)
-	{
+	if(!aFin && aPayloadSize != TL_MAX_TPDU_PAYLOAD) {
 		//if it's not a FIN packet it should have a length of
 		ERROR_BLOCK(LEV_WARNING, "Partial non-FIN frame, payload= " << aPayloadSize, TLERR_BAD_LENGTH);
 		return false;
 	}
 
-	if(aSeq != mSeq)
-	{
+	if(aSeq != mSeq) {
 		ERROR_BLOCK(LEV_WARNING, "Ignoring bad sequence, got: " << aSeq << " expected: " << mSeq, TLERR_BAD_SEQUENCE);
 		return false;
 	}
@@ -131,4 +126,5 @@ bool TransportRx::ValidateHeader(bool aFir, bool aFin, int aSeq, size_t aPayload
 	return true;
 }
 
-}}
+}
+}

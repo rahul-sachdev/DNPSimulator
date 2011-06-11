@@ -26,79 +26,80 @@
 
 using namespace std;
 
-namespace apl {
+namespace apl
+{
 
 
-	ByteStr::ByteStr(size_t aLength) : CopyableBuffer(aLength)
-	{}
+ByteStr::ByteStr(size_t aLength) : CopyableBuffer(aLength)
+{}
 
-	ByteStr::ByteStr(size_t aLength,boost::uint8_t aSeed) : CopyableBuffer(aLength)
-	{
-		for(size_t i=0; i<aLength; ++i) mpBuff[i] = static_cast<boost::uint8_t>((i+aSeed)%256);
-	}
+ByteStr::ByteStr(size_t aLength, boost::uint8_t aSeed) : CopyableBuffer(aLength)
+{
+	for(size_t i = 0; i < aLength; ++i) mpBuff[i] = static_cast<boost::uint8_t>((i + aSeed) % 256);
+}
 
-	ByteStr::ByteStr(const boost::uint8_t* apData, size_t aLength) : CopyableBuffer(aLength)
-	{
-		memcpy(mpBuff, apData, aLength);
-	}
+ByteStr::ByteStr(const boost::uint8_t* apData, size_t aLength) : CopyableBuffer(aLength)
+{
+	memcpy(mpBuff, apData, aLength);
+}
 
-	ByteStr::ByteStr(const std::string& aChars) : CopyableBuffer(aChars.size())
-	{
-		memcpy(mpBuff, aChars.c_str(), aChars.size());
-	}
+ByteStr::ByteStr(const std::string& aChars) : CopyableBuffer(aChars.size())
+{
+	memcpy(mpBuff, aChars.c_str(), aChars.size());
+}
 
-	bool ByteStr::operator==(const ByteStr& arRHS) const
-	{
-		if(Size() != arRHS.Size()) return false;
+bool ByteStr::operator==(const ByteStr& arRHS) const
+{
+	if(Size() != arRHS.Size()) return false;
 
-		for(size_t i=0; i<Size(); ++i)
-			if(mpBuff[i] != arRHS[i]) return false;
+	for(size_t i = 0; i < Size(); ++i)
+		if(mpBuff[i] != arRHS[i]) return false;
 
-		return true;
-	}
+	return true;
+}
 
-	HexSequence::HexSequence( const std::string& aSequence) :
+HexSequence::HexSequence( const std::string& aSequence) :
 	ByteStr(Validate(RemoveSpaces(aSequence)))
-	{
-		std::string s = RemoveSpaces(aSequence);
+{
+	std::string s = RemoveSpaces(aSequence);
 
-		size_t size = s.size();
-		for(size_t index = 0, pos = 0; pos < size; ++index, pos+=2) {
-			boost::uint32_t val;
-			std::stringstream ss;
-			ss << std::hex << s.substr(pos,2);
-			if((ss >> val).fail()) {
-				throw ArgumentException(LOCATION, aSequence);
-			}
-			mpBuff[index] = static_cast<boost::uint8_t>(val);
+	size_t size = s.size();
+	for(size_t index = 0, pos = 0; pos < size; ++index, pos += 2) {
+		boost::uint32_t val;
+		std::stringstream ss;
+		ss << std::hex << s.substr(pos, 2);
+		if((ss >> val).fail()) {
+			throw ArgumentException(LOCATION, aSequence);
 		}
+		mpBuff[index] = static_cast<boost::uint8_t>(val);
 	}
+}
 
-	std::string HexSequence::RemoveSpaces(const std::string& aSequence)
-	{
-		std::string copy(aSequence);
-		RemoveSpacesInPlace(copy);
-		return copy;
+std::string HexSequence::RemoveSpaces(const std::string& aSequence)
+{
+	std::string copy(aSequence);
+	RemoveSpacesInPlace(copy);
+	return copy;
+}
+
+void HexSequence::RemoveSpacesInPlace(std::string& s)
+{
+	size_t pos = s.find_first_of(' ');
+	if(pos != string::npos) {
+		s.replace(pos, 1, "");
+		RemoveSpacesInPlace(s);
 	}
+}
 
-	void HexSequence::RemoveSpacesInPlace(std::string& s)
-	{
-		size_t pos = s.find_first_of(' ');
-		if(pos != string::npos) {
-			s.replace(pos, 1, "");
-			RemoveSpacesInPlace(s);
-		}
-	}
+size_t HexSequence::Validate(const std::string& s)
+{
+	//annoying when you accidentally put an 'O' instead of zero '0'
+	if(s.find_first_of( "oO") != string::npos)
+		throw ArgumentException(LOCATION, "Sequence contains 'o' or 'O'");
 
-	size_t HexSequence::Validate(const std::string& s)
-	{
-		//annoying when you accidentally put an 'O' instead of zero '0'
-		if(s.find_first_of( "oO") != string::npos)
-			throw ArgumentException(LOCATION, "Sequence contains 'o' or 'O'");
-
-		if(s.size()%2 != 0) throw ArgumentException(LOCATION, s);
-		return s.size()/2;
-	}
+	if(s.size() % 2 != 0) throw ArgumentException(LOCATION, s);
+	return s.size() / 2;
+}
 
 }
 

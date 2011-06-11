@@ -22,12 +22,13 @@
 
 using namespace boost::posix_time;
 
-namespace apl {
+namespace apl
+{
 
 
 AsyncTaskNonPeriodic::AsyncTaskNonPeriodic(millis_t aRetryDelay, int aPriority, const TaskHandler& arCallback, AsyncTaskGroup* apGroup, const std::string& arName) :
-AsyncTaskBase(aPriority, arCallback, apGroup, min_date_time, arName),
-mRetryDelay(aRetryDelay)
+	AsyncTaskBase(aPriority, arCallback, apGroup, min_date_time, arName),
+	mRetryDelay(aRetryDelay)
 {
 
 }
@@ -35,13 +36,11 @@ mRetryDelay(aRetryDelay)
 void AsyncTaskNonPeriodic::_OnComplete(bool aSuccess)
 {
 	ptime now = mpGroup->GetUTC();
-	if(aSuccess)
-	{
+	if(aSuccess) {
 		mIsComplete = true;
 		mNextRunTime = max_date_time;
 	}
-	else
-	{
+	else {
 		mNextRunTime = now + milliseconds(mRetryDelay);
 	}
 }

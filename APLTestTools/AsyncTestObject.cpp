@@ -28,14 +28,14 @@
 
 using namespace std;
 
-namespace apl {
+namespace apl
+{
 
 bool AsyncTestObject::ProceedUntil(const EvalFunc& arFunc, millis_t aTimeout)
 {
 	Timeout t(aTimeout);
 
-	do
-	{
+	do {
 		if(arFunc()) return true;
 		else this->Next();
 	}
@@ -54,7 +54,9 @@ void AsyncTestObject::Next(boost::asio::io_service* apSrv, millis_t aSleep)
 	boost::system::error_code ec;
 	size_t num = apSrv->poll_one(ec);
 	if(ec) throw Exception(LOCATION, ec.message());
-	if(num == 0) { Thread::SleepFor(aSleep); }
+	if(num == 0) {
+		Thread::SleepFor(aSleep);
+	}
 	apSrv->reset();
 }
 

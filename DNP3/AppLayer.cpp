@@ -25,19 +25,22 @@
 
 using namespace std;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 AppLayer::AppLayer(apl::Logger* apLogger, ITimerSource* apTimerSrc, AppConfig aAppCfg) :
-Loggable(apLogger),
-IUpperLayer(apLogger),
-mIncoming(aAppCfg.FragSize),
-mConfirm(2), // only need 2 bytes for a confirm message
-mSending(false),
-mConfirmSending(false),
-mpUser(NULL),
-mSolicited(apLogger->GetSubLogger("sol"), this, apTimerSrc, aAppCfg.RspTimeout),
-mUnsolicited(apLogger->GetSubLogger("unsol"), this, apTimerSrc, aAppCfg.RspTimeout),
-mNumRetry(aAppCfg.NumRetry)
+	Loggable(apLogger),
+	IUpperLayer(apLogger),
+	mIncoming(aAppCfg.FragSize),
+	mConfirm(2), // only need 2 bytes for a confirm message
+	mSending(false),
+	mConfirmSending(false),
+	mpUser(NULL),
+	mSolicited(apLogger->GetSubLogger("sol"), this, apTimerSrc, aAppCfg.RspTimeout),
+	mUnsolicited(apLogger->GetSubLogger("unsol"), this, apTimerSrc, aAppCfg.RspTimeout),
+	mNumRetry(aAppCfg.NumRetry)
 {
 	mConfirm.SetFunction(FC_CONFIRM);
 }
@@ -105,23 +108,22 @@ void AppLayer::_OnReceive(const boost::uint8_t* apBuffer, size_t aSize)
 		FunctionCodes func = mIncoming.GetFunction();
 		AppControlField ctrl = mIncoming.GetControl();
 
-		switch(func){
-			case(FC_CONFIRM):
-				this->OnConfirm(ctrl, mIncoming);
-				break;
-			case(FC_RESPONSE):
-				this->OnResponse(ctrl, mIncoming);
-				break;
-			case(FC_UNSOLICITED_RESPONSE):
-				this->OnUnsolResponse(ctrl, mIncoming);
-				break;
-			default:	//otherwise, assume it's a request
-				this->OnRequest(ctrl, mIncoming);
-				break;
+		switch(func) {
+		case(FC_CONFIRM):
+			this->OnConfirm(ctrl, mIncoming);
+			break;
+		case(FC_RESPONSE):
+			this->OnResponse(ctrl, mIncoming);
+			break;
+		case(FC_UNSOLICITED_RESPONSE):
+			this->OnUnsolResponse(ctrl, mIncoming);
+			break;
+		default:	//otherwise, assume it's a request
+			this->OnRequest(ctrl, mIncoming);
+			break;
 		}
 	}
-	catch(ObjectException oex)
-	{
+	catch(ObjectException oex) {
 		EXCEPTION_BLOCK(LEV_WARNING, oex);
 		this->OnUnknownObject(mIncoming.GetFunction(), mIncoming.GetControl());
 	}
@@ -178,9 +180,15 @@ void AppLayer::OnSendResult(bool aSuccess)
 	this->CheckForSend();
 }
 
-void AppLayer::_OnSendSuccess() { this->OnSendResult(true); }
+void AppLayer::_OnSendSuccess()
+{
+	this->OnSendResult(true);
+}
 
-void AppLayer::_OnSendFailure() { this->OnSendResult(false); }
+void AppLayer::_OnSendFailure()
+{
+	this->OnSendResult(false);
+}
 
 
 ////////////////////
@@ -235,18 +243,17 @@ void AppLayer::OnConfirm(const AppControlField& arCtrl, APDU& arAPDU)
 
 void AppLayer::OnUnknownObject(FunctionCodes aCode, const AppControlField& arCtrl)
 {
-	if(!mpUser->IsMaster())
-	{
+	if(!mpUser->IsMaster()) {
 		switch(aCode) {
-			case(FC_CONFIRM):
-			case(FC_RESPONSE):
-			case(FC_UNSOLICITED_RESPONSE):
-			case(FC_DIRECT_OPERATE_NO_ACK):
-				break;
-			default:
-				mSolicited.OnUnknownObjectInRequest(arCtrl);
-				mpUser->OnUnknownObject();
-				break;
+		case(FC_CONFIRM):
+		case(FC_RESPONSE):
+		case(FC_UNSOLICITED_RESPONSE):
+		case(FC_DIRECT_OPERATE_NO_ACK):
+			break;
+		default:
+			mSolicited.OnUnknownObjectInRequest(arCtrl);
+			mpUser->OnUnknownObject();
+			break;
 		}
 	}
 }
@@ -320,14 +327,15 @@ void AppLayer::Validate(const AppControlField& arCtrl, bool aMaster, bool aRequi
 size_t AppLayer::GetRetries(FunctionCodes aCode)
 {
 	switch(aCode) {
-		case(FC_DIRECT_OPERATE):
-		case(FC_DIRECT_OPERATE_NO_ACK):
-		case(FC_RESPONSE):
-		case(FC_WRITE): // b/c these can contain time objects which are sensitive to retries
-			return 0;
-		default:
-			return mNumRetry; //use the configured
+	case(FC_DIRECT_OPERATE):
+	case(FC_DIRECT_OPERATE_NO_ACK):
+	case(FC_RESPONSE):
+	case(FC_WRITE): // b/c these can contain time objects which are sensitive to retries
+		return 0;
+	default:
+		return mNumRetry; //use the configured
 	}
 }
 
-}} //end ns
+}
+} //end ns

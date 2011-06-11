@@ -27,189 +27,191 @@
 #include "VtoDataInterface.h"
 #include "CleanupHelper.h"
 
-namespace apl {
+namespace apl
+{
 
-	class IPhysicalLayerAsync;
-	class ITimerSource;
+class IPhysicalLayerAsync;
+class ITimerSource;
 
-	namespace dnp {
+namespace dnp
+{
 
-		class VtoReader;
-		class VtoWriter;
-		struct VtoRouterSettings;
+class VtoReader;
+class VtoWriter;
+struct VtoRouterSettings;
 
-		/**
-		 * Class used to route data between a VTO channel (made up of both a
-		 * VtoWriter and VtoReader instance) and an IPhysicalLayerAsync
-		 * instance.
-		 *
-		 * @code
-		 *                                           +--> [VtoReader]
-		 *                                           |
-		 * [IPhysicalLayerAsync] <--> [VtoRouter] <--+
-		 *                                           |
-		 *                                           +--> [VtoWriter]
-		 * @endcode
-		 *
-		 * The VtoRouter instance provides the necessary IVtoCallbacks hooks
-		 * that the VtoReader will use.
-		 */
-		class VtoRouter : public AsyncPhysLayerMonitor, public IVtoCallbacks, public CleanupHelper
-		{
-			public:
+/**
+ * Class used to route data between a VTO channel (made up of both a
+ * VtoWriter and VtoReader instance) and an IPhysicalLayerAsync
+ * instance.
+ *
+ * @code
+ *                                           +--> [VtoReader]
+ *                                           |
+ * [IPhysicalLayerAsync] <--> [VtoRouter] <--+
+ *                                           |
+ *                                           +--> [VtoWriter]
+ * @endcode
+ *
+ * The VtoRouter instance provides the necessary IVtoCallbacks hooks
+ * that the VtoReader will use.
+ */
+class VtoRouter : public AsyncPhysLayerMonitor, public IVtoCallbacks, public CleanupHelper
+{
+public:
 
-				/**
-				 * Create a new VtoRouter instance.  Prior to using this
-				 * instance, make sure to register both a IPhysicalLayerAsync
-				 * and a VtoWriter using SetPhysicalLayer() and
-				 * SetVtoWriter(), respectively.
-				 *
-				 * @param apLogger			the Logger that the instance
-				 * 							should use for log messages
-				 * @param aChannelId		the DNP3 Virtual Terminal port
-				 * 							(channel id)
-				 *
-				 * @return					a new VtoRouter instance
-				 */
-				VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc);
+	/**
+	 * Create a new VtoRouter instance.  Prior to using this
+	 * instance, make sure to register both a IPhysicalLayerAsync
+	 * and a VtoWriter using SetPhysicalLayer() and
+	 * SetVtoWriter(), respectively.
+	 *
+	 * @param apLogger			the Logger that the instance
+	 * 							should use for log messages
+	 * @param aChannelId		the DNP3 Virtual Terminal port
+	 * 							(channel id)
+	 *
+	 * @return					a new VtoRouter instance
+	 */
+	VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc);
 
-				/**
-				 * when we try to stop the router we call this thread safe function which sets a flag and
-				 * then posts a shutdown request to mpTimerSrc.
-				 */
-				void StopRouter();
-				
+	/**
+	 * when we try to stop the router we call this thread safe function which sets a flag and
+	 * then posts a shutdown request to mpTimerSrc.
+	 */
+	void StopRouter();
 
-				/**
-				 * Receives data from the VTO channel and forwards it to the
-				 * IPhysicalLayerAsync instance associated with this VtoRouter.
-				 * Implements IVtoCallbacks::OnVtoDataReceived().
-				 *
-				 * @param apData		The data received from the VTO stream
-				 * @param aLength		The length of the data received (in
-				 *						bytes)
-				 */
-				void OnVtoDataReceived(const boost::uint8_t* apData,
-				                            size_t aLength);
 
-				/**
-				 * When the remote end indicates a connection state change we need to toggle
-				 * our connection state and setup for a new connection. Behavior will be
-				 * different depending on the mStartLocal setting. Posted to mpTimerSrc.
-				 */
-				void OnVtoRemoteConnectedChanged(bool aOpened);
-				
-				/**
-				 * When the dnp stack changes state to offline we will shutdown any our local physical
-				 * layer. When it comes online we may start our local physical layer, depending on the 
-				 * mStartLocal setting. Posted to mpTimerSrc.
-				 */
-				void OnDnpConnectedChanged(bool aConnected);
+	/**
+	 * Receives data from the VTO channel and forwards it to the
+	 * IPhysicalLayerAsync instance associated with this VtoRouter.
+	 * Implements IVtoCallbacks::OnVtoDataReceived().
+	 *
+	 * @param apData		The data received from the VTO stream
+	 * @param aLength		The length of the data received (in
+	 *						bytes)
+	 */
+	void OnVtoDataReceived(const boost::uint8_t* apData,
+	                       size_t aLength);
 
-				/**
-				 * Called when the VTO data buffer size changes (startup and
-				 * successuly transmission).		 
-				 */
-				void OnBufferAvailable();
+	/**
+	 * When the remote end indicates a connection state change we need to toggle
+	 * our connection state and setup for a new connection. Behavior will be
+	 * different depending on the mStartLocal setting. Posted to mpTimerSrc.
+	 */
+	void OnVtoRemoteConnectedChanged(bool aOpened);
 
-				protected:
+	/**
+	 * When the dnp stack changes state to offline we will shutdown any our local physical
+	 * layer. When it comes online we may start our local physical layer, depending on the
+	 * mStartLocal setting. Posted to mpTimerSrc.
+	 */
+	void OnDnpConnectedChanged(bool aConnected);
 
-				void CheckForPhysRead();
-				void CheckForPhysWrite();
+	/**
+	 * Called when the VTO data buffer size changes (startup and
+	 * successuly transmission).
+	 */
+	void OnBufferAvailable();
 
-				void CheckForVtoWrite();
+protected:
 
-				// Implement AsyncPhysLayerMonitor
+	void CheckForPhysRead();
+	void CheckForPhysWrite();
 
-				void OnPhysicalLayerOpen();
+	void CheckForVtoWrite();
 
-				void OnPhysicalLayerClose();
+	// Implement AsyncPhysLayerMonitor
 
-				void OnPhysicalLayerOpenFailure();
+	void OnPhysicalLayerOpen();
 
-				/**
-				 * Receives data from the physical layer and forwards it to the
-				 * VtoWriter.
-				 *
-				 * @param apData		The data received from the physical
-				 * 						layer
-				 * @param aLength		The length of the data received (in
-				 *						bytes)
-				 */
-				void _OnReceive(const boost::uint8_t* apData, size_t aLength);
+	void OnPhysicalLayerClose();
 
-				/**
-				 * Implements IUpperLayer::_OnSendSuccess(), which was
-				 * inherited via IHandlerAsync.  Called when an asynchronous
-				 * transmission to the physical layer was successful.
-				 */
-				void _OnSendSuccess();
+	void OnPhysicalLayerOpenFailure();
 
-				/**
-				 * Implements IUpperLayer::_OnSendFailure(), which was
-				 * inherited via IHandlerAsync.  Called when an asynchronous
-				 * transmission to the physical layer was not successful.
-				 */
-				void _OnSendFailure();
+	/**
+	 * Receives data from the physical layer and forwards it to the
+	 * VtoWriter.
+	 *
+	 * @param apData		The data received from the physical
+	 * 						layer
+	 * @param aLength		The length of the data received (in
+	 *						bytes)
+	 */
+	void _OnReceive(const boost::uint8_t* apData, size_t aLength);
 
-				/**
-				 * Implement AsyncPhysMonitor::OnStateChange
-				 */
-				void OnStateChange(IPhysMonitor::State);
+	/**
+	 * Implements IUpperLayer::_OnSendSuccess(), which was
+	 * inherited via IHandlerAsync.  Called when an asynchronous
+	 * transmission to the physical layer was successful.
+	 */
+	void _OnSendSuccess();
 
-				void DoStart();
-				void DoStop();
+	/**
+	 * Implements IUpperLayer::_OnSendFailure(), which was
+	 * inherited via IHandlerAsync.  Called when an asynchronous
+	 * transmission to the physical layer was not successful.
+	 */
+	void _OnSendFailure();
 
-				void SetLocalConnected(bool aConnected);
-				
-				/**
-				 * actually do the work for the external calls
-				 */ 
-				void DoStopRouter();
-				void DoVtoRemoteConnectedChanged(bool aOpened);
-				void DoDnpConnectedChanged(bool aConnected);
+	/**
+	 * Implement AsyncPhysMonitor::OnStateChange
+	 */
+	void OnStateChange(IPhysMonitor::State);
 
-			private:
+	void DoStart();
+	void DoStop();
 
-				/**
-				 * The VtoWriter instance that will be used to send the data
-				 * that is received by the IPhysicalLayerAsync instance to the
-				 * VTO endpoint.
-				 */
-				IVtoWriter* mpVtoWriter;
+	void SetLocalConnected(bool aConnected);
 
-				/**
-				 * The transmit buffer for Vto -> physical layer.  The data that
-				 * is put into this buffer was originally received via VTO.
-				 */
-				std::queue<VtoData> mPhysLayerTxBuffer;
+	/**
+	 * actually do the work for the external calls
+	 */
+	void DoStopRouter();
+	void DoVtoRemoteConnectedChanged(bool aOpened);
+	void DoDnpConnectedChanged(bool aConnected);
 
-				/**
-				 * The transmit buffer for physical layer -> Vto. The data that is put
-				 * into this buffer was originally received from the physical layer.
-				 */
-				ShiftableBuffer mVtoTxBuffer;
+private:
 
-				bool mDnpConnected;
-				bool mRemoteConnected;
-				bool mLocalConnected;
+	/**
+	 * The VtoWriter instance that will be used to send the data
+	 * that is received by the IPhysicalLayerAsync instance to the
+	 * VTO endpoint.
+	 */
+	IVtoWriter* mpVtoWriter;
 
-				bool mPermanentlyStopped;
-				bool mStarted;
-				bool mCleanedup;
+	/**
+	 * The transmit buffer for Vto -> physical layer.  The data that
+	 * is put into this buffer was originally received via VTO.
+	 */
+	std::queue<VtoData> mPhysLayerTxBuffer;
 
-				/**
-				 * determines if we should open our physical layer or wait for the remote
-				 * side to indicate the other side is connected.
-				 * TODO: refactor this class into abstract base class with 2 implementations 
-				 * instead of flag
-				 */
-				bool mStartLocal;
+	/**
+	 * The transmit buffer for physical layer -> Vto. The data that is put
+	 * into this buffer was originally received from the physical layer.
+	 */
+	ShiftableBuffer mVtoTxBuffer;
 
-				bool mDisableExtensions;
-		};
+	bool mDnpConnected;
+	bool mRemoteConnected;
+	bool mLocalConnected;
 
-	}
+	bool mPermanentlyStopped;
+	bool mStarted;
+	bool mCleanedup;
+
+	/**
+	 * determines if we should open our physical layer or wait for the remote
+	 * side to indicate the other side is connected.
+	 * TODO: refactor this class into abstract base class with 2 implementations
+	 * instead of flag
+	 */
+	bool mStartLocal;
+
+	bool mDisableExtensions;
+};
+
+}
 }
 
 /* vim: set ts=4 sw=4: */

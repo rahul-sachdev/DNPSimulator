@@ -19,12 +19,13 @@
 #include "MetricBuffer.h"
 
 
-namespace apl {
+namespace apl
+{
 
 void MetricBuffer::SetVar(const std::string& aSource, const std::string& aVarName, int aValue)
 {
 	CriticalSection cs(&mLock);
-	mValues[aSource+"."+aVarName] = Var(aSource, aVarName, aValue);
+	mValues[aSource + "." + aVarName] = Var(aSource, aVarName, aValue);
 }
 
 void MetricBuffer::Read(std::vector<MetricBuffer::Var>& v)

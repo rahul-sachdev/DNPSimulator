@@ -23,63 +23,66 @@
 
 #include <sstream>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 // @section desc Test class for app layer
 class MockAppUser : public IAppUser
 {
-	public:
+public:
 
-		struct State
-		{
-			friend std::ostream& operator<<(std::ostream& output, const State& s);
+	struct State {
+		friend std::ostream& operator<<(std::ostream& output, const State& s);
 
-			State();
+		State();
 
-			bool operator==(const State& arState) const;
+		bool operator==(const State& arState) const;
 
-			size_t NumLayerUp;
-			size_t NumLayerDown;
-			size_t NumUnsol;
-			size_t NumSolSendSuccess;
-			size_t NumSolFailure;
-			size_t NumUnsolSendSuccess;
-			size_t NumUnsolFailure;
-			size_t NumPartialRsp;
-			size_t NumFinalRsp;
-			size_t NumRequest;
-			size_t NumUnknown;
-		};
+		size_t NumLayerUp;
+		size_t NumLayerDown;
+		size_t NumUnsol;
+		size_t NumSolSendSuccess;
+		size_t NumSolFailure;
+		size_t NumUnsolSendSuccess;
+		size_t NumUnsolFailure;
+		size_t NumPartialRsp;
+		size_t NumFinalRsp;
+		size_t NumRequest;
+		size_t NumUnknown;
+	};
 
-		MockAppUser(bool aIsMaster);
+	MockAppUser(bool aIsMaster);
 
-		// Implement IAppUser
-		void OnLowerLayerUp();
-		void OnLowerLayerDown();
+	// Implement IAppUser
+	void OnLowerLayerUp();
+	void OnLowerLayerDown();
 
-		void OnSolSendSuccess();
-		void OnSolFailure();
+	void OnSolSendSuccess();
+	void OnSolFailure();
 
-		void OnUnsolSendSuccess();
-		void OnUnsolFailure();
+	void OnUnsolSendSuccess();
+	void OnUnsolFailure();
 
-		bool IsMaster();
-		void OnPartialResponse(const APDU&);
-		void OnFinalResponse(const APDU&);
-		void OnUnsolResponse(const APDU&);
-		void OnRequest(const APDU&, SequenceInfo);
-		void OnUnknownObject();
+	bool IsMaster();
+	void OnPartialResponse(const APDU&);
+	void OnFinalResponse(const APDU&);
+	void OnUnsolResponse(const APDU&);
+	void OnRequest(const APDU&, SequenceInfo);
+	void OnUnknownObject();
 
-		bool Equals(const State& arState) const;
+	bool Equals(const State& arState) const;
 
-	private:
+private:
 
-		bool mIsMaster;
+	bool mIsMaster;
 
-	public:
-		State mState;
+public:
+	State mState;
 };
 
-}}
+}
+}
 
 #endif

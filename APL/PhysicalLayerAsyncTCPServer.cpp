@@ -32,12 +32,13 @@ using namespace boost::system;
 using namespace boost::asio;
 using namespace std;
 
-namespace apl {
+namespace apl
+{
 
 PhysicalLayerAsyncTCPServer::PhysicalLayerAsyncTCPServer(Logger* apLogger, boost::asio::io_service* apIOService, const std::string& arEndpoint, boost::uint16_t aPort) :
-PhysicalLayerAsyncBaseTCP(apLogger, apIOService),
-mEndpoint(ip::tcp::v4(), aPort),
-mAcceptor(*apIOService)
+	PhysicalLayerAsyncBaseTCP(apLogger, apIOService),
+	mEndpoint(ip::tcp::v4(), aPort),
+	mAcceptor(*apIOService)
 {
 	//set the endpoint's address
 	boost::system::error_code ec;
@@ -49,8 +50,7 @@ mAcceptor(*apIOService)
 /* Implement the actions */
 void PhysicalLayerAsyncTCPServer::DoOpen()
 {
-	if(!mAcceptor.is_open())
-	{
+	if(!mAcceptor.is_open()) {
 		error_code ec;
 		mAcceptor.open(mEndpoint.protocol(), ec);
 		if(ec) throw Exception(LOCATION, ec.message());

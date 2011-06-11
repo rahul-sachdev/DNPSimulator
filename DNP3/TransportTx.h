@@ -26,7 +26,10 @@
 
 #include "TransportConstants.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class TransportLayer;
 
@@ -35,32 +38,35 @@ State/validation for the DNP3 transport layer's send channel.
 */
 class TransportTx : public Loggable
 {
-	public:
-		TransportTx(Logger*, TransportLayer*, size_t aFragSize);
+public:
+	TransportTx(Logger*, TransportLayer*, size_t aFragSize);
 
 
-		void Send(const boost::uint8_t*, size_t); // A fresh call to Send() will reset the state
-		bool SendSuccess();
+	void Send(const boost::uint8_t*, size_t); // A fresh call to Send() will reset the state
+	bool SendSuccess();
 
 
-		static boost::uint8_t GetHeader(bool aFir, bool aFin, int aSeq);
+	static boost::uint8_t GetHeader(bool aFir, bool aFin, int aSeq);
 
-	private:
+private:
 
-		bool CheckForSend();
+	bool CheckForSend();
 
-		TransportLayer* mpContext;
+	TransportLayer* mpContext;
 
-		CopyableBuffer mBufferAPDU;
-		CopyableBuffer mBufferTPDU;
+	CopyableBuffer mBufferAPDU;
+	CopyableBuffer mBufferTPDU;
 
-		size_t mNumBytesSent;
-		size_t mNumBytesToSend;
-		int mSeq;
+	size_t mNumBytesSent;
+	size_t mNumBytesToSend;
+	int mSeq;
 
-		size_t BytesRemaining() { return mNumBytesToSend - mNumBytesSent; }
+	size_t BytesRemaining() {
+		return mNumBytesToSend - mNumBytesSent;
+	}
 };
 
-}}
+}
+}
 
 #endif

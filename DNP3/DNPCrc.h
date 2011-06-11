@@ -22,28 +22,32 @@
 #include <APL/Types.h>
 #include <stddef.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	class DNPCrc
-	{
-		public:
+class DNPCrc
+{
+public:
 
-			static unsigned int CalcCrc(const boost::uint8_t* aInput, size_t length);
+	static unsigned int CalcCrc(const boost::uint8_t* aInput, size_t length);
 
-			static void AddCrc(boost::uint8_t* aInput, size_t aLength);
+	static void AddCrc(boost::uint8_t* aInput, size_t aLength);
 
-			static bool IsCorrectCRC(const boost::uint8_t* aInput, size_t aLength);
+	static bool IsCorrectCRC(const boost::uint8_t* aInput, size_t aLength);
 
-		private:
+private:
 
-			static bool mIsInitialized;
+	static bool mIsInitialized;
 
-			static bool InitCrcTable();
+	static bool InitCrcTable();
 
-			static unsigned int mpCrcTable[256]; //Precomputed CRC lookup table
+	static unsigned int mpCrcTable[256]; //Precomputed CRC lookup table
 
-	};
+};
 
-}}
+}
+}
 
 #endif

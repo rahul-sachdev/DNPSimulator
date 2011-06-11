@@ -22,32 +22,36 @@
 #include "MasterTaskBase.h"
 #include "VtoReader.h"
 
-namespace apl {
-	class IDataObserver;
+namespace apl
+{
+class IDataObserver;
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /**
  * Base class for all data acquistion polls
  */
 class DataPoll : public MasterTaskBase
 {
-	public:
+public:
 
-		DataPoll(Logger*, IDataObserver*, VtoReader*);
+	DataPoll(Logger*, IDataObserver*, VtoReader*);
 
-	private:
+private:
 
-		void ReadData(const APDU&);
+	void ReadData(const APDU&);
 
-		//Implement MasterTaskBase
-		TaskResult _OnPartialResponse(const APDU&);
-		TaskResult _OnFinalResponse(const APDU&);
+	//Implement MasterTaskBase
+	TaskResult _OnPartialResponse(const APDU&);
+	TaskResult _OnFinalResponse(const APDU&);
 
-		IDataObserver* mpObs;
+	IDataObserver* mpObs;
 
-		VtoReader* mpVtoReader;
+	VtoReader* mpVtoReader;
 
 };
 
@@ -55,23 +59,26 @@ class DataPoll : public MasterTaskBase
 */
 class ClassPoll : public DataPoll
 {
-	public:
+public:
 
-		ClassPoll(Logger*, IDataObserver*, VtoReader*);
+	ClassPoll(Logger*, IDataObserver*, VtoReader*);
 
-		void Set(int aClassMask);
+	void Set(int aClassMask);
 
-		//Implement MasterTaskBase
-		void ConfigureRequest(APDU& arAPDU);
-		virtual std::string Name() const { return "Class Poll"; }
+	//Implement MasterTaskBase
+	void ConfigureRequest(APDU& arAPDU);
+	virtual std::string Name() const {
+		return "Class Poll";
+	}
 
-	private:
+private:
 
-		int mClassMask;
+	int mClassMask;
 
 };
 
-}} //ens ns
+}
+} //ens ns
 
 /* vim: set ts=4 sw=4: */
 

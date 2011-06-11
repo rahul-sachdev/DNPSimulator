@@ -26,32 +26,36 @@
 
 namespace apl
 {
-	class Logger;
+class Logger;
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class ResponseLoaderTestObject
 {
-	public:
+public:
 
-		ResponseLoaderTestObject();
+	ResponseLoaderTestObject();
 
-		void CheckBinaries(const std::string& arAPDU);
-		void CheckCounters(const std::string& arAPDU);
-		void CheckAnalogs(const std::string& arAPDU);
-		void CheckSetpointStatii(const std::string& arAPDU);
+	void CheckBinaries(const std::string& arAPDU);
+	void CheckCounters(const std::string& arAPDU);
+	void CheckAnalogs(const std::string& arAPDU);
+	void CheckSetpointStatii(const std::string& arAPDU);
 
-		void Load(const std::string& arAPDU);
+	void Load(const std::string& arAPDU);
 
-	private: EventLog log;
-	public: FlexibleDataObserver fdo;
-	private: Logger* mpLogger;
-	public: VtoReader vto;
+private: EventLog log;
+public: FlexibleDataObserver fdo;
+private: Logger* mpLogger;
+public: VtoReader vto;
 
 };
 
-}}
+}
+}
 
 #endif
 

@@ -21,86 +21,85 @@
 
 namespace apl
 {
-	FlexibleDataObserver::FlexibleDataObserver() :
+FlexibleDataObserver::FlexibleDataObserver() :
 	mCommsLostCount(0),
 	mLastCommsLostCheck(0),
 	mNewData(false)
-	{}
+{}
 
-	void FlexibleDataObserver::Clear()
-	{
-		Transaction t(this);
-		mBinaryMap.clear();
-		mAnalogMap.clear();
-		mCounterMap.clear();
-		mControlStatusMap.clear();
-		mSetpointStatusMap.clear();
+void FlexibleDataObserver::Clear()
+{
+	Transaction t(this);
+	mBinaryMap.clear();
+	mAnalogMap.clear();
+	mCounterMap.clear();
+	mControlStatusMap.clear();
+	mSetpointStatusMap.clear();
+}
+
+// The RHS is a strict subset of the LHS... i.e. everything in the RHS can be found in the LHS
+bool FlexibleDataObserver::StrictEquality(const FlexibleDataObserver& arLHS, const FlexibleDataObserver& arRHS)
+{
+	if(! StrictEquality(arLHS.mBinaryMap, arRHS.mBinaryMap) ) return false;
+	if(! StrictEquality(arLHS.mAnalogMap, arRHS.mAnalogMap) ) return false;
+	if(! StrictEquality(arLHS.mCounterMap, arRHS.mCounterMap) ) return false;
+	if(! StrictEquality(arLHS.mControlStatusMap, arRHS.mControlStatusMap) ) return false;
+	if(! StrictEquality(arLHS.mSetpointStatusMap, arRHS.mSetpointStatusMap) ) return false;
+
+	return true;
+}
+
+// The RHS is a strict subset of the LHS... i.e. everything in the RHS can be found in the LHS
+bool FlexibleDataObserver::IsSubsetOf(const FlexibleDataObserver& arLHS, const FlexibleDataObserver& arRHS)
+{
+	if(! IsSubsetOf(arLHS.mBinaryMap, arRHS.mBinaryMap) ) return false;
+	if(! IsSubsetOf(arLHS.mAnalogMap, arRHS.mAnalogMap) ) return false;
+	if(! IsSubsetOf(arLHS.mCounterMap, arRHS.mCounterMap) ) return false;
+	if(! IsSubsetOf(arLHS.mControlStatusMap, arRHS.mControlStatusMap) ) return false;
+	if(! IsSubsetOf(arLHS.mSetpointStatusMap, arRHS.mSetpointStatusMap) ) return false;
+
+	return true;
+}
+
+void FlexibleDataObserver::Print()
+{
+	Transaction tr(this);
+
+	std::cout << "--- Binary ---" << std::endl;
+	this->Print<Binary>(mBinaryMap);
+
+	std::cout << "--- Analog ---" << std::endl;
+	this->Print<Analog>(mAnalogMap);
+
+	std::cout << "--- Counter ---" << std::endl;
+	this->Print<Counter>(mCounterMap);
+
+	std::cout << "--- Control Status ---" << std::endl;
+	this->Print<ControlStatus>(mControlStatusMap);
+
+	std::cout << "--- Setpoint Status ---" << std::endl;
+	this->Print<SetpointStatus>(mSetpointStatusMap);
+
+}
+
+template<class T>
+bool FlexibleDataObserver::StrictEquality(const T& arMap1, const T& arMap2)
+{
+	if(arMap1.size() != arMap2.size()) return false;
+	return IsSubsetOf(arMap1, arMap2);
+}
+
+template<class T>
+bool FlexibleDataObserver::IsSubsetOf(const T& arMap1, const T& arMap2)
+{
+	for(typename T::const_iterator i = arMap1.begin(); i != arMap1.end(); ++i) {
+		typename T::const_iterator j = arMap2.find(i->first);
+		if(j == arMap2.end()) return false;
+		if(j->second != i->second) return false;
 	}
 
-	// The RHS is a strict subset of the LHS... i.e. everything in the RHS can be found in the LHS
-	bool FlexibleDataObserver::StrictEquality(const FlexibleDataObserver& arLHS, const FlexibleDataObserver& arRHS)
-	{
-		if(! StrictEquality(arLHS.mBinaryMap, arRHS.mBinaryMap) ) return false;
-		if(! StrictEquality(arLHS.mAnalogMap, arRHS.mAnalogMap) ) return false;
-		if(! StrictEquality(arLHS.mCounterMap, arRHS.mCounterMap) ) return false;
-		if(! StrictEquality(arLHS.mControlStatusMap, arRHS.mControlStatusMap) ) return false;
-		if(! StrictEquality(arLHS.mSetpointStatusMap, arRHS.mSetpointStatusMap) ) return false;
-
-		return true;
-	}
-
-	// The RHS is a strict subset of the LHS... i.e. everything in the RHS can be found in the LHS
-	bool FlexibleDataObserver::IsSubsetOf(const FlexibleDataObserver& arLHS, const FlexibleDataObserver& arRHS)
-	{
-		if(! IsSubsetOf(arLHS.mBinaryMap, arRHS.mBinaryMap) ) return false;
-		if(! IsSubsetOf(arLHS.mAnalogMap, arRHS.mAnalogMap) ) return false;
-		if(! IsSubsetOf(arLHS.mCounterMap, arRHS.mCounterMap) ) return false;
-		if(! IsSubsetOf(arLHS.mControlStatusMap, arRHS.mControlStatusMap) ) return false;
-		if(! IsSubsetOf(arLHS.mSetpointStatusMap, arRHS.mSetpointStatusMap) ) return false;
-
-		return true;
-	}
-
-	void FlexibleDataObserver::Print()
-	{
-		Transaction tr(this);
-
-		std::cout << "--- Binary ---" << std::endl;
-		this->Print<Binary>(mBinaryMap);
-
-		std::cout << "--- Analog ---" << std::endl;
-		this->Print<Analog>(mAnalogMap);
-
-		std::cout << "--- Counter ---" << std::endl;
-		this->Print<Counter>(mCounterMap);
-
-		std::cout << "--- Control Status ---" << std::endl;
-		this->Print<ControlStatus>(mControlStatusMap);
-
-		std::cout << "--- Setpoint Status ---" << std::endl;
-		this->Print<SetpointStatus>(mSetpointStatusMap);
-
-	}
-
-	template<class T>
-	bool FlexibleDataObserver::StrictEquality(const T& arMap1, const T& arMap2)
-	{
-		if(arMap1.size() != arMap2.size()) return false;
-		return IsSubsetOf(arMap1, arMap2);
-	}
-
-	template<class T>
-	bool FlexibleDataObserver::IsSubsetOf(const T& arMap1, const T& arMap2)
-	{
-		for(typename T::const_iterator i = arMap1.begin(); i != arMap1.end(); ++i)
-		{
-			typename T::const_iterator j = arMap2.find(i->first);
-			if(j == arMap2.end()) return false;
-			if(j->second != i->second) return false;
-		}
-
-		return true;
-	}
+	return true;
+}
 
 }
 

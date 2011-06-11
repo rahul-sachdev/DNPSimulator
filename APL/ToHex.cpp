@@ -20,18 +20,19 @@
 
 
 
-namespace apl {
+namespace apl
+{
 
 char toHex(char c)
 {
-	if(c > 9) return 'A' + (c-10);
+	if(c > 9) return 'A' + (c - 10);
 	return '0' + c;
 }
 
 std::string ByteToHex(boost::uint8_t b)
 {
 	std::ostringstream oss;
-	oss << toHex((b&0xf0)>>4) << toHex(b&0xf);
+	oss << toHex((b & 0xf0) >> 4) << toHex(b & 0xf);
 	return oss.str();
 }
 

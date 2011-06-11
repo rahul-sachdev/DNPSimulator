@@ -25,10 +25,11 @@
 
 using namespace boost::posix_time;
 
-namespace apl {
+namespace apl
+{
 
 AsyncTaskContinuous::AsyncTaskContinuous(int aPriority, const TaskHandler& arCallback, AsyncTaskGroup* apGroup, const std::string& arName) :
-AsyncTaskBase(aPriority, arCallback, apGroup, min_date_time, arName)
+	AsyncTaskBase(aPriority, arCallback, apGroup, min_date_time, arName)
 {
 
 }

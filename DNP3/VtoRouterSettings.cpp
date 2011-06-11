@@ -17,17 +17,21 @@
 
 #include "VtoRouterSettings.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	VtoRouterSettings::VtoRouterSettings(boost::uint8_t aChannelId, bool aStartLocal, bool aDisableExtensions, size_t aVtoTxBufferSizeInBytes, millis_t aOpenRetryMs) :
-		CHANNEL_ID(aChannelId),
-		VTO_TX_BUFFFER_SIZE_IN_BYTES(aVtoTxBufferSizeInBytes),
-		OPEN_RETRY_MS(aOpenRetryMs),
-		START_LOCAL(aStartLocal),
-		DISABLE_EXTENSIONS(aDisableExtensions)
-	{}
+VtoRouterSettings::VtoRouterSettings(boost::uint8_t aChannelId, bool aStartLocal, bool aDisableExtensions, size_t aVtoTxBufferSizeInBytes, millis_t aOpenRetryMs) :
+	CHANNEL_ID(aChannelId),
+	VTO_TX_BUFFFER_SIZE_IN_BYTES(aVtoTxBufferSizeInBytes),
+	OPEN_RETRY_MS(aOpenRetryMs),
+	START_LOCAL(aStartLocal),
+	DISABLE_EXTENSIONS(aDisableExtensions)
+{}
 
-}}
+}
+}
 
 /* vim: set ts=4 sw=4: */
 

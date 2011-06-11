@@ -22,22 +22,26 @@
 #include <APL/Exception.h>
 
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class ParameterException : public apl::Exception
 {
-	public:
-		ParameterException(const std::string& aSource, const std::string& aMessage, int aErrorCode = -1) throw() :
+public:
+	ParameterException(const std::string& aSource, const std::string& aMessage, int aErrorCode = -1) throw() :
 		Exception(aSource, aMessage, aErrorCode) {}
 };
 
 class NotSupportedException : public apl::Exception
 {
-	public:
-		NotSupportedException(const std::string& aSource, const std::string& aMessage, int aErrorCode = -1) throw() :
+public:
+	NotSupportedException(const std::string& aSource, const std::string& aMessage, int aErrorCode = -1) throw() :
 		Exception(aSource, aMessage, aErrorCode) {}
 };
 
-}}
+}
+}
 
 #endif

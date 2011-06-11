@@ -22,14 +22,15 @@
 #include "Types.h"
 #include <stddef.h>
 
-namespace apl {
+namespace apl
+{
 
-	class CRC
-	{
-		public:
-			static unsigned int CalcCRC(const boost::uint8_t* aInput, size_t aLength, const unsigned int* apTable, unsigned int aStart, bool aInvert);
-			static void PrecomputeCRC(unsigned int* apTable, unsigned int aPolynomial);
-	};
+class CRC
+{
+public:
+	static unsigned int CalcCRC(const boost::uint8_t* aInput, size_t aLength, const unsigned int* apTable, unsigned int aStart, bool aInvert);
+	static void PrecomputeCRC(unsigned int* apTable, unsigned int aPolynomial);
+};
 
 }
 

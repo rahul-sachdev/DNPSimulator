@@ -31,7 +31,7 @@ namespace apl
 */
 class EventLock : public EventLockBase<boost::int64_t>
 {
-	public:
+public:
 	EventLock();
 
 	//needs to be used only when we are allready locked on the object
@@ -39,11 +39,11 @@ class EventLock : public EventLockBase<boost::int64_t>
 
 	static boost::int64_t Get64BitMask(size_t aShift);
 
-	protected:
+protected:
 
 	boost::int64_t mEvents; //the bitfield that holds the events.
 
-	private:
+private:
 
 	void RecordEventCode(const boost::int64_t& arEvent);
 };

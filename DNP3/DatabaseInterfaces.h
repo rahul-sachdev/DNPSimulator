@@ -24,16 +24,20 @@
 #include <APL/DataInterfaces.h>
 #include <APL/PackingUnpacking.h>
 
-namespace apl {
+namespace apl
+{
 class INotifier;
 }
 
-namespace apl{ namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 // @section desc Used by the database
 class IEventBuffer
 {
-	public:
+public:
 
 	virtual ~IEventBuffer() {}
 
@@ -48,7 +52,8 @@ class IEventBuffer
 
 };
 
-}}
+}
+}
 
 #endif
 

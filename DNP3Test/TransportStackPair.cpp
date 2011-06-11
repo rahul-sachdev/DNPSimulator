@@ -23,20 +23,23 @@
 
 #include <APL/Logger.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 TransportStackPair::TransportStackPair(
-	LinkConfig aClientCfg,
-	LinkConfig aServerCfg,
-	Logger* apLogger,
-	boost::asio::io_service* apService,
-	ITimerSource* apTimerSrc,
-	boost::uint16_t aPort) :
+    LinkConfig aClientCfg,
+    LinkConfig aServerCfg,
+    Logger* apLogger,
+    boost::asio::io_service* apService,
+    ITimerSource* apTimerSrc,
+    boost::uint16_t aPort) :
 
-mClient(apLogger->GetSubLogger("TCPClient"), apService, "127.0.0.1", aPort),
-mServer(apLogger->GetSubLogger("TCPServer"), apService, "127.0.0.1", aPort),
-mClientStack(apLogger->GetSubLogger("ClientStack"), apTimerSrc, &mClient, aClientCfg),
-mServerStack(apLogger->GetSubLogger("ServerStack"), apTimerSrc, &mServer, aServerCfg)
+	mClient(apLogger->GetSubLogger("TCPClient"), apService, "127.0.0.1", aPort),
+	mServer(apLogger->GetSubLogger("TCPServer"), apService, "127.0.0.1", aPort),
+	mClientStack(apLogger->GetSubLogger("ClientStack"), apTimerSrc, &mClient, aClientCfg),
+	mServerStack(apLogger->GetSubLogger("ServerStack"), apTimerSrc, &mServer, aServerCfg)
 {
 
 }
@@ -44,7 +47,7 @@ mServerStack(apLogger->GetSubLogger("ServerStack"), apTimerSrc, &mServer, aServe
 bool TransportStackPair::BothLayersUp()
 {
 	return mServerStack.mUpper.IsLowerLayerUp()
-		&& mClientStack.mUpper.IsLowerLayerUp();
+	       && mClientStack.mUpper.IsLowerLayerUp();
 }
 
 void TransportStackPair::Start()
@@ -54,5 +57,6 @@ void TransportStackPair::Start()
 }
 
 
-}}
+}
+}
 

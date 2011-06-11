@@ -31,7 +31,8 @@
 #include "LogEntryCircularBuffer.h"
 #include "Thread.h"
 
-namespace apl{
+namespace apl
+{
 
 /** Logging backend that uses a buffer and thread to do a non-blocking writeof all the log entries to a text file.
 */

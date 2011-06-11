@@ -26,11 +26,14 @@
 
 using namespace std;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 LinkFrame::LinkFrame() :
-mIsComplete(false),
-mSize(0)
+	mIsComplete(false),
+	mSize(0)
 {
 
 }
@@ -40,9 +43,10 @@ LinkFrame::~LinkFrame()
 
 }
 
-ostream& operator<<(ostream& output, const LinkFrame& f) {
-    output << f.ToString();
-    return output;  // for multiple << operators.
+ostream& operator<<(ostream& output, const LinkFrame& f)
+{
+	output << f.ToString();
+	return output;  // for multiple << operators.
 }
 
 bool LinkFrame::operator==(const LinkFrame& arRHS) const
@@ -51,7 +55,7 @@ bool LinkFrame::operator==(const LinkFrame& arRHS) const
 
 	if(this->GetSize() != arRHS.GetSize()) return false;
 
-	for(size_t i=0; i<this->GetSize(); ++i)
+	for(size_t i = 0; i < this->GetSize(); ++i)
 		if(this->GetBuffer()[i] != arRHS.GetBuffer()[i]) return false;
 
 	return true;
@@ -61,28 +65,28 @@ size_t LinkFrame::ReadUserData(boost::uint8_t* apBuffer) const
 {
 	assert(this->mIsComplete);
 	size_t user_bytes = mHeader.GetLength() - LS_MIN_LENGTH;
-	ReadUserData(mpBuffer+LS_HEADER_SIZE, apBuffer, user_bytes);
+	ReadUserData(mpBuffer + LS_HEADER_SIZE, apBuffer, user_bytes);
 	return user_bytes;
 }
 
-void LinkFrame::ReadUserData(const boost::uint8_t* apSrc,boost::uint8_t* apDest, size_t aLength)
+void LinkFrame::ReadUserData(const boost::uint8_t* apSrc, boost::uint8_t* apDest, size_t aLength)
 {
 	if(aLength == 0) return;	//base case of recursion
 	size_t max = LS_DATA_BLOCK_SIZE;
 	size_t num = (aLength <= max) ? aLength : max;
 	size_t num_with_crc = num + 2;
 	memcpy(apDest, apSrc, num);
-	ReadUserData(apSrc+num_with_crc, apDest+num, aLength-num); //tail recursive
+	ReadUserData(apSrc + num_with_crc, apDest + num, aLength - num); //tail recursive
 }
 
 bool LinkFrame::ValidateHeaderCRC() const
 {
-	return UInt16LE::Read(mpBuffer+LI_CRC) == DNPCrc::CalcCrc(mpBuffer, LI_CRC);
+	return UInt16LE::Read(mpBuffer + LI_CRC) == DNPCrc::CalcCrc(mpBuffer, LI_CRC);
 }
 
 bool LinkFrame::ValidateBodyCRC() const
 {
-	return ValidateBodyCRC(mpBuffer+LS_HEADER_SIZE, mHeader.GetLength()-LS_MIN_LENGTH);
+	return ValidateBodyCRC(mpBuffer + LS_HEADER_SIZE, mHeader.GetLength() - LS_MIN_LENGTH);
 }
 
 bool LinkFrame::ValidateBodyCRC(const boost::uint8_t* apBody, size_t aLength)
@@ -90,8 +94,8 @@ bool LinkFrame::ValidateBodyCRC(const boost::uint8_t* apBody, size_t aLength)
 	if(aLength == 0) return true;	//base case of recursion
 	size_t max = LS_DATA_BLOCK_SIZE ;
 	size_t num = (aLength <= max) ? aLength : max;
-	if(!DNPCrc::IsCorrectCRC(apBody,num)) return false;
-	else return ValidateBodyCRC(apBody+num+2, aLength-num); //tail recursive
+	if(!DNPCrc::IsCorrectCRC(apBody, num)) return false;
+	else return ValidateBodyCRC(apBody + num + 2, aLength - num); //tail recursive
 }
 
 size_t LinkFrame::CalcFrameSize(size_t aDataLength)
@@ -101,8 +105,8 @@ size_t LinkFrame::CalcFrameSize(size_t aDataLength)
 	size_t ret = LS_HEADER_SIZE;
 
 	if(aDataLength > 0) {
-		size_t mod16 = aDataLength%LS_DATA_BLOCK_SIZE;
-		ret += (aDataLength/LS_DATA_BLOCK_SIZE)*LS_DATA_PLUS_CRC_SIZE; //complete blocks
+		size_t mod16 = aDataLength % LS_DATA_BLOCK_SIZE;
+		ret += (aDataLength / LS_DATA_BLOCK_SIZE) * LS_DATA_PLUS_CRC_SIZE; //complete blocks
 		if(mod16) ret += mod16 + LS_CRC_SIZE; //possible partial block
 	}
 
@@ -185,20 +189,20 @@ void LinkFrame::FormatHeader(size_t aDataLength, bool aIsMaster, bool aFcb, bool
 {
 	mSize = this->CalcFrameSize(aDataLength);
 
-	mHeader.Set(static_cast<boost::uint8_t>(aDataLength+LS_MIN_LENGTH), aSrc, aDest, aIsMaster, aFcvDfc, aFcb, aFuncCode);
+	mHeader.Set(static_cast<boost::uint8_t>(aDataLength + LS_MIN_LENGTH), aSrc, aDest, aIsMaster, aFcvDfc, aFcb, aFuncCode);
 	mHeader.Write(mpBuffer);
 
 	mIsComplete = true;
 }
 
-void LinkFrame::WriteUserData(const boost::uint8_t* apSrc,boost::uint8_t* apDest, size_t aLength)
+void LinkFrame::WriteUserData(const boost::uint8_t* apSrc, boost::uint8_t* apDest, size_t aLength)
 {
 	if(aLength == 0) return;
 	size_t max = LS_DATA_BLOCK_SIZE;
 	size_t num = aLength > max ? max : aLength;
 	memcpy(apDest, apSrc, num);
 	DNPCrc::AddCrc(apDest, num);
-	WriteUserData(apSrc+num, apDest+num+2, aLength-num); //tail recursive
+	WriteUserData(apSrc + num, apDest + num + 2, aLength - num); //tail recursive
 }
 
 std::string LinkFrame::ToString() const
@@ -206,4 +210,5 @@ std::string LinkFrame::ToString() const
 	return mHeader.ToString();
 }
 
-}} //end namespace
+}
+} //end namespace

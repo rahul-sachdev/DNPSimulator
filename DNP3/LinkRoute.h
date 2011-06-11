@@ -23,7 +23,10 @@
 
 #include <iostream>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /**
  * Immutable class that defines a route from a DNP3 source address to a
@@ -45,8 +48,7 @@ public:
 	boost::uint16_t local;
 
 	// comparison functor for use with stl map/set
-	struct LessThan
-	{
+	struct LessThan {
 		// Const to fix VS compilation bug
 		bool operator()(const LinkRoute& a, const LinkRoute& b) const;
 	};
@@ -54,7 +56,8 @@ public:
 
 std::ostream& operator<<(std::ostream& oss, const LinkRoute&);
 
-}}
+}
+}
 
 #endif
 

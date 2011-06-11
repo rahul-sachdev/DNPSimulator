@@ -14,133 +14,131 @@
 
 namespace apl
 {
-	enum RetcodeType{
-		TYPE_BAD_ARGUMENTS,
-		TYPE_SUCCESS,
-		TYPE_QUALIFIED_SUCCESS,
-		TYPE_FAILURE
-	};
+enum RetcodeType {
+    TYPE_BAD_ARGUMENTS,
+    TYPE_SUCCESS,
+    TYPE_QUALIFIED_SUCCESS,
+    TYPE_FAILURE
+};
 
-	class retcode{
-		RetcodeType value;
-		int code;
-	public:
-		retcode(){};
-		retcode(RetcodeType aValue, int aCode){
-			value = aValue;
-			code = aCode;
+class retcode
+{
+	RetcodeType value;
+	int code;
+public:
+	retcode() {};
+	retcode(RetcodeType aValue, int aCode) {
+		value = aValue;
+		code = aCode;
+	}
+
+	bool operator==(const retcode& other) const {
+		return this->value == other.value && this->code == other.code;
+	}
+
+	bool operator!=(const retcode& other) const {
+		return !(this->value == other.value);
+	}
+
+	bool operator>=(const retcode& other) const {
+		return this->value >= other.value || this->code >= other.code;
+	}
+
+	bool operator<=(const retcode& other) const {
+		return this->value <= other.value;
+	}
+
+	bool operator>(const retcode& other) const {
+		return this->value > other.value;
+	}
+	bool operator<(const retcode& other) const {
+		return this->value < other.value;
+	}
+	retcode& operator|=(const retcode& other) {
+		if(this->value != TYPE_SUCCESS) return *this;
+		if(other.value != TYPE_SUCCESS) {
+			this->value = other.value;
+			this->code = other.code;
 		}
+		return *this;
+	}
+};
 
-		bool operator==(const retcode &other) const {
-			return this->value == other.value && this->code == other.code;
-		}
+#define BAD_ARGUMENTS apl::retcode(apl::TYPE_BAD_ARGUMENTS,0)
+#define SUCCESS apl::retcode(apl::TYPE_SUCCESS,0)
+#define QUALIFIED_SUCCESS(code) apl::retcode(apl::TYPE_QUALIFIED_SUCCESS,code)
+#define FAILURE(code) apl::retcode(apl::TYPE_FAILURE,code)
 
-		bool operator!=(const retcode &other) const {
-			return !(this->value == other.value);
-		}
+typedef boost::function<retcode (std::vector<std::string>&)> CommandHandler;
 
-		bool operator>=(const retcode &other) const {
-			return this->value >= other.value || this->code >= other.code;
-		}
+struct CommandNode {
+	CommandHandler mHandler;
+	std::string mName;
+	std::string mUsage;
+	std::string mDesc;
 
-		bool operator<=(const retcode &other) const {
-			return this->value <= other.value;
-		}
+	std::string ToString() const;
+};
 
-		bool operator>(const retcode &other) const {
-			return this->value > other.value;
-		}
-		bool operator<(const retcode &other) const {
-			return this->value < other.value;
-		}
-		retcode& operator|=(const retcode &other) {
-			if(this->value != TYPE_SUCCESS) return *this;
-			if(other.value != TYPE_SUCCESS){ this->value = other.value; this->code = other.code;}
-			return *this;
-		}
-	};
+typedef boost::function<void (const std::string& arLine)> RedirectFunc;
 
-	#define BAD_ARGUMENTS apl::retcode(apl::TYPE_BAD_ARGUMENTS,0)
-	#define SUCCESS apl::retcode(apl::TYPE_SUCCESS,0)
-	#define QUALIFIED_SUCCESS(code) apl::retcode(apl::TYPE_QUALIFIED_SUCCESS,code)
-	#define FAILURE(code) apl::retcode(apl::TYPE_FAILURE,code)
+class ITerminal
+{
+public:
 
-	typedef boost::function<retcode (std::vector<std::string>&)> CommandHandler;
+	const static int TERMINAL_CODE = 1 << 23; //pick a suitably high number for this code
 
-	struct CommandNode
-	{
-		CommandHandler mHandler;
-		std::string mName;
-		std::string mUsage;
-		std::string mDesc;
+	virtual ~ITerminal() {}
 
-		std::string ToString() const;
-	};
+	virtual void BindCommand(const CommandNode& arNode, const std::string& arFullCommand) = 0;
+	virtual void QueueSend(const std::string& arData, bool aLog = true) = 0;
+	virtual void SetRedirect(const RedirectFunc&) = 0;
+	virtual void ClearRedirect() = 0;
+	virtual void Post(const ExpirationHandler& arHandler) = 0;
 
-	typedef boost::function<void (const std::string& arLine)> RedirectFunc;
+	const static char EOL[3];
+	const static char CLEAR_SRC[2];
+};
 
-	class ITerminal
-	{
-		public:
+class ITerminalExtension
+{
+public:
 
-		const static int TERMINAL_CODE = 1 << 23; //pick a suitably high number for this code
+	ITerminalExtension() : mpTerminal(NULL) {}
+	virtual ~ITerminalExtension() {}
 
-		virtual ~ITerminal() {}
+	void BindToTerminal(ITerminal* apTerminal) {
+		assert(apTerminal != NULL);
+		assert(mpTerminal == NULL);
+		mpTerminal = apTerminal;
+		this->_BindToTerminal(apTerminal);
+	}
 
-		virtual void BindCommand(const CommandNode& arNode, const std::string &arFullCommand) = 0;
-		virtual void QueueSend(const std::string& arData, bool aLog = true) = 0;
-		virtual void SetRedirect(const RedirectFunc&) = 0;
-		virtual void ClearRedirect() = 0;
-		virtual void Post(const ExpirationHandler& arHandler) = 0;
+	void Post(const ExpirationHandler& arHandler) {
+		mpTerminal->Post(arHandler);
+	}
 
-		const static char EOL[3];
-		const static char CLEAR_SRC[2];
-	};
+	void SetRedirect(const RedirectFunc& arRedirect) {
+		mpTerminal->SetRedirect(arRedirect);
+	}
 
-	class ITerminalExtension
-	{
-		public:
+	void ClearRedirect() {
+		mpTerminal->ClearRedirect();
+	}
 
-			ITerminalExtension() : mpTerminal(NULL) {}
-			virtual ~ITerminalExtension() {}
+protected:
 
-			void BindToTerminal(ITerminal* apTerminal)
-			{
-			  assert(apTerminal != NULL);
-			  assert(mpTerminal == NULL);
-			  mpTerminal = apTerminal;
-			  this->_BindToTerminal(apTerminal);
-			}
+	void Send(const std::string& arData, bool aClearSrc = false) {
+		assert(mpTerminal != NULL);
+		mpTerminal->QueueSend(arData, aClearSrc);
+	}
 
-			void Post(const ExpirationHandler& arHandler)
-			{
-				mpTerminal->Post(arHandler);
-			}
+private:
 
-			void SetRedirect(const RedirectFunc& arRedirect)
-			{
-				mpTerminal->SetRedirect(arRedirect);
-			}
+	virtual void _BindToTerminal(ITerminal* apTerminal) = 0;
 
-			void ClearRedirect()
-			{
-				mpTerminal->ClearRedirect();
-			}
-
-		protected:
-
-			void Send(const std::string& arData, bool aClearSrc = false)
-			{
-				assert(mpTerminal != NULL);
-				mpTerminal->QueueSend(arData, aClearSrc);
-			}
-
-		private:
-
-			virtual void _BindToTerminal(ITerminal* apTerminal) = 0;
-
-			ITerminal* mpTerminal;
-	};
+	ITerminal* mpTerminal;
+};
 
 };
 

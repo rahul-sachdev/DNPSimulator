@@ -30,7 +30,10 @@
 
 #include <boost/bind.hpp>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, ITimeManager* apTime, Database* apDatabase, IDNPCommandMaster* apCmdMaster, const SlaveConfig& arCfg) :
 	Loggable(apLogger),
@@ -74,16 +77,16 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	 * Slave::OnDataUpdate().
 	 */
 	mChangeBuffer.AddObserver(
-		mNotifierSource.Get(
-				boost::bind(&Slave::OnDataUpdate, this),
-				mpTimerSrc
-		)
+	    mNotifierSource.Get(
+	        boost::bind(&Slave::OnDataUpdate, this),
+	        mpTimerSrc
+	    )
 	);
 
 	mpVtoNotifier = mNotifierSource.Get(
-			boost::bind(&Slave::OnVtoUpdate, this),
-			mpTimerSrc
-	);
+	                    boost::bind(&Slave::OnVtoUpdate, this),
+	                    mpTimerSrc
+	                );
 	/*
 	 * Incoming data will trigger a POST on the timer source to call
 	 * Slave::OnVtoUpdate().
@@ -91,15 +94,15 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	mVtoWriter.AddObserver(mpVtoNotifier);
 
 	/* Cause the slave to go through the null-unsol startup sequence */
-	if (!mConfig.mDisableUnsol)
-	{
+	if (!mConfig.mDisableUnsol) {
 		mDeferredUnsol = true;
 	}
 
 	this->UpdateState(SS_COMMS_DOWN);
 }
 
-Slave::~Slave(){
+Slave::~Slave()
+{
 	if(mpUnsolTimer) mpUnsolTimer->Cancel();
 	if(mpTimeTimer) mpTimeTimer->Cancel();
 
@@ -184,8 +187,7 @@ void Slave::OnVtoUpdate()
 	InsertionOrderedEventBuffer<VtoEvent>* buffer = seb->GetVtoEventBuffer();
 	VtoEvent info;
 
-	while (!buffer->IsFull() && this->mVtoWriter.Read(info))
-	{
+	while (!buffer->IsFull() && this->mVtoWriter.Read(info)) {
 		buffer->Update(info);
 	}
 
@@ -221,8 +223,7 @@ void Slave::FlushDeferredEvents()
 	 * If a data update events was previously Deferred this action might cause
 	 * the state to change for an unsol response.
 	 */
-	if (mpState->AcceptsDeferredUpdates() && mDeferredUpdate)
-	{
+	if (mpState->AcceptsDeferredUpdates() && mDeferredUpdate) {
 		mDeferredUpdate = false;
 		mpState->OnDataUpdate(this);
 	}
@@ -231,8 +232,7 @@ void Slave::FlushDeferredEvents()
 	 * If a request APDU was previously Deferred by a state, this action might
 	 * cause a response and subsequent state change.
 	 */
-	if (mpState->AcceptsDeferredRequests() && mDeferredRequest)
-	{
+	if (mpState->AcceptsDeferredRequests() && mDeferredRequest) {
 		mDeferredRequest = false;
 		mpState->OnRequest(this, mRequest, mSeqInfo);
 	}
@@ -241,14 +241,12 @@ void Slave::FlushDeferredEvents()
 	 * If an unsol timer expiration was Deferred by a state, this action might
 	 * cause an unsolicted response to be generated.
 	 */
-	if (mpState->AcceptsDeferredUnsolExpiration() && mDeferredUnsol)
-	{
+	if (mpState->AcceptsDeferredUnsolExpiration() && mDeferredUnsol) {
 		mDeferredUnsol = false;
 		mpState->OnUnsolExpiration(this);
 	}
 
-	if (mpState->AcceptsDeferredUnknown() && mDeferredUnknown)
-	{
+	if (mpState->AcceptsDeferredUnknown() && mDeferredUnknown) {
 		mDeferredUnknown = false;
 		mpState->OnUnknown(this);
 	}
@@ -257,12 +255,10 @@ void Slave::FlushDeferredEvents()
 size_t Slave::FlushUpdates()
 {
 	size_t num = 0;
-	try
-	{
+	try {
 		num = mChangeBuffer.FlushUpdates(mpDatabase);
 	}
-	catch (Exception& ex)
-	{
+	catch (Exception& ex) {
 		LOG_BLOCK(LEV_ERROR, "Error in flush updates: " << ex.Message());
 		Transaction tr(mChangeBuffer);
 		mChangeBuffer.Clear();
@@ -307,8 +303,7 @@ void Slave::SendUnsolicited(APDU& arAPDU)
 void Slave::ConfigureDelayMeasurement(const APDU& arRequest)
 {
 	HeaderReadIterator hdr = arRequest.BeginRead();
-	if (hdr.Count() > 0)
-	{
+	if (hdr.Count() > 0) {
 		mRspIIN.SetFuncNotSupported(true);
 	}
 
@@ -324,8 +319,7 @@ void Slave::ConfigureDelayMeasurement(const APDU& arRequest)
 void Slave::HandleWriteVto(HeaderReadIterator& arHdr)
 {
 	Transaction tr(mVtoReader);
-	for (ObjectReadIterator obj = arHdr.BeginRead(); !obj.IsEnd(); ++obj)
-	{
+	for (ObjectReadIterator obj = arHdr.BeginRead(); !obj.IsEnd(); ++obj) {
 		size_t index = obj->Index();
 
 		if(index > std::numeric_limits<boost::uint8_t>::max()) {
@@ -338,46 +332,40 @@ void Slave::HandleWriteVto(HeaderReadIterator& arHdr)
 			boost::uint8_t channel = static_cast<boost::uint8_t>(index);
 
 			VtoData vto(arHdr->GetVariation());
-			
+
 			Group112Var0::Inst()->Read(*obj, arHdr->GetVariation(), vto.mpData);
-			
-			mVtoReader.Update(vto,channel);
+
+			mVtoReader.Update(vto, channel);
 		}
 	}
 }
 
 void Slave::HandleWriteIIN(HeaderReadIterator& arHdr)
 {
-	for (ObjectReadIterator obj = arHdr.BeginRead(); !obj.IsEnd(); ++obj)
-	{
-		switch (obj->Index())
-		{
-			case IINI_DEVICE_RESTART:
-			{
+	for (ObjectReadIterator obj = arHdr.BeginRead(); !obj.IsEnd(); ++obj) {
+		switch (obj->Index()) {
+		case IINI_DEVICE_RESTART: {
 				bool value = Group80Var1::Inst()->Read(*obj, obj->Start(), obj->Index());
-				if (!value)
-				{
+				if (!value) {
 					mIIN.SetDeviceRestart(false);
 				}
-				else
-				{
+				else {
 					mRspIIN.SetParameterError(true);
 					ERROR_BLOCK(LEV_WARNING, "", SERR_INVALID_IIN_WRITE);
 				}
 				break;
 			}
-			default:
-				mRspIIN.SetParameterError(true);
-				ERROR_BLOCK(LEV_WARNING, "", SERR_INVALID_IIN_WRITE);
-				break;
+		default:
+			mRspIIN.SetParameterError(true);
+			ERROR_BLOCK(LEV_WARNING, "", SERR_INVALID_IIN_WRITE);
+			break;
 		}
 	}
 }
 
 void Slave::HandleWriteTimeDate(HeaderReadIterator& arHWI)
 {
-	if (!mIIN.GetNeedTime())
-	{
+	if (!mIIN.GetNeedTime()) {
 		LOG_BLOCK(LEV_WARNING, "Master is attempting to write time but slave is not requesting time sync");
 		return;
 	}
@@ -397,27 +385,24 @@ void Slave::HandleWriteTimeDate(HeaderReadIterator& arHWI)
 
 void Slave::HandleWrite(const APDU& arRequest)
 {
-	for (HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr)
-	{
-		switch (hdr->GetGroup())
-		{
-			case 112:
-				this->HandleWriteVto(hdr);
-				continue;
+	for (HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr) {
+		switch (hdr->GetGroup()) {
+		case 112:
+			this->HandleWriteVto(hdr);
+			continue;
 		}
 
-		switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation()))
-		{
-			case (MACRO_DNP_RADIX(80,1)):
-				this->HandleWriteIIN(hdr);
-				break;
-			case (MACRO_DNP_RADIX(50,1)):
-				this->HandleWriteTimeDate(hdr);
-				break;
-			default:
-				mRspIIN.SetFuncNotSupported(true);
-				ERROR_BLOCK(LEV_WARNING, "Object/Function mismatch", SERR_OBJ_FUNC_MISMATCH);
-				break;
+		switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation())) {
+		case (MACRO_DNP_RADIX(80, 1)):
+			this->HandleWriteIIN(hdr);
+			break;
+		case (MACRO_DNP_RADIX(50, 1)):
+			this->HandleWriteTimeDate(hdr);
+			break;
+		default:
+			mRspIIN.SetFuncNotSupported(true);
+			ERROR_BLOCK(LEV_WARNING, "Object/Function mismatch", SERR_OBJ_FUNC_MISMATCH);
+			break;
 		}
 	}
 }
@@ -434,38 +419,37 @@ void Slave::HandleSelect(const APDU& arRequest, SequenceInfo aSeqInfo)
 
 		switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation())) {
 
-			case (MACRO_DNP_RADIX(12,1)):
-				this->RespondToCommands<BinaryOutput>(Group12Var1::Inst(), i, boost::bind(&Slave::Select<BinaryOutput>, this, _1, _2, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
-				break;
+		case (MACRO_DNP_RADIX(12, 1)):
+			this->RespondToCommands<BinaryOutput>(Group12Var1::Inst(), i, boost::bind(&Slave::Select<BinaryOutput>, this, _1, _2, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
+			break;
 
-			case (MACRO_DNP_RADIX(41,1)):
-				this->RespondToCommands<Setpoint>(Group41Var1::Inst(), i, boost::bind(&Slave::Select<Setpoint>, this, _1, _2, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
-				break;
+		case (MACRO_DNP_RADIX(41, 1)):
+			this->RespondToCommands<Setpoint>(Group41Var1::Inst(), i, boost::bind(&Slave::Select<Setpoint>, this, _1, _2, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
+			break;
 
-			case (MACRO_DNP_RADIX(41,2)):
-				this->RespondToCommands<Setpoint>(Group41Var2::Inst(), i, boost::bind(&Slave::Select<Setpoint>, this, _1, _2, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
-				break;
+		case (MACRO_DNP_RADIX(41, 2)):
+			this->RespondToCommands<Setpoint>(Group41Var2::Inst(), i, boost::bind(&Slave::Select<Setpoint>, this, _1, _2, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
+			break;
 
-			case (MACRO_DNP_RADIX(41,3)):
-				this->RespondToCommands<Setpoint>(Group41Var3::Inst(), i, boost::bind(&Slave::Select<Setpoint>, this, _1, _2, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
-				break;
+		case (MACRO_DNP_RADIX(41, 3)):
+			this->RespondToCommands<Setpoint>(Group41Var3::Inst(), i, boost::bind(&Slave::Select<Setpoint>, this, _1, _2, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
+			break;
 
-			case (MACRO_DNP_RADIX(41,4)):
-				this->RespondToCommands<Setpoint>(Group41Var4::Inst(), i, boost::bind(&Slave::Select<Setpoint>, this, _1, _2, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
-				break;
+		case (MACRO_DNP_RADIX(41, 4)):
+			this->RespondToCommands<Setpoint>(Group41Var4::Inst(), i, boost::bind(&Slave::Select<Setpoint>, this, _1, _2, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
+			break;
 
-			default:
-				mRspIIN.SetFuncNotSupported(true);
-				ERROR_BLOCK(LEV_WARNING, "Object/Function mismatch", SERR_OBJ_FUNC_MISMATCH);
-				break;
+		default:
+			mRspIIN.SetFuncNotSupported(true);
+			ERROR_BLOCK(LEV_WARNING, "Object/Function mismatch", SERR_OBJ_FUNC_MISMATCH);
+			break;
 		}
 	}
 }
 
 void Slave::HandleOperate(const APDU& arRequest, SequenceInfo aSeqInfo)
 {
-	if (aSeqInfo == SI_PREV && mLastRequest == arRequest)
-	{
+	if (aSeqInfo == SI_PREV && mLastRequest == arRequest) {
 		return;
 	}
 
@@ -477,30 +461,30 @@ void Slave::HandleOperate(const APDU& arRequest, SequenceInfo aSeqInfo)
 
 		switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation())) {
 
-			case (MACRO_DNP_RADIX(12,1)):
-				this->RespondToCommands<BinaryOutput>(Group12Var1::Inst(), i, boost::bind(&Slave::Operate<BinaryOutput>, this, _1, _2, false, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
-				break;
+		case (MACRO_DNP_RADIX(12, 1)):
+			this->RespondToCommands<BinaryOutput>(Group12Var1::Inst(), i, boost::bind(&Slave::Operate<BinaryOutput>, this, _1, _2, false, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
+			break;
 
-			case (MACRO_DNP_RADIX(41,1)):
-				this->RespondToCommands<Setpoint>(Group41Var1::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, false, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
-				break;
+		case (MACRO_DNP_RADIX(41, 1)):
+			this->RespondToCommands<Setpoint>(Group41Var1::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, false, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
+			break;
 
-			case (MACRO_DNP_RADIX(41,2)):
-				this->RespondToCommands<Setpoint>(Group41Var2::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, false, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
-				break;
+		case (MACRO_DNP_RADIX(41, 2)):
+			this->RespondToCommands<Setpoint>(Group41Var2::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, false, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
+			break;
 
-			case (MACRO_DNP_RADIX(41,3)):
-				this->RespondToCommands<Setpoint>(Group41Var3::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, false, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
-				break;
+		case (MACRO_DNP_RADIX(41, 3)):
+			this->RespondToCommands<Setpoint>(Group41Var3::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, false, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
+			break;
 
-			case (MACRO_DNP_RADIX(41,4)):
-				this->RespondToCommands<Setpoint>(Group41Var4::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, false, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
-				break;
+		case (MACRO_DNP_RADIX(41, 4)):
+			this->RespondToCommands<Setpoint>(Group41Var4::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, false, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
+			break;
 
-			default:
-				mRspIIN.SetFuncNotSupported(true);
-				ERROR_BLOCK(LEV_WARNING, "Object/Function mismatch", SERR_OBJ_FUNC_MISMATCH);
-				break;
+		default:
+			mRspIIN.SetFuncNotSupported(true);
+			ERROR_BLOCK(LEV_WARNING, "Object/Function mismatch", SERR_OBJ_FUNC_MISMATCH);
+			break;
 		}
 	}
 }
@@ -515,30 +499,30 @@ void Slave::HandleDirectOperate(const APDU& arRequest, SequenceInfo aSeqInfo)
 
 		switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation())) {
 
-			case (MACRO_DNP_RADIX(12,1)):
-				this->RespondToCommands<BinaryOutput>(Group12Var1::Inst(), i, boost::bind(&Slave::Operate<BinaryOutput>, this, _1, _2, true, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
-				break;
+		case (MACRO_DNP_RADIX(12, 1)):
+			this->RespondToCommands<BinaryOutput>(Group12Var1::Inst(), i, boost::bind(&Slave::Operate<BinaryOutput>, this, _1, _2, true, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
+			break;
 
-			case (MACRO_DNP_RADIX(41,1)):
-				this->RespondToCommands<Setpoint>(Group41Var1::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, true, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
-				break;
+		case (MACRO_DNP_RADIX(41, 1)):
+			this->RespondToCommands<Setpoint>(Group41Var1::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, true, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
+			break;
 
-			case (MACRO_DNP_RADIX(41,2)):
-				this->RespondToCommands<Setpoint>(Group41Var2::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, true, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
-				break;
+		case (MACRO_DNP_RADIX(41, 2)):
+			this->RespondToCommands<Setpoint>(Group41Var2::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, true, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
+			break;
 
-			case (MACRO_DNP_RADIX(41,3)):
-				this->RespondToCommands<Setpoint>(Group41Var3::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, true, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
-				break;
+		case (MACRO_DNP_RADIX(41, 3)):
+			this->RespondToCommands<Setpoint>(Group41Var3::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, true, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
+			break;
 
-			case (MACRO_DNP_RADIX(41,4)):
-				this->RespondToCommands<Setpoint>(Group41Var4::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, true, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
-				break;
+		case (MACRO_DNP_RADIX(41, 4)):
+			this->RespondToCommands<Setpoint>(Group41Var4::Inst(), i, boost::bind(&Slave::Operate<Setpoint>, this, _1, _2, true, hdr.info(), aSeqInfo, arRequest.GetControl().SEQ));
+			break;
 
-			default:
-				mRspIIN.SetFuncNotSupported(true);
-				ERROR_BLOCK(LEV_WARNING, "Object/Function mismatch", SERR_OBJ_FUNC_MISMATCH);
-				break;
+		default:
+			mRspIIN.SetFuncNotSupported(true);
+			ERROR_BLOCK(LEV_WARNING, "Object/Function mismatch", SERR_OBJ_FUNC_MISMATCH);
+			break;
 		}
 	}
 }
@@ -547,37 +531,33 @@ void Slave::HandleEnableUnsolicited(const APDU& arRequest, bool aIsEnable)
 {
 	mResponse.Set(FC_RESPONSE);
 
-	if (mConfig.mDisableUnsol)
-	{
+	if (mConfig.mDisableUnsol) {
 		mRspIIN.SetFuncNotSupported(true);
 	}
-	else
-	{
-		if (aIsEnable)
-		{
+	else {
+		if (aIsEnable) {
 			this->mDeferredUnsol = true;
 		}
 
 		for (HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr) {
 
-			switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation()))
-			{
-				case (MACRO_DNP_RADIX(60,2)):
-					mConfig.mUnsolMask.class1 = aIsEnable;
-					break;
+			switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation())) {
+			case (MACRO_DNP_RADIX(60, 2)):
+				mConfig.mUnsolMask.class1 = aIsEnable;
+				break;
 
-				case (MACRO_DNP_RADIX(60,3)):
-					mConfig.mUnsolMask.class2 = aIsEnable;
-					break;
+			case (MACRO_DNP_RADIX(60, 3)):
+				mConfig.mUnsolMask.class2 = aIsEnable;
+				break;
 
-				case (MACRO_DNP_RADIX(60,4)):
-					mConfig.mUnsolMask.class3 = aIsEnable;
-					break;
+			case (MACRO_DNP_RADIX(60, 4)):
+				mConfig.mUnsolMask.class3 = aIsEnable;
+				break;
 
-				default:
-					mRspIIN.SetFuncNotSupported(true);
-					LOG_BLOCK(LEV_WARNING, "Cannot enable/disable unsol for " << hdr->GetBaseObject()->Name());
-					break;
+			default:
+				mRspIIN.SetFuncNotSupported(true);
+				LOG_BLOCK(LEV_WARNING, "Cannot enable/disable unsol for " << hdr->GetBaseObject()->Name());
+				break;
 			}
 		}
 	}
@@ -602,6 +582,7 @@ void Slave::ResetTimeIIN()
 	mpTimeTimer = mpTimerSrc->Start(mConfig.mTimeSyncPeriod, boost::bind(&Slave::ResetTimeIIN, this));
 }
 
-}} //end ns
+}
+} //end ns
 
 /* vim: set ts=4 sw=4: */

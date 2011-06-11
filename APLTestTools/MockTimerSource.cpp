@@ -24,7 +24,8 @@
 
 using namespace boost::posix_time;
 
-namespace apl {
+namespace apl
+{
 
 MockTimerSource::MockTimerSource()
 {
@@ -33,20 +34,20 @@ MockTimerSource::MockTimerSource()
 
 MockTimerSource::~MockTimerSource()
 {
-	BOOST_FOREACH(MockTimer* i, mAllTimers) { delete i; }
+	BOOST_FOREACH(MockTimer * i, mAllTimers) {
+		delete i;
+	}
 }
 
 bool MockTimerSource::DispatchOne()
 {
-	if(mPostQueue.size() > 0)
-	{
+	if(mPostQueue.size() > 0) {
 		ExpirationHandler callback = mPostQueue.front();
 		mPostQueue.pop_front();
 		callback();
 		return true;
 	}
-	else
-	{
+	else {
 		TimerMap::iterator front = mTimerMap.begin();
 
 		if(front != mTimerMap.end()) {
@@ -98,7 +99,7 @@ ITimer* MockTimerSource::Start(const boost::posix_time::ptime& arTime, const Exp
 		mAllTimers.push_back(pTimer);
 	}
 
-	mTimerMap.insert(std::pair<ptime,MockTimer*>(arTime, pTimer));
+	mTimerMap.insert(std::pair<ptime, MockTimer*>(arTime, pTimer));
 	return pTimer;
 }
 
@@ -114,9 +115,9 @@ void MockTimerSource::Cancel(ITimer* apTimer)
 }
 
 MockTimer::MockTimer(MockTimerSource* apSource, const boost::posix_time::ptime& arTime, const ExpirationHandler& arCallback) :
-mTime(arTime),
-mpSource(apSource),
-mCallback(arCallback)
+	mTime(arTime),
+	mpSource(apSource),
+	mCallback(arCallback)
 {
 
 }

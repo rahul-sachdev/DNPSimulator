@@ -30,12 +30,16 @@
 
 #include <vector>
 
-namespace apl {
-	class EventLog;
-	class ILogBase;
+namespace apl
+{
+class EventLog;
+class ILogBase;
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class AsyncStackManager;
 
@@ -45,46 +49,47 @@ class AsyncStackManager;
 	*/
 class StackManager
 {
-	public:
-		StackManager();
-		~StackManager();
+public:
+	StackManager();
+	~StackManager();
 
-		void AddTCPClient(const std::string& arName, PhysLayerSettings aPhys, const std::string& arAddr, boost::uint16_t aPort);
-		void AddTCPServer(const std::string& arName, PhysLayerSettings  aPhys, const std::string& arEndpoint, boost::uint16_t aPort);
-		void AddSerial(const std::string& arName, PhysLayerSettings aPhys, SerialSettings aSerial);
+	void AddTCPClient(const std::string& arName, PhysLayerSettings aPhys, const std::string& arAddr, boost::uint16_t aPort);
+	void AddTCPServer(const std::string& arName, PhysLayerSettings  aPhys, const std::string& arEndpoint, boost::uint16_t aPort);
+	void AddSerial(const std::string& arName, PhysLayerSettings aPhys, SerialSettings aSerial);
 
-		ICommandAcceptor* AddMaster(const std::string& arPortName,
-									const std::string& arStackName,
-									FilterLevel aLevel,
-									IDataObserver* apPublisher,
-									const MasterStackConfig& arCfg);
+	ICommandAcceptor* AddMaster(const std::string& arPortName,
+	                            const std::string& arStackName,
+	                            FilterLevel aLevel,
+	                            IDataObserver* apPublisher,
+	                            const MasterStackConfig& arCfg);
 
-		IDataObserver* AddSlave(const std::string& arPortName,
-								const std::string& arStackName,
-								FilterLevel aLevel,
-								ICommandAcceptor* apCmdAcceptor,
-								const SlaveStackConfig& arCfg);
+	IDataObserver* AddSlave(const std::string& arPortName,
+	                        const std::string& arStackName,
+	                        FilterLevel aLevel,
+	                        ICommandAcceptor* apCmdAcceptor,
+	                        const SlaveStackConfig& arCfg);
 
-		void RemovePort(const std::string& arPortName);
+	void RemovePort(const std::string& arPortName);
 
-		void RemoveStack(const std::string& arStackName);
+	void RemoveStack(const std::string& arStackName);
 
-		void AddLogHook(ILogBase*);
+	void AddLogHook(ILogBase*);
 
-		std::vector<std::string> GetStackNames();
+	std::vector<std::string> GetStackNames();
 
-		std::vector<std::string> GetPortNames();
+	std::vector<std::string> GetPortNames();
 
 
-		void Stop();
-		void Start();
+	void Stop();
+	void Start();
 
-	private:
-		EventLog* mpLog;
-		AsyncStackManager* mpImpl;
+private:
+	EventLog* mpLog;
+	AsyncStackManager* mpImpl;
 };
 
-}}
+}
+}
 
 #endif
 

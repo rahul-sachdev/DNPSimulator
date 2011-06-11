@@ -27,36 +27,36 @@
 #include <set>
 #include <vector>
 
-namespace apl {
+namespace apl
+{
 
 class MetricBuffer : public ILogBase, public SubjectBase<SigLock>, private Uncopyable
 {
-	public:
+public:
 
-		struct Var
-		{
-			Var(const std::string& s, const std::string& n , int v) :
+	struct Var {
+		Var(const std::string& s, const std::string& n , int v) :
 			source(s),
 			name(n),
 			value(v)
-			{}
+		{}
 
-			Var() {}
+		Var() {}
 
-			std::string source;
-			std::string name;
-			int value;
-		};
+		std::string source;
+		std::string name;
+		int value;
+	};
 
-		void SetVar(const std::string& aSource, const std::string& aVarName, int aValue);
+	void SetVar(const std::string& aSource, const std::string& aVarName, int aValue);
 
-		void Log( const apl::LogEntry& arEntry ) {}
+	void Log( const apl::LogEntry& arEntry ) {}
 
-		void Read(std::vector<Var>&);
+	void Read(std::vector<Var>&);
 
-	private:
-		SigLock mLock;
-		std::map<std::string, Var> mValues;
+private:
+	SigLock mLock;
+	std::map<std::string, Var> mValues;
 };
 
 }

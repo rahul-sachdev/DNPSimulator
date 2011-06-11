@@ -21,31 +21,29 @@
 
 #include <string>
 
-namespace apl {
+namespace apl
+{
 
-	enum ParityType
-	{
-		PAR_NONE,
-		PAR_EVEN,
-		PAR_ODD
-	};
+enum ParityType {
+    PAR_NONE,
+    PAR_EVEN,
+    PAR_ODD
+};
 
-	enum FlowType
-	{
-		FLOW_NONE,
-		FLOW_HARDWARE,
-		FLOW_XONXOFF
-	};
+enum FlowType {
+    FLOW_NONE,
+    FLOW_HARDWARE,
+    FLOW_XONXOFF
+};
 
-	struct SerialSettings
-	{
-		std::string mDevice;
-		int mBaud;
-		int mDataBits;
-		int mStopBits;
-		ParityType mParity;
-		FlowType mFlowType;
-	};
+struct SerialSettings {
+	std::string mDevice;
+	int mBaud;
+	int mDataBits;
+	int mStopBits;
+	ParityType mParity;
+	FlowType mFlowType;
+};
 
 }
 

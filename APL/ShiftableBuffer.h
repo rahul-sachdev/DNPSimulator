@@ -23,14 +23,15 @@
 #include "Types.h"
 #include <stddef.h>
 
-namespace apl {
+namespace apl
+{
 
 
 /** @section DESCRIPTION
 		Implements a buffer that can shift its contents as it is read */
 class ShiftableBuffer
 {
-	public:
+public:
 	/** @param aSize Size of the buffer in bytes */
 	ShiftableBuffer( size_t aSize);
 
@@ -40,7 +41,7 @@ class ShiftableBuffer
 	 * @param aBuffer    The content to initialize this ShiftableBuffer to.
 	 * @param aSize      The size of aBuffer and the max size of this ShiftableBuffer.
 	 */
-	ShiftableBuffer( const boost::uint8_t * aBuffer, size_t aSize);
+	ShiftableBuffer( const boost::uint8_t* aBuffer, size_t aSize);
 	~ShiftableBuffer();
 
 	////////////////////////////////////////////
@@ -94,7 +95,7 @@ class ShiftableBuffer
 	*/
 	bool Sync(const boost::uint8_t* apPattern, size_t aNumBytes);
 
-	private:
+private:
 
 	// Recursive function called by Sync
 	size_t SyncSubsequence(const boost::uint8_t* apPattern, size_t aNumPatternBytes, size_t aOffset);
@@ -107,12 +108,27 @@ class ShiftableBuffer
 	size_t mReadPos;
 };
 
-inline const boost::uint8_t& ShiftableBuffer::operator[](size_t i) const { return ReadBuff()[i]; }
-inline const boost::uint8_t* ShiftableBuffer::ReadBuff() const { return mpBuffer + mReadPos; }
-inline size_t ShiftableBuffer::NumReadBytes() const { return mWritePos - mReadPos; }
+inline const boost::uint8_t& ShiftableBuffer::operator[](size_t i) const
+{
+	return ReadBuff()[i];
+}
+inline const boost::uint8_t* ShiftableBuffer::ReadBuff() const
+{
+	return mpBuffer + mReadPos;
+}
+inline size_t ShiftableBuffer::NumReadBytes() const
+{
+	return mWritePos - mReadPos;
+}
 
-inline size_t ShiftableBuffer::NumWriteBytes() const { return M_SIZE - mWritePos; }
-inline boost::uint8_t* ShiftableBuffer::WriteBuff() const { return mpBuffer + mWritePos; }
+inline size_t ShiftableBuffer::NumWriteBytes() const
+{
+	return M_SIZE - mWritePos;
+}
+inline boost::uint8_t* ShiftableBuffer::WriteBuff() const
+{
+	return mpBuffer + mWritePos;
+}
 
 
 }

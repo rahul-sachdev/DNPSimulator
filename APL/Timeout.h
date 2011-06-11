@@ -22,53 +22,55 @@
 #include "TimeTypes.h"
 #include "Types.h"
 
-namespace apl{
+namespace apl
+{
 
-	// Use this class to simplify writing do loops with a timeout
-	// it minimizes the number of calls to get datetime and allows
-	// us to easily replace the implementation later if we find an
-	// even more effecient way to implement the timeout checking.
-	//
-	// Intended Usage:
-  //
-	// Timeout to(5000);
-	// do{
-	//	  //call some subordinate slow function
-	//	  bool success = WaitForInput(to.Remaining());
-	//
-	//		//do something on success
-	//		if(success) return or break;
-	//
-	//		//or go back around the loop, the next call to
-	//		//remaining will be guarnteed to be > 0
-	// }while(!to.IsExpired());
-	class Timeout{
-	public:
-		// constuctor, timeout will expire this many mills in the future
-		Timeout(apl::millis_t aTimeout);
+// Use this class to simplify writing do loops with a timeout
+// it minimizes the number of calls to get datetime and allows
+// us to easily replace the implementation later if we find an
+// even more effecient way to implement the timeout checking.
+//
+// Intended Usage:
+//
+// Timeout to(5000);
+// do{
+//	  //call some subordinate slow function
+//	  bool success = WaitForInput(to.Remaining());
+//
+//		//do something on success
+//		if(success) return or break;
+//
+//		//or go back around the loop, the next call to
+//		//remaining will be guarnteed to be > 0
+// }while(!to.IsExpired());
+class Timeout
+{
+public:
+	// constuctor, timeout will expire this many mills in the future
+	Timeout(apl::millis_t aTimeout);
 
-		// updates the remaing time (by default) and returns whether its expired
-		bool IsExpired(bool aUpdateRemaining = true);
+	// updates the remaing time (by default) and returns whether its expired
+	bool IsExpired(bool aUpdateRemaining = true);
 
-		// returns how much time is left (by default since the last IsExpired() call)
-		apl::millis_t Remaining(bool aUpdateRemaining = false);
+	// returns how much time is left (by default since the last IsExpired() call)
+	apl::millis_t Remaining(bool aUpdateRemaining = false);
 
-		// reset the Timeout to a new timeout value.
-		void Reset(apl::millis_t aTimeout);
+	// reset the Timeout to a new timeout value.
+	void Reset(apl::millis_t aTimeout);
 
-		apl::Time ExpiryTime();
-		apl::TimeStamp_t ExpiryTimeStamp();
+	apl::Time ExpiryTime();
+	apl::TimeStamp_t ExpiryTimeStamp();
 
-	private:
+private:
 
-		void UpdateRemaining(); //actually reread the clock.
+	void UpdateRemaining(); //actually reread the clock.
 
-		apl::millis_t mTimeout;
-		apl::millis_t mRemaining;
+	apl::millis_t mTimeout;
+	apl::millis_t mRemaining;
 
-		apl::Time mExpireTime;
+	apl::Time mExpireTime;
 
-	};
+};
 
 }
 

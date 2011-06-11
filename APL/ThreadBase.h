@@ -22,25 +22,26 @@
 
 #include "Threadable.h"
 
-namespace apl {
+namespace apl
+{
 
 class ThreadBase
 {
-	public:
+public:
 
-		ThreadBase(Threadable* apThreadable);
-		virtual ~ThreadBase();
+	ThreadBase(Threadable* apThreadable);
+	virtual ~ThreadBase();
 
-		virtual void Start() = 0;
-		virtual void RequestStop();
-		virtual void WaitForStop() = 0;
+	virtual void Start() = 0;
+	virtual void RequestStop();
+	virtual void WaitForStop() = 0;
 
-	protected:
+protected:
 
-		//pointer to obejct that conforms to the IThreadable interface
-		Threadable* mpThreadable;
+	//pointer to obejct that conforms to the IThreadable interface
+	Threadable* mpThreadable;
 
-		bool mIsExitRequested;
+	bool mIsExitRequested;
 
 };
 

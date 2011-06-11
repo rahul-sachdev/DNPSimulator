@@ -27,48 +27,52 @@
 #include "DNPDatabaseTypes.h"
 #include <APL/Types.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /** Utility class that keeps class event counters accessible by enumeration.
 */
 class ClassCounter
 {
-	public:
+public:
 
-		ClassCounter() : mNumClass1(0), mNumClass2(0), mNumClass3(0) {};
-		~ClassCounter() {};
+	ClassCounter() : mNumClass1(0), mNumClass2(0), mNumClass3(0) {};
+	~ClassCounter() {};
 
-		inline size_t GetNum(PointClass aClass)
-		{
-			switch(aClass)
-			{
-				case(PC_CLASS_1):
-					return mNumClass1;
-				case(PC_CLASS_2):
-					return mNumClass2;
-				case(PC_CLASS_3):
-					return mNumClass3;
-				case(PC_ALL_EVENTS):
-					return mNumClass1+mNumClass2+mNumClass3;
-				default:
-					return 0;
-			}
+	inline size_t GetNum(PointClass aClass) {
+		switch(aClass) {
+		case(PC_CLASS_1):
+			return mNumClass1;
+		case(PC_CLASS_2):
+			return mNumClass2;
+		case(PC_CLASS_3):
+			return mNumClass3;
+		case(PC_ALL_EVENTS):
+			return mNumClass1 + mNumClass2 + mNumClass3;
+		default:
+			return 0;
 		}
+	}
 
-		size_t GetNumAllClass() { return mNumClass1 + mNumClass2 + mNumClass3; }
+	size_t GetNumAllClass() {
+		return mNumClass1 + mNumClass2 + mNumClass3;
+	}
 
-		void IncrCount(dnp::PointClass aClass);
-		void DecrCount(dnp::PointClass aClass);
+	void IncrCount(dnp::PointClass aClass);
+	void DecrCount(dnp::PointClass aClass);
 
-	private:
+private:
 
-		size_t mNumClass1;
-		size_t mNumClass2;
-		size_t mNumClass3;
+	size_t mNumClass1;
+	size_t mNumClass2;
+	size_t mNumClass3;
 
 };
 
-}}
+}
+}
 
 
 #endif

@@ -24,7 +24,8 @@
 #include <map>
 #include <queue>
 
-namespace apl {
+namespace apl
+{
 
 class MockTimer;
 
@@ -33,7 +34,7 @@ class MockTimerSource : public ITimerSource
 {
 	friend class MockTimer;
 
-	public:
+public:
 	MockTimerSource();
 	~MockTimerSource();
 
@@ -46,17 +47,19 @@ class MockTimerSource : public ITimerSource
 		@returns true if a timer was dispatched */
 	bool DispatchOne();
 
-	/** Calls DispatchOne() up to some maximum number of times continuing while 
-		there are still events to dispatch 
+	/** Calls DispatchOne() up to some maximum number of times continuing while
+		there are still events to dispatch
 
 		@return the number of events dispatched
 	*/
 	size_t Dispatch(size_t aMaximum = 100);
 
 	/** @returns The number of active, pending timers */
-	size_t NumActive() { return mTimerMap.size() + mPostQueue.size(); }
+	size_t NumActive() {
+		return mTimerMap.size() + mPostQueue.size();
+	}
 
-	private:
+private:
 
 	void Cancel(ITimer* apTimer);
 
@@ -76,17 +79,17 @@ class MockTimer : public ITimer
 {
 	friend class MockTimerSource;
 
-	public:
-		MockTimer(MockTimerSource*, const boost::posix_time::ptime&, const ExpirationHandler&);
+public:
+	MockTimer(MockTimerSource*, const boost::posix_time::ptime&, const ExpirationHandler&);
 
-		//implement ITimer
-		void Cancel();
-		boost::posix_time::ptime ExpiresAt();
+	//implement ITimer
+	void Cancel();
+	boost::posix_time::ptime ExpiresAt();
 
-	private:
-		boost::posix_time::ptime mTime;
-		MockTimerSource* mpSource;
-		ExpirationHandler mCallback;
+private:
+	boost::posix_time::ptime mTime;
+	MockTimerSource* mpSource;
+	ExpirationHandler mCallback;
 };
 
 }

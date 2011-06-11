@@ -24,36 +24,41 @@
 
 #include <queue>
 
-namespace boost { namespace asio {
-	class io_service;
-}}
+namespace boost
+{
+namespace asio
+{
+class io_service;
+}
+}
 
-namespace apl {
+namespace apl
+{
 
-	// Provides a backend for testing physical layers
-	class LoopbackPhysicalLayerAsync : public PhysicalLayerAsyncBase
-	{
-		public:
-			LoopbackPhysicalLayerAsync(Logger*, boost::asio::io_service* apSrv);
-
-
-		private:
-
-			void DoOpen();
-			void DoClose();
-			void DoOpenSuccess();
-			void DoAsyncRead(boost::uint8_t* apBuff, size_t aNumBytes);
-			void DoAsyncWrite(const boost::uint8_t*, size_t aNumBytes);
+// Provides a backend for testing physical layers
+class LoopbackPhysicalLayerAsync : public PhysicalLayerAsyncBase
+{
+public:
+	LoopbackPhysicalLayerAsync(Logger*, boost::asio::io_service* apSrv);
 
 
-			void CheckForReadDispatch();
+private:
 
-			boost::asio::io_service* mpService;
-			std::deque<boost::uint8_t> mWritten;
+	void DoOpen();
+	void DoClose();
+	void DoOpenSuccess();
+	void DoAsyncRead(boost::uint8_t* apBuff, size_t aNumBytes);
+	void DoAsyncWrite(const boost::uint8_t*, size_t aNumBytes);
 
-			size_t mReadSize;
-			boost::uint8_t* mpReadBuff;
-	};
+
+	void CheckForReadDispatch();
+
+	boost::asio::io_service* mpService;
+	std::deque<boost::uint8_t> mWritten;
+
+	size_t mReadSize;
+	boost::uint8_t* mpReadBuff;
+};
 }
 
 #endif

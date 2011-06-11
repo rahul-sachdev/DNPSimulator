@@ -30,16 +30,21 @@
 
 #include "MockAppLayer.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class SlaveTestObject : public LogTester
 {
-	public:
+public:
 	SlaveTestObject(const SlaveConfig& arCfg, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
 
 	void SendToSlave(const std::string& arData, SequenceInfo aSeq = SI_OTHER);
 	std::string Read();
-	size_t Count() { return app.Count(); }
+	size_t Count() {
+		return app.Count();
+	}
 
 
 	//MockTimeSource fake_time;
@@ -55,6 +60,7 @@ class SlaveTestObject : public LogTester
 
 };
 
-}}
+}
+}
 
 #endif

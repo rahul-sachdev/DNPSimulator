@@ -28,7 +28,10 @@
 #include <boost/bind.hpp>
 #include <sstream>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 VtoRouterManager::RouterRecord::RouterRecord(const std::string& arPortName, VtoRouter* apRouter, IVtoWriter* apWriter, boost::uint8_t aVtoChannelId) :
 	mPortName(arPortName),
@@ -36,16 +39,16 @@ VtoRouterManager::RouterRecord::RouterRecord(const std::string& arPortName, VtoR
 	mpWriter(apWriter),
 	mVtoChannelId(aVtoChannelId)
 {
-	
+
 }
 
 VtoRouterManager::VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc) :
 	Loggable(apLogger),
 	mpTimerSrc(apTimerSrc),
-	mpPhysSource(apPhysSrc)	
-{	
-	assert(apTimerSrc != NULL);	
-	assert(apPhysSrc != NULL);	
+	mpPhysSource(apPhysSrc)
+{
+	assert(apTimerSrc != NULL);
+	assert(apPhysSrc != NULL);
 }
 
 VtoRouterManager::~VtoRouterManager()
@@ -59,14 +62,14 @@ void VtoRouterManager::ClenupAfterRouter(IPhysicalLayerAsync* apPhys, VtoRouter*
 	delete apRouter;
 }
 
-VtoRouter* VtoRouterManager::StartRouter(		
-		const std::string& arPortName,
-		const VtoRouterSettings& arSettings, 
-		IVtoWriter* apWriter)
-{		
+VtoRouter* VtoRouterManager::StartRouter(
+    const std::string& arPortName,
+    const VtoRouterSettings& arSettings,
+    IVtoWriter* apWriter)
+{
 	IPhysicalLayerAsync* pPhys = mpPhysSource->AcquireLayer(arPortName, false); //don't autodelete
 	Logger* pLogger = this->GetSubLogger(arPortName, arSettings.CHANNEL_ID);
-				
+
 	VtoRouter* pRouter = new VtoRouter(arSettings, pLogger, apWriter, pPhys, mpTimerSrc);
 
 	// when the router is completely stopped, it's physical layer will be deleted, followed by itself
@@ -76,7 +79,7 @@ VtoRouter* VtoRouterManager::StartRouter(
 
 	// we need the VtoRouters to start themselves
 	//pRouter->Start();
-	
+
 	this->mRecords.push_back(record);
 
 	return pRouter;
@@ -85,7 +88,7 @@ VtoRouter* VtoRouterManager::StartRouter(
 std::vector<VtoRouterManager::RouterRecord> VtoRouterManager::GetAllRouters()
 {
 	std::vector<VtoRouterManager::RouterRecord> ret;
-	for(size_t i=0; i<mRecords.size(); ++i) ret.push_back(mRecords[i]);
+	for(size_t i = 0; i < mRecords.size(); ++i) ret.push_back(mRecords[i]);
 	return ret;
 }
 
@@ -101,7 +104,7 @@ std::vector<VtoRouterManager::RouterRecord> VtoRouterManager::GetAllRoutersOnWri
 	for(RouterRecordVector::iterator i = this->mRecords.begin(); i != mRecords.end(); ++i) {
 		if(i->mpWriter == apWriter) ret.push_back(*i);
 	}
-	
+
 	return ret;
 }
 
@@ -109,7 +112,7 @@ VtoRouterManager::RouterRecord VtoRouterManager::GetRouterOnWriter(IVtoWriter* a
 {
 	for(RouterRecordVector::iterator i = this->mRecords.begin(); i != mRecords.end(); ++i) {
 		if(i->mpWriter == apWriter && i->mVtoChannelId == aVtoChannelId) return *i;
-	}	
+	}
 
 	throw ArgumentException(LOCATION, "Router not found for writer on channel");
 }
@@ -138,9 +141,8 @@ VtoRouterManager::RouterRecordVector::iterator VtoRouterManager::Find(IVtoWriter
 }
 
 void VtoRouterManager::StopRouter(VtoRouter* apRouter)
-{	
-	for(RouterRecordVector::iterator i = mRecords.begin(); i != mRecords.end(); ++i) 
-	{
+{
+	for(RouterRecordVector::iterator i = mRecords.begin(); i != mRecords.end(); ++i) {
 		if(i->mpRouter == apRouter) {
 			LOG_BLOCK(LEV_INFO, "Releasing layer: " << i->mPortName);
 			i->mpRouter->StopRouter();
@@ -149,7 +151,7 @@ void VtoRouterManager::StopRouter(VtoRouter* apRouter)
 			return;
 		}
 	}
-	
+
 	throw ArgumentException(LOCATION, "Router could not be found in vector");
 }
 
@@ -157,7 +159,8 @@ Logger* VtoRouterManager::GetSubLogger(const std::string& arId, boost::uint8_t a
 {
 	std::ostringstream oss;
 	oss << arId << "-VtoRouterChannel-" << ((int)aVtoChannelId);
-	return mpLogger->GetSubLogger(oss.str());	
+	return mpLogger->GetSubLogger(oss.str());
 }
 
-}}
+}
+}

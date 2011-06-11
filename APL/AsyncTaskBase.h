@@ -27,7 +27,8 @@
 #include <vector>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
-namespace apl {
+namespace apl
+{
 
 class AsyncTaskGroup;
 
@@ -41,7 +42,7 @@ class AsyncTaskBase : public ITask, private Uncopyable
 	friend class AsyncTaskGroup;
 	friend class AsyncTaskScheduler;
 
-	public:
+public:
 
 	virtual ~AsyncTaskBase() {}
 
@@ -52,8 +53,12 @@ class AsyncTaskBase : public ITask, private Uncopyable
 	void AddDependency(const AsyncTaskBase* apTask);
 	bool IsDependency(const AsyncTaskBase*) const;
 
-	void SetFlags(int aFlags) { mFlags = aFlags; }
-	int GetFlags() { return mFlags; }
+	void SetFlags(int aFlags) {
+		mFlags = aFlags;
+	}
+	int GetFlags() {
+		return mFlags;
+	}
 
 	void Enable();  // Enable the task and notify the task group which might execute another task
 	void Disable(); // Disable ''
@@ -61,22 +66,24 @@ class AsyncTaskBase : public ITask, private Uncopyable
 	void SilentEnable(); // Enable without notifying the task group
 	void SilentDisable();
 
-	std::string Name() const { return mName; }
+	std::string Name() const {
+		return mName;
+	}
 
 	static bool LessThan(const AsyncTaskBase* l, const AsyncTaskBase* r);
 	static bool LessThanGroupLevel(const AsyncTaskBase* l, const AsyncTaskBase* r);
 	static bool LessThanGroupLevelNoString(const AsyncTaskBase* l, const AsyncTaskBase* r);
 
-	protected:
+protected:
 
 
 
 	AsyncTaskBase(
-		int aPriority,
-		const TaskHandler& arCallback,
-		AsyncTaskGroup* apGroup,
-		const boost::posix_time::ptime& arInitialTime,
-		const std::string& arName);
+	    int aPriority,
+	    const TaskHandler& arCallback,
+	    AsyncTaskGroup* apGroup,
+	    const boost::posix_time::ptime& arInitialTime,
+	    const std::string& arName);
 
 	// optional NVII function for special bookkeeping
 	virtual void _OnComplete(bool aSuccess) {}
@@ -95,22 +102,34 @@ class AsyncTaskBase : public ITask, private Uncopyable
 	// base upon the input time
 	void UpdateTime(const boost::posix_time::ptime& arTime);
 
-	bool IsEnabled() const { return mIsEnabled; }
+	bool IsEnabled() const {
+		return mIsEnabled;
+	}
 
 	// @returns priority used to resolve ties
-	int Priority() const { return mPriority; }
+	int Priority() const {
+		return mPriority;
+	}
 
 	// @returns the completion status of the task
-	bool IsComplete() const { return mIsComplete; }
+	bool IsComplete() const {
+		return mIsComplete;
+	}
 
 	// @return wether the task is expired
-	bool IsExpired() const { return mIsExpired; }
+	bool IsExpired() const {
+		return mIsExpired;
+	}
 
 	// @return wether the task is running
-	bool IsRunning() const { return mIsRunning; }
+	bool IsRunning() const {
+		return mIsRunning;
+	}
 
 	// @returns max_date_time if the task is currently running or will not run again
-	boost::posix_time::ptime NextRunTime() const { return mNextRunTime; }
+	boost::posix_time::ptime NextRunTime() const {
+		return mNextRunTime;
+	}
 
 
 

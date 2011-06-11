@@ -21,18 +21,21 @@
 #include "PostingNotifier.h"
 #include <boost/foreach.hpp>
 
-namespace apl {
+namespace apl
+{
 
 PostingNotifierSource::~PostingNotifierSource()
 {
-	BOOST_FOREACH(PostingNotifier* p, mNotifiers) { delete p; }
+	BOOST_FOREACH(PostingNotifier * p, mNotifiers) {
+		delete p;
+	}
 }
 
 INotifier* PostingNotifierSource::Get(const ExpirationHandler& arHandler, ITimerSource* apTimerSrc)
 {
-		PostingNotifier* pRet = new PostingNotifier(apTimerSrc, arHandler);
-		mNotifiers.push_back(pRet);
-		return pRet;
+	PostingNotifier* pRet = new PostingNotifier(apTimerSrc, arHandler);
+	mNotifiers.push_back(pRet);
+	return pRet;
 }
 
 }

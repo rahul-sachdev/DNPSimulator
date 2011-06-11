@@ -24,57 +24,55 @@
 
 #include <APL/Types.h>
 
-namespace apl {
+namespace apl
+{
 
-	namespace dnp {
+namespace dnp
+{
 
-		/**
-		 * Describes the last set value of the setpoint. Like the ControlStatus
-		 * data type it is not well supportted and its generally better
-		 * practice to use an explict analog.
-		 */
-		class VtoData
-		{
-			public:
+/**
+ * Describes the last set value of the setpoint. Like the ControlStatus
+ * data type it is not well supportted and its generally better
+ * practice to use an explict analog.
+ */
+class VtoData
+{
+public:
 
-				const static size_t MAX_SIZE = 255;
+	const static size_t MAX_SIZE = 255;
 
-				VtoData() :
-					mSize(0)
-				{}
+	VtoData() :
+		mSize(0)
+	{}
 
-				VtoData(size_t aSize) :
-					mSize(aSize)
-				{
-					assert(aSize <= MAX_SIZE);	
-				}
-
-				VtoData(const boost::uint8_t* apValue, size_t aSize)
-				{
-					this->Copy(apValue, aSize);
-				}
-
-				size_t GetSize() const
-				{
-					return this->mSize;
-				}
-				
-				void Copy(const boost::uint8_t* apValue, size_t aSize)
-				{
-					assert(aSize <= MAX_SIZE);
-					memcpy(this->mpData, apValue, aSize);
-					this->mSize = aSize;
-				}
-
-				boost::uint8_t mpData[MAX_SIZE];
-
-			private:
-
-				size_t mSize;
-
-		};
-
+	VtoData(size_t aSize) :
+		mSize(aSize) {
+		assert(aSize <= MAX_SIZE);
 	}
+
+	VtoData(const boost::uint8_t* apValue, size_t aSize) {
+		this->Copy(apValue, aSize);
+	}
+
+	size_t GetSize() const {
+		return this->mSize;
+	}
+
+	void Copy(const boost::uint8_t* apValue, size_t aSize) {
+		assert(aSize <= MAX_SIZE);
+		memcpy(this->mpData, apValue, aSize);
+		this->mSize = aSize;
+	}
+
+	boost::uint8_t mpData[MAX_SIZE];
+
+private:
+
+	size_t mSize;
+
+};
+
+}
 
 }
 

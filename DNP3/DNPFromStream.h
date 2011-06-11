@@ -35,112 +35,116 @@
 //#include "ObjectInterfaces.h"
 //#include "Objects.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	/** Templates for read dnp3 data types from stream.
-		Used in the dnp3 object definitions to define how
-		they deserialize themeselves.
-	*/
-	class DNPFromStream
-	{
-		public:
+/** Templates for read dnp3 data types from stream.
+	Used in the dnp3 object definitions to define how
+	they deserialize themeselves.
+*/
+class DNPFromStream
+{
+public:
 
-			template <typename T, typename PayloadType, SetpointEncodingType EncodingType>
-			static Setpoint ReadSetpoint(const boost::uint8_t*, const T*);
+	template <typename T, typename PayloadType, SetpointEncodingType EncodingType>
+	static Setpoint ReadSetpoint(const boost::uint8_t*, const T*);
 
-			//templated conversion functions
-			template <typename T>
-			static typename T::DataType ReadQ(const boost::uint8_t* apPos, const T* apObj);
-
-			template <typename T>
-			static typename T::DataType ReadQT(const boost::uint8_t* apPos, const T* apObj);
-
-			template <typename T>
-			static typename T::DataType ReadV(const boost::uint8_t* apPos, const T* apObj);
-
-			template <typename T>
-			static typename T::DataType ReadQV(const boost::uint8_t* apPos, const T* apObj);
-
-			template <typename T>
-			static typename T::DataType ReadBinaryQV(const boost::uint8_t* apPos, const T* apObj);
-
-			template <typename T>
-			static typename T::DataType ReadBinaryQVT(const boost::uint8_t* apPos, const T* apObj);
-
-			template <typename T>
-			static typename T::DataType ReadQVT(const boost::uint8_t* apPos, const T* apObj);
-	};
-
-	template <typename T, typename PayloadType, apl::SetpointEncodingType EncodingType>
-	inline Setpoint DNPFromStream::ReadSetpoint(const boost::uint8_t* apPos, const T* apObj)
-	{
-		Setpoint sp(static_cast<PayloadType>(apObj->mValue.Get(apPos)));
-		sp.mStatus = ByteToCommandStatus(apObj->mStatus.Get(apPos));
-		sp.SetEncodingType(EncodingType);
-		return sp;
-	}
+	//templated conversion functions
+	template <typename T>
+	static typename T::DataType ReadQ(const boost::uint8_t* apPos, const T* apObj);
 
 	template <typename T>
-	inline typename T::DataType DNPFromStream::ReadQ(const boost::uint8_t* apPos, const T* apObj)
-	{
-		typename T::DataType ret;
-		ret.SetQuality(apObj->mFlag.Get(apPos));
-		return ret;
-	}
+	static typename T::DataType ReadQT(const boost::uint8_t* apPos, const T* apObj);
 
 	template <typename T>
-	inline typename T::DataType DNPFromStream::ReadBinaryQV(const boost::uint8_t* apPos, const T* apObj)
-	{
-		typename T::DataType ret;
-		ret.SetQualityValue(apObj->mFlag.Get(apPos));
-		return ret;
-	}
+	static typename T::DataType ReadV(const boost::uint8_t* apPos, const T* apObj);
 
 	template <typename T>
-	inline typename T::DataType DNPFromStream::ReadBinaryQVT(const boost::uint8_t* apPos, const T* apObj)
-	{
-		typename T::DataType ret;
-		ret.SetQualityValue(apObj->mFlag.Get(apPos));
-		ret.SetTime((TimeStamp_t)apObj->mTime.Get(apPos));
-		return ret;
-	}
+	static typename T::DataType ReadQV(const boost::uint8_t* apPos, const T* apObj);
 
 	template <typename T>
-	inline typename T::DataType DNPFromStream::ReadQT(const boost::uint8_t* apPos, const T* apObj)
-	{
-		typename T::DataType ret;
-		ret.SetQuality(apObj->mFlag.Get(apPos));
-		ret.SetTime((TimeStamp_t)apObj->mTime.Get(apPos));
-		return ret;
-	}
+	static typename T::DataType ReadBinaryQV(const boost::uint8_t* apPos, const T* apObj);
 
 	template <typename T>
-	inline typename T::DataType DNPFromStream::ReadV(const boost::uint8_t* apPos, const T* apObj)
-	{
-		typename T::DataType ret;
-		ret.SetValue(apObj->mValue.Get(apPos));
-		return ret;
-	}
+	static typename T::DataType ReadBinaryQVT(const boost::uint8_t* apPos, const T* apObj);
 
 	template <typename T>
-	inline typename T::DataType DNPFromStream::ReadQV(const boost::uint8_t* apPos, const T* apObj)
-	{
-		typename T::DataType ret;
-		ret.SetQuality(apObj->mFlag.Get(apPos));
-		ret.SetValue(apObj->mValue.Get(apPos));
-		return ret;
-	}
+	static typename T::DataType ReadQVT(const boost::uint8_t* apPos, const T* apObj);
+};
 
-	template <typename T>
-	inline typename T::DataType DNPFromStream::ReadQVT(const boost::uint8_t* apPos, const T* apObj)
-	{
-		typename T::DataType ret;
-		ret.SetQuality(apObj->mFlag.Get(apPos));
-		ret.SetValue(apObj->mValue.Get(apPos));
-		ret.SetTime((TimeStamp_t)apObj->mTime.Get(apPos));
-		return ret;
-	}
-}}
+template <typename T, typename PayloadType, apl::SetpointEncodingType EncodingType>
+inline Setpoint DNPFromStream::ReadSetpoint(const boost::uint8_t* apPos, const T* apObj)
+{
+	Setpoint sp(static_cast<PayloadType>(apObj->mValue.Get(apPos)));
+	sp.mStatus = ByteToCommandStatus(apObj->mStatus.Get(apPos));
+	sp.SetEncodingType(EncodingType);
+	return sp;
+}
+
+template <typename T>
+inline typename T::DataType DNPFromStream::ReadQ(const boost::uint8_t* apPos, const T* apObj)
+{
+	typename T::DataType ret;
+	ret.SetQuality(apObj->mFlag.Get(apPos));
+	return ret;
+}
+
+template <typename T>
+inline typename T::DataType DNPFromStream::ReadBinaryQV(const boost::uint8_t* apPos, const T* apObj)
+{
+	typename T::DataType ret;
+	ret.SetQualityValue(apObj->mFlag.Get(apPos));
+	return ret;
+}
+
+template <typename T>
+inline typename T::DataType DNPFromStream::ReadBinaryQVT(const boost::uint8_t* apPos, const T* apObj)
+{
+	typename T::DataType ret;
+	ret.SetQualityValue(apObj->mFlag.Get(apPos));
+	ret.SetTime((TimeStamp_t)apObj->mTime.Get(apPos));
+	return ret;
+}
+
+template <typename T>
+inline typename T::DataType DNPFromStream::ReadQT(const boost::uint8_t* apPos, const T* apObj)
+{
+	typename T::DataType ret;
+	ret.SetQuality(apObj->mFlag.Get(apPos));
+	ret.SetTime((TimeStamp_t)apObj->mTime.Get(apPos));
+	return ret;
+}
+
+template <typename T>
+inline typename T::DataType DNPFromStream::ReadV(const boost::uint8_t* apPos, const T* apObj)
+{
+	typename T::DataType ret;
+	ret.SetValue(apObj->mValue.Get(apPos));
+	return ret;
+}
+
+template <typename T>
+inline typename T::DataType DNPFromStream::ReadQV(const boost::uint8_t* apPos, const T* apObj)
+{
+	typename T::DataType ret;
+	ret.SetQuality(apObj->mFlag.Get(apPos));
+	ret.SetValue(apObj->mValue.Get(apPos));
+	return ret;
+}
+
+template <typename T>
+inline typename T::DataType DNPFromStream::ReadQVT(const boost::uint8_t* apPos, const T* apObj)
+{
+	typename T::DataType ret;
+	ret.SetQuality(apObj->mFlag.Get(apPos));
+	ret.SetValue(apObj->mValue.Get(apPos));
+	ret.SetTime((TimeStamp_t)apObj->mTime.Get(apPos));
+	return ret;
+}
+}
+}
 
 #ifdef APL_PLATFORM_WIN
 //disable thes type converstion warnings

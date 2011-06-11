@@ -27,124 +27,129 @@
 
 #include <queue>
 
-namespace apl {
+namespace apl
+{
 
-	/** Moves measurement data across thread boundaries.
-	*/
-	template <class LockType>
-	class ChangeBuffer : public IDataObserver, public SubjectBase<NullLock>
-	{
+/** Moves measurement data across thread boundaries.
+*/
+template <class LockType>
+class ChangeBuffer : public IDataObserver, public SubjectBase<NullLock>
+{
 
-		typedef std::deque< Change<Binary> > BinaryQueue;
-		typedef std::deque< Change<Analog> > AnalogQueue;
-		typedef std::deque< Change<Counter> > CounterQueue;
-		typedef std::deque< Change<ControlStatus> > ControlStatusQueue;
-		typedef std::deque< Change<SetpointStatus> > SetpointStatusQueue;
+	typedef std::deque< Change<Binary> > BinaryQueue;
+	typedef std::deque< Change<Analog> > AnalogQueue;
+	typedef std::deque< Change<Counter> > CounterQueue;
+	typedef std::deque< Change<ControlStatus> > ControlStatusQueue;
+	typedef std::deque< Change<SetpointStatus> > SetpointStatusQueue;
 
-	public:
+public:
 
-			ChangeBuffer() : mMidFlush(false) {}
+	ChangeBuffer() : mMidFlush(false) {}
 
-		void _Start() { mLock.Lock(); }
-		void _End()
-		{
+	void _Start() {
+		mLock.Lock();
+	}
+	void _End() {
 
-			if ( mMidFlush )
-			{
-				_Clear();
-				mMidFlush = false;
-			}
-
-			bool notify = this->HasChanges();
-			mLock.Unlock();
-			if(notify) this->NotifyAll();
-		}
-
-		void _Update(const Binary& arPoint, size_t aIndex)
-		{ mBinaryQueue.push_back(Change<Binary>(arPoint, aIndex)); }
-		void _Update(const Analog& arPoint, size_t aIndex)
-		{  mAnalogQueue.push_back(Change<Analog>(arPoint, aIndex)); }
-		void _Update(const Counter& arPoint, size_t aIndex)
-		{  mCounterQueue.push_back(Change<Counter>(arPoint, aIndex)); }
-		void _Update(const ControlStatus& arPoint, size_t aIndex)
-		{ mControlStatusQueue.push_back(Change<ControlStatus>(arPoint, aIndex)); }
-		void _Update(const SetpointStatus& arPoint, size_t aIndex)
-		{ mSetpointStatusQueue.push_back(Change<SetpointStatus>(arPoint, aIndex)); }
-
-
-		size_t FlushUpdates(apl::IDataObserver* apObserver, bool aClear = true);
-
-		void Clear()
-		{
-			assert(this->InProgress());
+		if ( mMidFlush ) {
 			_Clear();
-		}
-
-	private:
-
-		void _Clear()
-		{
-			mBinaryQueue.clear();
-			mAnalogQueue.clear();
-			mCounterQueue.clear();
-			mControlStatusQueue.clear();
-			mSetpointStatusQueue.clear();
-		}
-
-		bool HasChanges()
-		{
-			return mBinaryQueue.size() > 0 ||
-				 mAnalogQueue.size() > 0 ||
-				 mCounterQueue.size() > 0 ||
-				 mControlStatusQueue.size() > 0 ||
-				 mSetpointStatusQueue.size() > 0;
-		}
-
-		template<class T>
-		size_t FlushUpdates(const T& arContainer, IDataObserver* apObserver);
-
-		bool mMidFlush;
-		BinaryQueue mBinaryQueue;
-		AnalogQueue mAnalogQueue;
-		CounterQueue mCounterQueue;
-		ControlStatusQueue mControlStatusQueue;
-		SetpointStatusQueue mSetpointStatusQueue;
-
-		LockType mLock;
-	};
-
-	template <class LockType>
-	size_t ChangeBuffer<LockType>::FlushUpdates(apl::IDataObserver* apObserver, bool aClear)
-	{
-		Transaction tr(this);
-		size_t count = 0;
-		if(!this->HasChanges()) return count;
-
-		 {
-			Transaction t(apObserver);
-			mMidFlush = true;	// Will clear on transaction end if an observer call blows up
-			count += this->FlushUpdates(mBinaryQueue, apObserver);
-			count += this->FlushUpdates(mAnalogQueue, apObserver);
-			count += this->FlushUpdates(mCounterQueue, apObserver);
-			count += this->FlushUpdates(mControlStatusQueue, apObserver);
-			count += this->FlushUpdates(mSetpointStatusQueue, apObserver);
 			mMidFlush = false;
 		}
 
-		if(aClear) this->Clear();
-
-		return count;
+		bool notify = this->HasChanges();
+		mLock.Unlock();
+		if(notify) this->NotifyAll();
 	}
 
-	template <class LockType>
-	template <class T>
-	size_t ChangeBuffer<LockType>::FlushUpdates(const T& arContainer, IDataObserver* apObserver)
+	void _Update(const Binary& arPoint, size_t aIndex) {
+		mBinaryQueue.push_back(Change<Binary>(arPoint, aIndex));
+	}
+	void _Update(const Analog& arPoint, size_t aIndex) {
+		mAnalogQueue.push_back(Change<Analog>(arPoint, aIndex));
+	}
+	void _Update(const Counter& arPoint, size_t aIndex) {
+		mCounterQueue.push_back(Change<Counter>(arPoint, aIndex));
+	}
+	void _Update(const ControlStatus& arPoint, size_t aIndex) {
+		mControlStatusQueue.push_back(Change<ControlStatus>(arPoint, aIndex));
+	}
+	void _Update(const SetpointStatus& arPoint, size_t aIndex) {
+		mSetpointStatusQueue.push_back(Change<SetpointStatus>(arPoint, aIndex));
+	}
+
+
+	size_t FlushUpdates(apl::IDataObserver* apObserver, bool aClear = true);
+
+	void Clear() {
+		assert(this->InProgress());
+		_Clear();
+	}
+
+private:
+
+	void _Clear() {
+		mBinaryQueue.clear();
+		mAnalogQueue.clear();
+		mCounterQueue.clear();
+		mControlStatusQueue.clear();
+		mSetpointStatusQueue.clear();
+	}
+
+	bool HasChanges() {
+		return mBinaryQueue.size() > 0 ||
+		       mAnalogQueue.size() > 0 ||
+		       mCounterQueue.size() > 0 ||
+		       mControlStatusQueue.size() > 0 ||
+		       mSetpointStatusQueue.size() > 0;
+	}
+
+	template<class T>
+	size_t FlushUpdates(const T& arContainer, IDataObserver* apObserver);
+
+	bool mMidFlush;
+	BinaryQueue mBinaryQueue;
+	AnalogQueue mAnalogQueue;
+	CounterQueue mCounterQueue;
+	ControlStatusQueue mControlStatusQueue;
+	SetpointStatusQueue mSetpointStatusQueue;
+
+	LockType mLock;
+};
+
+template <class LockType>
+size_t ChangeBuffer<LockType>::FlushUpdates(apl::IDataObserver* apObserver, bool aClear)
+{
+	Transaction tr(this);
+	size_t count = 0;
+	if(!this->HasChanges()) return count;
+
 	{
-		size_t count = 0;
-		for(typename T::const_iterator i = arContainer.begin(); i != arContainer.end(); ++i)
-		{ apObserver->Update(i->mValue, i->mIndex); ++count; }
-		return count;
+		Transaction t(apObserver);
+		mMidFlush = true;	// Will clear on transaction end if an observer call blows up
+		count += this->FlushUpdates(mBinaryQueue, apObserver);
+		count += this->FlushUpdates(mAnalogQueue, apObserver);
+		count += this->FlushUpdates(mCounterQueue, apObserver);
+		count += this->FlushUpdates(mControlStatusQueue, apObserver);
+		count += this->FlushUpdates(mSetpointStatusQueue, apObserver);
+		mMidFlush = false;
 	}
+
+	if(aClear) this->Clear();
+
+	return count;
+}
+
+template <class LockType>
+template <class T>
+size_t ChangeBuffer<LockType>::FlushUpdates(const T& arContainer, IDataObserver* apObserver)
+{
+	size_t count = 0;
+	for(typename T::const_iterator i = arContainer.begin(); i != arContainer.end(); ++i) {
+		apObserver->Update(i->mValue, i->mIndex);
+		++count;
+	}
+	return count;
+}
 
 }
 

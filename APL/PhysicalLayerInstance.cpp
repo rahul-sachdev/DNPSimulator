@@ -24,21 +24,22 @@
 #include "PhysicalLayerFactory.h"
 #include "IPhysicalLayerAsync.h"
 
-namespace apl  {
+namespace apl
+{
 
 PhysLayerInstance::PhysLayerInstance(IPhysicalLayerAsyncFactory aFactory) :
-mFactoryAsync(aFactory),
-mpLayer(NULL),
-mpLogger(NULL),
-mAutoDelete(true)
+	mFactoryAsync(aFactory),
+	mpLayer(NULL),
+	mpLogger(NULL),
+	mAutoDelete(true)
 {
 
 }
 
 PhysLayerInstance::PhysLayerInstance(IPhysicalLayerAsync* apPhys, Logger* apLogger, bool aAutoDelete) :
-mpLayer(apPhys),
-mpLogger(apLogger),
-mAutoDelete(aAutoDelete)
+	mpLayer(apPhys),
+	mpLogger(apLogger),
+	mAutoDelete(aAutoDelete)
 {}
 
 void PhysLayerInstance::Release()

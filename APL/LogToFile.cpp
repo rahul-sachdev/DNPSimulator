@@ -21,79 +21,80 @@
 #include "LogToFile.h"
 #include "Util.h"
 
-namespace apl{
+namespace apl
+{
 
 
 
-	LogToFile :: LogToFile(EventLog* apLog, const std::string aFileName, const bool aOverwriteFile)
-		: LogEntryCircularBuffer(1000), mpThread(NULL), mpLog(apLog), mFileName(aFileName), mOverwriteFile(aOverwriteFile)
-	{
-		if(aFileName == "-" || aFileName == ""){
-			mpLog = NULL;
-		}else{
-			StartLogging();
-		}
+LogToFile :: LogToFile(EventLog* apLog, const std::string aFileName, const bool aOverwriteFile)
+	: LogEntryCircularBuffer(1000), mpThread(NULL), mpLog(apLog), mFileName(aFileName), mOverwriteFile(aOverwriteFile)
+{
+	if(aFileName == "-" || aFileName == "") {
+		mpLog = NULL;
+	}
+	else {
+		StartLogging();
+	}
+}
+
+void LogToFile :: StartLogging()
+{
+	LogEntry le(LEV_EVENT, "FileLogger", LOCATION, "New Log Started", -1);
+	Log(le);
+
+	mpThread = new Thread(this);
+	mpThread->Start();
+
+	mpLog->AddLogSubscriber(this);
+}
+
+LogToFile :: ~LogToFile()
+{
+	if(mpThread != NULL) {
+		mpThread->RequestStop();
+		mpThread->WaitForStop();
 	}
 
-	void LogToFile :: StartLogging()
-	{
-		LogEntry le(LEV_EVENT, "FileLogger", LOCATION, "New Log Started", -1);
-		Log(le);
+	delete mpThread;
+	if(mpLog != NULL) mpLog->RemoveLogSubscriber(this);
+}
 
-		mpThread = new Thread(this);
-		mpThread->Start();
+void LogToFile :: SignalStop()
+{
+	CriticalSection cs(&mLock);
+	cs.Signal();
+}
 
-		mpLog->AddLogSubscriber(this);
+/**
+open, write, close the file rather than hold it forever so it can handle having
+the file deleted from underneath it without failing.
+*/
+void LogToFile :: PushItemsToFile()
+{
+	try {
+		// we need to open file in append mode first time only
+		std::ofstream file(mFileName.c_str(), mOverwriteFile ? (std::ios::out) : (std::ios::app | std::ios::out));
+		if(!file.is_open()) std::cerr << "Failure to open: " << mFileName << std::endl;
+
+		mOverwriteFile = false;
+
+		LogEntry le;
+		while(ReadLog(le)) file << le.LogString() << std::endl;
+
+		file << std::flush;
+		if(file.bad()) std::cerr << "Failure during writing log file: " << file.rdstate() << std::endl;
+		file.close();
 	}
-
-	LogToFile :: ~LogToFile()
-	{
-		if(mpThread != NULL) {
-			mpThread->RequestStop();
-			mpThread->WaitForStop();
-		}
-
-		delete mpThread;
-		if(mpLog != NULL) mpLog->RemoveLogSubscriber(this);
+	catch(std::exception e) {
+		std::cerr << "Error during LogToFile: " << e.what() << std::endl;
 	}
+}
 
-	void LogToFile :: SignalStop()
-	{
-		CriticalSection cs(&mLock);
-		cs.Signal();
+void LogToFile :: Run()
+{
+	while(!this->IsExitRequested()) {
+		this->BlockUntilEntry();
+		this->PushItemsToFile();
 	}
-
-	/**
-	open, write, close the file rather than hold it forever so it can handle having
-	the file deleted from underneath it without failing.
-	*/
-	void LogToFile :: PushItemsToFile()
-	{
-		try {
-			// we need to open file in append mode first time only
-			std::ofstream file(mFileName.c_str(), mOverwriteFile ? (std::ios::out) : (std::ios::app | std::ios::out));
-			if(!file.is_open()) std::cerr << "Failure to open: " << mFileName << std::endl;
-
-			mOverwriteFile = false;
-
-			LogEntry le;
-			while(ReadLog(le)) file << le.LogString() << std::endl;
-
-			file << std::flush;
-			if(file.bad()) std::cerr << "Failure during writing log file: " << file.rdstate() << std::endl;
-			file.close();
-		}
-		catch(std::exception e){
-			std::cerr << "Error during LogToFile: " << e.what() << std::endl;
-		}
-	}
-
-	void LogToFile :: Run()
-	{
-		while(!this->IsExitRequested())
-		{
-			this->BlockUntilEntry();
-			this->PushItemsToFile();
-		}
-	}
+}
 }

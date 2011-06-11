@@ -26,7 +26,10 @@
 
 #include "TransportConstants.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class TransportLayer;
 
@@ -35,28 +38,31 @@ State/validation for the DNP3 transport layer's receive channel.
 */
 class TransportRx : public Loggable
 {
-	public:
-		TransportRx(Logger*, TransportLayer*, size_t aFragSize);
+public:
+	TransportRx(Logger*, TransportLayer*, size_t aFragSize);
 
-		void HandleReceive(const boost::uint8_t*, size_t);
+	void HandleReceive(const boost::uint8_t*, size_t);
 
-		void Reset();
+	void Reset();
 
-	private:
+private:
 
-		bool ValidateHeader(bool aFir, bool aFin, int aSeq, size_t aPayloadSize);
+	bool ValidateHeader(bool aFir, bool aFin, int aSeq, size_t aPayloadSize);
 
-		TransportLayer* mpContext;
+	TransportLayer* mpContext;
 
-		CopyableBuffer mBuffer;
-		size_t mNumBytesRead;
-		int mSeq;
+	CopyableBuffer mBuffer;
+	size_t mNumBytesRead;
+	int mSeq;
 
 
 
-		size_t BufferRemaining() { return mBuffer.Size() - mNumBytesRead; }
+	size_t BufferRemaining() {
+		return mBuffer.Size() - mNumBytesRead;
+	}
 };
 
-}}
+}
+}
 
 #endif

@@ -30,11 +30,14 @@
 
 namespace apl
 {
-	class ITimerSource;
-	class ITimer;
+class ITimerSource;
+class ITimer;
 }
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class AppTransactionStateBase;
 
@@ -49,79 +52,80 @@ class AppLayer : public IUpperLayer, public IAppLayer
 	friend class SolicitedChannel;
 	friend class UnsolicitedChannel;
 
-	public:
+public:
 
-		AppLayer(apl::Logger* apLogger, ITimerSource*, AppConfig aAppCfg);
+	AppLayer(apl::Logger* apLogger, ITimerSource*, AppConfig aAppCfg);
 
-		void SetUser(IAppUser*);
+	void SetUser(IAppUser*);
 
-		/////////////////////////////////
-		// Implement IAppLayer
-		/////////////////////////////////
-		void SendUnsolicited(APDU&);
-		void SendResponse(APDU&);
-		void SendRequest(APDU&);
-		void CancelResponse();
+	/////////////////////////////////
+	// Implement IAppLayer
+	/////////////////////////////////
+	void SendUnsolicited(APDU&);
+	void SendResponse(APDU&);
+	void SendRequest(APDU&);
+	void CancelResponse();
 
-	private:
+private:
 
-		////////////////////
-		// External Events
-		////////////////////
+	////////////////////
+	// External Events
+	////////////////////
 
-		// Parse the header of the incoming APDU and direct to the appropriate
-		// internal event handler
-		void _OnReceive(const boost::uint8_t*, size_t);
+	// Parse the header of the incoming APDU and direct to the appropriate
+	// internal event handler
+	void _OnReceive(const boost::uint8_t*, size_t);
 
-		void _OnLowerLayerUp();
-		void _OnLowerLayerDown();
-		void _OnSendSuccess();
-		void _OnSendFailure();
+	void _OnLowerLayerUp();
+	void _OnLowerLayerDown();
+	void _OnSendSuccess();
+	void _OnSendFailure();
 
-		void OnSendResult(bool aSuccess);
+	void OnSendResult(bool aSuccess);
 
-		////////////////////
-		// Internal Events
-		////////////////////
+	////////////////////
+	// Internal Events
+	////////////////////
 
-		void OnUnknownObject(FunctionCodes aCode, const AppControlField&);
-		void OnResponse(const AppControlField&, APDU&);
-		void OnUnsolResponse(const AppControlField&, APDU&);
-		void OnConfirm(const AppControlField&, APDU&);
-		void OnRequest(const AppControlField&, APDU&);
+	void OnUnknownObject(FunctionCodes aCode, const AppControlField&);
+	void OnResponse(const AppControlField&, APDU&);
+	void OnUnsolResponse(const AppControlField&, APDU&);
+	void OnConfirm(const AppControlField&, APDU&);
+	void OnRequest(const AppControlField&, APDU&);
 
-		////////////////////
-		// State
-		////////////////////
+	////////////////////
+	// State
+	////////////////////
 
-		typedef std::deque<const APDU*> SendQueue;
+	typedef std::deque<const APDU*> SendQueue;
 
-		APDU mIncoming;						// Fragment used to parse all incoming requests
-		APDU mConfirm;						// Fragment used to do confirms
+	APDU mIncoming;						// Fragment used to parse all incoming requests
+	APDU mConfirm;						// Fragment used to do confirms
 
-		bool mSending;						// State of send operation to the lower layer
-		bool mConfirmSending;
-		SendQueue mSendQueue;				// Buffer of send operations
+	bool mSending;						// State of send operation to the lower layer
+	bool mConfirmSending;
+	SendQueue mSendQueue;				// Buffer of send operations
 
-		IAppUser* mpUser;				// Interface for dispatching callbacks
+	IAppUser* mpUser;				// Interface for dispatching callbacks
 
-		SolicitedChannel mSolicited;			// Channel used for solicited communications
-		UnsolicitedChannel mUnsolicited;		// Channel used for unsolicited communications
-		size_t mNumRetry;
+	SolicitedChannel mSolicited;			// Channel used for solicited communications
+	UnsolicitedChannel mUnsolicited;		// Channel used for unsolicited communications
+	size_t mNumRetry;
 
 
-		////////////////////
-		// Helpers
-		////////////////////
+	////////////////////
+	// Helpers
+	////////////////////
 
-		void QueueConfirm(bool aUns, int aSeq);
-		void QueueFrame(const APDU& arAPDU);
-		void CheckForSend();
-		size_t GetRetries(FunctionCodes aCode);
+	void QueueConfirm(bool aUns, int aSeq);
+	void QueueFrame(const APDU& arAPDU);
+	void CheckForSend();
+	size_t GetRetries(FunctionCodes aCode);
 
-		void Validate(const AppControlField& arCtrl, bool aMaster, bool aRequireFIRFIN, bool aAllowCON, bool aUNS);
+	void Validate(const AppControlField& arCtrl, bool aMaster, bool aRequireFIRFIN, bool aAllowCON, bool aUNS);
 };
 
-}}
+}
+}
 
 #endif

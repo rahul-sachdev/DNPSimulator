@@ -22,24 +22,25 @@
 #include "PhysicalLayerAsyncBaseTCP.h"
 #include <boost/asio/ip/tcp.hpp>
 
-namespace apl {
+namespace apl
+{
 
-	class PhysicalLayerAsyncTCPServer : public PhysicalLayerAsyncBaseTCP
-	{
-		public:
-			PhysicalLayerAsyncTCPServer(Logger*, boost::asio::io_service* apIOService, const std::string& arEndpoint, boost::uint16_t aPort);
+class PhysicalLayerAsyncTCPServer : public PhysicalLayerAsyncBaseTCP
+{
+public:
+	PhysicalLayerAsyncTCPServer(Logger*, boost::asio::io_service* apIOService, const std::string& arEndpoint, boost::uint16_t aPort);
 
-			/* Implement the remainging actions */
-			void DoOpen();
-			void DoOpeningClose(); //override this to cancel the acceptor instead of the socket
+	/* Implement the remainging actions */
+	void DoOpen();
+	void DoOpeningClose(); //override this to cancel the acceptor instead of the socket
 
-		private:
-			/* This object appears to be used referentially
-			as in the asynchronous code as having it disappear from the stack was causing a stack corruption. */
-			boost::asio::ip::tcp::endpoint mEndpoint;
-			boost::asio::ip::tcp::acceptor mAcceptor;
+private:
+	/* This object appears to be used referentially
+	as in the asynchronous code as having it disappear from the stack was causing a stack corruption. */
+	boost::asio::ip::tcp::endpoint mEndpoint;
+	boost::asio::ip::tcp::acceptor mAcceptor;
 
-	};
+};
 }
 
 #endif

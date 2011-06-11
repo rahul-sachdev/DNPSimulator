@@ -27,62 +27,61 @@
 
 namespace apl
 {
-	struct CommandData
-	{
-		CommandData(apl::CommandTypes aType, size_t aIndex, int aSequence, IResponseAcceptor* apRspAcceptor) :
+struct CommandData {
+	CommandData(apl::CommandTypes aType, size_t aIndex, int aSequence, IResponseAcceptor* apRspAcceptor) :
 		mType(aType), mIndex(aIndex), mSequence(aSequence), mpRspAcceptor(apRspAcceptor) {}
 
-		CommandData(){}
+	CommandData() {}
 
-		apl::CommandTypes mType;
-		size_t mIndex;
-		int mSequence;
-		IResponseAcceptor* mpRspAcceptor;
-	};
+	apl::CommandTypes mType;
+	size_t mIndex;
+	int mSequence;
+	IResponseAcceptor* mpRspAcceptor;
+};
 
-	class CommandQueue : public ICommandAcceptor, public ICommandSource
-	{
-		public:
-			CommandQueue() : mpNotifier(NULL) {}
+class CommandQueue : public ICommandAcceptor, public ICommandSource
+{
+public:
+	CommandQueue() : mpNotifier(NULL) {}
 
-			//Implement the ICommandAcceptor interface
-			void AcceptCommand(const apl::BinaryOutput& arType, size_t aIndex, int aSequence, IResponseAcceptor* apRspAcceptor);
-			void AcceptCommand(const apl::Setpoint& arType, size_t aIndex, int aSequence, IResponseAcceptor* apRspAcceptor);
+	//Implement the ICommandAcceptor interface
+	void AcceptCommand(const apl::BinaryOutput& arType, size_t aIndex, int aSequence, IResponseAcceptor* apRspAcceptor);
+	void AcceptCommand(const apl::Setpoint& arType, size_t aIndex, int aSequence, IResponseAcceptor* apRspAcceptor);
 
-			void SetNotifier(INotifier* apNotifier);
+	void SetNotifier(INotifier* apNotifier);
 
-			size_t Size();
+	size_t Size();
 
-			apl::CommandTypes Next();
+	apl::CommandTypes Next();
 
-			void Read(apl::BinaryOutput& arType, CommandData& arData);
-			void Read(apl::Setpoint& arType, CommandData& arData);
+	void Read(apl::BinaryOutput& arType, CommandData& arData);
+	void Read(apl::Setpoint& arType, CommandData& arData);
 
-			/** Synchronously executes a command, expecting an immediate response from a handler
-			*	@return true if there was a command to execute
-			*/
-			bool ExecuteCommand(ICommandHandler* apHandler);
+	/** Synchronously executes a command, expecting an immediate response from a handler
+	*	@return true if there was a command to execute
+	*/
+	bool ExecuteCommand(ICommandHandler* apHandler);
 
-			/** Immediately respond to a command
-			*	@return true if there was a command to respond
-			*/
-			bool RespondToCommand(CommandStatus aStatus);
+	/** Immediately respond to a command
+	*	@return true if there was a command to respond
+	*/
+	bool RespondToCommand(CommandStatus aStatus);
 
-		protected:
-			apl::SigLock mLock;
-			apl::INotifier* mpNotifier;
+protected:
+	apl::SigLock mLock;
+	apl::INotifier* mpNotifier;
 
-			std::queue< apl::BinaryOutput > mBinaryQueue;
-			std::queue< apl::Setpoint > mSetpointQueue;
+	std::queue< apl::BinaryOutput > mBinaryQueue;
+	std::queue< apl::Setpoint > mSetpointQueue;
 
-			std::queue< CommandData > mTypeQueue;
+	std::queue< CommandData > mTypeQueue;
 
-			template <typename T>
-			void Read(T& arType, CommandData& arData, std::queue<T>& arQueue);
+	template <typename T>
+	void Read(T& arType, CommandData& arData, std::queue<T>& arQueue);
 
-			template <typename T>
-			void AcceptCommand(const T& arType, size_t aIndex, std::queue<T>& arQueue, int aSequence, IResponseAcceptor* apRspAcceptor);
-	};
+	template <typename T>
+	void AcceptCommand(const T& arType, size_t aIndex, std::queue<T>& arQueue, int aSequence, IResponseAcceptor* apRspAcceptor);
+};
 
 }
 #endif

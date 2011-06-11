@@ -32,66 +32,66 @@
 
 namespace apl
 {
-	const boost::uint8_t UInt8::Max = std::numeric_limits<boost::uint8_t>::max();
-	const boost::uint8_t UInt8::Min = std::numeric_limits<boost::uint8_t>::min();
+const boost::uint8_t UInt8::Max = std::numeric_limits<boost::uint8_t>::max();
+const boost::uint8_t UInt8::Min = std::numeric_limits<boost::uint8_t>::min();
 
 
-	/* ARM has a word alignment issue when using reinterpret cast. The float/double read/write routines
-	now uses an intermediate buffer that the compiler word aligns. */
-	float SingleFloat::Read(const boost::uint8_t* apStart)
-	{
-		#ifdef ARM
-			uint8_t buff[sizeof(float)];
-			memcpy(buff, apStart, sizeof(float));
-			return Float<float>::NaiveRead(buff);
-		#else
-			return Float<float>::NaiveRead(apStart);
-		#endif
-	}
+/* ARM has a word alignment issue when using reinterpret cast. The float/double read/write routines
+now uses an intermediate buffer that the compiler word aligns. */
+float SingleFloat::Read(const boost::uint8_t* apStart)
+{
+#ifdef ARM
+	uint8_t buff[sizeof(float)];
+	memcpy(buff, apStart, sizeof(float));
+	return Float<float>::NaiveRead(buff);
+#else
+	return Float<float>::NaiveRead(apStart);
+#endif
+}
 
-	void SingleFloat::Write(boost::uint8_t* apStart, float aValue)
-	{
-		#ifdef ARM
-			uint8_t buff[sizeof(float)];
-			Float<float>::NaiveWrite(buff, aValue);
-			memcpy(apStart, buff, sizeof(float));
-		#else
-			Float<float>::NaiveWrite(apStart, aValue);
-		#endif
-	}
+void SingleFloat::Write(boost::uint8_t* apStart, float aValue)
+{
+#ifdef ARM
+	uint8_t buff[sizeof(float)];
+	Float<float>::NaiveWrite(buff, aValue);
+	memcpy(apStart, buff, sizeof(float));
+#else
+	Float<float>::NaiveWrite(apStart, aValue);
+#endif
+}
 
-	double DoubleFloat::Read(const boost::uint8_t* apStart)
-	{
-		#ifdef ARM
-			uint8_t buff[sizeof(double)];
-			memcpy(buff, apStart, sizeof(double));
-			return FlipWord32(Float<double>::NaiveRead(buff));
-		#else
-			return Float<double>::NaiveRead(apStart);
-		#endif
-	}
+double DoubleFloat::Read(const boost::uint8_t* apStart)
+{
+#ifdef ARM
+	uint8_t buff[sizeof(double)];
+	memcpy(buff, apStart, sizeof(double));
+	return FlipWord32(Float<double>::NaiveRead(buff));
+#else
+	return Float<double>::NaiveRead(apStart);
+#endif
+}
 
-	void DoubleFloat::Write(boost::uint8_t* apStart, double aValue)
-	{
-		#ifdef ARM
-			uint8_t buff[sizeof(double)];
-			Float<double>::NaiveWrite(buff, FlipWord32(aValue));
-			memcpy(apStart, buff, sizeof(double));
-		#else
-			Float<double>::NaiveWrite(apStart, aValue);
-		#endif
-	}
+void DoubleFloat::Write(boost::uint8_t* apStart, double aValue)
+{
+#ifdef ARM
+	uint8_t buff[sizeof(double)];
+	Float<double>::NaiveWrite(buff, FlipWord32(aValue));
+	memcpy(apStart, buff, sizeof(double));
+#else
+	Float<double>::NaiveWrite(apStart, aValue);
+#endif
+}
 
-	#ifdef ARM
-	double DoubleFloat::FlipWord32(double aValue)
-	{
-		volatile double x = aValue;
-		volatile boost::uint8_t* p = reinterpret_cast<volatile boost::uint8_t*>(&x);
-		uint32_t tmp = p[0];
-		p[0] = p[1];
-		p[1] = tmp;
-		return x;
-	}
-	#endif
+#ifdef ARM
+double DoubleFloat::FlipWord32(double aValue)
+{
+	volatile double x = aValue;
+	volatile boost::uint8_t* p = reinterpret_cast<volatile boost::uint8_t*>(&x);
+	uint32_t tmp = p[0];
+	p[0] = p[1];
+	p[1] = tmp;
+	return x;
+}
+#endif
 
 }

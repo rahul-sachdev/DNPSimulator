@@ -23,16 +23,24 @@
 
 #include "SerialTypes.h"
 
-namespace boost { namespace asio {
-	typedef basic_serial_port<> serial_port;
-}}
+namespace boost
+{
+namespace asio
+{
+typedef basic_serial_port<> serial_port;
+}
+}
 
-namespace apl { namespace asio_serial {
+namespace apl
+{
+namespace asio_serial
+{
 
-	// Serial port configuration functions "free" to keep the classes simple.
-	void Configure(SerialSettings& arSettings, boost::asio::serial_port& arPort, boost::system::error_code& ec);
-	void Configure(SerialSettings& arSettings, boost::asio::serial_port& arPort);
+// Serial port configuration functions "free" to keep the classes simple.
+void Configure(SerialSettings& arSettings, boost::asio::serial_port& arPort, boost::system::error_code& ec);
+void Configure(SerialSettings& arSettings, boost::asio::serial_port& arPort);
 
-}}
+}
+}
 
 #endif

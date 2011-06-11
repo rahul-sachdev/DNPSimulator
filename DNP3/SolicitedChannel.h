@@ -21,7 +21,10 @@
 
 #include "AppLayerChannel.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /**  The application layer contains two virtual channels, one for
 	 solicited and unsolicited communication. Each channel has a sequence
@@ -30,9 +33,9 @@ namespace apl { namespace dnp {
 */
 class SolicitedChannel : public AppLayerChannel
 {
-	public:
+public:
 	SolicitedChannel(Logger* apLogger, AppLayer* apApp, ITimerSource* apTimerSrc, millis_t aTimeout);
-	virtual ~SolicitedChannel(){}
+	virtual ~SolicitedChannel() {}
 
 	// Called when the app layer has a problem parsing an object header
 	void OnUnknownObjectInRequest(const AppControlField& acf);
@@ -41,13 +44,14 @@ class SolicitedChannel : public AppLayerChannel
 
 	bool AcceptsResponse();
 
-	private:
+private:
 
 	// implement virtual memebers from AppLayerChannel
 	void DoSendSuccess();
 	void DoFailure();
 };
 
-}}
+}
+}
 
 #endif

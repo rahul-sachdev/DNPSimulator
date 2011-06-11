@@ -21,39 +21,41 @@
 
 #include <APL/Types.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 /**
 	Configuration for the dnp3 link layer
 */
-struct LinkConfig
-{
+struct LinkConfig {
 	LinkConfig(
-		bool aIsMaster,
-		bool aUseConfirms,
-		size_t aNumRetry,
-		boost::uint16_t aLocalAddr,
-		boost::uint16_t aRemoteAddr,
-		millis_t aTimeout) :
+	    bool aIsMaster,
+	    bool aUseConfirms,
+	    size_t aNumRetry,
+	    boost::uint16_t aLocalAddr,
+	    boost::uint16_t aRemoteAddr,
+	    millis_t aTimeout) :
 
-	IsMaster(aIsMaster),
-	UseConfirms(aUseConfirms),
-	NumRetry(aNumRetry),
-	LocalAddr(aLocalAddr),
-	RemoteAddr(aRemoteAddr),
-	Timeout(aTimeout)
+		IsMaster(aIsMaster),
+		UseConfirms(aUseConfirms),
+		NumRetry(aNumRetry),
+		LocalAddr(aLocalAddr),
+		RemoteAddr(aRemoteAddr),
+		Timeout(aTimeout)
 	{}
 
 	LinkConfig(
-		bool aIsMaster,
-		bool aUseConfirms) :
+	    bool aIsMaster,
+	    bool aUseConfirms) :
 
-	IsMaster(aIsMaster),
-	UseConfirms(aUseConfirms),
-	NumRetry(0),
-	LocalAddr(aIsMaster ? 1 : 1024),
-	RemoteAddr(aIsMaster ? 1024 : 1),
-	Timeout(1000)
+		IsMaster(aIsMaster),
+		UseConfirms(aUseConfirms),
+		NumRetry(0),
+		LocalAddr(aIsMaster ? 1 : 1024),
+		RemoteAddr(aIsMaster ? 1024 : 1),
+		Timeout(1000)
 	{}
 
 	// The master/slave bit set on all messages
@@ -74,11 +76,12 @@ struct LinkConfig
 	// the response timeout in milliseconds for confirmed requests
 	millis_t Timeout;
 
-	private:
+private:
 
 	LinkConfig() {}
 };
 
-}}
+}
+}
 
 #endif

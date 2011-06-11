@@ -19,51 +19,54 @@
 #include "ThreadBoost.h"
 #include "TimingTools.h"
 
-namespace apl {
+namespace apl
+{
 
-	ThreadBoost::ThreadBoost(Threadable* apRunnable) :
-		ThreadBase(apRunnable),
-		mEntryPoint(boost::bind(&Threadable::Start, apRunnable)),
-		mpThread(NULL)
-	{
+ThreadBoost::ThreadBoost(Threadable* apRunnable) :
+	ThreadBase(apRunnable),
+	mEntryPoint(boost::bind(&Threadable::Start, apRunnable)),
+	mpThread(NULL)
+{
 
-	}
+}
 
-	ThreadBoost::~ThreadBoost()
-	{
-		RequestStop();
-		WaitForStop();
-	}
+ThreadBoost::~ThreadBoost()
+{
+	RequestStop();
+	WaitForStop();
+}
 
-	void ThreadBoost::Start()
-	{
-		assert(mpThread == NULL);
-		mpThread = new boost::thread(mEntryPoint);
-	}
+void ThreadBoost::Start()
+{
+	assert(mpThread == NULL);
+	mpThread = new boost::thread(mEntryPoint);
+}
 
-	void ThreadBoost::WaitForStop()
-	{
-		if(mpThread != NULL) mpThread->join();
-		delete mpThread;
-		mpThread = NULL;
-	}
+void ThreadBoost::WaitForStop()
+{
+	if(mpThread != NULL) mpThread->join();
+	delete mpThread;
+	mpThread = NULL;
+}
 
-	void ThreadBoost::SleepFor(millis_t millis, bool ensureSleepForCorrectTime)
-	{
+void ThreadBoost::SleepFor(millis_t millis, bool ensureSleepForCorrectTime)
+{
 
-		if(ensureSleepForCorrectTime){
-			StopWatch sw;
-			millis_t remain = millis;
-			do{
-				boost::this_thread::sleep(boost::posix_time::milliseconds(remain));
-				millis_t remain = millis - sw.Elapsed(false);
-				if(remain <= 0) break;
-				boost::this_thread::yield();
-			}while(true);
-		}else{
-			boost::this_thread::sleep(boost::posix_time::milliseconds(millis));
+	if(ensureSleepForCorrectTime) {
+		StopWatch sw;
+		millis_t remain = millis;
+		do {
+			boost::this_thread::sleep(boost::posix_time::milliseconds(remain));
+			millis_t remain = millis - sw.Elapsed(false);
+			if(remain <= 0) break;
+			boost::this_thread::yield();
 		}
-
+		while(true);
 	}
+	else {
+		boost::this_thread::sleep(boost::posix_time::milliseconds(millis));
+	}
+
+}
 
 };

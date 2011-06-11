@@ -27,22 +27,23 @@
 #include <APL/LowerLayerToPhysAdapter.h>
 #include <APLTestTools/MockUpperLayer.h>
 
-namespace apl {
+namespace apl
+{
 
-	class AsyncSerialTestObject : public AsyncTestObjectASIO, public LogTester
-	{
-		public:
-			AsyncSerialTestObject(SerialSettings cfg, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
-			virtual ~AsyncSerialTestObject() {}
+class AsyncSerialTestObject : public AsyncTestObjectASIO, public LogTester
+{
+public:
+	AsyncSerialTestObject(SerialSettings cfg, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
+	virtual ~AsyncSerialTestObject() {}
 
-		private:
-			Logger* mpLogger;
+private:
+	Logger* mpLogger;
 
-		public:
-			PhysicalLayerAsyncSerial mPort;
-			LowerLayerToPhysAdapter mAdapter;
-			MockUpperLayer mUpper;
-	};
+public:
+	PhysicalLayerAsyncSerial mPort;
+	LowerLayerToPhysAdapter mAdapter;
+	MockUpperLayer mUpper;
+};
 
 }
 

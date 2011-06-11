@@ -28,40 +28,46 @@
 #include "Types.h"
 #include "Configure.h"
 
-namespace boost { namespace posix_time { class ptime; } }
+namespace boost
+{
+namespace posix_time
+{
+class ptime;
+}
+}
 
 namespace apl
 {
-	void ClearScreen();
+void ClearScreen();
 
-	template <class T>
-	inline T Min(T a, T b)
-	{
-		return (a < b) ? a : b;
-	}
+template <class T>
+inline T Min(T a, T b)
+{
+	return (a < b) ? a : b;
+}
 
-	template <class T>
-	inline T Max(T a, T b)
-	{
-		return (a > b) ? a : b;
-	}
+template <class T>
+inline T Max(T a, T b)
+{
+	return (a > b) ? a : b;
+}
 
-	template <class T>
-	bool FloatEqual(T a, T b, T eapllon = 1e-6)
-	{
-		T diff = a - b;
-		if(diff < 0) diff = -diff;
-		return diff <= eapllon;
-	}
-
-
-	double SafeCastInt64ToDouble(boost::int64_t aInput);
-
-	void toUpperCase(std::string& aStr);
-	void toLowerCase(std::string& aStr);
+template <class T>
+bool FloatEqual(T a, T b, T eapllon = 1e-6)
+{
+	T diff = a - b;
+	if(diff < 0) diff = -diff;
+	return diff <= eapllon;
+}
 
 
-	std::string ToNormalizedString(const boost::posix_time::ptime& arTime);
+double SafeCastInt64ToDouble(boost::int64_t aInput);
+
+void toUpperCase(std::string& aStr);
+void toLowerCase(std::string& aStr);
+
+
+std::string ToNormalizedString(const boost::posix_time::ptime& arTime);
 
 
 }

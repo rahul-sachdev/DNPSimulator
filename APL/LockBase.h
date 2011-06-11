@@ -35,27 +35,29 @@ namespace apl
 */
 class ILockBase
 {
-	public:
-		virtual ~ILockBase(){}
-		virtual void Lock() = 0;	// gain exclusivity to the lock
-		virtual void Unlock() = 0;	// release exclusivity
-		virtual void Wait() = 0;	//wait forever for condition to be satisfied
-		virtual bool TimedWait(apl::millis_t aMillisec) = 0; //wait for a number of milliseconds
-		virtual void Signal() = 0;	  //wakes a single thread waiting on the lock
-		virtual void Broadcast() = 0; //wakes all threads waiting on the lock
+public:
+	virtual ~ILockBase() {}
+	virtual void Lock() = 0;	// gain exclusivity to the lock
+	virtual void Unlock() = 0;	// release exclusivity
+	virtual void Wait() = 0;	//wait forever for condition to be satisfied
+	virtual bool TimedWait(apl::millis_t aMillisec) = 0; //wait for a number of milliseconds
+	virtual void Signal() = 0;	  //wakes a single thread waiting on the lock
+	virtual void Broadcast() = 0; //wakes all threads waiting on the lock
 };
 
 // this class is for templating purposes for when you want
 // to provide the option to use a lock or not in a templated class.
 class NullLock : public ILockBase
 {
-	public:
-	void Lock(){}
-	void Unlock(){}
-	void Wait(){}
-	bool TimedWait(apl::millis_t /*aMillisec*/){return true;}
-	void Signal(){}
-	void Broadcast(){}
+public:
+	void Lock() {}
+	void Unlock() {}
+	void Wait() {}
+	bool TimedWait(apl::millis_t /*aMillisec*/) {
+		return true;
+	}
+	void Signal() {}
+	void Broadcast() {}
 };
 
 
@@ -63,26 +65,43 @@ class NullLock : public ILockBase
 his construct, exceptions can even be thrown from within critical section. */
 class CriticalSection : private Uncopyable
 {
-	public:
-		CriticalSection(ILockBase* apLock);
-		~CriticalSection();
-		void Wait();
-		bool TimedWait(apl::millis_t aMillisec);
-		void Signal();
-		void Broadcast();
-		void End();
+public:
+	CriticalSection(ILockBase* apLock);
+	~CriticalSection();
+	void Wait();
+	bool TimedWait(apl::millis_t aMillisec);
+	void Signal();
+	void Broadcast();
+	void End();
 
-	private:
-		bool mIsLocked;
-		CriticalSection();
-		ILockBase* mpLock;
+private:
+	bool mIsLocked;
+	CriticalSection();
+	ILockBase* mpLock;
 };
 
-inline void CriticalSection::Wait(){ mpLock->Wait(); }
-inline bool CriticalSection::TimedWait(apl::millis_t aMillisec){ return mpLock->TimedWait(aMillisec);  }
-inline void CriticalSection::Signal() { mpLock->Signal(); }
-inline void CriticalSection::Broadcast() { mpLock->Broadcast(); }
-inline void CriticalSection::End() { assert(mIsLocked); mIsLocked = false; mpLock->Unlock(); }
+inline void CriticalSection::Wait()
+{
+	mpLock->Wait();
+}
+inline bool CriticalSection::TimedWait(apl::millis_t aMillisec)
+{
+	return mpLock->TimedWait(aMillisec);
+}
+inline void CriticalSection::Signal()
+{
+	mpLock->Signal();
+}
+inline void CriticalSection::Broadcast()
+{
+	mpLock->Broadcast();
+}
+inline void CriticalSection::End()
+{
+	assert(mIsLocked);
+	mIsLocked = false;
+	mpLock->Unlock();
+}
 
 } //end namespace
 

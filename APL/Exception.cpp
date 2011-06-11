@@ -22,50 +22,52 @@
 
 using namespace std;
 
-namespace apl {
+namespace apl
+{
 
-	Exception::Exception(const string& aSource, const string& aMessage, int aErrorCode, int aSubCode) throw() :
-    mErrorCode(aErrorCode), mSubCode(aSubCode), mSource(aSource), mMessage(aMessage)
-	{
-		this->SetWhat();
-	}
+Exception::Exception(const string& aSource, const string& aMessage, int aErrorCode, int aSubCode) throw() :
+	mErrorCode(aErrorCode), mSubCode(aSubCode), mSource(aSource), mMessage(aMessage)
+{
+	this->SetWhat();
+}
 
-	Exception::Exception(const std::string& aSource, int aErrorCode, int aSubCode) throw() :
+Exception::Exception(const std::string& aSource, int aErrorCode, int aSubCode) throw() :
 	mErrorCode(aErrorCode), mSubCode(aSubCode), mSource(aSource), mMessage("")
-	{
-		this->SetWhat();
-	}
+{
+	this->SetWhat();
+}
 
-	void Exception::SetWhat()
-	{
-		ostringstream oss;
-		oss << mSource << ": " << mMessage << ", " << mErrorCode;
-		mWhat = oss.str();
-	}
+void Exception::SetWhat()
+{
+	ostringstream oss;
+	oss << mSource << ": " << mMessage << ", " << mErrorCode;
+	mWhat = oss.str();
+}
 
-	Exception::~Exception() throw()
-	{
+Exception::~Exception() throw()
+{
 
-	}
+}
 
-	const std::string& Exception :: Source() const
-	{
-		return this->mSource;
-	}
+const std::string& Exception :: Source() const
+{
+	return this->mSource;
+}
 
-	const std::string& Exception :: Message() const
-	{
-		return this->mMessage;
-	}
+const std::string& Exception :: Message() const
+{
+	return this->mMessage;
+}
 
-	string Exception::GetErrorString() const
-	{
-		return mWhat;
-	}
+string Exception::GetErrorString() const
+{
+	return mWhat;
+}
 
-	const char * Exception :: what() const throw(){
-		return mWhat.c_str();
-	}
+const char* Exception :: what() const throw()
+{
+	return mWhat.c_str();
+}
 
 }
 

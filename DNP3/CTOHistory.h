@@ -19,52 +19,53 @@
 #ifndef __CTO_HISTORY_H_
 #define __CTO_HISTORY_H_
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class CTOHistory
 {
-	public:
-		CTOHistory() :
+public:
+	CTOHistory() :
 		mCTO(-1),
 		mHeaderNum(0),
-		mTimeHeaderNum(0)
-		{
+		mTimeHeaderNum(0) {
 
+	}
+
+	void Reset() {
+		mCTO = TimeStamp_t(-1);
+		mHeaderNum = 0;
+		mTimeHeaderNum = 0;
+	}
+
+	void NextHeader() {
+		++mHeaderNum;
+	}
+
+	void SetCTO(TimeStamp_t& arTime) {
+		mCTO = arTime;
+		mTimeHeaderNum = mHeaderNum;
+	}
+
+	bool GetCTO(TimeStamp_t& arTime) {
+		if(mCTO >= 0 && mTimeHeaderNum == (mHeaderNum - 1)) {
+			arTime = mCTO;
+			return true;
 		}
+		else return false;
+	}
 
-		void Reset()
-		{
-			mCTO = TimeStamp_t(-1);
-			mHeaderNum = 0;
-			mTimeHeaderNum = 0;
-		}
+private:
 
-		void NextHeader() { ++mHeaderNum; }
-
-		void SetCTO(TimeStamp_t& arTime)
-		{
-			mCTO = arTime;
-			mTimeHeaderNum = mHeaderNum;
-		}
-
-		bool GetCTO(TimeStamp_t& arTime)
-		{
-			if(mCTO >= 0 && mTimeHeaderNum == (mHeaderNum-1))
-			{
-				arTime = mCTO;
-				return true;
-			}
-			else return false;
-		}
-
-	private:
-
-		TimeStamp_t mCTO;
-		size_t mHeaderNum;
-		size_t mTimeHeaderNum;
+	TimeStamp_t mCTO;
+	size_t mHeaderNum;
+	size_t mTimeHeaderNum;
 
 };
 
-}}
+}
+}
 
 #endif

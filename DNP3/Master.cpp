@@ -39,7 +39,10 @@
 
 using namespace boost;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IDataObserver* apPublisher, AsyncTaskGroup* apTaskGroup, ITimerSource* apTimerSrc, ITimeSource* apTimeSrc) :
 	Loggable(apLogger),
@@ -71,13 +74,13 @@ Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IData
 	 * wake up mpCommandTask to process the data.
 	 */
 	mCommandQueue.SetNotifier(
-			mNotifierSource.Get(
-					boost::bind(
-							&AsyncTaskBase::Enable,
-							mSchedule.mpCommandTask
-					),
-					mpTimerSrc
-			)
+	    mNotifierSource.Get(
+	        boost::bind(
+	            &AsyncTaskBase::Enable,
+	            mSchedule.mpCommandTask
+	        ),
+	        mpTimerSrc
+	    )
 	);
 
 	/*
@@ -86,13 +89,13 @@ Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IData
 	 * mVtoWriter, wake up the mSchedule.mpVtoTransmitTask.
 	 */
 	mVtoWriter.AddObserver(
-			mNotifierSource.Get(
-					boost::bind(
-							&AsyncTaskBase::Enable,
-							mSchedule.mpVtoTransmitTask
-					),
-					mpTimerSrc
-			)
+	    mNotifierSource.Get(
+	        boost::bind(
+	            &AsyncTaskBase::Enable,
+	            mSchedule.mpVtoTransmitTask
+	        ),
+	        mpTimerSrc
+	    )
 	);
 
 	/*
@@ -108,7 +111,7 @@ void Master::UpdateState(StackStates aState)
 		mState = aState;
 		if(mpObserver != NULL) mpObserver->OnStateChange(aState);
 		mVtoReader.OnStateChange(aState);
-		if(mState == SS_COMMS_UP){
+		if(mState == SS_COMMS_UP) {
 			mSchedule.mpVtoTransmitTask->Enable();
 		}
 	}
@@ -151,27 +154,24 @@ void Master::ProcessCommand(ITask* apTask)
 	}
 	else {
 
-		switch(mCommandQueue.Next())
-		{
-			case(apl::CT_BINARY_OUTPUT):
-			{
+		switch(mCommandQueue.Next()) {
+		case(apl::CT_BINARY_OUTPUT): {
 				apl::BinaryOutput cmd;
 				mCommandQueue.Read(cmd, info);
 				mExecuteBO.Set(cmd, info, true);
 				mpState->StartTask(this, apTask, &mExecuteBO);
 			}
 			break;
-			case(apl::CT_SETPOINT):
-			{
+		case(apl::CT_SETPOINT): {
 				apl::Setpoint cmd;
 				mCommandQueue.Read(cmd, info);
 				mExecuteSP.Set(cmd, info, true);
 				mpState->StartTask(this, apTask, &mExecuteSP);
 			}
 			break;
-			default:
-				apTask->Disable(); //no commands to be read
-				break;
+		default:
+			apTask->Disable(); //no commands to be read
+			break;
 		}
 	}
 }
@@ -187,8 +187,7 @@ void Master::StartTask(MasterTaskBase* apMasterTask, bool aInit)
 
 void Master::SyncTime(ITask* apTask)
 {
-	if(mLastIIN.GetNeedTime())
-	{
+	if(mLastIIN.GetNeedTime()) {
 		mpState->StartTask(this, apTask, &mTimeSync);
 	}
 	else apTask->Disable();
@@ -196,8 +195,7 @@ void Master::SyncTime(ITask* apTask)
 
 void Master::WriteIIN(ITask* apTask)
 {
-	if(mLastIIN.GetDeviceRestart())
-	{
+	if(mLastIIN.GetDeviceRestart()) {
 		mpState->StartTask(this, apTask, &mClearRestart);
 	}
 	else apTask->Disable();
@@ -226,23 +224,20 @@ void Master::TransmitVtoData(ITask* apTask)
 	VtoEvent info;
 
 	/* Take out of the mVtoWriter and put into the mVtoTransmitTask */
-	while (!mVtoTransmitTask.mBuffer.IsFull() && mVtoWriter.Read(info))
-	{
+	while (!mVtoTransmitTask.mBuffer.IsFull() && mVtoWriter.Read(info)) {
 		mVtoTransmitTask.mBuffer.Update(info);
 	}
 
 	// only start the task if we are in comms_up
 	// TODO: should this just be Enable?
-	if(this->mState == SS_COMMS_UP){
+	if(this->mState == SS_COMMS_UP) {
 
 		/* Any data to transmit? */
-		if (mVtoTransmitTask.mBuffer.Size() > 0)
-		{
+		if (mVtoTransmitTask.mBuffer.Size() > 0) {
 			/* Start the mVtoTransmitTask */
 			mpState->StartTask(this, apTask, &mVtoTransmitTask);
 		}
-		else
-		{
+		else {
 			/* Stop the mVtoTransmitTask */
 			apTask->Disable();
 		}
@@ -316,12 +311,12 @@ void Master::ProcessDataResponse(const APDU& arResponse)
 		for(HeaderReadIterator hdr = arResponse.BeginRead(); !hdr.IsEnd(); ++hdr)
 			loader.Process(hdr);
 	}
-	catch(Exception ex)
-	{
+	catch(Exception ex) {
 		EXCEPTION_BLOCK(LEV_WARNING, ex)
 	}
 }
 
-}} //end ns
+}
+} //end ns
 
 /* vim: set ts=4 sw=4: */

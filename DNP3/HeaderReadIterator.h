@@ -31,121 +31,156 @@
 
 class IObjectHeader;
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	class ObjectReadIterator;
+class ObjectReadIterator;
 
-	/**
-	 * A class that represents a DNP3 Object Header in an APDU object.
-	 */
-	class HeaderInfo
-	{
-		public:
+/**
+ * A class that represents a DNP3 Object Header in an APDU object.
+ */
+class HeaderInfo
+{
+public:
 
-		HeaderInfo(const ObjectHeaderField& arData, size_t aCount, size_t aPrefixSize, IObjectHeader* apHeader, ObjectBase* apObject, size_t aPos) :
-			mPos(aPos),
-			mHeaderData(arData),
-			mCount(aCount),
-			mPrefixSize(aPrefixSize),
-			mpHeader(apHeader),
-			mpObjectBase(apObject)
-		{}
+	HeaderInfo(const ObjectHeaderField& arData, size_t aCount, size_t aPrefixSize, IObjectHeader* apHeader, ObjectBase* apObject, size_t aPos) :
+		mPos(aPos),
+		mHeaderData(arData),
+		mCount(aCount),
+		mPrefixSize(aPrefixSize),
+		mpHeader(apHeader),
+		mpObjectBase(apObject)
+	{}
 
-		HeaderInfo() {}
+	HeaderInfo() {}
 
-		// accessor helpers to simplify reading code
-		ObjectHeaderTypes GetHeaderType() const { return mpHeader->GetType(); }
-		ObjectTypes GetObjectType() const { return mpObjectBase->GetType(); }
-		int GetGroup() const { return mHeaderData.Group; }
-		int GetVariation() const { return mHeaderData.Variation; }
-		QualifierCode GetQualifier() const { return mHeaderData.Qualifier; }
-		size_t GetPrefixSize() const { return mPrefixSize; }
-		size_t GetCount() const { return mCount; }
-		size_t GetHeaderSize() const { return mpHeader->GetSize(); }
-		const ObjectBase* GetBaseObject() const { return mpObjectBase; }
-		const IObjectHeader* GetHeader() const { return mpHeader; }
-		size_t GetPosition() const { return mPos; }
-
-		private:
-
-		size_t mPos;
-		ObjectHeaderField mHeaderData;
-		size_t mCount;
-		size_t mPrefixSize;
-		IObjectHeader* mpHeader;
-		ObjectBase* mpObjectBase;
-	};
-
-	/**
-	 * An interator that clients can use to loop over the object headers in an
-	 * APDU object.
-	 */
-	class HeaderReadIterator
-	{
-		friend class APDU;
-
-		public:
-
-			const HeaderInfo* operator->() const;
-			const boost::uint8_t* operator*() const;
-			const HeaderReadIterator& operator++();
-			const HeaderReadIterator operator++(int);
-			const HeaderInfo& info() const;
-
-			ObjectReadIterator BeginRead();
-			size_t Count() { return mpHeaders->size(); }
-			bool IsEnd() { return mIndex >= mpHeaders->size(); }
-
-		private:
-
-			HeaderReadIterator(const std::vector<HeaderInfo>* apHeaders, const boost::uint8_t* apBuffer, bool aHasData);
-
-			const std::vector<HeaderInfo>* mpHeaders;
-			const boost::uint8_t* mpBuffer;
-			bool mHasData;
-			size_t mIndex;
-
-	};
-
-	inline const HeaderInfo& HeaderReadIterator::info() const
-	{
-		if(mIndex >= mpHeaders->size())
-		{ throw apl::Exception(LOCATION, "Iter out of bounds", ALERR_ITERATOR_OUT_OF_BOUNDS); }
-		return (*mpHeaders)[mIndex];
+	// accessor helpers to simplify reading code
+	ObjectHeaderTypes GetHeaderType() const {
+		return mpHeader->GetType();
+	}
+	ObjectTypes GetObjectType() const {
+		return mpObjectBase->GetType();
+	}
+	int GetGroup() const {
+		return mHeaderData.Group;
+	}
+	int GetVariation() const {
+		return mHeaderData.Variation;
+	}
+	QualifierCode GetQualifier() const {
+		return mHeaderData.Qualifier;
+	}
+	size_t GetPrefixSize() const {
+		return mPrefixSize;
+	}
+	size_t GetCount() const {
+		return mCount;
+	}
+	size_t GetHeaderSize() const {
+		return mpHeader->GetSize();
+	}
+	const ObjectBase* GetBaseObject() const {
+		return mpObjectBase;
+	}
+	const IObjectHeader* GetHeader() const {
+		return mpHeader;
+	}
+	size_t GetPosition() const {
+		return mPos;
 	}
 
-	inline const boost::uint8_t* HeaderReadIterator::operator*() const
-	{
-		if(mIndex >= mpHeaders->size())
-		{ throw apl::Exception(LOCATION, "Iter out of bounds", ALERR_ITERATOR_OUT_OF_BOUNDS); }
-		return mpBuffer+(*mpHeaders)[mIndex].GetPosition();
+private:
+
+	size_t mPos;
+	ObjectHeaderField mHeaderData;
+	size_t mCount;
+	size_t mPrefixSize;
+	IObjectHeader* mpHeader;
+	ObjectBase* mpObjectBase;
+};
+
+/**
+ * An interator that clients can use to loop over the object headers in an
+ * APDU object.
+ */
+class HeaderReadIterator
+{
+	friend class APDU;
+
+public:
+
+	const HeaderInfo* operator->() const;
+	const boost::uint8_t* operator*() const;
+	const HeaderReadIterator& operator++();
+	const HeaderReadIterator operator++(int);
+	const HeaderInfo& info() const;
+
+	ObjectReadIterator BeginRead();
+	size_t Count() {
+		return mpHeaders->size();
+	}
+	bool IsEnd() {
+		return mIndex >= mpHeaders->size();
 	}
 
-	inline const HeaderInfo* HeaderReadIterator::operator->() const
-	{
-		if(mIndex >= mpHeaders->size())
-		{ throw apl::Exception(LOCATION, "", ALERR_ITERATOR_OUT_OF_BOUNDS); }
-		return &(*mpHeaders)[mIndex];
-	}
+private:
 
-	inline const HeaderReadIterator& HeaderReadIterator::operator++()
-	{
-		if(mIndex >= mpHeaders->size())
-		{ throw apl::Exception(LOCATION, "", ALERR_ITERATOR_OUT_OF_BOUNDS); }
-		++mIndex;
-		return (*this);
-	}
+	HeaderReadIterator(const std::vector<HeaderInfo>* apHeaders, const boost::uint8_t* apBuffer, bool aHasData);
 
-	inline const HeaderReadIterator HeaderReadIterator::operator++(int)
-	{
-		if(mIndex >= mpHeaders->size())
-		{ throw apl::Exception(LOCATION, "", ALERR_ITERATOR_OUT_OF_BOUNDS); }
-		HeaderReadIterator tmp(*this);
-		++mIndex;
-		return tmp;
-	}
+	const std::vector<HeaderInfo>* mpHeaders;
+	const boost::uint8_t* mpBuffer;
+	bool mHasData;
+	size_t mIndex;
 
-}}
+};
+
+inline const HeaderInfo& HeaderReadIterator::info() const
+{
+	if(mIndex >= mpHeaders->size()) {
+		throw apl::Exception(LOCATION, "Iter out of bounds", ALERR_ITERATOR_OUT_OF_BOUNDS);
+	}
+	return (*mpHeaders)[mIndex];
+}
+
+inline const boost::uint8_t* HeaderReadIterator::operator*() const
+{
+	if(mIndex >= mpHeaders->size()) {
+		throw apl::Exception(LOCATION, "Iter out of bounds", ALERR_ITERATOR_OUT_OF_BOUNDS);
+	}
+	return mpBuffer + (*mpHeaders)[mIndex].GetPosition();
+}
+
+inline const HeaderInfo* HeaderReadIterator::operator->() const
+{
+	if(mIndex >= mpHeaders->size()) {
+		throw apl::Exception(LOCATION, "", ALERR_ITERATOR_OUT_OF_BOUNDS);
+	}
+	return &(*mpHeaders)[mIndex];
+}
+
+inline const HeaderReadIterator& HeaderReadIterator::operator++()
+{
+	if(mIndex >= mpHeaders->size()) {
+		throw apl::Exception(LOCATION, "", ALERR_ITERATOR_OUT_OF_BOUNDS);
+	}
+	++mIndex;
+	return (*this);
+}
+
+inline const HeaderReadIterator HeaderReadIterator::operator++(int)
+{
+	if(mIndex >= mpHeaders->size()) {
+		throw apl::Exception(LOCATION, "", ALERR_ITERATOR_OUT_OF_BOUNDS);
+	}
+	HeaderReadIterator tmp(*this);
+	++mIndex;
+	return tmp;
+}
+
+}
+}
 
 /* vim: set ts=4 sw=4: */
 
