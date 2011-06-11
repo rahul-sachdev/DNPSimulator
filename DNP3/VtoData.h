@@ -43,6 +43,12 @@ namespace apl {
 					mSize(0)
 				{}
 
+				VtoData(size_t aSize) :
+					mSize(aSize)
+				{
+					assert(aSize <= MAX_SIZE);	
+				}
+
 				VtoData(const boost::uint8_t* apValue, size_t aSize)
 				{
 					this->Copy(apValue, aSize);
@@ -52,12 +58,7 @@ namespace apl {
 				{
 					return this->mSize;
 				}
-
-				const boost::uint8_t* GetData() const
-				{
-					return mpData;
-				}
-
+				
 				void Copy(const boost::uint8_t* apValue, size_t aSize)
 				{
 					assert(aSize <= MAX_SIZE);
@@ -65,9 +66,9 @@ namespace apl {
 					this->mSize = aSize;
 				}
 
-			private:
-
 				boost::uint8_t mpData[MAX_SIZE];
+
+			private:
 
 				size_t mSize;
 

@@ -125,7 +125,7 @@ BOOST_AUTO_TEST_SUITE(InsertionOrderedEventBufferSuite)
 
 		itr = b.Begin();
 		for (size_t i = 0; i < b.NumSelected(); ++i) {
-			const boost::uint8_t* value = itr->mValue.GetData();
+			const boost::uint8_t* value = itr->mValue.mpData;
 			for (size_t j = 0; j < dataSize; ++j)
 				BOOST_REQUIRE_EQUAL(value[j], i);
 			++itr;
@@ -137,7 +137,7 @@ BOOST_AUTO_TEST_SUITE(InsertionOrderedEventBufferSuite)
 
 		itr = b.Begin();
 		for (size_t i = 0; i < b.NumSelected(); ++i) {
-			const boost::uint8_t *value = itr->mValue.GetData();
+			const boost::uint8_t *value = itr->mValue.mpData;
 			for (size_t j = 0; j < dataSize; ++j)
 				BOOST_REQUIRE_EQUAL(value[j], i);
 			++itr;

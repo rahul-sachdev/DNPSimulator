@@ -75,7 +75,7 @@ namespace apl {
 				Group112Var0::Inst()->Write(
 						*itr,
 						vto->mValue.GetSize(),
-						vto->mValue.GetData()
+						vto->mValue.mpData
 				);
 
 				/* Mark the data segment as being written */

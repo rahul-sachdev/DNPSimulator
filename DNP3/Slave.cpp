@@ -337,12 +337,10 @@ void Slave::HandleWriteVto(HeaderReadIterator& arHdr)
 			 */
 			boost::uint8_t channel = static_cast<boost::uint8_t>(index);
 
-			size_t size = arHdr->GetVariation();
-			boost::uint8_t* data = new boost::uint8_t[size];
-			Group112Var0::Inst()->Read(*obj, arHdr->GetVariation(), data);
-
-			VtoData vto(data,size);
-			delete data;
+			VtoData vto(arHdr->GetVariation());
+			
+			Group112Var0::Inst()->Read(*obj, arHdr->GetVariation(), vto.mpData);
+			
 			mVtoReader.Update(vto,channel);
 		}
 	}

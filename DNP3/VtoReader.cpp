@@ -77,14 +77,8 @@ namespace apl {
 			/* Make sure we are part of the larger DNP3 transaction */
 			assert( this->InProgress() );
 
-			boost::uint8_t realChannel;
-			if(aChannelId == 255){
-				const boost::uint8_t* data = arData.GetData();
-				realChannel = data[0];
-			}else{
-				realChannel = aChannelId;
-			}
-
+			boost::uint8_t realChannel = (aChannelId == 255) ? arData.mpData[0] : aChannelId;
+			
 			/*
 			 * Lookup the callback object for the channel id.  If it doesn't
 			 * exist, register an error.  Otherwise, notify the callback
@@ -102,10 +96,10 @@ namespace apl {
 			else
 			{
 				if(aChannelId == 255){
-					bool online = arData.GetData()[1] == 0 ? true : false;
+					bool online = (arData.mpData[1] == 0);
 					i->second->OnVtoRemoteConnectedChanged(online);
 				}else{
-					i->second->OnVtoDataReceived(arData.GetData(), arData.GetSize());
+					i->second->OnVtoDataReceived(arData.mpData, arData.GetSize());
 				}
 			}
 		}

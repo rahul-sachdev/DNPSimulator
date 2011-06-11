@@ -61,14 +61,9 @@ void VtoWriter::SetLocalVtoState(bool aLocalVtoConnectionOpened, boost::uint8_t 
 	 */
 	CriticalSection cs(&mLock);
 
-	boost::uint8_t* data = new boost::uint8_t[2];
-
-	data[0] = aChannelId;
-	data[1] = aLocalVtoConnectionOpened ? 0 : 1;
-
-	VtoData vto(data, 2);
-
-	delete data;
+	VtoData vto(2);
+	vto.mpData[0] = aChannelId;
+	vto.mpData[1] = aLocalVtoConnectionOpened ? 0 : 1;
 
 	VtoEvent evt(vto, PC_CLASS_1, 255);
 	this->mQueue.push(evt);

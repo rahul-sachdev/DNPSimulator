@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_SUITE(VtoRouterTests)
 		BOOST_REQUIRE_EQUAL(aChannelId, arEvent.mIndex); // the channel id
 		BOOST_REQUIRE_EQUAL(aClass, arEvent.mClass);
 
-		const std::string hex = toHex(arEvent.mValue.GetData(), arEvent.mValue.GetSize(), true);
+		const std::string hex = toHex(arEvent.mValue.mpData, arEvent.mValue.GetSize(), true);
 
 		BOOST_REQUIRE_EQUAL(arData, hex);		
 	}

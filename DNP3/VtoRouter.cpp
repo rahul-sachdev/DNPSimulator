@@ -233,7 +233,7 @@ void VtoRouter::CheckForPhysWrite()
 {
 	if(mpPhys->CanWrite()) {
 		if(mPhysLayerTxBuffer.size() > 0) {
-			mpPhys->AsyncWrite(mPhysLayerTxBuffer.front().GetData(), mPhysLayerTxBuffer.front().GetSize());
+			mpPhys->AsyncWrite(mPhysLayerTxBuffer.front().mpData, mPhysLayerTxBuffer.front().GetSize());
 		}
 	}
 }
