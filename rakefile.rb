@@ -52,15 +52,9 @@ desc 'Formats all of the C++ h/cpp files with uncrustify'
 format_dirs = ['DNP3', 'APL', 'DNP3Test', 'TestAPL', 'APLTestTools', 'Terminal', 'TerminalTest', 'SlaveDemo']
 task :format do
   format_dirs.each do |dir|
-   cmd = "astyle --suffix=none #{dir}/*.h #{dir}/*.cpp"
-   puts cmd
-   `#{cmd}`
-   FileList["#{dir}/*.h"].each do |file|
-    #cmd = "asytle ./#{file}"
-    #puts cmd
-    #`#{cmd}`
-    #sh "asytle #{file}"
-   end
+   cmd = "astyle --options=config/astyle.cfg #{dir}/*.h #{dir}/*.cpp"
+   #puts cmd
+   `#{cmd}`   
   end
 end
 
