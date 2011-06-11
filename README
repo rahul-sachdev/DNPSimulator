@@ -70,7 +70,7 @@ required if you choose to build those options.
 
 Requirements:
 
-  - libtool                         (required)
+  - astyle                          (required if running 'make astyle')
   - boost v1.42 or later            (required)
     * boost::date_time              (required)
     * boost::program_options        (required)
@@ -78,6 +78,7 @@ Requirements:
     * boost::thread                 (required)
     * Boost Unit Test Framework     (required if running 'make check')
   - lcov                            (required if running 'make lcov')
+  - libtool                         (required)
   - tinyxml                         (required if 'testset' is desired)
 
 To start, first reinitialize autotools to be compatible with the version
@@ -139,6 +140,14 @@ sequence to reduce the amount of rebuilding required:
      make check             ; # Make and run the test infrastructure
                               # with lcov support enabled
      make lcov-report       ; # Regenerate the lcov report
+
+If you are a developer and are making changes to the OpenDNP3 library
+code, you can run the 'astyle' utility to ensure that your code
+conforms to the style guidelines used for the project:
+
+  make astyle
+
+Please run this utility before submitting any patches to the project.
 
 ## GNU rake (ruby make) ##
 
