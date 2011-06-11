@@ -434,8 +434,16 @@ dnp3test_SOURCES = \
 	DNP3Test/TransportStackPair.cpp \
 	DNP3Test/TransportTestObject.cpp
 
+ASTYLE=astyle --options=config/astyle.cfg
+
+astyle:
+	${ASTYLE}   ${srcdir}/APL/*.cpp            ${srcdir}/APL/*.h
+	${ASTYLE}   ${srcdir}/APLTestTools/*.cpp   ${srcdir}/APLTestTools/*.h
+	${ASTYLE}   ${srcdir}/DNP3/*.cpp           ${srcdir}/DNP3/*.h
+	${ASTYLE}   ${srcdir}/DNP3Test/*.cpp       ${srcdir}/DNP3Test/*.h
+
 include config/autotools/mk/doxygen.mak
 include config/autotools/mk/lcov.mak
 
-.PHONY : lcov lcov-report lcov-reset doxygen-run doxygen-doc $(DX_PS_GOAL) $(DX_PDF_GOAL)
+.PHONY : astyle lcov lcov-report lcov-reset doxygen-run doxygen-doc $(DX_PS_GOAL) $(DX_PDF_GOAL)
 

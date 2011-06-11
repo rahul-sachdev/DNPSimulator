@@ -27,11 +27,11 @@ class IPhysMonitor
 public:
 
 	enum State {
-	    Closed,		// layer is offline and idle
-	    Opening,	// layer is trying to open
-	    Waiting,
-	    Open,		// layer is open
-	    Stopped		// stopped and will no longer dispatch events
+		Closed,		// layer is offline and idle
+		Opening,	// layer is trying to open
+		Waiting,
+		Open,		// layer is open
+		Stopped		// stopped and will no longer dispatch events
 	};
 
 	virtual ~IPhysMonitor() {}

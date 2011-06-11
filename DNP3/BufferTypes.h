@@ -32,11 +32,11 @@ namespace dnp
  * BT_VTO.
  */
 enum BufferTypes {
-    BT_BINARY,
-    BT_ANALOG,
-    BT_COUNTER,
-    BT_VTO,
-    BT_INVALID		/* used for unit testing only, keep as last */
+	BT_BINARY,
+	BT_ANALOG,
+	BT_COUNTER,
+	BT_VTO,
+	BT_INVALID		/* used for unit testing only, keep as last */
 };
 
 /**

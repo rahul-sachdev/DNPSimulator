@@ -25,15 +25,15 @@ namespace apl
 {
 
 enum ParityType {
-    PAR_NONE,
-    PAR_EVEN,
-    PAR_ODD
+	PAR_NONE,
+	PAR_EVEN,
+	PAR_ODD
 };
 
 enum FlowType {
-    FLOW_NONE,
-    FLOW_HARDWARE,
-    FLOW_XONXOFF
+	FLOW_NONE,
+	FLOW_HARDWARE,
+	FLOW_XONXOFF
 };
 
 struct SerialSettings {
