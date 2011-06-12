@@ -16,39 +16,47 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_PHYS_TEST_OBJECT_H_
-#define __ASYNC_PHYS_TEST_OBJECT_H_
 
-#include <APLTestTools/AsyncTestObjectASIO.h>
+#include "AsyncLoopback.h"
 
-#include <APLTestTools/LogTester.h>
-#include <APL/PhysicalLayerAsyncTCPClient.h>
-#include <APL/PhysicalLayerAsyncTCPServer.h>
-#include <APL/LowerLayerToPhysAdapter.h>
-#include <APLTestTools/MockUpperLayer.h>
+#include <APL/IPhysicalLayerAsync.h>
 
 namespace apl
 {
 
-class AsyncPhysTestObject : public AsyncTestObjectASIO, public LogTester
+AsyncLoopback::AsyncLoopback(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc, FilterLevel aLevel, bool aImmediate) :
+	Loggable(apLogger),
+	AsyncPhysLayerMonitor(apLogger, apPhys, apTimerSrc, 5000),
+	mRead(1024),
+	mWrite(mRead)
 {
-public:
-	AsyncPhysTestObject(FilterLevel aLevel = LEV_INFO, bool aImmediate = false, bool aAutoRead = true);
-
-private:
-	Logger* mpLogger;
-
-public:
-	PhysicalLayerAsyncTCPClient mTCPClient;
-	PhysicalLayerAsyncTCPServer mTCPServer;
-
-	LowerLayerToPhysAdapter mClientAdapter;
-	LowerLayerToPhysAdapter mServerAdapter;
-
-	MockUpperLayer mClientUpper;
-	MockUpperLayer mServerUpper;
-};
 
 }
 
-#endif
+void AsyncLoopback::StartRead()
+{
+	mpPhys->AsyncRead(mRead, mRead.Size());
+}
+
+void AsyncLoopback::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
+{
+	if(mpPhys->CanWrite()) {
+		memcpy(mWrite, mRead, aNumBytes);
+		mpPhys->AsyncWrite(mWrite, aNumBytes);
+	}
+	this->StartRead();
+}
+
+void AsyncLoopback::OnPhysicalLayerOpen(void)
+{
+	LOG_BLOCK(LEV_INFO, "Opened");
+	this->StartRead();
+}
+
+void AsyncLoopback::OnPhysicalLayerClose(void)
+{
+	LOG_BLOCK(LEV_INFO, "Closed");
+}
+
+}
+

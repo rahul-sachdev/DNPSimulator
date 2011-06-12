@@ -19,7 +19,7 @@
 #include <APLTestTools/TestHelpers.h>
 #include <APLTestTools/MockCommandAcceptor.h>
 #include <APLTestTools/AsyncTestObjectASIO.h>
-#include <APLTestTools/AsyncPhysTestObject.h>
+#include <APLTestTools/AsyncLoopback.h>
 #include <APLTestTools/BufferHelpers.h>
 
 #include <APL/Log.h>
