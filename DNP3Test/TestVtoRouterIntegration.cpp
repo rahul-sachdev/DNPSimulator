@@ -152,10 +152,11 @@ public:
 		loopback.Stop();
 	}
 
-	bool checkState(IPhysMonitor::State aState) {
+	bool WaitForState(IPhysMonitor::State aState) {
 		return testObj.ProceedUntil(boost::bind(&MockClientConnection::StateIs, &local, aState), 10000);
 	}
-	bool checkData(CopyableBuffer& cb) {
+
+	bool WaitForData(CopyableBuffer& cb) {
 		return testObj.ProceedUntil(boost::bind(&MockClientConnection::DataIs, &local, cb), 10000);
 	}
 
@@ -186,7 +187,7 @@ BOOST_AUTO_TEST_CASE(Reconnect)
 {
 	VtoTestStack stack;
 
-	BOOST_REQUIRE(stack.checkState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
 
 	// start up both halfs of the dnp3 connection, vto server port will be online
 	stack.masterMgr.Start();
@@ -196,36 +197,36 @@ BOOST_AUTO_TEST_CASE(Reconnect)
 
 	// startup the local connection to the vto socket, since the whole stack is up we should connect
 	stack.local.Start();
-	BOOST_REQUIRE(stack.checkState(IPhysMonitor::Open));
+	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Open));
 
 	// test that data is correctly sent both ways
 	HexSequence testData1("de ad be ef");
 	stack.local.WriteData(testData1);
-	BOOST_REQUIRE(stack.checkData(testData1));
+	BOOST_REQUIRE(stack.WaitForData(testData1));
 
 	// stop the remote loopback server, which should cause the local vto socket to close and reopen
 	stack.loopback.Stop();
-	BOOST_REQUIRE(stack.checkState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
 
 	// check that we can reconnect to the loopback if it is turned back on
 	stack.loopback.Start();
-	BOOST_REQUIRE(stack.checkState(IPhysMonitor::Open));
+	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Open));
 
 	// send a second set of data
 	HexSequence testData2("01 02 03 04");
 	stack.local.WriteData(testData2);
-	BOOST_REQUIRE(stack.checkData(testData2));
+	BOOST_REQUIRE(stack.WaitForData(testData2));
 
 	// disconnect again
 	stack.loopback.Stop();
-	BOOST_REQUIRE(stack.checkState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
 }
 
 BOOST_AUTO_TEST_CASE(ServerNotOpenUntilDnpConnected)
 {
 	VtoTestStack stack;
 
-	BOOST_REQUIRE(stack.checkState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
 
 	// start master side, since there is no dnp connection to slave we wont start listening socket
 	stack.masterMgr.Start();
@@ -233,21 +234,21 @@ BOOST_AUTO_TEST_CASE(ServerNotOpenUntilDnpConnected)
 	// start local connection, we wont be able to connect to vto socket because there is no dnp3 connection made yet so we should
 	// end up in the waiting state
 	stack.local.Start();
-	BOOST_REQUIRE(stack.checkState(IPhysMonitor::Waiting));
+	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Waiting));
 
 	// start the slave side of the dnp3 connection and verify that we can connect to the vto server
 	stack.slaveMgr.Start();
-	BOOST_REQUIRE(stack.checkState(IPhysMonitor::Open));
+	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Open));
 
 	// since the remote side can't connect to the port we should have our local connection bounced
-	BOOST_REQUIRE(stack.checkState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
 }
 
 BOOST_AUTO_TEST_CASE(SocketIsClosedIfDnpDrops)
 {
 	VtoTestStack stack;
 
-	BOOST_REQUIRE(stack.checkState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
 
 	// start all 4 components, should connect
 	stack.masterMgr.Start();
@@ -255,19 +256,19 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfDnpDrops)
 	stack.loopback.Start();
 	stack.local.Start();
 
-	BOOST_REQUIRE(stack.checkState(IPhysMonitor::Open));
+	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Open));
 
 	// kill slave dnp3, should kill our local connection
 	stack.slaveMgr.Stop();
 
-	BOOST_REQUIRE(stack.checkState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
 }
 
 BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 {
 	VtoTestStack stack;
 
-	BOOST_REQUIRE(stack.checkState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
 
 	// start all 4 components, should connect
 	stack.masterMgr.Start();
@@ -275,12 +276,12 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 	stack.loopback.Start();
 	stack.local.Start();
 
-	BOOST_REQUIRE(stack.checkState(IPhysMonitor::Open));
+	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Open));
 
 	// kill remote connection, should kill our local connection
 	stack.loopback.Stop();
 
-	BOOST_REQUIRE(stack.checkState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
