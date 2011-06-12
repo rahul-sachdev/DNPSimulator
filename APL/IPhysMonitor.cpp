@@ -25,20 +25,19 @@ namespace apl
 
 std::string ConvertToString(PhysLayerState aState)
 {
-	switch(aState)
-	{
-		case(PLS_CLOSED): 
-			return "Closed";
-		case(PLS_OPENING): 
-			return "Opening";
-		case(PLS_WAITING):
-			return "Waiting";
-		case(PLS_OPEN):
-			return "Open";
-		case(PLS_STOPPED):
-			return "Stopped";
-		default: 
-			return "Undefined state";
+	switch(aState) {
+	case(PLS_CLOSED):
+		return "Closed";
+	case(PLS_OPENING):
+		return "Opening";
+	case(PLS_WAITING):
+		return "Waiting";
+	case(PLS_OPEN):
+		return "Open";
+	case(PLS_STOPPED):
+		return "Stopped";
+	default:
+		return "Undefined state";
 	}
 }
 

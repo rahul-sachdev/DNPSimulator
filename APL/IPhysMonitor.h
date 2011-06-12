@@ -25,11 +25,11 @@ namespace apl
 {
 
 enum PhysLayerState {
-	    PLS_CLOSED,		// layer is offline and idle
-	    PLS_OPENING,	// layer is trying to open
-	    PLS_WAITING,
-	    PLS_OPEN,		// layer is open
-	    PLS_STOPPED		// stopped and will no longer dispatch events
+    PLS_CLOSED,		// layer is offline and idle
+    PLS_OPENING,	// layer is trying to open
+    PLS_WAITING,
+    PLS_OPEN,		// layer is open
+    PLS_STOPPED		// stopped and will no longer dispatch events
 };
 
 std::string ConvertToString(PhysLayerState aState);

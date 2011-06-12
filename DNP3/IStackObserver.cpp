@@ -26,16 +26,15 @@ namespace dnp
 
 std::string ConvertToString(StackStates aState)
 {
-	switch(aState)
-	{
-		case(SS_COMMS_UP):
-			return "COMMS_UP";
-		case(SS_COMMS_DOWN):
-			return "COMMS_DOWN";
-		case(SS_UNKNOWN):
-			return "COMMS_UNKNOWN";
-		default:
-			return "Undefined state";
+	switch(aState) {
+	case(SS_COMMS_UP):
+		return "COMMS_UP";
+	case(SS_COMMS_DOWN):
+		return "COMMS_DOWN";
+	case(SS_UNKNOWN):
+		return "COMMS_UNKNOWN";
+	default:
+		return "Undefined state";
 	}
 }
 
