@@ -187,6 +187,14 @@
 				Name="PhysicalLayer"
 				>
 				<File
+					RelativePath=".\AsyncLoopback.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\AsyncLoopback.h"
+					>
+				</File>
+				<File
 					RelativePath=".\AsyncPhysTestObject.cpp"
 					>
 				</File>

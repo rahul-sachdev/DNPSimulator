@@ -588,6 +588,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\IStackObserver.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\IStackObserver.h"
 					>
 				</File>

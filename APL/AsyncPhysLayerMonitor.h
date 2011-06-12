@@ -68,9 +68,9 @@ protected:
 
 private:
 
-	void Notify(IPhysMonitor::State);
+	void Notify(PhysLayerState);
 
-	virtual void OnStateChange(IPhysMonitor::State) = 0;
+	virtual void OnStateChange(PhysLayerState) = 0;
 
 	bool mOpening;
 	bool mOpen;

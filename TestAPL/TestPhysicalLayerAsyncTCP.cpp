@@ -29,6 +29,7 @@
 #include <APLTestTools/TestHelpers.h>
 #include <APLTestTools/BufferHelpers.h>
 #include <APLTestTools/AsyncTestObjectASIO.h>
+#include <APLTestTools/AsyncLoopback.h>
 #include <APLTestTools/AsyncPhysTestObject.h>
 
 #include <iostream>

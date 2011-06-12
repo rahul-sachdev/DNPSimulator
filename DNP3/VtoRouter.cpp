@@ -129,7 +129,7 @@ void VtoRouter::DoStop()
 void VtoRouter::DoVtoRemoteConnectedChanged(bool aOpened)
 {
 
-	LOG_BLOCK(LEV_INFO, "RemoteConnectionChanged: " << std::boolalpha << aOpened);
+	LOG_BLOCK(LEV_INFO, "RemoteConnectionChanged: " << (aOpened ? "open" : "closed"));
 
 	if(mRemoteConnected != aOpened) {
 		mRemoteConnected = aOpened;
@@ -164,7 +164,7 @@ void VtoRouter::DoDnpConnectedChanged(bool aConnected)
 {
 
 	if(mDnpConnected != aConnected) {
-		LOG_BLOCK(LEV_INFO, "Dnp Connection changed: " << std::boolalpha << aConnected);
+		LOG_BLOCK(LEV_INFO, "Dnp Connection changed: " << (aConnected ? "connected" : "disconnected"));
 		mDnpConnected = aConnected;
 		if(mLocalConnected && !mDisableExtensions && !mPermanentlyStopped) {
 			mpVtoWriter->SetLocalVtoState(mLocalConnected, this->GetChannelId());
@@ -186,7 +186,7 @@ void VtoRouter::DoDnpConnectedChanged(bool aConnected)
 void VtoRouter::SetLocalConnected(bool aConnected)
 {
 	if(mLocalConnected != aConnected) {
-		LOG_BLOCK(LEV_INFO, "Local Connection changed: " << std::boolalpha << aConnected);
+		LOG_BLOCK(LEV_INFO, "Local Connection changed: " << (aConnected ? "connected" : "disconnected"));
 		mLocalConnected = aConnected;
 		if(mDnpConnected && !mDisableExtensions && !mPermanentlyStopped) {
 			mpVtoWriter->SetLocalVtoState(mLocalConnected, this->GetChannelId());
@@ -264,9 +264,9 @@ void VtoRouter::OnPhysicalLayerOpen()
 	this->CheckForPhysWrite();
 }
 
-void VtoRouter::OnStateChange(IPhysMonitor::State aState)
+void VtoRouter::OnStateChange(PhysLayerState aState)
 {
-	if(mPermanentlyStopped && aState == IPhysMonitor::Stopped && !mCleanedup) {
+	if(mPermanentlyStopped && aState == PLS_STOPPED && !mCleanedup) {
 		mCleanedup = true;
 		this->Cleanup();
 	}

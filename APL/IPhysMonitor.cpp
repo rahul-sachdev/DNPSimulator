@@ -16,39 +16,31 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_PHYS_TEST_OBJECT_H_
-#define __ASYNC_PHYS_TEST_OBJECT_H_
 
-#include <APLTestTools/AsyncTestObjectASIO.h>
-
-#include <APLTestTools/LogTester.h>
-#include <APL/PhysicalLayerAsyncTCPClient.h>
-#include <APL/PhysicalLayerAsyncTCPServer.h>
-#include <APL/LowerLayerToPhysAdapter.h>
-#include <APLTestTools/MockUpperLayer.h>
+#include "IPhysMonitor.h"
 
 namespace apl
 {
 
-class AsyncPhysTestObject : public AsyncTestObjectASIO, public LogTester
+
+std::string ConvertToString(PhysLayerState aState)
 {
-public:
-	AsyncPhysTestObject(FilterLevel aLevel = LEV_INFO, bool aImmediate = false, bool aAutoRead = true);
-
-private:
-	Logger* mpLogger;
-
-public:
-	PhysicalLayerAsyncTCPClient mTCPClient;
-	PhysicalLayerAsyncTCPServer mTCPServer;
-
-	LowerLayerToPhysAdapter mClientAdapter;
-	LowerLayerToPhysAdapter mServerAdapter;
-
-	MockUpperLayer mClientUpper;
-	MockUpperLayer mServerUpper;
-};
+	switch(aState) {
+	case(PLS_CLOSED):
+		return "Closed";
+	case(PLS_OPENING):
+		return "Opening";
+	case(PLS_WAITING):
+		return "Waiting";
+	case(PLS_OPEN):
+		return "Open";
+	case(PLS_STOPPED):
+		return "Stopped";
+	default:
+		return "Undefined state";
+	}
+}
 
 }
 
-#endif
+

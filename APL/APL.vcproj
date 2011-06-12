@@ -218,6 +218,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\IPhysMonitor.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\IPhysMonitor.h"
 						>
 					</File>

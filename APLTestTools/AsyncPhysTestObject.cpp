@@ -19,12 +19,6 @@
 
 #include "AsyncPhysTestObject.h"
 
-#include <boost/asio.hpp>
-#include <APL/Exception.h>
-#include <sstream>
-
-using namespace std;
-
 namespace apl
 {
 
@@ -41,41 +35,5 @@ AsyncPhysTestObject::AsyncPhysTestObject(FilterLevel aLevel, bool aImmediate, bo
 	mClientAdapter.SetUpperLayer(&mClientUpper);
 	mServerAdapter.SetUpperLayer(&mServerUpper);
 }
-
-AsyncLoopback::AsyncLoopback(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc, FilterLevel aLevel, bool aImmediate) :
-	Loggable(apLogger),
-	AsyncPhysLayerMonitor(apLogger, apPhys, apTimerSrc, 5000),
-	mRead(1024),
-	mWrite(mRead)
-{
-
-}
-
-void AsyncLoopback::StartRead()
-{
-	mpPhys->AsyncRead(mRead, mRead.Size());
-}
-
-void AsyncLoopback::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
-{
-	if(mpPhys->CanWrite()) {
-		memcpy(mWrite, mRead, aNumBytes);
-		mpPhys->AsyncWrite(mWrite, aNumBytes);
-	}
-	this->StartRead();
-}
-
-void AsyncLoopback::OnPhysicalLayerOpen(void)
-{
-	LOG_BLOCK(LEV_INFO, "Opened");
-	this->StartRead();
-}
-
-void AsyncLoopback::OnPhysicalLayerClose(void)
-{
-	LOG_BLOCK(LEV_INFO, "Closed");
-}
-
-
 
 }

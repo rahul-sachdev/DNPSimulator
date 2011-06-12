@@ -16,37 +16,36 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_PHYS_TEST_OBJECT_H_
-#define __ASYNC_PHYS_TEST_OBJECT_H_
+#ifndef __ASYNC_LOOPBACK_H_
+#define __ASYNC_LOOPBACK_H_
 
 #include <APLTestTools/AsyncTestObjectASIO.h>
-
-#include <APLTestTools/LogTester.h>
-#include <APL/PhysicalLayerAsyncTCPClient.h>
-#include <APL/PhysicalLayerAsyncTCPServer.h>
-#include <APL/LowerLayerToPhysAdapter.h>
-#include <APLTestTools/MockUpperLayer.h>
+#include <APL/AsyncPhysLayerMonitor.h>
+#include <APL/CopyableBuffer.h>
 
 namespace apl
 {
 
-class AsyncPhysTestObject : public AsyncTestObjectASIO, public LogTester
+class AsyncLoopback : public AsyncPhysLayerMonitor
 {
 public:
-	AsyncPhysTestObject(FilterLevel aLevel = LEV_INFO, bool aImmediate = false, bool aAutoRead = true);
+	AsyncLoopback(Logger*, IPhysicalLayerAsync*, ITimerSource*, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
 
 private:
-	Logger* mpLogger;
 
-public:
-	PhysicalLayerAsyncTCPClient mTCPClient;
-	PhysicalLayerAsyncTCPServer mTCPServer;
+	CopyableBuffer mRead;
+	CopyableBuffer mWrite;
 
-	LowerLayerToPhysAdapter mClientAdapter;
-	LowerLayerToPhysAdapter mServerAdapter;
+	void OnStateChange(PhysLayerState) {}
 
-	MockUpperLayer mClientUpper;
-	MockUpperLayer mServerUpper;
+	void _OnReceive(const boost::uint8_t*, size_t);
+	void _OnSendSuccess(void) {}
+	void _OnSendFailure(void) {}
+
+	void OnPhysicalLayerOpen(void);
+	void OnPhysicalLayerClose(void);
+
+	void StartRead();
 };
 
 }
