@@ -163,6 +163,7 @@ void AsyncStackManager::StopAllRoutersOnStack(const std::string& arStackName)
 {
 	IVtoWriter* pWriter = this->GetVtoWriter(arStackName);
 	//mVtoManager.StopAllRoutersOnWriter(pWriter);
+	//TODO - figure out why this is commented out
 }
 
 IVtoWriter* AsyncStackManager::GetVtoWriter(const std::string& arStackName)
