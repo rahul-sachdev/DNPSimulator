@@ -24,10 +24,12 @@
 
 namespace apl
 {
+
 PhysicalLayerMap::PhysicalLayerMap(Logger* apBaseLogger, boost::asio::io_service* apService) :
 	Loggable(apBaseLogger),
-	mpBaseLogger(apBaseLogger),
-	mpService(apService)
+	mpService(apService),
+	mpBaseLogger(apBaseLogger)
+
 {
 
 }

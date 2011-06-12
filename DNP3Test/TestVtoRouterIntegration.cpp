@@ -54,8 +54,8 @@ class MockClientConnection : public AsyncPhysLayerMonitor
 {
 public:
 	MockClientConnection(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimer, millis_t aOpenRetry) :
-		AsyncPhysLayerMonitor(apLogger, apPhys, apTimer, aOpenRetry),
 		Loggable(apLogger),
+		AsyncPhysLayerMonitor(apLogger, apPhys, apTimer, aOpenRetry),
 		mOpens(0),
 		mCloses(0),
 		mOpenFailures(0),
