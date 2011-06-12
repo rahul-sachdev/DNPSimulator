@@ -25,14 +25,15 @@ namespace dnp
 {
 
 enum StackStates {
-    SS_COMMS_UP,
-    SS_COMMS_DOWN,
-    SS_UNKNOWN
+	SS_COMMS_UP,
+	SS_COMMS_DOWN,
+	SS_UNKNOWN
 };
 
 class IStackObserver
 {
 public:
+	virtual ~IStackObserver() {};
 
 	virtual void OnStateChange(StackStates aState) = 0;
 };

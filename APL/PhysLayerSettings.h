@@ -38,8 +38,8 @@ public:
 		mpObserver(apObserver)
 	{}
 
-	const FilterLevel LogLevel;
-	const millis_t RetryTimeout;
+	FilterLevel LogLevel;
+	millis_t RetryTimeout;
 	IPhysMonitor* mpObserver;
 };
 

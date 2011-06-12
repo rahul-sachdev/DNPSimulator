@@ -36,12 +36,12 @@ class APDU;
 class IINField;
 
 enum TaskResult {
-    TR_FAIL,		// The task fails, further responses are ignored
+	TR_FAIL,		// The task fails, further responses are ignored
 
-    TR_SUCCESS,		// The tasks is successful and complete
+	TR_SUCCESS,		// The tasks is successful and complete
 
-    TR_CONTINUE,    // The task is not yet complete. If OnFinalResponse
-    // returns CONTINUE, it's a multi request task
+	TR_CONTINUE,    // The task is not yet complete. If OnFinalResponse
+	// returns CONTINUE, it's a multi request task
 };
 
 /**

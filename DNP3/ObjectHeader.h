@@ -42,8 +42,8 @@ namespace dnp
 class ObjectBase;
 
 enum ObjectHeaderMasks {
-    OHM_OBJECT_PREFIX = 0x70,
-    OHM_RANGE_SPECIFIER = 0x0F
+	OHM_OBJECT_PREFIX = 0x70,
+	OHM_RANGE_SPECIFIER = 0x0F
 };
 
 struct ObjectHeaderField {
@@ -60,13 +60,13 @@ struct ObjectHeaderField {
 };
 
 enum ObjectHeaderTypes {
-    OHT_ALL_OBJECTS,
-    OHT_RANGED_2_OCTET,
-    OHT_RANGED_4_OCTET,
-    OHT_RANGED_8_OCTET,
-    OHT_COUNT_1_OCTET,
-    OHT_COUNT_2_OCTET,
-    OHT_COUNT_4_OCTET
+	OHT_ALL_OBJECTS,
+	OHT_RANGED_2_OCTET,
+	OHT_RANGED_4_OCTET,
+	OHT_RANGED_8_OCTET,
+	OHT_COUNT_1_OCTET,
+	OHT_COUNT_2_OCTET,
+	OHT_COUNT_4_OCTET
 };
 
 class IObjectHeader

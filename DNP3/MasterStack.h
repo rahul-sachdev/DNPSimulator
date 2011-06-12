@@ -34,11 +34,11 @@ class MasterStack : public Stack
 public:
 
 	MasterStack(
-	    Logger*,
-	    ITimerSource* apTimerSrc,
-	    IDataObserver* apPublisher,
-	    AsyncTaskGroup* apTaskGroup,
-	    const MasterStackConfig& arCfg);
+	        Logger*,
+	        ITimerSource* apTimerSrc,
+	        IDataObserver* apPublisher,
+	        AsyncTaskGroup* apTaskGroup,
+	        const MasterStackConfig& arCfg);
 
 	IVtoWriter* GetVtoWriter();
 	IVtoReader* GetVtoReader();

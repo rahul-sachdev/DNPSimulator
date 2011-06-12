@@ -53,9 +53,9 @@ struct WriteFunc {
 class ResponseContext : public Loggable
 {
 	enum Mode {
-	    UNDEFINED,
-	    SOLICITED,
-	    UNSOLICITED
+		UNDEFINED,
+		SOLICITED,
+		UNSOLICITED
 	};
 
 public:

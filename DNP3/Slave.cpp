@@ -77,15 +77,15 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	 * Slave::OnDataUpdate().
 	 */
 	mChangeBuffer.AddObserver(
-	    mNotifierSource.Get(
-	        boost::bind(&Slave::OnDataUpdate, this),
-	        mpTimerSrc
-	    )
+	        mNotifierSource.Get(
+	                boost::bind(&Slave::OnDataUpdate, this),
+	                mpTimerSrc
+	        )
 	);
 
 	mpVtoNotifier = mNotifierSource.Get(
-	                    boost::bind(&Slave::OnVtoUpdate, this),
-	                    mpTimerSrc
+	                        boost::bind(&Slave::OnVtoUpdate, this),
+	                        mpTimerSrc
 	                );
 	/*
 	 * Incoming data will trigger a POST on the timer source to call
