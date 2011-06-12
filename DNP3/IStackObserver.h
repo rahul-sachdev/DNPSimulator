@@ -16,8 +16,10 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __STACK_OBSERVER_H_
-#define __STACK_OBSERVER_H_
+#ifndef __I_STACK_OBSERVER_H_
+#define __I_STACK_OBSERVER_H_
+
+#include <string>
 
 namespace apl
 {
@@ -29,6 +31,8 @@ enum StackStates {
     SS_COMMS_DOWN,
     SS_UNKNOWN
 };
+
+std::string ConvertToString(StackStates aState);
 
 class IStackObserver
 {

@@ -61,7 +61,7 @@ public:
 		mOpenFailures(0),
 		mRead(1024),
 		mLastRead(0) {
-		mState.push(IPhysMonitor::Closed);
+		mState.push(PLS_CLOSED);
 	}
 
 	size_t mOpens;
@@ -71,7 +71,7 @@ public:
 	CopyableBuffer mRead;
 	CopyableBuffer mLastRead;
 
-	std::queue< IPhysMonitor::State > mState;
+	std::queue< PhysLayerState > mState;
 
 	void OnPhysicalLayerOpen() {
 		mOpens++;
@@ -85,8 +85,8 @@ public:
 		mOpenFailures++;
 	}
 
-	void OnStateChange(IPhysMonitor::State aState) {
-		LOG_BLOCK(LEV_INFO, "State: " << aState);
+	void OnStateChange(PhysLayerState aState) {
+		LOG_BLOCK(LEV_INFO, "OnStateChange: " << ConvertToString(aState));
 		mState.push(aState);
 	}
 
@@ -103,11 +103,13 @@ public:
 	void _OnSendSuccess(void) {}
 	void _OnSendFailure(void) {}
 
-	bool StateIs(IPhysMonitor::State aState) {
+	bool StateIs(PhysLayerState aState) {
 		if(mState.empty()) return false;
-		bool matchedState = mState.front() == aState;
-		if(mState.size() > 1) mState.pop();
-		return matchedState;
+		else {
+			bool matchedState = mState.front() == aState;
+			mState.pop();
+			return matchedState;
+		}
 	}
 	bool CountsAre(size_t aOpens, size_t aCloses, size_t aOpenFails) {
 		return mOpens == aOpens && mCloses == aCloses && mOpenFailures == aOpenFails;
@@ -131,7 +133,7 @@ public:
 		server(log.GetLogger(level, "remote"), testObj.GetService(), "0.0.0.0", port + 10),
 		loopback(log.GetLogger(level, "loopback"), &server, &timerSource),
 		local(log.GetLogger(level, "mock"), &client, &timerSource, 50) {
-		//log.AddLogSubscriber(LogToStdio::Inst());
+		log.AddLogSubscriber(LogToStdio::Inst());
 
 		slaveMgr.AddTCPServer("dnp_server", PhysLayerSettings(), "127.0.0.1", port);
 		slaveMgr.AddTCPClient("vto_client", PhysLayerSettings(), "127.0.0.1", port + 10);
@@ -152,7 +154,7 @@ public:
 		loopback.Stop();
 	}
 
-	bool WaitForState(IPhysMonitor::State aState) {
+	bool WaitForState(PhysLayerState aState) {
 		return testObj.ProceedUntil(boost::bind(&MockClientConnection::StateIs, &local, aState), 10000);
 	}
 
@@ -187,7 +189,7 @@ BOOST_AUTO_TEST_CASE(Reconnect)
 {
 	VtoTestStack stack;
 
-	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 
 	// start up both halfs of the dnp3 connection, vto server port will be online
 	stack.masterMgr.Start();
@@ -197,7 +199,7 @@ BOOST_AUTO_TEST_CASE(Reconnect)
 
 	// startup the local connection to the vto socket, since the whole stack is up we should connect
 	stack.local.Start();
-	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Open));
+	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));
 
 	// test that data is correctly sent both ways
 	HexSequence testData1("de ad be ef");
@@ -206,11 +208,11 @@ BOOST_AUTO_TEST_CASE(Reconnect)
 
 	// stop the remote loopback server, which should cause the local vto socket to close and reopen
 	stack.loopback.Stop();
-	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 
 	// check that we can reconnect to the loopback if it is turned back on
 	stack.loopback.Start();
-	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Open));
+	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));
 
 	// send a second set of data
 	HexSequence testData2("01 02 03 04");
@@ -219,14 +221,14 @@ BOOST_AUTO_TEST_CASE(Reconnect)
 
 	// disconnect again
 	stack.loopback.Stop();
-	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 }
 
 BOOST_AUTO_TEST_CASE(ServerNotOpenUntilDnpConnected)
 {
 	VtoTestStack stack;
 
-	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 
 	// start master side, since there is no dnp connection to slave we wont start listening socket
 	stack.masterMgr.Start();
@@ -234,21 +236,21 @@ BOOST_AUTO_TEST_CASE(ServerNotOpenUntilDnpConnected)
 	// start local connection, we wont be able to connect to vto socket because there is no dnp3 connection made yet so we should
 	// end up in the waiting state
 	stack.local.Start();
-	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Waiting));
+	BOOST_REQUIRE(stack.WaitForState(PLS_WAITING));
 
 	// start the slave side of the dnp3 connection and verify that we can connect to the vto server
 	stack.slaveMgr.Start();
-	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Open));
+	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));
 
 	// since the remote side can't connect to the port we should have our local connection bounced
-	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 }
 
 BOOST_AUTO_TEST_CASE(SocketIsClosedIfDnpDrops)
 {
 	VtoTestStack stack;
 
-	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 
 	// start all 4 components, should connect
 	stack.masterMgr.Start();
@@ -256,19 +258,19 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfDnpDrops)
 	stack.loopback.Start();
 	stack.local.Start();
 
-	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Open));
+	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));
 
 	// kill slave dnp3, should kill our local connection
 	stack.slaveMgr.Stop();
 
-	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 }
 
 BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 {
 	VtoTestStack stack;
 
-	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 
 	// start all 4 components, should connect
 	stack.masterMgr.Start();
@@ -276,12 +278,12 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 	stack.loopback.Start();
 	stack.local.Start();
 
-	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Open));
+	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));
 
 	// kill remote connection, should kill our local connection
 	stack.loopback.Stop();
 
-	BOOST_REQUIRE(stack.WaitForState(IPhysMonitor::Closed));
+	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

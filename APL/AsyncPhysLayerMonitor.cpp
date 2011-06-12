@@ -64,7 +64,7 @@ void AsyncPhysLayerMonitor::SetMonitor(IPhysMonitor* apMonitor)
 	mpMonitor = apMonitor;
 }
 
-void AsyncPhysLayerMonitor::Notify(IPhysMonitor::State aState)
+void AsyncPhysLayerMonitor::Notify(PhysLayerState aState)
 {
 	mPortState.Set(aState);
 	this->OnStateChange(aState);
@@ -79,7 +79,7 @@ void AsyncPhysLayerMonitor::Start()
 	mOpening = true;
 	mStopOpenRetry = false;
 	mpPhys->AsyncOpen();
-	this->Notify(IPhysMonitor::Opening);
+	this->Notify(PLS_OPENING);
 }
 
 void AsyncPhysLayerMonitor::Stop()
@@ -87,7 +87,7 @@ void AsyncPhysLayerMonitor::Stop()
 	LOG_BLOCK(LEV_INFO, "Stop");
 	if(!this->IsRunning()) {
 		mStopOpenRetry = true;
-		this->Notify(IPhysMonitor::Stopped);
+		this->Notify(PLS_STOPPED);
 	}
 	else {
 		if(!mStopOpenRetry) {
@@ -115,10 +115,10 @@ void AsyncPhysLayerMonitor::_OnOpenFailure()
 	mOpening = false;
 	OnPhysicalLayerOpenFailure();
 	if(mStopOpenRetry) {
-		this->Notify(IPhysMonitor::Stopped); //we're done!
+		this->Notify(PLS_STOPPED); //we're done!
 	}
 	else {
-		this->Notify(IPhysMonitor::Waiting);
+		this->Notify(PLS_WAITING);
 		mpOpenTimer = mpTimerSrc->Start(M_OPEN_RETRY, boost::bind(&AsyncPhysLayerMonitor::Start, this));
 	}
 }
@@ -127,7 +127,7 @@ void AsyncPhysLayerMonitor::_OnLowerLayerUp()
 {
 	assert(mOpening); mOpening = false; mOpen = true;
 	this->OnPhysicalLayerOpen();
-	this->Notify(IPhysMonitor::Open);
+	this->Notify(PLS_OPEN);
 }
 
 void AsyncPhysLayerMonitor::_OnLowerLayerDown()
@@ -135,10 +135,10 @@ void AsyncPhysLayerMonitor::_OnLowerLayerDown()
 	mOpen = false;
 
 	this->OnPhysicalLayerClose();
-	this->Notify(IPhysMonitor::Closed);
+	this->Notify(PLS_CLOSED);
 
 	if(mStopOpenRetry) {
-		this->Notify(IPhysMonitor::Stopped);
+		this->Notify(PLS_STOPPED);
 	}
 	else this->Start();
 }

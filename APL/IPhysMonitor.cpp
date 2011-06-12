@@ -16,34 +16,32 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __I_PHYS_MONITOR_H_
-#define __I_PHYS_MONITOR_H_
 
-#include <string>
+#include "IPhysMonitor.h"
 
 namespace apl
 {
 
-enum PhysLayerState {
-	    PLS_CLOSED,		// layer is offline and idle
-	    PLS_OPENING,	// layer is trying to open
-	    PLS_WAITING,
-	    PLS_OPEN,		// layer is open
-	    PLS_STOPPED		// stopped and will no longer dispatch events
-};
 
-std::string ConvertToString(PhysLayerState aState);
-
-class IPhysMonitor
+std::string ConvertToString(PhysLayerState aState)
 {
-public:
-
-	virtual ~IPhysMonitor() {}
-
-	virtual void OnStateChange(PhysLayerState) = 0;
-
-};
+	switch(aState)
+	{
+		case(PLS_CLOSED): 
+			return "Closed";
+		case(PLS_OPENING): 
+			return "Opening";
+		case(PLS_WAITING):
+			return "Waiting";
+		case(PLS_OPEN):
+			return "Open";
+		case(PLS_STOPPED):
+			return "Stopped";
+		default: 
+			return "Undefined state";
+	}
+}
 
 }
 
-#endif
+

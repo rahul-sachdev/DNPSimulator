@@ -29,20 +29,17 @@
 
 namespace apl
 {
+
 class Logger;
 class IPhysicalLayerAsync;
 class ITimerSource;
 class AsyncTaskGroup;
-}
 
-namespace apl
-{
 namespace dnp
 {
 
 class Stack;
 class AsyncStackManager;
-
 
 template <class T, class U>
 static std::vector<U> GetKeys(T& arMap)
@@ -89,7 +86,7 @@ public:
 	void Release();
 
 	//Events from the router
-	void OnStateChange(IPhysMonitor::State);
+	void OnStateChange(PhysLayerState);
 
 private:
 

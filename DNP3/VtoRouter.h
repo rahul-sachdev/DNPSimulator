@@ -157,7 +157,7 @@ protected:
 	/**
 	 * Implement AsyncPhysMonitor::OnStateChange
 	 */
-	void OnStateChange(IPhysMonitor::State);
+	void OnStateChange(PhysLayerState);
 
 	void DoStart();
 	void DoStop();

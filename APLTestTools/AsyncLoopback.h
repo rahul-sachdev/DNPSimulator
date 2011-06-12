@@ -36,7 +36,7 @@ private:
 	CopyableBuffer mRead;
 	CopyableBuffer mWrite;
 
-	void OnStateChange(IPhysMonitor::State) {}
+	void OnStateChange(PhysLayerState) {}
 
 	void _OnReceive(const boost::uint8_t*, size_t);
 	void _OnSendSuccess(void) {}

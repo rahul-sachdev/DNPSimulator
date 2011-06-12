@@ -102,7 +102,7 @@ private:
 	void _OnSendFailure();
 
 	// Implement virtual AsyncPhysLayerMonitor
-	void OnStateChange(IPhysMonitor::State) {}
+	void OnStateChange(PhysLayerState) {}
 	void OnPhysicalLayerOpen();
 	void OnPhysicalLayerClose();
 

@@ -264,9 +264,9 @@ void VtoRouter::OnPhysicalLayerOpen()
 	this->CheckForPhysWrite();
 }
 
-void VtoRouter::OnStateChange(IPhysMonitor::State aState)
+void VtoRouter::OnStateChange(PhysLayerState aState)
 {
-	if(mPermanentlyStopped && aState == IPhysMonitor::Stopped && !mCleanedup) {
+	if(mPermanentlyStopped && aState == PLS_STOPPED && !mCleanedup) {
 		mCleanedup = true;
 		this->Cleanup();
 	}

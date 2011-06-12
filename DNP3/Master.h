@@ -44,6 +44,7 @@
 
 namespace apl
 {
+
 class IDataObserver;
 class ITask;
 class AsyncTaskGroup;
@@ -52,10 +53,7 @@ class ITimeSource;
 class AsyncTaskContinuous;
 class AsyncTaskBase;
 class CopyableBuffer;
-}
 
-namespace apl
-{
 namespace dnp
 {
 
