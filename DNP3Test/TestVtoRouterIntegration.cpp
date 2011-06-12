@@ -21,6 +21,7 @@
 #include <APLTestTools/AsyncTestObjectASIO.h>
 #include <APLTestTools/AsyncLoopback.h>
 #include <APLTestTools/BufferHelpers.h>
+#include <APLTestTools/LogTester.h>
 
 #include <APL/Log.h>
 #include <APL/LogToStdio.h>
@@ -120,30 +121,32 @@ public:
 
 };
 
-class VtoTestStack
+class VtoTestStack : public LogTester
 {
 public:
 	VtoTestStack(FilterLevel level = LEV_INFO, boost::uint16_t port = PORT_VALUE) :
-		main(log.GetLogger(level, "main")),
-		ltf(&log, "integration.log", true),
-		slaveMgr(log.GetLogger(level, "slave"), false),
-		masterMgr(log.GetLogger(level, "master"), false),
+		LogTester(),
+		mpMainLogger(mLog.GetLogger(level, "main")),
+		ltf(&mLog, "integration.log", true),
+		slaveMgr(mLog.GetLogger(level, "slave"), false),
+		masterMgr(mLog.GetLogger(level, "master"), false),
 		timerSource(testObj.GetService()),
-		client(log.GetLogger(level, "local"), testObj.GetService(), "127.0.0.1", port + 20),
-		server(log.GetLogger(level, "remote"), testObj.GetService(), "0.0.0.0", port + 10),
-		loopback(log.GetLogger(level, "loopback"), &server, &timerSource),
-		local(log.GetLogger(level, "mock"), &client, &timerSource, 50) {
-		log.AddLogSubscriber(LogToStdio::Inst());
+		client(mLog.GetLogger(level, "local-tcp-client"), testObj.GetService(), "127.0.0.1", port + 20),
+		server(mLog.GetLogger(level, "remote-tcp-server"), testObj.GetService(), "0.0.0.0", port + 10),
+		loopback(mLog.GetLogger(level, "loopback"), &server, &timerSource),
+		local(mLog.GetLogger(level, "mock-client-connection"), &client, &timerSource, 500) {
 
-		slaveMgr.AddTCPServer("dnp_server", PhysLayerSettings(), "127.0.0.1", port);
-		slaveMgr.AddTCPClient("vto_client", PhysLayerSettings(), "127.0.0.1", port + 10);
-		slaveMgr.AddSlave("dnp_server", "slave", level, &cmdAcceptor, SlaveStackConfig());
-		slaveMgr.StartVtoRouter("vto_client", "slave", VtoRouterSettings(88, false, false, 4096, 1000));
+		mLog.AddLogSubscriber(LogToStdio::Inst());
 
-		masterMgr.AddTCPClient("dnp_client", PhysLayerSettings(), "127.0.0.1", port);
-		masterMgr.AddTCPServer("vto_server", PhysLayerSettings(), "127.0.0.1", port + 20);
-		masterMgr.AddMaster("dnp_client", "master", level, &fdo, MasterStackConfig());
-		masterMgr.StartVtoRouter("vto_server", "master", VtoRouterSettings(88, true, false, 4096, 1000));
+		slaveMgr.AddTCPServer("dnp-tcp-server", PhysLayerSettings(), "127.0.0.1", port);
+		slaveMgr.AddTCPClient("vto-tcp-client", PhysLayerSettings(), "127.0.0.1", port + 10);
+		slaveMgr.AddSlave("dnp-tcp-server", "slave", level, &cmdAcceptor, SlaveStackConfig());
+		slaveMgr.StartVtoRouter("vto-tcp-client", "slave", VtoRouterSettings(88, false, false, 4096, 1000));
+
+		masterMgr.AddTCPClient("dnp-tcp-client", PhysLayerSettings(), "127.0.0.1", port);
+		masterMgr.AddTCPServer("vto-tcp-server", PhysLayerSettings(), "127.0.0.1", port + 20);
+		masterMgr.AddMaster("dnp-tcp-client", "master", level, &fdo, MasterStackConfig());
+		masterMgr.StartVtoRouter("vto-tcp-server", "master", VtoRouterSettings(88, true, false, 4096, 1000));
 	}
 
 	~VtoTestStack() {
@@ -162,9 +165,7 @@ public:
 		return testObj.ProceedUntil(boost::bind(&MockClientConnection::DataIs, &local, cb), 10000);
 	}
 
-	EventLog log;
-
-	Logger* main;
+	Logger* mpMainLogger;
 	LogToFile ltf;
 	FlexibleDataObserver fdo;
 	MockCommandAcceptor cmdAcceptor;
@@ -281,7 +282,9 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));
 
 	// kill remote connection, should kill our local connection
+	stack.mpMainLogger->Log(LEV_EVENT, LOCATION, "Stopping loopback");
 	stack.loopback.Stop();
+	stack.mpMainLogger->Log(LEV_EVENT, LOCATION, "Stopped loopback");
 
 	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 }
