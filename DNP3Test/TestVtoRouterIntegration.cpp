@@ -291,7 +291,7 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 	stack.loopback.Stop();
 	stack.mpMainLogger->Log(LEV_EVENT, LOCATION, "Stopped loopback");
 
-	stack.testObj.ProceedUntil(&False, 100000);
+	//stack.testObj.ProceedUntil(&False, 100000);
 
 	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 }
