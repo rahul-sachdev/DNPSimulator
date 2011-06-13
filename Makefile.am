@@ -34,6 +34,7 @@ libopendnp3_apl_la_SOURCES = \
 	APL/IHandlerAsync.cpp \
 	APL/IOService.cpp \
 	APL/IOServiceThread.cpp \
+	APL/IPhysMonitor.cpp \
 	APL/LockBase.cpp \
 	APL/LockBoost.cpp \
 	APL/Log.cpp \
@@ -79,6 +80,7 @@ libopendnp3_apl_la_SOURCES = \
 libopendnp3_dnp3_la_LDFLAGS = -version-info 0:0:0
 libopendnp3_dnp3_la_LIBADD = libopendnp3_apl.la
 libopendnp3_dnp3_la_SOURCES = \
+	DNP3/AlwaysOpeningVtoRouter.cpp \
 	DNP3/APDUConstants.cpp \
 	DNP3/APDU.cpp \
 	DNP3/AppChannelStates.cpp \
@@ -96,8 +98,10 @@ libopendnp3_dnp3_la_SOURCES = \
 	DNP3/DeviceTemplate.cpp \
 	DNP3/DNPCommandMaster.cpp \
 	DNP3/DNPCrc.cpp \
+	DNP3/EnhancedVtoRouter.cpp \
 	DNP3/HeaderReadIterator.cpp \
 	DNP3/IndexedWriteIterator.cpp \
+	DNP3/IStackObserver.cpp \
 	DNP3/LinkFrame.cpp \
 	DNP3/LinkHeader.cpp \
 	DNP3/LinkLayerConstants.cpp \
@@ -245,6 +249,7 @@ nobase_pkginclude_HEADERS= \
 	APL/Types.h \
 	APL/Uncopyable.h \
 	APL/Util.h \
+	DNP3/AlwaysOpeningVtoRouter.h \
 	DNP3/APDUConstants.h \
 	DNP3/APDU.h \
 	DNP3/AppChannelStates.h \
@@ -273,6 +278,7 @@ nobase_pkginclude_HEADERS= \
 	DNP3/DNPExceptions.h \
 	DNP3/DNPFromStream.h \
 	DNP3/DNPToStream.h \
+	DNP3/EnhancedVtoRouter.h \
 	DNP3/EventBufferBase.h \
 	DNP3/EventBuffers.h \
 	DNP3/EventTypes.h \
@@ -281,6 +287,7 @@ nobase_pkginclude_HEADERS= \
 	DNP3/ILinkContext.h \
 	DNP3/ILinkRouter.h \
 	DNP3/IndexedWriteIterator.h \
+	DNP3/IStackObserver.h \
 	DNP3/LinkConfig.h \
 	DNP3/LinkFrame.h \
 	DNP3/LinkHeader.h \
@@ -293,7 +300,6 @@ nobase_pkginclude_HEADERS= \
 	DNP3/MasterConfig.h \
 	DNP3/MasterConfigTypes.h \
 	DNP3/Master.h \
-	DNP3/MasterObserver.h \
 	DNP3/MasterSchedule.h \
 	DNP3/MasterStackConfig.h \
 	DNP3/MasterStack.h \
@@ -328,6 +334,7 @@ nobase_pkginclude_HEADERS= \
 	DNP3/TransportStates.h \
 	DNP3/TransportTx.h \
 	DNP3/UnsolicitedChannel.h \
+	DNP3/VtoConfig.h \
 	DNP3/VtoData.h \
 	DNP3/VtoDataInterface.h \
 	DNP3/VtoReader.h \
