@@ -73,7 +73,7 @@ AC_CHECK_LIB([c],	[atexit]		,,AC_MSG_ERROR(missing library))
 AC_CHECK_LIB([pthread],	[pthread_join]		,,AC_MSG_ERROR(missing library))
 
 AC_CHECK_HEADERS([tinyxml.h],			ac_tinyxml_h_found=yes,		ac_tinyxml_h_found=no)
-AC_CHECK_LIB([tinyxml],	[_ZTI9TiXmlNode],	ac_tinyxml_lib_found=yes,	ac_tinyxml_lib_found=no)
+AC_CHECK_LIB([tinyxml],	[_ZTI9TiXmlNode],,					ac_tinyxml_lib_found=no)
 
 AC_ARG_ENABLE(testset,
   AS_HELP_STRING([--enable-testset], [Enable building the testset application]),
@@ -130,6 +130,7 @@ Boost libraries:            ${BOOSTLIBDIR}
 CXX:                        ${CXX}
 CXXFLAGS:                   ${CXXFLAGS}
 LDFLAGS:                    ${LDFLAGS}
+LIBS:                       ${LIBS}
 
 lcov support:               ${ac_lcov_enabled}
 testset application:        ${ac_testset_enabled}
