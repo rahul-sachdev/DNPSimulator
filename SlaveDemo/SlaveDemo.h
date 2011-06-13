@@ -43,7 +43,7 @@ namespace dnp
 	This class takes care of all the plumbing and bingings between application code and the stack.
 	Inherited clases on have to implement the ICommandHandler interface.
 */
-class SlaveDemoBase : protected Loggable, protected ICommandHandler, private IOService, public IOServiceThread
+class SlaveDemoBase : protected ICommandHandler, private IOService, public IOServiceThread
 {
 public:
 	SlaveDemoBase(Logger* apLogger);

@@ -47,7 +47,7 @@ StackBase::StackBase(const APLXML_Base::PhysicalLayerList_t& arList, FilterLevel
 	logToFile(&log, arLogFile),
 	pTermLogger(log.GetLogger(aLevel, "terminal")),
 	mService(),
-	mTermThread(mService.Get()),
+	mTermThread(log.GetLogger(aLevel, "ioservice"), mService.Get()),
 	mTimerSrc(mService.Get()),
 	pTermPhys(FGetTerminalPhys(pTermLogger, mTermThread.GetService(), aRemote, aRemotePort)),
 	fdo(),

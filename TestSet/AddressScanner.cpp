@@ -34,7 +34,7 @@ AddressScanner::AddressScanner(Logger* apLogger, const APLXML_MTS::MasterTestSet
 	mService(),
 	manager(apLogger, mService.Get(), &cfg.PhysicalLayerList, xml::Convert(cfg.Log.Filter)),
 	mTimerSrc(mService.Get()),
-	mThread(mService.Get()),
+	mThread(apLogger->GetSubLogger("ioservice"), mService.Get()),
 	mRouter(apLogger, manager.AcquireLayer(cfg.PhysicalLayer), &mTimerSrc, 1000),
 	mpTimer(NULL),
 	mMasterAddr(cfg.Master.Stack.LinkLayer.LocalAddress),
