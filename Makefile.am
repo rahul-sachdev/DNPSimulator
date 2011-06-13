@@ -385,6 +385,8 @@ TESTS = $(check_PROGRAMS)
 
 dnp3test_LDADD = libopendnp3_apl.la libopendnp3_dnp3.la
 dnp3test_SOURCES = \
+	APLTestTools/AsyncLoopback.cpp \
+	APLTestTools/AsyncPhysTestObject.cpp \
 	APLTestTools/AsyncTestObjectASIO.cpp \
 	APLTestTools/AsyncTestObject.cpp \
 	APLTestTools/BufferHelpers.cpp \
@@ -394,6 +396,7 @@ dnp3test_SOURCES = \
 	APLTestTools/MockLowerLayer.cpp \
 	APLTestTools/MockPhysicalLayerAsync.cpp \
 	APLTestTools/MockPhysicalLayerAsyncTS.cpp \
+	APLTestTools/MockPhysicalLayerSource.cpp \
 	APLTestTools/MockResponseAcceptor.cpp \
 	APLTestTools/MockTimerSource.cpp \
 	APLTestTools/MockUpperLayer.cpp \
@@ -414,6 +417,7 @@ dnp3test_SOURCES = \
 	DNP3Test/TestAppLayer.cpp \
 	DNP3Test/TestCRC.cpp \
 	DNP3Test/TestDatabase.cpp \
+	DNP3Test/TestEnhancedVtoRouter.cpp \
 	DNP3Test/TestEventBufferBase.cpp \
 	DNP3Test/TestEventBuffers.cpp \
 	DNP3Test/TestIntegration.cpp \
@@ -435,6 +439,7 @@ dnp3test_SOURCES = \
 	DNP3Test/TestVtoInterface.cpp \
 	DNP3Test/TestVtoRouter.cpp \
 	DNP3Test/TestVtoRouterIntegration.cpp \
+	DNP3Test/TestVtoRouterManager.cpp \
 	DNP3Test/TransportIntegrationStack.cpp \
 	DNP3Test/TransportLoopbackTestObject.cpp \
 	DNP3Test/TransportScalabilityTestObject.cpp \
