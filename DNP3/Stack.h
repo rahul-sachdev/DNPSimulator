@@ -27,12 +27,10 @@
 
 namespace apl
 {
+
 class Logger;
 class ITimerSource;
-}
 
-namespace apl
-{
 namespace dnp
 {
 

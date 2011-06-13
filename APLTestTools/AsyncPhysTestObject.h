@@ -25,8 +25,6 @@
 #include <APL/PhysicalLayerAsyncTCPClient.h>
 #include <APL/PhysicalLayerAsyncTCPServer.h>
 #include <APL/LowerLayerToPhysAdapter.h>
-#include <APL/AsyncPhysLayerMonitor.h>
-#include <APL/CopyableBuffer.h>
 #include <APLTestTools/MockUpperLayer.h>
 
 namespace apl
@@ -49,28 +47,6 @@ public:
 
 	MockUpperLayer mClientUpper;
 	MockUpperLayer mServerUpper;
-};
-
-class AsyncLoopback : public AsyncPhysLayerMonitor
-{
-public:
-	AsyncLoopback(Logger*, IPhysicalLayerAsync*, ITimerSource*, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
-
-private:
-
-	CopyableBuffer mRead;
-	CopyableBuffer mWrite;
-
-	void OnStateChange(IPhysMonitor::State) {}
-
-	void _OnReceive(const boost::uint8_t*, size_t);
-	void _OnSendSuccess(void) {}
-	void _OnSendFailure(void) {}
-
-	void OnPhysicalLayerOpen(void);
-	void OnPhysicalLayerClose(void);
-
-	void StartRead();
 };
 
 }

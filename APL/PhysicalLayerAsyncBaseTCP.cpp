@@ -52,11 +52,13 @@ void PhysicalLayerAsyncBaseTCP::DoClose()
 	if(ec) LOG_BLOCK(LEV_WARNING, ec.message());
 }
 
+/*
 void PhysicalLayerAsyncBaseTCP::DoOpenSuccess()
 {
 	//mSocket.set_option(ip::tcp::no_delay(true));
 	LOG_BLOCK(LEV_INFO, "Successful conneciton");
 }
+*/
 
 void PhysicalLayerAsyncBaseTCP::DoAsyncRead(boost::uint8_t* apBuffer, size_t aMaxBytes)
 {
@@ -72,7 +74,7 @@ void PhysicalLayerAsyncBaseTCP::DoAsyncWrite(const boost::uint8_t* apBuffer, siz
 
 void PhysicalLayerAsyncBaseTCP::DoOpenFailure()
 {
-	LOG_BLOCK(LEV_INFO, "Failed socket open, reclosing");
+	LOG_BLOCK(LEV_INFO, "Failed socket open, closing socket");
 	DoClose();
 }
 

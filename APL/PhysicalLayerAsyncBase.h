@@ -96,6 +96,7 @@ public:
 	virtual void DoAsyncWrite(const boost::uint8_t*, size_t) = 0;
 
 	// These can be optionally overriden to do something more interesting, i.e. specific logging
+	virtual void DoOpenCallback() {}
 	virtual void DoOpenSuccess() {}
 	virtual void DoOpenFailure() {}
 

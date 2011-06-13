@@ -19,12 +19,9 @@
 
 #include "AsyncTestObject.h"
 
-#include <boost/asio.hpp>
-
-#include <APL/Exception.h>
-#include <APL/Thread.h>
 #include <APL/TimingTools.h>
-#include <sstream>
+
+#include <boost/bind.hpp>
 
 using namespace std;
 
@@ -47,17 +44,6 @@ bool AsyncTestObject::ProceedUntil(const EvalFunc& arFunc, millis_t aTimeout)
 bool AsyncTestObject::ProceedUntilFalse(const EvalFunc& arFunc, millis_t aTimeout)
 {
 	return ProceedUntil(boost::bind(&AsyncTestObject::Negate, arFunc), aTimeout);
-}
-
-void AsyncTestObject::Next(boost::asio::io_service* apSrv, millis_t aSleep)
-{
-	boost::system::error_code ec;
-	size_t num = apSrv->poll_one(ec);
-	if(ec) throw Exception(LOCATION, ec.message());
-	if(num == 0) {
-		Thread::SleepFor(aSleep);
-	}
-	apSrv->reset();
 }
 
 }

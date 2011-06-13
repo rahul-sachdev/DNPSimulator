@@ -23,11 +23,14 @@
 #include <APL/PhysicalLayerFunctors.h>
 #include <APL/SerialTypes.h>
 
-namespace apl { namespace xml {
+namespace apl
+{
+namespace xml
+{
 
 class PhysicalLayerXMLFactory
 {
-	public:
+public:
 
 	//these 3 return functor factories
 	static IPhysicalLayerAsyncFactory GetFactoryAsync(const APLXML_Base::PhysicalLayerDescriptor_t* apCfg);
@@ -43,6 +46,7 @@ ParityType EnumToParity(APLXML_Base::ParityEnum aParity);
 SerialSettings GetSerialSettings(const APLXML_Base::Serial_t* apCfg);
 FlowType EnumToFlow(APLXML_Base::FlowControlEnum);
 
-}}
+}
+}
 
 #endif

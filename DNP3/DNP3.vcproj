@@ -588,6 +588,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\IStackObserver.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\IStackObserver.h"
 					>
 				</File>
@@ -618,6 +622,22 @@
 				<Filter
 					Name="VTO"
 					>
+					<File
+						RelativePath=".\AlwaysOpeningVtoRouter.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\AlwaysOpeningVtoRouter.h"
+						>
+					</File>
+					<File
+						RelativePath=".\EnhancedVtoRouter.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\EnhancedVtoRouter.h"
+						>
+					</File>
 					<File
 						RelativePath=".\VtoConfig.h"
 						>

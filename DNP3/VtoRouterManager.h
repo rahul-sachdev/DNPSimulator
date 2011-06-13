@@ -69,9 +69,9 @@ public:
 	~VtoRouterManager();
 
 	VtoRouter* StartRouter(
-	        const std::string& arPortName,
-	        const VtoRouterSettings& arSettings,
-	        IVtoWriter* apWriter);
+	    const std::string& arPortName,
+	    const VtoRouterSettings& arSettings,
+	    IVtoWriter* apWriter);
 
 	void StopRouter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
 

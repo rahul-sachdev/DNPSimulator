@@ -53,12 +53,12 @@ void Port::Release()
 	}
 }
 
-void Port::OnStateChange(IPhysMonitor::State aState)
+void Port::OnStateChange(PhysLayerState aState)
 {
 	if(mpObserver != NULL) mpObserver->OnStateChange(aState);
 
 	//when the router stops, delete ourselves
-	if((aState == IPhysMonitor::Stopped) && mRelease) this->Cleanup();
+	if((aState == PLS_STOPPED) && mRelease) this->Cleanup();
 }
 
 void Port::Associate(const std::string& arStackName, Stack* apStack, const LinkRoute& arRoute)

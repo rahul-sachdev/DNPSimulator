@@ -19,22 +19,25 @@
 #ifndef _XML_TESTSET_H_
 #define _XML_TESTSET_H_
 
-namespace APLXML_MTS{
-	class MasterTestSet_t;
+namespace APLXML_MTS
+{
+class MasterTestSet_t;
 }
-namespace APLXML_STS{
-	class SlaveTestSet_t;
+namespace APLXML_STS
+{
+class SlaveTestSet_t;
 }
 
-namespace apl{
+namespace apl
+{
 
-	class XML_TestSet
-	{
-	public:
-		static void Configure(APLXML_MTS::MasterTestSet_t& arMasterTest, bool aUseUnsol = false);
-		static void Configure(APLXML_STS::SlaveTestSet_t& arSlaveTest);
+class XML_TestSet
+{
+public:
+	static void Configure(APLXML_MTS::MasterTestSet_t& arMasterTest, bool aUseUnsol = false);
+	static void Configure(APLXML_STS::SlaveTestSet_t& arSlaveTest);
 
-	};
+};
 
 }
 

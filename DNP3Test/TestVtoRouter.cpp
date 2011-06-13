@@ -27,7 +27,7 @@
 #include <APLTestTools/MockTimerSource.h>
 #include <APLTestTools/TestHelpers.h>
 
-#include <DNP3/VtoRouter.h>
+#include <DNP3/AlwaysOpeningVtoRouter.h>
 #include <DNP3/VtoRouterSettings.h>
 #include <DNP3/VtoWriter.h>
 
@@ -50,7 +50,7 @@ public:
 	MockPhysicalLayerAsync phys;
 	VtoWriter writer;
 	MockTimerSource mts;
-	VtoRouter router;
+	AlwaysOpeningVtoRouter router;
 };
 
 BOOST_AUTO_TEST_SUITE(VtoRouterTests)

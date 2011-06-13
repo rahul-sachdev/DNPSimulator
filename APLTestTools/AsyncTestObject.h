@@ -21,14 +21,6 @@
 
 #include "TestTypedefs.h"
 
-namespace boost
-{
-namespace asio
-{
-class io_service;
-}
-}
-
 namespace apl
 {
 
@@ -49,7 +41,7 @@ protected:
 	// to try and make progress
 	virtual void Next() = 0;
 
-	static void Next(boost::asio::io_service* apSrv, millis_t aSleep);
+
 
 };
 

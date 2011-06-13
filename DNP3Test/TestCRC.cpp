@@ -16,6 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 

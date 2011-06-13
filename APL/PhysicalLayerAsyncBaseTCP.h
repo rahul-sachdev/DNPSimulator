@@ -38,7 +38,6 @@ public:
 
 	/* Implement the shared client/server actions */
 	void DoClose();
-	void DoOpenSuccess();
 	void DoAsyncRead(boost::uint8_t*, size_t);
 	void DoAsyncWrite(const boost::uint8_t*, size_t);
 	void DoOpenFailure();

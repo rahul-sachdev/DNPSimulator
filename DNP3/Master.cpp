@@ -74,13 +74,13 @@ Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IData
 	 * wake up mpCommandTask to process the data.
 	 */
 	mCommandQueue.SetNotifier(
-	        mNotifierSource.Get(
-	                boost::bind(
-	                        &AsyncTaskBase::Enable,
-	                        mSchedule.mpCommandTask
-	                ),
-	                mpTimerSrc
-	        )
+	    mNotifierSource.Get(
+	        boost::bind(
+	            &AsyncTaskBase::Enable,
+	            mSchedule.mpCommandTask
+	        ),
+	        mpTimerSrc
+	    )
 	);
 
 	/*
@@ -89,13 +89,13 @@ Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IData
 	 * mVtoWriter, wake up the mSchedule.mpVtoTransmitTask.
 	 */
 	mVtoWriter.AddObserver(
-	        mNotifierSource.Get(
-	                boost::bind(
-	                        &AsyncTaskBase::Enable,
-	                        mSchedule.mpVtoTransmitTask
-	                ),
-	                mpTimerSrc
-	        )
+	    mNotifierSource.Get(
+	        boost::bind(
+	            &AsyncTaskBase::Enable,
+	            mSchedule.mpVtoTransmitTask
+	        ),
+	        mpTimerSrc
+	    )
 	);
 
 	/*
@@ -107,7 +107,7 @@ Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IData
 void Master::UpdateState(StackStates aState)
 {
 	if(mState != aState) {
-		LOG_BLOCK(LEV_INFO, "StackState: " << aState);
+		LOG_BLOCK(LEV_INFO, "StackState: " << ConvertToString(aState));
 		mState = aState;
 		if(mpObserver != NULL) mpObserver->OnStateChange(aState);
 		mVtoReader.OnStateChange(aState);

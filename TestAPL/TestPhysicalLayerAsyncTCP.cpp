@@ -29,6 +29,7 @@
 #include <APLTestTools/TestHelpers.h>
 #include <APLTestTools/BufferHelpers.h>
 #include <APLTestTools/AsyncTestObjectASIO.h>
+#include <APLTestTools/AsyncLoopback.h>
 #include <APLTestTools/AsyncPhysTestObject.h>
 
 #include <iostream>
@@ -153,6 +154,51 @@ BOOST_AUTO_TEST_CASE(TwoWaySend)
 	BOOST_REQUIRE(t.ProceedUntilFalse(bind(&MockUpperLayer::IsLowerLayerUp, &t.mServerUpper)));
 	BOOST_REQUIRE(t.ProceedUntilFalse(bind(&MockUpperLayer::IsLowerLayerUp, &t.mClientUpper)));
 }
+
+BOOST_AUTO_TEST_CASE(ServerAsyncCloseWhileOpeningKillsAcceptor)
+{
+	AsyncPhysTestObject t(LEV_INFO, false);
+
+	BOOST_REQUIRE_EQUAL(0, t.mClientAdapter.GetNumOpenFailure());
+
+	for(size_t i = 0; i < 5; ++i) {
+		t.mTCPServer.AsyncOpen();
+		t.mTCPServer.AsyncClose();
+
+		BOOST_REQUIRE(t.ProceedUntil(boost::bind(&LowerLayerToPhysAdapter::OpenFailureEquals, &t.mServerAdapter, i + 1)));
+
+		// since we closed the server socket we shouldn't be able to connect now
+		t.mTCPClient.AsyncOpen();
+
+		BOOST_REQUIRE(t.ProceedUntil(boost::bind(&LowerLayerToPhysAdapter::OpenFailureEquals, &t.mClientAdapter, i + 1)));
+	}
+}
+
+BOOST_AUTO_TEST_CASE(ServerAsyncCloseAfterOpeningKillsAcceptor)
+{
+	AsyncPhysTestObject t(LEV_INFO, false);
+
+	BOOST_REQUIRE_EQUAL(t.mClientAdapter.GetNumOpenFailure(), 0);
+
+	for(size_t i = 0; i < 5; ++i) {
+		t.mTCPServer.AsyncOpen();
+		t.mTCPClient.AsyncOpen();
+
+		BOOST_REQUIRE(t.ProceedUntil(bind(&MockUpperLayer::IsLowerLayerUp, &t.mServerUpper)));
+		BOOST_REQUIRE(t.ProceedUntil(bind(&MockUpperLayer::IsLowerLayerUp, &t.mClientUpper)));
+
+		t.mTCPServer.AsyncClose();
+
+		BOOST_REQUIRE(t.ProceedUntilFalse(bind(&MockUpperLayer::IsLowerLayerUp, &t.mServerUpper)));
+		BOOST_REQUIRE(t.ProceedUntilFalse(bind(&MockUpperLayer::IsLowerLayerUp, &t.mClientUpper)));
+
+		// since we closed the server socket we shouldn't be able to connect now
+		t.mTCPClient.AsyncOpen();
+
+		BOOST_REQUIRE(t.ProceedUntil(boost::bind(&LowerLayerToPhysAdapter::OpenFailureEquals, &t.mClientAdapter, i + 1)));
+	}
+}
+
 
 #ifndef ARM
 

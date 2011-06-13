@@ -37,14 +37,14 @@ namespace apl
 
 PhysicalLayerAsyncTCPServer::PhysicalLayerAsyncTCPServer(Logger* apLogger, boost::asio::io_service* apIOService, const std::string& arEndpoint, boost::uint16_t aPort) :
 	PhysicalLayerAsyncBaseTCP(apLogger, apIOService),
-	mEndpoint(ip::tcp::v4(), aPort),
+	mLocalEndpoint(ip::tcp::v4(), aPort),
 	mAcceptor(*apIOService)
 {
 	//set the endpoint's address
 	boost::system::error_code ec;
 	ip::address_v4 addr = ip::address_v4::from_string(arEndpoint, ec);
 	if(ec) throw ArgumentException(LOCATION, "endpoint: " + arEndpoint + " is invalid ");
-	mEndpoint.address(addr);
+	mLocalEndpoint.address(addr);
 }
 
 /* Implement the actions */
@@ -52,18 +52,27 @@ void PhysicalLayerAsyncTCPServer::DoOpen()
 {
 	if(!mAcceptor.is_open()) {
 		error_code ec;
-		mAcceptor.open(mEndpoint.protocol(), ec);
+		mAcceptor.open(mLocalEndpoint.protocol(), ec);
 		if(ec) throw Exception(LOCATION, ec.message());
 
 		mAcceptor.set_option(ip::tcp::acceptor::reuse_address(true));
-		mAcceptor.bind(mEndpoint, ec);
+		mAcceptor.bind(mLocalEndpoint, ec);
 		if(ec) throw Exception(LOCATION, ec.message());
 
 		mAcceptor.listen(socket_base::max_connections, ec);
 		if(ec) throw Exception(LOCATION, ec.message());
 	}
 
-	mAcceptor.async_accept(mSocket, mEndpoint, boost::bind(&PhysicalLayerAsyncTCPServer::OnOpenCallback, this, placeholders::error));
+	mAcceptor.async_accept(mSocket, mRemoteEndpoint, boost::bind(&PhysicalLayerAsyncTCPServer::OnOpenCallback, this, placeholders::error));
+}
+
+void PhysicalLayerAsyncTCPServer::DoOpenCallback()
+{
+	boost::system::error_code ec;
+	mAcceptor.close(ec);
+	if(ec) {
+		LOG_BLOCK(LEV_WARNING, "Error while closing tcp acceptor: " << ec);
+	}
 }
 
 void PhysicalLayerAsyncTCPServer::DoOpeningClose()
@@ -73,6 +82,11 @@ void PhysicalLayerAsyncTCPServer::DoOpeningClose()
 	if(ec) {
 		LOG_BLOCK(LEV_WARNING, "Error while canceling tcp acceptor: " << ec);
 	}
+}
+
+void PhysicalLayerAsyncTCPServer::DoOpenSuccess()
+{
+	LOG_BLOCK(LEV_INFO, "Accepted connection from: " << mRemoteEndpoint);
 }
 
 }

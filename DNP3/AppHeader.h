@@ -136,8 +136,8 @@ private:
 };
 
 enum AppHeaderTypes {
-	AHT_RESPONSE,
-	AHT_REQUEST
+    AHT_RESPONSE,
+    AHT_REQUEST
 };
 
 class IAppHeader
