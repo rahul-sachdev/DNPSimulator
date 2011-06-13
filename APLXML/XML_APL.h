@@ -21,19 +21,23 @@
 
 #include <XMLBindings/APLXML_Base.h>
 
-namespace apl { namespace xml {
+namespace apl
+{
+namespace xml
+{
 
-	class XML_APL
-	{
-		public:
+class XML_APL
+{
+public:
 
-			static APLXML_Base::TCPServer_t* AddTCPServer(APLXML_Base::PhysicalLayerList_t& arList, const std::string& arDevice, const std::string& arEndpoint, int aPort);
-			static APLXML_Base::TCPClient_t* AddTCPClient(APLXML_Base::PhysicalLayerList_t& arList, const std::string& arDevice, const std::string& arAdderss, int aPort);
-			static APLXML_Base::Serial_t* AddSerial(APLXML_Base::PhysicalLayerList_t& arList, const std::string& arName, const std::string& arDevice);
+	static APLXML_Base::TCPServer_t* AddTCPServer(APLXML_Base::PhysicalLayerList_t& arList, const std::string& arDevice, const std::string& arEndpoint, int aPort);
+	static APLXML_Base::TCPClient_t* AddTCPClient(APLXML_Base::PhysicalLayerList_t& arList, const std::string& arDevice, const std::string& arAdderss, int aPort);
+	static APLXML_Base::Serial_t* AddSerial(APLXML_Base::PhysicalLayerList_t& arList, const std::string& arName, const std::string& arDevice);
 
-	};
+};
 
-}}
+}
+}
 
 #endif
 

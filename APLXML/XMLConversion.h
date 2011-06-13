@@ -22,9 +22,13 @@
 #include <APL/LogBase.h>
 #include <XMLBindings/APLXML_Base.h>
 
-namespace apl { namespace xml {
+namespace apl
+{
+namespace xml
+{
 
-	FilterLevel Convert(APLXML_Base::LogLevelEnum aEnum);
-}}
+FilterLevel Convert(APLXML_Base::LogLevelEnum aEnum);
+}
+}
 
 #endif

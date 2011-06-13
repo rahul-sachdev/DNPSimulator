@@ -23,33 +23,41 @@
 #include <APL/PhysicalLayerManager.h>
 
 
-namespace APLXML_Base {
-	class PhysicalLayerList_t;
+namespace APLXML_Base
+{
+class PhysicalLayerList_t;
 }
 
-namespace apl { class EventLog; }
+namespace apl
+{
+class EventLog;
+}
 
-namespace apl { namespace xml {
+namespace apl
+{
+namespace xml
+{
 
 class PhysicalLayerManagerXML : public PhysicalLayerManager
 {
-	public:
-		PhysicalLayerManagerXML(Logger*, boost::asio::io_service* apService);
-		PhysicalLayerManagerXML(Logger*, boost::asio::io_service* apService, const APLXML_Base::PhysicalLayerList_t*, FilterLevel aLevel);
-		virtual ~PhysicalLayerManagerXML() {}
+public:
+	PhysicalLayerManagerXML(Logger*, boost::asio::io_service* apService);
+	PhysicalLayerManagerXML(Logger*, boost::asio::io_service* apService, const APLXML_Base::PhysicalLayerList_t*, FilterLevel aLevel);
+	virtual ~PhysicalLayerManagerXML() {}
 
-		void AddList(const APLXML_Base::PhysicalLayerList_t*, FilterLevel aLevel);
+	void AddList(const APLXML_Base::PhysicalLayerList_t*, FilterLevel aLevel);
 
-	private:
+private:
 
-		template<class T>
-		void AddStandalones(const std::vector<T*>& arVector, FilterLevel aLevel);
+	template<class T>
+	void AddStandalones(const std::vector<T*>& arVector, FilterLevel aLevel);
 
-		template <class T>
-		void AddPhysLayer(const std::string& aName, FilterLevel aLevel, const T* apConfig);
+	template <class T>
+	void AddPhysLayer(const std::string& aName, FilterLevel aLevel, const T* apConfig);
 };
 
-}}
+}
+}
 
 #endif
 

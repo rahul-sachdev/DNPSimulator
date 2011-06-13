@@ -6,8 +6,10 @@
 #define _APLXML_DNP_H_
 #include <APLXML/tinybinding.h>
 using namespace std;
-namespace APLXML_DNP {
-class Analog_t : public IXMLDataBound {
+namespace APLXML_DNP
+{
+class Analog_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
@@ -18,22 +20,25 @@ public:
 };
 #ifdef SWIG
 }
-%template(Analog_c) std::vector<APLXML_DNP::Analog_t*>;
-namespace APLXML_DNP{
+% template(Analog_c) std::vector<APLXML_DNP::Analog_t*>;
+namespace APLXML_DNP
+{
 #endif
-class AnalogData_t : public IXMLDataBound {
+class AnalogData_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 	AnalogData_t();
 
 #ifdef SWIG
-%immutable AnalogVector;
+	% immutable AnalogVector;
 #endif
-	private: collectedType < Analog_t > Analog;
-	public: vector < Analog_t* >& AnalogVector;
+private: collectedType < Analog_t > Analog;
+public: vector < Analog_t* >& AnalogVector;
 };
-class AppLayer_t : public IXMLDataBound {
+class AppLayer_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
@@ -41,7 +46,8 @@ public:
 	int MaxFragSize;
 	int NumRetries;
 };
-class Binary_t : public IXMLDataBound {
+class Binary_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
@@ -51,22 +57,25 @@ public:
 };
 #ifdef SWIG
 }
-%template(Binary_c) std::vector<APLXML_DNP::Binary_t*>;
-namespace APLXML_DNP{
+% template(Binary_c) std::vector<APLXML_DNP::Binary_t*>;
+namespace APLXML_DNP
+{
 #endif
-class BinaryData_t : public IXMLDataBound {
+class BinaryData_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 	BinaryData_t();
 
 #ifdef SWIG
-%immutable BinaryVector;
+	% immutable BinaryVector;
 #endif
-	private: collectedType < Binary_t > Binary;
-	public: vector < Binary_t* >& BinaryVector;
+private: collectedType < Binary_t > Binary;
+public: vector < Binary_t* >& BinaryVector;
 };
-class Control_t : public IXMLDataBound {
+class Control_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
@@ -77,22 +86,25 @@ public:
 };
 #ifdef SWIG
 }
-%template(Control_c) std::vector<APLXML_DNP::Control_t*>;
-namespace APLXML_DNP{
+% template(Control_c) std::vector<APLXML_DNP::Control_t*>;
+namespace APLXML_DNP
+{
 #endif
-class ControlData_t : public IXMLDataBound {
+class ControlData_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 	ControlData_t();
 
 #ifdef SWIG
-%immutable ControlVector;
+	% immutable ControlVector;
 #endif
-	private: collectedType < Control_t > Control;
-	public: vector < Control_t* >& ControlVector;
+private: collectedType < Control_t > Control;
+public: vector < Control_t* >& ControlVector;
 };
-class ControlStatus_t : public IXMLDataBound {
+class ControlStatus_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
@@ -101,22 +113,25 @@ public:
 };
 #ifdef SWIG
 }
-%template(ControlStatus_c) std::vector<APLXML_DNP::ControlStatus_t*>;
-namespace APLXML_DNP{
+% template(ControlStatus_c) std::vector<APLXML_DNP::ControlStatus_t*>;
+namespace APLXML_DNP
+{
 #endif
-class ControlStatusData_t : public IXMLDataBound {
+class ControlStatusData_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 	ControlStatusData_t();
 
 #ifdef SWIG
-%immutable ControlStatusVector;
+	% immutable ControlStatusVector;
 #endif
-	private: collectedType < ControlStatus_t > ControlStatus;
-	public: vector < ControlStatus_t* >& ControlStatusVector;
+private: collectedType < ControlStatus_t > ControlStatus;
+public: vector < ControlStatus_t* >& ControlStatusVector;
 };
-class Counter_t : public IXMLDataBound {
+class Counter_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
@@ -126,22 +141,25 @@ public:
 };
 #ifdef SWIG
 }
-%template(Counter_c) std::vector<APLXML_DNP::Counter_t*>;
-namespace APLXML_DNP{
+% template(Counter_c) std::vector<APLXML_DNP::Counter_t*>;
+namespace APLXML_DNP
+{
 #endif
-class CounterData_t : public IXMLDataBound {
+class CounterData_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 	CounterData_t();
 
 #ifdef SWIG
-%immutable CounterVector;
+	% immutable CounterVector;
 #endif
-	private: collectedType < Counter_t > Counter;
-	public: vector < Counter_t* >& CounterVector;
+private: collectedType < Counter_t > Counter;
+public: vector < Counter_t* >& CounterVector;
 };
-class ExceptionScan_t : public IXMLDataBound {
+class ExceptionScan_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
@@ -150,14 +168,16 @@ public:
 	bool Class3;
 	int PeriodMS;
 };
-class GrpVar_t : public IXMLDataBound {
+class GrpVar_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 	int Grp;
 	int Var;
 };
-class LinkLayer_t : public IXMLDataBound {
+class LinkLayer_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
@@ -168,7 +188,8 @@ public:
 	int AckTimeoutMS;
 	int NumRetries;
 };
-class MasterSettings_t : public IXMLDataBound {
+class MasterSettings_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
@@ -178,22 +199,25 @@ public:
 };
 #ifdef SWIG
 }
-%template(ExceptionScan_c) std::vector<APLXML_DNP::ExceptionScan_t*>;
-namespace APLXML_DNP{
+% template(ExceptionScan_c) std::vector<APLXML_DNP::ExceptionScan_t*>;
+namespace APLXML_DNP
+{
 #endif
-class ScanList_t : public IXMLDataBound {
+class ScanList_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 	ScanList_t();
 
 #ifdef SWIG
-%immutable ExceptionScanVector;
+	% immutable ExceptionScanVector;
 #endif
-	private: collectedType < ExceptionScan_t > ExceptionScan;
-	public: vector < ExceptionScan_t* >& ExceptionScanVector;
+private: collectedType < ExceptionScan_t > ExceptionScan;
+public: vector < ExceptionScan_t* >& ExceptionScanVector;
 };
-class Setpoint_t : public IXMLDataBound {
+class Setpoint_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
@@ -204,22 +228,25 @@ public:
 };
 #ifdef SWIG
 }
-%template(Setpoint_c) std::vector<APLXML_DNP::Setpoint_t*>;
-namespace APLXML_DNP{
+% template(Setpoint_c) std::vector<APLXML_DNP::Setpoint_t*>;
+namespace APLXML_DNP
+{
 #endif
-class SetpointData_t : public IXMLDataBound {
+class SetpointData_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 	SetpointData_t();
 
 #ifdef SWIG
-%immutable SetpointVector;
+	% immutable SetpointVector;
 #endif
-	private: collectedType < Setpoint_t > Setpoint;
-	public: vector < Setpoint_t* >& SetpointVector;
+private: collectedType < Setpoint_t > Setpoint;
+public: vector < Setpoint_t* >& SetpointVector;
 };
-class SetpointStatus_t : public IXMLDataBound {
+class SetpointStatus_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
@@ -228,47 +255,53 @@ public:
 };
 #ifdef SWIG
 }
-%template(SetpointStatus_c) std::vector<APLXML_DNP::SetpointStatus_t*>;
-namespace APLXML_DNP{
+% template(SetpointStatus_c) std::vector<APLXML_DNP::SetpointStatus_t*>;
+namespace APLXML_DNP
+{
 #endif
-class SetpointStatusData_t : public IXMLDataBound {
+class SetpointStatusData_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 	SetpointStatusData_t();
 
 #ifdef SWIG
-%immutable SetpointStatusVector;
+	% immutable SetpointStatusVector;
 #endif
-	private: collectedType < SetpointStatus_t > SetpointStatus;
-	public: vector < SetpointStatus_t* >& SetpointStatusVector;
+private: collectedType < SetpointStatus_t > SetpointStatus;
+public: vector < SetpointStatus_t* >& SetpointStatusVector;
 };
-class SetpointStatusGrpVar_t : public APLXML_DNP::GrpVar_t{
+class SetpointStatusGrpVar_t : public APLXML_DNP::GrpVar_t
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 };
-class Stack_t : public IXMLDataBound {
+class Stack_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 #ifdef SWIG
-%immutable LinkLayer;
+	% immutable LinkLayer;
 #endif
 	LinkLayer_t LinkLayer;
 #ifdef SWIG
-%immutable AppLayer;
+	% immutable AppLayer;
 #endif
 	AppLayer_t AppLayer;
 };
-class TimeIINTask_t : public IXMLDataBound {
+class TimeIINTask_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 	bool DoTask;
 	int PeriodMS;
 };
-class Unsol_t : public IXMLDataBound {
+class Unsol_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
@@ -278,7 +311,8 @@ public:
 	bool Class2;
 	bool Class3;
 };
-class UnsolDefaults_t : public IXMLDataBound {
+class UnsolDefaults_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
@@ -288,7 +322,8 @@ public:
 	int PackDelayMS;
 	int RetryMS;
 };
-class VtoPort_t : public IXMLDataBound {
+class VtoPort_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
@@ -300,134 +335,144 @@ public:
 };
 #ifdef SWIG
 }
-%template(VtoPort_c) std::vector<APLXML_DNP::VtoPort_t*>;
-namespace APLXML_DNP{
+% template(VtoPort_c) std::vector<APLXML_DNP::VtoPort_t*>;
+namespace APLXML_DNP
+{
 #endif
-class VtoPorts_t : public IXMLDataBound {
+class VtoPorts_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 	VtoPorts_t();
 
 #ifdef SWIG
-%immutable VtoPortVector;
+	% immutable VtoPortVector;
 #endif
-	private: collectedType < VtoPort_t > VtoPort;
-	public: vector < VtoPort_t* >& VtoPortVector;
+private: collectedType < VtoPort_t > VtoPort;
+public: vector < VtoPort_t* >& VtoPortVector;
 };
-class AnalogGrpVar_t : public APLXML_DNP::GrpVar_t{
+class AnalogGrpVar_t : public APLXML_DNP::GrpVar_t
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 };
-class BinaryGrpVar_t : public APLXML_DNP::GrpVar_t{
+class BinaryGrpVar_t : public APLXML_DNP::GrpVar_t
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 };
-class CounterGrpVar_t : public APLXML_DNP::GrpVar_t{
+class CounterGrpVar_t : public APLXML_DNP::GrpVar_t
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 };
-class DeviceTemplate_t : public IXMLDataBound {
+class DeviceTemplate_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 	string TemplateName;
 #ifdef SWIG
-%immutable BinaryData;
+	% immutable BinaryData;
 #endif
 	BinaryData_t BinaryData;
 #ifdef SWIG
-%immutable AnalogData;
+	% immutable AnalogData;
 #endif
 	AnalogData_t AnalogData;
 #ifdef SWIG
-%immutable CounterData;
+	% immutable CounterData;
 #endif
 	CounterData_t CounterData;
 #ifdef SWIG
-%immutable SetpointStatusData;
+	% immutable SetpointStatusData;
 #endif
 	SetpointStatusData_t SetpointStatusData;
 #ifdef SWIG
-%immutable ControlStatusData;
+	% immutable ControlStatusData;
 #endif
 	ControlStatusData_t ControlStatusData;
 #ifdef SWIG
-%immutable SetpointData;
+	% immutable SetpointData;
 #endif
 	SetpointData_t SetpointData;
 #ifdef SWIG
-%immutable ControlData;
+	% immutable ControlData;
 #endif
 	ControlData_t ControlData;
 };
-class EventRsp_t : public IXMLDataBound {
+class EventRsp_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 #ifdef SWIG
-%immutable BinaryGrpVar;
+	% immutable BinaryGrpVar;
 #endif
 	BinaryGrpVar_t BinaryGrpVar;
 #ifdef SWIG
-%immutable AnalogGrpVar;
+	% immutable AnalogGrpVar;
 #endif
 	AnalogGrpVar_t AnalogGrpVar;
 #ifdef SWIG
-%immutable CounterGrpVar;
+	% immutable CounterGrpVar;
 #endif
 	CounterGrpVar_t CounterGrpVar;
 };
-class Master_t : public IXMLDataBound {
+class Master_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 #ifdef SWIG
-%immutable Stack;
+	% immutable Stack;
 #endif
 	Stack_t Stack;
 #ifdef SWIG
-%immutable MasterSettings;
+	% immutable MasterSettings;
 #endif
 	MasterSettings_t MasterSettings;
 #ifdef SWIG
-%immutable ScanList;
+	% immutable ScanList;
 #endif
 	ScanList_t ScanList;
 #ifdef SWIG
-%immutable Unsol;
+	% immutable Unsol;
 #endif
 	Unsol_t Unsol;
 #ifdef SWIG
-%immutable VtoPorts;
+	% immutable VtoPorts;
 #endif
 	VtoPorts_t VtoPorts;
 };
-class StaticRsp_t : public IXMLDataBound {
+class StaticRsp_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 #ifdef SWIG
-%immutable BinaryGrpVar;
+	% immutable BinaryGrpVar;
 #endif
 	BinaryGrpVar_t BinaryGrpVar;
 #ifdef SWIG
-%immutable AnalogGrpVar;
+	% immutable AnalogGrpVar;
 #endif
 	AnalogGrpVar_t AnalogGrpVar;
 #ifdef SWIG
-%immutable CounterGrpVar;
+	% immutable CounterGrpVar;
 #endif
 	CounterGrpVar_t CounterGrpVar;
 #ifdef SWIG
-%immutable SetpointStatusGrpVar;
+	% immutable SetpointStatusGrpVar;
 #endif
 	SetpointStatusGrpVar_t SetpointStatusGrpVar;
 };
-class SlaveConfig_t : public IXMLDataBound {
+class SlaveConfig_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
@@ -435,36 +480,37 @@ public:
 	int MaxAnalogEvents;
 	int MaxCounterEvents;
 #ifdef SWIG
-%immutable StaticRsp;
+	% immutable StaticRsp;
 #endif
 	StaticRsp_t StaticRsp;
 #ifdef SWIG
-%immutable EventRsp;
+	% immutable EventRsp;
 #endif
 	EventRsp_t EventRsp;
 #ifdef SWIG
-%immutable TimeIINTask;
+	% immutable TimeIINTask;
 #endif
 	TimeIINTask_t TimeIINTask;
 #ifdef SWIG
-%immutable UnsolDefaults;
+	% immutable UnsolDefaults;
 #endif
 	UnsolDefaults_t UnsolDefaults;
 };
-class Slave_t : public IXMLDataBound {
+class Slave_t : public IXMLDataBound
+{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
 #ifdef SWIG
-%immutable Stack;
+	% immutable Stack;
 #endif
 	Stack_t Stack;
 #ifdef SWIG
-%immutable SlaveConfig;
+	% immutable SlaveConfig;
 #endif
 	SlaveConfig_t SlaveConfig;
 #ifdef SWIG
-%immutable VtoPorts;
+	% immutable VtoPorts;
 #endif
 	VtoPorts_t VtoPorts;
 };
