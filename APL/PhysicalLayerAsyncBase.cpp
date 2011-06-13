@@ -162,6 +162,8 @@ void PhysicalLayerAsyncBase::OnOpenCallback(const boost::system::error_code& arE
 	if(mState.mOpening) {
 		mState.mOpening = false;
 
+		this->DoOpenCallback();
+
 		if(arErr) {
 			LOG_BLOCK(LEV_WARNING, arErr.message());
 			mState.CheckForClose();

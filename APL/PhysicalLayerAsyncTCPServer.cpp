@@ -66,13 +66,22 @@ void PhysicalLayerAsyncTCPServer::DoOpen()
 	mAcceptor.async_accept(mSocket, mRemoteEndpoint, boost::bind(&PhysicalLayerAsyncTCPServer::OnOpenCallback, this, placeholders::error));
 }
 
+void PhysicalLayerAsyncTCPServer::DoOpenCallback()
+{
+	boost::system::error_code ec;
+	mAcceptor.close(ec);
+	if(ec) {
+		LOG_BLOCK(LEV_WARNING, "Error while closing tcp acceptor: " << ec);
+	}
+}
+
 void PhysicalLayerAsyncTCPServer::DoOpeningClose()
 {
 	boost::system::error_code ec;
-	mAcceptor.cancel(ec);
+	mAcceptor.cancel(ec);	
 	if(ec) {
 		LOG_BLOCK(LEV_WARNING, "Error while canceling tcp acceptor: " << ec);
-	}
+	}	
 }
 
 void PhysicalLayerAsyncTCPServer::DoOpenSuccess()

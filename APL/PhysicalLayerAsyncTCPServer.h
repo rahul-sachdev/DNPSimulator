@@ -34,6 +34,7 @@ public:
 	void DoOpen();
 	void DoOpeningClose(); //override this to cancel the acceptor instead of the socket
 	void DoOpenSuccess();
+	void DoOpenCallback();
 
 private:
 	
