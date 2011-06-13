@@ -55,11 +55,11 @@ namespace dnp
  * hierarchy.
  */
 enum ObjectTypes {
-	OT_PLACEHOLDER,
-	OT_FIXED,
-	OT_BITFIELD,
-	OT_VARIABLE,
-	OT_SIZE_BY_VARIATION
+    OT_PLACEHOLDER,
+    OT_FIXED,
+    OT_BITFIELD,
+    OT_VARIABLE,
+    OT_SIZE_BY_VARIATION
 };
 
 /**

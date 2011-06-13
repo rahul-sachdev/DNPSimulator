@@ -17,16 +17,20 @@
 
 #include "AlwaysOpeningVtoRouter.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-AlwaysOpeningVtoRouter::AlwaysOpeningVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc) :
-	VtoRouter(arSettings,apLogger,apWriter,apPhysLayer,apTimerSrc),
+AlwaysOpeningVtoRouter::AlwaysOpeningVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
+	VtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc),
 	Loggable(apLogger)
 {
 	this->DoStart();
 }
 
-}}
+}
+}
 
 /* vim: set ts=4 sw=4: */
 

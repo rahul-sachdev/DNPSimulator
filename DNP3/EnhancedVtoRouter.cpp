@@ -17,10 +17,13 @@
 
 #include "EnhancedVtoRouter.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-EnhancedVtoRouter::EnhancedVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc) :
-	VtoRouter(arSettings,apLogger,apWriter,apPhysLayer,apTimerSrc),
+EnhancedVtoRouter::EnhancedVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
+	VtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc),
 	Loggable(apLogger),
 	mDnpConnected(false),
 	mRemoteConnected(false),
@@ -31,7 +34,7 @@ EnhancedVtoRouter::EnhancedVtoRouter(const VtoRouterSettings& arSettings, Logger
 
 void EnhancedVtoRouter::DoVtoRemoteConnectedChanged(bool aOpened)
 {
-	if(mRemoteConnected != aOpened){
+	if(mRemoteConnected != aOpened) {
 		LOG_BLOCK(LEV_INFO, "RemoteConnectionChanged: " << std::boolalpha << aOpened);
 		mRemoteConnected = aOpened;
 
@@ -41,7 +44,7 @@ void EnhancedVtoRouter::DoVtoRemoteConnectedChanged(bool aOpened)
 
 void EnhancedVtoRouter::DoDnpConnectedChanged(bool aConnected)
 {
-	if(mDnpConnected != aConnected){
+	if(mDnpConnected != aConnected) {
 		LOG_BLOCK(LEV_INFO, "Dnp Connection changed: " << std::boolalpha << aConnected);
 		mDnpConnected = aConnected;
 
@@ -49,7 +52,7 @@ void EnhancedVtoRouter::DoDnpConnectedChanged(bool aConnected)
 
 		// if we are already connected locally we need to inform remote side
 		// now that we have a dnp connection to tunnel that across
-		if(!mPermanentlyStopped){
+		if(mLocalConnected && !mPermanentlyStopped) {
 			mpVtoWriter->SetLocalVtoState(mLocalConnected, this->GetChannelId());
 		}
 
@@ -59,11 +62,11 @@ void EnhancedVtoRouter::DoDnpConnectedChanged(bool aConnected)
 
 void EnhancedVtoRouter::SetLocalConnected(bool aConnected)
 {
-	if(mLocalConnected != aConnected){
+	if(mLocalConnected != aConnected) {
 		LOG_BLOCK(LEV_INFO, "Local Connection changed: " << std::boolalpha << aConnected);
 		mLocalConnected = aConnected;
 
-		if(mDnpConnected && !mPermanentlyStopped){
+		if(mDnpConnected && !mPermanentlyStopped) {
 			mpVtoWriter->SetLocalVtoState(mLocalConnected, this->GetChannelId());
 		}
 		this->HandleSetLocalConnected();
@@ -74,8 +77,8 @@ void EnhancedVtoRouter::SetLocalConnected(bool aConnected)
  * Server socket specific implementation
  *************************************/
 
-ServerSocketVtoRouter::ServerSocketVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc) :
-	EnhancedVtoRouter(arSettings,apLogger,apWriter,apPhysLayer,apTimerSrc),
+ServerSocketVtoRouter::ServerSocketVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
+	EnhancedVtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc),
 	Loggable(apLogger)
 {
 
@@ -83,7 +86,7 @@ ServerSocketVtoRouter::ServerSocketVtoRouter(const VtoRouterSettings& arSettings
 
 void ServerSocketVtoRouter::HandleVtoRemoteConnectedChanged()
 {
-	if(!mRemoteConnected){
+	if(!mRemoteConnected) {
 		// if the remote side has closed we should close our
 		// local connection and then prepare for a new one
 		this->Reconnect();
@@ -106,8 +109,8 @@ void ServerSocketVtoRouter::HandleSetLocalConnected()
 /*****************************************
  * Client socket specific implementation
  *************************************/
-ClientSocketVtoRouter::ClientSocketVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc) :
-	EnhancedVtoRouter(arSettings,apLogger,apWriter,apPhysLayer,apTimerSrc),
+ClientSocketVtoRouter::ClientSocketVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
+	EnhancedVtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc),
 	Loggable(apLogger)
 {
 
@@ -119,7 +122,7 @@ void ClientSocketVtoRouter::HandleVtoRemoteConnectedChanged()
 	// have a valid dnp connection
 	assert(!mRemoteConnected || mDnpConnected == mRemoteConnected);
 
-	if(mRemoteConnected){
+	if(mRemoteConnected) {
 		// pretend we are online, so the other side sees a "connected"
 		// message. If we succeed in connecting the second SetLocalConnected(true)
 		// call will do nothing, if we fail the SetLocalConnected(false) call
@@ -147,7 +150,8 @@ void ClientSocketVtoRouter::HandleSetLocalConnected()
 	if(!mLocalConnected) DoStop();
 }
 
-}}
+}
+}
 
 /* vim: set ts=4 sw=4: */
 

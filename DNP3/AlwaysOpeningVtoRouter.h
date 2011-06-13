@@ -20,27 +20,31 @@
 
 #include "VtoRouter.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	/**
-	 * the simplest type of vto router, useful for vto ports that should always be
-	 * online regardless of dnp connection state. The vtorouter on the other side
-	 * of the dnp connection can be either an AlwaysOpening or a ServerSocket router.
-	 */
-	class AlwaysOpeningVtoRouter : public VtoRouter
-	{
-		public:
+/**
+ * the simplest type of vto router, useful for vto ports that should always be
+ * online regardless of dnp connection state. The vtorouter on the other side
+ * of the dnp connection can be either an AlwaysOpening or a ServerSocket router.
+ */
+class AlwaysOpeningVtoRouter : public VtoRouter
+{
+public:
 
-			AlwaysOpeningVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc);
+	AlwaysOpeningVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc);
 
-			/// we don't care about any of the callbacks so we have empty implementations
-			void DoVtoRemoteConnectedChanged(bool aOpened){}
-			void DoDnpConnectedChanged(bool aConnected){}
-			void SetLocalConnected(bool aConnected){}
+	/// we don't care about any of the callbacks so we have empty implementations
+	void DoVtoRemoteConnectedChanged(bool aOpened) {}
+	void DoDnpConnectedChanged(bool aConnected) {}
+	void SetLocalConnected(bool aConnected) {}
 
-	};
+};
 
-}}
+}
+}
 
 /* vim: set ts=4 sw=4: */
 

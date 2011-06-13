@@ -41,7 +41,7 @@ protected:
 	// to try and make progress
 	virtual void Next() = 0;
 
-	
+
 
 };
 

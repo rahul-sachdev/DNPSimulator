@@ -74,11 +74,11 @@ struct Change {
 };
 
 enum DataTypes {
-	DT_BINARY,
-	DT_ANALOG,
-	DT_COUNTER,
-	DT_CONTROL_STATUS,
-	DT_SETPOINT_STATUS
+    DT_BINARY,
+    DT_ANALOG,
+    DT_COUNTER,
+    DT_CONTROL_STATUS,
+    DT_SETPOINT_STATUS
 };
 
 std::string GetDataTypeName(DataTypes aType);

@@ -28,9 +28,9 @@ namespace dnp
 {
 
 enum TransportHeader {
-	TL_HDR_FIN = 0x80,
-	TL_HDR_FIR = 0x40,
-	TL_HDR_SEQ = 0x3F
+    TL_HDR_FIN = 0x80,
+    TL_HDR_FIR = 0x40,
+    TL_HDR_SEQ = 0x3F
 };
 
 // The macro MACRO_DNP_MAX_FRAG_SIZE controls the maximum size of application layer frames

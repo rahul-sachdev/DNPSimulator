@@ -315,9 +315,9 @@ size_t ResponseContext::IterateIndexed(VtoEventRequest& arRequest, VtoDataEventI
 {
 	for (size_t i = 0; i < arRequest.count; ++i) {
 		IndexedWriteIterator itr = arAPDU.WriteIndexed(
-		                                   arRequest.pObj,
-		                                   arIter->mValue.GetSize(),
-		                                   arIter->mIndex
+		                               arRequest.pObj,
+		                               arIter->mValue.GetSize(),
+		                               arIter->mIndex
 		                           );
 
 		/*
@@ -334,9 +334,9 @@ size_t ResponseContext::IterateIndexed(VtoEventRequest& arRequest, VtoDataEventI
 
 		/* Write the data to the APDU message */
 		arRequest.pObj->Write(
-		        *itr,
-		        arIter->mValue.GetSize(),
-		        arIter->mValue.mpData
+		    *itr,
+		    arIter->mValue.GetSize(),
+		    arIter->mValue.mpData
 		);
 
 		/* Mark the data segment as being written */

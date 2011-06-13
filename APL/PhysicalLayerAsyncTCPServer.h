@@ -36,7 +36,7 @@ public:
 	void DoOpenSuccess();
 
 private:
-	
+
 	boost::asio::ip::tcp::endpoint mLocalEndpoint;
 	boost::asio::ip::tcp::endpoint mRemoteEndpoint;
 

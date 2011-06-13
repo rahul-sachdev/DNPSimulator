@@ -35,25 +35,24 @@ using namespace std;
 using namespace apl;
 using namespace apl::dnp;
 
-class ServerVtoRouterTestClass : LogTester 
+class ServerVtoRouterTestClass : LogTester
 {
-	public:
-		ServerVtoRouterTestClass(const VtoRouterSettings& arSettings = VtoRouterSettings(0,true,true), const size_t aWriterSize = 100) :
+public:
+	ServerVtoRouterTestClass(const VtoRouterSettings& arSettings = VtoRouterSettings(88, true, true), const size_t aWriterSize = 100) :
 		LogTester(false),
 		phys(mLog.GetLogger(LEV_DEBUG, "phys")),
 		writer(aWriterSize),
 		mts(),
-		router(arSettings, mLog.GetLogger(LEV_DEBUG, "router"), &writer, &phys, &mts)
-	{
+		router(arSettings, mLog.GetLogger(LEV_DEBUG, "router"), &writer, &phys, &mts) {
 		writer.AddVtoCallback(&router);
 	}
 
-	void CheckLocalChannelConnectedMessage(bool connected){
+	void CheckLocalChannelConnectedMessage(bool connected) {
 		BOOST_REQUIRE_EQUAL(writer.Size(), 1);
 		VtoEvent vto;
 		BOOST_REQUIRE(writer.Read(vto));
-		BOOST_REQUIRE_EQUAL(vto.mValue.GetData()[0], 0);
-		BOOST_REQUIRE_EQUAL(vto.mValue.GetData()[1], (connected ? 0 : 1));
+		BOOST_REQUIRE_EQUAL(vto.mValue.mpData[0], 88);
+		BOOST_REQUIRE_EQUAL(vto.mValue.mpData[1], (connected ? 0 : 1));
 	}
 
 	MockPhysicalLayerAsync phys;
@@ -64,45 +63,45 @@ class ServerVtoRouterTestClass : LogTester
 
 BOOST_AUTO_TEST_SUITE(EnhancedVtoRouterTests)
 
-	BOOST_AUTO_TEST_CASE(Construction)
-	{
-		ServerVtoRouterTestClass rtc;
-	}
+BOOST_AUTO_TEST_CASE(Construction)
+{
+	ServerVtoRouterTestClass rtc;
+}
 
-	BOOST_AUTO_TEST_CASE(StartsOpeningAfterDnpConnection)
-	{
-		ServerVtoRouterTestClass rtc;
-		BOOST_REQUIRE(!rtc.phys.IsOpening());
+BOOST_AUTO_TEST_CASE(StartsOpeningAfterDnpConnection)
+{
+	ServerVtoRouterTestClass rtc;
+	BOOST_REQUIRE(!rtc.phys.IsOpening());
 
-		rtc.router.OnDnpConnectedChanged(true);
+	rtc.router.OnDnpConnectedChanged(true);
 
-		rtc.mts.Dispatch();
-		BOOST_REQUIRE(rtc.phys.IsOpening());
+	rtc.mts.Dispatch();
+	BOOST_REQUIRE(rtc.phys.IsOpening());
 
-		rtc.router.OnDnpConnectedChanged(false);
+	rtc.router.OnDnpConnectedChanged(false);
 
-		rtc.mts.Dispatch();
-		BOOST_REQUIRE(rtc.phys.IsClosing());
-	}
+	rtc.mts.Dispatch();
+	BOOST_REQUIRE(rtc.phys.IsClosing());
+}
 
-	BOOST_AUTO_TEST_CASE(SendsMagicChannelLocalConnected)
-	{
-		ServerVtoRouterTestClass rtc;
+BOOST_AUTO_TEST_CASE(SendsMagicChannelLocalConnected)
+{
+	ServerVtoRouterTestClass rtc;
 
-		rtc.router.OnDnpConnectedChanged(true);
-		rtc.mts.Dispatch();
-		BOOST_REQUIRE(rtc.phys.IsOpening());
-		rtc.phys.SignalOpenSuccess();
+	rtc.router.OnDnpConnectedChanged(true);
+	rtc.mts.Dispatch();
+	BOOST_REQUIRE(rtc.phys.IsOpening());
+	rtc.phys.SignalOpenSuccess();
 
-		rtc.CheckLocalChannelConnectedMessage(true);
+	rtc.CheckLocalChannelConnectedMessage(true);
 
-		rtc.phys.TriggerClose();
-		rtc.mts.Dispatch();
+	rtc.phys.TriggerClose();
+	rtc.mts.Dispatch();
 
-		BOOST_REQUIRE_EQUAL(rtc.phys.NumClose(), 1);
+	BOOST_REQUIRE_EQUAL(rtc.phys.NumClose(), 1);
 
-		rtc.CheckLocalChannelConnectedMessage(false);
-	}
+	rtc.CheckLocalChannelConnectedMessage(false);
+}
 
 BOOST_AUTO_TEST_SUITE_END()
 

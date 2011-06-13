@@ -267,7 +267,10 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfDnpDrops)
 	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 }
 
-bool False() { return false; }
+bool False()
+{
+	return false;
+}
 
 BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 {

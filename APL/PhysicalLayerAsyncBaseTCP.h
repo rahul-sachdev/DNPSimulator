@@ -37,7 +37,7 @@ public:
 	virtual ~PhysicalLayerAsyncBaseTCP() {}
 
 	/* Implement the shared client/server actions */
-	void DoClose();	
+	void DoClose();
 	void DoAsyncRead(boost::uint8_t*, size_t);
 	void DoAsyncWrite(const boost::uint8_t*, size_t);
 	void DoOpenFailure();

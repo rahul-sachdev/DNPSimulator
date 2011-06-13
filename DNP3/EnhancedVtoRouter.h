@@ -20,86 +20,90 @@
 
 #include "VtoRouter.h"
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
-	/**
-	 * Base class for the VtoRouters that take advantage of the extended
-	 * callbacks to manage the local side of a tunneled connection. This
-	 * base class provides the common machinery for generating and recieving
-	 * notiifications that the local/remote connection has been created or
-	 * terminated. The concrete base classes provide policy for when to start
-	 * or stop the local side of the connection.
-	 */
-	class EnhancedVtoRouter : public VtoRouter
-	{
-		public:
+/**
+ * Base class for the VtoRouters that take advantage of the extended
+ * callbacks to manage the local side of a tunneled connection. This
+ * base class provides the common machinery for generating and recieving
+ * notiifications that the local/remote connection has been created or
+ * terminated. The concrete base classes provide policy for when to start
+ * or stop the local side of the connection.
+ */
+class EnhancedVtoRouter : public VtoRouter
+{
+public:
 
-			EnhancedVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc);
+	EnhancedVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc);
 
-			// these base functions handle updating the state variables
-			// and inform the remote side of local connection changes
-			void DoVtoRemoteConnectedChanged(bool aOpened);
-			void DoDnpConnectedChanged(bool aConnected);
-			void SetLocalConnected(bool aConnected);
+	// these base functions handle updating the state variables
+	// and inform the remote side of local connection changes
+	void DoVtoRemoteConnectedChanged(bool aOpened);
+	void DoDnpConnectedChanged(bool aConnected);
+	void SetLocalConnected(bool aConnected);
 
-			// concrete classes use these callbacks and the state
-			// variables to decide when to Start or Stop attempting
-			// the local connections
-			virtual void HandleVtoRemoteConnectedChanged() = 0;
-			virtual void HandleDnpConnectedChanged() = 0;
-			virtual void HandleSetLocalConnected() = 0;
+	// concrete classes use these callbacks and the state
+	// variables to decide when to Start or Stop attempting
+	// the local connections
+	virtual void HandleVtoRemoteConnectedChanged() = 0;
+	virtual void HandleDnpConnectedChanged() = 0;
+	virtual void HandleSetLocalConnected() = 0;
 
-		protected:
+protected:
 
-			bool mDnpConnected;
-			bool mRemoteConnected;
-			bool mLocalConnected;
+	bool mDnpConnected;
+	bool mRemoteConnected;
+	bool mLocalConnected;
 
-	};
+};
 
-	/**
-	 * The server socket vto implementation will keep the local side of the
-	 * connection running whenever the dnp3 connection is online. If the
-	 * remote connection drops we will drop the local connection if it
-	 * exists to indicate to our client that the remote end terminated the
-	 * connection. An example where this is useful is when SSH is being
-	 * tunneled and the user uses the "logout" command, the ssh server closes
-	 * the socket to inform the client that the session is over. It can be paired
-	 * with a remote ClientSocket or AlwaysOnline vto router, but not another
-	 * ServerSocket router.
-	 */
-	class ServerSocketVtoRouter : public EnhancedVtoRouter
-	{
-		public:
+/**
+ * The server socket vto implementation will keep the local side of the
+ * connection running whenever the dnp3 connection is online. If the
+ * remote connection drops we will drop the local connection if it
+ * exists to indicate to our client that the remote end terminated the
+ * connection. An example where this is useful is when SSH is being
+ * tunneled and the user uses the "logout" command, the ssh server closes
+ * the socket to inform the client that the session is over. It can be paired
+ * with a remote ClientSocket or AlwaysOnline vto router, but not another
+ * ServerSocket router.
+ */
+class ServerSocketVtoRouter : public EnhancedVtoRouter
+{
+public:
 
-			ServerSocketVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc);
+	ServerSocketVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc);
 
-			void HandleVtoRemoteConnectedChanged();
-			void HandleDnpConnectedChanged();
-			void HandleSetLocalConnected();
+	void HandleVtoRemoteConnectedChanged();
+	void HandleDnpConnectedChanged();
+	void HandleSetLocalConnected();
 
-	};
+};
 
-	/**
-	 * The client socket vto implementation will only attempt to open a client
-	 * connection when the dnp connection is online and the remote side indicates
-	 * that a connection has been made on that side. When a "remote connected"
-	 * message is received it will respond with a "local connected" message and
-	 * only if it can't connect locally will it send a "local disconnected" message.
-	 */
-	class ClientSocketVtoRouter : public EnhancedVtoRouter
-	{
-		public:
+/**
+ * The client socket vto implementation will only attempt to open a client
+ * connection when the dnp connection is online and the remote side indicates
+ * that a connection has been made on that side. When a "remote connected"
+ * message is received it will respond with a "local connected" message and
+ * only if it can't connect locally will it send a "local disconnected" message.
+ */
+class ClientSocketVtoRouter : public EnhancedVtoRouter
+{
+public:
 
-			ClientSocketVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc);
+	ClientSocketVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc);
 
-			void HandleVtoRemoteConnectedChanged();
-			void HandleDnpConnectedChanged();
-			void HandleSetLocalConnected();
+	void HandleVtoRemoteConnectedChanged();
+	void HandleDnpConnectedChanged();
+	void HandleSetLocalConnected();
 
-	};
+};
 
-}}
+}
+}
 
 /* vim: set ts=4 sw=4: */
 

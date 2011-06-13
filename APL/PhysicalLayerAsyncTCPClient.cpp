@@ -35,12 +35,12 @@ namespace apl
 {
 
 PhysicalLayerAsyncTCPClient::PhysicalLayerAsyncTCPClient(
-        Logger* apLogger,
-        boost::asio::io_service* apIOService,
-        const std::string& arAddress,
-        uint16_t aPort) :
+    Logger* apLogger,
+    boost::asio::io_service* apIOService,
+    const std::string& arAddress,
+    uint16_t aPort) :
 	PhysicalLayerAsyncBaseTCP(apLogger, apIOService),
-	mRemoteEndpoint(ip::tcp::v4(), aPort)	
+	mRemoteEndpoint(ip::tcp::v4(), aPort)
 {
 	//set the endpoint's address
 	boost::system::error_code ec;

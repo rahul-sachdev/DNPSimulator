@@ -31,12 +31,12 @@ namespace dnp
 */
 struct LinkConfig {
 	LinkConfig(
-	        bool aIsMaster,
-	        bool aUseConfirms,
-	        size_t aNumRetry,
-	        boost::uint16_t aLocalAddr,
-	        boost::uint16_t aRemoteAddr,
-	        millis_t aTimeout) :
+	    bool aIsMaster,
+	    bool aUseConfirms,
+	    size_t aNumRetry,
+	    boost::uint16_t aLocalAddr,
+	    boost::uint16_t aRemoteAddr,
+	    millis_t aTimeout) :
 
 		IsMaster(aIsMaster),
 		UseConfirms(aUseConfirms),
@@ -47,8 +47,8 @@ struct LinkConfig {
 	{}
 
 	LinkConfig(
-	        bool aIsMaster,
-	        bool aUseConfirms) :
+	    bool aIsMaster,
+	    bool aUseConfirms) :
 
 		IsMaster(aIsMaster),
 		UseConfirms(aUseConfirms),

@@ -92,8 +92,9 @@ void VtoRouter::DoStart()
 {
 	if(mPermanentlyStopped) {
 		LOG_BLOCK(LEV_INFO, "Permenantly Stopped")
-	}else{
-		if(!mReopenPhysicalLayer){
+	}
+	else {
+		if(!mReopenPhysicalLayer) {
 			mReopenPhysicalLayer = true;
 			LOG_BLOCK(LEV_INFO, "Starting VtoRouted Port")
 			this->Start();
@@ -107,7 +108,7 @@ void VtoRouter::DoStart()
 void VtoRouter::DoStop()
 {
 
-	if(mReopenPhysicalLayer){
+	if(mReopenPhysicalLayer) {
 		mReopenPhysicalLayer = false;
 		LOG_BLOCK(LEV_INFO, "Stopping VtoRouted Port")
 		this->Stop();

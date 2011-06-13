@@ -92,7 +92,7 @@ void AsyncStackManager::AddSerial(const std::string& arName, PhysLayerSettings a
 }
 
 ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel, IDataObserver* apPublisher,
-                const MasterStackConfig& arCfg)
+        const MasterStackConfig& arCfg)
 {
 	Port* pPort = this->AllocatePort(arPortName);
 	Logger* pLogger = mpLogger->GetSubLogger(arStackName, aLevel);
@@ -110,7 +110,7 @@ ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, c
 }
 
 IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel, ICommandAcceptor* apCmdAcceptor,
-                const SlaveStackConfig& arCfg)
+        const SlaveStackConfig& arCfg)
 {
 	Port* pPort = this->AllocatePort(arPortName);
 	Logger* pLogger = mpLogger->GetSubLogger(arStackName, aLevel);

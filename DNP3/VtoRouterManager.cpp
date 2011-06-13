@@ -65,21 +65,22 @@ void VtoRouterManager::ClenupAfterRouter(IPhysicalLayerAsync* apPhys, VtoRouter*
 }
 
 VtoRouter* VtoRouterManager::StartRouter(
-        const std::string& arPortName,
-        const VtoRouterSettings& arSettings,
-        IVtoWriter* apWriter)
+    const std::string& arPortName,
+    const VtoRouterSettings& arSettings,
+    IVtoWriter* apWriter)
 {
 	IPhysicalLayerAsync* pPhys = mpPhysSource->AcquireLayer(arPortName, false); //don't autodelete
 	Logger* pLogger = this->GetSubLogger(arPortName, arSettings.CHANNEL_ID);
-			
+
 	VtoRouter* pRouter;
-	if(arSettings.DISABLE_EXTENSIONS){
+	if(arSettings.DISABLE_EXTENSIONS) {
 		pRouter = new AlwaysOpeningVtoRouter(arSettings, pLogger, apWriter, pPhys, mpTimerSrc);
 	}
-	else{
-		if(arSettings.START_LOCAL){
+	else {
+		if(arSettings.START_LOCAL) {
 			pRouter = new ServerSocketVtoRouter(arSettings, pLogger, apWriter, pPhys, mpTimerSrc);
-		}else{
+		}
+		else {
 			pRouter = new ClientSocketVtoRouter(arSettings, pLogger, apWriter, pPhys, mpTimerSrc);
 		}
 	}

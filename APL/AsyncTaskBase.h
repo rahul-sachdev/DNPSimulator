@@ -77,11 +77,11 @@ public:
 protected:
 
 	AsyncTaskBase(
-	        int aPriority,
-	        const TaskHandler& arCallback,
-	        AsyncTaskGroup* apGroup,
-	        const boost::posix_time::ptime& arInitialTime,
-	        const std::string& arName);
+	    int aPriority,
+	    const TaskHandler& arCallback,
+	    AsyncTaskGroup* apGroup,
+	    const boost::posix_time::ptime& arInitialTime,
+	    const std::string& arName);
 
 	// optional NVII function for special bookkeeping
 	virtual void _OnComplete(bool aSuccess) {}
@@ -132,15 +132,15 @@ protected:
 	std::string mName;						// Every task has a name
 	bool mIsEnabled;						// Tasks can be enabled or disabled
 	bool mIsComplete;						// Every task has a flag that
-											// executes it's completion status
+	// executes it's completion status
 	bool mIsExpired;						// Indicate wether the time from
-											// the last UpdateTime call >=
-											// mNextRunTime
+	// the last UpdateTime call >=
+	// mNextRunTime
 	bool mIsRunning;						// Every task has an execution
-											// status
+	// status
 	int mPriority;							// Every task has a pr
 	TaskHandler mHandler;					// Every task has a handler for
-											// executing the task
+	// executing the task
 	AsyncTaskGroup* mpGroup;				// owning task group
 	boost::posix_time::ptime mNextRunTime;	// next execution time for the task
 	const boost::posix_time::ptime M_INITIAL_TIME;

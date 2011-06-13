@@ -108,9 +108,9 @@ public:
 
 
 enum SequenceInfo {
-	SI_OTHER,
-	SI_PREV,
-	SI_CORRECT
+    SI_OTHER,
+    SI_PREV,
+    SI_CORRECT
 };
 
 // Interface for callbacks from an application layer

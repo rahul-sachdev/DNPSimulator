@@ -27,191 +27,193 @@
 #include "VtoDataInterface.h"
 #include "CleanupHelper.h"
 
-namespace apl {
+namespace apl
+{
 
-	class IPhysicalLayerAsync;
-	class ITimerSource;
+class IPhysicalLayerAsync;
+class ITimerSource;
 
-	namespace dnp {
+namespace dnp
+{
 
-		class VtoReader;
-		class VtoWriter;
-		struct VtoRouterSettings;
+class VtoReader;
+class VtoWriter;
+struct VtoRouterSettings;
 
-		/**
-		 * Base Class used to route data between a VTO channel (made up of both a
-		 * VtoWriter and VtoReader instance) and an IPhysicalLayerAsync
-		 * instance.
-		 *
-		 * @code
-		 *                                           +--> [VtoReader]
-		 *                                           |
-		 * [IPhysicalLayerAsync] <--> [VtoRouter] <--+
-		 *                                           |
-		 *                                           +--> [VtoWriter]
-		 * @endcode
-		 *
-		 * The VtoRouter instance provides the necessary IVtoCallbacks hooks
-		 * that the VtoReader will use. The base vtorouter provides the machinery
-		 * to route data to and from the dnp connection and the lets the concrete
-		 * implementations set policy on when to start and stop the reconnecting
-		 * behavior.
-		 */
-		class VtoRouter : public AsyncPhysLayerMonitor, public IVtoCallbacks, public CleanupHelper
-		{
-			public:
+/**
+ * Base Class used to route data between a VTO channel (made up of both a
+ * VtoWriter and VtoReader instance) and an IPhysicalLayerAsync
+ * instance.
+ *
+ * @code
+ *                                           +--> [VtoReader]
+ *                                           |
+ * [IPhysicalLayerAsync] <--> [VtoRouter] <--+
+ *                                           |
+ *                                           +--> [VtoWriter]
+ * @endcode
+ *
+ * The VtoRouter instance provides the necessary IVtoCallbacks hooks
+ * that the VtoReader will use. The base vtorouter provides the machinery
+ * to route data to and from the dnp connection and the lets the concrete
+ * implementations set policy on when to start and stop the reconnecting
+ * behavior.
+ */
+class VtoRouter : public AsyncPhysLayerMonitor, public IVtoCallbacks, public CleanupHelper
+{
+public:
 
-				/**
-				 * Create a new VtoRouter instance.  Prior to using this
-				 * instance, make sure to register both a IPhysicalLayerAsync
-				 * and a VtoWriter using SetPhysicalLayer() and
-				 * SetVtoWriter(), respectively.
-				 *
-				 * @param apLogger			the Logger that the instance
-				 * 							should use for log messages
-				 * @param aChannelId		the DNP3 Virtual Terminal port
-				 * 							(channel id)
-				 *
-				 * @return					a new VtoRouter instance
-				 */
-				VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource *apTimerSrc);
+	/**
+	 * Create a new VtoRouter instance.  Prior to using this
+	 * instance, make sure to register both a IPhysicalLayerAsync
+	 * and a VtoWriter using SetPhysicalLayer() and
+	 * SetVtoWriter(), respectively.
+	 *
+	 * @param apLogger			the Logger that the instance
+	 * 							should use for log messages
+	 * @param aChannelId		the DNP3 Virtual Terminal port
+	 * 							(channel id)
+	 *
+	 * @return					a new VtoRouter instance
+	 */
+	VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc);
 
-				/**
-				 * when we try to stop the router we call this thread safe function which sets a flag and
-				 * then posts a shutdown request to mpTimerSrc.
-				 */
-				void StopRouter();
+	/**
+	 * when we try to stop the router we call this thread safe function which sets a flag and
+	 * then posts a shutdown request to mpTimerSrc.
+	 */
+	void StopRouter();
 
-				/**
-				 * Receives data from the VTO channel and forwards it to the
-				 * IPhysicalLayerAsync instance associated with this VtoRouter.
-				 * Implements IVtoCallbacks::OnVtoDataReceived().
-				 *
-				 * @param apData		The data received from the VTO stream
-				 * @param aLength		The length of the data received (in
-				 *						bytes)
-				 */
-				void OnVtoDataReceived(const boost::uint8_t* apData,
-				                            size_t aLength);
+	/**
+	 * Receives data from the VTO channel and forwards it to the
+	 * IPhysicalLayerAsync instance associated with this VtoRouter.
+	 * Implements IVtoCallbacks::OnVtoDataReceived().
+	 *
+	 * @param apData		The data received from the VTO stream
+	 * @param aLength		The length of the data received (in
+	 *						bytes)
+	 */
+	void OnVtoDataReceived(const boost::uint8_t* apData,
+	                       size_t aLength);
 
-				/**
-				 * When the remote end indicates a connection state change we need to toggle
-				 * our connection state and setup for a new connection. Behavior will be
-				 * different depending on the mStartLocal setting. Posted to mpTimerSrc.
-				 */
-				void OnVtoRemoteConnectedChanged(bool aOpened);
-				
-				/**
-				 * When the dnp stack changes state to offline we will shutdown any our local physical
-				 * layer. When it comes online we may start our local physical layer, depending on the 
-				 * mStartLocal setting. Posted to mpTimerSrc.
-				 */
-				void OnDnpConnectedChanged(bool aConnected);
+	/**
+	 * When the remote end indicates a connection state change we need to toggle
+	 * our connection state and setup for a new connection. Behavior will be
+	 * different depending on the mStartLocal setting. Posted to mpTimerSrc.
+	 */
+	void OnVtoRemoteConnectedChanged(bool aOpened);
 
-				/**
-				 * Called when the VTO data buffer size changes (startup and
-				 * successuly transmission).		 
-				 */
-				void OnBufferAvailable();
+	/**
+	 * When the dnp stack changes state to offline we will shutdown any our local physical
+	 * layer. When it comes online we may start our local physical layer, depending on the
+	 * mStartLocal setting. Posted to mpTimerSrc.
+	 */
+	void OnDnpConnectedChanged(bool aConnected);
 
-			protected:
+	/**
+	 * Called when the VTO data buffer size changes (startup and
+	 * successuly transmission).
+	 */
+	void OnBufferAvailable();
 
-				void CheckForPhysRead();
-				void CheckForPhysWrite();
+protected:
 
-				void CheckForVtoWrite();
+	void CheckForPhysRead();
+	void CheckForPhysWrite();
 
-				// Implement AsyncPhysLayerMonitor
+	void CheckForVtoWrite();
 
-				void OnPhysicalLayerOpen();
+	// Implement AsyncPhysLayerMonitor
 
-				void OnPhysicalLayerClose();
+	void OnPhysicalLayerOpen();
 
-				void OnPhysicalLayerOpenFailure();
+	void OnPhysicalLayerClose();
 
-				/**
-				 * Receives data from the physical layer and forwards it to the
-				 * VtoWriter.
-				 *
-				 * @param apData		The data received from the physical
-				 * 						layer
-				 * @param aLength		The length of the data received (in
-				 *						bytes)
-				 */
-				void _OnReceive(const boost::uint8_t* apData, size_t aLength);
+	void OnPhysicalLayerOpenFailure();
 
-				/**
-				 * Implements IUpperLayer::_OnSendSuccess(), which was
-				 * inherited via IHandlerAsync.  Called when an asynchronous
-				 * transmission to the physical layer was successful.
-				 */
-				void _OnSendSuccess();
+	/**
+	 * Receives data from the physical layer and forwards it to the
+	 * VtoWriter.
+	 *
+	 * @param apData		The data received from the physical
+	 * 						layer
+	 * @param aLength		The length of the data received (in
+	 *						bytes)
+	 */
+	void _OnReceive(const boost::uint8_t* apData, size_t aLength);
 
-				/**
-				 * Implements IUpperLayer::_OnSendFailure(), which was
-				 * inherited via IHandlerAsync.  Called when an asynchronous
-				 * transmission to the physical layer was not successful.
-				 */
-				void _OnSendFailure();
+	/**
+	 * Implements IUpperLayer::_OnSendSuccess(), which was
+	 * inherited via IHandlerAsync.  Called when an asynchronous
+	 * transmission to the physical layer was successful.
+	 */
+	void _OnSendSuccess();
 
-				/**
-				 * Implement AsyncPhysMonitor::OnStateChange
-				 */
-				void OnStateChange(IPhysMonitor::State);
+	/**
+	 * Implements IUpperLayer::_OnSendFailure(), which was
+	 * inherited via IHandlerAsync.  Called when an asynchronous
+	 * transmission to the physical layer was not successful.
+	 */
+	void _OnSendFailure();
 
-				// DoStart and DoStop are idempotent versions of Start/Stop
-				void DoStart();
-				void DoStop(); 
+	/**
+	 * Implement AsyncPhysMonitor::OnStateChange
+	 */
+	void OnStateChange(PhysLayerState);
 
-				void DoStopRouter();
+	// DoStart and DoStop are idempotent versions of Start/Stop
+	void DoStart();
+	void DoStop();
 
-				virtual void DoVtoRemoteConnectedChanged(bool aOpened) = 0;
-				virtual void DoDnpConnectedChanged(bool aConnected) = 0;
-				virtual void SetLocalConnected(bool aConnected) = 0;
+	void DoStopRouter();
 
-			protected:
+	virtual void DoVtoRemoteConnectedChanged(bool aOpened) = 0;
+	virtual void DoDnpConnectedChanged(bool aConnected) = 0;
+	virtual void SetLocalConnected(bool aConnected) = 0;
 
-				/**
-				 * The VtoWriter instance that will be used to send the data
-				 * that is received by the IPhysicalLayerAsync instance to the
-				 * VTO endpoint.
-				 */
-				IVtoWriter* mpVtoWriter;
+protected:
 
-				/**
-				 * The transmit buffer for Vto -> physical layer.  The data that
-				 * is put into this buffer was originally received via VTO.
-				 */
-				std::queue<VtoData> mPhysLayerTxBuffer;
+	/**
+	 * The VtoWriter instance that will be used to send the data
+	 * that is received by the IPhysicalLayerAsync instance to the
+	 * VTO endpoint.
+	 */
+	IVtoWriter* mpVtoWriter;
 
-				/**
-				 * The transmit buffer for physical layer -> Vto. The data that is put
-				 * into this buffer was originally received from the physical layer.
-				 */
-				ShiftableBuffer mVtoTxBuffer;
+	/**
+	 * The transmit buffer for Vto -> physical layer.  The data that
+	 * is put into this buffer was originally received via VTO.
+	 */
+	std::queue<VtoData> mPhysLayerTxBuffer;
 
-				/**
-				 * while true we will let the AsyncPhysLayerMonitor implementation try
-				 * to keep reconnecting the local physical layer if it gets disconnected
-				 * for any reason
-				 */
-				bool mReopenPhysicalLayer;
+	/**
+	 * The transmit buffer for physical layer -> Vto. The data that is put
+	 * into this buffer was originally received from the physical layer.
+	 */
+	ShiftableBuffer mVtoTxBuffer;
 
-				/**
-				 * when StopRouter is called we start shutting down the vto router and
-				 * don't reconnect or send local connected callbacks
-				 */
-				bool mPermanentlyStopped;
+	/**
+	 * while true we will let the AsyncPhysLayerMonitor implementation try
+	 * to keep reconnecting the local physical layer if it gets disconnected
+	 * for any reason
+	 */
+	bool mReopenPhysicalLayer;
 
-				/**
-				 * we use a delayed cleanup mechanism which we need to make sure we only
-				 * call once.
-				 */
-				bool mCleanedup;
+	/**
+	 * when StopRouter is called we start shutting down the vto router and
+	 * don't reconnect or send local connected callbacks
+	 */
+	bool mPermanentlyStopped;
 
-		};
+	/**
+	 * we use a delayed cleanup mechanism which we need to make sure we only
+	 * call once.
+	 */
+	bool mCleanedup;
 
-	}
+};
+
+}
 }
 
 /* vim: set ts=4 sw=4: */

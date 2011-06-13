@@ -30,26 +30,26 @@ namespace dnp
 
 // Sizes of various part of link frames
 enum LinkSizes {
-	LS_MIN_LENGTH = 5,
-	LS_MAX_LENGTH = 255,
-	LS_HEADER_SIZE = 10,
-	LS_DATA_BLOCK_SIZE = 16,
-	LS_CRC_SIZE = 2,
-	LS_DATA_PLUS_CRC_SIZE = 18,
-	LS_MAX_USER_DATA_SIZE = 250,
-	LS_MAX_FRAME_SIZE = 292,	//10(header) + 250 (user data) + 32 (block CRC's) = 292 frame bytes
+    LS_MIN_LENGTH = 5,
+    LS_MAX_LENGTH = 255,
+    LS_HEADER_SIZE = 10,
+    LS_DATA_BLOCK_SIZE = 16,
+    LS_CRC_SIZE = 2,
+    LS_DATA_PLUS_CRC_SIZE = 18,
+    LS_MAX_USER_DATA_SIZE = 250,
+    LS_MAX_FRAME_SIZE = 292,	//10(header) + 250 (user data) + 32 (block CRC's) = 292 frame bytes
 
 };
 
 // Indices for use with buffers containing link headers
 enum LinkHeaderIndex {
-	LI_START_05 = 0,
-	LI_START_64 = 1,
-	LI_LENGTH = 2,
-	LI_CONTROL = 3,
-	LI_DESTINATION = 4,
-	LI_SOURCE = 6,
-	LI_CRC = 8
+    LI_START_05 = 0,
+    LI_START_64 = 1,
+    LI_LENGTH = 2,
+    LI_CONTROL = 3,
+    LI_DESTINATION = 4,
+    LI_SOURCE = 6,
+    LI_CRC = 8
 };
 
 /** These func codes are a little different then those defined in the specification for the following reason.
@@ -63,20 +63,20 @@ enum LinkHeaderIndex {
 	code. Support of this function is not required. Function code 1 is now obsolete.
 	*/
 enum FuncCodes {
-	// Pri-To-Sec functions, add 0x40 to each to for the PRM bit
-	FC_PRI_RESET_LINK_STATES = 0x40,
-	FC_PRI_TEST_LINK_STATES = 0x42,
-	FC_PRI_CONFIRMED_USER_DATA = 0x43,
-	FC_PRI_UNCONFIRMED_USER_DATA = 0x44,
-	FC_PRI_REQUEST_LINK_STATUS = 0x49,
-	// Sec-to-Pri functions, just as in the specification
-	FC_SEC_ACK = 0x00,
-	FC_SEC_NACK = 0x01,
-	FC_SEC_LINK_STATUS = 0x0B,
-	FC_SEC_NOT_SUPPORTED = 0x0F,
+    // Pri-To-Sec functions, add 0x40 to each to for the PRM bit
+    FC_PRI_RESET_LINK_STATES = 0x40,
+    FC_PRI_TEST_LINK_STATES = 0x42,
+    FC_PRI_CONFIRMED_USER_DATA = 0x43,
+    FC_PRI_UNCONFIRMED_USER_DATA = 0x44,
+    FC_PRI_REQUEST_LINK_STATUS = 0x49,
+    // Sec-to-Pri functions, just as in the specification
+    FC_SEC_ACK = 0x00,
+    FC_SEC_NACK = 0x01,
+    FC_SEC_LINK_STATUS = 0x0B,
+    FC_SEC_NOT_SUPPORTED = 0x0F,
 
-	// Used as an error code for return values
-	FC_INVALID = 0xFF
+    // Used as an error code for return values
+    FC_INVALID = 0xFF
 };
 
 /** @param aByte Any byte
@@ -89,12 +89,12 @@ std::string FuncCodeToString(FuncCodes aCode);
 
 // Masks for use with the CONTROL byte
 enum ControlMask {
-	MASK_DIR = 0x80,
-	MASK_PRM = 0x40,
-	MASK_FCB = 0x20,
-	MASK_FCV = 0x10,
-	MASK_FUNC = 0x0F,
-	MASK_FUNC_OR_PRM = MASK_PRM | MASK_FUNC
+    MASK_DIR = 0x80,
+    MASK_PRM = 0x40,
+    MASK_FCB = 0x20,
+    MASK_FCV = 0x10,
+    MASK_FUNC = 0x0F,
+    MASK_FUNC_OR_PRM = MASK_PRM | MASK_FUNC
 };
 
 }

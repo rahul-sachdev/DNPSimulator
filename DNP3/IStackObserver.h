@@ -27,9 +27,9 @@ namespace dnp
 {
 
 enum StackStates {
-	SS_COMMS_UP,
-	SS_COMMS_DOWN,
-	SS_UNKNOWN
+    SS_COMMS_UP,
+    SS_COMMS_DOWN,
+    SS_UNKNOWN
 };
 
 std::string ConvertToString(StackStates aState);

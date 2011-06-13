@@ -25,13 +25,13 @@ namespace apl
 {
 
 enum FilterLevel {
-	LEV_EVENT =		0x01,
-	LEV_ERROR =		0x02,
-	LEV_WARNING =	0x04,
-	LEV_INFO  =		0x08,
-	LEV_INTERPRET =	0x10,
-	LEV_COMM =		0x20,
-	LEV_DEBUG =		0x40
+    LEV_EVENT =		0x01,
+    LEV_ERROR =		0x02,
+    LEV_WARNING =	0x04,
+    LEV_INFO  =		0x08,
+    LEV_INTERPRET =	0x10,
+    LEV_COMM =		0x20,
+    LEV_DEBUG =		0x40
 };
 
 struct FilterAssoc {

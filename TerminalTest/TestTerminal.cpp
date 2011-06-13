@@ -37,7 +37,8 @@ bool SendAndTest(MockPhysicalLayerAsyncTS* apLayer, std::string aCmd, std::strin
 	return apLayer->BufferContains(aSearchString);
 }
 
-void TestCommandParsing(MockPhysicalLayerAsyncTS* apLayer){
+void TestCommandParsing(MockPhysicalLayerAsyncTS* apLayer)
+{
 	//check that a bad command string is parsed and ignored correclty
 	BOOST_REQUIRE(SendAndTest(apLayer, "badCommand", "Unrecognized"));
 
@@ -50,13 +51,14 @@ void TestCommandParsing(MockPhysicalLayerAsyncTS* apLayer){
 
 	//generate a big long string that should flood the Readline() buffer.
 	uint8_t tooBigBuff[1100];
-	for(int i=0; i < 1100; ++i) tooBigBuff[i] = '0' + (i%10);
+	for(int i = 0; i < 1100; ++i) tooBigBuff[i] = '0' + (i % 10);
 	string tooBigString((char*)tooBigBuff, 1100);
 	//add onto the end of the string a valid command we can check the output of
 	tooBigString.append("\r\nlog print");
 }
 
-void TestHelpCommands(MockPhysicalLayerAsyncTS* apLayer){
+void TestHelpCommands(MockPhysicalLayerAsyncTS* apLayer)
+{
 	//test that help generates a big usage text screen.
 	BOOST_REQUIRE(SendAndTest(apLayer, "help", "usage"));
 	//test that we have atleast some subtopics for print
@@ -80,20 +82,22 @@ void TestHelpCommands(MockPhysicalLayerAsyncTS* apLayer){
 	BOOST_REQUIRE(SendAndTest(apLayer, "loggers NotARealDevice", "usage: "));
 }
 
-void TestPrintCommands(MockPhysicalLayerAsyncTS* apLayer, Logger* apLogger){
+void TestPrintCommands(MockPhysicalLayerAsyncTS* apLayer, Logger* apLogger)
+{
 	//check that our new device is in the list
 	BOOST_REQUIRE(SendAndTest(apLayer, "loggers", "TestDevice"));
 
 	//Log a string and see that it appears in the print log command
-	apLogger->Log(LEV_ERROR,LOCATION,"TestLogOutput");
+	apLogger->Log(LEV_ERROR, LOCATION, "TestLogOutput");
 	BOOST_REQUIRE(SendAndTest(apLayer, "log print", "TestLogOutput"));
 
 	//log another string and make sure that it is displayed if we ask for jsut the TestDevice
-	apLogger->Log(LEV_ERROR,LOCATION,"TestOutputOnly");
+	apLogger->Log(LEV_ERROR, LOCATION, "TestOutputOnly");
 	BOOST_REQUIRE(SendAndTest(apLayer, "log print TestDevice", "TestOutputOnly"));
 }
 
-void TestSetCommands(MockPhysicalLayerAsyncTS* apLayer){
+void TestSetCommands(MockPhysicalLayerAsyncTS* apLayer)
+{
 	//test that the help string is correct
 	BOOST_REQUIRE(SendAndTest(apLayer, "logcol", "usage: "));
 	//test that we stop the user from having the same column more that once
@@ -126,9 +130,10 @@ void TestSetCommands(MockPhysicalLayerAsyncTS* apLayer){
 	BOOST_REQUIRE(SendAndTest(apLayer, "filter dciwev TestDevice", ">"));
 }
 
-void TestRunCommands(MockPhysicalLayerAsyncTS* apLayer, Logger* apLogger){
+void TestRunCommands(MockPhysicalLayerAsyncTS* apLayer, Logger* apLogger)
+{
 	//put an entry into the log that we will pickup on RunLog so we see something
-	apLogger->Log(LEV_ERROR,LOCATION,"TestOutputOnRun");
+	apLogger->Log(LEV_ERROR, LOCATION, "TestOutputOnRun");
 
 	//do the run command, notice I adedd a \r\n which forces a second line of input to be ready
 	//immediateley to break the "run" cycle after a single iteration (this is necessary since the
@@ -153,7 +158,7 @@ BOOST_AUTO_TEST_CASE(TerminalInteractions)
 	BOOST_REQUIRE(mts.DispatchOne());
 
 	//add a "device" to the logger so we can test the devices behavior
-	Logger* logger = log.GetLogger(LEV_ERROR,"TestDevice");
+	Logger* logger = log.GetLogger(LEV_ERROR, "TestDevice");
 
 	TestCommandParsing(&phys);
 	TestHelpCommands(&phys);
