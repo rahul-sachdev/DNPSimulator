@@ -96,7 +96,7 @@ void AsyncPhysLayerMonitor::Stop()
 				mpOpenTimer->Cancel();
 				mpOpenTimer = NULL;
 			}
-		}		
+		}
 	}
 	else {
 		mStopOpenRetry = true;

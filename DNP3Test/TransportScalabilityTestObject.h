@@ -34,12 +34,12 @@ class TransportScalabilityTestObject : public LogTester, public AsyncTestObjectA
 {
 public:
 	TransportScalabilityTestObject(
-	        LinkConfig aClientCfg,
-	        LinkConfig aServerCfg,
-	        boost::uint16_t aPortStart,
-	        boost::uint16_t aNumPair,
-	        FilterLevel aLevel = LEV_INFO,
-	        bool aImmediate = false);
+	    LinkConfig aClientCfg,
+	    LinkConfig aServerCfg,
+	    boost::uint16_t aPortStart,
+	    boost::uint16_t aNumPair,
+	    FilterLevel aLevel = LEV_INFO,
+	    bool aImmediate = false);
 
 	~TransportScalabilityTestObject();
 

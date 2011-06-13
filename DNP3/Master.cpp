@@ -74,13 +74,13 @@ Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IData
 	 * wake up mpCommandTask to process the data.
 	 */
 	mCommandQueue.SetNotifier(
-	        mNotifierSource.Get(
-	                boost::bind(
-	                        &AsyncTaskBase::Enable,
-	                        mSchedule.mpCommandTask
-	                ),
-	                mpTimerSrc
-	        )
+	    mNotifierSource.Get(
+	        boost::bind(
+	            &AsyncTaskBase::Enable,
+	            mSchedule.mpCommandTask
+	        ),
+	        mpTimerSrc
+	    )
 	);
 
 	/*
@@ -89,13 +89,13 @@ Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IData
 	 * mVtoWriter, wake up the mSchedule.mpVtoTransmitTask.
 	 */
 	mVtoWriter.AddObserver(
-	        mNotifierSource.Get(
-	                boost::bind(
-	                        &AsyncTaskBase::Enable,
-	                        mSchedule.mpVtoTransmitTask
-	                ),
-	                mpTimerSrc
-	        )
+	    mNotifierSource.Get(
+	        boost::bind(
+	            &AsyncTaskBase::Enable,
+	            mSchedule.mpVtoTransmitTask
+	        ),
+	        mpTimerSrc
+	    )
 	);
 
 	/*

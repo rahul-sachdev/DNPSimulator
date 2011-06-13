@@ -37,7 +37,7 @@ public:
 	void DoOpenCallback();
 
 private:
-	
+
 	boost::asio::ip::tcp::endpoint mLocalEndpoint;
 	boost::asio::ip::tcp::endpoint mRemoteEndpoint;
 

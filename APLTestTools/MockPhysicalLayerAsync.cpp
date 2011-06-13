@@ -111,4 +111,11 @@ void MockPhysicalLayerAsync::TriggerRead(const std::string& arData)
 	this->OnReadCallback(ec, mpWriteBuff, hs.Size());
 }
 
+void MockPhysicalLayerAsync::TriggerClose()
+{
+	error_code ec(errc::connection_aborted, get_generic_category());
+	this->OnReadCallback(ec, mpWriteBuff, 0);
+}
+
+
 }

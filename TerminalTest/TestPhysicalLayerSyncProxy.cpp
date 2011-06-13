@@ -19,77 +19,73 @@ using namespace boost;
 
 class SyncProxyTestObject : public LogTester, public AsyncTestObjectASIO, public PhysicalLayerSyncProxy
 {
-	public:
-		SyncProxyTestObject(FilterLevel aLevel, bool aImmediate = false) :
+public:
+	SyncProxyTestObject(FilterLevel aLevel, bool aImmediate = false) :
 		LogTester(aImmediate),
 		AsyncTestObjectASIO(),
 		PhysicalLayerSyncProxy(mLog.GetLogger(aLevel, "SyncProxy"), this->GetService()),
 		adapter(mLog.GetLogger(aLevel, "Adapter"), this, false),
-		upper(mLog.GetLogger(aLevel, "Upper"))
-		{
-			adapter.SetUpperLayer(&upper);
-		}
+		upper(mLog.GetLogger(aLevel, "Upper")) {
+		adapter.SetUpperLayer(&upper);
+	}
 
-		std::string Read()
-		{
-			CriticalSection cs(&mQueueLock);
-			while(mReadQueue.size() == 0) cs.Wait();
-			std::string ret = mReadQueue.front();
-			mReadQueue.pop_front();
-			return ret;
-		}
+	std::string Read() {
+		CriticalSection cs(&mQueueLock);
+		while(mReadQueue.size() == 0) cs.Wait();
+		std::string ret = mReadQueue.front();
+		mReadQueue.pop_front();
+		return ret;
+	}
 
-		void Write(const std::string&)
-		{
+	void Write(const std::string&) {
 
-		}
+	}
 
-		void Push(const std::string& s)
-		{
-			CriticalSection cs(&mQueueLock);
-			mReadQueue.push_back(s);
-			cs.Signal();
-		}
+	void Push(const std::string& s) {
+		CriticalSection cs(&mQueueLock);
+		mReadQueue.push_back(s);
+		cs.Signal();
+	}
 
-		apl::LowerLayerToPhysAdapter adapter;
-		apl::MockUpperLayer upper;
+	apl::LowerLayerToPhysAdapter adapter;
+	apl::MockUpperLayer upper;
 
-	private:
+private:
 
-		SigLock mQueueLock;
-		std::deque<std::string> mReadQueue;
+	SigLock mQueueLock;
+	std::deque<std::string> mReadQueue;
 };
 
 BOOST_AUTO_TEST_SUITE(PhysicalLayerSyncProxy)
 
 
-	BOOST_AUTO_TEST_CASE(Init)
-	{
-		SyncProxyTestObject t(LEV_INFO);
-	}
+BOOST_AUTO_TEST_CASE(Init)
+{
+	SyncProxyTestObject t(LEV_INFO);
+}
 
-	BOOST_AUTO_TEST_CASE(OpenReadWrite)
-	{
-		SyncProxyTestObject t(LEV_INFO);
-		MockUpperLayer::State s;
-		BOOST_REQUIRE(t.upper.StateEquals(s));
-		t.AsyncOpen(); ++s.mNumLayerUp;
-		t.ProceedUntil(boost::bind(&MockUpperLayer::StateEquals, &t.upper, s));
+BOOST_AUTO_TEST_CASE(OpenReadWrite)
+{
+	SyncProxyTestObject t(LEV_INFO);
+	MockUpperLayer::State s;
+	BOOST_REQUIRE(t.upper.StateEquals(s));
+	t.AsyncOpen(); ++s.mNumLayerUp;
+	t.ProceedUntil(boost::bind(&MockUpperLayer::StateEquals, &t.upper, s));
 
-		t.adapter.StartRead();
-		t.Push("foo");
-		BOOST_REQUIRE(t.ProceedUntil(boost::bind(&MockUpperLayer::BufferEqualsString, &t.upper, "foo")));
+	t.adapter.StartRead();
+	t.Push("foo");
+	BOOST_REQUIRE(t.ProceedUntil(boost::bind(&MockUpperLayer::BufferEqualsString, &t.upper, "foo")));
 
-		t.Push("bar");
-		t.adapter.StartRead();
-		BOOST_REQUIRE(t.ProceedUntil(boost::bind(&MockUpperLayer::BufferEqualsString, &t.upper, "foobar")));
+	t.Push("bar");
+	t.adapter.StartRead();
+	BOOST_REQUIRE(t.ProceedUntil(boost::bind(&MockUpperLayer::BufferEqualsString, &t.upper, "foobar")));
 
-		t.upper.SendDown("00"); ++s.mSuccessCnt;
-		t.ProceedUntil(boost::bind(&MockUpperLayer::StateEquals, &t.upper, s));
+	t.upper.SendDown("00"); ++s.mSuccessCnt;
+	t.ProceedUntil(boost::bind(&MockUpperLayer::StateEquals, &t.upper, s));
 
-		t.AsyncClose(); ++s.mNumLayerDown;
-		t.ProceedUntil(boost::bind(&MockUpperLayer::StateEquals, &t.upper, s));
-	}
+	t.AsyncClose(); ++s.mNumLayerDown;
+	t.ProceedUntil(boost::bind(&MockUpperLayer::StateEquals, &t.upper, s));
+}
 
 
 

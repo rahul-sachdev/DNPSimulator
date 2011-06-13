@@ -41,7 +41,7 @@ class VtoWriter;
 struct VtoRouterSettings;
 
 /**
- * Class used to route data between a VTO channel (made up of both a
+ * Base Class used to route data between a VTO channel (made up of both a
  * VtoWriter and VtoReader instance) and an IPhysicalLayerAsync
  * instance.
  *
@@ -54,7 +54,10 @@ struct VtoRouterSettings;
  * @endcode
  *
  * The VtoRouter instance provides the necessary IVtoCallbacks hooks
- * that the VtoReader will use.
+ * that the VtoReader will use. The base vtorouter provides the machinery
+ * to route data to and from the dnp connection and the lets the concrete
+ * implementations set policy on when to start and stop the reconnecting
+ * behavior.
  */
 class VtoRouter : public AsyncPhysLayerMonitor, public IVtoCallbacks, public CleanupHelper
 {
@@ -80,7 +83,6 @@ public:
 	 * then posts a shutdown request to mpTimerSrc.
 	 */
 	void StopRouter();
-
 
 	/**
 	 * Receives data from the VTO channel and forwards it to the
@@ -159,19 +161,17 @@ protected:
 	 */
 	void OnStateChange(PhysLayerState);
 
+	// DoStart and DoStop are idempotent versions of Start/Stop
 	void DoStart();
 	void DoStop();
 
-	void SetLocalConnected(bool aConnected);
-
-	/**
-	 * actually do the work for the external calls
-	 */
 	void DoStopRouter();
-	void DoVtoRemoteConnectedChanged(bool aOpened);
-	void DoDnpConnectedChanged(bool aConnected);
 
-private:
+	virtual void DoVtoRemoteConnectedChanged(bool aOpened) = 0;
+	virtual void DoDnpConnectedChanged(bool aConnected) = 0;
+	virtual void SetLocalConnected(bool aConnected) = 0;
+
+protected:
 
 	/**
 	 * The VtoWriter instance that will be used to send the data
@@ -192,23 +192,25 @@ private:
 	 */
 	ShiftableBuffer mVtoTxBuffer;
 
-	bool mDnpConnected;
-	bool mRemoteConnected;
-	bool mLocalConnected;
-
-	bool mPermanentlyStopped;
-	bool mStarted;
-	bool mCleanedup;
+	/**
+	 * while true we will let the AsyncPhysLayerMonitor implementation try
+	 * to keep reconnecting the local physical layer if it gets disconnected
+	 * for any reason
+	 */
+	bool mReopenPhysicalLayer;
 
 	/**
-	 * determines if we should open our physical layer or wait for the remote
-	 * side to indicate the other side is connected.
-	 * TODO: refactor this class into abstract base class with 2 implementations
-	 * instead of flag
+	 * when StopRouter is called we start shutting down the vto router and
+	 * don't reconnect or send local connected callbacks
 	 */
-	bool mStartLocal;
+	bool mPermanentlyStopped;
 
-	bool mDisableExtensions;
+	/**
+	 * we use a delayed cleanup mechanism which we need to make sure we only
+	 * call once.
+	 */
+	bool mCleanedup;
+
 };
 
 }

@@ -32,12 +32,12 @@ namespace dnp
 {
 
 TransportScalabilityTestObject::TransportScalabilityTestObject(
-        LinkConfig aClientCfg,
-        LinkConfig aServerCfg,
-        boost::uint16_t aPortStart,
-        boost::uint16_t aNumPair,
-        FilterLevel aLevel,
-        bool aImmediate) :
+    LinkConfig aClientCfg,
+    LinkConfig aServerCfg,
+    boost::uint16_t aPortStart,
+    boost::uint16_t aNumPair,
+    FilterLevel aLevel,
+    bool aImmediate) :
 
 	LogTester(aImmediate),
 	AsyncTestObjectASIO(),

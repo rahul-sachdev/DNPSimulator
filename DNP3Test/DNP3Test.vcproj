@@ -471,6 +471,10 @@
 				Name="Vto"
 				>
 				<File
+					RelativePath=".\TestEnhancedVtoRouter.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\TestVtoInterface.cpp"
 					>
 				</File>

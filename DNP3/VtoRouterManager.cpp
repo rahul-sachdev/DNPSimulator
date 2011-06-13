@@ -17,7 +17,8 @@
 
 #include "VtoRouterManager.h"
 
-#include "VtoRouter.h"
+#include "AlwaysOpeningVtoRouter.h"
+#include "EnhancedVtoRouter.h"
 #include "VtoRouterSettings.h"
 
 #include <APL/Exception.h>
@@ -64,22 +65,30 @@ void VtoRouterManager::ClenupAfterRouter(IPhysicalLayerAsync* apPhys, VtoRouter*
 }
 
 VtoRouter* VtoRouterManager::StartRouter(
-        const std::string& arPortName,
-        const VtoRouterSettings& arSettings,
-        IVtoWriter* apWriter)
+    const std::string& arPortName,
+    const VtoRouterSettings& arSettings,
+    IVtoWriter* apWriter)
 {
 	IPhysicalLayerAsync* pPhys = mpPhysSource->AcquireLayer(arPortName, false); //don't autodelete
 	Logger* pLogger = this->GetSubLogger(arPortName, arSettings.CHANNEL_ID);
 
-	VtoRouter* pRouter = new VtoRouter(arSettings, pLogger, apWriter, pPhys, mpTimerSrc);
+	VtoRouter* pRouter;
+	if(arSettings.DISABLE_EXTENSIONS) {
+		pRouter = new AlwaysOpeningVtoRouter(arSettings, pLogger, apWriter, pPhys, mpTimerSrc);
+	}
+	else {
+		if(arSettings.START_LOCAL) {
+			pRouter = new ServerSocketVtoRouter(arSettings, pLogger, apWriter, pPhys, mpTimerSrc);
+		}
+		else {
+			pRouter = new ClientSocketVtoRouter(arSettings, pLogger, apWriter, pPhys, mpTimerSrc);
+		}
+	}
 
 	// when the router is completely stopped, it's physical layer will be deleted, followed by itself
 	pRouter->AddCleanupTask(boost::bind(&VtoRouterManager::ClenupAfterRouter, pPhys, pRouter));
 
 	RouterRecord record(arPortName, pRouter, apWriter, arSettings.CHANNEL_ID);
-
-	// we need the VtoRouters to start themselves
-	//pRouter->Start();
 
 	this->mRecords.push_back(record);
 

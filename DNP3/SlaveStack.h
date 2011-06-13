@@ -43,10 +43,10 @@ public:
 		@param arCfg			Configuration struct that holds parameters for the stack
 	*/
 	SlaveStack(
-	        Logger* apLogger,
-	        ITimerSource* apTimerSrc,
-	        ICommandAcceptor* apCmdAcceptor,
-	        const SlaveStackConfig& arCfg);
+	    Logger* apLogger,
+	    ITimerSource* apTimerSrc,
+	    ICommandAcceptor* apCmdAcceptor,
+	    const SlaveStackConfig& arCfg);
 
 	IVtoWriter* GetVtoWriter();
 

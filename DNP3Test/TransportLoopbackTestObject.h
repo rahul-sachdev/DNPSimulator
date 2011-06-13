@@ -38,12 +38,12 @@ class TransportLoopbackTestObject : public LogTester, public AsyncTestObjectASIO
 {
 public:
 	TransportLoopbackTestObject(
-	        boost::asio::io_service*,
-	        IPhysicalLayerAsync*,
-	        LinkConfig,
-	        LinkConfig,
-	        FilterLevel aLevel = LEV_INFO,
-	        bool aImmediate = false);
+	    boost::asio::io_service*,
+	    IPhysicalLayerAsync*,
+	    LinkConfig,
+	    LinkConfig,
+	    FilterLevel aLevel = LEV_INFO,
+	    bool aImmediate = false);
 
 	~TransportLoopbackTestObject();
 

@@ -37,7 +37,7 @@ public:
 
 private:
 	boost::asio::ip::tcp::endpoint mRemoteEndpoint;
-	
+
 };
 }
 

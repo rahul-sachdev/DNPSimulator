@@ -42,6 +42,7 @@ public:
 	void SignalReadFailure();
 
 	void TriggerRead(const std::string& arData);
+	void TriggerClose();
 
 	size_t NumWrites() {
 		return mNumWrites;
@@ -97,6 +98,7 @@ private:
 
 	ITimerSource* mpTimerSource;
 };
+
 }
 
 #endif
