@@ -176,7 +176,7 @@ BOOST_AUTO_TEST_CASE(ServerAsyncCloseWhileOpeningKillsAcceptor)
 
 BOOST_AUTO_TEST_CASE(ServerAsyncCloseAfterOpeningKillsAcceptor)
 {
-	AsyncPhysTestObject t(LEV_INFO, true);
+	AsyncPhysTestObject t(LEV_INFO, false);
 
 	BOOST_REQUIRE_EQUAL(t.mClientAdapter.GetNumOpenFailure(), 0);
 
