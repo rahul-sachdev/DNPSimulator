@@ -32,6 +32,8 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "TestSetInstaller", "TestSet
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SlaveDemo", "SlaveDemo\SlaveDemo.vcproj", "{9C4EC600-DE0F-4042-BE12-F4BAF605A49C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TeamCitySupport", "TeamCitySupport\TeamCitySupport.vcproj", "{0771C646-1B68-4C34-8029-97A266DFE3E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -198,6 +200,16 @@ Global
 		{9C4EC600-DE0F-4042-BE12-F4BAF605A49C}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{9C4EC600-DE0F-4042-BE12-F4BAF605A49C}.Release|Win32.ActiveCfg = Release|Win32
 		{9C4EC600-DE0F-4042-BE12-F4BAF605A49C}.Release|Win32.Build.0 = Release|Win32
+		{0771C646-1B68-4C34-8029-97A266DFE3E4}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{0771C646-1B68-4C34-8029-97A266DFE3E4}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{0771C646-1B68-4C34-8029-97A266DFE3E4}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{0771C646-1B68-4C34-8029-97A266DFE3E4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0771C646-1B68-4C34-8029-97A266DFE3E4}.Debug|Win32.Build.0 = Debug|Win32
+		{0771C646-1B68-4C34-8029-97A266DFE3E4}.Release|Any CPU.ActiveCfg = Release|Win32
+		{0771C646-1B68-4C34-8029-97A266DFE3E4}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{0771C646-1B68-4C34-8029-97A266DFE3E4}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{0771C646-1B68-4C34-8029-97A266DFE3E4}.Release|Win32.ActiveCfg = Release|Win32
+		{0771C646-1B68-4C34-8029-97A266DFE3E4}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
