@@ -180,7 +180,7 @@ BOOST_AUTO_TEST_CASE(ServerAsyncCloseAfterOpeningKillsAcceptor)
 
 	BOOST_REQUIRE_EQUAL(t.mClientAdapter.GetNumOpenFailure(), 0);
 
-	for(size_t i=0; i<5; ++i) {
+	for(size_t i = 0; i < 5; ++i) {
 		t.mTCPServer.AsyncOpen();
 		t.mTCPClient.AsyncOpen();
 
@@ -195,7 +195,7 @@ BOOST_AUTO_TEST_CASE(ServerAsyncCloseAfterOpeningKillsAcceptor)
 		// since we closed the server socket we shouldn't be able to connect now
 		t.mTCPClient.AsyncOpen();
 
-		BOOST_REQUIRE(t.ProceedUntil(boost::bind(&LowerLayerToPhysAdapter::OpenFailureEquals, &t.mClientAdapter, i+1)));
+		BOOST_REQUIRE(t.ProceedUntil(boost::bind(&LowerLayerToPhysAdapter::OpenFailureEquals, &t.mClientAdapter, i + 1)));
 	}
 }
 
