@@ -26,50 +26,56 @@
 
 #include <APL/Loggable.h>
 
-namespace apl{
+namespace apl
+{
 
-	/** Implementation of INodeSaver that takes an XML Node and
-	saves or loads it to a file.
-	*/
-	template <class RootNode>
-	class SingleNodeSaver : public INodeSaver<RootNode>, public Loggable{
-	public:
-		SingleNodeSaver(std::string aFileName, Logger* apLogger)
-			:Loggable(apLogger), mFileName(aFileName)
-		{	}
+/** Implementation of INodeSaver that takes an XML Node and
+saves or loads it to a file.
+*/
+template <class RootNode>
+class SingleNodeSaver : public INodeSaver<RootNode>, public Loggable
+{
+public:
+	SingleNodeSaver(std::string aFileName, Logger* apLogger)
+		: Loggable(apLogger), mFileName(aFileName)
+	{	}
 
-	protected:
-		bool _LoadNode(RootNode&);
-		bool _SaveNode(RootNode&);
+protected:
+	bool _LoadNode(RootNode&);
+	bool _SaveNode(RootNode&);
 
-	private:
-		std::string mFileName;
-	};
+private:
+	std::string mFileName;
+};
 
-	template <class RootNode>
-	bool SingleNodeSaver<RootNode> :: _LoadNode(RootNode& aeNode){
-		try{
-			loadXmlInto(mFileName, &aeNode);
-			return true;
-		}catch(Exception& e){
-			//treat file not found as a warning (its expect on a clean boot)
-			FilterLevel level = e.ErrorCode() == IXMLDataBound::ERR_XML_NO_FILE?LEV_WARNING:LEV_ERROR;
-			LOG_BLOCK(level, "Error Loading XML: " << e.what());
-			return false;
-		}
+template <class RootNode>
+bool SingleNodeSaver<RootNode> :: _LoadNode(RootNode& aeNode)
+{
+	try {
+		loadXmlInto(mFileName, &aeNode);
+		return true;
 	}
-
-	template <class RootNode>
-	bool SingleNodeSaver<RootNode> :: _SaveNode(RootNode& aeNode){
-		try{
-			TiXmlDocument doc2;
-			aeNode.toXml(&doc2, true, true);
-			return doc2.SaveFile(mFileName);
-		}catch(Exception& e){
-			LOG_BLOCK(LEV_ERROR, "Error Saving XML: " << e.what());
-			return false;
-		}
+	catch(Exception& e) {
+		//treat file not found as a warning (its expect on a clean boot)
+		FilterLevel level = e.ErrorCode() == IXMLDataBound::ERR_XML_NO_FILE ? LEV_WARNING : LEV_ERROR;
+		LOG_BLOCK(level, "Error Loading XML: " << e.what());
+		return false;
 	}
+}
+
+template <class RootNode>
+bool SingleNodeSaver<RootNode> :: _SaveNode(RootNode& aeNode)
+{
+	try {
+		TiXmlDocument doc2;
+		aeNode.toXml(&doc2, true, true);
+		return doc2.SaveFile(mFileName);
+	}
+	catch(Exception& e) {
+		LOG_BLOCK(LEV_ERROR, "Error Saving XML: " << e.what());
+		return false;
+	}
+}
 }
 
 #endif

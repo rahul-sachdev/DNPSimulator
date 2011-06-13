@@ -21,31 +21,35 @@
 #ifndef _XML_SAVE_FILE_H_
 #define _XML_SAVE_FILE_H_
 
-namespace apl{
+namespace apl
+{
 
-	template <class RootNode>
-	class INodeSaver{
+template <class RootNode>
+class INodeSaver
+{
 
 
-	public:
-		virtual ~INodeSaver(){}
+public:
+	virtual ~INodeSaver() {}
 
-		bool LoadNode(RootNode&);
-		bool SaveNode(RootNode&);
+	bool LoadNode(RootNode&);
+	bool SaveNode(RootNode&);
 
-	protected:
-		virtual bool _LoadNode(RootNode&) = 0;
-		virtual bool _SaveNode(RootNode&) = 0;
+protected:
+	virtual bool _LoadNode(RootNode&) = 0;
+	virtual bool _SaveNode(RootNode&) = 0;
 
-	};
-	template <class RootNode>
-	bool INodeSaver<RootNode>:: LoadNode(RootNode& aNode){
-		return _LoadNode(aNode);
-	}
-	template <class RootNode>
-	bool INodeSaver<RootNode> :: SaveNode(RootNode& aNode){
-		return _SaveNode(aNode);
-	}
+};
+template <class RootNode>
+bool INodeSaver<RootNode>:: LoadNode(RootNode& aNode)
+{
+	return _LoadNode(aNode);
+}
+template <class RootNode>
+bool INodeSaver<RootNode> :: SaveNode(RootNode& aNode)
+{
+	return _SaveNode(aNode);
+}
 
 
 };

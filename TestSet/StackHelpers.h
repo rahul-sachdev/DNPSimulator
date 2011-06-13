@@ -43,7 +43,10 @@
 #include <DNP3XML/XML_TestSet.h>
 #include <APLXML/XMLConversion.h>
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class StackBase
 {
@@ -77,7 +80,9 @@ class SlaveXMLStack : public StackBase
 public:
 	SlaveXMLStack(APLXML_STS::SlaveTestSet_t* pCfg, FilterLevel aLevel);
 
-	IDataObserver* GetDataObs() { return pObs; }
+	IDataObserver* GetDataObs() {
+		return pObs;
+	}
 
 private:
 
@@ -92,14 +97,17 @@ class MasterXMLStack : public StackBase
 public:
 	MasterXMLStack(APLXML_MTS::MasterTestSet_t* pCfg, FilterLevel aLevel);
 
-	ICommandAcceptor* GetCmdAcceptor() { return accept; }
+	ICommandAcceptor* GetCmdAcceptor() {
+		return accept;
+	}
 
 private:
 	ICommandAcceptor* accept;
-	ControlTerminalExtension cte;	
+	ControlTerminalExtension cte;
 };
 
 
-}}
+}
+}
 
 #endif
