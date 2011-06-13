@@ -49,13 +49,11 @@ task :sloccount do
 end
 
 desc 'Formats all of the C++ h/cpp files with uncrustify'
-format_dirs = ['DNP3', 'APL', 'DNP3Test', 'TestAPL', 'APLTestTools', 'Terminal', 'TerminalTest', 'SlaveDemo']
 task :format do
-  format_dirs.each do |dir|
-   cmd = "astyle --options=config/astyle.cfg #{dir}/*.cpp #{dir}/*.h"
-   puts cmd
-   `#{cmd}`   
-  end
+ excludes = ['tinyxml'].collect{|e| "--exclude=#{e}"}.join(" ")
+ cmd = "astyle --options=config/astyle.cfg #{excludes} -r *.cpp *.h"
+ puts cmd
+ `#{cmd}`   
 end
 
 namespace :license do

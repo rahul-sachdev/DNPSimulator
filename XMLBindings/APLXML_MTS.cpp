@@ -4,26 +4,30 @@
 */
 #include "APLXML_MTS.h"
 using namespace std;
-namespace APLXML_MTS {
-void MasterTestSet_t :: fromXml(TiXmlNode* pNode){
+namespace APLXML_MTS
+{
+void MasterTestSet_t :: fromXml(TiXmlNode* pNode)
+{
 	if(pNode == NULL)return;
-	XML_CHECK("MasterTestSet",pNode->Type() == TiXmlNode::ELEMENT);
+	XML_CHECK("MasterTestSet", pNode->Type() == TiXmlNode::ELEMENT);
 	TiXmlElement* pEm = pNode->ToElement();
-	XML_CHECK("MasterTestSet",pEm != 0);
+	XML_CHECK("MasterTestSet", pEm != 0);
 	PhysicalLayer = FromString_string(pEm, pEm->Attribute("PhysicalLayer"));
 	LogFile = FromString_string(pEm, pEm->Attribute("LogFile"));
 	Log.fromXml(pNode->FirstChildElement("Log"));
 	Master.fromXml(pNode->FirstChildElement("Master"));
 	PhysicalLayerList.fromXml(pNode->FirstChildElement("PhysicalLayerList"));
-	valid=true;
+	valid = true;
 };
-void MasterTestSet_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid){
+void MasterTestSet_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid)
+{
 	if(!aIgnoreValid && !valid) return;
-	TiXmlElement * pEm;
-	if(aCreateNode){
+	TiXmlElement* pEm;
+	if(aCreateNode) {
 		pEm = new TiXmlElement("MasterTestSet");
 		pParent->LinkEndChild(pEm);
-	}else{
+	}
+	else {
 		pEm = pParent->ToElement();
 	}
 	pEm->SetAttribute("PhysicalLayer", ToString_string(PhysicalLayer));
