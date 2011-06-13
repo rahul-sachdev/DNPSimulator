@@ -24,7 +24,7 @@
 #include <APL/PhysicalLayerFactory.h>
 #include <APL/IPhysicalLayerAsync.h>
 
-#include <APLTestTools/AsyncTestObjectAsio.h>
+#include <APLTestTools/AsyncTestObjectASIO.h>
 
 #include <DNP3/MasterStackConfig.h>
 #include <DNP3/SlaveStackConfig.h>

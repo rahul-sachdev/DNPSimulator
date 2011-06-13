@@ -23,8 +23,8 @@ namespace dnp
 {
 
 EnhancedVtoRouter::EnhancedVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
-	VtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc),
 	Loggable(apLogger),
+	VtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc),
 	mDnpConnected(false),
 	mRemoteConnected(false),
 	mLocalConnected(false)
@@ -78,8 +78,8 @@ void EnhancedVtoRouter::SetLocalConnected(bool aConnected)
  *************************************/
 
 ServerSocketVtoRouter::ServerSocketVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
-	EnhancedVtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc),
-	Loggable(apLogger)
+	Loggable(apLogger),
+	EnhancedVtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc)
 {
 
 }
@@ -110,8 +110,8 @@ void ServerSocketVtoRouter::HandleSetLocalConnected()
  * Client socket specific implementation
  *************************************/
 ClientSocketVtoRouter::ClientSocketVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
-	EnhancedVtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc),
-	Loggable(apLogger)
+	Loggable(apLogger),
+	EnhancedVtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc)
 {
 
 }
