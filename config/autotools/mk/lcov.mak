@@ -17,7 +17,7 @@ lcov-report:
 	done
 	genhtml -o lcov/html lcov/all.out
 
-lcov: clean-local check lcov-report
+lcov: lcov-report
 
 else
 lcov-report lcov:

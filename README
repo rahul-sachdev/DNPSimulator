@@ -76,7 +76,7 @@ Requirements:
     * boost::program_options        (required)
     * boost::system                 (required)
     * boost::thread                 (required)
-    * Boost Unit Test Framework     (required if running 'make check')
+    * Boost Unit Test Framework     (required)
   - lcov                            (required if running 'make lcov')
   - libtool                         (required)
   - tinyxml                         (required if 'testset' is desired)
@@ -94,16 +94,12 @@ A full list of options can be found using './configure --help'.  If
 tinyxml is not found, a warning message is printed and the 'testset'
 application will not be built.
 
-You can now build the libraries:
+You can now build the OpenDNP3 libraries and programs:
 
   make
 
-Optionally, you can build and run the unit/integration test
-infrastructure at this point:
-
-  make check
-
-When ready, you can install the libraries and headers onto your system:
+When ready, you can install the libraries, headers, and programs onto
+your system:
 
   make install
 
@@ -121,6 +117,8 @@ changes slightly:
 
   autoreconf -f -i
   ./configure --enable-lcov
+  make
+  ./dnp3test
   make lcov
 
 The lcov HTML report is written to './lcov/html/index.html' and can be
@@ -132,13 +130,15 @@ sequence to reduce the amount of rebuilding required:
 
   autoreconf -f -i
   ./configure --enable-lcov
+  make
+  ./dnp3test
   make lcov
 
   Iterate on the following sequence after changing the tests:
 
      make lcov-reset        ; # Reset lcov data between each run
-     make check             ; # Make and run the test infrastructure
-                              # with lcov support enabled
+     make                   ; # Rebuild with the new changes
+     ./dnp3test             ; # Profile the new changes
      make lcov-report       ; # Regenerate the lcov report
 
 If you are a developer and are making changes to the OpenDNP3 library

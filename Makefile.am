@@ -350,7 +350,7 @@ else
 TESTSET_APP =
 endif
 
-bin_PROGRAMS  = ${TESTSET_APP}
+bin_PROGRAMS  = ${TESTSET_APP} dnp3test
 
 testset_LDADD = libopendnp3_apl.la libopendnp3_dnp3.la
 testset_SOURCES = \
@@ -379,9 +379,6 @@ testset_SOURCES = \
 	XMLBindings/APLXML_DNP.cpp \
 	XMLBindings/APLXML_MTS.cpp \
 	XMLBindings/APLXML_STS.cpp
-
-check_PROGRAMS = dnp3test
-TESTS = $(check_PROGRAMS)
 
 dnp3test_LDADD = libopendnp3_apl.la libopendnp3_dnp3.la
 dnp3test_SOURCES = \
