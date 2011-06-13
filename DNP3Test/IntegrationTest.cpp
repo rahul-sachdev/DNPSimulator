@@ -24,6 +24,8 @@
 #include <APL/PhysicalLayerFactory.h>
 #include <APL/IPhysicalLayerAsync.h>
 
+#include <APLTestTools/AsyncTestObjectAsio.h>
+
 #include <DNP3/MasterStackConfig.h>
 #include <DNP3/SlaveStackConfig.h>
 
@@ -61,7 +63,7 @@ IntegrationTest::~IntegrationTest()
 
 void IntegrationTest::Next()
 {
-	AsyncTestObject::Next(this->mService.Get(), 10);
+	AsyncTestObjectASIO::Next(this->mService.Get(), 10);
 }
 
 bool IntegrationTest::SameData()

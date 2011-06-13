@@ -33,13 +33,14 @@ public:
 	/* Implement the remainging actions */
 	void DoOpen();
 	void DoOpeningClose(); //override this to cancel the acceptor instead of the socket
+	void DoOpenSuccess();
 
 private:
-	/* This object appears to be used referentially
-	as in the asynchronous code as having it disappear from the stack was causing a stack corruption. */
-	boost::asio::ip::tcp::endpoint mEndpoint;
-	boost::asio::ip::tcp::acceptor mAcceptor;
+	
+	boost::asio::ip::tcp::endpoint mLocalEndpoint;
+	boost::asio::ip::tcp::endpoint mRemoteEndpoint;
 
+	boost::asio::ip::tcp::acceptor mAcceptor;
 };
 }
 

@@ -43,12 +43,13 @@ public:
 		return mpTestObjectService;
 	}
 
+	static void Next(boost::asio::io_service* apSrv, millis_t aSleep);
+
 private:
 	boost::asio::io_service* mpTestObjectService;
 	bool mOwner;
-	void Next() {
-		AsyncTestObject::Next(this->GetService(), 10);
-	}
+	void Next();
+
 };
 
 }

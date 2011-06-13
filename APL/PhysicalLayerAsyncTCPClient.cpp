@@ -39,26 +39,25 @@ PhysicalLayerAsyncTCPClient::PhysicalLayerAsyncTCPClient(
         boost::asio::io_service* apIOService,
         const std::string& arAddress,
         uint16_t aPort) :
-
 	PhysicalLayerAsyncBaseTCP(apLogger, apIOService),
-	mAddr(arAddress),
-	mPort(aPort)
+	mRemoteEndpoint(ip::tcp::v4(), aPort)	
 {
-
+	//set the endpoint's address
+	boost::system::error_code ec;
+	ip::address_v4 addr = ip::address_v4::from_string(arAddress, ec);
+	if(ec) throw ArgumentException(LOCATION, "endpoint: " + arAddress + " is invalid ");
+	mRemoteEndpoint.address(addr);
 }
 
 /* Implement the actions */
 void PhysicalLayerAsyncTCPClient::DoOpen()
 {
-	ip::address_v4 address;
-	boost::system::error_code ec;
-	string ipstring(mAddr);
-	address = address.from_string(ipstring, ec);
-	if(ec) throw ArgumentException(LOCATION, "string Address: " + ipstring + " is invalid");
+	mSocket.async_connect(mRemoteEndpoint, boost::bind(&PhysicalLayerAsyncTCPClient::OnOpenCallback, this, placeholders::error));
+}
 
-	ip::tcp::endpoint serverEndpoint(address, mPort);
-
-	mSocket.async_connect(serverEndpoint, boost::bind(&PhysicalLayerAsyncTCPClient::OnOpenCallback, this, placeholders::error));
+void PhysicalLayerAsyncTCPClient::DoOpenSuccess()
+{
+	LOG_BLOCK(LEV_INFO, "Connected to: " << mRemoteEndpoint);
 }
 
 }

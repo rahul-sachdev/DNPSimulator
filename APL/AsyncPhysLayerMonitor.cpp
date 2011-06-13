@@ -66,6 +66,7 @@ void AsyncPhysLayerMonitor::SetMonitor(IPhysMonitor* apMonitor)
 
 void AsyncPhysLayerMonitor::Notify(PhysLayerState aState)
 {
+	LOG_BLOCK(LEV_INFO, "Transition to state: " << ConvertToString(aState));
 	mPortState.Set(aState);
 	this->OnStateChange(aState);
 	if(mpMonitor) mpMonitor->OnStateChange(aState);
@@ -85,11 +86,7 @@ void AsyncPhysLayerMonitor::Start()
 void AsyncPhysLayerMonitor::Stop()
 {
 	LOG_BLOCK(LEV_INFO, "Stop");
-	if(!this->IsRunning()) {
-		mStopOpenRetry = true;
-		this->Notify(PLS_STOPPED);
-	}
-	else {
+	if(this->IsRunning()) {
 		if(!mStopOpenRetry) {
 			mStopOpenRetry = true;
 			if(mOpen || mOpening) {
@@ -99,7 +96,11 @@ void AsyncPhysLayerMonitor::Stop()
 				mpOpenTimer->Cancel();
 				mpOpenTimer = NULL;
 			}
-		}
+		}		
+	}
+	else {
+		mStopOpenRetry = true;
+		this->Notify(PLS_STOPPED);
 	}
 }
 

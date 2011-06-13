@@ -136,7 +136,7 @@ public:
 		loopback(mLog.GetLogger(level, "loopback"), &server, &timerSource),
 		local(mLog.GetLogger(level, "mock-client-connection"), &client, &timerSource, 500) {
 
-		mLog.AddLogSubscriber(LogToStdio::Inst());
+		//mLog.AddLogSubscriber(LogToStdio::Inst());
 
 		slaveMgr.AddTCPServer("dnp-tcp-server", PhysLayerSettings(), "127.0.0.1", port);
 		slaveMgr.AddTCPClient("vto-tcp-client", PhysLayerSettings(), "127.0.0.1", port + 10);
@@ -267,6 +267,8 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfDnpDrops)
 	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 }
 
+bool False() { return false; }
+
 BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 {
 	VtoTestStack stack;
@@ -286,8 +288,12 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 	stack.loopback.Stop();
 	stack.mpMainLogger->Log(LEV_EVENT, LOCATION, "Stopped loopback");
 
+	stack.testObj.ProceedUntil(&False, 100000);
+
 	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 }
+
+
 
 BOOST_AUTO_TEST_SUITE_END()
 
