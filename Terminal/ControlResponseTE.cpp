@@ -45,7 +45,7 @@ CommandStatus CommandResponder :: HandleControl(const BinaryOutput& aControl, si
 		}
 		catch (Exception& ex) {
 			LOG_BLOCK(LEV_WARNING, "Failure trying to update point in response to control. " << ex.GetErrorString());
-			cs = CS_NOT_SUPPORTED;
+			cs = CS_FORMAT_ERROR;
 		}
 	}
 	else {
@@ -67,7 +67,7 @@ CommandStatus CommandResponder :: HandleControl(const Setpoint& aControl, size_t
 		}
 		catch (Exception& ex) {
 			LOG_BLOCK(LEV_WARNING, "Failure trying to update point in response to control. " << ex.GetErrorString());
-			cs = CS_NOT_SUPPORTED;
+			cs = CS_FORMAT_ERROR;
 		}
 	}
 	else {
@@ -96,6 +96,9 @@ CommandStatus CommandResponder :: GetResponseCode(bool aType, size_t aIndex)
 	// check for specific return code for this index.
 	CommandMap::iterator iter = m.find(aIndex);
 	if(iter != m.end()) return iter->second;
+
+	CommandMap::iterator defaultValue = m.find(-1);
+	if(defaultValue != m.end()) return defaultValue->second;
 
 	return CS_SUCCESS; //return default
 }
