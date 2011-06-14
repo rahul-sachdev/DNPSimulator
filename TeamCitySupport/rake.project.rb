@@ -16,12 +16,8 @@
 # specific language governing permissions and limitations
 # under the License.
 # 
-
+#setup the psi project
 $options = {
-:target => 'testapl.exe',
-:project_libs => [:xmlbindings, :tinyxml, :aplxml, :apltesttools, :apl],
-:includes => [Boost::get_includes_dir, DEFAULT_INCLUDES],
-:warn_flags => ['-Wno-sign-compare'],
-:libs => Boost::get_static_libs + $PLATFORM_LIBS
+:target => 'libteamcity.a',
+:includes => [Boost::get_includes_dir,DEFAULT_INCLUDES],
 }
-$options[:project_libs] << :teamcity if($USE_TEAM_CITY)

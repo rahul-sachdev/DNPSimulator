@@ -21,6 +21,7 @@
 
 #include "Thread.h"
 #include "TimerSourceASIO.h"
+#include "Loggable.h"
 
 namespace boost
 {
@@ -36,10 +37,10 @@ namespace apl
 class Logger;
 class Timer;
 
-class IOServiceThread : public Threadable
+class IOServiceThread : public Threadable, protected Loggable
 {
 public:
-	IOServiceThread(boost::asio::io_service* apService);
+	IOServiceThread(Logger* apLogger, boost::asio::io_service* apService);
 
 	void Start() {
 		mThread.Start();

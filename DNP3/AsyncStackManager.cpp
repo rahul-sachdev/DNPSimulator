@@ -333,7 +333,7 @@ void AsyncStackManager::Run()
 			num = mService.Get()->run();
 		}
 		catch(const std::exception& ex) {
-			std::cout << "Unhandled exception: " << ex.what() << std::endl;
+			LOG_BLOCK(LEV_ERROR, "Unhandled exception: " << ex.what());
 		}
 	}
 	while(num > 0);

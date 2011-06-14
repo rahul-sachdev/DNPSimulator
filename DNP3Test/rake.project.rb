@@ -24,3 +24,5 @@ $options = {
 :warn_flags => ['-Wno-sign-compare'],
 :libs => $PLATFORM_LIBS + Boost::get_static_libs
 }
+
+$options[:project_libs] << :teamcity if($USE_TEAM_CITY)
