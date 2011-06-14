@@ -18,6 +18,7 @@
 #include "VtoData.h"
 
 #include <assert.h>
+#include <memory.h>
 
 namespace apl
 {

@@ -22,6 +22,8 @@
 #include <APL/Configure.h>
 #include <APL/Exception.h>
 
+#include <memory.h>
+
 namespace apl
 {
 
