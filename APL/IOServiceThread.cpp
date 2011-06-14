@@ -38,7 +38,8 @@ public:
 	{}
 };
 
-IOServiceThread::IOServiceThread(boost::asio::io_service* apService) :
+IOServiceThread::IOServiceThread(Logger* apLogger, boost::asio::io_service* apService) :
+	Loggable(apLogger),
 	mpService(apService),
 	mThread(this)
 {
@@ -64,10 +65,10 @@ void IOServiceThread::Run()
 		num = mpService->run();
 	}
 	catch(IOServiceExitException&) {
-		//clean exit
+		LOG_BLOCK(LEV_INFO, "IOService exited via IOServiceExitException");
 	}
 	catch(const std::exception& ex) {
-		std::cout << ex.what() << std::endl;
+		LOG_BLOCK(LEV_ERROR, "Unexpected exception: " << ex.what());
 	}
 
 }

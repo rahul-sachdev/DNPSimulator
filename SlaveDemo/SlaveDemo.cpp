@@ -27,9 +27,8 @@ namespace dnp
 {
 
 SlaveDemoBase::SlaveDemoBase(Logger* apLogger) :
-	Loggable(apLogger),
 	IOService(),
-	IOServiceThread(this->Get()),
+	IOServiceThread(apLogger, this->Get()),
 	mTimerSource(this->Get())
 {
 	// Start a timer that will do nothing but keep the boost asio service from returning when it has no work to do
