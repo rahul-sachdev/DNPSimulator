@@ -98,6 +98,7 @@ libopendnp3_dnp3_la_SOURCES = \
 	DNP3/DeviceTemplate.cpp \
 	DNP3/DNPCommandMaster.cpp \
 	DNP3/DNPCrc.cpp \
+	DNP3/EnhancedVto.cpp \
 	DNP3/EnhancedVtoRouter.cpp \
 	DNP3/HeaderReadIterator.cpp \
 	DNP3/IndexedWriteIterator.cpp \
@@ -142,6 +143,7 @@ libopendnp3_dnp3_la_SOURCES = \
 	DNP3/TransportStates.cpp \
 	DNP3/TransportTx.cpp \
 	DNP3/UnsolicitedChannel.cpp \
+	DNP3/VtoData.cpp \
 	DNP3/VtoReader.cpp \
 	DNP3/VtoRouter.cpp \
 	DNP3/VtoRouterManager.cpp \
@@ -278,6 +280,7 @@ nobase_pkginclude_HEADERS= \
 	DNP3/DNPExceptions.h \
 	DNP3/DNPFromStream.h \
 	DNP3/DNPToStream.h \
+	DNP3/EnhancedVto.h \
 	DNP3/EnhancedVtoRouter.h \
 	DNP3/EventBufferBase.h \
 	DNP3/EventBuffers.h \
