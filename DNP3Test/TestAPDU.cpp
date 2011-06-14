@@ -42,6 +42,18 @@ BOOST_AUTO_TEST_CASE(WriteTooMuch)
 	BOOST_REQUIRE_THROW(frag.Write(buff, 101), ArgumentException);
 }
 
+BOOST_AUTO_TEST_CASE(ToStringInterpretation)
+{
+	APDU frag;
+	HexSequence hs("C3 01 3C 02 06 3C 03 06 3C 04 06 3C 01 06");
+	frag.Write(hs, hs.Size());
+	frag.Interpret();
+
+	std::string interpreted = "FIR: 1, FIN: 1, CON: 0, UNS: 0, SEQ: 3, Func: Read HdrCount: 4, Header: (Grp: 60, Var: 2, Qual: 6, Count: 0) Header: (Grp: 60, Var: 3, Qual: 6, Count: 0) Header: (Grp: 60, Var: 4, Qual: 6, Count: 0) Header: (Grp: 60, Var: 1, Qual: 6, Count: 0), Size: 14";
+
+	BOOST_REQUIRE_EQUAL(interpreted, frag.ToString());
+}
+
 BOOST_AUTO_TEST_CASE(ClassPollRequest)
 {
 	APDU frag;
