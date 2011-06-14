@@ -632,10 +632,10 @@ BOOST_AUTO_TEST_CASE(WriteSingleVtoByte)
 	BOOST_REQUIRE_FALSE(t.mts.DispatchOne()); // no more actions to dispatch
 }
 
-BOOST_AUTO_TEST_CASE(UnexpectedUnsolicitedVTO)
+BOOST_AUTO_TEST_CASE(BadlyFormattedEnhancedVTO)
 {
 	MasterConfig master_cfg; master_cfg.IntegrityRate = -1;
-	MasterTestObject t(master_cfg);
+	MasterTestObject t(master_cfg, LEV_INFO);
 	t.master.OnLowerLayerUp();
 
 	TestForIntegrityPoll(t);
@@ -648,10 +648,32 @@ BOOST_AUTO_TEST_CASE(UnexpectedUnsolicitedVTO)
 	 */
 	BOOST_REQUIRE_FALSE(t.mts.DispatchOne());
 
-	// 3 bytes for channel 0xFF
+	// 3 bytes for channel 0xFF, but with wrong size
 	t.SendUnsolToMaster("C0 82 00 00 71 03 17 01 FF AB BC CD");
 
-	BOOST_CHECK_EQUAL(MERR_VTO_FOR_UNEXPECTED_CHANNEL, t.NextErrorCode());
+	BOOST_CHECK_EQUAL(VTOERR_BADLY_FORMATTED_ENHANCED_VTO, t.NextErrorCode());
+}
+
+BOOST_AUTO_TEST_CASE(EnhancedVtoForUnregisteredChannel)
+{
+	MasterConfig master_cfg; master_cfg.IntegrityRate = -1;
+	MasterTestObject t(master_cfg, LEV_INFO);
+	t.master.OnLowerLayerUp();
+
+	TestForIntegrityPoll(t);
+
+	/* Check that the master sends no more packets */
+	BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0);
+
+	/*
+	 * Make sure that there are no events ready to be run in the reactor.
+	 */
+	BOOST_REQUIRE_FALSE(t.mts.DispatchOne());
+
+	// 3 bytes for channel 0xFF -> (Channel 2, offline)
+	t.SendUnsolToMaster("C0 82 00 00 71 05 17 01 FF 02 01 AB BC CD");
+
+	BOOST_CHECK_EQUAL(VTOERR_ENHANCED_VTO_FOR_UNREGISTERED_CHANNEL, t.NextErrorCode());
 }
 
 BOOST_AUTO_TEST_SUITE_END() //end suite

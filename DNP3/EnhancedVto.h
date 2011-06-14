@@ -31,10 +31,13 @@ class EnhancedVto
 {
 public:
 
-	const static size_t MAGIC_BYTES_SIZE = 10;
+	const static size_t MAGIC_BYTES_SIZE = 3;
 	const static char MAGIC_BYTES[MAGIC_BYTES_SIZE];
 
 	static VtoData CreateVtoData(bool aLocalVtoConnectionOpened, boost::uint8_t aChannelId);
+
+	/** Throws an exception if the frame is not an enhanced vto control frame */
+	static void ReadVtoData(const VtoData& arData, bool& arLocalVtoConnectionOpened, boost::uint8_t& arChannelId);
 
 };
 

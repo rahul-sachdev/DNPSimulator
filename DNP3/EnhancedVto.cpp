@@ -19,21 +19,36 @@
 
 #include "VtoData.h"
 
+#include <APL/Configure.h>
+#include <APL/Exception.h>
+
 namespace apl
 {
 
 namespace dnp
 {
 
-//spells out opendnpvto
-const char EnhancedVto::MAGIC_BYTES[MAGIC_BYTES_SIZE] = {'o', 'p', 'e', 'n', 'd', 'n', 'p', 'v', 't', 'o'};
+const char EnhancedVto::MAGIC_BYTES[MAGIC_BYTES_SIZE] = {0xAB, 0xBC, 0xCD};
 
 VtoData EnhancedVto::CreateVtoData(bool aLocalVtoConnectionOpened, boost::uint8_t aChannelId)
 {
-	VtoData vto(2);
+	VtoData vto(2 + MAGIC_BYTES_SIZE);
 	vto.mpData[0] = aChannelId;
 	vto.mpData[1] = aLocalVtoConnectionOpened ? 0 : 1;
+	memcpy(vto.mpData + 2, EnhancedVto::MAGIC_BYTES, MAGIC_BYTES_SIZE);
 	return vto;
+}
+
+void EnhancedVto::ReadVtoData(const VtoData& arData, bool& arLocalVtoConnectionOpened, boost::uint8_t& arChannelId)
+{
+	if(arData.GetSize() != (2 + MAGIC_BYTES_SIZE))
+		throw Exception(LOCATION, "Unexpected size in enhanced vto frame");
+
+	if(memcmp(arData.mpData + 2, MAGIC_BYTES, MAGIC_BYTES_SIZE) != 0)
+		throw Exception(LOCATION, "Enhanced vto frame did not include the control sequence");
+
+	arChannelId = arData.mpData[0];
+	arLocalVtoConnectionOpened = (arData.mpData[1] == 0);
 }
 
 }

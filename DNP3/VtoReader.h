@@ -107,6 +107,10 @@ protected:
 
 private:
 
+	void UpdateEnhancedVto(const VtoData& arData, boost::uint8_t aChannelId);
+
+	void UpdateNormalVto(const VtoData& arData, boost::uint8_t aChannelId);
+
 	/**
 	 * Starts the ITransactable transaction lock.
 	 */
