@@ -18,6 +18,7 @@
 #include "VtoReader.h"
 
 #include "DNPConstants.h"
+#include "EnhancedVto.h"
 
 #include <APL/Exception.h>
 #include <APL/Logger.h>
@@ -71,35 +72,54 @@ void VtoReader::RemoveVtoChannel(IVtoDataHandler* apCallbacks)
 	}
 }
 
+void VtoReader::UpdateEnhancedVto(const VtoData& arData, boost::uint8_t aChannelId)
+{
+	bool remoteOnline;
+	boost::uint8_t realChannel;
+	try {
+		EnhancedVto::ReadVtoData(arData, remoteOnline, realChannel);
+		ChannelMap::iterator i = mChannelMap.find(realChannel);
+
+		if (i == mChannelMap.end()) {
+			ERROR_BLOCK(LEV_ERROR,
+			            "Received enhanced Vto control message for unregistered channel: " << realChannel,
+			            VTOERR_ENHANCED_VTO_FOR_UNREGISTERED_CHANNEL);
+		}
+		else {
+			i->second->OnVtoRemoteConnectedChanged(remoteOnline);
+		}
+	}
+	catch(Exception ex) {
+		ERROR_BLOCK(LEV_WARNING, ex.GetErrorString(), VTOERR_BADLY_FORMATTED_ENHANCED_VTO);
+	}
+}
+
+void VtoReader::UpdateNormalVto(const VtoData& arData, boost::uint8_t aChannelId)
+{
+	ChannelMap::iterator i = mChannelMap.find(aChannelId);
+
+	if (i == mChannelMap.end()) {
+		ERROR_BLOCK(LEV_ERROR,
+		            "No registered callback handler for received data "
+		            "on VTO channel id: " + aChannelId,
+		            VTOERR_VTO_FOR_UNEXPECTED_CHANNEL);
+	}
+	else {
+		i->second->OnVtoDataReceived(arData.mpData, arData.GetSize());
+	}
+}
+
 void VtoReader::Update(const VtoData& arData,
                        boost::uint8_t aChannelId)
 {
 	/* Make sure we are part of the larger DNP3 transaction */
 	assert( this->InProgress() );
 
-	boost::uint8_t realChannel = (aChannelId == 255) ? arData.mpData[0] : aChannelId;
-
-	/*
-	 * Lookup the callback object for the channel id.  If it doesn't
-	 * exist, register an error.  Otherwise, notify the callback
-	 * object.
-	 */
-	ChannelMap::iterator i = mChannelMap.find(realChannel);
-
-	if (i == mChannelMap.end()) {
-		ERROR_BLOCK(LEV_ERROR,
-		            "No registered callback handler for received data "
-		            "on VTO channel id: " + aChannelId,
-		            MERR_VTO_FOR_UNEXPECTED_CHANNEL);
+	if(aChannelId == 255) {
+		this->UpdateEnhancedVto(arData, aChannelId);
 	}
 	else {
-		if(aChannelId == 255) {
-			bool online = (arData.mpData[1] == 0);
-			i->second->OnVtoRemoteConnectedChanged(online);
-		}
-		else {
-			i->second->OnVtoDataReceived(arData.mpData, arData.GetSize());
-		}
+		this->UpdateNormalVto(arData, aChannelId);
 	}
 }
 

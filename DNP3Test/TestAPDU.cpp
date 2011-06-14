@@ -28,6 +28,8 @@
 #include <APLTestTools/BufferHelpers.h>
 
 #include <queue>
+#include <set>
+#include <sstream>
 
 using namespace std;
 using namespace apl;
@@ -40,6 +42,73 @@ BOOST_AUTO_TEST_CASE(WriteTooMuch)
 	boost::uint8_t buff[101];
 
 	BOOST_REQUIRE_THROW(frag.Write(buff, 101), ArgumentException);
+}
+
+BOOST_AUTO_TEST_CASE(FunctionCodeToStringNamesAreUnique)
+{
+	const size_t NUM_CODES = 34;
+	FunctionCodes codes[NUM_CODES] = {
+		FC_CONFIRM,
+		FC_READ,
+		FC_WRITE,
+		FC_SELECT,
+		FC_OPERATE,
+		FC_DIRECT_OPERATE,
+		FC_DIRECT_OPERATE_NO_ACK,
+		FC_FREEZE,
+		FC_FREEZE_NO_ACK,
+		FC_FREEZE_CLEAR,
+		FC_FREEZE_CLEAR_NO_ACK,
+		FC_FREEZE_AT_TIME,
+		FC_FREEZE_AT_TIME_NO_ACK,
+		FC_COLD_RESTART,
+		FC_WARM_RESTART,
+		FC_INITIALIZE_DATA,
+		FC_INITIALIZE_APPLICATION,
+		FC_START_APPLICATION,
+		FC_STOP_APPLICATION,
+		FC_SAVE_CONFIGURATION,
+		FC_ENABLE_UNSOLICITED,
+		FC_DISABLE_UNSOLICITED,
+		FC_ASSIGN_CLASS,
+		FC_DELAY_MEASURE,
+		FC_RECORD_TIME,
+		FC_FILE_OPEN,
+		FC_FILE_CLOSE,
+		FC_FILE_DELETE,
+		FC_FILE_INFO,
+		FC_FILE_AUTHENTICATE,
+		FC_FILE_ABORT,
+		FC_RESPONSE,
+		FC_UNSOLICITED_RESPONSE,
+		FC_UNKNOWN
+	};
+
+	set<string> strings;
+	for(int i = 0; i < NUM_CODES; ++i) {
+		FunctionCodes code = static_cast<FunctionCodes>(codes[i]);
+		string text = ToString(code);
+		if(strings.find(text) != strings.end()) {
+			ostringstream oss;
+			oss << "The string " << text << " was encountered 2x with int " << i << " and function code " << code;
+			oss << " when there were " << strings.size() << " strings in the set";
+			BOOST_FAIL(oss.str());
+		}
+		strings.insert(text);
+	}
+}
+
+
+BOOST_AUTO_TEST_CASE(APDUToString)
+{
+	APDU frag;
+	HexSequence hs("C3 01 3C 02 06 3C 03 06 3C 04 06 3C 01 06");
+	frag.Write(hs, hs.Size());
+	frag.Interpret();
+
+	std::string interpreted = "FIR: 1, FIN: 1, CON: 0, UNS: 0, SEQ: 3, Func: Read HdrCount: 4, Header: (Grp: 60, Var: 2, Qual: 6, Count: 0) Header: (Grp: 60, Var: 3, Qual: 6, Count: 0) Header: (Grp: 60, Var: 4, Qual: 6, Count: 0) Header: (Grp: 60, Var: 1, Qual: 6, Count: 0), Size: 14";
+
+	BOOST_REQUIRE_EQUAL(interpreted, frag.ToString());
 }
 
 BOOST_AUTO_TEST_CASE(ClassPollRequest)

@@ -15,11 +15,10 @@
 // under the License.
 //
 
-#ifndef __VTO_DATA_H_
-#define __VTO_DATA_H_
+#include "VtoData.h"
 
-#include <APL/Types.h>
-
+#include <assert.h>
+#include <memory.h>
 
 namespace apl
 {
@@ -27,37 +26,36 @@ namespace apl
 namespace dnp
 {
 
-/**
- * Describes the last set value of the setpoint. Like the ControlStatus
- * data type it is not well supportted and its generally better
- * practice to use an explict analog.
- */
-class VtoData
+VtoData::VtoData() :
+	mSize(0)
+{}
+
+VtoData::VtoData(size_t aSize) :
+	mSize(aSize)
 {
-public:
+	assert(aSize <= MAX_SIZE);
+}
 
-	const static size_t MAX_SIZE = 255;
+VtoData::VtoData(const boost::uint8_t* apValue, size_t aSize)
+{
+	this->Copy(apValue, aSize);
+}
 
-	VtoData();
+size_t VtoData::GetSize() const
+{
+	return this->mSize;
+}
 
-	VtoData(size_t aSize);
-
-	VtoData(const boost::uint8_t* apValue, size_t aSize);
-
-	size_t GetSize() const;
-
-	void Copy(const boost::uint8_t* apValue, size_t aSize);
-
-	boost::uint8_t mpData[MAX_SIZE];
-
-private:
-	size_t mSize;
-};
-
+void VtoData::Copy(const boost::uint8_t* apValue, size_t aSize)
+{
+	assert(aSize <= MAX_SIZE);
+	memcpy(this->mpData, apValue, aSize);
+	this->mSize = aSize;
+}
 }
 
 }
 
 /* vim: set ts=4 sw=4: */
 
-#endif
+

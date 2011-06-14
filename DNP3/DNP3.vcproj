@@ -631,6 +631,14 @@
 						>
 					</File>
 					<File
+						RelativePath=".\EnhancedVto.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\EnhancedVto.h"
+						>
+					</File>
+					<File
 						RelativePath=".\EnhancedVtoRouter.cpp"
 						>
 					</File>
@@ -640,6 +648,10 @@
 					</File>
 					<File
 						RelativePath=".\VtoConfig.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VtoData.cpp"
 						>
 					</File>
 					<File
