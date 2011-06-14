@@ -15,11 +15,9 @@
 // under the License.
 //
 
-#ifndef __VTO_DATA_H_
-#define __VTO_DATA_H_
+#include "EnhancedVto.h"
 
-#include <APL/Types.h>
-
+#include "VtoData.h"
 
 namespace apl
 {
@@ -27,32 +25,16 @@ namespace apl
 namespace dnp
 {
 
-/**
- * Describes the last set value of the setpoint. Like the ControlStatus
- * data type it is not well supportted and its generally better
- * practice to use an explict analog.
- */
-class VtoData
+//spells out opendnpvto
+const char EnhancedVto::MAGIC_BYTES[MAGIC_BYTES_SIZE] = {'o', 'p', 'e', 'n', 'd', 'n', 'p', 'v', 't', 'o'};
+
+VtoData EnhancedVto::CreateVtoData(bool aLocalVtoConnectionOpened, boost::uint8_t aChannelId)
 {
-public:
-
-	const static size_t MAX_SIZE = 255;
-
-	VtoData();
-
-	VtoData(size_t aSize);
-
-	VtoData(const boost::uint8_t* apValue, size_t aSize);
-
-	size_t GetSize() const;
-
-	void Copy(const boost::uint8_t* apValue, size_t aSize);
-
-	boost::uint8_t mpData[MAX_SIZE];
-
-private:
-	size_t mSize;
-};
+	VtoData vto(2);
+	vto.mpData[0] = aChannelId;
+	vto.mpData[1] = aLocalVtoConnectionOpened ? 0 : 1;
+	return vto;
+}
 
 }
 
@@ -60,4 +42,4 @@ private:
 
 /* vim: set ts=4 sw=4: */
 
-#endif
+

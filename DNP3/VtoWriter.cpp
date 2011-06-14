@@ -16,6 +16,7 @@
  */
 
 #include "VtoWriter.h"
+#include "EnhancedVto.h"
 
 #include <APL/Util.h>
 
@@ -59,18 +60,13 @@ size_t VtoWriter::Write(const boost::uint8_t* apData,
 
 void VtoWriter::SetLocalVtoState(bool aLocalVtoConnectionOpened, boost::uint8_t aChannelId)
 {
-	/*
-	 * The whole function is thread-safe, from start to finish.
-	 */
-	CriticalSection cs(&mLock);
 
-	VtoData vto(2);
-	vto.mpData[0] = aChannelId;
-	vto.mpData[1] = aLocalVtoConnectionOpened ? 0 : 1;
-
+	VtoData vto = EnhancedVto::CreateVtoData(aLocalVtoConnectionOpened, aChannelId);
 	VtoEvent evt(vto, PC_CLASS_1, 255);
-	this->mQueue.push(evt);
 
+	/* Thread safe for rest of function */
+	CriticalSection cs(&mLock);
+	this->mQueue.push(evt);
 	this->NotifyAll();
 }
 
