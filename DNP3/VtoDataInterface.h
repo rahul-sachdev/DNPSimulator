@@ -131,13 +131,13 @@ public:
 
 	/**
 	* Registers an IVtoCallbacks to receive OnBufferAvailable() notifications
-	* @param apCallbacks The interface to invoke when space is made available
+	* @param apHandler The interface to invoke when space is made available
 	*/
 	virtual void AddVtoCallback(IVtoBufferHandler* apHandler) = 0;
 
 	/**
 	* Stops an IVtoCallbacks from receiving OnBufferAvailable() notifications
-	* @param apCallbacks The interface to stop calling when space is available
+	* @param apHandler The interface to stop calling when space is available
 	*/
 	virtual void RemoveVtoCallback(IVtoBufferHandler* apHandler) = 0;
 };
