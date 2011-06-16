@@ -31,11 +31,6 @@ namespace dnp
 struct LinkHeader {
 	LinkHeader();
 
-	LinkHeader(boost::uint8_t aLen, boost::uint16_t aSrc, boost::uint16_t aDest, bool aFromMaster, bool aFcvDfc, bool aFcb, FuncCodes aCode);
-
-	/** @param apBuff Buffer of at least 10 bytes*/
-	LinkHeader(const boost::uint8_t* apBuff);
-
 	// Setter
 
 	void Set(boost::uint8_t aLen, boost::uint16_t aSrc, boost::uint16_t aDest, bool aFromMaster, bool aFcvDfc, bool aFcb, FuncCodes aCode);
