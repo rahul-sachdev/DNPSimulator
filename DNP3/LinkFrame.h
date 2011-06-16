@@ -93,8 +93,6 @@ public:
 		return mHeader.IsFcvDfcSet();
 	}
 
-	size_t ReadUserData(boost::uint8_t* apBuffer) const;
-
 	////////////////////////////////////////////////
 	//	Functions for formatting outgoing Sec to Pri frames
 	////////////////////////////////////////////////

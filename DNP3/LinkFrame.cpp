@@ -61,14 +61,6 @@ bool LinkFrame::operator==(const LinkFrame& arRHS) const
 	return true;
 }
 
-size_t LinkFrame::ReadUserData(boost::uint8_t* apBuffer) const
-{
-	assert(this->mIsComplete);
-	size_t user_bytes = mHeader.GetLength() - LS_MIN_LENGTH;
-	ReadUserData(mpBuffer + LS_HEADER_SIZE, apBuffer, user_bytes);
-	return user_bytes;
-}
-
 void LinkFrame::ReadUserData(const boost::uint8_t* apSrc, boost::uint8_t* apDest, size_t aLength)
 {
 	if(aLength == 0) return;	//base case of recursion
