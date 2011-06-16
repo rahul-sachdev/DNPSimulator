@@ -37,6 +37,10 @@ struct LinkHeader {
 
 	void ChangeFCB(bool aFCB);
 
+	boost::uint8_t GetControl() const {
+		return ctrl;
+	}
+
 	// Getters
 	boost::uint8_t GetLength() const {
 		return length;
