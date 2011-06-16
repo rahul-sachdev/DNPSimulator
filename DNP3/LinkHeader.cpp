@@ -32,20 +32,6 @@ namespace dnp
 
 LinkHeader::LinkHeader() {}
 
-LinkHeader::LinkHeader(boost::uint8_t aLen, boost::uint16_t aSrc, boost::uint16_t aDest, bool aMaster, bool aFcvDfc, bool aFcb, FuncCodes aCode) :
-	length(aLen),
-	src(aSrc),
-	dest(aDest),
-	ctrl(ControlByte(aMaster, aFcb, aFcvDfc, aCode))
-{
-
-}
-
-LinkHeader::LinkHeader(const boost::uint8_t* apBuff)
-{
-	this->Read(apBuff);
-}
-
 void LinkHeader::Set(boost::uint8_t aLen, boost::uint16_t aSrc, boost::uint16_t aDest, bool aFromMaster, bool aFcvDfc, bool aFcb, FuncCodes aCode)
 {
 	length = aLen;
