@@ -347,15 +347,10 @@ nobase_pkginclude_HEADERS= \
 	DNP3/VtoTransmitTask.h \
 	DNP3/VtoWriter.h
 
-if ENABLE_TESTSET
-TESTSET_APP = testset
-else
-TESTSET_APP =
-endif
-
-bin_PROGRAMS  = ${TESTSET_APP} dnp3test
+bin_PROGRAMS = testset
 
 testset_LDADD = libopendnp3_apl.la libopendnp3_dnp3.la
+testset_CFLAGS = -Itinyxml
 testset_SOURCES = \
 	APLXML/PhysicalLayerManagerXML.cpp \
 	APLXML/PhysicalLayerXMLFactory.cpp \
@@ -381,7 +376,12 @@ testset_SOURCES = \
 	XMLBindings/APLXML_Base.cpp \
 	XMLBindings/APLXML_DNP.cpp \
 	XMLBindings/APLXML_MTS.cpp \
-	XMLBindings/APLXML_STS.cpp
+	XMLBindings/APLXML_STS.cpp \
+	tinyxml/tinyxml.cpp \
+	tinyxml/tinyxmlerror.cpp \
+	tinyxml/tinyxmlparser.cpp
+
+noinst_PROGRAMS = dnp3test
 
 dnp3test_LDADD = libopendnp3_apl.la libopendnp3_dnp3.la
 dnp3test_SOURCES = \

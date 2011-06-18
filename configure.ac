@@ -72,19 +72,6 @@ AC_CHECK_HEADERS([unistd.h]	,,AC_MSG_ERROR(missing header))
 AC_CHECK_LIB([c],	[atexit]		,,AC_MSG_ERROR(missing library))
 AC_CHECK_LIB([pthread],	[pthread_join]		,,AC_MSG_ERROR(missing library))
 
-AC_CHECK_HEADERS([tinyxml.h],			ac_tinyxml_h_found=yes,		ac_tinyxml_h_found=no)
-AC_CHECK_LIB([tinyxml],	[_ZTI9TiXmlNode],,					ac_tinyxml_lib_found=no)
-
-AC_ARG_ENABLE(testset,
-  AS_HELP_STRING([--enable-testset], [Enable building the testset application]),
-    [ac_testset_enabled=$enableval], [ac_testset_enabled=no])
-if test "$ac_testset_enabled" = yes; then
-  if test "$ac_tinyxml_h_found" = no -o "$ac_tinyxml_lib_found" = no; then
-    AC_MSG_ERROR("missing one or more components of the tinyxml library -- unable to build the testset application!")
-  fi
-fi
-AM_CONDITIONAL(ENABLE_TESTSET, [test "$ac_testset_enabled" = yes])
-
 AC_PROG_AWK
 AC_PROG_CXX
 AC_PROG_GREP
@@ -133,7 +120,6 @@ LDFLAGS:                    ${LDFLAGS}
 LIBS:                       ${LIBS}
 
 lcov support:               ${ac_lcov_enabled}
-testset application:        ${ac_testset_enabled}
 shared libraries:           ${enable_shared}
 static libraries:           ${enable_static}
 -----------------------------------------------------
