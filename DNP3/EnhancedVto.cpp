@@ -30,7 +30,7 @@ namespace apl
 namespace dnp
 {
 
-const char EnhancedVto::MAGIC_BYTES[MAGIC_BYTES_SIZE] = {0xAB, 0xBC, 0xCD};
+const char EnhancedVto::MAGIC_BYTES[MAGIC_BYTES_SIZE] = {'\xAB', '\xBC', '\xCD'};
 
 VtoData EnhancedVto::CreateVtoData(bool aLocalVtoConnectionOpened, boost::uint8_t aChannelId)
 {
@@ -58,5 +58,4 @@ void EnhancedVto::ReadVtoData(const VtoData& arData, bool& arLocalVtoConnectionO
 }
 
 /* vim: set ts=4 sw=4: */
-
 

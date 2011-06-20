@@ -51,7 +51,7 @@ PhysicalLayerAsyncTCPServer::PhysicalLayerAsyncTCPServer(Logger* apLogger, boost
 void PhysicalLayerAsyncTCPServer::DoOpen()
 {
 	if(!mAcceptor.is_open()) {
-		error_code ec;
+		boost::system::error_code ec;
 		mAcceptor.open(mLocalEndpoint.protocol(), ec);
 		if(ec) throw Exception(LOCATION, ec.message());
 
@@ -63,7 +63,11 @@ void PhysicalLayerAsyncTCPServer::DoOpen()
 		if(ec) throw Exception(LOCATION, ec.message());
 	}
 
-	mAcceptor.async_accept(mSocket, mRemoteEndpoint, boost::bind(&PhysicalLayerAsyncTCPServer::OnOpenCallback, this, placeholders::error));
+	mAcceptor.async_accept(mSocket,
+	                       mRemoteEndpoint,
+						   boost::bind(&PhysicalLayerAsyncTCPServer::OnOpenCallback,
+						               this,
+						               boost::asio::placeholders::error));
 }
 
 void PhysicalLayerAsyncTCPServer::DoOpenCallback()
@@ -91,3 +95,4 @@ void PhysicalLayerAsyncTCPServer::DoOpenSuccess()
 
 }
 
+/* vim: set ts=4 sw=4: */

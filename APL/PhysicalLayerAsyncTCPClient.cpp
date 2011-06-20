@@ -52,7 +52,10 @@ PhysicalLayerAsyncTCPClient::PhysicalLayerAsyncTCPClient(
 /* Implement the actions */
 void PhysicalLayerAsyncTCPClient::DoOpen()
 {
-	mSocket.async_connect(mRemoteEndpoint, boost::bind(&PhysicalLayerAsyncTCPClient::OnOpenCallback, this, placeholders::error));
+	mSocket.async_connect(mRemoteEndpoint,
+	                      boost::bind(&PhysicalLayerAsyncTCPClient::OnOpenCallback,
+			                  this,
+			                  boost::asio::placeholders::error));
 }
 
 void PhysicalLayerAsyncTCPClient::DoOpenSuccess()
@@ -62,3 +65,4 @@ void PhysicalLayerAsyncTCPClient::DoOpenSuccess()
 
 }
 
+/* vim: set ts=4 sw=4: */
