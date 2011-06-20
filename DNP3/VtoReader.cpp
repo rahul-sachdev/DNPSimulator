@@ -106,7 +106,6 @@ void VtoReader::UpdateNormalVto(const VtoData& arData, boost::uint8_t aChannelId
 		            VTOERR_VTO_FOR_UNEXPECTED_CHANNEL);
 	}
 	else {
-
 		i->second->OnVtoDataReceived(arData);
 	}
 }
