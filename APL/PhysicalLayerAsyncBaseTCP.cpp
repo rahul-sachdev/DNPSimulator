@@ -48,6 +48,10 @@ PhysicalLayerAsyncBaseTCP::PhysicalLayerAsyncBaseTCP(Logger* apLogger, boost::as
 void PhysicalLayerAsyncBaseTCP::DoClose()
 {
 	error_code ec;
+	LOG_BLOCK(LEV_WARNING, "Shutdown socket...")
+	mSocket.shutdown(ip::tcp::socket::shutdown_both, ec);
+	if(ec) LOG_BLOCK(LEV_WARNING, ec.message());
+
 	mSocket.close(ec);
 	if(ec) LOG_BLOCK(LEV_WARNING, ec.message());
 }
