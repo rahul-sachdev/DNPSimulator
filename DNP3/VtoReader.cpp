@@ -86,7 +86,8 @@ void VtoReader::UpdateEnhancedVto(const VtoData& arData, boost::uint8_t aChannel
 			            VTOERR_ENHANCED_VTO_FOR_UNREGISTERED_CHANNEL);
 		}
 		else {
-			i->second->OnVtoRemoteConnectedChanged(remoteOnline);
+			VtoData data(remoteOnline ? REMOTE_OPENED : REMOTE_CLOSED);
+			i->second->OnVtoDataReceived(data);
 		}
 	}
 	catch(Exception ex) {
@@ -105,7 +106,8 @@ void VtoReader::UpdateNormalVto(const VtoData& arData, boost::uint8_t aChannelId
 		            VTOERR_VTO_FOR_UNEXPECTED_CHANNEL);
 	}
 	else {
-		i->second->OnVtoDataReceived(arData.mpData, arData.GetSize());
+
+		i->second->OnVtoDataReceived(arData);
 	}
 }
 

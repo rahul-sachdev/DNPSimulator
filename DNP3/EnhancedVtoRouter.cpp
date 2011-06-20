@@ -48,14 +48,6 @@ void EnhancedVtoRouter::DoDnpConnectedChanged(bool aConnected)
 		LOG_BLOCK(LEV_INFO, "Dnp Connection changed: " << std::boolalpha << aConnected);
 		mDnpConnected = aConnected;
 
-		//mRemoteConnected = false;
-
-		// if we are already connected locally we need to inform remote side
-		// now that we have a dnp connection to tunnel that across
-		if(mLocalConnected && !mPermanentlyStopped) {
-			mpVtoWriter->SetLocalVtoState(mLocalConnected, this->GetChannelId());
-		}
-
 		this->HandleDnpConnectedChanged();
 	}
 }
@@ -66,11 +58,37 @@ void EnhancedVtoRouter::SetLocalConnected(bool aConnected)
 		LOG_BLOCK(LEV_INFO, "Local Connection changed: " << std::boolalpha << aConnected);
 		mLocalConnected = aConnected;
 
-		if(mDnpConnected && !mPermanentlyStopped) {
-			mpVtoWriter->SetLocalVtoState(mLocalConnected, this->GetChannelId());
-		}
 		this->HandleSetLocalConnected();
+
+		if(aConnected){
+			mVtoTxBuffer.push(new VtoDataChunk(REMOTE_OPENED, 0));
+			mVtoTxBuffer.push(new VtoDataChunk(DATA, 4096));
+		}
+		else {
+			mVtoTxBuffer.push(new VtoDataChunk(REMOTE_CLOSED, 0));
+		}
+
+		
 	}
+}
+
+void EnhancedVtoRouter::FlushBuffers()
+{
+	// clear out all of the data when we close the local connection
+	size_t entries = mPhysLayerTxBuffer.size();
+	 
+	while(entries-- > 0) {
+		LOG_BLOCK(LEV_WARNING, "Tossing data: " << this->mPhysLayerTxBuffer.front().GetType() << " size: " << this->mPhysLayerTxBuffer.front().GetSize());
+		this->mPhysLayerTxBuffer.pop();
+	}
+
+}
+
+void EnhancedVtoRouter::StopAndFlushBuffers()
+{
+	FlushBuffers();
+
+	this->DoStop();
 }
 
 /*****************************************
@@ -89,6 +107,7 @@ void ServerSocketVtoRouter::HandleVtoRemoteConnectedChanged()
 	if(!mRemoteConnected) {
 		// if the remote side has closed we should close our
 		// local connection and then prepare for a new one
+		this->FlushBuffers();
 		this->Reconnect();
 	}
 }
@@ -97,13 +116,12 @@ void ServerSocketVtoRouter::HandleDnpConnectedChanged()
 {
 	// only if connected via dnp should the local connection be running
 	if(mDnpConnected) this->DoStart();
-	else DoStop();
+	else this->StopAndFlushBuffers();
 }
 
 void ServerSocketVtoRouter::HandleSetLocalConnected()
 {
-	// nothing extra necessary when local connects, enhanced vtorouter
-	// will already have sent the local online message
+	if(!mLocalConnected) this->FlushBuffers();
 }
 
 /*****************************************
@@ -134,20 +152,20 @@ void ClientSocketVtoRouter::HandleVtoRemoteConnectedChanged()
 	}
 	else {
 		// always stop the local connection attempts if the remote is disconnected
-		this->DoStop();
+		this->StopAndFlushBuffers();
 	}
 }
 
 void ClientSocketVtoRouter::HandleDnpConnectedChanged()
 {
 	// if we lose dnp we should terminate the local connection
-	if(!mDnpConnected) this->DoStop();
+	if(!mDnpConnected) this->StopAndFlushBuffers();
 }
 
 void ClientSocketVtoRouter::HandleSetLocalConnected()
 {
 	// we shouldn't automatically reconnect when the connection drops
-	if(!mLocalConnected) DoStop();
+	if(!mLocalConnected) this->StopAndFlushBuffers();
 }
 
 }

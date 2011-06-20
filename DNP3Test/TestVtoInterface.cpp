@@ -49,7 +49,7 @@ public:
 		this->Reset();
 	}
 
-	void OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength);
+	void OnVtoDataReceived(const VtoData& arData);
 
 	void OnVtoRemoteConnectedChanged(bool aIsRemoteOpen);
 
@@ -84,10 +84,11 @@ public:
 	size_t size;
 };
 
-void VtoCallbackTest::OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength)
+void VtoCallbackTest::OnVtoDataReceived(const VtoData& arData)
 {
+	size_t aLength = arData.GetSize();
 	assert(this->size + aLength <= sizeof(received));
-	memcpy(&this->received[this->size], apData, aLength);
+	memcpy(&this->received[this->size], arData.mpData, aLength);
 	this->size += aLength;
 
 	this->lastOnVtoDataReceived = aLength;

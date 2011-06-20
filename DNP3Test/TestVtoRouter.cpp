@@ -56,6 +56,7 @@ public:
 BOOST_AUTO_TEST_SUITE(VtoRouterTests)
 
 boost::uint8_t data[3] = { 0xA, 0xB, 0xC };
+VtoData vtoData(data, 3);
 
 void CheckVtoEvent(const VtoEvent& arEvent, const std::string& arData, boost::uint8_t aChannelId, PointClass aClass)
 {
@@ -84,7 +85,7 @@ BOOST_AUTO_TEST_CASE(WriteVtoBeforeConnect)
 {
 	RouterTestClass rtc;
 	BOOST_REQUIRE(rtc.phys.IsOpening());
-	rtc.router.OnVtoDataReceived(data, 3);
+	rtc.router.OnVtoDataReceived(vtoData);
 
 	/* When physical layer comes up, it should read and write */
 	rtc.phys.SignalOpenSuccess();
@@ -106,7 +107,7 @@ BOOST_AUTO_TEST_CASE(WriteVtoAfterConnect)
 	rtc.phys.SignalOpenSuccess();
 	BOOST_REQUIRE(rtc.phys.IsReading());
 	BOOST_REQUIRE(rtc.phys.IsOpen());
-	rtc.router.OnVtoDataReceived(data, 3);
+	rtc.router.OnVtoDataReceived(vtoData);
 
 	BOOST_REQUIRE(rtc.phys.IsWriting());
 

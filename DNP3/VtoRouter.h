@@ -41,6 +41,20 @@ class VtoWriter;
 struct VtoRouterSettings;
 
 /**
+ * helper object that allows us to serialize data and up/down communication events into
+ * the same data stream
+ */
+class VtoDataChunk{
+public:
+	VtoDataChunk(VtoDataType aType, size_t aBufferSize) :
+	mType(aType), mBuffer(aBufferSize){}
+
+	VtoDataType     mType;
+	ShiftableBuffer mBuffer;
+};
+
+
+/**
  * Base Class used to route data between a VTO channel (made up of both a
  * VtoWriter and VtoReader instance) and an IPhysicalLayerAsync
  * instance.
@@ -80,6 +94,11 @@ public:
 	VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc);
 
 	/**
+	 * cleans up any left over transmission data
+	 */
+	~VtoRouter();
+
+	/**
 	 * when we try to stop the router we call this thread safe function which sets a flag and
 	 * then posts a shutdown request to mpTimerSrc.
 	 */
@@ -94,15 +113,7 @@ public:
 	 * @param aLength		The length of the data received (in
 	 *						bytes)
 	 */
-	void OnVtoDataReceived(const boost::uint8_t* apData,
-	                       size_t aLength);
-
-	/**
-	 * When the remote end indicates a connection state change we need to toggle
-	 * our connection state and setup for a new connection. Behavior will be
-	 * different depending on the mStartLocal setting. Posted to mpTimerSrc.
-	 */
-	void OnVtoRemoteConnectedChanged(bool aOpened);
+	void OnVtoDataReceived(const VtoData& arData);
 
 	/**
 	 * When the dnp stack changes state to offline we will shutdown any our local physical
@@ -191,7 +202,8 @@ protected:
 	 * The transmit buffer for physical layer -> Vto. The data that is put
 	 * into this buffer was originally received from the physical layer.
 	 */
-	ShiftableBuffer mVtoTxBuffer;
+	std::queue<VtoDataChunk*> mVtoTxBuffer;
+
 
 	/**
 	 * while true we will let the AsyncPhysLayerMonitor implementation try

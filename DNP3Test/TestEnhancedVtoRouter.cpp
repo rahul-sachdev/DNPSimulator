@@ -48,11 +48,16 @@ public:
 	}
 
 	void CheckLocalChannelConnectedMessage(bool connected) {
-		BOOST_REQUIRE_EQUAL(writer.Size(), 1);
+		BOOST_REQUIRE(writer.Size() > 0);
 		VtoEvent vto;
 		BOOST_REQUIRE(writer.Read(vto));
 		BOOST_REQUIRE_EQUAL(vto.mValue.mpData[0], 88);
 		BOOST_REQUIRE_EQUAL(vto.mValue.mpData[1], (connected ? 0 : 1));
+	}
+
+	void SetRemoteState(bool online){
+		VtoData data(online ? REMOTE_OPENED : REMOTE_CLOSED);
+		router.OnVtoDataReceived(data);
 	}
 
 	MockPhysicalLayerAsync phys;
@@ -74,11 +79,25 @@ public:
 	}
 
 	void CheckLocalChannelConnectedMessage(bool connected) {
-		BOOST_REQUIRE_EQUAL(writer.Size(), 1);
+		BOOST_REQUIRE(writer.Size() > 0);
 		VtoEvent vto;
 		BOOST_REQUIRE(writer.Read(vto));
+		BOOST_REQUIRE_EQUAL(vto.mIndex, 255);
 		BOOST_REQUIRE_EQUAL(vto.mValue.mpData[0], 88);
 		BOOST_REQUIRE_EQUAL(vto.mValue.mpData[1], (connected ? 0 : 1));
+	}
+	void SetRemoteState(bool online){
+		VtoData data(online ? REMOTE_OPENED : REMOTE_CLOSED);
+		router.OnVtoDataReceived(data);
+	}
+	void CheckVtoData(const std::string& arData){
+		VtoEvent vto;
+		BOOST_REQUIRE(writer.Read(vto));
+		BOOST_REQUIRE_EQUAL(88, vto.mIndex); // the channel id
+
+		const std::string hex = toHex(vto.mValue.mpData, vto.mValue.GetSize(), true);
+
+		BOOST_REQUIRE_EQUAL(arData, hex);
 	}
 
 	MockPhysicalLayerAsync phys;
@@ -88,6 +107,9 @@ public:
 };
 
 BOOST_AUTO_TEST_SUITE(EnhancedVtoRouterTests)
+
+boost::uint8_t data[3] = { 0xA, 0xB, 0xC };
+VtoData vtoData(data, 3);
 
 BOOST_AUTO_TEST_CASE(Construction)
 {
@@ -118,6 +140,7 @@ BOOST_AUTO_TEST_CASE(ServerSendsMagicChannelLocalConnected)
 	rtc.mts.Dispatch();
 	BOOST_REQUIRE(rtc.phys.IsOpening());
 	rtc.phys.SignalOpenSuccess();
+	rtc.mts.Dispatch();
 
 	rtc.CheckLocalChannelConnectedMessage(true);
 
@@ -135,10 +158,11 @@ BOOST_AUTO_TEST_CASE(ClientStartsOpeningAfterRemoteConnection)
 	BOOST_REQUIRE(!rtc.phys.IsOpening());
 
 	rtc.router.OnDnpConnectedChanged(true);
+	rtc.mts.Dispatch();
 
 	BOOST_REQUIRE(!rtc.phys.IsOpening());
 
-	rtc.router.OnVtoRemoteConnectedChanged(true);
+	rtc.SetRemoteState(true);
 
 	rtc.mts.Dispatch();
 	BOOST_REQUIRE(rtc.phys.IsOpening());
@@ -154,20 +178,29 @@ BOOST_AUTO_TEST_CASE(ClientSendsMagicChannelLocalConnected)
 	ClientVtoRouterTestClass rtc;
 
 	rtc.router.OnDnpConnectedChanged(true);
-	rtc.router.OnVtoRemoteConnectedChanged(true);
+	rtc.mts.Dispatch();
+	rtc.SetRemoteState(true);
+
 	rtc.mts.Dispatch();
 	BOOST_REQUIRE(rtc.phys.IsOpening());
 	rtc.phys.SignalOpenSuccess();
+	rtc.mts.Dispatch();
 
 	rtc.CheckLocalChannelConnectedMessage(true);
+
+	rtc.phys.TriggerRead("01 02 03 04 05");
+	rtc.phys.TriggerRead("06 07 08 09 0A");
 
 	rtc.phys.TriggerClose();
 	rtc.mts.Dispatch();
 
 	BOOST_REQUIRE_EQUAL(rtc.phys.NumClose(), 1);
 
+	rtc.CheckVtoData("01 02 03 04 05");
+	rtc.CheckVtoData("06 07 08 09 0A");
 	rtc.CheckLocalChannelConnectedMessage(false);
 }
+
 
 BOOST_AUTO_TEST_SUITE_END()
 

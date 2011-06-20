@@ -26,6 +26,8 @@ AlwaysOpeningVtoRouter::AlwaysOpeningVtoRouter(const VtoRouterSettings& arSettin
 	Loggable(apLogger),
 	VtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc)
 {
+	// we are always ready to accept new data
+	mVtoTxBuffer.push(new VtoDataChunk(DATA, 4096));
 	this->DoStart();
 }
 

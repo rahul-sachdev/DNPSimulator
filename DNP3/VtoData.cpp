@@ -27,16 +27,21 @@ namespace dnp
 {
 
 VtoData::VtoData() :
-	mSize(0)
+	mSize(0), mType(DATA)
 {}
 
 VtoData::VtoData(size_t aSize) :
-	mSize(aSize)
+	mSize(aSize), mType(DATA)
 {
 	assert(aSize <= MAX_SIZE);
 }
 
-VtoData::VtoData(const boost::uint8_t* apValue, size_t aSize)
+VtoData::VtoData(VtoDataType aType) : 
+	mSize(0), mType(aType)
+{}
+
+VtoData::VtoData(const boost::uint8_t* apValue, size_t aSize) :
+	mType(DATA)
 {
 	this->Copy(apValue, aSize);
 }
@@ -44,6 +49,11 @@ VtoData::VtoData(const boost::uint8_t* apValue, size_t aSize)
 size_t VtoData::GetSize() const
 {
 	return this->mSize;
+}
+
+VtoDataType VtoData::GetType() const
+{
+	return this->mType;
 }
 
 void VtoData::Copy(const boost::uint8_t* apValue, size_t aSize)

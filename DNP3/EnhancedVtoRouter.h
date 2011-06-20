@@ -45,6 +45,9 @@ public:
 	void DoDnpConnectedChanged(bool aConnected);
 	void SetLocalConnected(bool aConnected);
 
+	void FlushBuffers();
+	void StopAndFlushBuffers();
+
 	// concrete classes use these callbacks and the state
 	// variables to decide when to Start or Stop attempting
 	// the local connections

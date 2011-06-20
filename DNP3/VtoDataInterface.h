@@ -167,22 +167,12 @@ public:
 	/**
 	 * Called when data arrives from stack and needs to be handled.
 	 *
-	 * @param apData		The data received from the VTO stream.
-	 * @param aLength		The length of the data received (in
-	 *						bytes).
+	 * @param arData     The data received from the VTO stream, also includes
+	 *                   a VtoDataType flag that the router should look at to
+	 *                   decide if they should open/close the local half of the
+	 *                   connection.
 	 */
-	virtual void OnVtoDataReceived(const boost::uint8_t* apData,
-	                               size_t aLength) = 0;
-
-	/**
-	 * This callback is called when we have detected that the remote
-	 * connection state has changed. It will change if the client of
-	 * the remote connection drops the connection or the dnp3
-	 * connection drops.
-	 *
-	 * @param aIsRemoteOpen  whether we should act if the remote side is open
-	 */
-	virtual void OnVtoRemoteConnectedChanged(bool aIsRemoteOpen) = 0;
+	virtual void OnVtoDataReceived(const VtoData& arData) = 0;
 
 	/**
 	 * Called when the dnp connected state changes. This allows us to only

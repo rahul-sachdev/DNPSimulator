@@ -27,11 +27,12 @@ namespace apl
 namespace dnp
 {
 
-/**
- * Describes the last set value of the setpoint. Like the ControlStatus
- * data type it is not well supportted and its generally better
- * practice to use an explict analog.
- */
+enum VtoDataType{
+	REMOTE_CLOSED,
+	REMOTE_OPENED,
+	DATA
+};
+
 class VtoData
 {
 public:
@@ -44,7 +45,12 @@ public:
 
 	VtoData(const boost::uint8_t* apValue, size_t aSize);
 
+	VtoData(VtoDataType aType);
+
 	size_t GetSize() const;
+
+	VtoDataType GetType() const;
+
 
 	void Copy(const boost::uint8_t* apValue, size_t aSize);
 
@@ -52,6 +58,8 @@ public:
 
 private:
 	size_t mSize;
+
+	VtoDataType mType;
 };
 
 }
