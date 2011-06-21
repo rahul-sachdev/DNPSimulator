@@ -180,18 +180,6 @@ void Slave::OnUnknownObject()
 void Slave::OnVtoUpdate()
 {
 	/*
-	 * Copy as much data as we can from the VtoWriter into the
-	 * SlaveEventBuffer's VtoEvent buffer.
-	 */
-	SlaveEventBuffer* seb = reinterpret_cast<SlaveEventBuffer*>(this->mRspContext.GetBuffer());
-	InsertionOrderedEventBuffer<VtoEvent>* buffer = seb->GetVtoEventBuffer();
-	VtoEvent info;
-
-	while (!buffer->IsFull() && this->mVtoWriter.Read(info)) {
-		buffer->Update(info);
-	}
-
-	/*
 	 * Let the current state decide how to handle the VTO buffer.  We use the
 	 * same handler as Slave::OnDataUpdate() to reduce the complexity in the
 	 * mechanism.
@@ -252,6 +240,27 @@ void Slave::FlushDeferredEvents()
 	}
 }
 
+size_t Slave::FlushVtoUpdates()
+{
+	/*
+	 * Copy as much data as we can from the VtoWriter into the
+	 * SlaveEventBuffer's VtoEvent buffer.
+	 */
+	SlaveEventBuffer* seb = reinterpret_cast<SlaveEventBuffer*>(this->mRspContext.GetBuffer());
+	InsertionOrderedEventBuffer<VtoEvent>* buffer = seb->GetVtoEventBuffer();
+	VtoEvent info;
+
+	size_t num = 0;
+	while (!buffer->IsFull() && this->mVtoWriter.Read(info)) {
+		buffer->Update(info);
+		num++;
+	}
+
+	LOG_BLOCK(LEV_INTERPRET, "VtoUpdates: " << num << " updates. VtoBufferSize: " << buffer->Size());
+
+	return num;
+}
+
 size_t Slave::FlushUpdates()
 {
 	size_t num = 0;
@@ -264,6 +273,8 @@ size_t Slave::FlushUpdates()
 		mChangeBuffer.Clear();
 		return 0;
 	}
+
+	num += this->FlushVtoUpdates();
 
 	LOG_BLOCK(LEV_INFO, "Processed " << num << " updates");
 	return num;
