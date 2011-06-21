@@ -60,6 +60,8 @@ public:
 		mOpens(0),
 		mCloses(0),
 		mOpenFailures(0),
+		mBytesRead(0),
+		mBytesWritten(0),
 		mRead(1024),
 		mLastRead(0) {
 		mState.push(PLS_CLOSED);
@@ -68,6 +70,9 @@ public:
 	size_t mOpens;
 	size_t mCloses;
 	size_t mOpenFailures;
+
+	size_t mBytesRead;
+	size_t mBytesWritten;
 
 	CopyableBuffer mRead;
 	CopyableBuffer mLastRead;
@@ -94,10 +99,12 @@ public:
 	void _OnReceive(const boost::uint8_t* apData, size_t aNumBytes) {
 		CopyableBuffer cb(apData, aNumBytes);
 		mLastRead = cb;
+		mBytesRead += aNumBytes;
 		mpPhys->AsyncRead(mRead, mRead.Size());
 	}
 
 	void WriteData(CopyableBuffer& aData) {
+		mBytesWritten += aData.Size();
 		mpPhys->AsyncWrite(aData, aData.Size());
 	}
 
@@ -118,13 +125,16 @@ public:
 	bool DataIs(CopyableBuffer& cb) {
 		return cb == mLastRead;
 	}
+	bool DataSizeIs(CopyableBuffer& cb) {
+		return cb.Size() == mBytesRead;
+	}
 
 };
 
 class VtoTestStack : public LogTester
 {
 public:
-	VtoTestStack(FilterLevel level = LEV_INFO, boost::uint16_t port = PORT_VALUE) :
+	VtoTestStack(bool clientOnSlave = true, size_t aLoopbackRepeats = 1, FilterLevel level = LEV_INTERPRET, boost::uint16_t port = PORT_VALUE) :
 		LogTester(),
 		mpMainLogger(mLog.GetLogger(level, "main")),
 		ltf(&mLog, "integration.log", true),
@@ -133,20 +143,29 @@ public:
 		timerSource(testObj.GetService()),
 		client(mLog.GetLogger(level, "local-tcp-client"), testObj.GetService(), "127.0.0.1", port + 20),
 		server(mLog.GetLogger(level, "remote-tcp-server"), testObj.GetService(), "0.0.0.0", port + 10),
-		loopback(mLog.GetLogger(level, "loopback"), &server, &timerSource),
+		loopback(mLog.GetLogger(level, "loopback"), &server, &timerSource, aLoopbackRepeats),
 		local(mLog.GetLogger(level, "mock-client-connection"), &client, &timerSource, 500) {
 
 		//mLog.AddLogSubscriber(LogToStdio::Inst());
 
 		slaveMgr.AddTCPServer("dnp-tcp-server", PhysLayerSettings(), "127.0.0.1", port);
-		slaveMgr.AddTCPClient("vto-tcp-client", PhysLayerSettings(), "127.0.0.1", port + 10);
 		slaveMgr.AddSlave("dnp-tcp-server", "slave", level, &cmdAcceptor, SlaveStackConfig());
-		slaveMgr.StartVtoRouter("vto-tcp-client", "slave", VtoRouterSettings(88, false, false, 4096, 1000));
 
 		masterMgr.AddTCPClient("dnp-tcp-client", PhysLayerSettings(), "127.0.0.1", port);
-		masterMgr.AddTCPServer("vto-tcp-server", PhysLayerSettings(), "127.0.0.1", port + 20);
 		masterMgr.AddMaster("dnp-tcp-client", "master", level, &fdo, MasterStackConfig());
-		masterMgr.StartVtoRouter("vto-tcp-server", "master", VtoRouterSettings(88, true, false, 4096, 1000));
+
+		// switch if master or slave gets the loopback half of the server
+		if(clientOnSlave){
+			slaveMgr.AddTCPClient("vto-tcp-client", PhysLayerSettings(), "127.0.0.1", port + 10);
+			slaveMgr.StartVtoRouter("vto-tcp-client", "slave", VtoRouterSettings(88, false, false, 4096, 1000));
+			masterMgr.AddTCPServer("vto-tcp-server", PhysLayerSettings(), "127.0.0.1", port + 20);
+			masterMgr.StartVtoRouter("vto-tcp-server", "master", VtoRouterSettings(88, true, false, 4096, 1000));
+		}else{
+			masterMgr.AddTCPClient("vto-tcp-client", PhysLayerSettings(), "127.0.0.1", port + 10);
+			masterMgr.StartVtoRouter("vto-tcp-client", "master", VtoRouterSettings(88, false, false, 4096, 1000));
+			slaveMgr.AddTCPServer("vto-tcp-server", PhysLayerSettings(), "127.0.0.1", port + 20);
+			slaveMgr.StartVtoRouter("vto-tcp-server", "slave", VtoRouterSettings(88, true, false, 4096, 1000));
+		}
 	}
 
 	~VtoTestStack() {
@@ -163,6 +182,16 @@ public:
 
 	bool WaitForData(CopyableBuffer& cb) {
 		return testObj.ProceedUntil(boost::bind(&MockClientConnection::DataIs, &local, cb), 10000);
+	}
+
+	bool SameDataSize(CopyableBuffer& cb){
+		return loopback.mBytesRead == cb.Size() &&
+			loopback.mBytesWritten == local.mBytesRead &&
+			loopback.mBytesRead == local.mBytesWritten;
+	}
+
+	bool WaitForDataSize(CopyableBuffer& cb) {
+		return testObj.ProceedUntil(boost::bind(&VtoTestStack::SameDataSize, this, cb), 30000);
 	}
 
 	Logger* mpMainLogger;
@@ -267,11 +296,6 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfDnpDrops)
 	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 }
 
-bool False()
-{
-	return false;
-}
-
 BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 {
 	VtoTestStack stack;
@@ -291,12 +315,46 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 	stack.loopback.Stop();
 	stack.mpMainLogger->Log(LEV_EVENT, LOCATION, "Stopped loopback");
 
-	//stack.testObj.ProceedUntil(&False, 100000);
-
 	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 }
 
+BOOST_AUTO_TEST_CASE(LargeDataTransmissionMasterToSlave)
+{
+	VtoTestStack stack(true, 0);
 
+	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
+
+	// start everything
+	stack.masterMgr.Start();
+	stack.slaveMgr.Start();
+	stack.loopback.Start();
+	stack.local.Start();
+	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));
+
+	// test that a large set of data flowing one way works
+	ByteStr testData1(500000, 1234567);
+	stack.local.WriteData(testData1);
+	BOOST_REQUIRE(stack.WaitForDataSize(testData1));
+}
+
+BOOST_AUTO_TEST_CASE(LargeDataTransmissionSlaveToMaster)
+{
+	VtoTestStack stack(false, 0);
+
+	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
+
+	// start everything
+	stack.masterMgr.Start();
+	stack.slaveMgr.Start();
+	stack.loopback.Start();
+	stack.local.Start();
+	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));
+
+	// test that a large set of data flowing one way works
+	ByteStr testData1(500000, 1234567);
+	stack.local.WriteData(testData1);
+	BOOST_REQUIRE(stack.WaitForDataSize(testData1));
+}
 
 BOOST_AUTO_TEST_SUITE_END()
 
