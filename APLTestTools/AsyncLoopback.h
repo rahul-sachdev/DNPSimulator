@@ -29,12 +29,16 @@ namespace apl
 class AsyncLoopback : public AsyncPhysLayerMonitor
 {
 public:
-	AsyncLoopback(Logger*, IPhysicalLayerAsync*, ITimerSource*, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
+	AsyncLoopback(Logger*, IPhysicalLayerAsync*, ITimerSource*, size_t aRepeatDataCount = 1, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
+
+	size_t mBytesWritten;
+	size_t mBytesRead;
 
 private:
 
 	CopyableBuffer mRead;
 	CopyableBuffer mWrite;
+	size_t mRepeatDataCount;
 
 	void OnStateChange(PhysLayerState) {}
 

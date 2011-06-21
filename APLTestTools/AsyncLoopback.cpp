@@ -24,11 +24,14 @@
 namespace apl
 {
 
-AsyncLoopback::AsyncLoopback(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc, FilterLevel aLevel, bool aImmediate) :
+AsyncLoopback::AsyncLoopback(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc, size_t aRepeatDataCount, FilterLevel aLevel, bool aImmediate) :
 	Loggable(apLogger),
 	AsyncPhysLayerMonitor(apLogger, apPhys, apTimerSrc, 5000),
+	mBytesWritten(0),
+	mBytesRead(0),
 	mRead(1024),
-	mWrite(mRead)
+	mWrite(1024*aRepeatDataCount),
+	mRepeatDataCount(aRepeatDataCount)
 {
 
 }
@@ -40,11 +43,17 @@ void AsyncLoopback::StartRead()
 
 void AsyncLoopback::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
 {
-	if(mpPhys->CanWrite()) {
-		memcpy(mWrite, mRead, aNumBytes);
-		mpPhys->AsyncWrite(mWrite, aNumBytes);
+	mBytesRead += aNumBytes;
+
+	if(mpPhys->CanWrite() && mRepeatDataCount > 0) {
+		for(size_t i = 0; i < mRepeatDataCount; i++){
+			memcpy(mWrite + mRead.Size()*i, mRead, aNumBytes);
+		}
+		mBytesWritten += aNumBytes*mRepeatDataCount;
+		mpPhys->AsyncWrite(mWrite, aNumBytes*mRepeatDataCount);
 	}
 	this->StartRead();
+
 }
 
 void AsyncLoopback::OnPhysicalLayerOpen(void)
