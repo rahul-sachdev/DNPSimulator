@@ -140,6 +140,7 @@ size_t SlaveEventBuffer::Select(PointClass aClass, size_t aMaxEvent)
 	size_t left = aMaxEvent;
 
 	/*
+	 * ONLY USED IN TESTS!
 	 * The following implies a natural order of importance.  From 'most
 	 * important' to 'least important', the order is:
 	 *
@@ -156,20 +157,24 @@ size_t SlaveEventBuffer::Select(PointClass aClass, size_t aMaxEvent)
 	return aMaxEvent - left;
 }
 
-void SlaveEventBuffer::ClearWritten()
+size_t SlaveEventBuffer::ClearWritten()
 {
-	mBinaryEvents.ClearWrittenEvents();
-	mAnalogEvents.ClearWrittenEvents();
-	mCounterEvents.ClearWrittenEvents();
-	mVtoEvents.ClearWrittenEvents();
+	size_t sum = 0;
+	sum += mBinaryEvents.ClearWrittenEvents();
+	sum += mAnalogEvents.ClearWrittenEvents();
+	sum += mCounterEvents.ClearWrittenEvents();
+	sum += mVtoEvents.ClearWrittenEvents();
+	return sum;
 }
 
-void SlaveEventBuffer::Deselect()
+size_t SlaveEventBuffer::Deselect()
 {
-	mBinaryEvents.Deselect();
-	mAnalogEvents.Deselect();
-	mCounterEvents.Deselect();
-	mVtoEvents.Deselect();
+	size_t sum = 0;
+	sum += mBinaryEvents.Deselect();
+	sum += mAnalogEvents.Deselect();
+	sum += mCounterEvents.Deselect();
+	sum += mVtoEvents.Deselect();
+	return sum;
 }
 
 bool SlaveEventBuffer::IsFull(BufferTypes aType)

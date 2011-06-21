@@ -207,13 +207,13 @@ public:
 	/**
 	 * Transfers any selected events back into the buffer.
 	 */
-	void Deselect();
+	size_t Deselect();
 
 	/**
 	 * Remove events that have been written (flagged with 'mWritten=true')
 	 * from the selection buffer.
 	 */
-	void ClearWritten();
+	size_t ClearWritten();
 
 	/**
 	 * Returns 'true' if the specified buffer is full, 'false' if it still
