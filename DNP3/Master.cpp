@@ -228,6 +228,8 @@ void Master::TransmitVtoData(ITask* apTask)
 		mVtoTransmitTask.mBuffer.Update(info);
 	}
 
+	LOG_BLOCK(LEV_INTERPRET, "TransmitVtoData: " << std::boolalpha << mVtoTransmitTask.mBuffer.IsFull() << " size: " << mVtoTransmitTask.mBuffer.Size());
+
 	// only start the task if we are in comms_up
 	// TODO: should this just be Enable?
 	if(this->mState == SS_COMMS_UP) {

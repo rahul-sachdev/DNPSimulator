@@ -76,7 +76,7 @@ void VtoRouter::DoStopRouter()
 
 void VtoRouter::OnVtoDataReceived(const VtoData& arData)
 {
-	LOG_BLOCK(LEV_DEBUG, "GotRemoteData: " << arData.GetSize() << " Type: " << arData.GetType());
+	LOG_BLOCK(LEV_INTERPRET, "GotRemoteData: " << arData.GetSize() << " Type: " << arData.GetType());
 
 	/*
 	 * This will create a container object that allows us to hold the data
@@ -120,7 +120,7 @@ void VtoRouter::DoStop()
 
 void VtoRouter::_OnReceive(const boost::uint8_t* apData, size_t aLength)
 {
-	LOG_BLOCK(LEV_DEBUG, "GotLocalData: " << aLength);
+	LOG_BLOCK(LEV_INTERPRET, "GotLocalData: " << aLength);
 	mVtoTxBuffer.back()->mBuffer.AdvanceWrite(aLength);
 
 	this->CheckForVtoWrite();
@@ -139,7 +139,7 @@ void VtoRouter::CheckForVtoWrite()
 			size_t num = pBuffer->NumReadBytes();
 			if(num > 0) {
 				size_t numWritten = mpVtoWriter->Write(pBuffer->ReadBuff(), num, this->GetChannelId());
-				LOG_BLOCK(LEV_DEBUG, "VtoWriter: " << numWritten << " of " << num);
+				LOG_BLOCK(LEV_INTERPRET, "VtoWriter: " << numWritten << " of " << num);
 				pBuffer->AdvanceRead(numWritten);
 				pBuffer->Shift();
 				this->CheckForPhysRead();
@@ -198,7 +198,7 @@ void VtoRouter::CheckForPhysWrite()
 			// only write to the physical layer if we have a valid local connection
 			if(mpPhys->CanWrite()) {
 				mpPhys->AsyncWrite(mPhysLayerTxBuffer.front().mpData, mPhysLayerTxBuffer.front().GetSize());
-				LOG_BLOCK(LEV_DEBUG, "Wrote: " << mPhysLayerTxBuffer.front().GetSize());
+				LOG_BLOCK(LEV_INTERPRET, "Wrote: " << mPhysLayerTxBuffer.front().GetSize());
 			}
 		}
 		else {
