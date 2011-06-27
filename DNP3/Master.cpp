@@ -109,8 +109,7 @@ void Master::UpdateState(StackStates aState)
 	if(mState != aState) {
 		LOG_BLOCK(LEV_INFO, "StackState: " << ConvertToString(aState));
 		mState = aState;
-		if(mpObserver != NULL) mpObserver->OnStateChange(aState);
-		mVtoReader.OnStateChange(aState);
+		if(mpObserver != NULL) mpObserver->OnStateChange(aState);		
 		if(mState == SS_COMMS_UP) {
 			mSchedule.mpVtoTransmitTask->Enable();
 		}

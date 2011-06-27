@@ -115,8 +115,7 @@ void Slave::UpdateState(StackStates aState)
 		mCommsStatus.Set(aState);
 		LOG_BLOCK(LEV_INFO, "StackState: " << ConvertToString(aState));
 		mState = aState;
-		if(mpObserver != NULL) mpObserver->OnStateChange(aState);
-		mVtoReader.OnStateChange(aState);
+		if(mpObserver != NULL) mpObserver->OnStateChange(aState);		
 	}
 }
 

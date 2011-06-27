@@ -115,14 +115,7 @@ public:
 	 *						bytes)
 	 */
 	void OnVtoDataReceived(const VtoData& arData);
-
-	/**
-	 * When the dnp stack changes state to offline we will shutdown any our local physical
-	 * layer. When it comes online we may start our local physical layer, depending on the
-	 * mStartLocal setting. Posted to mpTimerSrc.
-	 */
-	void OnDnpConnectedChanged(bool aConnected);
-
+	
 	/**
 	 * Called when the VTO data buffer size changes (startup and
 	 * successuly transmission).
@@ -180,8 +173,7 @@ protected:
 
 	void DoStopRouter();
 
-	virtual void DoVtoRemoteConnectedChanged(bool aOpened) = 0;
-	virtual void DoDnpConnectedChanged(bool aConnected) = 0;
+	virtual void DoVtoRemoteConnectedChanged(bool aOpened) = 0;	
 	virtual void SetLocalConnected(bool aConnected) = 0;
 
 protected:

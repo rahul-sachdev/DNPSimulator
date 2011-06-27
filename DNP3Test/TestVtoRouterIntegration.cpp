@@ -135,45 +135,43 @@ public:
 class VtoTestStack : public LogTester
 {
 public:
-	VtoTestStack(bool clientOnSlave = true, FilterLevel level = LEV_INTERPRET, boost::uint16_t port = MACRO_PORT_VALUE) :
+	VtoTestStack(bool clientOnSlave = true, bool aImmediateOutput = false, FilterLevel level = LEV_INTERPRET, boost::uint16_t port = MACRO_PORT_VALUE) :
 		LogTester(),
 		mpMainLogger(mLog.GetLogger(level, "main")),
 		ltf(&mLog, "integration.log", true),
-		slaveMgr(mLog.GetLogger(level, "slave"), false),
-		masterMgr(mLog.GetLogger(level, "master"), false),
+		manager(mLog.GetLogger(level, "manager"), false),		
 		timerSource(testObj.GetService()),
 		client(mLog.GetLogger(level, "local-tcp-client"), testObj.GetService(), "127.0.0.1", port + 20),
 		server(mLog.GetLogger(level, "remote-tcp-server"), testObj.GetService(), "0.0.0.0", port + 10),
 		loopback(mLog.GetLogger(level, "loopback"), &server, &timerSource),
 		local(mLog.GetLogger(level, "mock-client-connection"), &client, &timerSource, 500) {
 
-		//mLog.AddLogSubscriber(LogToStdio::Inst());
+		if(aImmediateOutput) mLog.AddLogSubscriber(LogToStdio::Inst());
 
-		slaveMgr.AddTCPServer("dnp-tcp-server", PhysLayerSettings(), "127.0.0.1", port);
-		slaveMgr.AddSlave("dnp-tcp-server", "slave", level, &cmdAcceptor, SlaveStackConfig());
+		manager.AddTCPServer("dnp-tcp-server", PhysLayerSettings(), "127.0.0.1", port);
+		manager.AddSlave("dnp-tcp-server", "slave", level, &cmdAcceptor, SlaveStackConfig());
 
-		masterMgr.AddTCPClient("dnp-tcp-client", PhysLayerSettings(), "127.0.0.1", port);
-		masterMgr.AddMaster("dnp-tcp-client", "master", level, &fdo, MasterStackConfig());
+		manager.AddTCPClient("dnp-tcp-client", PhysLayerSettings(), "127.0.0.1", port);
+		manager.AddMaster("dnp-tcp-client", "master", level, &fdo, MasterStackConfig());
 
 		// switch if master or slave gets the loopback half of the server
 		if(clientOnSlave) {
-			slaveMgr.AddTCPClient("vto-tcp-client", PhysLayerSettings(), "127.0.0.1", port + 10);
-			slaveMgr.StartVtoRouter("vto-tcp-client", "slave", VtoRouterSettings(88, false, false, 4096, 1000));
-			masterMgr.AddTCPServer("vto-tcp-server", PhysLayerSettings(), "127.0.0.1", port + 20);
-			masterMgr.StartVtoRouter("vto-tcp-server", "master", VtoRouterSettings(88, true, false, 4096, 1000));
+			manager.AddTCPClient("vto-tcp-client", PhysLayerSettings(), "127.0.0.1", port + 10);
+			manager.StartVtoRouter("vto-tcp-client", "slave", VtoRouterSettings(88, false, false, 4096, 1000));
+			manager.AddTCPServer("vto-tcp-server", PhysLayerSettings(), "127.0.0.1", port + 20);
+			manager.StartVtoRouter("vto-tcp-server", "master", VtoRouterSettings(88, true, false, 4096, 1000));
 		}
 		else {
-			masterMgr.AddTCPClient("vto-tcp-client", PhysLayerSettings(), "127.0.0.1", port + 10);
-			masterMgr.StartVtoRouter("vto-tcp-client", "master", VtoRouterSettings(88, false, false, 4096, 1000));
-			slaveMgr.AddTCPServer("vto-tcp-server", PhysLayerSettings(), "127.0.0.1", port + 20);
-			slaveMgr.StartVtoRouter("vto-tcp-server", "slave", VtoRouterSettings(88, true, false, 4096, 1000));
+			manager.AddTCPClient("vto-tcp-client", PhysLayerSettings(), "127.0.0.1", port + 10);
+			manager.StartVtoRouter("vto-tcp-client", "master", VtoRouterSettings(88, false, false, 4096, 1000));
+			manager.AddTCPServer("vto-tcp-server", PhysLayerSettings(), "127.0.0.1", port + 20);
+			manager.StartVtoRouter("vto-tcp-server", "slave", VtoRouterSettings(88, true, false, 4096, 1000));
 		}
 	}
 
 	~VtoTestStack() {
-		masterMgr.Stop();
-		slaveMgr.Stop();
-
+		manager.Stop();
+		
 		local.Stop();
 		loopback.Stop();
 	}
@@ -202,8 +200,7 @@ public:
 	MockCommandAcceptor cmdAcceptor;
 
 	AsyncTestObjectASIO testObj;
-	AsyncStackManager slaveMgr;
-	AsyncStackManager masterMgr;
+	AsyncStackManager manager;	
 
 	TimerSourceASIO timerSource;
 	PhysicalLayerAsyncTCPClient client;
@@ -223,9 +220,9 @@ BOOST_AUTO_TEST_CASE(Reconnect)
 
 	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 
-	// start up both halfs of the dnp3 connection, vto server port will be online
-	stack.masterMgr.Start();
-	stack.slaveMgr.Start();
+	// start up dnp3 manager, vto server port will be online
+	stack.manager.Start();
+	
 	// startup the loopback server on the slave side
 	stack.loopback.Start();
 
@@ -256,45 +253,19 @@ BOOST_AUTO_TEST_CASE(Reconnect)
 	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 }
 
-BOOST_AUTO_TEST_CASE(ServerNotOpenUntilDnpConnected)
+BOOST_AUTO_TEST_CASE(RemoteSideFailureBouncesLocalConnection)
 {
 	VtoTestStack stack;
 
 	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
+	
+	stack.manager.Start();
 
-	// start master side, since there is no dnp connection to slave we wont start listening socket
-	stack.masterMgr.Start();
-
-	// start local connection, we wont be able to connect to vto socket because there is no dnp3 connection made yet so we should
-	// end up in the waiting state
+	// start local connection, we should immediately be able to connect to this side
 	stack.local.Start();
-	BOOST_REQUIRE(stack.WaitForState(PLS_WAITING));
-
-	// start the slave side of the dnp3 connection and verify that we can connect to the vto server
-	stack.slaveMgr.Start();
-	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));
-
+	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));	
+	
 	// since the remote side can't connect to the port we should have our local connection bounced
-	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
-}
-
-BOOST_AUTO_TEST_CASE(SocketIsClosedIfDnpDrops)
-{
-	VtoTestStack stack;
-
-	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
-
-	// start all 4 components, should connect
-	stack.masterMgr.Start();
-	stack.slaveMgr.Start();
-	stack.loopback.Start();
-	stack.local.Start();
-
-	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));
-
-	// kill slave dnp3, should kill our local connection
-	stack.slaveMgr.Stop();
-
 	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 }
 
@@ -305,8 +276,7 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 
 	// start all 4 components, should connect
-	stack.masterMgr.Start();
-	stack.slaveMgr.Start();
+	stack.manager.Start();	
 	stack.loopback.Start();
 	stack.local.Start();
 
@@ -320,42 +290,32 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 }
 
-BOOST_AUTO_TEST_CASE(LargeDataTransmissionMasterToSlave)
+void TestLargeDataTransmission(VtoTestStack& arTest, size_t aSizeInBytes)
 {
-	VtoTestStack stack(true);
-
-	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
+	BOOST_REQUIRE(arTest.WaitForState(PLS_CLOSED));
 
 	// start everything
-	stack.masterMgr.Start();
-	stack.slaveMgr.Start();
-	stack.loopback.Start();
-	stack.local.Start();
-	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));
+	arTest.manager.Start();	
+	arTest.loopback.Start();
+	arTest.local.Start();
+	BOOST_REQUIRE(arTest.WaitForState(PLS_OPEN));
 
 	// test that a large set of data flowing one way works
-	ByteStr testData1(500000, 123);
-	stack.local.WriteData(testData1);
-	BOOST_REQUIRE(stack.WaitForDataSize(testData1));
+	ByteStr testData1(aSizeInBytes, 123);
+	arTest.local.WriteData(testData1);
+	BOOST_REQUIRE(arTest.WaitForDataSize(testData1));
+}
+
+BOOST_AUTO_TEST_CASE(LargeDataTransmissionMasterToSlave)
+{
+	VtoTestStack stack(true, true);
+	TestLargeDataTransmission(stack, 500000);
 }
 
 BOOST_AUTO_TEST_CASE(LargeDataTransmissionSlaveToMaster)
 {
 	VtoTestStack stack(false);
-
-	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
-
-	// start everything
-	stack.masterMgr.Start();
-	stack.slaveMgr.Start();
-	stack.loopback.Start();
-	stack.local.Start();
-	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));
-
-	// test that a large set of data flowing one way works
-	ByteStr testData1(500000, 123);
-	stack.local.WriteData(testData1);
-	BOOST_REQUIRE(stack.WaitForDataSize(testData1));
+	TestLargeDataTransmission(stack, 500000);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

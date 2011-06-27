@@ -173,17 +173,7 @@ public:
 	 *                   connection.
 	 */
 	virtual void OnVtoDataReceived(const VtoData& arData) = 0;
-
-	/**
-	 * Called when the dnp connected state changes. This allows us to only
-	 * open the local port after we are connected via Dnp so client applications
-	 * dont connect to a vto port that can't possibly satisfy their requests. It
-	 * also allows us to drop the local socket when we lose the underlying dnp3
-	 * link.
-	 *
-	 * @param aDnpIsConencted dnp3 comms connection state
-	 */
-	virtual void OnDnpConnectedChanged(bool aDnpIsConencted) = 0;
+	
 };
 
 class IVtoReader

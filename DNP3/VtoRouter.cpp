@@ -63,13 +63,6 @@ void VtoRouter::StopRouter()
 	mpTimerSrc->Post(boost::bind(&VtoRouter::DoStopRouter, this));
 }
 
-void VtoRouter::OnDnpConnectedChanged(bool aConnected)
-{
-	if(!mPermanentlyStopped) {
-		mpTimerSrc->Post(boost::bind(&VtoRouter::DoDnpConnectedChanged, this, aConnected));
-	}
-}
-
 void VtoRouter::DoStopRouter()
 {
 	this->Stop();

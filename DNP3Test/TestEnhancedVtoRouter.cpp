@@ -116,29 +116,15 @@ BOOST_AUTO_TEST_CASE(Construction)
 	ServerVtoRouterTestClass rtc;
 }
 
-BOOST_AUTO_TEST_CASE(ServerStartsOpeningAfterDnpConnection)
-{
-	ServerVtoRouterTestClass rtc;
-	BOOST_REQUIRE(!rtc.phys.IsOpening());
-
-	rtc.router.OnDnpConnectedChanged(true);
-
-	rtc.mts.Dispatch();
-	BOOST_REQUIRE(rtc.phys.IsOpening());
-
-	rtc.router.OnDnpConnectedChanged(false);
-
-	rtc.mts.Dispatch();
-	BOOST_REQUIRE(rtc.phys.IsClosing());
-}
-
 BOOST_AUTO_TEST_CASE(ServerSendsMagicChannelLocalConnected)
 {
 	ServerVtoRouterTestClass rtc;
-
-	rtc.router.OnDnpConnectedChanged(true);
+		
 	rtc.mts.Dispatch();
+	
 	BOOST_REQUIRE(rtc.phys.IsOpening());
+
+
 	rtc.phys.SignalOpenSuccess();
 	rtc.mts.Dispatch();
 
@@ -156,8 +142,7 @@ BOOST_AUTO_TEST_CASE(ClientStartsOpeningAfterRemoteConnection)
 {
 	ClientVtoRouterTestClass rtc;
 	BOOST_REQUIRE(!rtc.phys.IsOpening());
-
-	rtc.router.OnDnpConnectedChanged(true);
+	
 	rtc.mts.Dispatch();
 
 	BOOST_REQUIRE(!rtc.phys.IsOpening());
@@ -167,7 +152,7 @@ BOOST_AUTO_TEST_CASE(ClientStartsOpeningAfterRemoteConnection)
 	rtc.mts.Dispatch();
 	BOOST_REQUIRE(rtc.phys.IsOpening());
 
-	rtc.router.OnDnpConnectedChanged(false);
+	rtc.SetRemoteState(false);
 
 	rtc.mts.Dispatch();
 	BOOST_REQUIRE(rtc.phys.IsClosing());
@@ -176,9 +161,7 @@ BOOST_AUTO_TEST_CASE(ClientStartsOpeningAfterRemoteConnection)
 BOOST_AUTO_TEST_CASE(ClientSendsMagicChannelLocalConnected)
 {
 	ClientVtoRouterTestClass rtc;
-
-	rtc.router.OnDnpConnectedChanged(true);
-	rtc.mts.Dispatch();
+	
 	rtc.SetRemoteState(true);
 
 	rtc.mts.Dispatch();

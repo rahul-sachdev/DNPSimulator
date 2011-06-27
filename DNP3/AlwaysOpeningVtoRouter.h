@@ -37,8 +37,7 @@ public:
 	AlwaysOpeningVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc);
 
 	/// we don't care about any of the callbacks so we have empty implementations
-	void DoVtoRemoteConnectedChanged(bool aOpened) {}
-	void DoDnpConnectedChanged(bool aConnected) {}
+	void DoVtoRemoteConnectedChanged(bool aOpened) {}	
 	void SetLocalConnected(bool aConnected) {}
 
 };
