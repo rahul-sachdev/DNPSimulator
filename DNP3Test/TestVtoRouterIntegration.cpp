@@ -134,7 +134,7 @@ public:
 class VtoTestStack : public LogTester
 {
 public:
-	VtoTestStack(bool clientOnSlave = true, size_t aLoopbackRepeats = 1, FilterLevel level = LEV_INTERPRET, boost::uint16_t port = PORT_VALUE) :
+	VtoTestStack(bool clientOnSlave = true, FilterLevel level = LEV_INTERPRET, boost::uint16_t port = PORT_VALUE) :
 		LogTester(),
 		mpMainLogger(mLog.GetLogger(level, "main")),
 		ltf(&mLog, "integration.log", true),
@@ -143,7 +143,7 @@ public:
 		timerSource(testObj.GetService()),
 		client(mLog.GetLogger(level, "local-tcp-client"), testObj.GetService(), "127.0.0.1", port + 20),
 		server(mLog.GetLogger(level, "remote-tcp-server"), testObj.GetService(), "0.0.0.0", port + 10),
-		loopback(mLog.GetLogger(level, "loopback"), &server, &timerSource, aLoopbackRepeats),
+		loopback(mLog.GetLogger(level, "loopback"), &server, &timerSource),
 		local(mLog.GetLogger(level, "mock-client-connection"), &client, &timerSource, 500) {
 
 		//mLog.AddLogSubscriber(LogToStdio::Inst());
@@ -320,7 +320,7 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 
 BOOST_AUTO_TEST_CASE(LargeDataTransmissionMasterToSlave)
 {
-	VtoTestStack stack(true, 0);
+	VtoTestStack stack(true);
 
 	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 
@@ -332,14 +332,14 @@ BOOST_AUTO_TEST_CASE(LargeDataTransmissionMasterToSlave)
 	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));
 
 	// test that a large set of data flowing one way works
-	ByteStr testData1(500000, 1234567);
+	ByteStr testData1(500000, 123);
 	stack.local.WriteData(testData1);
 	BOOST_REQUIRE(stack.WaitForDataSize(testData1));
 }
 
 BOOST_AUTO_TEST_CASE(LargeDataTransmissionSlaveToMaster)
 {
-	VtoTestStack stack(false, 0);
+	VtoTestStack stack(false);
 
 	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 
@@ -351,7 +351,7 @@ BOOST_AUTO_TEST_CASE(LargeDataTransmissionSlaveToMaster)
 	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));
 
 	// test that a large set of data flowing one way works
-	ByteStr testData1(500000, 1234567);
+	ByteStr testData1(500000, 123);
 	stack.local.WriteData(testData1);
 	BOOST_REQUIRE(stack.WaitForDataSize(testData1));
 }

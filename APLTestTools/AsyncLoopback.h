@@ -29,7 +29,7 @@ namespace apl
 class AsyncLoopback : public AsyncPhysLayerMonitor
 {
 public:
-	AsyncLoopback(Logger*, IPhysicalLayerAsync*, ITimerSource*, size_t aRepeatDataCount = 1, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
+	AsyncLoopback(Logger*, IPhysicalLayerAsync*, ITimerSource*, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
 
 	size_t mBytesWritten;
 	size_t mBytesRead;
@@ -37,13 +37,12 @@ public:
 private:
 
 	CopyableBuffer mRead;
-	CopyableBuffer mWrite;
-	size_t mRepeatDataCount;
+	CopyableBuffer mWrite;	
 
 	void OnStateChange(PhysLayerState) {}
 
 	void _OnReceive(const boost::uint8_t*, size_t);
-	void _OnSendSuccess(void) {}
+	void _OnSendSuccess(void);
 	void _OnSendFailure(void) {}
 
 	void OnPhysicalLayerOpen(void);
