@@ -47,8 +47,10 @@ PhysicalLayerAsyncBaseTCP::PhysicalLayerAsyncBaseTCP(Logger* apLogger, boost::as
 
 void PhysicalLayerAsyncBaseTCP::DoClose()
 {
-	error_code ec;
+
+	boost::system::error_code ec;
 	LOG_BLOCK(LEV_WARNING, "Shutdown socket...")
+
 	mSocket.shutdown(ip::tcp::socket::shutdown_both, ec);
 	if(ec) LOG_BLOCK(LEV_WARNING, ec.message());
 
@@ -56,24 +58,23 @@ void PhysicalLayerAsyncBaseTCP::DoClose()
 	if(ec) LOG_BLOCK(LEV_WARNING, ec.message());
 }
 
-/*
-void PhysicalLayerAsyncBaseTCP::DoOpenSuccess()
-{
-	//mSocket.set_option(ip::tcp::no_delay(true));
-	LOG_BLOCK(LEV_INFO, "Successful conneciton");
-}
-*/
-
 void PhysicalLayerAsyncBaseTCP::DoAsyncRead(boost::uint8_t* apBuffer, size_t aMaxBytes)
 {
 	mSocket.async_read_some(buffer(apBuffer, aMaxBytes),
-	                        boost::bind(&PhysicalLayerAsyncBaseTCP::OnReadCallback, this, placeholders::error, apBuffer, placeholders::bytes_transferred));
+	                        boost::bind(&PhysicalLayerAsyncBaseTCP::OnReadCallback,
+							            this,
+							            boost::asio::placeholders::error,
+							            apBuffer,
+							            boost::asio::placeholders::bytes_transferred));
 }
 
 void PhysicalLayerAsyncBaseTCP::DoAsyncWrite(const boost::uint8_t* apBuffer, size_t aNumBytes)
 {
 	async_write(mSocket, buffer(apBuffer, aNumBytes),
-	            boost::bind(&PhysicalLayerAsyncBaseTCP::OnWriteCallback, this, placeholders::error, aNumBytes));
+	            boost::bind(&PhysicalLayerAsyncBaseTCP::OnWriteCallback,
+				            this,
+				            boost::asio::placeholders::error,
+				            aNumBytes));
 }
 
 void PhysicalLayerAsyncBaseTCP::DoOpenFailure()
@@ -84,3 +85,4 @@ void PhysicalLayerAsyncBaseTCP::DoOpenFailure()
 
 }
 
+/* vim: set ts=4 sw=4: */

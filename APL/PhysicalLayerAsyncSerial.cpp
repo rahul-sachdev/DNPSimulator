@@ -65,7 +65,7 @@ void PhysicalLayerAsyncSerial::DoOpen()
 
 void PhysicalLayerAsyncSerial::DoClose()
 {
-	error_code ec;
+	boost::system::error_code ec;
 	mPort.close(ec);
 	if(ec) LOG_BLOCK(LEV_WARNING, ec.message());
 }
@@ -78,14 +78,22 @@ void PhysicalLayerAsyncSerial::DoOpenSuccess()
 void PhysicalLayerAsyncSerial::DoAsyncRead(boost::uint8_t* apBuffer, size_t aMaxBytes)
 {
 	mPort.async_read_some(buffer(apBuffer, aMaxBytes),
-	                      boost::bind(&PhysicalLayerAsyncSerial::OnReadCallback, this, placeholders::error, apBuffer, placeholders::bytes_transferred));
+	                      boost::bind(&PhysicalLayerAsyncSerial::OnReadCallback,
+						              this,
+						              boost::asio::placeholders::error,
+						              apBuffer,
+						              boost::asio::placeholders::bytes_transferred));
 }
 
 void PhysicalLayerAsyncSerial::DoAsyncWrite(const boost::uint8_t* apBuffer, size_t aNumBytes)
 {
 	async_write(mPort, buffer(apBuffer, aNumBytes),
-	            boost::bind(&PhysicalLayerAsyncSerial::OnWriteCallback, this, placeholders::error, aNumBytes));
+	            boost::bind(&PhysicalLayerAsyncSerial::OnWriteCallback,
+				            this,
+				            boost::asio::placeholders::error,
+				            aNumBytes));
 }
 
 }
 
+/* vim: set ts=4 sw=4: */
