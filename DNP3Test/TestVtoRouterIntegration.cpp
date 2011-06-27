@@ -46,10 +46,10 @@ using namespace apl::dnp;
 
 #if defined(WIN32)
 /* Windows platform */
-#define PORT_VALUE			(50000)
+#define MACRO_PORT_VALUE	(50000)
 #else
 /* Generic Linux platform */
-#define PORT_VALUE			(30000)
+#define MACRO_PORT_VALUE	(30000)
 #endif
 
 class MockClientConnection : public AsyncPhysLayerMonitor
@@ -135,7 +135,7 @@ public:
 class VtoTestStack : public LogTester
 {
 public:
-	VtoTestStack(bool clientOnSlave = true, FilterLevel level = LEV_INTERPRET, boost::uint16_t port = PORT_VALUE) :
+	VtoTestStack(bool clientOnSlave = true, FilterLevel level = LEV_INTERPRET, boost::uint16_t port = MACRO_PORT_VALUE) :
 		LogTester(),
 		mpMainLogger(mLog.GetLogger(level, "main")),
 		ltf(&mLog, "integration.log", true),
