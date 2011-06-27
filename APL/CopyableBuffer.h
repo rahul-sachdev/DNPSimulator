@@ -32,15 +32,16 @@ namespace apl
 */
 class CopyableBuffer
 {
+
 public:
-	// Construct null bufer
+	// Construct null buffer
 	CopyableBuffer();
 	// Construct based on starting size of buffer
 	CopyableBuffer(size_t aSize);
 	CopyableBuffer(const boost::uint8_t*, size_t aSize);
 	CopyableBuffer(const CopyableBuffer&);
 	CopyableBuffer& operator=(const CopyableBuffer&);
-	~CopyableBuffer();
+	~CopyableBuffer();	
 
 	bool operator==( const CopyableBuffer& other) const;
 	bool operator!=( const CopyableBuffer& other) const {

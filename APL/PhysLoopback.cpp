@@ -17,14 +17,14 @@
 // under the License.
 //
 
-#include "AsyncLoopback.h"
+#include "PhysLoopback.h"
 
-#include <APL/IPhysicalLayerAsync.h>
+#include "IPhysicalLayerAsync.h"
 
 namespace apl
 {
 
-AsyncLoopback::AsyncLoopback(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc, FilterLevel aLevel, bool aImmediate) :
+PhysLoopback::PhysLoopback(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc, FilterLevel aLevel, bool aImmediate) :
 	Loggable(apLogger),
 	AsyncPhysLayerMonitor(apLogger, apPhys, apTimerSrc, 5000),
 	mBytesWritten(0),
@@ -35,12 +35,12 @@ AsyncLoopback::AsyncLoopback(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITim
 
 }
 
-void AsyncLoopback::StartRead()
+void PhysLoopback::StartRead()
 {
 	mpPhys->AsyncRead(mRead, mRead.Size());
 }
 
-void AsyncLoopback::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
+void PhysLoopback::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
 {
 	mBytesRead += aNumBytes;
 	if(mpPhys->CanWrite()) {
@@ -50,18 +50,23 @@ void AsyncLoopback::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
 	}
 }
 
-void AsyncLoopback::_OnSendSuccess(void)
+void PhysLoopback::_OnSendSuccess(void)
+{
+	
+}
+
+void PhysLoopback::_OnSendFailure(void)
 {
 
 }
 
-void AsyncLoopback::OnPhysicalLayerOpen(void)
+void PhysLoopback::OnPhysicalLayerOpen(void)
 {
 	LOG_BLOCK(LEV_INFO, "Opened");
 	this->StartRead();
 }
 
-void AsyncLoopback::OnPhysicalLayerClose(void)
+void PhysLoopback::OnPhysicalLayerClose(void)
 {
 	LOG_BLOCK(LEV_INFO, "Closed");
 }

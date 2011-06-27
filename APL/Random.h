@@ -16,41 +16,43 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_LOOPBACK_H_
-#define __ASYNC_LOOPBACK_H_
+#ifndef __RANDOM_H_
+#define __RANDOM_H_
 
-#include <APLTestTools/AsyncTestObjectASIO.h>
-#include <APL/AsyncPhysLayerMonitor.h>
-#include <APL/CopyableBuffer.h>
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/variate_generator.hpp>
 
 namespace apl
 {
 
-class AsyncLoopback : public AsyncPhysLayerMonitor
+template<class T>
+class Random
 {
-public:
-	AsyncLoopback(Logger*, IPhysicalLayerAsync*, ITimerSource*, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
 
-	size_t mBytesWritten;
-	size_t mBytesRead;
+public:
+	Random(T aMin = std::numeric_limits<T>::min(), T aMax = std::numeric_limits<T>::max()) :
+		rng(),
+		dist(aMin, aMax),
+		nextRand(rng, dist)
+	{
+	
+	}
+
+	T Next()
+	{
+		T ret = nextRand();
+		return ret;
+	}
 
 private:
-
-	CopyableBuffer mRead;
-	CopyableBuffer mWrite;	
-
-	void OnStateChange(PhysLayerState) {}
-
-	void _OnReceive(const boost::uint8_t*, size_t);
-	void _OnSendSuccess(void);
-	void _OnSendFailure(void) {}
-
-	void OnPhysicalLayerOpen(void);
-	void OnPhysicalLayerClose(void);
-
-	void StartRead();
+	boost::mt19937 rng;
+	boost::uniform_int<T> dist;
+	boost::variate_generator<boost::mt19937&, boost::uniform_int<T> > nextRand;
 };
+
 
 }
 
 #endif
+

@@ -16,10 +16,10 @@
  */
 
 #include <boost/test/unit_test.hpp>
+
 #include <APLTestTools/TestHelpers.h>
 #include <APLTestTools/MockCommandAcceptor.h>
 #include <APLTestTools/AsyncTestObjectASIO.h>
-#include <APLTestTools/AsyncLoopback.h>
 #include <APLTestTools/BufferHelpers.h>
 #include <APLTestTools/LogTester.h>
 
@@ -28,6 +28,7 @@
 #include <APL/LogToFile.h>
 #include <APL/FlexibleDataObserver.h>
 #include <APL/AsyncPhysLayerMonitor.h>
+#include <APL/PhysLoopback.h>
 
 #include <DNP3/AsyncStackManager.h>
 #include <DNP3/SlaveStackConfig.h>
@@ -207,7 +208,7 @@ public:
 	PhysicalLayerAsyncTCPClient client;
 	PhysicalLayerAsyncTCPServer server;
 
-	AsyncLoopback loopback;
+	PhysLoopback loopback;
 
 	MockClientConnection local;
 };
