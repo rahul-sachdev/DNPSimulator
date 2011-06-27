@@ -27,10 +27,10 @@ namespace apl
 namespace dnp
 {
 
-enum VtoDataType{
-	REMOTE_CLOSED,
-	REMOTE_OPENED,
-	DATA
+enum VtoDataType {
+    REMOTE_CLOSED,
+    REMOTE_OPENED,
+    DATA
 };
 
 class VtoData

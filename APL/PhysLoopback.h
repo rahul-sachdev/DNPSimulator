@@ -33,13 +33,12 @@ class PhysLoopback : public AsyncPhysLayerMonitor
 public:
 	PhysLoopback(Logger*, IPhysicalLayerAsync*, ITimerSource*, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
 
-	size_t mBytesWritten;
 	size_t mBytesRead;
+	size_t mBytesWritten;
 
 private:
 
-	CopyableBuffer mRead;
-	CopyableBuffer mWrite;	
+	CopyableBuffer mBuffer;
 
 	void OnStateChange(PhysLayerState) {}
 

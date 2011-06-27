@@ -48,9 +48,10 @@ VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVto
 
 }
 
-VtoRouter::~VtoRouter(){
+VtoRouter::~VtoRouter()
+{
 	size_t s = mVtoTxBuffer.size();
-	while(s-- >0) {
+	while(s-- > 0) {
 		delete mVtoTxBuffer.front();
 		mVtoTxBuffer.pop();
 	}
@@ -131,10 +132,10 @@ void VtoRouter::CheckForVtoWrite()
 {
 	// need to check mPermanentlyStopped, we will often get a physical layer closed notification after
 	// we have already stopped and disposed of the dnp3 stack so we need to not call anything on mpVtoWriter
-	if(!mPermanentlyStopped && !mVtoTxBuffer.empty()){
+	if(!mPermanentlyStopped && !mVtoTxBuffer.empty()) {
 		VtoDataType type = mVtoTxBuffer.front()->mType;
 		// type DATA means this is a buffer and we need to pull the data out and send it to the vto writer
-		if(type == DATA){
+		if(type == DATA) {
 			ShiftableBuffer* pBuffer = &mVtoTxBuffer.front()->mBuffer;
 			size_t num = pBuffer->NumReadBytes();
 			if(num > 0) {
@@ -145,14 +146,15 @@ void VtoRouter::CheckForVtoWrite()
 				this->CheckForPhysRead();
 			}
 			// if the buffer was empty and we have other types of data to send pop the buffer off and recheck
-			if(num == 0 && mVtoTxBuffer.size() > 1){
+			if(num == 0 && mVtoTxBuffer.size() > 1) {
 				delete mVtoTxBuffer.front();
 				mVtoTxBuffer.pop();
 				this->CheckForVtoWrite();
 			}
-		}else{
+		}
+		else {
 			// if we have generated REMOTE_OPENED or REMOTE_CLOSED message we need to send the SetLocalVtoState
-			// update to the vtowriter so it can be serialized in the correct order. 
+			// update to the vtowriter so it can be serialized in the correct order.
 			mpVtoWriter->SetLocalVtoState(type == REMOTE_OPENED, this->GetChannelId());
 			delete mVtoTxBuffer.front();
 			mVtoTxBuffer.pop();
@@ -180,7 +182,7 @@ void VtoRouter::_OnSendFailure()
 void VtoRouter::CheckForPhysRead()
 {
 	if(mpPhys->CanRead()) {
-		// the last entry in the buffer will always be the DATA buffer if we have a local 
+		// the last entry in the buffer will always be the DATA buffer if we have a local
 		// connection open.
 		ShiftableBuffer* pBuffer = &mVtoTxBuffer.back()->mBuffer;
 		size_t num = pBuffer->NumWriteBytes();
@@ -204,7 +206,7 @@ void VtoRouter::CheckForPhysWrite()
 		else {
 			// we only want to handle the remotely sent online/offline message when are not in the process
 			// of sending data (waiting for a SendSuccess or SendFailure message)
-			if(!mpPhys->IsWriting()){
+			if(!mpPhys->IsWriting()) {
 				this->mPhysLayerTxBuffer.pop();
 				this->DoVtoRemoteConnectedChanged(type == REMOTE_OPENED);
 			}

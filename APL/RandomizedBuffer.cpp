@@ -20,9 +20,9 @@
 #include "RandomizedBuffer.h"
 
 namespace apl
-{	
+{
 
-RandomizedBuffer::RandomizedBuffer(size_t aSize) : 
+RandomizedBuffer::RandomizedBuffer(size_t aSize) :
 	CopyableBuffer(aSize),
 	rand()
 {
@@ -31,7 +31,7 @@ RandomizedBuffer::RandomizedBuffer(size_t aSize) :
 
 void RandomizedBuffer::Randomize()
 {
-	for(size_t i=0; i<this->Size(); ++i) mpBuff[i] = rand.Next();
+	for(size_t i = 0; i < this->Size(); ++i) mpBuff[i] = rand.Next();
 }
-		
+
 }

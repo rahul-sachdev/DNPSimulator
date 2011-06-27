@@ -36,7 +36,7 @@ VtoData::VtoData(size_t aSize) :
 	assert(aSize <= MAX_SIZE);
 }
 
-VtoData::VtoData(VtoDataType aType) : 
+VtoData::VtoData(VtoDataType aType) :
 	mSize(0), mType(aType)
 {}
 

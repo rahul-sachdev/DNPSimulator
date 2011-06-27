@@ -62,19 +62,19 @@ void PhysicalLayerAsyncBaseTCP::DoAsyncRead(boost::uint8_t* apBuffer, size_t aMa
 {
 	mSocket.async_read_some(buffer(apBuffer, aMaxBytes),
 	                        boost::bind(&PhysicalLayerAsyncBaseTCP::OnReadCallback,
-							            this,
-							            boost::asio::placeholders::error,
-							            apBuffer,
-							            boost::asio::placeholders::bytes_transferred));
+	                                    this,
+	                                    boost::asio::placeholders::error,
+	                                    apBuffer,
+	                                    boost::asio::placeholders::bytes_transferred));
 }
 
 void PhysicalLayerAsyncBaseTCP::DoAsyncWrite(const boost::uint8_t* apBuffer, size_t aNumBytes)
 {
 	async_write(mSocket, buffer(apBuffer, aNumBytes),
 	            boost::bind(&PhysicalLayerAsyncBaseTCP::OnWriteCallback,
-				            this,
-				            boost::asio::placeholders::error,
-				            aNumBytes));
+	                        this,
+	                        boost::asio::placeholders::error,
+	                        aNumBytes));
 }
 
 void PhysicalLayerAsyncBaseTCP::DoOpenFailure()

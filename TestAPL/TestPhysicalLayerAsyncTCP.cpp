@@ -218,11 +218,11 @@ BOOST_AUTO_TEST_CASE(Loopback)
 	AsyncTestObjectASIO test;
 	TimerSourceASIO timerSource(test.GetService());
 	PhysicalLayerAsyncTCPServer server(pLogger->GetSubLogger("server"), test.GetService(), "127.0.0.1", 30000);
-	
-	PhysLoopback loopback(pLogger->GetSubLogger("loopback"), &server, &timerSource, LEV_WARNING, false);	
+
+	PhysLoopback loopback(pLogger->GetSubLogger("loopback"), &server, &timerSource, LEV_WARNING, false);
 	loopback.Start();
-				
-	PhysicalLayerAsyncTCPClient client(pLogger->GetSubLogger("client"), test.GetService(), "127.0.0.1", 30000);	
+
+	PhysicalLayerAsyncTCPClient client(pLogger->GetSubLogger("client"), test.GetService(), "127.0.0.1", 30000);
 	LowerLayerToPhysAdapter adapter(pLogger->GetSubLogger("adapter"), &client);
 	MockUpperLayer upper(pLogger->GetSubLogger("mock"));
 	adapter.SetUpperLayer(&upper);
@@ -232,7 +232,7 @@ BOOST_AUTO_TEST_CASE(Loopback)
 
 	RandomizedBuffer rb(SIZE);
 
-	for(size_t i = 0; i < ITERATIONS; ++i) {		
+	for(size_t i = 0; i < ITERATIONS; ++i) {
 		rb.Randomize();
 		upper.SendDown(rb, rb.Size());
 		BOOST_REQUIRE(test.ProceedUntil(boost::bind(&MockUpperLayer::BufferEquals, &upper, rb.Buffer(), rb.Size())));

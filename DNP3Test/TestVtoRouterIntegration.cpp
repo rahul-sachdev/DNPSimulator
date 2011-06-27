@@ -156,12 +156,13 @@ public:
 		masterMgr.AddMaster("dnp-tcp-client", "master", level, &fdo, MasterStackConfig());
 
 		// switch if master or slave gets the loopback half of the server
-		if(clientOnSlave){
+		if(clientOnSlave) {
 			slaveMgr.AddTCPClient("vto-tcp-client", PhysLayerSettings(), "127.0.0.1", port + 10);
 			slaveMgr.StartVtoRouter("vto-tcp-client", "slave", VtoRouterSettings(88, false, false, 4096, 1000));
 			masterMgr.AddTCPServer("vto-tcp-server", PhysLayerSettings(), "127.0.0.1", port + 20);
 			masterMgr.StartVtoRouter("vto-tcp-server", "master", VtoRouterSettings(88, true, false, 4096, 1000));
-		}else{
+		}
+		else {
 			masterMgr.AddTCPClient("vto-tcp-client", PhysLayerSettings(), "127.0.0.1", port + 10);
 			masterMgr.StartVtoRouter("vto-tcp-client", "master", VtoRouterSettings(88, false, false, 4096, 1000));
 			slaveMgr.AddTCPServer("vto-tcp-server", PhysLayerSettings(), "127.0.0.1", port + 20);
@@ -185,10 +186,10 @@ public:
 		return testObj.ProceedUntil(boost::bind(&MockClientConnection::DataIs, &local, cb), 10000);
 	}
 
-	bool SameDataSize(CopyableBuffer& cb){
+	bool SameDataSize(CopyableBuffer& cb) {
 		return loopback.mBytesRead == cb.Size() &&
-			loopback.mBytesWritten == local.mBytesRead &&
-			loopback.mBytesRead == local.mBytesWritten;
+		       loopback.mBytesWritten == local.mBytesRead &&
+		       loopback.mBytesRead == local.mBytesWritten;
 	}
 
 	bool WaitForDataSize(CopyableBuffer& cb) {

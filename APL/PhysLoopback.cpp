@@ -27,32 +27,28 @@ namespace apl
 PhysLoopback::PhysLoopback(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc, FilterLevel aLevel, bool aImmediate) :
 	Loggable(apLogger),
 	AsyncPhysLayerMonitor(apLogger, apPhys, apTimerSrc, 5000),
-	mBytesWritten(0),
 	mBytesRead(0),
-	mRead(1024),
-	mWrite(mRead)	
+	mBytesWritten(0),
+	mBuffer(1024)
 {
 
 }
 
 void PhysLoopback::StartRead()
 {
-	mpPhys->AsyncRead(mRead, mRead.Size());
+	mpPhys->AsyncRead(mBuffer, mBuffer.Size());
 }
 
 void PhysLoopback::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
 {
 	mBytesRead += aNumBytes;
-	if(mpPhys->CanWrite()) {
-		memcpy(mWrite, mRead, aNumBytes);
-		mpPhys->AsyncWrite(mWrite, aNumBytes);
-		this->StartRead();
-	}
+	mBytesWritten += aNumBytes;
+	mpPhys->AsyncWrite(mBuffer, aNumBytes);
 }
 
 void PhysLoopback::_OnSendSuccess(void)
 {
-	
+	this->StartRead();
 }
 
 void PhysLoopback::_OnSendFailure(void)

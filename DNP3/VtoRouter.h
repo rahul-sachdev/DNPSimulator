@@ -44,10 +44,11 @@ struct VtoRouterSettings;
  * helper object that allows us to serialize data and up/down communication events into
  * the same data stream
  */
-class VtoDataChunk{
+class VtoDataChunk
+{
 public:
 	VtoDataChunk(VtoDataType aType, size_t aBufferSize) :
-	mType(aType), mBuffer(aBufferSize){}
+		mType(aType), mBuffer(aBufferSize) {}
 
 	VtoDataType     mType;
 	ShiftableBuffer mBuffer;

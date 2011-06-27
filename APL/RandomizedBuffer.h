@@ -28,13 +28,13 @@ namespace apl
 class RandomizedBuffer : public CopyableBuffer
 {
 
-	public:
-			
-	RandomizedBuffer(size_t aSize);	
+public:
+
+	RandomizedBuffer(size_t aSize);
 
 	void Randomize();
 
-	private:
+private:
 	Random<boost::uint8_t> rand;
 };
 

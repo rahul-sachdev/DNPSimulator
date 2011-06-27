@@ -99,7 +99,7 @@ TaskResult VtoTransmitTask::_OnPartialResponse(const APDU& arAPDU)
 
 TaskResult VtoTransmitTask::_OnFinalResponse(const APDU& arAPDU)
 {
-	
+
 	/* Remove the written data from the buffer */
 	size_t cleared = this->mBuffer.ClearWrittenEvents();
 

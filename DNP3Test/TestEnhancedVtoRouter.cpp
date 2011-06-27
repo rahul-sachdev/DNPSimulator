@@ -55,7 +55,7 @@ public:
 		BOOST_REQUIRE_EQUAL(vto.mValue.mpData[1], (connected ? 0 : 1));
 	}
 
-	void SetRemoteState(bool online){
+	void SetRemoteState(bool online) {
 		VtoData data(online ? REMOTE_OPENED : REMOTE_CLOSED);
 		router.OnVtoDataReceived(data);
 	}
@@ -86,11 +86,11 @@ public:
 		BOOST_REQUIRE_EQUAL(vto.mValue.mpData[0], 88);
 		BOOST_REQUIRE_EQUAL(vto.mValue.mpData[1], (connected ? 0 : 1));
 	}
-	void SetRemoteState(bool online){
+	void SetRemoteState(bool online) {
 		VtoData data(online ? REMOTE_OPENED : REMOTE_CLOSED);
 		router.OnVtoDataReceived(data);
 	}
-	void CheckVtoData(const std::string& arData){
+	void CheckVtoData(const std::string& arData) {
 		VtoEvent vto;
 		BOOST_REQUIRE(writer.Read(vto));
 		BOOST_REQUIRE_EQUAL(88, vto.mIndex); // the channel id

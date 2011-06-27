@@ -41,7 +41,7 @@ public:
 	CopyableBuffer(const boost::uint8_t*, size_t aSize);
 	CopyableBuffer(const CopyableBuffer&);
 	CopyableBuffer& operator=(const CopyableBuffer&);
-	~CopyableBuffer();	
+	~CopyableBuffer();
 
 	bool operator==( const CopyableBuffer& other) const;
 	bool operator!=( const CopyableBuffer& other) const {

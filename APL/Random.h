@@ -34,13 +34,11 @@ public:
 	Random(T aMin = std::numeric_limits<T>::min(), T aMax = std::numeric_limits<T>::max()) :
 		rng(),
 		dist(aMin, aMax),
-		nextRand(rng, dist)
-	{
-	
+		nextRand(rng, dist) {
+
 	}
 
-	T Next()
-	{
+	T Next() {
 		T ret = nextRand();
 		return ret;
 	}
