@@ -21,20 +21,27 @@
 
 #include "Lock.h"
 #include "LogBase.h"
-#include "Singleton.h"
 
 namespace apl
 {
 
 class LogToStdio : public ILogBase
-{
-	MACRO_SINGLETON_INSTANCE(LogToStdio);
+{	
 
 public:
+	static LogToStdio* Inst(){ return &mInstance; }	
+
 	void Log( const LogEntry& arEntry );
 	void SetVar(const std::string& aSource, const std::string& aVarName, int aValue) {}
 
+	void SetPrintLocation(bool aPrintLocation);
+
+protected:
+	LogToStdio();
+
 private:
+	static LogToStdio mInstance;
+	bool mPrintLocation;
 	SigLock mLock;
 };
 

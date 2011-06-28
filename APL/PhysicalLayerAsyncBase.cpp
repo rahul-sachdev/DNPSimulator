@@ -196,7 +196,7 @@ void PhysicalLayerAsyncBase::OnReadCallback(const boost::system::error_code& arE
 		}
 		else {
 			if(mState.mClosing) {
-				LOG_BLOCK(LEV_WARNING, "Ignoring received bytes since layer is closing: " << aSize);
+				LOG_BLOCK(LEV_DEBUG, "Ignoring received bytes since layer is closing: " << aSize);
 			}
 			else {
 				this->DoReadCallback(apBuff, aSize);
@@ -219,7 +219,7 @@ void PhysicalLayerAsyncBase::OnWriteCallback(const boost::system::error_code& ar
 		}
 		else {
 			if(mState.mClosing) {
-				LOG_BLOCK(LEV_WARNING, "Ignoring written bytes since layer is closing: " << aNumBytes);
+				LOG_BLOCK(LEV_DEBUG, "Ignoring written bytes since layer is closing: " << aNumBytes);
 			}
 			else {
 				this->DoWriteSuccess();

@@ -50,11 +50,11 @@ void EnhancedVtoRouter::SetLocalConnected(bool aConnected)
 		this->HandleSetLocalConnected();
 
 		if(aConnected) {
-			mVtoTxBuffer.push(new VtoDataChunk(REMOTE_OPENED, 0));
-			mVtoTxBuffer.push(new VtoDataChunk(DATA, 4096));
+			mVtoTxBuffer.push(new VtoDataChunk(VTODT_REMOTE_OPENED, 0));
+			mVtoTxBuffer.push(new VtoDataChunk(VTODT_DATA, 4096));
 		}
 		else {
-			mVtoTxBuffer.push(new VtoDataChunk(REMOTE_CLOSED, 0));
+			mVtoTxBuffer.push(new VtoDataChunk(VTODT_REMOTE_CLOSED, 0));
 		}
 
 

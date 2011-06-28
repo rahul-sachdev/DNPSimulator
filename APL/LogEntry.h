@@ -57,7 +57,7 @@ public:
 	int					GetErrorCode() const {
 		return mErrorCode;
 	}
-	std::string			LogString() const;
+	std::string			LogString(bool aUseLocation = false) const;
 
 	bool GetValue(const std::string& arKey, std::string& arValue) const;
 	bool GetValue(const std::string& arKey, int& arValue) const;

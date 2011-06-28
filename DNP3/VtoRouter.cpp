@@ -70,7 +70,7 @@ void VtoRouter::DoStopRouter()
 
 void VtoRouter::OnVtoDataReceived(const VtoData& arData)
 {
-	LOG_BLOCK(LEV_INTERPRET, "GotRemoteData: " << arData.GetSize() << " Type: " << arData.GetType());
+	LOG_BLOCK(LEV_INFO, "GotRemoteData: " << arData.GetSize() << " Type: " << ToString(arData.GetType()));
 
 	/*
 	 * This will create a container object that allows us to hold the data
@@ -85,16 +85,16 @@ void VtoRouter::OnVtoDataReceived(const VtoData& arData)
 void VtoRouter::DoStart()
 {
 	if(mPermanentlyStopped) {
-		LOG_BLOCK(LEV_INFO, "Permenantly Stopped")
+		LOG_BLOCK(LEV_DEBUG, "Permenantly Stopped")
 	}
 	else {
 		if(!mReopenPhysicalLayer) {
 			mReopenPhysicalLayer = true;
-			LOG_BLOCK(LEV_INFO, "Starting VtoRouted Port")
+			LOG_BLOCK(LEV_DEBUG, "Starting VtoRouted Port")
 			this->Start();
 		}
 		else {
-			LOG_BLOCK(LEV_INFO, "Already started")
+			LOG_BLOCK(LEV_DEBUG, "Already started")
 		}
 	}
 }
@@ -104,17 +104,17 @@ void VtoRouter::DoStop()
 
 	if(mReopenPhysicalLayer) {
 		mReopenPhysicalLayer = false;
-		LOG_BLOCK(LEV_INFO, "Stopping VtoRouted Port")
+		LOG_BLOCK(LEV_DEBUG, "Stopping VtoRouted Port")
 		this->Stop();
 	}
 	else {
-		LOG_BLOCK(LEV_INFO, "Already stopped")
+		LOG_BLOCK(LEV_DEBUG, "Already stopped")
 	}
 }
 
 void VtoRouter::_OnReceive(const boost::uint8_t* apData, size_t aLength)
 {
-	LOG_BLOCK(LEV_INTERPRET, "GotLocalData: " << aLength);
+	LOG_BLOCK(LEV_COMM, "GotLocalData: " << aLength);
 	mVtoTxBuffer.back()->mBuffer.AdvanceWrite(aLength);
 
 	this->CheckForVtoWrite();
@@ -128,7 +128,7 @@ void VtoRouter::CheckForVtoWrite()
 	if(!mPermanentlyStopped && !mVtoTxBuffer.empty()) {
 		VtoDataType type = mVtoTxBuffer.front()->mType;
 		// type DATA means this is a buffer and we need to pull the data out and send it to the vto writer
-		if(type == DATA) {
+		if(type == VTODT_DATA) {
 			ShiftableBuffer* pBuffer = &mVtoTxBuffer.front()->mBuffer;
 			size_t num = pBuffer->NumReadBytes();
 			if(num > 0) {
@@ -148,7 +148,7 @@ void VtoRouter::CheckForVtoWrite()
 		else {
 			// if we have generated REMOTE_OPENED or REMOTE_CLOSED message we need to send the SetLocalVtoState
 			// update to the vtowriter so it can be serialized in the correct order.
-			mpVtoWriter->SetLocalVtoState(type == REMOTE_OPENED, this->GetChannelId());
+			mpVtoWriter->SetLocalVtoState(type == VTODT_REMOTE_OPENED, this->GetChannelId());
 			delete mVtoTxBuffer.front();
 			mVtoTxBuffer.pop();
 			this->CheckForVtoWrite();
@@ -189,11 +189,11 @@ void VtoRouter::CheckForPhysWrite()
 {
 	if(!mPhysLayerTxBuffer.empty()) {
 		VtoDataType type = mPhysLayerTxBuffer.front().GetType();
-		if(type == DATA) {
+		if(type == VTODT_DATA) {
 			// only write to the physical layer if we have a valid local connection
 			if(mpPhys->CanWrite()) {
 				mpPhys->AsyncWrite(mPhysLayerTxBuffer.front().mpData, mPhysLayerTxBuffer.front().GetSize());
-				LOG_BLOCK(LEV_INTERPRET, "Wrote: " << mPhysLayerTxBuffer.front().GetSize());
+				LOG_BLOCK(LEV_COMM, "Wrote: " << mPhysLayerTxBuffer.front().GetSize());
 			}
 		}
 		else {
@@ -201,7 +201,7 @@ void VtoRouter::CheckForPhysWrite()
 			// of sending data (waiting for a SendSuccess or SendFailure message)
 			if(!mpPhys->IsWriting()) {
 				this->mPhysLayerTxBuffer.pop();
-				this->DoVtoRemoteConnectedChanged(type == REMOTE_OPENED);
+				this->DoVtoRemoteConnectedChanged(type == VTODT_REMOTE_OPENED);
 			}
 		}
 	}

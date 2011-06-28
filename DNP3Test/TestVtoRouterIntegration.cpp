@@ -135,7 +135,12 @@ public:
 class VtoTestStack : public LogTester
 {
 public:
-	VtoTestStack(bool clientOnSlave = true, bool aImmediateOutput = false, FilterLevel level = LEV_INTERPRET, boost::uint16_t port = MACRO_PORT_VALUE) :
+	VtoTestStack(
+		bool clientOnSlave = true, 
+		bool aImmediateOutput = false, 
+		FilterLevel level = LEV_INFO, 		
+		boost::uint16_t port = MACRO_PORT_VALUE) :
+		
 		LogTester(),
 		mpMainLogger(mLog.GetLogger(level, "main")),
 		ltf(&mLog, "integration.log", true),
@@ -253,20 +258,20 @@ BOOST_AUTO_TEST_CASE(Reconnect)
 	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 }
 
-BOOST_AUTO_TEST_CASE(RemoteSideFailureBouncesLocalConnection)
+BOOST_AUTO_TEST_CASE(RemoteSideOpenFailureBouncesLocalConnection)
 {
-	VtoTestStack stack;
+	VtoTestStack test(true, false);
 
-	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
+	BOOST_REQUIRE(test.WaitForState(PLS_CLOSED));
 	
-	stack.manager.Start();
+	test.manager.Start();
 
 	// start local connection, we should immediately be able to connect to this side
-	stack.local.Start();
-	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));	
+	test.local.Start();
+	BOOST_REQUIRE(test.WaitForState(PLS_OPEN));	
 	
 	// since the remote side can't connect to the port we should have our local connection bounced
-	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
+	BOOST_REQUIRE(test.WaitForState(PLS_CLOSED));
 }
 
 BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
@@ -308,13 +313,13 @@ void TestLargeDataTransmission(VtoTestStack& arTest, size_t aSizeInBytes)
 
 BOOST_AUTO_TEST_CASE(LargeDataTransmissionMasterToSlave)
 {
-	VtoTestStack stack(true, true);
+	VtoTestStack stack(true, false);
 	TestLargeDataTransmission(stack, 500000);
 }
 
 BOOST_AUTO_TEST_CASE(LargeDataTransmissionSlaveToMaster)
 {
-	VtoTestStack stack(false);
+	VtoTestStack stack(false, false);
 	TestLargeDataTransmission(stack, 500000);
 }
 

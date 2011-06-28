@@ -86,7 +86,7 @@ void VtoReader::UpdateEnhancedVto(const VtoData& arData, boost::uint8_t aChannel
 			            VTOERR_ENHANCED_VTO_FOR_UNREGISTERED_CHANNEL);
 		}
 		else {
-			VtoData data(remoteOnline ? REMOTE_OPENED : REMOTE_CLOSED);
+			VtoData data(remoteOnline ? VTODT_REMOTE_OPENED : VTODT_REMOTE_CLOSED);
 			i->second->OnVtoDataReceived(data);
 		}
 	}

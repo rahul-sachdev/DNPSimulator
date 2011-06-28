@@ -56,7 +56,7 @@ public:
 	}
 
 	void SetRemoteState(bool online) {
-		VtoData data(online ? REMOTE_OPENED : REMOTE_CLOSED);
+		VtoData data(online ? VTODT_REMOTE_OPENED : VTODT_REMOTE_CLOSED);
 		router.OnVtoDataReceived(data);
 	}
 
@@ -87,7 +87,7 @@ public:
 		BOOST_REQUIRE_EQUAL(vto.mValue.mpData[1], (connected ? 0 : 1));
 	}
 	void SetRemoteState(bool online) {
-		VtoData data(online ? REMOTE_OPENED : REMOTE_CLOSED);
+		VtoData data(online ? VTODT_REMOTE_OPENED : VTODT_REMOTE_CLOSED);
 		router.OnVtoDataReceived(data);
 	}
 	void CheckVtoData(const std::string& arData) {

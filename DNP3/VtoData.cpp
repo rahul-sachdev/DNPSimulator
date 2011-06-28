@@ -26,12 +26,22 @@ namespace apl
 namespace dnp
 {
 
+std::string ToString(VtoDataType aType)
+{
+	switch(aType) {
+		case(VTODT_DATA): return "DATA";
+		case(VTODT_REMOTE_CLOSED): return "REMOTE_CLOSED";
+		case(VTODT_REMOTE_OPENED): return "REMOTE_OPENED";
+		default: return "Unknown VtoDataType";
+	}
+}
+
 VtoData::VtoData() :
-	mSize(0), mType(DATA)
+	mSize(0), mType(VTODT_DATA)
 {}
 
 VtoData::VtoData(size_t aSize) :
-	mSize(aSize), mType(DATA)
+	mSize(aSize), mType(VTODT_DATA)
 {
 	assert(aSize <= MAX_SIZE);
 }
@@ -41,7 +51,7 @@ VtoData::VtoData(VtoDataType aType) :
 {}
 
 VtoData::VtoData(const boost::uint8_t* apValue, size_t aSize) :
-	mType(DATA)
+	mType(VTODT_DATA)
 {
 	this->Copy(apValue, aSize);
 }

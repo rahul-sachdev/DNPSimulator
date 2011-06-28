@@ -20,6 +20,7 @@
 
 #include <APL/Types.h>
 
+#include <string>
 
 namespace apl
 {
@@ -28,10 +29,12 @@ namespace dnp
 {
 
 enum VtoDataType {
-    REMOTE_CLOSED,
-    REMOTE_OPENED,
-    DATA
+    VTODT_REMOTE_CLOSED,
+    VTODT_REMOTE_OPENED,
+    VTODT_DATA
 };
+
+std::string ToString(VtoDataType aType);
 
 class VtoData
 {

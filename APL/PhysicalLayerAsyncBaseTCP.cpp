@@ -47,9 +47,7 @@ PhysicalLayerAsyncBaseTCP::PhysicalLayerAsyncBaseTCP(Logger* apLogger, boost::as
 
 void PhysicalLayerAsyncBaseTCP::DoClose()
 {
-
-	boost::system::error_code ec;
-	LOG_BLOCK(LEV_WARNING, "Shutdown socket...")
+	boost::system::error_code ec;	
 
 	mSocket.shutdown(ip::tcp::socket::shutdown_both, ec);
 	if(ec) LOG_BLOCK(LEV_WARNING, ec.message());
@@ -79,7 +77,7 @@ void PhysicalLayerAsyncBaseTCP::DoAsyncWrite(const boost::uint8_t* apBuffer, siz
 
 void PhysicalLayerAsyncBaseTCP::DoOpenFailure()
 {
-	LOG_BLOCK(LEV_INFO, "Failed socket open, closing socket");
+	LOG_BLOCK(LEV_DEBUG, "Failed socket open, closing socket");
 	DoClose();
 }
 
