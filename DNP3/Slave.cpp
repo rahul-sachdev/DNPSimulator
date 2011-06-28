@@ -81,16 +81,16 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	        mpTimerSrc
 	    )
 	);
-	
+
 	/*
 	 * Incoming vto data will trigger a POST on the timer source to call
 	 * Slave::OnVtoUpdate().
 	 */
 	mVtoWriter.AddObserver(
-		mNotifierSource.Get(
-	                    boost::bind(&Slave::OnVtoUpdate, this),
-	                    mpTimerSrc
-		)
+	    mNotifierSource.Get(
+	        boost::bind(&Slave::OnVtoUpdate, this),
+	        mpTimerSrc
+	    )
 	);
 
 	/* Cause the slave to go through the null-unsol startup sequence */
@@ -115,7 +115,7 @@ void Slave::UpdateState(StackStates aState)
 		mCommsStatus.Set(aState);
 		LOG_BLOCK(LEV_INFO, "StackState: " << ConvertToString(aState));
 		mState = aState;
-		if(mpObserver != NULL) mpObserver->OnStateChange(aState);		
+		if(mpObserver != NULL) mpObserver->OnStateChange(aState);
 	}
 }
 
@@ -182,7 +182,7 @@ void Slave::OnVtoUpdate()
 	 * Let the current state decide how to handle the VTO buffer.  We use the
 	 * same handler as Slave::OnDataUpdate()
 	 */
-	this->OnDataUpdate();	
+	this->OnDataUpdate();
 }
 
 void Slave::OnDataUpdate()

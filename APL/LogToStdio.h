@@ -26,10 +26,12 @@ namespace apl
 {
 
 class LogToStdio : public ILogBase
-{	
+{
 
 public:
-	static LogToStdio* Inst(){ return &mInstance; }	
+	static LogToStdio* Inst() {
+		return &mInstance;
+	}
 
 	void Log( const LogEntry& arEntry );
 	void SetVar(const std::string& aSource, const std::string& aVarName, int aValue) {}

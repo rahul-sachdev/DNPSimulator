@@ -65,8 +65,7 @@ public:
 		mBytesWritten(0),
 		mLastWriteSize(0),
 		mReadBuffer(1024),
-		mWriteBuffer(0)
-		{
+		mWriteBuffer(0) {
 		mState.push(PLS_CLOSED);
 	}
 
@@ -74,11 +73,11 @@ public:
 	size_t mCloses;
 	size_t mOpenFailures;
 
-	size_t mBytesRead;	
+	size_t mBytesRead;
 	size_t mBytesWritten;
 	size_t mLastWriteSize;
 
-	CopyableBuffer mReadBuffer;	
+	CopyableBuffer mReadBuffer;
 	CopyableBuffer mWriteBuffer;
 
 	std::queue< PhysLayerState > mState;
@@ -95,7 +94,7 @@ public:
 		mOpenFailures++;
 	}
 
-	void OnStateChange(PhysLayerState aState) {		
+	void OnStateChange(PhysLayerState aState) {
 		mState.push(aState);
 	}
 
@@ -114,7 +113,7 @@ public:
 	void WriteData(const CopyableBuffer& arData) {
 		BOOST_REQUIRE(mpPhys->CanWrite());
 		mBytesRead = 0;
-		mBytesWritten = 0;		
+		mBytesWritten = 0;
 		mWriteBuffer = arData;
 		this->TransmitNext();
 	}
@@ -138,16 +137,15 @@ public:
 			return (state == aState);
 		}
 	}
-		
+
 	bool ReceivedAllDataThatWasWritten() {
 		return mBytesRead == mWriteBuffer.Size();
 	}
 
-	private:
+private:
 
-	void TransmitNext()
-	{
-		if(mWriteBuffer.Size() > this->mBytesWritten) {			
+	void TransmitNext() {
+		if(mWriteBuffer.Size() > this->mBytesWritten) {
 			size_t remaining = mWriteBuffer.Size() - mBytesWritten;
 			size_t toWrite = apl::Min<size_t>(4096, remaining);
 			mpPhys->AsyncWrite(mWriteBuffer.Buffer() + mBytesWritten, toWrite);
@@ -161,16 +159,16 @@ class VtoTestStack : public LogTester
 {
 public:
 	VtoTestStack(
-		bool clientOnSlave = true, 
-		bool aImmediateOutput = false, 
-		FilterLevel level = LEV_INFO, 		
-		boost::uint16_t port = MACRO_PORT_VALUE) :
-		
+	    bool clientOnSlave = true,
+	    bool aImmediateOutput = false,
+	    FilterLevel level = LEV_INFO,
+	    boost::uint16_t port = MACRO_PORT_VALUE) :
+
 		LogTester(),
 		mpMainLogger(mLog.GetLogger(level, "main")),
 		ltf(&mLog, "integration.log", true),
 		testObj(),
-		manager(mLog.GetLogger(level, "manager"), false),		
+		manager(mLog.GetLogger(level, "manager"), false),
 		timerSource(testObj.GetService()),
 		client(mLog.GetLogger(level, "local-tcp-client"), testObj.GetService(), "127.0.0.1", port + 20),
 		server(mLog.GetLogger(level, "loopback-tcp-server"), testObj.GetService(), "0.0.0.0", port + 10),
@@ -186,18 +184,18 @@ public:
 		manager.AddMaster("dnp-tcp-client", "master", level, &fdo, MasterStackConfig());
 
 		// switch if master or slave gets the loopback half of the server
-		
+
 		std::string clientSideOfStack = clientOnSlave ? "slave" : "master";
 		std::string serverSideOfStack = clientOnSlave ? "master" : "slave";
 
 		manager.AddTCPClient("vto-tcp-client", PhysLayerSettings(), "127.0.0.1", port + 10);
 		manager.StartVtoRouter("vto-tcp-client", clientSideOfStack, VtoRouterSettings(88, false, false, 4096, 1000));
 		manager.AddTCPServer("vto-tcp-server", PhysLayerSettings(), "127.0.0.1", port + 20);
-		manager.StartVtoRouter("vto-tcp-server", serverSideOfStack, VtoRouterSettings(88, true, false, 4096, 1000));		
+		manager.StartVtoRouter("vto-tcp-server", serverSideOfStack, VtoRouterSettings(88, true, false, 4096, 1000));
 	}
 
 	~VtoTestStack() {
-		manager.Stop();		
+		manager.Stop();
 		local.Stop();
 		loopback.Stop();
 	}
@@ -216,7 +214,7 @@ public:
 	MockCommandAcceptor cmdAcceptor;
 
 	AsyncTestObjectASIO testObj;
-	AsyncStackManager manager;	
+	AsyncStackManager manager;
 
 	TimerSourceASIO timerSource;
 	PhysicalLayerAsyncTCPClient client;
@@ -237,14 +235,14 @@ BOOST_AUTO_TEST_CASE(Reconnect)
 	BOOST_REQUIRE(stack.WaitForLocalState(PLS_CLOSED));
 
 	// start up everything, the local side should be able to open
-	stack.manager.Start();		
+	stack.manager.Start();
 	stack.loopback.Start();
 	stack.local.Start();
 	BOOST_REQUIRE(stack.WaitForLocalState(PLS_OPEN));
 
 	RandomizedBuffer data(100);
 
-	// test that data is correctly sent both ways	
+	// test that data is correctly sent both ways
 	stack.local.WriteData(data);
 	BOOST_REQUIRE(stack.WaitForAllDataToBeEchoed());
 
@@ -271,13 +269,13 @@ BOOST_AUTO_TEST_CASE(RemoteSideOpenFailureBouncesLocalConnection)
 	VtoTestStack test(true, false);
 
 	BOOST_REQUIRE(test.WaitForLocalState(PLS_CLOSED));
-	
-	test.manager.Start();	
+
+	test.manager.Start();
 	test.local.Start();
 
-	for(size_t i=0; i<5; ++i) {
+	for(size_t i = 0; i < 5; ++i) {
 		// start local connection, we should immediately be able to connect to this side
-		BOOST_REQUIRE(test.WaitForLocalState(PLS_OPEN));		
+		BOOST_REQUIRE(test.WaitForLocalState(PLS_OPEN));
 		// since the remote side can't connect to the port we should have our local connection bounced
 		BOOST_REQUIRE(test.WaitForLocalState(PLS_CLOSED));
 	}
@@ -286,9 +284,9 @@ BOOST_AUTO_TEST_CASE(RemoteSideOpenFailureBouncesLocalConnection)
 BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 {
 	VtoTestStack stack(true, false);
-	
+
 	// start all 4 components, should connect
-	stack.manager.Start();	
+	stack.manager.Start();
 	stack.loopback.Start();
 	stack.local.Start();
 
@@ -303,9 +301,9 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 }
 
 void TestLargeDataTransmission(VtoTestStack& arTest, size_t aSizeInBytes)
-{	
+{
 	// start everything
-	arTest.manager.Start();	
+	arTest.manager.Start();
 	arTest.loopback.Start();
 	arTest.local.Start();
 	BOOST_REQUIRE(arTest.WaitForLocalState(PLS_OPEN));

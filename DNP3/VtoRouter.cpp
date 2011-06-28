@@ -213,7 +213,7 @@ void VtoRouter::OnBufferAvailable()
 }
 
 void VtoRouter::OnPhysicalLayerOpen()
-{	
+{
 	this->SetLocalConnected(true);
 
 	this->CheckForPhysRead();
@@ -237,7 +237,7 @@ void VtoRouter::OnPhysicalLayerClose()
 }
 
 void VtoRouter::OnPhysicalLayerOpenFailure()
-{	
+{
 	this->SetLocalConnected(false);
 	this->CheckForPhysWrite();
 	this->CheckForVtoWrite();

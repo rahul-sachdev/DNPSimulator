@@ -54,7 +54,9 @@ public:
 		mVtoEvents.push_back(v);
 	}
 
-	size_t NumVtoEventsAvailable() { return std::numeric_limits<size_t>::max() - mVtoEvents.size(); }
+	size_t NumVtoEventsAvailable() {
+		return std::numeric_limits<size_t>::max() - mVtoEvents.size();
+	}
 
 	std::deque<BinaryInfo> mBinaryEvents;
 	std::deque<AnalogInfo> mAnalogEvents;

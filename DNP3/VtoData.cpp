@@ -29,10 +29,10 @@ namespace dnp
 std::string ToString(VtoDataType aType)
 {
 	switch(aType) {
-		case(VTODT_DATA): return "DATA";
-		case(VTODT_REMOTE_CLOSED): return "REMOTE_CLOSED";
-		case(VTODT_REMOTE_OPENED): return "REMOTE_OPENED";
-		default: return "Unknown VtoDataType";
+	case(VTODT_DATA): return "DATA";
+	case(VTODT_REMOTE_CLOSED): return "REMOTE_CLOSED";
+	case(VTODT_REMOTE_OPENED): return "REMOTE_OPENED";
+	default: return "Unknown VtoDataType";
 	}
 }
 

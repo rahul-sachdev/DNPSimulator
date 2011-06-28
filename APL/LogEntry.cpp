@@ -75,7 +75,7 @@ string LogEntry :: LogString(bool aUseLocation) const
 	ostringstream oss;
 	oss << GetTimeString() << " - "
 	    << LogTypes::GetLevelString( mFilterLevel ) << " - "
-	    << mDeviceName;	
+	    << mDeviceName;
 	if(aUseLocation && !mLocation.empty()) oss << " - " << mLocation;
 	oss << " - " << mMessage;
 

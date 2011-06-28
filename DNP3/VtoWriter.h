@@ -92,7 +92,7 @@ public:
 	 *
 	 * @return				The number of events that were written
 	 */
-	size_t Flush(IVtoEventAcceptor* apAcceptor, size_t aMaxEvents);	
+	size_t Flush(IVtoEventAcceptor* apAcceptor, size_t aMaxEvents);
 
 	/**
 	 * Implements IVtoWriter::Size().
@@ -143,7 +143,7 @@ private:
 	                    size_t aLength,
 	                    boost::uint8_t aChannelId);
 
-	const size_t mMaxVtoChunks;	
+	const size_t mMaxVtoChunks;
 
 	typedef std::set<IVtoBufferHandler*> CallbackSet;
 	CallbackSet mCallbacks;

@@ -115,7 +115,7 @@ public:
 	 *						bytes)
 	 */
 	void OnVtoDataReceived(const VtoData& arData);
-	
+
 	/**
 	 * Called when the VTO data buffer size changes (startup and
 	 * successuly transmission).
@@ -173,7 +173,7 @@ protected:
 
 	void DoStopRouter();
 
-	virtual void DoVtoRemoteConnectedChanged(bool aOpened) = 0;	
+	virtual void DoVtoRemoteConnectedChanged(bool aOpened) = 0;
 	virtual void SetLocalConnected(bool aConnected) = 0;
 
 protected:

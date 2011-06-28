@@ -227,7 +227,7 @@ BOOST_AUTO_TEST_CASE(ReportVtoViaExceptionScan)
 {
 	SlaveConfig cfg; cfg.mDisableUnsol = true;
 	SlaveTestObject t(cfg);
-	t.slave.OnLowerLayerUp();	
+	t.slave.OnLowerLayerUp();
 
 	IVtoWriter* pWriter = t.slave.GetVtoWriter();
 
@@ -249,7 +249,7 @@ BOOST_AUTO_TEST_CASE(ReportVtoViaUnsol)
 	SlaveConfig cfg; cfg.mUnsolPackDelay = 0;
 	SlaveTestObject t(cfg);
 	t.slave.OnLowerLayerUp();
-	BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00"); 
+	BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
 
 	IVtoWriter* pWriter = t.slave.GetVtoWriter();
 
@@ -258,7 +258,7 @@ BOOST_AUTO_TEST_CASE(ReportVtoViaUnsol)
 	boost::uint8_t pData[3] = {0x13, 0x14, 0x15};
 	pWriter->Write(pData, 3, 0xAA);
 
-	BOOST_REQUIRE(t.mts.DispatchOne());	
+	BOOST_REQUIRE(t.mts.DispatchOne());
 
 	// Slave should send 3 bytes of vto data with index AA and Group/Var 113/3
 	BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 71 03 17 01 AA 13 14 15");
@@ -271,7 +271,7 @@ BOOST_AUTO_TEST_CASE(FlushesMoreVtoEventsAfterSuccess)
 	SlaveConfig cfg; cfg.mUnsolPackDelay = 0; cfg.mEventMaxConfig.mMaxVtoEvents = 2;
 	SlaveTestObject t(cfg);
 	t.slave.OnLowerLayerUp();
-	BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00"); 
+	BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
 
 	IVtoWriter* pWriter = t.slave.GetVtoWriter();
 
@@ -282,7 +282,7 @@ BOOST_AUTO_TEST_CASE(FlushesMoreVtoEventsAfterSuccess)
 	pWriter->Write(pData, 3, 0xAA);
 	pWriter->Write(pData, 3, 0xAA); //write 3 seperate vto events
 
-	BOOST_REQUIRE(t.mts.DispatchOne());	
+	BOOST_REQUIRE(t.mts.DispatchOne());
 
 	// Slave should send the first two vto data blocks because that's all the event buffer holds
 	BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 71 03 17 01 AA 13 14 15 71 03 17 01 AA 13 14 15");

@@ -32,7 +32,7 @@ VtoWriter::VtoWriter(Logger* apLogger, size_t aMaxVtoChunks) :
 {}
 
 VtoWriter::~VtoWriter()
-{	
+{
 	if(mQueue.size() > 0) {
 		LOG_BLOCK(LEV_WARNING, "On destruction, writer had " << mQueue.size() << " chunks that went unread");
 	}
@@ -42,7 +42,7 @@ size_t VtoWriter::Write(const boost::uint8_t* apData,
                         size_t aLength,
                         boost::uint8_t aChannelId)
 {
-	
+
 	size_t num = 0;
 	{
 		CriticalSection cs(&mLock);
@@ -121,17 +121,17 @@ size_t VtoWriter::Flush(IVtoEventAcceptor* apAcceptor, size_t aMaxEvents)
 {
 	size_t numRemaining = aMaxEvents;
 	size_t numUpdates = 0;
-	
+
 	{
-		CriticalSection cs(&mLock);	
+		CriticalSection cs(&mLock);
 		while(numUpdates < aMaxEvents && mQueue.size() > 0) {
 			VtoEvent& evt = mQueue.front();
 			apAcceptor->Update(evt.mValue, evt.mClass, evt.mIndex);
 			mQueue.pop();
-			++numUpdates;			
-		}		
+			++numUpdates;
+		}
 	}
-	
+
 
 	if(numUpdates > 0) this->NotifyAllCallbacks();
 

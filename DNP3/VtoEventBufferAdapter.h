@@ -29,17 +29,16 @@ namespace dnp
 
 class VtoEventBufferAdapter : public IVtoEventAcceptor
 {
-	public:
+public:
 
 	VtoEventBufferAdapter(EventAcceptor<VtoEvent>* apBuffer) : mpBuffer(apBuffer)
 	{}
 
-	void Update(const VtoData& arEvent, PointClass aClass, size_t aIndex)
-	{
+	void Update(const VtoData& arEvent, PointClass aClass, size_t aIndex) {
 		mpBuffer->Update(arEvent, aClass, aIndex);
 	}
 
-	private:
+private:
 	EventAcceptor<VtoEvent>* mpBuffer;
 };
 

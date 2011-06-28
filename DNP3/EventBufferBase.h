@@ -31,8 +31,8 @@ namespace dnp
 template <class EventType>
 class EventAcceptor
 {
-	public:
-		virtual void Update(const typename EventType::MeasType& arVal, PointClass aClass, size_t aIndex) = 0;
+public:
+	virtual void Update(const typename EventType::MeasType& arVal, PointClass aClass, size_t aIndex) = 0;
 };
 
 /**
@@ -56,7 +56,7 @@ public:
 	 * @param aClass		Class of the measurement
 	 * @param aIndex		Index of the measurement
 	 */
-	void Update(const typename EventType::MeasType& arVal, PointClass aClass, size_t aIndex);	
+	void Update(const typename EventType::MeasType& arVal, PointClass aClass, size_t aIndex);
 
 	/**
 	 * Returns true if the buffer contains any data matching the given

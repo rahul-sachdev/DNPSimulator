@@ -24,7 +24,7 @@ namespace dnp
 
 EnhancedVtoRouter::EnhancedVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
 	Loggable(apLogger),
-	VtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc),	
+	VtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc),
 	mRemoteConnected(false),
 	mLocalConnected(false)
 {
@@ -68,7 +68,7 @@ void EnhancedVtoRouter::SetLocalConnected(bool aConnected)
 void EnhancedVtoRouter::FlushBuffers()
 {
 	// clear out all of the data when we close the local connection
-	
+
 	while(mPhysLayerTxBuffer.size() > 0) {
 		LOG_BLOCK(LEV_WARNING, "Tossing data: " << this->mPhysLayerTxBuffer.front().GetType() << " size: " << this->mPhysLayerTxBuffer.front().GetSize());
 		this->mPhysLayerTxBuffer.pop();
@@ -106,7 +106,7 @@ void ServerSocketVtoRouter::HandleVtoRemoteConnectedChanged()
 		this->FlushBuffers();
 		this->Reconnect();
 	}
-	
+
 }
 
 void ServerSocketVtoRouter::HandleSetLocalConnected()
@@ -125,7 +125,7 @@ ClientSocketVtoRouter::ClientSocketVtoRouter(const VtoRouterSettings& arSettings
 }
 
 void ClientSocketVtoRouter::HandleVtoRemoteConnectedChanged()
-{	
+{
 	if(mRemoteConnected) {
 		// pretend we are online, so the other side sees a "connected"
 		// message. If we succeed in connecting the second SetLocalConnected(true)

@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE(ClassSelect)
 /*
 BOOST_AUTO_TEST_CASE(SlaveVtoEvents)
 {
-	
+
 }
 */
 

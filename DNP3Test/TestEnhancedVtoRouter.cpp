@@ -46,23 +46,20 @@ public:
 		mts()
 	{}
 
-	void Update(const VtoData& arEvent, PointClass aClass, size_t aIndex)
-	{
+	void Update(const VtoData& arEvent, PointClass aClass, size_t aIndex) {
 		VtoEvent evt(arEvent, aClass, aIndex);
 		mQueue.push(evt);
 	}
 
-	bool Read(VtoEvent& arEvent)
-	{
+	bool Read(VtoEvent& arEvent) {
 		if(mQueue.size() == 0) writer.Flush(this, 1);
-		
-		if(mQueue.size() > 0)
-		{
-			VtoEvent evt = mQueue.front();			
+
+		if(mQueue.size() > 0) {
+			VtoEvent evt = mQueue.front();
 			mQueue.pop();
 			arEvent = evt;
 			return true;
-		}	
+		}
 		else return false;
 	}
 
@@ -77,7 +74,7 @@ class ServerVtoRouterTestClass : public VtoRouterTestClassBase
 {
 public:
 	ServerVtoRouterTestClass(const VtoRouterSettings& arSettings = VtoRouterSettings(88, true, true), size_t aWriterSize = 100) :
-		VtoRouterTestClassBase(aWriterSize),		
+		VtoRouterTestClassBase(aWriterSize),
 		router(arSettings, mLog.GetLogger(LEV_DEBUG, "router"), &writer, &phys, &mts) {
 		writer.AddVtoCallback(&router);
 	}
@@ -102,7 +99,7 @@ class ClientVtoRouterTestClass : public VtoRouterTestClassBase
 {
 public:
 	ClientVtoRouterTestClass(const VtoRouterSettings& arSettings = VtoRouterSettings(88, true, true), size_t aWriterSize = 100) :
-		VtoRouterTestClassBase(aWriterSize),		
+		VtoRouterTestClassBase(aWriterSize),
 		router(arSettings, mLog.GetLogger(LEV_DEBUG, "router"), &writer, &phys, &mts) {
 		writer.AddVtoCallback(&router);
 	}
@@ -145,9 +142,9 @@ BOOST_AUTO_TEST_CASE(Construction)
 BOOST_AUTO_TEST_CASE(ServerSendsMagicChannelLocalConnected)
 {
 	ServerVtoRouterTestClass rtc;
-		
+
 	rtc.mts.Dispatch();
-	
+
 	BOOST_REQUIRE(rtc.phys.IsOpening());
 
 
@@ -168,7 +165,7 @@ BOOST_AUTO_TEST_CASE(ClientStartsOpeningAfterRemoteConnection)
 {
 	ClientVtoRouterTestClass rtc;
 	BOOST_REQUIRE(!rtc.phys.IsOpening());
-	
+
 	rtc.mts.Dispatch();
 
 	BOOST_REQUIRE(!rtc.phys.IsOpening());
@@ -187,7 +184,7 @@ BOOST_AUTO_TEST_CASE(ClientStartsOpeningAfterRemoteConnection)
 BOOST_AUTO_TEST_CASE(ClientSendsMagicChannelLocalConnected)
 {
 	ClientVtoRouterTestClass rtc;
-	
+
 	rtc.SetRemoteState(true);
 
 	rtc.mts.Dispatch();

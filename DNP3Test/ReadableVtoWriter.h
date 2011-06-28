@@ -34,10 +34,9 @@ class ReadableVtoWriter : public VtoWriter, private IVtoEventAcceptor
 public:
 	ReadableVtoWriter(Logger* apLogger, size_t aMaxVtoChunks) : VtoWriter(apLogger, aMaxVtoChunks), mpEvent(NULL)
 	{}
-	
-	bool Read(VtoEvent& arEvent)
-	{
-		mpEvent = &arEvent; 
+
+	bool Read(VtoEvent& arEvent) {
+		mpEvent = &arEvent;
 		size_t num = this->Flush(this, 1);
 		mpEvent = NULL;
 		return num > 0;
@@ -45,8 +44,7 @@ public:
 
 private:
 
-	void Update(const VtoData& arEvent, PointClass aClass, size_t aIndex)
-	{
+	void Update(const VtoData& arEvent, PointClass aClass, size_t aIndex) {
 		assert(mpEvent != NULL);
 		VtoEvent evt(arEvent, aClass, aIndex);
 		*mpEvent = evt;

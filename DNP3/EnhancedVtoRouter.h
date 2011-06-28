@@ -41,7 +41,7 @@ public:
 
 	// these base functions handle updating the state variables
 	// and inform the remote side of local connection changes
-	void DoVtoRemoteConnectedChanged(bool aOpened);	
+	void DoVtoRemoteConnectedChanged(bool aOpened);
 	void SetLocalConnected(bool aConnected);
 
 	void FlushBuffers();
@@ -50,13 +50,13 @@ public:
 	// concrete classes use these callbacks and the state
 	// variables to decide when to Start or Stop attempting
 	// the local connections
-	virtual void HandleVtoRemoteConnectedChanged() = 0;	
+	virtual void HandleVtoRemoteConnectedChanged() = 0;
 	virtual void HandleSetLocalConnected() = 0;
 
 protected:
 
 	static std::string GetConnectionString(bool aOpen);
-	
+
 	bool mRemoteConnected;
 	bool mLocalConnected;
 
@@ -64,8 +64,8 @@ protected:
 
 /**
  * The server socket vto implementation will always keep the local side of the
- * connection running. If the remote connection drops we will drop the local 
- * connection if it exists to indicate to our client that the remote end 
+ * connection running. If the remote connection drops we will drop the local
+ * connection if it exists to indicate to our client that the remote end
  * terminated the connection. An example where this is useful is when SSH is being
  * tunneled and the user uses the "logout" command, the ssh server closes
  * the socket to inform the client that the session is over. It can be paired
@@ -78,16 +78,16 @@ public:
 
 	ServerSocketVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc);
 
-	void HandleVtoRemoteConnectedChanged();	
+	void HandleVtoRemoteConnectedChanged();
 	void HandleSetLocalConnected();
 
 };
 
 /**
  * The client socket vto implementation will only attempt to open a client
- * connection when the remote side indicates that a connection has been made 
- * on that side. When a "remote connected"  message is received it will respond 
- * with a "local connected" message and only if it can't connect locally will it 
+ * connection when the remote side indicates that a connection has been made
+ * on that side. When a "remote connected"  message is received it will respond
+ * with a "local connected" message and only if it can't connect locally will it
  * send a "local disconnected" message.
  */
 class ClientSocketVtoRouter : public EnhancedVtoRouter
@@ -96,7 +96,7 @@ public:
 
 	ClientSocketVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc);
 
-	void HandleVtoRemoteConnectedChanged();	
+	void HandleVtoRemoteConnectedChanged();
 	void HandleSetLocalConnected();
 
 };

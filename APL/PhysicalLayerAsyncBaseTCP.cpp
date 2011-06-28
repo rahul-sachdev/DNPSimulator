@@ -49,7 +49,7 @@ void PhysicalLayerAsyncBaseTCP::DoClose()
 {
 	LOG_BLOCK(LEV_INFO, "Shutting down and closing socket");
 
-	boost::system::error_code ec;	
+	boost::system::error_code ec;
 
 	mSocket.shutdown(ip::tcp::socket::shutdown_both, ec);
 	if(ec) LOG_BLOCK(LEV_WARNING, "Error while shutting down socket: " << ec.message());

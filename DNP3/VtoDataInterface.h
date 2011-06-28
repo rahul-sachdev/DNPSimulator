@@ -173,7 +173,7 @@ public:
 	 *                   connection.
 	 */
 	virtual void OnVtoDataReceived(const VtoData& arData) = 0;
-	
+
 };
 
 class IVtoReader

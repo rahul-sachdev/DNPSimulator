@@ -21,10 +21,10 @@
 
 #include "VtoData.h"
 
-namespace apl 
+namespace apl
 {
 
-namespace dnp 
+namespace dnp
 {
 
 class IVtoEventAcceptor
