@@ -29,6 +29,7 @@
 #include <APL/FlexibleDataObserver.h>
 #include <APL/AsyncPhysLayerMonitor.h>
 #include <APL/PhysLoopback.h>
+#include <APL/RandomizedBuffer.h>
 
 #include <DNP3/AsyncStackManager.h>
 #include <DNP3/SlaveStackConfig.h>
@@ -175,8 +176,7 @@ public:
 	}
 
 	~VtoTestStack() {
-		manager.Stop();
-		
+		manager.Stop();		
 		local.Stop();
 		loopback.Stop();
 	}
@@ -225,20 +225,17 @@ BOOST_AUTO_TEST_CASE(Reconnect)
 
 	BOOST_REQUIRE(stack.WaitForState(PLS_CLOSED));
 
-	// start up dnp3 manager, vto server port will be online
-	stack.manager.Start();
-	
-	// startup the loopback server on the slave side
-	stack.loopback.Start();
-
-	// startup the local connection to the vto socket, since the whole stack is up we should connect
+	// start up everything, the local side should be able to open
+	stack.manager.Start();		
+	stack.loopback.Start();	
 	stack.local.Start();
 	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));
 
-	// test that data is correctly sent both ways
-	HexSequence testData1("de ad be ef");
-	stack.local.WriteData(testData1);
-	BOOST_REQUIRE(stack.WaitForData(testData1));
+	RandomizedBuffer data(100);
+
+	// test that data is correctly sent both ways	
+	stack.local.WriteData(data);
+	BOOST_REQUIRE(stack.WaitForData(data));
 
 	// stop the remote loopback server, which should cause the local vto socket to close and reopen
 	stack.loopback.Stop();
@@ -249,9 +246,9 @@ BOOST_AUTO_TEST_CASE(Reconnect)
 	BOOST_REQUIRE(stack.WaitForState(PLS_OPEN));
 
 	// send a second set of data
-	HexSequence testData2("01 02 03 04");
-	stack.local.WriteData(testData2);
-	BOOST_REQUIRE(stack.WaitForData(testData2));
+	data.Randomize();
+	stack.local.WriteData(data);
+	BOOST_REQUIRE(stack.WaitForData(data));
 
 	// disconnect again
 	stack.loopback.Stop();
@@ -306,9 +303,9 @@ void TestLargeDataTransmission(VtoTestStack& arTest, size_t aSizeInBytes)
 	BOOST_REQUIRE(arTest.WaitForState(PLS_OPEN));
 
 	// test that a large set of data flowing one way works
-	ByteStr testData1(aSizeInBytes, 123);
-	arTest.local.WriteData(testData1);
-	BOOST_REQUIRE(arTest.WaitForDataSize(testData1));
+	RandomizedBuffer data(aSizeInBytes);
+	arTest.local.WriteData(data);
+	BOOST_REQUIRE(arTest.WaitForDataSize(data));
 }
 
 BOOST_AUTO_TEST_CASE(LargeDataTransmissionMasterToSlave)
