@@ -54,6 +54,8 @@ public:
 	virtual void HandleSetLocalConnected() = 0;
 
 protected:
+
+	static std::string GetConnectionString(bool aOpen);
 	
 	bool mRemoteConnected;
 	bool mLocalConnected;

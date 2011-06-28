@@ -31,12 +31,16 @@ EnhancedVtoRouter::EnhancedVtoRouter(const VtoRouterSettings& arSettings, Logger
 
 }
 
+std::string EnhancedVtoRouter::GetConnectionString(bool aOpen)
+{
+	return aOpen ? "OPEN" : "CLOSED";
+}
+
 void EnhancedVtoRouter::DoVtoRemoteConnectedChanged(bool aOpened)
 {
 	if(mRemoteConnected != aOpened) {
-		LOG_BLOCK(LEV_INFO, "RemoteConnectionChanged: " << std::boolalpha << aOpened);
+		LOG_BLOCK(LEV_INFO, "Remote connection: " << GetConnectionString(aOpened));
 		mRemoteConnected = aOpened;
-
 		this->HandleVtoRemoteConnectedChanged();
 	}
 }
@@ -44,7 +48,7 @@ void EnhancedVtoRouter::DoVtoRemoteConnectedChanged(bool aOpened)
 void EnhancedVtoRouter::SetLocalConnected(bool aConnected)
 {
 	if(mLocalConnected != aConnected) {
-		LOG_BLOCK(LEV_INFO, "Local Connection changed: " << std::boolalpha << aConnected);
+		LOG_BLOCK(LEV_INFO, "Local connection: " << GetConnectionString(aConnected));
 		mLocalConnected = aConnected;
 
 		this->HandleSetLocalConnected();
@@ -93,12 +97,16 @@ ServerSocketVtoRouter::ServerSocketVtoRouter(const VtoRouterSettings& arSettings
 
 void ServerSocketVtoRouter::HandleVtoRemoteConnectedChanged()
 {
-	if(!mRemoteConnected) {
+	if(mRemoteConnected) {
+
+	}
+	else {
 		// if the remote side has closed we should close our
 		// local connection and then prepare for a new one
 		this->FlushBuffers();
 		this->Reconnect();
 	}
+	
 }
 
 void ServerSocketVtoRouter::HandleSetLocalConnected()

@@ -213,8 +213,7 @@ void VtoRouter::OnBufferAvailable()
 }
 
 void VtoRouter::OnPhysicalLayerOpen()
-{
-	LOG_BLOCK(LEV_INFO, "Local Connection Opened");
+{	
 	this->SetLocalConnected(true);
 
 	this->CheckForPhysRead();
@@ -232,17 +231,13 @@ void VtoRouter::OnStateChange(PhysLayerState aState)
 
 void VtoRouter::OnPhysicalLayerClose()
 {
-	LOG_BLOCK(LEV_INFO, "Local Connection Closed");
-
 	this->SetLocalConnected(false);
 	this->CheckForPhysWrite();
 	this->CheckForVtoWrite();
 }
 
 void VtoRouter::OnPhysicalLayerOpenFailure()
-{
-	LOG_BLOCK(LEV_INFO, "Local Connection Open Failed");
-
+{	
 	this->SetLocalConnected(false);
 	this->CheckForPhysWrite();
 	this->CheckForVtoWrite();

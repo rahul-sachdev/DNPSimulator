@@ -47,6 +47,8 @@ PhysicalLayerAsyncBaseTCP::PhysicalLayerAsyncBaseTCP(Logger* apLogger, boost::as
 
 void PhysicalLayerAsyncBaseTCP::DoClose()
 {
+	LOG_BLOCK(LEV_INFO, "Shutting down socket");
+
 	boost::system::error_code ec;	
 
 	mSocket.shutdown(ip::tcp::socket::shutdown_both, ec);
