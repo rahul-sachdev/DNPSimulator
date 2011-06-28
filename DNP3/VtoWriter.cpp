@@ -33,26 +33,26 @@ size_t VtoWriter::Write(const boost::uint8_t* apData,
                         size_t aLength,
                         boost::uint8_t aChannelId)
 {
-	/*
-	 * The whole function is thread-safe, from start to finish.
-	 */
-	CriticalSection cs(&mLock);
+	
+	size_t num = 0;
+	{
+		CriticalSection cs(&mLock);
 
-	/*
-	 * Only write the maximum amount available or requested.  If the
-	 * requested data size is larger than the available buffer space,
-	 * only send what will fit.
-	 */
-	size_t num = Min<size_t>(this->NumBytesAvailable(), aLength);
+		/*
+		 * Only write the maximum amount available or requested.  If the
+		 * requested data size is larger than the available buffer space,
+		 * only send what will fit.
+		 */
+		num = Min<size_t>(this->NumBytesAvailable(), aLength);
 
-	/*
-	 * Chop up the data into Max(255) segments and add it to the queue.
-	 */
-	this->Commit(apData, num, aChannelId);
+		/*
+		 * Chop up the data into Max(255) segments and add it to the queue.
+		 */
+		this->Commit(apData, num, aChannelId);
+	}
 
 	/* Tell any listeners that the queue has new data to be read. */
-	if (num > 0)
-		this->NotifyAll();
+	if (num > 0) this->NotifyAll();
 
 	/* Return the number of bytes from apData that were queued. */
 	return num;
@@ -108,36 +108,25 @@ void VtoWriter::QueueVtoObject(const boost::uint8_t* apData,
 	this->mQueue.push(evt);
 }
 
-bool VtoWriter::Read(VtoEvent& arEvent)
+size_t VtoWriter::Flush(IVtoEventAcceptor* apAcceptor, size_t aMaxEvents)
 {
-	bool readValue = this->ReadWithoutNotifying(arEvent);
-
-	if(readValue) this->NotifyAllCallbacks();
-
-	return readValue;
-}
-
-bool VtoWriter::ReadWithoutNotifying(VtoEvent& arEvent)
-{
-	CriticalSection cs(&mLock);
-
-	/*
-	 * If there is no data on the queue, return false.  This allows
-	 * the function to be used in the conditional block of a loop
-	 * construct.
-	 */
-	if(this->mQueue.size() == 0) return false;
-	else {
-		/*
-		* The queue has data, so pop off the front item, store it in
-		* arEvent, and return true.
-		*/
-		arEvent = this->mQueue.front();
-		this->mQueue.pop();
-		return true;
+	size_t numRemaining = aMaxEvents;
+	size_t numUpdates = 0;
+	
+	{
+		CriticalSection cs(&mLock);	
+		while(numUpdates < aMaxEvents && mQueue.size() > 0) {
+			VtoEvent& evt = mQueue.front();
+			apAcceptor->Update(evt.mValue, evt.mClass, evt.mIndex);
+			mQueue.pop();
+			++numUpdates;			
+		}
 	}
-}
 
+	if(numUpdates > 0) this->NotifyAllCallbacks();
+
+	return numUpdates;
+}
 
 void VtoWriter::AddVtoCallback(IVtoBufferHandler* apHandler)
 {

@@ -109,6 +109,7 @@ public:
 		BOOST_REQUIRE_EQUAL(written, read);
 		mBytesRead += aNumBytes;
 		std::cout << "Received " << mBytesRead << " of " << mWriteBuffer.Size() << std::endl;
+		mpPhys->AsyncRead(mReadBuffer, mReadBuffer.Size());
 	}
 
 	void WriteData(const CopyableBuffer& arData) {
@@ -202,12 +203,12 @@ public:
 		loopback.Stop();
 	}
 
-	bool WaitForLocalState(PhysLayerState aState) {
-		return testObj.ProceedUntil(boost::bind(&MockClientConnection::StateIs, &local, aState), 10000);
+	bool WaitForLocalState(PhysLayerState aState, millis_t aTimeout = 15000) {
+		return testObj.ProceedUntil(boost::bind(&MockClientConnection::StateIs, &local, aState), aTimeout);
 	}
 
-	bool WaitForAllDataToBeEchoed() {
-		return testObj.ProceedUntil(boost::bind(&MockClientConnection::ReceivedAllDataThatWasWritten, &local), 10000);
+	bool WaitForAllDataToBeEchoed(millis_t aTimeout = 15000) {
+		return testObj.ProceedUntil(boost::bind(&MockClientConnection::ReceivedAllDataThatWasWritten, &local), aTimeout);
 	}
 
 	Logger* mpMainLogger;
@@ -232,7 +233,7 @@ BOOST_AUTO_TEST_SUITE(VtoRouterIntegrationSuite)
 
 BOOST_AUTO_TEST_CASE(Reconnect)
 {
-	VtoTestStack stack(true, true);
+	VtoTestStack stack(true, false);
 
 	BOOST_REQUIRE(stack.WaitForLocalState(PLS_CLOSED));
 
@@ -272,22 +273,21 @@ BOOST_AUTO_TEST_CASE(RemoteSideOpenFailureBouncesLocalConnection)
 
 	BOOST_REQUIRE(test.WaitForLocalState(PLS_CLOSED));
 	
-	test.manager.Start();
-
-	// start local connection, we should immediately be able to connect to this side
+	test.manager.Start();	
 	test.local.Start();
-	BOOST_REQUIRE(test.WaitForLocalState(PLS_OPEN));	
-	
-	// since the remote side can't connect to the port we should have our local connection bounced
-	BOOST_REQUIRE(test.WaitForLocalState(PLS_CLOSED));
+
+	for(size_t i=0; i<5; ++i) {
+		// start local connection, we should immediately be able to connect to this side
+		BOOST_REQUIRE(test.WaitForLocalState(PLS_OPEN));		
+		// since the remote side can't connect to the port we should have our local connection bounced
+		BOOST_REQUIRE(test.WaitForLocalState(PLS_CLOSED));
+	}
 }
 
 BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 {
-	VtoTestStack stack;
-
-	BOOST_REQUIRE(stack.WaitForLocalState(PLS_CLOSED));
-
+	VtoTestStack stack(true, false);
+	
 	// start all 4 components, should connect
 	stack.manager.Start();	
 	stack.loopback.Start();
@@ -304,9 +304,7 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 }
 
 void TestLargeDataTransmission(VtoTestStack& arTest, size_t aSizeInBytes)
-{
-	BOOST_REQUIRE(arTest.WaitForLocalState(PLS_CLOSED));
-
+{	
 	// start everything
 	arTest.manager.Start();	
 	arTest.loopback.Start();
@@ -316,7 +314,7 @@ void TestLargeDataTransmission(VtoTestStack& arTest, size_t aSizeInBytes)
 	// test that a large set of data flowing one way works
 	RandomizedBuffer data(aSizeInBytes);
 	arTest.local.WriteData(data);
-	BOOST_REQUIRE(arTest.WaitForAllDataToBeEchoed());
+	BOOST_REQUIRE(arTest.WaitForAllDataToBeEchoed(60000));
 }
 
 BOOST_AUTO_TEST_CASE(LargeDataTransmissionMasterToSlave)

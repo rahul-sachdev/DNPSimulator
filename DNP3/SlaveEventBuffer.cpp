@@ -46,9 +46,14 @@ void SlaveEventBuffer::Update(const Counter& arEvent, PointClass aClass, size_t 
 	mCounterEvents.Update(arEvent, aClass, aIndex);
 }
 
-void SlaveEventBuffer::Update(VtoEvent& arEvent)
+void SlaveEventBuffer::Update(const VtoData& arEvent, PointClass aClass, size_t aIndex)
 {
-	this->mVtoEvents.Update(arEvent);
+	mVtoEvents.Update(arEvent, aClass, aIndex);
+}
+
+size_t SlaveEventBuffer::NumVtoEventsAvailable()
+{
+	return mVtoEvents.NumAvailable();
 }
 
 size_t SlaveEventBuffer::NumSelected(BufferTypes aType)

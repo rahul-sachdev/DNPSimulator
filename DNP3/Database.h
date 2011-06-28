@@ -23,6 +23,7 @@
 #include "DatabaseInterfaces.h"
 #include "DNPConstants.h"
 
+#include <APL/DataInterfaces.h>
 #include <APL/Exception.h>
 #include <APL/Loggable.h>
 

@@ -25,6 +25,7 @@
 #include <APL/DataTypes.h>
 
 #include "PointClass.h"
+#include "VtoData.h"
 
 #include <vector>
 
@@ -91,6 +92,7 @@ typedef PointInfo<apl::Analog>					AnalogInfo;
 typedef PointInfo<apl::Counter>					CounterInfo;
 typedef PointInfo<apl::ControlStatus>			ControlStatusInfo;
 typedef PointInfo<apl::SetpointStatus>			SetpointStatusInfo;
+typedef PointInfoBase<apl::dnp::VtoData>			VtoDataInfo;
 
 typedef StaticIter<BinaryInfo>::Type			BinaryIterator;
 typedef StaticIter<AnalogInfo>::Type			AnalogIterator;

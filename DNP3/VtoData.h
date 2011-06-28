@@ -65,6 +65,7 @@ private:
 	VtoDataType mType;
 };
 
+
 }
 
 }

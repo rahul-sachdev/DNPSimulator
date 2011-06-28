@@ -29,7 +29,8 @@
 
 #include <DNP3/AlwaysOpeningVtoRouter.h>
 #include <DNP3/VtoRouterSettings.h>
-#include <DNP3/VtoWriter.h>
+
+#include "ReadableVtoWriter.h"
 
 using namespace std;
 using namespace apl;
@@ -48,7 +49,7 @@ public:
 	}
 
 	MockPhysicalLayerAsync phys;
-	VtoWriter writer;
+	ReadableVtoWriter writer;
 	MockTimerSource mts;
 	AlwaysOpeningVtoRouter router;
 };
@@ -149,7 +150,7 @@ BOOST_AUTO_TEST_CASE(PhysReadBuffering)
 	BOOST_REQUIRE(rtc.writer.Read(vto));
 	CheckVtoEvent(vto, stringData1, 0, PC_CLASS_1);
 
-	BOOST_REQUIRE_EQUAL(rtc.writer.Size(), 1);
+	BOOST_REQUIRE_EQUAL(1, rtc.writer.Size());
 
 	// the 2nd set of data will get merged as a single vto object
 	BOOST_REQUIRE(rtc.writer.Read(vto));

@@ -30,19 +30,54 @@
 #include <DNP3/EnhancedVtoRouter.h>
 #include <DNP3/VtoRouterSettings.h>
 #include <DNP3/VtoWriter.h>
+#include <DNP3/IVtoEventAcceptor.h>
 
 using namespace std;
 using namespace apl;
 using namespace apl::dnp;
 
-class ServerVtoRouterTestClass : LogTester
+class VtoRouterTestClassBase : protected LogTester, public IVtoEventAcceptor
 {
 public:
-	ServerVtoRouterTestClass(const VtoRouterSettings& arSettings = VtoRouterSettings(88, true, true), const size_t aWriterSize = 100) :
+	VtoRouterTestClassBase(size_t aWriterSize) :
 		LogTester(false),
 		phys(mLog.GetLogger(LEV_DEBUG, "phys")),
 		writer(aWriterSize),
-		mts(),
+		mts()
+	{}
+
+	void Update(const VtoData& arEvent, PointClass aClass, size_t aIndex)
+	{
+		VtoEvent evt(arEvent, aClass, aIndex);
+		mQueue.push(evt);
+	}
+
+	bool Read(VtoEvent& arEvent)
+	{
+		if(mQueue.size() == 0) writer.Flush(this, 1);
+		
+		if(mQueue.size() > 0)
+		{
+			VtoEvent evt = mQueue.front();			
+			mQueue.pop();
+			arEvent = evt;
+			return true;
+		}	
+		else return false;
+	}
+
+	MockPhysicalLayerAsync phys;
+	VtoWriter writer;
+	MockTimerSource mts;
+
+	std::queue<VtoEvent> mQueue;
+};
+
+class ServerVtoRouterTestClass : public VtoRouterTestClassBase
+{
+public:
+	ServerVtoRouterTestClass(const VtoRouterSettings& arSettings = VtoRouterSettings(88, true, true), size_t aWriterSize = 100) :
+		VtoRouterTestClassBase(aWriterSize),		
 		router(arSettings, mLog.GetLogger(LEV_DEBUG, "router"), &writer, &phys, &mts) {
 		writer.AddVtoCallback(&router);
 	}
@@ -50,7 +85,7 @@ public:
 	void CheckLocalChannelConnectedMessage(bool connected) {
 		BOOST_REQUIRE(writer.Size() > 0);
 		VtoEvent vto;
-		BOOST_REQUIRE(writer.Read(vto));
+		BOOST_REQUIRE(Read(vto));
 		BOOST_REQUIRE_EQUAL(vto.mValue.mpData[0], 88);
 		BOOST_REQUIRE_EQUAL(vto.mValue.mpData[1], (connected ? 0 : 1));
 	}
@@ -60,20 +95,14 @@ public:
 		router.OnVtoDataReceived(data);
 	}
 
-	MockPhysicalLayerAsync phys;
-	VtoWriter writer;
-	MockTimerSource mts;
 	ServerSocketVtoRouter router;
 };
 
-class ClientVtoRouterTestClass : LogTester
+class ClientVtoRouterTestClass : public VtoRouterTestClassBase
 {
 public:
-	ClientVtoRouterTestClass(const VtoRouterSettings& arSettings = VtoRouterSettings(88, true, true), const size_t aWriterSize = 100) :
-		LogTester(false),
-		phys(mLog.GetLogger(LEV_DEBUG, "phys")),
-		writer(aWriterSize),
-		mts(),
+	ClientVtoRouterTestClass(const VtoRouterSettings& arSettings = VtoRouterSettings(88, true, true), size_t aWriterSize = 100) :
+		VtoRouterTestClassBase(aWriterSize),		
 		router(arSettings, mLog.GetLogger(LEV_DEBUG, "router"), &writer, &phys, &mts) {
 		writer.AddVtoCallback(&router);
 	}
@@ -81,7 +110,7 @@ public:
 	void CheckLocalChannelConnectedMessage(bool connected) {
 		BOOST_REQUIRE(writer.Size() > 0);
 		VtoEvent vto;
-		BOOST_REQUIRE(writer.Read(vto));
+		BOOST_REQUIRE(Read(vto));
 		BOOST_REQUIRE_EQUAL(vto.mIndex, 255);
 		BOOST_REQUIRE_EQUAL(vto.mValue.mpData[0], 88);
 		BOOST_REQUIRE_EQUAL(vto.mValue.mpData[1], (connected ? 0 : 1));
@@ -92,7 +121,7 @@ public:
 	}
 	void CheckVtoData(const std::string& arData) {
 		VtoEvent vto;
-		BOOST_REQUIRE(writer.Read(vto));
+		BOOST_REQUIRE(Read(vto));
 		BOOST_REQUIRE_EQUAL(88, vto.mIndex); // the channel id
 
 		const std::string hex = toHex(vto.mValue.mpData, vto.mValue.GetSize(), true);
@@ -100,9 +129,6 @@ public:
 		BOOST_REQUIRE_EQUAL(arData, hex);
 	}
 
-	MockPhysicalLayerAsync phys;
-	VtoWriter writer;
-	MockTimerSource mts;
 	ClientSocketVtoRouter router;
 };
 

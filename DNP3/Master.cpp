@@ -22,6 +22,7 @@
 #include "MasterStates.h"
 #include "ObjectReadIterator.h"
 #include "ResponseLoader.h"
+#include "VtoEventBufferAdapter.h"
 
 #include <APL/DataInterfaces.h>
 #include <APL/AsyncTaskInterfaces.h>
@@ -222,11 +223,10 @@ void Master::TransmitVtoData(ITask* apTask)
 {
 	VtoEvent info;
 
-	/* Take out of the mVtoWriter and put into the mVtoTransmitTask */
-	while (!mVtoTransmitTask.mBuffer.IsFull() && mVtoWriter.Read(info)) {
-		mVtoTransmitTask.mBuffer.Update(info);
-	}
-
+	size_t max = mVtoTransmitTask.mBuffer.NumAvailable();
+	VtoEventBufferAdapter adapter(&mVtoTransmitTask.mBuffer);
+	size_t num = mVtoWriter.Flush(&adapter, max);	
+	
 	LOG_BLOCK(LEV_INTERPRET, "TransmitVtoData: " << std::boolalpha << mVtoTransmitTask.mBuffer.IsFull() << " size: " << mVtoTransmitTask.mBuffer.Size());
 
 	// only start the task if we are in comms_up

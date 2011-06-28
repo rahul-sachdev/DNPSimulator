@@ -16,40 +16,26 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __DATABASE_INTERFACES_H_
-#define __DATABASE_INTERFACES_H_
+#include <boost/test/unit_test.hpp>
 
+#include <APL/RandomizedBuffer.h>
+#include <DNP3/VtoWriter.h>
 
-#include "DNPDatabaseTypes.h"
-#include "VtoData.h"
-#include "IVtoEventAcceptor.h"
+using namespace std;
+using namespace apl;
+using namespace apl::dnp;
 
-namespace apl
-{
-namespace dnp
-{
+BOOST_AUTO_TEST_SUITE(VtoWriterSuite)
 
-// @section desc Used by the database
-class IEventBuffer : public IVtoEventAcceptor
-{
-public:
+BOOST_AUTO_TEST_CASE(OnlyAcceptsMaximumSize)
+{	
+	VtoWriter writer(3);
+		
+	/* Initialize the data stream to a pseudo-random sequence */
+	RandomizedBuffer data(1024);
 
-	virtual ~IEventBuffer() {}
-	
-	virtual void Update(const Binary& arEvent, PointClass aClass, size_t aIndex) = 0;
-	
-	virtual void Update(const Analog& arEvent, PointClass aClass, size_t aIndex) = 0;
-	
-	virtual void Update(const Counter& arEvent, PointClass aClass, size_t aIndex) = 0;
-
-	virtual void Update(const VtoData& arEvent, PointClass aClass, size_t aIndex) = 0;
-
-	virtual size_t NumVtoEventsAvailable() = 0;
-
-};
-
-}
+	BOOST_REQUIRE_EQUAL(writer.Write(data, data.Size(), 5), 255*3);
+	BOOST_REQUIRE_EQUAL(writer.Write(data, data.Size(), 5), 0);	
 }
 
-#endif
-
+BOOST_AUTO_TEST_SUITE_END()
