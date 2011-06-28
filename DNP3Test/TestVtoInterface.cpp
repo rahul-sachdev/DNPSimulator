@@ -111,9 +111,10 @@ void VtoCallbackTest::OnBufferAvailable()
 BOOST_AUTO_TEST_SUITE(VtoInterfaceTests)
 BOOST_AUTO_TEST_CASE(VtoWriteOverflow)
 {
+	EventLog log;
 	const size_t numChunks = 3;
 	const size_t emptySize = numChunks * MAX_SIZE;
-	VtoWriter writer(numChunks);
+	VtoWriter writer(log.GetLogger(LEV_DEBUG, "writer"), numChunks);
 
 	const size_t dataSize = MAX_SIZE * 10;
 	boost::uint8_t data[dataSize];

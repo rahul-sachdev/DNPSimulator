@@ -42,7 +42,7 @@ public:
 	RouterTestClass(const VtoRouterSettings& arSettings = VtoRouterSettings(0, true, true), const size_t aWriterSize = 100) :
 		LogTester(false),
 		phys(mLog.GetLogger(LEV_DEBUG, "phys")),
-		writer(aWriterSize),
+		writer(mLog.GetLogger(LEV_DEBUG, "writer"), aWriterSize),
 		mts(),
 		router(arSettings, mLog.GetLogger(LEV_DEBUG, "router"), &writer, &phys, &mts) {
 		writer.AddVtoCallback(&router);

@@ -19,6 +19,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <APL/RandomizedBuffer.h>
+#include <APL/Log.h>
 #include <DNP3/VtoWriter.h>
 
 using namespace std;
@@ -29,7 +30,8 @@ BOOST_AUTO_TEST_SUITE(VtoWriterSuite)
 
 BOOST_AUTO_TEST_CASE(OnlyAcceptsMaximumSize)
 {	
-	VtoWriter writer(3);
+	EventLog log;
+	VtoWriter writer(log.GetLogger(LEV_DEBUG, "writer"), 3);
 		
 	/* Initialize the data stream to a pseudo-random sequence */
 	RandomizedBuffer data(1024);

@@ -61,8 +61,7 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	mState(SS_UNKNOWN),
 	mpTimeTimer(NULL),
 	mVtoReader(apLogger),
-	mVtoWriter(arCfg.mVtoWriterQueueSize)
-
+	mVtoWriter(apLogger->GetSubLogger("VtoWriter"), arCfg.mVtoWriterQueueSize)
 {
 	/* Link the event buffer to the database */
 	mpDatabase->SetEventBuffer(mRspContext.GetBuffer());
@@ -245,9 +244,11 @@ size_t Slave::FlushVtoUpdates()
 	 * SlaveEventBuffer's VtoEvent buffer.
 	 */
 	IEventBuffer* pBuff = this->mRspContext.GetBuffer();
-	size_t num = this->mVtoWriter.Flush(pBuff, pBuff->NumVtoEventsAvailable());	
-	LOG_BLOCK(LEV_INTERPRET, "VtoUpdates: " << num << " updates");
-	return num;
+	size_t available = mVtoWriter.Size();
+	size_t space = pBuff->NumVtoEventsAvailable();
+	size_t flushed = this->mVtoWriter.Flush(pBuff, space);
+	if(available > space) this->mDeferredUpdate = true;
+	return flushed;
 }
 
 size_t Slave::FlushUpdates()

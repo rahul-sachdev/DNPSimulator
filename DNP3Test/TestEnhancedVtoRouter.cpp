@@ -42,7 +42,7 @@ public:
 	VtoRouterTestClassBase(size_t aWriterSize) :
 		LogTester(false),
 		phys(mLog.GetLogger(LEV_DEBUG, "phys")),
-		writer(aWriterSize),
+		writer(mLog.GetLogger(LEV_DEBUG, "writer"), aWriterSize),
 		mts()
 	{}
 

@@ -24,6 +24,7 @@
 #include <APL/Lock.h>
 #include <APL/DataInterfaces.h>
 #include <APL/SubjectBase.h>
+#include <APL/Loggable.h>
 
 #include "EventTypes.h"
 #include "VtoDataInterface.h"
@@ -40,7 +41,7 @@ namespace dnp
  * stack.  Responsible for UserCode -> Stack thread marshalling and
  * stream decomposition.
  */
-class VtoWriter : public IVtoWriter, public SubjectBase<NullLock>
+class VtoWriter : public IVtoWriter, public SubjectBase<NullLock>, private Loggable
 {
 public:
 
@@ -54,7 +55,9 @@ public:
 	 *
 	 * @return				the new VtoQueue instance
 	 */
-	VtoWriter(size_t aMaxVtoChunks);
+	VtoWriter(Logger* apLogger, size_t aMaxVtoChunks);
+
+	~VtoWriter();
 
 	/**
 	* Registers an IVtoCallbacks to receive OnBufferAvailable() notifications

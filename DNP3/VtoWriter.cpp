@@ -18,6 +18,7 @@
 #include "VtoWriter.h"
 #include "EnhancedVto.h"
 
+#include <APL/Logger.h>
 #include <APL/Util.h>
 
 namespace apl
@@ -25,9 +26,17 @@ namespace apl
 namespace dnp
 {
 
-VtoWriter::VtoWriter(size_t aMaxVtoChunks) :
+VtoWriter::VtoWriter(Logger* apLogger, size_t aMaxVtoChunks) :
+	Loggable(apLogger),
 	mMaxVtoChunks(aMaxVtoChunks)
 {}
+
+VtoWriter::~VtoWriter()
+{	
+	if(mQueue.size() > 0) {
+		LOG_BLOCK(LEV_WARNING, "On destruction, writer had " << mQueue.size() << " chunks that went unread");
+	}
+}
 
 size_t VtoWriter::Write(const boost::uint8_t* apData,
                         size_t aLength,
@@ -120,8 +129,9 @@ size_t VtoWriter::Flush(IVtoEventAcceptor* apAcceptor, size_t aMaxEvents)
 			apAcceptor->Update(evt.mValue, evt.mClass, evt.mIndex);
 			mQueue.pop();
 			++numUpdates;			
-		}
+		}		
 	}
+	
 
 	if(numUpdates > 0) this->NotifyAllCallbacks();
 

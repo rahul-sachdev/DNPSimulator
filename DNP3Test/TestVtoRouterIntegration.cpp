@@ -36,7 +36,6 @@
 #include <DNP3/MasterStackConfig.h>
 #include <DNP3/VtoRouterSettings.h>
 
-
 #include <APL/PhysicalLayerAsyncTCPClient.h>
 #include <APL/PhysicalLayerAsyncTCPServer.h>
 
@@ -108,7 +107,7 @@ public:
 		// check that we're receiving what was written
 		BOOST_REQUIRE_EQUAL(written, read);
 		mBytesRead += aNumBytes;
-		std::cout << "Received " << mBytesRead << " of " << mWriteBuffer.Size() << std::endl;
+		LOG_BLOCK(LEV_INFO, "Received " << mBytesRead << " of " << mWriteBuffer.Size());
 		mpPhys->AsyncRead(mReadBuffer, mReadBuffer.Size());
 	}
 
@@ -122,7 +121,7 @@ public:
 
 	void _OnSendSuccess(void) {
 		this->mBytesWritten += this->mLastWriteSize;
-		std::cout << "Written " << this->mBytesWritten << " of " << this->mWriteBuffer.Size() << std::endl;
+		//std::cout << "Written " << this->mBytesWritten << " of " << this->mWriteBuffer.Size() << std::endl;
 		this->TransmitNext();
 	}
 
@@ -314,7 +313,7 @@ void TestLargeDataTransmission(VtoTestStack& arTest, size_t aSizeInBytes)
 	// test that a large set of data flowing one way works
 	RandomizedBuffer data(aSizeInBytes);
 	arTest.local.WriteData(data);
-	BOOST_REQUIRE(arTest.WaitForAllDataToBeEchoed(60000));
+	BOOST_REQUIRE(arTest.WaitForAllDataToBeEchoed(15000));
 }
 
 BOOST_AUTO_TEST_CASE(LargeDataTransmissionMasterToSlave)

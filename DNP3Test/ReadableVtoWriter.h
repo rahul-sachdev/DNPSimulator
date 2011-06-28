@@ -32,7 +32,7 @@ namespace dnp
 class ReadableVtoWriter : public VtoWriter, private IVtoEventAcceptor
 {
 public:
-	ReadableVtoWriter(size_t aMaxVtoChunks) : VtoWriter(aMaxVtoChunks), mpEvent(NULL)
+	ReadableVtoWriter(Logger* apLogger, size_t aMaxVtoChunks) : VtoWriter(apLogger, aMaxVtoChunks), mpEvent(NULL)
 	{}
 	
 	bool Read(VtoEvent& arEvent)
