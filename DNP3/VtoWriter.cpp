@@ -119,7 +119,6 @@ void VtoWriter::QueueVtoObject(const boost::uint8_t* apData,
 
 size_t VtoWriter::Flush(IVtoEventAcceptor* apAcceptor, size_t aMaxEvents)
 {
-	size_t numRemaining = aMaxEvents;
 	size_t numUpdates = 0;
 
 	{

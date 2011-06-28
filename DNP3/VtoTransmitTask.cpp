@@ -101,11 +101,9 @@ TaskResult VtoTransmitTask::_OnFinalResponse(const APDU& arAPDU)
 {
 
 	/* Remove the written data from the buffer */
-	size_t cleared = this->mBuffer.ClearWrittenEvents();
+	this->mBuffer.ClearWrittenEvents();
 
-	size_t deselected = this->mBuffer.Deselect();
-
-	LOG_BLOCK(LEV_INTERPRET, "VtoTransmitTask cleared: " << cleared << " size: " << this->mBuffer.Size());
+	this->mBuffer.Deselect();
 
 	return TR_SUCCESS;
 }

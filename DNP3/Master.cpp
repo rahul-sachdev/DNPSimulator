@@ -223,9 +223,9 @@ void Master::TransmitVtoData(ITask* apTask)
 {
 	size_t max = mVtoTransmitTask.mBuffer.NumAvailable();
 	VtoEventBufferAdapter adapter(&mVtoTransmitTask.mBuffer);
-	size_t num = mVtoWriter.Flush(&adapter, max);
+	mVtoWriter.Flush(&adapter, max);
 
-	LOG_BLOCK(LEV_INFO, "TransmitVtoData: " << std::boolalpha << mVtoTransmitTask.mBuffer.IsFull() << " size: " << mVtoTransmitTask.mBuffer.Size());
+	LOG_BLOCK(LEV_DEBUG, "TransmitVtoData: " << std::boolalpha << mVtoTransmitTask.mBuffer.IsFull() << " size: " << mVtoTransmitTask.mBuffer.Size());
 
 	/* Any data to transmit? */
 	if (mVtoTransmitTask.mBuffer.Size() > 0) {
