@@ -24,6 +24,7 @@
 #include <APL/ToHex.h>
 
 #include <iostream>
+#include <sstream>
 
 namespace apl
 {
@@ -74,7 +75,11 @@ void MockPhysicalLayerMonitor::_OnReceive(const boost::uint8_t* apData, size_t a
 	CopyableBuffer expecting(mExpectReadBuffer.Buffer() + mBytesRead, aNumBytes);
 	CopyableBuffer read(apData, aNumBytes);
 	// check that we're receiving what was written
-	BOOST_REQUIRE_EQUAL(expecting, read);
+	if(expecting != read) {
+		std::ostringstream oss;
+		oss << "Data corruption on receive, " << read << " != " << expecting; 
+		BOOST_FAIL(oss.str());
+	}	
 	mBytesRead += aNumBytes;
 	LOG_BLOCK(LEV_INFO, "Received " << mBytesRead << " of " << mExpectReadBuffer.Size());
 	mpPhys->AsyncRead(mReadBuffer, mReadBuffer.Size());
