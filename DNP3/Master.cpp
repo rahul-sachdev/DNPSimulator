@@ -228,7 +228,7 @@ void Master::TransmitVtoData(ITask* apTask)
 		mVtoWriter.Flush(&adapter, max);
 
 		LOG_BLOCK(LEV_DEBUG, "TransmitVtoData: " << std::boolalpha << mVtoTransmitTask.mBuffer.IsFull() << " size: " << mVtoTransmitTask.mBuffer.Size());
-		
+
 		/* Any data to transmit? */
 		if (mVtoTransmitTask.mBuffer.Size() > 0) {
 			/* Start the mVtoTransmitTask */
@@ -238,7 +238,7 @@ void Master::TransmitVtoData(ITask* apTask)
 			/* Stop the mVtoTransmitTask */
 			apTask->Disable();
 		}
-	}	
+	}
 }
 
 /* Implement IAppUser */

@@ -22,7 +22,8 @@
 
 #include <queue>
 
-namespace apl {
+namespace apl
+{
 
 class MockPhysicalLayerMonitor : public AsyncPhysLayerMonitor
 {

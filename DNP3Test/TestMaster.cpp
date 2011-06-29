@@ -609,7 +609,7 @@ BOOST_AUTO_TEST_CASE(VtoBufferedWhileStackIsOffline)
 	//queue 2 bytes of Vto data
 	boost::uint8_t data[2] = {0xAB, 0xBC};
 	t.master.GetVtoWriter()->Write(data, 2, 0xFF);
-	
+
 	// the master will still wake up, put will not process the buffer since it is offline
 	BOOST_REQUIRE(t.mts.DispatchOne());
 	BOOST_REQUIRE_FALSE(t.mts.DispatchOne());

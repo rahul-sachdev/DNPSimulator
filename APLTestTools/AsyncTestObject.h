@@ -26,7 +26,9 @@ namespace apl
 
 class AsyncTestObject
 {
-	static bool AlwaysBoolean(bool aAlwaysThis) { return aAlwaysThis; }
+	static bool AlwaysBoolean(bool aAlwaysThis) {
+		return aAlwaysThis;
+	}
 
 public:
 	AsyncTestObject() {}

@@ -24,7 +24,10 @@
 
 /** Platforms have different reserved port ranges */
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 
 VtoIntegrationTestBase::VtoIntegrationTestBase(
@@ -40,8 +43,9 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 	manager(mLog.GetLogger(level, "manager"), false),
 	timerSource(testObj.GetService()),
 	client(mLog.GetLogger(level, "local-tcp-client"), testObj.GetService(), "127.0.0.1", port + 20),
-	server(mLog.GetLogger(level, "loopback-tcp-server"), testObj.GetService(), "0.0.0.0", port + 10) {
-	
+	server(mLog.GetLogger(level, "loopback-tcp-server"), testObj.GetService(), "0.0.0.0", port + 10)
+{
+
 	if(aImmediateOutput) mLog.AddLogSubscriber(LogToStdio::Inst());
 
 	manager.AddTCPServer("dnp-tcp-server", PhysLayerSettings(), "127.0.0.1", port);
@@ -61,9 +65,10 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 	manager.StartVtoRouter("vto-tcp-server", serverSideOfStack, VtoRouterSettings(88, true, false, 4096, 1000));
 }
 
-VtoIntegrationTestBase::~VtoIntegrationTestBase() {
-	manager.Stop();	
-}	
+VtoIntegrationTestBase::~VtoIntegrationTestBase()
+{
+	manager.Stop();
+}
 
 }
 

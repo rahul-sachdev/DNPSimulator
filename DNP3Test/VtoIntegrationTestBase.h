@@ -39,7 +39,10 @@
 #define MACRO_PORT_VALUE	(30000)
 #endif
 
-namespace apl { namespace dnp {
+namespace apl
+{
+namespace dnp
+{
 
 class VtoIntegrationTestBase : public LogTester
 {
@@ -53,7 +56,7 @@ public:
 	~VtoIntegrationTestBase();
 
 	Logger* mpMainLogger;
-	LogToFile ltf;	
+	LogToFile ltf;
 	MockCommandAcceptor cmdAcceptor;
 
 	AsyncTestObjectASIO testObj;
@@ -62,7 +65,7 @@ public:
 
 	TimerSourceASIO timerSource;
 	PhysicalLayerAsyncTCPClient client;
-	PhysicalLayerAsyncTCPServer server;	
+	PhysicalLayerAsyncTCPServer server;
 };
 
 }

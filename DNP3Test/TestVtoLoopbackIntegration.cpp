@@ -17,28 +17,10 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <APLTestTools/TestHelpers.h>
-#include <APLTestTools/MockCommandAcceptor.h>
-#include <APLTestTools/AsyncTestObjectASIO.h>
-#include <APLTestTools/BufferHelpers.h>
-#include <APLTestTools/LogTester.h>
-#include <APLTestTools/MockPhysicalLayerMonitor.h>
-
-#include <APL/Log.h>
-#include <APL/LogToStdio.h>
-#include <APL/LogToFile.h>
-#include <APL/FlexibleDataObserver.h>
-#include <APL/AsyncPhysLayerMonitor.h>
 #include <APL/PhysLoopback.h>
 #include <APL/RandomizedBuffer.h>
 
-#include <DNP3/AsyncStackManager.h>
-#include <DNP3/SlaveStackConfig.h>
-#include <DNP3/MasterStackConfig.h>
-#include <DNP3/VtoRouterSettings.h>
-
-#include <APL/PhysicalLayerAsyncTCPClient.h>
-#include <APL/PhysicalLayerAsyncTCPServer.h>
+#include <APLTestTools/MockPhysicalLayerMonitor.h>
 
 #include "VtoIntegrationTestBase.h"
 
@@ -54,12 +36,12 @@ public:
 	    FilterLevel level = LEV_INFO,
 	    boost::uint16_t port = MACRO_PORT_VALUE) :
 
-		VtoIntegrationTestBase(clientOnSlave, aImmediateOutput, level, port),		
+		VtoIntegrationTestBase(clientOnSlave, aImmediateOutput, level, port),
 		loopback(mLog.GetLogger(level, "loopback"), &server, &timerSource),
-		local(mLog.GetLogger(level, "mock-client-connection"), &client, &timerSource, 500) {		
+		local(mLog.GetLogger(level, "mock-client-connection"), &client, &timerSource, 500) {
 	}
 
-	virtual ~VtoLoopbackTestStack() {		
+	virtual ~VtoLoopbackTestStack() {
 		local.Stop();
 		loopback.Stop();
 	}
@@ -71,7 +53,7 @@ public:
 	bool WaitForExpectedDataToBeReceived(millis_t aTimeout = 15000) {
 		return testObj.ProceedUntil(boost::bind(&MockPhysicalLayerMonitor::AllExpectedDataHasBeenReceived, &local), aTimeout);
 	}
-	
+
 	PhysLoopback loopback;
 	MockPhysicalLayerMonitor local;
 };
@@ -81,19 +63,19 @@ BOOST_AUTO_TEST_SUITE(VtoLoopbackIntegrationSuite)
 
 BOOST_AUTO_TEST_CASE(Reconnection)
 {
-	VtoLoopbackTestStack stack(true, false);	
+	VtoLoopbackTestStack stack(true, false);
 
 	// start up everything, the local side should be able to open
 	stack.manager.Start();
 	stack.loopback.Start();
 	stack.local.Start();
-	
+
 	RandomizedBuffer data(100);
 
-	for(size_t i=0; i<3; ++i) {
-			
+	for(size_t i = 0; i < 3; ++i) {
+
 		BOOST_REQUIRE(stack.WaitForLocalState(PLS_OPEN));
-	
+
 		// test that data is correctly sent both ways
 		data.Randomize();
 		stack.local.ExpectData(data);
@@ -103,7 +85,7 @@ BOOST_AUTO_TEST_CASE(Reconnection)
 		// stop the remote loopback server, which should cause the local vto socket to close and reopen
 		stack.loopback.Stop();
 		BOOST_REQUIRE(stack.WaitForLocalState(PLS_CLOSED));
-		stack.loopback.Start();		
+		stack.loopback.Start();
 	}
 }
 
@@ -140,7 +122,7 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 	stack.loopback.Stop();
 	stack.mpMainLogger->Log(LEV_EVENT, LOCATION, "Stopped loopback");
 
-	BOOST_REQUIRE(stack.WaitForLocalState(PLS_CLOSED));	
+	BOOST_REQUIRE(stack.WaitForLocalState(PLS_CLOSED));
 }
 
 void TestLargeDataLoopback(VtoLoopbackTestStack& arTest, size_t aSizeInBytes)
@@ -156,7 +138,7 @@ void TestLargeDataLoopback(VtoLoopbackTestStack& arTest, size_t aSizeInBytes)
 	arTest.local.ExpectData(data);
 	arTest.local.WriteData(data);
 	BOOST_REQUIRE(arTest.WaitForExpectedDataToBeReceived(15000));
-	
+
 	// this will cause an exception if we receive any more data beyond what we wrote
 	arTest.testObj.ProceedForTime(1000);
 }

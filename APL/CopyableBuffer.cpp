@@ -29,9 +29,10 @@
 namespace apl
 {
 
-std::ostream& operator<<(std::ostream& output, const CopyableBuffer& arBuff) {
+std::ostream& operator<<(std::ostream& output, const CopyableBuffer& arBuff)
+{
 	output << "[" << toHex(arBuff.Buffer(), arBuff.Size(), true) << "]";
-    return output;
+	return output;
 }
 
 CopyableBuffer::CopyableBuffer() :

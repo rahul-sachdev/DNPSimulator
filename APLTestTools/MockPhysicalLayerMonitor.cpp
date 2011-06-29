@@ -22,36 +22,37 @@
 #include <APL/IPhysicalLayerAsync.h>
 #include <APL/Util.h>
 
-namespace apl {
+namespace apl
+{
 
 MockPhysicalLayerMonitor::MockPhysicalLayerMonitor(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimer, millis_t aOpenRetry) :
-		Loggable(apLogger),
-		AsyncPhysLayerMonitor(apLogger, apPhys, apTimer, aOpenRetry),
-		mOpens(0),
-		mCloses(0),
-		mOpenFailures(0),
-		mBytesRead(0),
-		mBytesWritten(0),
-		mLastWriteSize(0),
-		mReadBuffer(64),
-		mWriteBuffer(0),
-		mExpectReadBuffer(0)
+	Loggable(apLogger),
+	AsyncPhysLayerMonitor(apLogger, apPhys, apTimer, aOpenRetry),
+	mOpens(0),
+	mCloses(0),
+	mOpenFailures(0),
+	mBytesRead(0),
+	mBytesWritten(0),
+	mLastWriteSize(0),
+	mReadBuffer(64),
+	mWriteBuffer(0),
+	mExpectReadBuffer(0)
 {
-		mState.push(PLS_CLOSED);
+	mState.push(PLS_CLOSED);
 }
 
-void MockPhysicalLayerMonitor::OnPhysicalLayerOpen() 
+void MockPhysicalLayerMonitor::OnPhysicalLayerOpen()
 {
 	mOpens++;
 	mpPhys->AsyncRead(mReadBuffer, mReadBuffer.Size());
 }
 
-void MockPhysicalLayerMonitor::OnPhysicalLayerClose() 
+void MockPhysicalLayerMonitor::OnPhysicalLayerClose()
 {
 	mCloses++;
 }
 
-void MockPhysicalLayerMonitor::OnPhysicalLayerOpenFailure() 
+void MockPhysicalLayerMonitor::OnPhysicalLayerOpenFailure()
 {
 	mOpenFailures++;
 }
@@ -61,7 +62,8 @@ void MockPhysicalLayerMonitor::OnStateChange(PhysLayerState aState)
 	mState.push(aState);
 }
 
-void MockPhysicalLayerMonitor::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes) {
+void MockPhysicalLayerMonitor::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
+{
 	// we should never receive more than we're expecting
 	BOOST_REQUIRE(mExpectReadBuffer.Size() >= mBytesRead + aNumBytes);
 	CopyableBuffer expecting(mExpectReadBuffer.Buffer() + mBytesRead, aNumBytes);
@@ -75,28 +77,33 @@ void MockPhysicalLayerMonitor::_OnReceive(const boost::uint8_t* apData, size_t a
 	mpPhys->AsyncRead(mReadBuffer, mReadBuffer.Size());
 }
 
-void MockPhysicalLayerMonitor::ExpectData(const CopyableBuffer& arData) {
+void MockPhysicalLayerMonitor::ExpectData(const CopyableBuffer& arData)
+{
 	mBytesRead = 0;
 	mExpectReadBuffer = arData;
 }
 
-void MockPhysicalLayerMonitor::WriteData(const CopyableBuffer& arData) {
-	BOOST_REQUIRE(mpPhys->CanWrite());	
+void MockPhysicalLayerMonitor::WriteData(const CopyableBuffer& arData)
+{
+	BOOST_REQUIRE(mpPhys->CanWrite());
 	mBytesWritten = 0;
 	mWriteBuffer = arData;
 	this->TransmitNext();
 }
 
-void MockPhysicalLayerMonitor::_OnSendSuccess(void) {
-	this->mBytesWritten += this->mLastWriteSize;		
+void MockPhysicalLayerMonitor::_OnSendSuccess(void)
+{
+	this->mBytesWritten += this->mLastWriteSize;
 	this->TransmitNext();
 }
 
-void MockPhysicalLayerMonitor::_OnSendFailure(void) {
+void MockPhysicalLayerMonitor::_OnSendFailure(void)
+{
 	BOOST_REQUIRE(false);
 }
 
-bool MockPhysicalLayerMonitor::NextStateIs(PhysLayerState aState) {
+bool MockPhysicalLayerMonitor::NextStateIs(PhysLayerState aState)
+{
 	if(mState.empty()) return false;
 	else {
 		PhysLayerState state = mState.front();
@@ -106,11 +113,13 @@ bool MockPhysicalLayerMonitor::NextStateIs(PhysLayerState aState) {
 	}
 }
 
-bool MockPhysicalLayerMonitor::AllExpectedDataHasBeenReceived() {
+bool MockPhysicalLayerMonitor::AllExpectedDataHasBeenReceived()
+{
 	return mBytesRead == mExpectReadBuffer.Size();
 }
 
-void MockPhysicalLayerMonitor::TransmitNext() {
+void MockPhysicalLayerMonitor::TransmitNext()
+{
 	if(mWriteBuffer.Size() > this->mBytesWritten) {
 		size_t remaining = mWriteBuffer.Size() - mBytesWritten;
 		size_t toWrite = apl::Min<size_t>(4096, remaining);
