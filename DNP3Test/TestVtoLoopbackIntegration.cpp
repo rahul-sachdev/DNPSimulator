@@ -143,13 +143,13 @@ void TestLargeDataLoopback(VtoLoopbackTestStack& arTest, size_t aSizeInBytes)
 	arTest.testObj.ProceedForTime(1000);
 }
 
-BOOST_AUTO_TEST_CASE(LargeDataLoopbackMasterToSlave)
+BOOST_AUTO_TEST_CASE(LargeDataLoopbackMasterWritesSlaveEchoes)
 {
 	VtoLoopbackTestStack stack(true, false);
 	TestLargeDataLoopback(stack, 500000);
 }
 
-BOOST_AUTO_TEST_CASE(LargeDataLoopbackSlaveToMaster)
+BOOST_AUTO_TEST_CASE(LargeDataLoopbackSlaveWritesMasterEchoes)
 {
 	VtoLoopbackTestStack stack(false, false);
 	TestLargeDataLoopback(stack, 500000);

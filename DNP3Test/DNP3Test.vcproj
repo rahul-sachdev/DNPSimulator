@@ -487,6 +487,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\TestVtoOnewayIntegration.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\TestVtoRouter.cpp"
 					>
 				</File>
