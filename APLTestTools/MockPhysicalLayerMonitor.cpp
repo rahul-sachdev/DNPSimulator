@@ -22,6 +22,8 @@
 #include <APL/IPhysicalLayerAsync.h>
 #include <APL/Util.h>
 
+#include <iostream>
+
 namespace apl
 {
 
