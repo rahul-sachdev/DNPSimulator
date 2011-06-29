@@ -22,6 +22,7 @@
 #include "MasterStates.h"
 #include "ObjectReadIterator.h"
 #include "ResponseLoader.h"
+#include "VtoEventBufferAdapter.h"
 
 #include <APL/DataInterfaces.h>
 #include <APL/AsyncTaskInterfaces.h>
@@ -47,7 +48,7 @@ namespace dnp
 Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IDataObserver* apPublisher, AsyncTaskGroup* apTaskGroup, ITimerSource* apTimerSrc, ITimeSource* apTimeSrc) :
 	Loggable(apLogger),
 	mVtoReader(apLogger),
-	mVtoWriter(aCfg.VtoWriterQueueSize),
+	mVtoWriter(apLogger->GetSubLogger("VtoWriter"), aCfg.VtoWriterQueueSize),
 	mRequest(aCfg.FragSize),
 	mpAppLayer(apAppLayer),
 	mpPublisher(apPublisher),
@@ -110,7 +111,6 @@ void Master::UpdateState(StackStates aState)
 		LOG_BLOCK(LEV_INFO, "StackState: " << ConvertToString(aState));
 		mState = aState;
 		if(mpObserver != NULL) mpObserver->OnStateChange(aState);
-		mVtoReader.OnStateChange(aState);
 		if(mState == SS_COMMS_UP) {
 			mSchedule.mpVtoTransmitTask->Enable();
 		}
@@ -221,27 +221,22 @@ void Master::ChangeUnsol(ITask* apTask, bool aEnable, int aClassMask)
 
 void Master::TransmitVtoData(ITask* apTask)
 {
-	VtoEvent info;
+	size_t max = mVtoTransmitTask.mBuffer.NumAvailable();
+	VtoEventBufferAdapter adapter(&mVtoTransmitTask.mBuffer);
+	mVtoWriter.Flush(&adapter, max);
 
-	/* Take out of the mVtoWriter and put into the mVtoTransmitTask */
-	while (!mVtoTransmitTask.mBuffer.IsFull() && mVtoWriter.Read(info)) {
-		mVtoTransmitTask.mBuffer.Update(info);
+	LOG_BLOCK(LEV_DEBUG, "TransmitVtoData: " << std::boolalpha << mVtoTransmitTask.mBuffer.IsFull() << " size: " << mVtoTransmitTask.mBuffer.Size());
+
+	/* Any data to transmit? */
+	if (mVtoTransmitTask.mBuffer.Size() > 0) {
+		/* Start the mVtoTransmitTask */
+		mpState->StartTask(this, apTask, &mVtoTransmitTask);
+	}
+	else {
+		/* Stop the mVtoTransmitTask */
+		apTask->Disable();
 	}
 
-	// only start the task if we are in comms_up
-	// TODO: should this just be Enable?
-	if(this->mState == SS_COMMS_UP) {
-
-		/* Any data to transmit? */
-		if (mVtoTransmitTask.mBuffer.Size() > 0) {
-			/* Start the mVtoTransmitTask */
-			mpState->StartTask(this, apTask, &mVtoTransmitTask);
-		}
-		else {
-			/* Stop the mVtoTransmitTask */
-			apTask->Disable();
-		}
-	}
 }
 
 /* Implement IAppUser */

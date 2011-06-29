@@ -240,15 +240,15 @@ Stack* AsyncStackManager::GetStackByName(const std::string& arStackName)
 
 void AsyncStackManager::Stop()
 {
-	LOG_BLOCK(LEV_INFO, "enter stop");
+	LOG_BLOCK(LEV_DEBUG, "enter stop");
 	vector<string> ports = this->GetPortNames();
 	BOOST_FOREACH(string s, ports) {
-		LOG_BLOCK(LEV_INFO, "Removing port: " << s);
+		LOG_BLOCK(LEV_DEBUG, "Removing port: " << s);
 		this->RemovePort(s);
-		LOG_BLOCK(LEV_INFO, "Done removing Port: " << s);
+		LOG_BLOCK(LEV_DEBUG, "Done removing Port: " << s);
 	}
 	if(mRunning) {
-		LOG_BLOCK(LEV_INFO, "Joining on io_service thread");
+		LOG_BLOCK(LEV_DEBUG, "Joining on io_service thread");
 		mThread.WaitForStop();
 		mRunning = false;
 		LOG_BLOCK(LEV_INFO, "Done joining");
@@ -258,10 +258,10 @@ void AsyncStackManager::Stop()
 	 * Run out the io_service to verify that all the delete operations are
 	 * called, just in case the io_service wasn't running before.
 	 */
-	LOG_BLOCK(LEV_INFO, "extra run");
+	LOG_BLOCK(LEV_DEBUG, "extra run");
 	this->Run();
 
-	LOG_BLOCK(LEV_INFO, "exit stop");
+	LOG_BLOCK(LEV_DEBUG, "exit stop");
 }
 
 void AsyncStackManager::Start()

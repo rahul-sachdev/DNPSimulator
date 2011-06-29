@@ -25,7 +25,6 @@
 #include "DNPDatabaseTypes.h"
 #include "EventBuffers.h"
 #include "SlaveConfig.h"
-#include "VtoData.h"
 
 namespace apl
 {
@@ -89,7 +88,9 @@ public:
 	 *
 	 * @param arEvent		Event update to add to the buffer
 	 */
-	void Update(VtoEvent& arEvent);
+	void Update(const VtoData& arEvent, PointClass aClass, size_t aIndex);
+
+	size_t NumVtoEventsAvailable();
 
 	/**
 	 * Returns the number of events that were previously selected through
@@ -207,13 +208,13 @@ public:
 	/**
 	 * Transfers any selected events back into the buffer.
 	 */
-	void Deselect();
+	size_t Deselect();
 
 	/**
 	 * Remove events that have been written (flagged with 'mWritten=true')
 	 * from the selection buffer.
 	 */
-	void ClearWritten();
+	size_t ClearWritten();
 
 	/**
 	 * Returns 'true' if the specified buffer is full, 'false' if it still

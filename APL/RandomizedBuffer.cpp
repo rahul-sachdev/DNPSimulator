@@ -16,38 +16,22 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_LOOPBACK_H_
-#define __ASYNC_LOOPBACK_H_
 
-#include <APLTestTools/AsyncTestObjectASIO.h>
-#include <APL/AsyncPhysLayerMonitor.h>
-#include <APL/CopyableBuffer.h>
+#include "RandomizedBuffer.h"
 
 namespace apl
 {
 
-class AsyncLoopback : public AsyncPhysLayerMonitor
+RandomizedBuffer::RandomizedBuffer(size_t aSize) :
+	CopyableBuffer(aSize),
+	rand()
 {
-public:
-	AsyncLoopback(Logger*, IPhysicalLayerAsync*, ITimerSource*, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
-
-private:
-
-	CopyableBuffer mRead;
-	CopyableBuffer mWrite;
-
-	void OnStateChange(PhysLayerState) {}
-
-	void _OnReceive(const boost::uint8_t*, size_t);
-	void _OnSendSuccess(void) {}
-	void _OnSendFailure(void) {}
-
-	void OnPhysicalLayerOpen(void);
-	void OnPhysicalLayerClose(void);
-
-	void StartRead();
-};
-
+	Randomize();
 }
 
-#endif
+void RandomizedBuffer::Randomize()
+{
+	for(size_t i = 0; i < this->Size(); ++i) mpBuff[i] = rand.Next();
+}
+
+}

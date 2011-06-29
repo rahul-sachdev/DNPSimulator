@@ -36,11 +36,14 @@ void VtoTransmitTask::ConfigureRequest(APDU& arAPDU)
 	 */
 	arAPDU.Set(FC_WRITE);
 
+	const size_t MAX_VTO_EVENTS = 7;
 	/* Get all of the data objects in the buffer. */
-	size_t numObjects = this->mBuffer.Select(PC_ALL_EVENTS);
+	size_t numObjects = this->mBuffer.Select(PC_ALL_EVENTS, MAX_VTO_EVENTS);
+
+	LOG_BLOCK(LEV_INTERPRET, "VtoTransmitTask Sending: " << numObjects << " of " << this->mBuffer.Size());
 
 	/* If there are no objects to write, skip the remainder. */
-	if (numObjects < 0) {
+	if (numObjects == 0) {
 		return;
 	}
 
@@ -96,14 +99,18 @@ TaskResult VtoTransmitTask::_OnPartialResponse(const APDU& arAPDU)
 
 TaskResult VtoTransmitTask::_OnFinalResponse(const APDU& arAPDU)
 {
+
 	/* Remove the written data from the buffer */
 	this->mBuffer.ClearWrittenEvents();
+
+	this->mBuffer.Deselect();
 
 	return TR_SUCCESS;
 }
 
 void VtoTransmitTask::OnFailure()
 {
+	LOG_BLOCK(LEV_INTERPRET, "VtoTransmitTask Failed deselecting");
 	/* Put the written data back onto the buffer */
 	this->mBuffer.Deselect();
 }

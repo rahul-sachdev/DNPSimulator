@@ -38,7 +38,6 @@ public:
 
 	/// we don't care about any of the callbacks so we have empty implementations
 	void DoVtoRemoteConnectedChanged(bool aOpened) {}
-	void DoDnpConnectedChanged(bool aConnected) {}
 	void SetLocalConnected(bool aConnected) {}
 
 };

@@ -16,40 +16,42 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __DATABASE_INTERFACES_H_
-#define __DATABASE_INTERFACES_H_
+#ifndef __PHYS_LOOPBACK_H_
+#define __PHYS_LOOPBACK_H_
 
-
-#include "DNPDatabaseTypes.h"
-#include "VtoData.h"
-#include "IVtoEventAcceptor.h"
+#include "AsyncPhysLayerMonitor.h"
+#include "CopyableBuffer.h"
 
 namespace apl
 {
-namespace dnp
-{
 
-// @section desc Used by the database
-class IEventBuffer : public IVtoEventAcceptor
+/**
+*	Buffers and sends all bytes received to back on the same layer.
+*/
+class PhysLoopback : public AsyncPhysLayerMonitor
 {
 public:
+	PhysLoopback(Logger*, IPhysicalLayerAsync*, ITimerSource*, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
 
-	virtual ~IEventBuffer() {}
+	size_t mBytesRead;
+	size_t mBytesWritten;
 
-	virtual void Update(const Binary& arEvent, PointClass aClass, size_t aIndex) = 0;
+private:
 
-	virtual void Update(const Analog& arEvent, PointClass aClass, size_t aIndex) = 0;
+	CopyableBuffer mBuffer;
 
-	virtual void Update(const Counter& arEvent, PointClass aClass, size_t aIndex) = 0;
+	void OnStateChange(PhysLayerState) {}
 
-	virtual void Update(const VtoData& arEvent, PointClass aClass, size_t aIndex) = 0;
+	void _OnReceive(const boost::uint8_t*, size_t);
+	void _OnSendSuccess(void);
+	void _OnSendFailure(void);
 
-	virtual size_t NumVtoEventsAvailable() = 0;
+	void OnPhysicalLayerOpen(void);
+	void OnPhysicalLayerClose(void);
 
+	void StartRead();
 };
 
 }
-}
 
 #endif
-

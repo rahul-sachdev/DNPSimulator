@@ -26,10 +26,18 @@ namespace apl
 
 LogToStdio LogToStdio::mInstance;
 
+LogToStdio::LogToStdio() : mPrintLocation(false)
+{}
+
+void LogToStdio::SetPrintLocation(bool aPrintLocation)
+{
+	mPrintLocation = aPrintLocation;
+}
+
 void LogToStdio::Log(const LogEntry& arEntry)
 {
 	CriticalSection cs(&mLock);
-	std::cout << "IMMEDIATE: " << arEntry.LogString() << std::endl;
+	std::cout << arEntry.LogString(mPrintLocation) << std::endl;
 }
 
 } //end ns

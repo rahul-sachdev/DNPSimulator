@@ -65,9 +65,9 @@ void PhysicalLayerAsyncTCPServer::DoOpen()
 
 	mAcceptor.async_accept(mSocket,
 	                       mRemoteEndpoint,
-						   boost::bind(&PhysicalLayerAsyncTCPServer::OnOpenCallback,
-						               this,
-						               boost::asio::placeholders::error));
+	                       boost::bind(&PhysicalLayerAsyncTCPServer::OnOpenCallback,
+	                                   this,
+	                                   boost::asio::placeholders::error));
 }
 
 void PhysicalLayerAsyncTCPServer::DoOpenCallback()

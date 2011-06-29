@@ -29,7 +29,8 @@
 
 #include <DNP3/AlwaysOpeningVtoRouter.h>
 #include <DNP3/VtoRouterSettings.h>
-#include <DNP3/VtoWriter.h>
+
+#include "ReadableVtoWriter.h"
 
 using namespace std;
 using namespace apl;
@@ -41,14 +42,14 @@ public:
 	RouterTestClass(const VtoRouterSettings& arSettings = VtoRouterSettings(0, true, true), const size_t aWriterSize = 100) :
 		LogTester(false),
 		phys(mLog.GetLogger(LEV_DEBUG, "phys")),
-		writer(aWriterSize),
+		writer(mLog.GetLogger(LEV_DEBUG, "writer"), aWriterSize),
 		mts(),
 		router(arSettings, mLog.GetLogger(LEV_DEBUG, "router"), &writer, &phys, &mts) {
 		writer.AddVtoCallback(&router);
 	}
 
 	MockPhysicalLayerAsync phys;
-	VtoWriter writer;
+	ReadableVtoWriter writer;
 	MockTimerSource mts;
 	AlwaysOpeningVtoRouter router;
 };
@@ -56,6 +57,7 @@ public:
 BOOST_AUTO_TEST_SUITE(VtoRouterTests)
 
 boost::uint8_t data[3] = { 0xA, 0xB, 0xC };
+VtoData vtoData(data, 3);
 
 void CheckVtoEvent(const VtoEvent& arEvent, const std::string& arData, boost::uint8_t aChannelId, PointClass aClass)
 {
@@ -84,7 +86,7 @@ BOOST_AUTO_TEST_CASE(WriteVtoBeforeConnect)
 {
 	RouterTestClass rtc;
 	BOOST_REQUIRE(rtc.phys.IsOpening());
-	rtc.router.OnVtoDataReceived(data, 3);
+	rtc.router.OnVtoDataReceived(vtoData);
 
 	/* When physical layer comes up, it should read and write */
 	rtc.phys.SignalOpenSuccess();
@@ -106,7 +108,7 @@ BOOST_AUTO_TEST_CASE(WriteVtoAfterConnect)
 	rtc.phys.SignalOpenSuccess();
 	BOOST_REQUIRE(rtc.phys.IsReading());
 	BOOST_REQUIRE(rtc.phys.IsOpen());
-	rtc.router.OnVtoDataReceived(data, 3);
+	rtc.router.OnVtoDataReceived(vtoData);
 
 	BOOST_REQUIRE(rtc.phys.IsWriting());
 
@@ -148,7 +150,7 @@ BOOST_AUTO_TEST_CASE(PhysReadBuffering)
 	BOOST_REQUIRE(rtc.writer.Read(vto));
 	CheckVtoEvent(vto, stringData1, 0, PC_CLASS_1);
 
-	BOOST_REQUIRE_EQUAL(rtc.writer.Size(), 1);
+	BOOST_REQUIRE_EQUAL(1, rtc.writer.Size());
 
 	// the 2nd set of data will get merged as a single vto object
 	BOOST_REQUIRE(rtc.writer.Read(vto));

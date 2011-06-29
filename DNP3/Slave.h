@@ -220,6 +220,7 @@ private:
 
 	// Helpers
 
+	size_t FlushVtoUpdates();
 	size_t FlushUpdates();
 	void FlushDeferredEvents();
 	void StartUnsolTimer(millis_t aTimeout);

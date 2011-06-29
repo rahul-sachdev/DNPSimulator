@@ -16,47 +16,28 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+#include <boost/test/unit_test.hpp>
 
-#include "AsyncLoopback.h"
+#include <APL/RandomizedBuffer.h>
+#include <APL/Log.h>
+#include <DNP3/VtoWriter.h>
 
-#include <APL/IPhysicalLayerAsync.h>
+using namespace std;
+using namespace apl;
+using namespace apl::dnp;
 
-namespace apl
+BOOST_AUTO_TEST_SUITE(VtoWriterSuite)
+
+BOOST_AUTO_TEST_CASE(OnlyAcceptsMaximumSize)
 {
+	EventLog log;
+	VtoWriter writer(log.GetLogger(LEV_DEBUG, "writer"), 3);
 
-AsyncLoopback::AsyncLoopback(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc, FilterLevel aLevel, bool aImmediate) :
-	Loggable(apLogger),
-	AsyncPhysLayerMonitor(apLogger, apPhys, apTimerSrc, 5000),
-	mRead(1024),
-	mWrite(mRead)
-{
+	/* Initialize the data stream to a pseudo-random sequence */
+	RandomizedBuffer data(1024);
 
+	BOOST_REQUIRE_EQUAL(writer.Write(data, data.Size(), 5), 255 * 3);
+	BOOST_REQUIRE_EQUAL(writer.Write(data, data.Size(), 5), 0);
 }
 
-void AsyncLoopback::StartRead()
-{
-	mpPhys->AsyncRead(mRead, mRead.Size());
-}
-
-void AsyncLoopback::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
-{
-	if(mpPhys->CanWrite()) {
-		memcpy(mWrite, mRead, aNumBytes);
-		mpPhys->AsyncWrite(mWrite, aNumBytes);
-	}
-	this->StartRead();
-}
-
-void AsyncLoopback::OnPhysicalLayerOpen(void)
-{
-	LOG_BLOCK(LEV_INFO, "Opened");
-	this->StartRead();
-}
-
-void AsyncLoopback::OnPhysicalLayerClose(void)
-{
-	LOG_BLOCK(LEV_INFO, "Closed");
-}
-
-}
-
+BOOST_AUTO_TEST_SUITE_END()

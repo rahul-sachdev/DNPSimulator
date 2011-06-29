@@ -20,6 +20,7 @@
 #include <APLTestTools/TestHelpers.h>
 
 #include <APL/Exception.h>
+#include <APL/RandomizedBuffer.h>
 #include <DNP3/SlaveEventBuffer.h>
 #include <DNP3/VtoWriter.h>
 #include <limits>
@@ -125,68 +126,13 @@ BOOST_AUTO_TEST_CASE(ClassSelect)
 	BOOST_REQUIRE(!b.IsFull(BT_COUNTER));
 }
 
+/* TODO - Write a Vto Only test here */
+/*
 BOOST_AUTO_TEST_CASE(SlaveVtoEvents)
 {
-	boost::uint8_t vtoBufferSize = 2;
-	VtoWriter writer(vtoBufferSize + 1);
-	EventMaxConfig cfg( 0, 0, 0, vtoBufferSize);
-	SlaveEventBuffer b(cfg);
-	VtoEvent info;
 
-	/* Initialize the data stream to a pseudo-random sequence */
-	const size_t dataSize = 255;
-	boost::uint8_t data[dataSize];
-	for (size_t i = 0; i < dataSize; ++i) {
-		data[i] = static_cast<boost::uint8_t>(i % 255);
-	}
-
-	/*
-	 * Add the data to the VtoWriter, as three different virtual
-	 * channels
-	 */
-	for (boost::uint8_t i = 0; i <= vtoBufferSize; ++i) {
-		writer.Write(data, dataSize, i);
-	}
-
-	/* Fill up the SlaveEventBuffer with VTO data */
-	for (size_t i = 0; i < vtoBufferSize; ++i) {
-		BOOST_REQUIRE(!b.IsFull(BT_VTO));
-		writer.Read(info);
-		b.Update(info);
-	}
-
-	BOOST_REQUIRE(b.IsFull(BT_VTO));
-	BOOST_REQUIRE_EQUAL(b.NumType(BT_VTO), vtoBufferSize);
-
-	/* Select a morsel of data and clear it */
-	BOOST_REQUIRE_EQUAL(b.Select(PC_CLASS_1, 1), 1);
-	VtoDataEventIter itr;
-	b.Begin(itr);
-	itr->mWritten = true;
-	b.ClearWritten();
-
-	/* The buffer should now have one more space left */
-	BOOST_REQUIRE(!b.IsFull(BT_VTO));
-	BOOST_REQUIRE_EQUAL(b.NumType(BT_VTO), vtoBufferSize - 1);
-	writer.Read(info);
-	b.Update(info);
-
-	/* The buffer should now be full again */
-	BOOST_REQUIRE(b.IsFull(BT_VTO));
-	BOOST_REQUIRE_EQUAL(b.NumType(BT_VTO), vtoBufferSize);
-
-	/* Clear out the buffer entirely */
-	b.Select(PC_CLASS_1);
-	b.Begin(itr);
-	for (size_t i = 0; i < vtoBufferSize; i++) {
-		itr->mWritten = true;
-		itr++;
-	}
-	b.ClearWritten();
-
-	BOOST_REQUIRE(!b.IsFull(BT_VTO));
-	BOOST_REQUIRE_EQUAL(b.NumType(BT_VTO), 0);
 }
+*/
 
 BOOST_AUTO_TEST_CASE(SimpleNegativeTests)
 {

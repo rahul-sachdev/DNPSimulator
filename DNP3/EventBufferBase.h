@@ -28,6 +28,12 @@ namespace apl
 namespace dnp
 {
 
+template <class EventType>
+class EventAcceptor
+{
+public:
+	virtual void Update(const typename EventType::MeasType& arVal, PointClass aClass, size_t aIndex) = 0;
+};
 
 /**
  * Base class for the EventBuffer classes (with templating and virtual
@@ -36,7 +42,7 @@ namespace dnp
  * Single-threaded for asynchronous/event-based model.
 */
 template <class EventType, class SetType>
-class EventBufferBase
+class EventBufferBase : public EventAcceptor<EventType>
 {
 public:
 	EventBufferBase(size_t aMaxEvents, bool aDropFirst = true);
@@ -51,17 +57,6 @@ public:
 	 * @param aIndex		Index of the measurement
 	 */
 	void Update(const typename EventType::MeasType& arVal, PointClass aClass, size_t aIndex);
-
-	/**
-	 * Adds an event to the buffer, tracking insertion order. Calls _Update
-	 * which can be overriden to do special types of insertion.
-	 *
-	 * @param arEvent		Event update to add to the buffer
-	 * @param aNewValue		a new sequence value will be assigned to the
-	 * 						arEvent if the value is true, otherwise the
-	 * 						existing arEvent sequence number will be used
-	 */
-	void Update(EventType& arEvent, bool aNewValue = true);
 
 	/**
 	 * Returns true if the buffer contains any data matching the given
@@ -142,6 +137,14 @@ public:
 	}
 
 	/**
+	 * @return the number of events before the buffer will overflow
+	 *
+	 */
+	size_t NumAvailable() {
+		return M_MAX_EVENTS - this->Size();
+	}
+
+	/**
 	 * Returns a flag to indicate whether the buffer has been overflown.
 	 *
 	 * @return				true if too much data has been written to the
@@ -162,6 +165,17 @@ public:
 	}
 
 protected:
+
+	/**
+	 * Adds an event to the buffer, tracking insertion order. Calls _Update
+	 * which can be overriden to do special types of insertion.
+	 *
+	 * @param arEvent		Event update to add to the buffer
+	 * @param aNewValue		a new sequence value will be assigned to the
+	 * 						arEvent if the value is true, otherwise the
+	 * 						existing arEvent sequence number will be used
+	 */
+	void Update(EventType& arEvent, bool aNewValue = true);
 
 	/**
 	 * Overridable NVII function called by Update.  The default

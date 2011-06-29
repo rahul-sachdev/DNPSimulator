@@ -475,6 +475,10 @@
 				Name="Vto"
 				>
 				<File
+					RelativePath=".\ReadableVtoWriter.h"
+					>
+				</File>
+				<File
 					RelativePath=".\TestEnhancedVtoRouter.cpp"
 					>
 				</File>
@@ -492,6 +496,10 @@
 				</File>
 				<File
 					RelativePath=".\TestVtoRouterManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TestVtoWriter.cpp"
 					>
 				</File>
 			</Filter>

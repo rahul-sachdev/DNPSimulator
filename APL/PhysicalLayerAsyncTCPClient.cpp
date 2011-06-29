@@ -54,8 +54,8 @@ void PhysicalLayerAsyncTCPClient::DoOpen()
 {
 	mSocket.async_connect(mRemoteEndpoint,
 	                      boost::bind(&PhysicalLayerAsyncTCPClient::OnOpenCallback,
-			                  this,
-			                  boost::asio::placeholders::error));
+	                                  this,
+	                                  boost::asio::placeholders::error));
 }
 
 void PhysicalLayerAsyncTCPClient::DoOpenSuccess()

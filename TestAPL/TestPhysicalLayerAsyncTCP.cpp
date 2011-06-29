@@ -25,11 +25,12 @@
 #include <APL/TimerSourceASIO.h>
 #include <APL/Exception.h>
 #include <APL/IOServiceThread.h>
+#include <APL/PhysLoopback.h>
+#include <APL/RandomizedBuffer.h>
 
 #include <APLTestTools/TestHelpers.h>
 #include <APLTestTools/BufferHelpers.h>
 #include <APLTestTools/AsyncTestObjectASIO.h>
-#include <APLTestTools/AsyncLoopback.h>
 #include <APLTestTools/AsyncPhysTestObject.h>
 
 #include <iostream>
@@ -200,40 +201,48 @@ BOOST_AUTO_TEST_CASE(ServerAsyncCloseAfterOpeningKillsAcceptor)
 }
 
 
+#define MACRO_LOOPBACK_SIZE 100
 #ifndef ARM
+#define MACRO_LOOPBACK_ITERATIONS 100
+#else
+#define MACRO_LOOPBACK_ITERATIONS 10
+#endif
 
 BOOST_AUTO_TEST_CASE(Loopback)
 {
-	EventLog logserver;
-	boost::asio::io_service loopservice;
-	TimerSourceASIO timer_src(&loopservice);
-	PhysicalLayerAsyncTCPServer server(logserver.GetLogger(LEV_INFO, "server"), &loopservice, "127.0.0.1", 30000);
-	AsyncLoopback t(logserver.GetLogger(LEV_INFO, "loopback"), &server, &timer_src, LEV_WARNING, false);
-	IOServiceThread iost(logserver.GetLogger(LEV_INFO, "ioservice"), &loopservice);
-	t.Start();
-	iost.Start();
+	const size_t SIZE = MACRO_LOOPBACK_SIZE;
+	const size_t ITERATIONS = MACRO_LOOPBACK_ITERATIONS;
 
 	EventLog log;
-	Logger* logger = log.GetLogger(LEV_DEBUG, "client");
+	Logger* pLogger = log.GetLogger(LEV_INFO, "test");
 	AsyncTestObjectASIO test;
-	PhysicalLayerAsyncTCPClient client(logger, test.GetService(), "127.0.0.1", 30000);
-	LowerLayerToPhysAdapter adapter(logger, &client);
-	MockUpperLayer upper(logger);
+	TimerSourceASIO timerSource(test.GetService());
+	PhysicalLayerAsyncTCPServer server(pLogger->GetSubLogger("server"), test.GetService(), "127.0.0.1", 30000);
+
+	PhysLoopback loopback(pLogger->GetSubLogger("loopback"), &server, &timerSource, LEV_WARNING, false);
+	loopback.Start();
+
+	PhysicalLayerAsyncTCPClient client(pLogger->GetSubLogger("client"), test.GetService(), "127.0.0.1", 30000);
+	LowerLayerToPhysAdapter adapter(pLogger->GetSubLogger("adapter"), &client);
+	MockUpperLayer upper(pLogger->GetSubLogger("mock"));
 	adapter.SetUpperLayer(&upper);
 
 	client.AsyncOpen();
 	BOOST_REQUIRE(test.ProceedUntil(boost::bind(&MockUpperLayer::IsLowerLayerUp, &upper)));
 
-	for(size_t i = 0; i < 1000; ++i) {
-		upper.SendDown("01 02 03");
-		BOOST_REQUIRE(test.ProceedUntil(boost::bind(&MockUpperLayer::BufferEquals, &upper, "01 02 03")));
+	RandomizedBuffer rb(SIZE);
+
+	for(size_t i = 0; i < ITERATIONS; ++i) {
+		rb.Randomize();
+		upper.SendDown(rb, rb.Size());
+		BOOST_REQUIRE(test.ProceedUntil(boost::bind(&MockUpperLayer::BufferEquals, &upper, rb.Buffer(), rb.Size())));
 		BOOST_REQUIRE(test.ProceedUntil(boost::bind(&MockUpperLayer::CountersEqual, &upper, 1, 0)));
 		upper.ClearBuffer();
 		upper.Reset();
 	}
 }
 
-#endif
+
 
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -15,24 +15,36 @@
  * under the License.
  */
 
-#include "AlwaysOpeningVtoRouter.h"
+#ifndef __VTO_EVENT_BUFFER_ADAPTER_H_
+#define __VTO_EVENT_BUFFER_ADAPTER_H_
+
+#include "EventBufferBase.h"
+#include "IVtoEventAcceptor.h"
 
 namespace apl
 {
+
 namespace dnp
 {
 
-AlwaysOpeningVtoRouter::AlwaysOpeningVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
-	Loggable(apLogger),
-	VtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc)
+class VtoEventBufferAdapter : public IVtoEventAcceptor
 {
-	// we are always ready to accept new data
-	mVtoTxBuffer.push(new VtoDataChunk(VTODT_DATA, 4096));
-	this->DoStart();
+public:
+
+	VtoEventBufferAdapter(EventAcceptor<VtoEvent>* apBuffer) : mpBuffer(apBuffer)
+	{}
+
+	void Update(const VtoData& arEvent, PointClass aClass, size_t aIndex) {
+		mpBuffer->Update(arEvent, aClass, aIndex);
+	}
+
+private:
+	EventAcceptor<VtoEvent>* mpBuffer;
+};
+
+
 }
 
 }
-}
 
-/* vim: set ts=4 sw=4: */
-
+#endif

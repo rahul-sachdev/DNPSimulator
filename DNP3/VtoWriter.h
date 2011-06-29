@@ -24,10 +24,12 @@
 #include <APL/Lock.h>
 #include <APL/DataInterfaces.h>
 #include <APL/SubjectBase.h>
+#include <APL/Loggable.h>
 
 #include "EventTypes.h"
 #include "VtoDataInterface.h"
 #include "VtoData.h"
+#include "IVtoEventAcceptor.h"
 
 namespace apl
 {
@@ -39,7 +41,7 @@ namespace dnp
  * stack.  Responsible for UserCode -> Stack thread marshalling and
  * stream decomposition.
  */
-class VtoWriter : public IVtoWriter, public SubjectBase<NullLock>
+class VtoWriter : public IVtoWriter, public SubjectBase<NullLock>, private Loggable
 {
 public:
 
@@ -53,7 +55,9 @@ public:
 	 *
 	 * @return				the new VtoQueue instance
 	 */
-	VtoWriter(size_t aMaxVtoChunks);
+	VtoWriter(Logger* apLogger, size_t aMaxVtoChunks);
+
+	~VtoWriter();
 
 	/**
 	* Registers an IVtoCallbacks to receive OnBufferAvailable() notifications
@@ -81,18 +85,14 @@ public:
 	virtual void SetLocalVtoState(bool aLocalVtoConnectionOpened,
 	                              boost::uint8_t aChannelId);
 	/**
-	 * Reads one item from the front of the queue.  If no items
-	 * are available, the function returns false.  If an item is
-	 * found in the queue, the item is stored in arEvent and
-	 * removed from the queue, and the function returns true.
+	 * Pulls items from the queue and pushes them to an IVtoEventAcceptor*
 	 *
-	 * @param arEvent		The destination store for the queue
-	 * 						data
+	 * @param apAcceptor	Interface that accepts the events
+	 * @param aMaxEvents	The maximum number of events that will be written to apAcceptor
 	 *
-	 * @return				true if data is returned, false
-	 * 						otherwise
+	 * @return				The number of events that were written
 	 */
-	bool Read(VtoEvent& arEvent);
+	size_t Flush(IVtoEventAcceptor* apAcceptor, size_t aMaxEvents);
 
 	/**
 	 * Implements IVtoWriter::Size().
@@ -112,14 +112,18 @@ public:
 
 protected:
 
+	std::queue<VtoEvent> mQueue;
+
+private:
+
 	/**
 	 * Lock used for thread safety
 	 */
 	SigLock mLock;
 
-private:
-
-	bool ReadWithoutNotifying(VtoEvent& arEvent);
+	/* implement ITransactable NVII functions */
+	void _Start();
+	void _End();
 
 	void NotifyAllCallbacks();
 
@@ -140,7 +144,6 @@ private:
 	                    boost::uint8_t aChannelId);
 
 	const size_t mMaxVtoChunks;
-	std::queue<VtoEvent> mQueue;
 
 	typedef std::set<IVtoBufferHandler*> CallbackSet;
 	CallbackSet mCallbacks;

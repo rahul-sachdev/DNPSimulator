@@ -220,6 +220,10 @@
 					RelativePath=".\TestPhysicalLayerAsyncTCP.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\TestPhysicalLayerLoopback.cpp"
+					>
+				</File>
 				<Filter
 					Name="Framework"
 					>

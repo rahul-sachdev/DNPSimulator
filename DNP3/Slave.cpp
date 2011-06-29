@@ -61,8 +61,7 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	mState(SS_UNKNOWN),
 	mpTimeTimer(NULL),
 	mVtoReader(apLogger),
-	mVtoWriter(arCfg.mVtoWriterQueueSize)
-
+	mVtoWriter(apLogger->GetSubLogger("VtoWriter"), arCfg.mVtoWriterQueueSize)
 {
 	/* Link the event buffer to the database */
 	mpDatabase->SetEventBuffer(mRspContext.GetBuffer());
@@ -83,15 +82,16 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	    )
 	);
 
-	mpVtoNotifier = mNotifierSource.Get(
-	                    boost::bind(&Slave::OnVtoUpdate, this),
-	                    mpTimerSrc
-	                );
 	/*
-	 * Incoming data will trigger a POST on the timer source to call
+	 * Incoming vto data will trigger a POST on the timer source to call
 	 * Slave::OnVtoUpdate().
 	 */
-	mVtoWriter.AddObserver(mpVtoNotifier);
+	mVtoWriter.AddObserver(
+	    mNotifierSource.Get(
+	        boost::bind(&Slave::OnVtoUpdate, this),
+	        mpTimerSrc
+	    )
+	);
 
 	/* Cause the slave to go through the null-unsol startup sequence */
 	if (!mConfig.mDisableUnsol) {
@@ -116,7 +116,6 @@ void Slave::UpdateState(StackStates aState)
 		LOG_BLOCK(LEV_INFO, "StackState: " << ConvertToString(aState));
 		mState = aState;
 		if(mpObserver != NULL) mpObserver->OnStateChange(aState);
-		mVtoReader.OnStateChange(aState);
 	}
 }
 
@@ -180,24 +179,10 @@ void Slave::OnUnknownObject()
 void Slave::OnVtoUpdate()
 {
 	/*
-	 * Copy as much data as we can from the VtoWriter into the
-	 * SlaveEventBuffer's VtoEvent buffer.
-	 */
-	SlaveEventBuffer* seb = reinterpret_cast<SlaveEventBuffer*>(this->mRspContext.GetBuffer());
-	InsertionOrderedEventBuffer<VtoEvent>* buffer = seb->GetVtoEventBuffer();
-	VtoEvent info;
-
-	while (!buffer->IsFull() && this->mVtoWriter.Read(info)) {
-		buffer->Update(info);
-	}
-
-	/*
 	 * Let the current state decide how to handle the VTO buffer.  We use the
-	 * same handler as Slave::OnDataUpdate() to reduce the complexity in the
-	 * mechanism.
+	 * same handler as Slave::OnDataUpdate()
 	 */
-	mpState->OnDataUpdate(this);
-	this->FlushDeferredEvents();
+	this->OnDataUpdate();
 }
 
 void Slave::OnDataUpdate()
@@ -252,6 +237,20 @@ void Slave::FlushDeferredEvents()
 	}
 }
 
+size_t Slave::FlushVtoUpdates()
+{
+	/*
+	 * Copy as much data as we can from the VtoWriter into the
+	 * SlaveEventBuffer's VtoEvent buffer.
+	 */
+	IEventBuffer* pBuff = this->mRspContext.GetBuffer();
+	size_t available = mVtoWriter.Size();
+	size_t space = pBuff->NumVtoEventsAvailable();
+	size_t flushed = this->mVtoWriter.Flush(pBuff, space);
+	if(available > space) this->mDeferredUpdate = true;
+	return flushed;
+}
+
 size_t Slave::FlushUpdates()
 {
 	size_t num = 0;
@@ -264,6 +263,8 @@ size_t Slave::FlushUpdates()
 		mChangeBuffer.Clear();
 		return 0;
 	}
+
+	num += this->FlushVtoUpdates();
 
 	LOG_BLOCK(LEV_INFO, "Processed " << num << " updates");
 	return num;

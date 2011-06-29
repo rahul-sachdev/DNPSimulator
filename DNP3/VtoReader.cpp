@@ -86,7 +86,8 @@ void VtoReader::UpdateEnhancedVto(const VtoData& arData, boost::uint8_t aChannel
 			            VTOERR_ENHANCED_VTO_FOR_UNREGISTERED_CHANNEL);
 		}
 		else {
-			i->second->OnVtoRemoteConnectedChanged(remoteOnline);
+			VtoData data(remoteOnline ? VTODT_REMOTE_OPENED : VTODT_REMOTE_CLOSED);
+			i->second->OnVtoDataReceived(data);
 		}
 	}
 	catch(Exception ex) {
@@ -105,7 +106,7 @@ void VtoReader::UpdateNormalVto(const VtoData& arData, boost::uint8_t aChannelId
 		            VTOERR_VTO_FOR_UNEXPECTED_CHANNEL);
 	}
 	else {
-		i->second->OnVtoDataReceived(arData.mpData, arData.GetSize());
+		i->second->OnVtoDataReceived(arData);
 	}
 }
 
@@ -120,21 +121,6 @@ void VtoReader::Update(const VtoData& arData,
 	}
 	else {
 		this->UpdateNormalVto(arData, aChannelId);
-	}
-}
-
-void VtoReader::OnStateChange(StackStates aState)
-{
-	CriticalSection cs(&mLock);
-
-	ChannelMap::iterator i = mChannelMap.begin();
-
-	// COMMS_DOWN or UNKNOWN are not-connected
-	bool connected = aState == SS_COMMS_UP;
-
-	while(i != mChannelMap.end()) {
-		i->second->OnDnpConnectedChanged(connected);
-		i++;
 	}
 }
 

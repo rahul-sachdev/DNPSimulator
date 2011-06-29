@@ -25,52 +25,62 @@ namespace dnp
 EnhancedVtoRouter::EnhancedVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
 	Loggable(apLogger),
 	VtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc),
-	mDnpConnected(false),
 	mRemoteConnected(false),
 	mLocalConnected(false)
 {
 
 }
 
+std::string EnhancedVtoRouter::GetConnectionString(bool aOpen)
+{
+	return aOpen ? "OPEN" : "CLOSED";
+}
+
 void EnhancedVtoRouter::DoVtoRemoteConnectedChanged(bool aOpened)
 {
 	if(mRemoteConnected != aOpened) {
-		LOG_BLOCK(LEV_INFO, "RemoteConnectionChanged: " << std::boolalpha << aOpened);
+		LOG_BLOCK(LEV_INFO, "Remote connection: " << GetConnectionString(aOpened));
 		mRemoteConnected = aOpened;
-
 		this->HandleVtoRemoteConnectedChanged();
-	}
-}
-
-void EnhancedVtoRouter::DoDnpConnectedChanged(bool aConnected)
-{
-	if(mDnpConnected != aConnected) {
-		LOG_BLOCK(LEV_INFO, "Dnp Connection changed: " << std::boolalpha << aConnected);
-		mDnpConnected = aConnected;
-
-		//mRemoteConnected = false;
-
-		// if we are already connected locally we need to inform remote side
-		// now that we have a dnp connection to tunnel that across
-		if(mLocalConnected && !mPermanentlyStopped) {
-			mpVtoWriter->SetLocalVtoState(mLocalConnected, this->GetChannelId());
-		}
-
-		this->HandleDnpConnectedChanged();
 	}
 }
 
 void EnhancedVtoRouter::SetLocalConnected(bool aConnected)
 {
 	if(mLocalConnected != aConnected) {
-		LOG_BLOCK(LEV_INFO, "Local Connection changed: " << std::boolalpha << aConnected);
+		LOG_BLOCK(LEV_INFO, "Local connection: " << GetConnectionString(aConnected));
 		mLocalConnected = aConnected;
 
-		if(mDnpConnected && !mPermanentlyStopped) {
-			mpVtoWriter->SetLocalVtoState(mLocalConnected, this->GetChannelId());
-		}
 		this->HandleSetLocalConnected();
+
+		if(aConnected) {
+			mVtoTxBuffer.push(new VtoDataChunk(VTODT_REMOTE_OPENED, 0));
+			mVtoTxBuffer.push(new VtoDataChunk(VTODT_DATA, 4096));
+		}
+		else {
+			mVtoTxBuffer.push(new VtoDataChunk(VTODT_REMOTE_CLOSED, 0));
+		}
+
+
 	}
+}
+
+void EnhancedVtoRouter::FlushBuffers()
+{
+	// clear out all of the data when we close the local connection
+
+	while(mPhysLayerTxBuffer.size() > 0) {
+		LOG_BLOCK(LEV_WARNING, "Tossing data: " << this->mPhysLayerTxBuffer.front().GetType() << " size: " << this->mPhysLayerTxBuffer.front().GetSize());
+		this->mPhysLayerTxBuffer.pop();
+	}
+
+}
+
+void EnhancedVtoRouter::StopAndFlushBuffers()
+{
+	FlushBuffers();
+
+	this->DoStop();
 }
 
 /*****************************************
@@ -81,29 +91,27 @@ ServerSocketVtoRouter::ServerSocketVtoRouter(const VtoRouterSettings& arSettings
 	Loggable(apLogger),
 	EnhancedVtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc)
 {
-
+	// This type of router always runs
+	this->DoStart();
 }
 
 void ServerSocketVtoRouter::HandleVtoRemoteConnectedChanged()
 {
-	if(!mRemoteConnected) {
+	if(mRemoteConnected) {
+
+	}
+	else {
 		// if the remote side has closed we should close our
 		// local connection and then prepare for a new one
+		this->FlushBuffers();
 		this->Reconnect();
 	}
-}
 
-void ServerSocketVtoRouter::HandleDnpConnectedChanged()
-{
-	// only if connected via dnp should the local connection be running
-	if(mDnpConnected) this->DoStart();
-	else DoStop();
 }
 
 void ServerSocketVtoRouter::HandleSetLocalConnected()
 {
-	// nothing extra necessary when local connects, enhanced vtorouter
-	// will already have sent the local online message
+	if(!mLocalConnected) this->FlushBuffers();
 }
 
 /*****************************************
@@ -118,10 +126,6 @@ ClientSocketVtoRouter::ClientSocketVtoRouter(const VtoRouterSettings& arSettings
 
 void ClientSocketVtoRouter::HandleVtoRemoteConnectedChanged()
 {
-	// should not be possible to recieve remote connected message and not
-	// have a valid dnp connection
-	assert(!mRemoteConnected || mDnpConnected == mRemoteConnected);
-
 	if(mRemoteConnected) {
 		// pretend we are online, so the other side sees a "connected"
 		// message. If we succeed in connecting the second SetLocalConnected(true)
@@ -134,20 +138,14 @@ void ClientSocketVtoRouter::HandleVtoRemoteConnectedChanged()
 	}
 	else {
 		// always stop the local connection attempts if the remote is disconnected
-		this->DoStop();
+		this->StopAndFlushBuffers();
 	}
-}
-
-void ClientSocketVtoRouter::HandleDnpConnectedChanged()
-{
-	// if we lose dnp we should terminate the local connection
-	if(!mDnpConnected) this->DoStop();
 }
 
 void ClientSocketVtoRouter::HandleSetLocalConnected()
 {
 	// we shouldn't automatically reconnect when the connection drops
-	if(!mLocalConnected) DoStop();
+	if(!mLocalConnected) this->StopAndFlushBuffers();
 }
 
 }

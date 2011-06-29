@@ -70,13 +70,14 @@ bool LogEntry :: GetValue(const std::string& arKey, int& arValue) const
 	return GetAnyValue<int>(arKey, arValue);
 }
 
-string LogEntry :: LogString() const
+string LogEntry :: LogString(bool aUseLocation) const
 {
 	ostringstream oss;
 	oss << GetTimeString() << " - "
 	    << LogTypes::GetLevelString( mFilterLevel ) << " - "
-	    << mDeviceName << " - "
-	    << mMessage;
+	    << mDeviceName;
+	if(aUseLocation && !mLocation.empty()) oss << " - " << mLocation;
+	oss << " - " << mMessage;
 
 	if(this->GetErrorCode() != -1) oss << " - " << this->GetErrorCode();
 

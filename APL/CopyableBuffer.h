@@ -32,8 +32,9 @@ namespace apl
 */
 class CopyableBuffer
 {
+
 public:
-	// Construct null bufer
+	// Construct null buffer
 	CopyableBuffer();
 	// Construct based on starting size of buffer
 	CopyableBuffer(size_t aSize);

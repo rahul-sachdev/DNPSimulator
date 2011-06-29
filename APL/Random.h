@@ -16,39 +16,40 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __DATABASE_INTERFACES_H_
-#define __DATABASE_INTERFACES_H_
+#ifndef __RANDOM_H_
+#define __RANDOM_H_
 
-
-#include "DNPDatabaseTypes.h"
-#include "VtoData.h"
-#include "IVtoEventAcceptor.h"
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/variate_generator.hpp>
 
 namespace apl
 {
-namespace dnp
+
+template<class T>
+class Random
 {
 
-// @section desc Used by the database
-class IEventBuffer : public IVtoEventAcceptor
-{
 public:
+	Random(T aMin = std::numeric_limits<T>::min(), T aMax = std::numeric_limits<T>::max()) :
+		rng(),
+		dist(aMin, aMax),
+		nextRand(rng, dist) {
 
-	virtual ~IEventBuffer() {}
+	}
 
-	virtual void Update(const Binary& arEvent, PointClass aClass, size_t aIndex) = 0;
+	T Next() {
+		T ret = nextRand();
+		return ret;
+	}
 
-	virtual void Update(const Analog& arEvent, PointClass aClass, size_t aIndex) = 0;
-
-	virtual void Update(const Counter& arEvent, PointClass aClass, size_t aIndex) = 0;
-
-	virtual void Update(const VtoData& arEvent, PointClass aClass, size_t aIndex) = 0;
-
-	virtual size_t NumVtoEventsAvailable() = 0;
-
+private:
+	boost::mt19937 rng;
+	boost::uniform_int<T> dist;
+	boost::variate_generator<boost::mt19937&, boost::uniform_int<T> > nextRand;
 };
 
-}
+
 }
 
 #endif

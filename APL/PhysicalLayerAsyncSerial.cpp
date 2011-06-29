@@ -79,19 +79,19 @@ void PhysicalLayerAsyncSerial::DoAsyncRead(boost::uint8_t* apBuffer, size_t aMax
 {
 	mPort.async_read_some(buffer(apBuffer, aMaxBytes),
 	                      boost::bind(&PhysicalLayerAsyncSerial::OnReadCallback,
-						              this,
-						              boost::asio::placeholders::error,
-						              apBuffer,
-						              boost::asio::placeholders::bytes_transferred));
+	                                  this,
+	                                  boost::asio::placeholders::error,
+	                                  apBuffer,
+	                                  boost::asio::placeholders::bytes_transferred));
 }
 
 void PhysicalLayerAsyncSerial::DoAsyncWrite(const boost::uint8_t* apBuffer, size_t aNumBytes)
 {
 	async_write(mPort, buffer(apBuffer, aNumBytes),
 	            boost::bind(&PhysicalLayerAsyncSerial::OnWriteCallback,
-				            this,
-				            boost::asio::placeholders::error,
-				            aNumBytes));
+	                        this,
+	                        boost::asio::placeholders::error,
+	                        aNumBytes));
 }
 
 }

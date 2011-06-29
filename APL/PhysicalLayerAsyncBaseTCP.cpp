@@ -47,41 +47,39 @@ PhysicalLayerAsyncBaseTCP::PhysicalLayerAsyncBaseTCP(Logger* apLogger, boost::as
 
 void PhysicalLayerAsyncBaseTCP::DoClose()
 {
-	boost::system::error_code ec;
-	mSocket.close(ec);
-	if(ec) LOG_BLOCK(LEV_WARNING, ec.message());
-}
+	LOG_BLOCK(LEV_INFO, "Shutting down and closing socket");
 
-/*
-void PhysicalLayerAsyncBaseTCP::DoOpenSuccess()
-{
-	//mSocket.set_option(ip::tcp::no_delay(true));
-	LOG_BLOCK(LEV_INFO, "Successful conneciton");
+	boost::system::error_code ec;
+
+	mSocket.shutdown(ip::tcp::socket::shutdown_both, ec);
+	if(ec) LOG_BLOCK(LEV_WARNING, "Error while shutting down socket: " << ec.message());
+
+	mSocket.close(ec);
+	if(ec) LOG_BLOCK(LEV_WARNING, "Error while closing socket: " << ec.message());
 }
-*/
 
 void PhysicalLayerAsyncBaseTCP::DoAsyncRead(boost::uint8_t* apBuffer, size_t aMaxBytes)
 {
 	mSocket.async_read_some(buffer(apBuffer, aMaxBytes),
 	                        boost::bind(&PhysicalLayerAsyncBaseTCP::OnReadCallback,
-							            this,
-							            boost::asio::placeholders::error,
-							            apBuffer,
-							            boost::asio::placeholders::bytes_transferred));
+	                                    this,
+	                                    boost::asio::placeholders::error,
+	                                    apBuffer,
+	                                    boost::asio::placeholders::bytes_transferred));
 }
 
 void PhysicalLayerAsyncBaseTCP::DoAsyncWrite(const boost::uint8_t* apBuffer, size_t aNumBytes)
 {
 	async_write(mSocket, buffer(apBuffer, aNumBytes),
 	            boost::bind(&PhysicalLayerAsyncBaseTCP::OnWriteCallback,
-				            this,
-				            boost::asio::placeholders::error,
-				            aNumBytes));
+	                        this,
+	                        boost::asio::placeholders::error,
+	                        aNumBytes));
 }
 
 void PhysicalLayerAsyncBaseTCP::DoOpenFailure()
 {
-	LOG_BLOCK(LEV_INFO, "Failed socket open, closing socket");
+	LOG_BLOCK(LEV_DEBUG, "Failed socket open, closing socket");
 	DoClose();
 }
 

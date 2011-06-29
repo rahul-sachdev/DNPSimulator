@@ -16,40 +16,30 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __DATABASE_INTERFACES_H_
-#define __DATABASE_INTERFACES_H_
+#ifndef __RANDOMIZED_BUFFER_H_
+#define __RANDOMIZED_BUFFER_H_
 
-
-#include "DNPDatabaseTypes.h"
-#include "VtoData.h"
-#include "IVtoEventAcceptor.h"
+#include "CopyableBuffer.h"
+#include "Random.h"
 
 namespace apl
 {
-namespace dnp
+
+class RandomizedBuffer : public CopyableBuffer
 {
 
-// @section desc Used by the database
-class IEventBuffer : public IVtoEventAcceptor
-{
 public:
 
-	virtual ~IEventBuffer() {}
+	RandomizedBuffer(size_t aSize);
 
-	virtual void Update(const Binary& arEvent, PointClass aClass, size_t aIndex) = 0;
+	void Randomize();
 
-	virtual void Update(const Analog& arEvent, PointClass aClass, size_t aIndex) = 0;
-
-	virtual void Update(const Counter& arEvent, PointClass aClass, size_t aIndex) = 0;
-
-	virtual void Update(const VtoData& arEvent, PointClass aClass, size_t aIndex) = 0;
-
-	virtual size_t NumVtoEventsAvailable() = 0;
-
+private:
+	Random<boost::uint8_t> rand;
 };
 
 }
-}
 
 #endif
+
 

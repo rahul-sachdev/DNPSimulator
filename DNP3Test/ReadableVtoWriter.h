@@ -15,24 +15,49 @@
  * under the License.
  */
 
-#include "AlwaysOpeningVtoRouter.h"
+#ifndef __READABLE_VTO_WRITER_H_
+#define __READABLE_VTO_WRITER_H_
+
+#include <DNP3/VtoWriter.h>
+#include <DNP3/IVtoEventAcceptor.h>
 
 namespace apl
 {
 namespace dnp
 {
 
-AlwaysOpeningVtoRouter::AlwaysOpeningVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
-	Loggable(apLogger),
-	VtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc)
+/**
+ *  Provides a simple read function that makes testing easier
+ */
+class ReadableVtoWriter : public VtoWriter, private IVtoEventAcceptor
 {
-	// we are always ready to accept new data
-	mVtoTxBuffer.push(new VtoDataChunk(VTODT_DATA, 4096));
-	this->DoStart();
-}
+public:
+	ReadableVtoWriter(Logger* apLogger, size_t aMaxVtoChunks) : VtoWriter(apLogger, aMaxVtoChunks), mpEvent(NULL)
+	{}
+
+	bool Read(VtoEvent& arEvent) {
+		mpEvent = &arEvent;
+		size_t num = this->Flush(this, 1);
+		mpEvent = NULL;
+		return num > 0;
+	}
+
+private:
+
+	void Update(const VtoData& arEvent, PointClass aClass, size_t aIndex) {
+		assert(mpEvent != NULL);
+		VtoEvent evt(arEvent, aClass, aIndex);
+		*mpEvent = evt;
+	}
+
+	VtoEvent* mpEvent;
+
+};
 
 }
 }
 
 /* vim: set ts=4 sw=4: */
+
+#endif
 

@@ -647,6 +647,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\IVtoEventAcceptor.h"
+						>
+					</File>
+					<File
 						RelativePath=".\VtoConfig.h"
 						>
 					</File>
@@ -660,6 +664,10 @@
 					</File>
 					<File
 						RelativePath=".\VtoDataInterface.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VtoEventBufferAdapter.h"
 						>
 					</File>
 					<File

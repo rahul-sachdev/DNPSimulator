@@ -49,7 +49,7 @@ public:
 		this->Reset();
 	}
 
-	void OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength);
+	void OnVtoDataReceived(const VtoData& arData);
 
 	void OnVtoRemoteConnectedChanged(bool aIsRemoteOpen);
 
@@ -84,10 +84,11 @@ public:
 	size_t size;
 };
 
-void VtoCallbackTest::OnVtoDataReceived(const boost::uint8_t* apData, size_t aLength)
+void VtoCallbackTest::OnVtoDataReceived(const VtoData& arData)
 {
+	size_t aLength = arData.GetSize();
 	assert(this->size + aLength <= sizeof(received));
-	memcpy(&this->received[this->size], apData, aLength);
+	memcpy(&this->received[this->size], arData.mpData, aLength);
 	this->size += aLength;
 
 	this->lastOnVtoDataReceived = aLength;
@@ -108,78 +109,12 @@ void VtoCallbackTest::OnBufferAvailable()
 }
 
 BOOST_AUTO_TEST_SUITE(VtoInterfaceTests)
-BOOST_AUTO_TEST_CASE(VtoWriteSeveral)
-{
-	const size_t numChunks = 10;
-	const size_t emptySize = numChunks * MAX_SIZE;
-	VtoWriter writer(numChunks);
-	VtoEvent info;
-
-	const size_t dataSize = 5;
-	boost::uint8_t data[dataSize];
-
-	size_t len;
-
-	for (size_t i = 0; i < dataSize; ++i)
-		data[i] = i % 255;
-
-	/* Check the default size to make sure we have full space available */
-	BOOST_REQUIRE_EQUAL(writer.NumBytesAvailable(), emptySize);
-
-	/* Write no data, size should remain the same */
-	len = writer.Write(data, 0, 1);
-	BOOST_REQUIRE_EQUAL(len, 0);
-	BOOST_REQUIRE_EQUAL(writer.Size(), 0);
-	BOOST_WARN_EQUAL(writer.NumBytesAvailable(), emptySize);
-
-	/* Write a partial frame */
-	len = writer.Write(data, 5, 2);
-	BOOST_REQUIRE_EQUAL(len, 5);
-	BOOST_REQUIRE_EQUAL(writer.Size(), 1);
-	BOOST_WARN_EQUAL(writer.NumBytesAvailable(), emptySize - 5);
-
-	/* Write a complete frame */
-	len = writer.Write(data, MAX_SIZE, 3);
-	BOOST_REQUIRE_EQUAL(len, MAX_SIZE);
-	BOOST_REQUIRE_EQUAL(writer.Size(), 2);
-	BOOST_WARN_EQUAL(writer.NumBytesAvailable(), emptySize - 5 - MAX_SIZE);
-
-	/* Write a complete and a partial frame */
-	len = writer.Write(data, MAX_SIZE + 5, 1);
-	BOOST_REQUIRE_EQUAL(len, MAX_SIZE + 5);
-	BOOST_REQUIRE_EQUAL(writer.Size(), 4);
-	BOOST_WARN_EQUAL(writer.NumBytesAvailable(), emptySize - 5 - MAX_SIZE - (MAX_SIZE + 5));
-
-	/*
-	 * Read all items from the queue until we get a 'false' from
-	 * writer.Read().  The available size in the queue should decrement in
-	 * a corresponding 'FCFS' order.
-	 */
-	BOOST_REQUIRE(writer.Read(info) == true);
-	BOOST_REQUIRE_EQUAL(info.mValue.GetSize(), 5);
-	BOOST_WARN_EQUAL(writer.NumBytesAvailable(), emptySize - MAX_SIZE - (MAX_SIZE + 5));
-
-	BOOST_REQUIRE(writer.Read(info) == true);
-	BOOST_REQUIRE_EQUAL(info.mValue.GetSize(), MAX_SIZE);
-	BOOST_WARN_EQUAL(writer.NumBytesAvailable(), emptySize - (MAX_SIZE + 5));
-
-	BOOST_REQUIRE(writer.Read(info) == true);
-	BOOST_REQUIRE_EQUAL(info.mValue.GetSize(), MAX_SIZE);
-	BOOST_WARN_EQUAL(writer.NumBytesAvailable(), emptySize);
-
-	BOOST_REQUIRE(writer.Read(info) == true);
-	BOOST_REQUIRE_EQUAL(info.mValue.GetSize(), 5);
-	BOOST_WARN_EQUAL(writer.NumBytesAvailable(), emptySize);
-
-	BOOST_REQUIRE(writer.Read(info) == false);
-	BOOST_WARN_EQUAL(writer.NumBytesAvailable(), emptySize);
-}
-
 BOOST_AUTO_TEST_CASE(VtoWriteOverflow)
 {
+	EventLog log;
 	const size_t numChunks = 3;
 	const size_t emptySize = numChunks * MAX_SIZE;
-	VtoWriter writer(numChunks);
+	VtoWriter writer(log.GetLogger(LEV_DEBUG, "writer"), numChunks);
 
 	const size_t dataSize = MAX_SIZE * 10;
 	boost::uint8_t data[dataSize];

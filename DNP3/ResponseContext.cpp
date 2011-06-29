@@ -18,6 +18,7 @@
 #include <boost/bind.hpp>
 
 #include <APL/Logger.h>
+#include <APL/Util.h>
 
 #include "DNPConstants.h"
 #include "Objects.h"
@@ -73,7 +74,11 @@ void ResponseContext::Reset()
 
 void ResponseContext::ClearWritten()
 {
-	mBuffer.ClearWritten();
+	size_t written = mBuffer.ClearWritten();
+
+	size_t deselected = mBuffer.Deselect();
+
+	LOG_BLOCK(LEV_INTERPRET, "Clearing written events: " << written << " deselected: " << deselected);
 }
 
 void ResponseContext::ClearAndReset()
@@ -202,7 +207,14 @@ void ResponseContext::SelectEvents(PointClass aClass, size_t aNum)
 
 size_t ResponseContext::SelectVtoEvents(PointClass aClass, const SizeByVariationObject* apObj, size_t aNum)
 {
-	size_t num = mBuffer.Select(BT_VTO, aClass, aNum);
+	// only select as many messages we are likley to be able to send
+	// TODO: remove MAX_VTO_EVENTS once eventbuffer is fixed so selecting/adding/deselecting events keeps same size
+	const size_t MAX_VTO_EVENTS = 7;
+
+	size_t selectable = apl::Min<size_t>(aNum, MAX_VTO_EVENTS);
+	size_t num = mBuffer.Select(BT_VTO, aClass, selectable);
+
+	LOG_BLOCK(LEV_INTERPRET, "Selected: " << num << " vto events");
 
 	if (num > 0) {
 		VtoEventRequest r(apObj, aNum);

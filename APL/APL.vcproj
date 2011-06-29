@@ -186,6 +186,14 @@
 					RelativePath=".\PhysLayerSettings.h"
 					>
 				</File>
+				<File
+					RelativePath=".\PhysLoopback.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PhysLoopback.h"
+					>
+				</File>
 				<Filter
 					Name="Base"
 					>
@@ -527,6 +535,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Random.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Singleton.h"
 					>
 				</File>
@@ -663,6 +675,14 @@
 					</File>
 					<File
 						RelativePath=".\CopyableBuffer.h"
+						>
+					</File>
+					<File
+						RelativePath=".\RandomizedBuffer.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\RandomizedBuffer.h"
 						>
 					</File>
 					<File
