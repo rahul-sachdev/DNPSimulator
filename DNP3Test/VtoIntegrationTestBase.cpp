@@ -60,9 +60,9 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 	std::string serverSideOfStack = clientOnSlave ? "master" : "slave";
 
 	manager.AddTCPClient("vto-tcp-client", PhysLayerSettings(), "127.0.0.1", port + 10);
-	manager.StartVtoRouter("vto-tcp-client", clientSideOfStack, VtoRouterSettings(88, false, false, 4096, 1000));
+	manager.StartVtoRouter("vto-tcp-client", clientSideOfStack, VtoRouterSettings(88, false, false, 1000));
 	manager.AddTCPServer("vto-tcp-server", PhysLayerSettings(), "127.0.0.1", port + 20);
-	manager.StartVtoRouter("vto-tcp-server", serverSideOfStack, VtoRouterSettings(88, true, false, 4096, 1000));
+	manager.StartVtoRouter("vto-tcp-server", serverSideOfStack, VtoRouterSettings(88, true, false, 1000));
 }
 
 VtoIntegrationTestBase::~VtoIntegrationTestBase()

@@ -21,6 +21,7 @@
 
 #include <APL/IPhysicalLayerAsync.h>
 #include <APL/Util.h>
+#include <APL/ToHex.h>
 
 #include <iostream>
 
@@ -33,10 +34,11 @@ MockPhysicalLayerMonitor::MockPhysicalLayerMonitor(Logger* apLogger, IPhysicalLa
 	mOpens(0),
 	mCloses(0),
 	mOpenFailures(0),
+	mNumReads(0),
 	mBytesRead(0),
 	mBytesWritten(0),
 	mLastWriteSize(0),
-	mReadBuffer(64),
+	mReadBuffer(512),
 	mWriteBuffer(0),
 	mExpectReadBuffer(0)
 {
@@ -66,14 +68,25 @@ void MockPhysicalLayerMonitor::OnStateChange(PhysLayerState aState)
 
 void MockPhysicalLayerMonitor::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
 {
+	++mNumReads;
 	// we should never receive more than we're expecting
 	BOOST_REQUIRE(mExpectReadBuffer.Size() >= mBytesRead + aNumBytes);
 	CopyableBuffer expecting(mExpectReadBuffer.Buffer() + mBytesRead, aNumBytes);
 	CopyableBuffer read(apData, aNumBytes);
 	// check that we're receiving what was written
-	if(expecting != read) {
-		std::cout << "Data corruption" << std::endl;
+	BOOST_REQUIRE_EQUAL(expecting, read);
+	/*
+	const boost::uint8_t* pLast = NULL;
+	for(size_t i=0; i<aNumBytes; ++i) {		
+		if(i > 0 && (apData[i] != 0) && (apData[i] != (*pLast+1))) {
+			int diff = static_cast<int>(apData[i]) - static_cast<int>(*pLast);
+			if(diff < 0) diff += 0xAA;
+			std::cout << "Sequence discontinuity, " << toHex(pLast,1) << " -> " << toHex(apData+i,1) << " diff: " << diff << " read# " << mNumReads << std::endl;			
+		}		
+		pLast = apData + i;
 	}
+	*/
+
 	mBytesRead += aNumBytes;
 	LOG_BLOCK(LEV_INFO, "Received " << mBytesRead << " of " << mExpectReadBuffer.Size());
 	mpPhys->AsyncRead(mReadBuffer, mReadBuffer.Size());
@@ -82,6 +95,7 @@ void MockPhysicalLayerMonitor::_OnReceive(const boost::uint8_t* apData, size_t a
 void MockPhysicalLayerMonitor::ExpectData(const CopyableBuffer& arData)
 {
 	mBytesRead = 0;
+	mNumReads = 0;
 	mExpectReadBuffer = arData;
 }
 

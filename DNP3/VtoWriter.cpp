@@ -75,7 +75,7 @@ void VtoWriter::SetLocalVtoState(bool aLocalVtoConnectionOpened, boost::uint8_t 
 
 	/* Thread safe for rest of function */
 	CriticalSection cs(&mLock);
-	this->mQueue.push(evt);
+	this->mQueue.push_back(evt);
 	this->NotifyAll();
 }
 
@@ -106,15 +106,15 @@ void VtoWriter::Commit(const boost::uint8_t* apData,
 void VtoWriter::QueueVtoObject(const boost::uint8_t* apData,
                                size_t aLength,
                                boost::uint8_t aChannelId)
-{
+{		
 	/*
 	 * Create a new VtoData instance, set the event data associated
 	 * with it, and then push the object onto the transmission queue.
 	 */
-	VtoData vto(apData, aLength);
+	VtoData vto(apData, aLength);	
 
 	VtoEvent evt(vto, PC_CLASS_1, aChannelId);
-	this->mQueue.push(evt);
+	this->mQueue.push_back(evt);
 }
 
 size_t VtoWriter::Flush(IVtoEventAcceptor* apAcceptor, size_t aMaxEvents)
@@ -126,7 +126,7 @@ size_t VtoWriter::Flush(IVtoEventAcceptor* apAcceptor, size_t aMaxEvents)
 		while(numUpdates < aMaxEvents && mQueue.size() > 0) {
 			VtoEvent& evt = mQueue.front();
 			apAcceptor->Update(evt.mValue, evt.mClass, evt.mIndex);
-			mQueue.pop();
+			mQueue.pop_front();
 			++numUpdates;
 		}
 	}

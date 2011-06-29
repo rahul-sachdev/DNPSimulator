@@ -22,9 +22,8 @@ namespace apl
 namespace dnp
 {
 
-VtoRouterSettings::VtoRouterSettings(boost::uint8_t aChannelId, bool aStartLocal, bool aDisableExtensions, size_t aVtoTxBufferSizeInBytes, millis_t aOpenRetryMs) :
-	CHANNEL_ID(aChannelId),
-	VTO_TX_BUFFFER_SIZE_IN_BYTES(aVtoTxBufferSizeInBytes),
+VtoRouterSettings::VtoRouterSettings(boost::uint8_t aChannelId, bool aStartLocal, bool aDisableExtensions, millis_t aOpenRetryMs) :
+	CHANNEL_ID(aChannelId),	
 	OPEN_RETRY_MS(aOpenRetryMs),
 	START_LOCAL(aStartLocal),
 	DISABLE_EXTENSIONS(aDisableExtensions)

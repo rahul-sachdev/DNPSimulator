@@ -34,6 +34,7 @@ public:
 	size_t mCloses;
 	size_t mOpenFailures;
 
+	size_t mNumReads;
 	size_t mBytesRead;
 	size_t mBytesWritten;
 	size_t mLastWriteSize;

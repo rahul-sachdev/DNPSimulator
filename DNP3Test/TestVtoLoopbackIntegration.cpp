@@ -134,7 +134,9 @@ void TestLargeDataLoopback(VtoLoopbackTestStack& arTest, size_t aSizeInBytes)
 	BOOST_REQUIRE(arTest.WaitForLocalState(PLS_OPEN));
 
 	// test that a large set of data flowing one way works
-	RandomizedBuffer data(aSizeInBytes);
+	CopyableBuffer data(aSizeInBytes);
+	for(size_t i=0; i<data.Size(); ++i) data[i] = static_cast<boost::uint8_t>(i%(0xAA));
+
 	arTest.local.ExpectData(data);
 	arTest.local.WriteData(data);
 	BOOST_REQUIRE(arTest.WaitForExpectedDataToBeReceived(15000));
@@ -143,16 +145,18 @@ void TestLargeDataLoopback(VtoLoopbackTestStack& arTest, size_t aSizeInBytes)
 	arTest.testObj.ProceedForTime(1000);
 }
 
+#define MACRO_BUFFER_SIZE 1<<20 // 1 << 20 == 1MB, 1<<24 == 16MB
+
 BOOST_AUTO_TEST_CASE(LargeDataLoopbackMasterWritesSlaveEchoes)
 {
 	VtoLoopbackTestStack stack(true, false);
-	TestLargeDataLoopback(stack, 500000);
+	TestLargeDataLoopback(stack, MACRO_BUFFER_SIZE);	
 }
 
 BOOST_AUTO_TEST_CASE(LargeDataLoopbackSlaveWritesMasterEchoes)
 {
 	VtoLoopbackTestStack stack(false, false);
-	TestLargeDataLoopback(stack, 500000);
+	TestLargeDataLoopback(stack, MACRO_BUFFER_SIZE);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

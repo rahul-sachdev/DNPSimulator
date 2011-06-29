@@ -154,7 +154,11 @@ BOOST_AUTO_TEST_CASE(PhysReadBuffering)
 
 	// the 2nd set of data will get merged as a single vto object
 	BOOST_REQUIRE(rtc.writer.Read(vto));
-	CheckVtoEvent(vto, "0D 0E 0F 10 11 12", 0, PC_CLASS_1);
+	BOOST_REQUIRE_EQUAL(1, rtc.writer.Size());
+	CheckVtoEvent(vto, "0D 0E 0F", 0, PC_CLASS_1);
+	BOOST_REQUIRE_EQUAL(1, rtc.writer.Size());
+	BOOST_REQUIRE(rtc.writer.Read(vto));
+	CheckVtoEvent(vto, "10 11 12", 0, PC_CLASS_1);
 
 	BOOST_REQUIRE_EQUAL(rtc.writer.Size(), 0);
 }

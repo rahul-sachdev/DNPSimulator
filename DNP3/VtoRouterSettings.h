@@ -34,14 +34,12 @@ struct VtoRouterSettings {
 	/**
 	 * @param aChannelId Each dnp index for Vto data events is a channel id
 	 * @param aStartLocal If true we allways try to keep the local connection online, otherwise we only connect when the remote side connects
-	 * @param aDisableExtensions If true, the router defaults to the VTO specification and does not publish/utilize the connection state information
-	 * @param aVtoTxBufferSizeInBytes number of bytes to buffer locally
+	 * @param aDisableExtensions If true, the router defaults to the VTO specification and does not publish/utilize the connection state information	 
 	 * @param aOpenRetryMs how long to wait before retrying opening the physical layer after a failure
 	 */
-	VtoRouterSettings(boost::uint8_t aChannelId, bool aStartLocal, bool aDisableExtensions, size_t aVtoTxBufferSizeInBytes = 4096, millis_t aOpenRetryMs = 5000);
+	VtoRouterSettings(boost::uint8_t aChannelId, bool aStartLocal, bool aDisableExtensions, millis_t aOpenRetryMs = 5000);
 
-	boost::uint8_t CHANNEL_ID;
-	size_t VTO_TX_BUFFFER_SIZE_IN_BYTES;
+	boost::uint8_t CHANNEL_ID;	
 	millis_t OPEN_RETRY_MS;
 	bool START_LOCAL;
 	bool DISABLE_EXTENSIONS;
