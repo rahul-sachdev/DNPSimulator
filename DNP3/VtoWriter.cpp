@@ -106,12 +106,12 @@ void VtoWriter::Commit(const boost::uint8_t* apData,
 void VtoWriter::QueueVtoObject(const boost::uint8_t* apData,
                                size_t aLength,
                                boost::uint8_t aChannelId)
-{		
+{
 	/*
 	 * Create a new VtoData instance, set the event data associated
 	 * with it, and then push the object onto the transmission queue.
 	 */
-	VtoData vto(apData, aLength);	
+	VtoData vto(apData, aLength);
 
 	VtoEvent evt(vto, PC_CLASS_1, aChannelId);
 	this->mQueue.push_back(evt);

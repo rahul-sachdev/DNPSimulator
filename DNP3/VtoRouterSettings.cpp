@@ -23,7 +23,7 @@ namespace dnp
 {
 
 VtoRouterSettings::VtoRouterSettings(boost::uint8_t aChannelId, bool aStartLocal, bool aDisableExtensions, millis_t aOpenRetryMs) :
-	CHANNEL_ID(aChannelId),	
+	CHANNEL_ID(aChannelId),
 	OPEN_RETRY_MS(aOpenRetryMs),
 	START_LOCAL(aStartLocal),
 	DISABLE_EXTENSIONS(aDisableExtensions)

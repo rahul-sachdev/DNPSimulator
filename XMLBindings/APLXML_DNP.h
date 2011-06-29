@@ -330,7 +330,6 @@ public:
 	string PhysicalLayer;
 	int Index;
 	bool StartLocal;
-	int BufferSize;
 	int OpenRetry;
 };
 #ifdef SWIG

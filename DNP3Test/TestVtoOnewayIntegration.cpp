@@ -35,10 +35,9 @@ public:
 	    FilterLevel level = LEV_INFO,
 	    boost::uint16_t port = MACRO_PORT_VALUE) :
 
-		VtoIntegrationTestBase(clientOnSlave, aImmediateOutput, level, port),		
+		VtoIntegrationTestBase(clientOnSlave, aImmediateOutput, level, port),
 		local(mLog.GetLogger(level, "local-mock-phys-monitor"), &client, &timerSource, 500),
-		remote(mLog.GetLogger(level, "remote-mock-phys-monitor"), &server, &timerSource, 500) 
-	{
+		remote(mLog.GetLogger(level, "remote-mock-phys-monitor"), &server, &timerSource, 500) {
 
 	}
 
@@ -60,7 +59,7 @@ public:
 	}
 
 	MockPhysicalLayerMonitor local;
-	MockPhysicalLayerMonitor remote;	
+	MockPhysicalLayerMonitor remote;
 };
 
 
@@ -68,11 +67,11 @@ BOOST_AUTO_TEST_SUITE(VtoOnewayIntegrationSuite)
 
 void TestLargeDataOneWay(VtoOnewayTestStack& arTest, size_t aSizeInBytes)
 {
-	// start everything	
+	// start everything
 	arTest.local.Start();
 	arTest.remote.Start();
 	arTest.manager.Start();
-	
+
 	BOOST_REQUIRE(arTest.WaitForLocalState(PLS_OPEN));
 	BOOST_REQUIRE(arTest.WaitForRemoteState(PLS_OPEN));
 

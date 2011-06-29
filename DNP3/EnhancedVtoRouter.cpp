@@ -53,7 +53,7 @@ void EnhancedVtoRouter::SetLocalConnected(bool aConnected)
 
 		this->HandleSetLocalConnected();
 
-		mVtoTxBuffer.push_back(VtoMessage(aConnected ? VTODT_REMOTE_OPENED : VTODT_REMOTE_CLOSED));					
+		mVtoTxBuffer.push_back(VtoMessage(aConnected ? VTODT_REMOTE_OPENED : VTODT_REMOTE_CLOSED));
 	}
 }
 

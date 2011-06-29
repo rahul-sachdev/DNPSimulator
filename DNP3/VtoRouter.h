@@ -50,7 +50,7 @@ class VtoMessage
 public:
 
 	VtoMessage(VtoDataType aType) :
-	  type(aType), data() {}
+		type(aType), data() {}
 
 
 	VtoMessage(VtoDataType aType, const boost::uint8_t* apBuffer, size_t aBufferSize) :
@@ -100,7 +100,7 @@ public:
 	 */
 	VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc);
 
-	
+
 	/**
 	 * when we try to stop the router we call this thread safe function which sets a flag and
 	 * then posts a shutdown request to mpTimerSrc.
@@ -129,7 +129,7 @@ protected:
 	void CheckForPhysRead();
 	void CheckForPhysWrite();
 	void CheckForVtoWrite();
-	
+
 	// Implement AsyncPhysLayerMonitor
 
 	void OnPhysicalLayerOpen();
@@ -193,14 +193,14 @@ protected:
 	std::queue<VtoData> mPhysLayerTxBuffer;
 
 	/**
-	 * The transmit message buffer for vto actions (OPEN/CLOSE/DATA) from physical layer -> Vto. 
+	 * The transmit message buffer for vto actions (OPEN/CLOSE/DATA) from physical layer -> Vto.
 	 * The data that is put into this buffer was originally received from the physical layer.
 	 */
 	std::deque<VtoMessage> mVtoTxBuffer;
 
 	/**
 	 * Buffer used to read from the physical layer
-	 */ 
+	 */
 	CopyableBuffer mReadBuffer;
 
 	/**

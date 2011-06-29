@@ -75,18 +75,6 @@ void MockPhysicalLayerMonitor::_OnReceive(const boost::uint8_t* apData, size_t a
 	CopyableBuffer read(apData, aNumBytes);
 	// check that we're receiving what was written
 	BOOST_REQUIRE_EQUAL(expecting, read);
-	/*
-	const boost::uint8_t* pLast = NULL;
-	for(size_t i=0; i<aNumBytes; ++i) {		
-		if(i > 0 && (apData[i] != 0) && (apData[i] != (*pLast+1))) {
-			int diff = static_cast<int>(apData[i]) - static_cast<int>(*pLast);
-			if(diff < 0) diff += 0xAA;
-			std::cout << "Sequence discontinuity, " << toHex(pLast,1) << " -> " << toHex(apData+i,1) << " diff: " << diff << " read# " << mNumReads << std::endl;			
-		}		
-		pLast = apData + i;
-	}
-	*/
-
 	mBytesRead += aNumBytes;
 	LOG_BLOCK(LEV_INFO, "Received " << mBytesRead << " of " << mExpectReadBuffer.Size());
 	mpPhys->AsyncRead(mReadBuffer, mReadBuffer.Size());

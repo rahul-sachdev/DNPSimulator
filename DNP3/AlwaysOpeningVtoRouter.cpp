@@ -25,7 +25,7 @@ namespace dnp
 AlwaysOpeningVtoRouter::AlwaysOpeningVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
 	Loggable(apLogger),
 	VtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc)
-{	
+{
 	this->DoStart();
 }
 

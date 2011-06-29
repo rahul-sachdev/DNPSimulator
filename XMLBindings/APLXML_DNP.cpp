@@ -690,7 +690,6 @@ void VtoPort_t :: fromXml(TiXmlNode* pNode)
 	PhysicalLayer = FromString_string(pEm, pEm->Attribute("PhysicalLayer"));
 	Index = FromString_int(pEm, pEm->Attribute("Index"));
 	StartLocal = FromString_bool(pEm, pEm->Attribute("StartLocal"));
-	BufferSize = FromString_int(pEm, pEm->Attribute("BufferSize"));
 	OpenRetry = FromString_int(pEm, pEm->Attribute("OpenRetry"));
 	valid = true;
 };
@@ -708,7 +707,6 @@ void VtoPort_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid)
 	pEm->SetAttribute("PhysicalLayer", ToString_string(PhysicalLayer));
 	pEm->SetAttribute("Index", ToString_int(Index));
 	pEm->SetAttribute("StartLocal", ToString_bool(StartLocal));
-	pEm->SetAttribute("BufferSize", ToString_int(BufferSize));
 	pEm->SetAttribute("OpenRetry", ToString_int(OpenRetry));
 };
 

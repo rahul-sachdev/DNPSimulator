@@ -106,7 +106,7 @@ void VtoRouter::DoStop()
 void VtoRouter::_OnReceive(const boost::uint8_t* apData, size_t aLength)
 {
 	LOG_BLOCK(LEV_COMM, "GotLocalData: " << aLength);
-	
+
 	// turn the incoming data into a VtoMessage object and enque it
 	VtoMessage msg(VTODT_DATA, apData, aLength);
 	this->mVtoTxBuffer.push_back(msg);
@@ -122,9 +122,9 @@ void VtoRouter::CheckForVtoWrite()
 	if(!mPermanentlyStopped && !mVtoTxBuffer.empty()) {
 		VtoMessage msg = mVtoTxBuffer.front();
 		mVtoTxBuffer.pop_front();
-		
+
 		// type DATA means this is a buffer and we need to pull the data out and send it to the vto writer
-		if(msg.type == VTODT_DATA) {									
+		if(msg.type == VTODT_DATA) {
 			size_t numWritten = mpVtoWriter->Write(msg.data.Buffer(), msg.data.Size(), this->GetChannelId());
 			LOG_BLOCK(LEV_INTERPRET, "VtoWriter: " << numWritten << " of " << msg.data.Size());
 			if(numWritten < msg.data.Size()) {
@@ -133,11 +133,11 @@ void VtoRouter::CheckForVtoWrite()
 				mVtoTxBuffer.push_front(partial);
 			}
 			else this->CheckForVtoWrite();
-		}			
+		}
 		else {
 			// if we have generated REMOTE_OPENED or REMOTE_CLOSED message we need to send the SetLocalVtoState
 			// update to the vtowriter so it can be serialized in the correct order.
-			mpVtoWriter->SetLocalVtoState(msg.type == VTODT_REMOTE_OPENED, this->GetChannelId());						
+			mpVtoWriter->SetLocalVtoState(msg.type == VTODT_REMOTE_OPENED, this->GetChannelId());
 			this->CheckForVtoWrite();
 		}
 	}
@@ -164,7 +164,7 @@ void VtoRouter::_OnSendFailure()
 void VtoRouter::CheckForPhysRead()
 {
 	if(mpPhys->CanRead() && mVtoTxBuffer.size() < 10) {	//TODO - Make this configurable or track the size in bytes
-		mpPhys->AsyncRead(mReadBuffer, mReadBuffer.Size());		
+		mpPhys->AsyncRead(mReadBuffer, mReadBuffer.Size());
 	}
 }
 
