@@ -40,60 +40,26 @@
 #include <APL/PhysicalLayerAsyncTCPClient.h>
 #include <APL/PhysicalLayerAsyncTCPServer.h>
 
+#include "VtoIntegrationTestBase.h"
+
 using namespace apl;
 using namespace apl::dnp;
 
-/** Platforms have different reserved port ranges */
-
-#if defined(WIN32)
-/* Windows platform */
-#define MACRO_PORT_VALUE	(50000)
-#else
-/* Generic Linux platform */
-#define MACRO_PORT_VALUE	(30000)
-#endif
-
-class VtoTestStack : public LogTester
+class VtoLoopbackTestStack : public VtoIntegrationTestBase
 {
 public:
-	VtoTestStack(
+	VtoLoopbackTestStack(
 	    bool clientOnSlave = true,
 	    bool aImmediateOutput = false,
 	    FilterLevel level = LEV_INFO,
 	    boost::uint16_t port = MACRO_PORT_VALUE) :
 
-		LogTester(),
-		mpMainLogger(mLog.GetLogger(level, "main")),
-		ltf(&mLog, "integration.log", true),
-		testObj(),
-		manager(mLog.GetLogger(level, "manager"), false),
-		timerSource(testObj.GetService()),
-		client(mLog.GetLogger(level, "local-tcp-client"), testObj.GetService(), "127.0.0.1", port + 20),
-		server(mLog.GetLogger(level, "loopback-tcp-server"), testObj.GetService(), "0.0.0.0", port + 10),
+		VtoIntegrationTestBase(clientOnSlave, aImmediateOutput, level, port),		
 		loopback(mLog.GetLogger(level, "loopback"), &server, &timerSource),
-		local(mLog.GetLogger(level, "mock-client-connection"), &client, &timerSource, 500) {
-
-		if(aImmediateOutput) mLog.AddLogSubscriber(LogToStdio::Inst());
-
-		manager.AddTCPServer("dnp-tcp-server", PhysLayerSettings(), "127.0.0.1", port);
-		manager.AddSlave("dnp-tcp-server", "slave", level, &cmdAcceptor, SlaveStackConfig());
-
-		manager.AddTCPClient("dnp-tcp-client", PhysLayerSettings(), "127.0.0.1", port);
-		manager.AddMaster("dnp-tcp-client", "master", level, &fdo, MasterStackConfig());
-
-		// switch if master or slave gets the loopback half of the server
-
-		std::string clientSideOfStack = clientOnSlave ? "slave" : "master";
-		std::string serverSideOfStack = clientOnSlave ? "master" : "slave";
-
-		manager.AddTCPClient("vto-tcp-client", PhysLayerSettings(), "127.0.0.1", port + 10);
-		manager.StartVtoRouter("vto-tcp-client", clientSideOfStack, VtoRouterSettings(88, false, false, 4096, 1000));
-		manager.AddTCPServer("vto-tcp-server", PhysLayerSettings(), "127.0.0.1", port + 20);
-		manager.StartVtoRouter("vto-tcp-server", serverSideOfStack, VtoRouterSettings(88, true, false, 4096, 1000));
+		local(mLog.GetLogger(level, "mock-client-connection"), &client, &timerSource, 500) {		
 	}
 
-	~VtoTestStack() {
-		manager.Stop();
+	virtual ~VtoLoopbackTestStack() {		
 		local.Stop();
 		loopback.Stop();
 	}
@@ -105,30 +71,17 @@ public:
 	bool WaitForExpectedDataToBeReceived(millis_t aTimeout = 15000) {
 		return testObj.ProceedUntil(boost::bind(&MockPhysicalLayerMonitor::AllExpectedDataHasBeenReceived, &local), aTimeout);
 	}
-
-	Logger* mpMainLogger;
-	LogToFile ltf;
-	FlexibleDataObserver fdo;
-	MockCommandAcceptor cmdAcceptor;
-
-	AsyncTestObjectASIO testObj;
-	AsyncStackManager manager;
-
-	TimerSourceASIO timerSource;
-	PhysicalLayerAsyncTCPClient client;
-	PhysicalLayerAsyncTCPServer server;
-
+	
 	PhysLoopback loopback;
-
 	MockPhysicalLayerMonitor local;
 };
 
 
-BOOST_AUTO_TEST_SUITE(VtoRouterIntegrationSuite)
+BOOST_AUTO_TEST_SUITE(VtoLoopbackIntegrationSuite)
 
 BOOST_AUTO_TEST_CASE(Reconnection)
 {
-	VtoTestStack stack(true, false);	
+	VtoLoopbackTestStack stack(true, false);	
 
 	// start up everything, the local side should be able to open
 	stack.manager.Start();
@@ -156,7 +109,7 @@ BOOST_AUTO_TEST_CASE(Reconnection)
 
 BOOST_AUTO_TEST_CASE(RemoteSideOpenFailureBouncesLocalConnection)
 {
-	VtoTestStack test(true, false);
+	VtoLoopbackTestStack test(true, false);
 
 	BOOST_REQUIRE(test.WaitForLocalState(PLS_CLOSED));
 
@@ -173,7 +126,7 @@ BOOST_AUTO_TEST_CASE(RemoteSideOpenFailureBouncesLocalConnection)
 
 BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 {
-	VtoTestStack stack(true, false);
+	VtoLoopbackTestStack stack(true, false);
 
 	// start all 4 components, should connect
 	stack.manager.Start();
@@ -190,7 +143,7 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 	BOOST_REQUIRE(stack.WaitForLocalState(PLS_CLOSED));	
 }
 
-void TestLargeDataTransmission(VtoTestStack& arTest, size_t aSizeInBytes)
+void TestLargeDataLoopback(VtoLoopbackTestStack& arTest, size_t aSizeInBytes)
 {
 	// start everything
 	arTest.manager.Start();
@@ -208,16 +161,16 @@ void TestLargeDataTransmission(VtoTestStack& arTest, size_t aSizeInBytes)
 	arTest.testObj.ProceedForTime(1000);
 }
 
-BOOST_AUTO_TEST_CASE(LargeDataTransmissionMasterToSlave)
+BOOST_AUTO_TEST_CASE(LargeDataLoopbackMasterToSlave)
 {
-	VtoTestStack stack(true, false);
-	TestLargeDataTransmission(stack, 500000);
+	VtoLoopbackTestStack stack(true, false);
+	TestLargeDataLoopback(stack, 500000);
 }
 
-BOOST_AUTO_TEST_CASE(LargeDataTransmissionSlaveToMaster)
+BOOST_AUTO_TEST_CASE(LargeDataLoopbackSlaveToMaster)
 {
-	VtoTestStack stack(false, false);
-	TestLargeDataTransmission(stack, 500000);
+	VtoLoopbackTestStack stack(false, false);
+	TestLargeDataLoopback(stack, 500000);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

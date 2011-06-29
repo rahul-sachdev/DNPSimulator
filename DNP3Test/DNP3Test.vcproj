@@ -483,11 +483,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\TestVtoRouter.cpp"
+					RelativePath=".\TestVtoLoopbackIntegration.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\TestVtoRouterIntegration.cpp"
+					RelativePath=".\TestVtoRouter.cpp"
 					>
 				</File>
 				<File
@@ -503,6 +503,14 @@
 					>
 					<File
 						RelativePath=".\ReadableVtoWriter.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VtoIntegrationTestBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VtoIntegrationTestBase.h"
 						>
 					</File>
 				</Filter>
