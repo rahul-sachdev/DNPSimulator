@@ -26,9 +26,12 @@ namespace apl
 
 class AsyncTestObject
 {
+	static bool AlwaysBoolean(bool aAlwaysThis) { return aAlwaysThis; }
+
 public:
 	AsyncTestObject() {}
 
+	void ProceedForTime(millis_t aTimeout);
 	bool ProceedUntil(const EvalFunc& arFunc, millis_t aTimeout = G_TEST_TIMEOUT);
 	bool ProceedUntilFalse(const EvalFunc& arFunc, millis_t aTimeout = G_TEST_TIMEOUT);
 

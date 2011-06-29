@@ -227,6 +227,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\MockPhysicalLayerMonitor.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\MockPhysicalLayerMonitor.h"
+					>
+				</File>
+				<File
 					RelativePath=".\MockPhysicalLayerSource.cpp"
 					>
 				</File>

@@ -22,6 +22,7 @@
 #include <APLTestTools/AsyncTestObjectASIO.h>
 #include <APLTestTools/BufferHelpers.h>
 #include <APLTestTools/LogTester.h>
+#include <APLTestTools/MockPhysicalLayerMonitor.h>
 
 #include <APL/Log.h>
 #include <APL/LogToStdio.h>
@@ -51,109 +52,6 @@ using namespace apl::dnp;
 /* Generic Linux platform */
 #define MACRO_PORT_VALUE	(30000)
 #endif
-
-class MockClientConnection : public AsyncPhysLayerMonitor
-{
-public:
-	MockClientConnection(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimer, millis_t aOpenRetry) :
-		Loggable(apLogger),
-		AsyncPhysLayerMonitor(apLogger, apPhys, apTimer, aOpenRetry),
-		mOpens(0),
-		mCloses(0),
-		mOpenFailures(0),
-		mBytesRead(0),
-		mBytesWritten(0),
-		mLastWriteSize(0),
-		mReadBuffer(1024),
-		mWriteBuffer(0) {
-		mState.push(PLS_CLOSED);
-	}
-
-	size_t mOpens;
-	size_t mCloses;
-	size_t mOpenFailures;
-
-	size_t mBytesRead;
-	size_t mBytesWritten;
-	size_t mLastWriteSize;
-
-	CopyableBuffer mReadBuffer;
-	CopyableBuffer mWriteBuffer;
-
-	std::queue< PhysLayerState > mState;
-
-	void OnPhysicalLayerOpen() {
-		mOpens++;
-		mpPhys->AsyncRead(mReadBuffer, mReadBuffer.Size());
-	}
-	void OnPhysicalLayerClose() {
-		mCloses++;
-	}
-
-	void OnPhysicalLayerOpenFailure() {
-		mOpenFailures++;
-	}
-
-	void OnStateChange(PhysLayerState aState) {
-		mState.push(aState);
-	}
-
-	void _OnReceive(const boost::uint8_t* apData, size_t aNumBytes) {
-		// we should never receive more than we sent
-		BOOST_REQUIRE(mWriteBuffer.Size() >= mBytesRead + aNumBytes);
-		CopyableBuffer written(mWriteBuffer.Buffer() + mBytesRead, aNumBytes);
-		CopyableBuffer read(apData, aNumBytes);
-		// check that we're receiving what was written
-		BOOST_REQUIRE_EQUAL(written, read);
-		mBytesRead += aNumBytes;
-		LOG_BLOCK(LEV_INFO, "Received " << mBytesRead << " of " << mWriteBuffer.Size());
-		mpPhys->AsyncRead(mReadBuffer, mReadBuffer.Size());
-	}
-
-	void WriteData(const CopyableBuffer& arData) {
-		BOOST_REQUIRE(mpPhys->CanWrite());
-		mBytesRead = 0;
-		mBytesWritten = 0;
-		mWriteBuffer = arData;
-		this->TransmitNext();
-	}
-
-	void _OnSendSuccess(void) {
-		this->mBytesWritten += this->mLastWriteSize;
-		//std::cout << "Written " << this->mBytesWritten << " of " << this->mWriteBuffer.Size() << std::endl;
-		this->TransmitNext();
-	}
-
-	void _OnSendFailure(void) {
-		BOOST_REQUIRE(false);
-	}
-
-	bool StateIs(PhysLayerState aState) {
-		if(mState.empty()) return false;
-		else {
-			PhysLayerState state = mState.front();
-			LOG_BLOCK(LEV_INFO, "Saw state: " + ConvertToString(state));
-			mState.pop();
-			return (state == aState);
-		}
-	}
-
-	bool ReceivedAllDataThatWasWritten() {
-		return mBytesRead == mWriteBuffer.Size();
-	}
-
-private:
-
-	void TransmitNext() {
-		if(mWriteBuffer.Size() > this->mBytesWritten) {
-			size_t remaining = mWriteBuffer.Size() - mBytesWritten;
-			size_t toWrite = apl::Min<size_t>(4096, remaining);
-			mpPhys->AsyncWrite(mWriteBuffer.Buffer() + mBytesWritten, toWrite);
-			this->mLastWriteSize = toWrite;
-		}
-	}
-
-};
 
 class VtoTestStack : public LogTester
 {
@@ -201,11 +99,11 @@ public:
 	}
 
 	bool WaitForLocalState(PhysLayerState aState, millis_t aTimeout = 15000) {
-		return testObj.ProceedUntil(boost::bind(&MockClientConnection::StateIs, &local, aState), aTimeout);
+		return testObj.ProceedUntil(boost::bind(&MockPhysicalLayerMonitor::NextStateIs, &local, aState), aTimeout);
 	}
 
-	bool WaitForAllDataToBeEchoed(millis_t aTimeout = 15000) {
-		return testObj.ProceedUntil(boost::bind(&MockClientConnection::ReceivedAllDataThatWasWritten, &local), aTimeout);
+	bool WaitForExpectedDataToBeReceived(millis_t aTimeout = 15000) {
+		return testObj.ProceedUntil(boost::bind(&MockPhysicalLayerMonitor::AllExpectedDataHasBeenReceived, &local), aTimeout);
 	}
 
 	Logger* mpMainLogger;
@@ -222,7 +120,7 @@ public:
 
 	PhysLoopback loopback;
 
-	MockClientConnection local;
+	MockPhysicalLayerMonitor local;
 };
 
 
@@ -245,8 +143,9 @@ BOOST_AUTO_TEST_CASE(Reconnection)
 	
 		// test that data is correctly sent both ways
 		data.Randomize();
+		stack.local.ExpectData(data);
 		stack.local.WriteData(data);
-		BOOST_REQUIRE(stack.WaitForAllDataToBeEchoed());
+		BOOST_REQUIRE(stack.WaitForExpectedDataToBeReceived());
 
 		// stop the remote loopback server, which should cause the local vto socket to close and reopen
 		stack.loopback.Stop();
@@ -288,7 +187,7 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 	stack.loopback.Stop();
 	stack.mpMainLogger->Log(LEV_EVENT, LOCATION, "Stopped loopback");
 
-	BOOST_REQUIRE(stack.WaitForLocalState(PLS_CLOSED));
+	BOOST_REQUIRE(stack.WaitForLocalState(PLS_CLOSED));	
 }
 
 void TestLargeDataTransmission(VtoTestStack& arTest, size_t aSizeInBytes)
@@ -301,8 +200,12 @@ void TestLargeDataTransmission(VtoTestStack& arTest, size_t aSizeInBytes)
 
 	// test that a large set of data flowing one way works
 	RandomizedBuffer data(aSizeInBytes);
+	arTest.local.ExpectData(data);
 	arTest.local.WriteData(data);
-	BOOST_REQUIRE(arTest.WaitForAllDataToBeEchoed(15000));
+	BOOST_REQUIRE(arTest.WaitForExpectedDataToBeReceived(15000));
+	
+	// this will cause an exception if we receive any more data beyond what we wrote
+	arTest.testObj.ProceedForTime(1000);
 }
 
 BOOST_AUTO_TEST_CASE(LargeDataTransmissionMasterToSlave)
