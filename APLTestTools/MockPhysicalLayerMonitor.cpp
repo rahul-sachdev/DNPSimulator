@@ -71,7 +71,9 @@ void MockPhysicalLayerMonitor::_OnReceive(const boost::uint8_t* apData, size_t a
 {
 	++mNumReads;
 	// we should never receive more than we're expecting
-	BOOST_REQUIRE(mExpectReadBuffer.Size() >= mBytesRead + aNumBytes);
+	if(mExpectReadBuffer.Size() < mBytesRead + aNumBytes) {
+		BOOST_FAIL("Read more data than expected");
+	}	
 	CopyableBuffer expecting(mExpectReadBuffer.Buffer() + mBytesRead, aNumBytes);
 	CopyableBuffer read(apData, aNumBytes);
 	// check that we're receiving what was written

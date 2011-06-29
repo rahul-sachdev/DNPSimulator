@@ -46,15 +46,15 @@ public:
 		remote.Stop();
 	}
 
-	bool WaitForLocalState(PhysLayerState aState, millis_t aTimeout = 15000) {
+	bool WaitForLocalState(PhysLayerState aState, millis_t aTimeout = 30000) {
 		return testObj.ProceedUntil(boost::bind(&MockPhysicalLayerMonitor::NextStateIs, &local, aState), aTimeout);
 	}
 
-	bool WaitForRemoteState(PhysLayerState aState, millis_t aTimeout = 15000) {
+	bool WaitForRemoteState(PhysLayerState aState, millis_t aTimeout = 30000) {
 		return testObj.ProceedUntil(boost::bind(&MockPhysicalLayerMonitor::NextStateIs, &remote, aState), aTimeout);
 	}
 
-	bool WaitForExpectedDataToBeReceived(millis_t aTimeout = 15000) {
+	bool WaitForExpectedDataToBeReceived(millis_t aTimeout = 30000) {
 		return testObj.ProceedUntil(boost::bind(&MockPhysicalLayerMonitor::AllExpectedDataHasBeenReceived, &remote), aTimeout);
 	}
 
