@@ -83,12 +83,12 @@ private:
 	AsyncTaskGroup* mpGroup;
 
 	enum MasterPriority {
-	    AMP_POLL,
+	    AMP_VTO_TRANSMIT,
+		AMP_POLL,
 	    AMP_TIME_SYNC,
 	    AMP_CLEAR_RESTART,
 	    AMP_UNSOL_CHANGE,
-	    AMP_COMMAND,
-	    AMP_VTO_TRANSMIT
+	    AMP_COMMAND	    
 	};
 
 	enum TaskTypes {

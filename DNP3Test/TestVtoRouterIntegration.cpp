@@ -228,40 +228,31 @@ public:
 
 BOOST_AUTO_TEST_SUITE(VtoRouterIntegrationSuite)
 
-BOOST_AUTO_TEST_CASE(Reconnect)
+BOOST_AUTO_TEST_CASE(Reconnection)
 {
-	VtoTestStack stack(true, false);
-
-	BOOST_REQUIRE(stack.WaitForLocalState(PLS_CLOSED));
+	VtoTestStack stack(true, false);	
 
 	// start up everything, the local side should be able to open
 	stack.manager.Start();
 	stack.loopback.Start();
 	stack.local.Start();
-	BOOST_REQUIRE(stack.WaitForLocalState(PLS_OPEN));
-
+	
 	RandomizedBuffer data(100);
 
-	// test that data is correctly sent both ways
-	stack.local.WriteData(data);
-	BOOST_REQUIRE(stack.WaitForAllDataToBeEchoed());
+	for(size_t i=0; i<3; ++i) {
+			
+		BOOST_REQUIRE(stack.WaitForLocalState(PLS_OPEN));
+	
+		// test that data is correctly sent both ways
+		data.Randomize();
+		stack.local.WriteData(data);
+		BOOST_REQUIRE(stack.WaitForAllDataToBeEchoed());
 
-	// stop the remote loopback server, which should cause the local vto socket to close and reopen
-	stack.loopback.Stop();
-	BOOST_REQUIRE(stack.WaitForLocalState(PLS_CLOSED));
-
-	// check that we can reconnect to the loopback if it is turned back on
-	stack.loopback.Start();
-	BOOST_REQUIRE(stack.WaitForLocalState(PLS_OPEN));
-
-	// send a second set of data
-	data.Randomize();
-	stack.local.WriteData(data);
-	BOOST_REQUIRE(stack.WaitForAllDataToBeEchoed());
-
-	// disconnect again
-	stack.loopback.Stop();
-	BOOST_REQUIRE(stack.WaitForLocalState(PLS_CLOSED));
+		// stop the remote loopback server, which should cause the local vto socket to close and reopen
+		stack.loopback.Stop();
+		BOOST_REQUIRE(stack.WaitForLocalState(PLS_CLOSED));
+		stack.loopback.Start();		
+	}
 }
 
 BOOST_AUTO_TEST_CASE(RemoteSideOpenFailureBouncesLocalConnection)

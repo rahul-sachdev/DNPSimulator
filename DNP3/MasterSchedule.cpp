@@ -140,8 +140,9 @@ MasterSchedule MasterSchedule::GetSchedule(MasterConfig aCfg,
 	schedule.mpVtoTransmitTask = apGroup->AddContinuous(
 	                                 AMP_VTO_TRANSMIT,
 	                                 boost::bind(&Master::TransmitVtoData, apMaster, _1),
-	                                 "Buffer VTO Data");
+	                                 "Buffer VTO Data");	
 
+	schedule.mpVtoTransmitTask->SetFlags(ONLINE_ONLY_TASKS);
 	schedule.mpTimeTask->SetFlags(ONLINE_ONLY_TASKS);
 	schedule.mpClearRestartTask->SetFlags(ONLINE_ONLY_TASKS);
 
