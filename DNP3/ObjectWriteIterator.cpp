@@ -38,6 +38,7 @@ ObjectWriteIterator::ObjectWriteIterator() :
 	mObjectSize(0)
 {}
 
+
 ObjectWriteIterator::ObjectWriteIterator(boost::uint8_t* apPos, size_t aStart, size_t aStop, size_t aObjectSize) :
 	mpPos(apPos),
 	mIndex(aStart),
@@ -56,13 +57,6 @@ const ObjectWriteIterator& ObjectWriteIterator::operator++()
 	mpPos += mObjectSize;
 
 	return (*this);
-}
-
-const ObjectWriteIterator ObjectWriteIterator::operator++(int)
-{
-	ObjectWriteIterator tmp(*this);
-	++(*this);
-	return tmp;
 }
 
 }

@@ -45,7 +45,7 @@ template <class EventType, class SetType>
 class EventBufferBase : public EventAcceptor<EventType>
 {
 public:
-	EventBufferBase(size_t aMaxEvents, bool aDropFirst = true);
+	EventBufferBase(size_t aMaxEvents);
 	virtual ~EventBufferBase() {}
 
 	/**
@@ -189,7 +189,6 @@ protected:
 	const size_t M_MAX_EVENTS;	// max number of events to accept before setting overflow
 	size_t mSequence;			// used to track the insertion order of events into the buffer
 	bool mIsOverflown;			// flag that tracks when an overflow occurs
-	bool mDropFirst;			// on overflow, do we drop the first or last element?
 
 	// vector to hold all selected events until they are cleared or failed back into mEventSet
 	typename std::vector< EventType > mSelectedEvents;
@@ -199,11 +198,10 @@ protected:
 };
 
 template <class EventType, class SetType>
-EventBufferBase <EventType, SetType> :: EventBufferBase(size_t aMaxEvents, bool aDropFirst) :
+EventBufferBase <EventType, SetType> :: EventBufferBase(size_t aMaxEvents) :
 	M_MAX_EVENTS(aMaxEvents),
 	mSequence(0),
-	mIsOverflown(false),
-	mDropFirst(aDropFirst)
+	mIsOverflown(false)
 {}
 
 template <class EventType, class SetType>
@@ -214,9 +212,7 @@ void EventBufferBase<EventType, SetType> :: Update(const typename EventType::Mea
 
 	if(this->NumUnselected() > M_MAX_EVENTS) { //we've overflown and we've got to drop an event
 		mIsOverflown = true;
-		typename SetType::Type::iterator itr;
-		if(mDropFirst) itr = mEventSet.begin();
-		else itr = (++mEventSet.rbegin()).base();
+		typename SetType::Type::iterator itr = mEventSet.begin();
 		this->mCounter.DecrCount(itr->mClass);
 		mEventSet.erase(itr);
 	}

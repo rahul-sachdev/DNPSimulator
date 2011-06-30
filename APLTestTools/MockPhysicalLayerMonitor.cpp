@@ -73,15 +73,15 @@ void MockPhysicalLayerMonitor::_OnReceive(const boost::uint8_t* apData, size_t a
 	// we should never receive more than we're expecting
 	if(mExpectReadBuffer.Size() < mBytesRead + aNumBytes) {
 		BOOST_FAIL("Read more data than expected");
-	}	
+	}
 	CopyableBuffer expecting(mExpectReadBuffer.Buffer() + mBytesRead, aNumBytes);
 	CopyableBuffer read(apData, aNumBytes);
 	// check that we're receiving what was written
 	if(expecting != read) {
 		std::ostringstream oss;
-		oss << "Data corruption on receive, " << read << " != " << expecting; 
+		oss << "Data corruption on receive, " << read << " != " << expecting;
 		BOOST_FAIL(oss.str());
-	}	
+	}
 	mBytesRead += aNumBytes;
 	LOG_BLOCK(LEV_INFO, "Received " << mBytesRead << " of " << mExpectReadBuffer.Size());
 	mpPhys->AsyncRead(mReadBuffer, mReadBuffer.Size());

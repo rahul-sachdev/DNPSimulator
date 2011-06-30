@@ -43,10 +43,8 @@ class ObjectWriteIterator
 
 public:
 
-	ObjectWriteIterator();
-
 	const ObjectWriteIterator& operator++();
-	const ObjectWriteIterator operator++(int);
+
 	bool IsEnd() const {
 		return mIndex > mStop;
 	};
@@ -54,6 +52,8 @@ public:
 	boost::uint8_t* operator*() const;
 
 private:
+
+	ObjectWriteIterator();
 
 	ObjectWriteIterator(boost::uint8_t* apPos, size_t aStart, size_t aStop, size_t aObjectSize);
 
