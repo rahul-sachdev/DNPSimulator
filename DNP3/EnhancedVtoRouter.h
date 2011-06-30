@@ -43,8 +43,8 @@ public:
 	// and inform the remote side of local connection changes
 	void DoVtoRemoteConnectedChanged(bool aOpened);
 	void SetLocalConnected(bool aConnected);
-	
-	
+
+
 
 protected:
 
@@ -66,7 +66,7 @@ protected:
 
 private:
 
-	
+
 
 	static std::string GetConnectionString(bool aOpen);
 	bool mInstRemoteConnected;

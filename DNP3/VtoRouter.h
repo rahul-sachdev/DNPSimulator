@@ -172,7 +172,7 @@ protected:
 	void DoStart();
 	void DoStop();
 
-	void DoStopRouter();	
+	void DoStopRouter();
 
 	virtual void DoVtoRemoteConnectedChanged(bool aOpened) = 0;
 	virtual void SetLocalConnected(bool aConnected) = 0;

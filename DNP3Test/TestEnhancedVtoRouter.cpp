@@ -43,7 +43,7 @@ public:
 	VtoRouterTestClassBase(size_t aWriterSize) :
 		LogTester(false),
 		phys(mLog.GetLogger(LEV_DEBUG, "phys")),
-		writer(mLog.GetLogger(LEV_DEBUG, "writer"), aWriterSize),		
+		writer(mLog.GetLogger(LEV_DEBUG, "writer"), aWriterSize),
 		pRouter(NULL)
 	{}
 
@@ -121,7 +121,7 @@ public:
 		pRouter = &router;
 		writer.AddVtoCallback(&router);
 	}
-			
+
 	ClientSocketVtoRouter router;
 };
 
@@ -178,7 +178,7 @@ void TestDuplicateRemoteOpenCausesLocalReconnect(VtoRouterTestClassBase& arTest)
 
 	arTest.SetRemoteState(true);
 	BOOST_REQUIRE(arTest.phys.IsClosing());
-	arTest.phys.TriggerClose();	
+	arTest.phys.TriggerClose();
 	arTest.CheckLocalChannelConnectedMessage(false);
 }
 

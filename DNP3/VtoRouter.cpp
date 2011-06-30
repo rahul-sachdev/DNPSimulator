@@ -64,8 +64,7 @@ void VtoRouter::OnVtoDataReceived(const VtoData& arData)
 {
 	LOG_BLOCK(LEV_DEBUG, "GotRemoteData: " << arData.GetSize() << " Type: " << ToString(arData.GetType()));
 
-	if(this->CheckIncomingVtoData(arData)) 
-	{
+	if(this->CheckIncomingVtoData(arData)) {
 		/*
 		 * Each physical layer action is processed serially, so we can take
 		 * advantage of the FIFO structure to keep things simple.
@@ -155,7 +154,7 @@ void VtoRouter::_OnSendSuccess()
 
 void VtoRouter::_OnSendFailure()
 {
-	/* Do nothing here because they layer will be closing anyway */	
+	/* Do nothing here because they layer will be closing anyway */
 }
 
 void VtoRouter::CheckForPhysRead()
@@ -178,9 +177,9 @@ void VtoRouter::CheckForPhysWrite()
 				LOG_BLOCK(LEV_COMM, "Wrote: " << mWriteData.GetSize());
 			}
 		}
-		else {			
+		else {
 			this->mPhysLayerTxBuffer.pop();
-			this->DoVtoRemoteConnectedChanged(type == VTODT_REMOTE_OPENED);			
+			this->DoVtoRemoteConnectedChanged(type == VTODT_REMOTE_OPENED);
 		}
 	}
 }

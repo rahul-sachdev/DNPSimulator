@@ -37,35 +37,35 @@ EnhancedVtoRouter::EnhancedVtoRouter(const VtoRouterSettings& arSettings, Logger
 bool EnhancedVtoRouter::CheckIncomingVtoData(const VtoData& arData)
 {
 	switch(arData.GetType()) {
-		case(VTODT_DATA):
-			if(mInstRemoteConnected) return true;
-			else {
-				LOG_BLOCK(LEV_WARNING, "Discarding received data, because remote side is offline");
-				this->HandleReceivingDataWhenRemoteClosed();
-				return false;
-			}
-		case(VTODT_REMOTE_OPENED):
-			if(mInstRemoteConnected) {
-				LOG_BLOCK(LEV_WARNING, "Remote side opened, but it was already open");
-				this->HandleDuplicateOpen();
-				return false;
-			}
-			else {
-				mInstRemoteConnected = true;
-				return true;
-			}
-		case(VTODT_REMOTE_CLOSED):
-			if(mInstRemoteConnected) {
-				mInstRemoteConnected = false;
-				return true;
-			}
-			else {
-				LOG_BLOCK(LEV_WARNING, "Remote side closed, but it was already closed");
-				this->HandleDuplicateClose();
-				return false;
-			}
-		default: 
-			throw ArgumentException(LOCATION, "Unknown VtoData type");
+	case(VTODT_DATA):
+		if(mInstRemoteConnected) return true;
+		else {
+			LOG_BLOCK(LEV_WARNING, "Discarding received data, because remote side is offline");
+			this->HandleReceivingDataWhenRemoteClosed();
+			return false;
+		}
+	case(VTODT_REMOTE_OPENED):
+		if(mInstRemoteConnected) {
+			LOG_BLOCK(LEV_WARNING, "Remote side opened, but it was already open");
+			this->HandleDuplicateOpen();
+			return false;
+		}
+		else {
+			mInstRemoteConnected = true;
+			return true;
+		}
+	case(VTODT_REMOTE_CLOSED):
+		if(mInstRemoteConnected) {
+			mInstRemoteConnected = false;
+			return true;
+		}
+		else {
+			LOG_BLOCK(LEV_WARNING, "Remote side closed, but it was already closed");
+			this->HandleDuplicateClose();
+			return false;
+		}
+	default:
+		throw ArgumentException(LOCATION, "Unknown VtoData type");
 	}
 }
 
@@ -133,7 +133,7 @@ void ServerSocketVtoRouter::HandleSetLocalConnected()
 
 void ServerSocketVtoRouter::HandleReceivingDataWhenRemoteClosed()
 {
-	
+
 	if(this->mLocalConnected) {
 		this->FlushBuffers();
 		this->Reconnect();
@@ -194,11 +194,11 @@ void ClientSocketVtoRouter::HandleSetLocalConnected()
 }
 
 void ClientSocketVtoRouter::HandleReceivingDataWhenRemoteClosed()
-{		
+{
 	if(this->mLocalConnected) {
 		this->StopAndFlushBuffers();
 	}
-	else {		
+	else {
 		this->NotifyRemoteSideOfState(false);
 	}
 }
@@ -206,13 +206,13 @@ void ClientSocketVtoRouter::HandleReceivingDataWhenRemoteClosed()
 void ClientSocketVtoRouter::HandleDuplicateOpen()
 {
 	if(this->mLocalConnected) {
-		this->StopAndFlushBuffers();		
+		this->StopAndFlushBuffers();
 	}
 }
 
 void ClientSocketVtoRouter::HandleDuplicateClose()
 {
-	
+
 }
 
 }
