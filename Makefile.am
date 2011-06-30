@@ -444,7 +444,6 @@ dnp3test_SOURCES = \
 	DNP3Test/TestTransportScalability.cpp \
 	DNP3Test/TestVtoInterface.cpp \
 	DNP3Test/TestVtoRouter.cpp \
-	DNP3Test/TestVtoRouterIntegration.cpp \
 	DNP3Test/TestVtoRouterManager.cpp \
 	DNP3Test/TestVtoWriter.cpp \
 	DNP3Test/TransportIntegrationStack.cpp \
