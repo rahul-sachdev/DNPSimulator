@@ -17,6 +17,8 @@
 
 #include "EnhancedVtoRouter.h"
 
+#include <APL/Exception.h>
+
 namespace apl
 {
 namespace dnp
@@ -26,9 +28,45 @@ EnhancedVtoRouter::EnhancedVtoRouter(const VtoRouterSettings& arSettings, Logger
 	Loggable(apLogger),
 	VtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc),
 	mRemoteConnected(false),
-	mLocalConnected(false)
+	mLocalConnected(false),
+	mInstRemoteConnected(false)
 {
 
+}
+
+bool EnhancedVtoRouter::CheckIncomingVtoData(const VtoData& arData)
+{
+	switch(arData.GetType()) {
+		case(VTODT_DATA):
+			if(mInstRemoteConnected) return true;
+			else {
+				LOG_BLOCK(LEV_WARNING, "Discarding received data, because remote side is offline");
+				this->HandleReceivingDataWhenRemoteClosed();
+				return false;
+			}
+		case(VTODT_REMOTE_OPENED):
+			if(mInstRemoteConnected) {
+				LOG_BLOCK(LEV_WARNING, "Remote side opened, but it was already open");
+				this->HandleDuplicateOpen();
+				return false;
+			}
+			else {
+				mInstRemoteConnected = true;
+				return true;
+			}
+		case(VTODT_REMOTE_CLOSED):
+			if(mInstRemoteConnected) {
+				mInstRemoteConnected = false;
+				return true;
+			}
+			else {
+				LOG_BLOCK(LEV_WARNING, "Remote side closed, but it was already closed");
+				this->HandleDuplicateClose();
+				return false;
+			}
+		default: 
+			throw ArgumentException(LOCATION, "Unknown VtoData type");
+	}
 }
 
 std::string EnhancedVtoRouter::GetConnectionString(bool aOpen)
@@ -93,6 +131,34 @@ void ServerSocketVtoRouter::HandleSetLocalConnected()
 	if(!mLocalConnected) this->FlushBuffers();
 }
 
+void ServerSocketVtoRouter::HandleReceivingDataWhenRemoteClosed()
+{
+	
+	if(this->mLocalConnected) {
+		this->FlushBuffers();
+		this->Reconnect();
+	}
+	else {
+		this->NotifyRemoteSideOfState(false);
+	}
+}
+
+void ServerSocketVtoRouter::HandleDuplicateOpen()
+{
+	if(this->mLocalConnected) {
+		this->FlushBuffers();
+		this->Reconnect();
+	}
+}
+
+void ServerSocketVtoRouter::HandleDuplicateClose()
+{
+	if(this->mLocalConnected) {
+		this->FlushBuffers();
+		this->Reconnect();
+	}
+}
+
 /*****************************************
  * Client socket specific implementation
  *************************************/
@@ -125,6 +191,28 @@ void ClientSocketVtoRouter::HandleSetLocalConnected()
 {
 	// we shouldn't automatically reconnect when the connection drops
 	if(!mLocalConnected) this->StopAndFlushBuffers();
+}
+
+void ClientSocketVtoRouter::HandleReceivingDataWhenRemoteClosed()
+{		
+	if(this->mLocalConnected) {
+		this->StopAndFlushBuffers();
+	}
+	else {		
+		this->NotifyRemoteSideOfState(false);
+	}
+}
+
+void ClientSocketVtoRouter::HandleDuplicateOpen()
+{
+	if(this->mLocalConnected) {
+		this->StopAndFlushBuffers();		
+	}
+}
+
+void ClientSocketVtoRouter::HandleDuplicateClose()
+{
+	
 }
 
 }

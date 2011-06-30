@@ -44,6 +44,10 @@ public:
 	void DoVtoRemoteConnectedChanged(bool aOpened);
 	void SetLocalConnected(bool aConnected);
 	
+	
+
+protected:
+
 	void StopAndFlushBuffers();
 
 	// concrete classes use these callbacks and the state
@@ -51,13 +55,21 @@ public:
 	// the local connections
 	virtual void HandleVtoRemoteConnectedChanged() = 0;
 	virtual void HandleSetLocalConnected() = 0;
+	virtual void HandleReceivingDataWhenRemoteClosed() = 0;
+	virtual void HandleDuplicateOpen() = 0;
+	virtual void HandleDuplicateClose() = 0;
 
-protected:
-
-	static std::string GetConnectionString(bool aOpen);
+	bool CheckIncomingVtoData(const VtoData& arData);
 
 	bool mRemoteConnected;
 	bool mLocalConnected;
+
+private:
+
+	
+
+	static std::string GetConnectionString(bool aOpen);
+	bool mInstRemoteConnected;
 
 };
 
@@ -79,6 +91,9 @@ public:
 
 	void HandleVtoRemoteConnectedChanged();
 	void HandleSetLocalConnected();
+	void HandleReceivingDataWhenRemoteClosed();
+	void HandleDuplicateOpen();
+	void HandleDuplicateClose();
 
 };
 
@@ -97,6 +112,9 @@ public:
 
 	void HandleVtoRemoteConnectedChanged();
 	void HandleSetLocalConnected();
+	void HandleReceivingDataWhenRemoteClosed();
+	void HandleDuplicateOpen();
+	void HandleDuplicateClose();
 
 };
 

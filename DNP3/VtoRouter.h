@@ -174,10 +174,11 @@ protected:
 
 	void DoStopRouter();	
 
-protected:
-
 	virtual void DoVtoRemoteConnectedChanged(bool aOpened) = 0;
 	virtual void SetLocalConnected(bool aConnected) = 0;
+
+	//return true if should be processed, false otherwise
+	virtual bool CheckIncomingVtoData(const VtoData& arData) = 0;
 
 	void FlushBuffers();
 	void NotifyRemoteSideOfState(bool aConnected);

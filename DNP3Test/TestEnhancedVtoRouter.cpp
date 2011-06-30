@@ -161,6 +161,25 @@ BOOST_AUTO_TEST_CASE(ServerSendsMagicChannelLocalConnected)
 	rtc.CheckLocalChannelConnectedMessage(false);
 }
 
+BOOST_AUTO_TEST_CASE(ServerDuplicateRemoteOpenCausesLocalReconnect)
+{
+	ClientVtoRouterTestClass rtc;
+
+	rtc.SetRemoteState(true);
+
+	rtc.mts.Dispatch();
+	BOOST_REQUIRE(rtc.phys.IsOpening());
+	rtc.phys.SignalOpenSuccess();
+	rtc.mts.Dispatch();
+
+	rtc.CheckLocalChannelConnectedMessage(true);
+
+	rtc.SetRemoteState(true);
+	BOOST_REQUIRE(rtc.phys.IsClosing());
+	rtc.phys.TriggerClose();	
+	rtc.CheckLocalChannelConnectedMessage(false);
+}
+
 BOOST_AUTO_TEST_CASE(ClientStartsOpeningAfterRemoteConnection)
 {
 	ClientVtoRouterTestClass rtc;
@@ -204,6 +223,25 @@ BOOST_AUTO_TEST_CASE(ClientSendsMagicChannelLocalConnected)
 
 	rtc.CheckVtoData("01 02 03 04 05");
 	rtc.CheckVtoData("06 07 08 09 0A");
+	rtc.CheckLocalChannelConnectedMessage(false);
+}
+
+BOOST_AUTO_TEST_CASE(ClientDuplicateRemoteOpenCausesLocalReconnect)
+{
+	ClientVtoRouterTestClass rtc;
+
+	rtc.SetRemoteState(true);
+
+	rtc.mts.Dispatch();
+	BOOST_REQUIRE(rtc.phys.IsOpening());
+	rtc.phys.SignalOpenSuccess();
+	rtc.mts.Dispatch();
+
+	rtc.CheckLocalChannelConnectedMessage(true);
+
+	rtc.SetRemoteState(true);
+	BOOST_REQUIRE(rtc.phys.IsClosing());
+	rtc.phys.TriggerClose();	
 	rtc.CheckLocalChannelConnectedMessage(false);
 }
 

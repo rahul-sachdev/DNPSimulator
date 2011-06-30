@@ -40,6 +40,9 @@ public:
 	void DoVtoRemoteConnectedChanged(bool aOpened) {}
 	void SetLocalConnected(bool aConnected) {}
 
+	// doesn't care what type of data under any condition
+	bool CheckIncomingVtoData(const VtoData& arData) { return true; }
+
 };
 
 }

@@ -64,14 +64,15 @@ void VtoRouter::OnVtoDataReceived(const VtoData& arData)
 {
 	LOG_BLOCK(LEV_DEBUG, "GotRemoteData: " << arData.GetSize() << " Type: " << ToString(arData.GetType()));
 
-	/*
-	 * This will create a container object that allows us to hold the data
-	 * pointer asynchronously.  We need to release the object from the queue in
-	 * _OnSendSuccess().  Each call is processed serially, so we can take
-	 * advantage of the FIFO structure to keep things simple.
-	 */
-	this->mPhysLayerTxBuffer.push(arData);
-	this->CheckForPhysWrite();
+	if(this->CheckIncomingVtoData(arData)) 
+	{
+		/*
+		 * Each physical layer action is processed serially, so we can take
+		 * advantage of the FIFO structure to keep things simple.
+		 */
+		this->mPhysLayerTxBuffer.push(arData);
+		this->CheckForPhysWrite();
+	}
 }
 
 void VtoRouter::DoStart()
@@ -187,6 +188,7 @@ void VtoRouter::CheckForPhysWrite()
 void VtoRouter::NotifyRemoteSideOfState(bool aConnected)
 {
 	mVtoTxBuffer.push_back(VtoMessage(aConnected ? VTODT_REMOTE_OPENED : VTODT_REMOTE_CLOSED));
+	this->CheckForVtoWrite();
 }
 
 void VtoRouter::FlushBuffers()
