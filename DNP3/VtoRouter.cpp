@@ -61,7 +61,7 @@ void VtoRouter::DoStopRouter()
 
 void VtoRouter::OnVtoDataReceived(const VtoData& arData)
 {
-	LOG_BLOCK(LEV_INFO, "GotRemoteData: " << arData.GetSize() << " Type: " << ToString(arData.GetType()));
+	LOG_BLOCK(LEV_DEBUG, "GotRemoteData: " << arData.GetSize() << " Type: " << ToString(arData.GetType()));
 
 	/*
 	 * This will create a container object that allows us to hold the data
