@@ -59,10 +59,12 @@ libopendnp3_apl_la_SOURCES = \
 	APL/PhysicalLayerInstance.cpp \
 	APL/PhysicalLayerManager.cpp \
 	APL/PhysicalLayerMap.cpp \
+	APL/PhysLoopback.cpp \
 	APL/PostingNotifier.cpp \
 	APL/PostingNotifierSource.cpp \
 	APL/ProtocolUtil.cpp \
 	APL/QualityConverter.cpp \
+	APL/RandomizedBuffer.cpp \
 	APL/ShiftableBuffer.cpp \
 	APL/Threadable.cpp \
 	APL/ThreadBase.cpp \
@@ -223,12 +225,15 @@ nobase_pkginclude_HEADERS= \
 	APL/PhysicalLayerManager.h \
 	APL/PhysicalLayerMap.h \
 	APL/PhysLayerSettings.h \
+	APL/PhysLoopback.h \
 	APL/PostingNotifier.h \
 	APL/PostingNotifierSource.h \
 	APL/ProtocolUtil.h \
 	APL/QualityConverter.h \
 	APL/QualityMasks.h \
 	APL/QueueingFDO.h \
+	APL/Random.h \
+	APL/RandomizedBuffer.h \
 	APL/SerialTypes.h \
 	APL/ShiftableBuffer.h \
 	APL/Singleton.h \
@@ -291,6 +296,7 @@ nobase_pkginclude_HEADERS= \
 	DNP3/ILinkRouter.h \
 	DNP3/IndexedWriteIterator.h \
 	DNP3/IStackObserver.h \
+	DNP3/IVtoEventAcceptor.h \
 	DNP3/LinkConfig.h \
 	DNP3/LinkFrame.h \
 	DNP3/LinkHeader.h \
@@ -340,6 +346,7 @@ nobase_pkginclude_HEADERS= \
 	DNP3/VtoConfig.h \
 	DNP3/VtoData.h \
 	DNP3/VtoDataInterface.h \
+	DNP3/VtoEventBufferAdapter.h \
 	DNP3/VtoReader.h \
 	DNP3/VtoRouter.h \
 	DNP3/VtoRouterManager.h \
@@ -385,7 +392,6 @@ noinst_PROGRAMS = dnp3test
 
 dnp3test_LDADD = libopendnp3_apl.la libopendnp3_dnp3.la
 dnp3test_SOURCES = \
-	APLTestTools/AsyncLoopback.cpp \
 	APLTestTools/AsyncPhysTestObject.cpp \
 	APLTestTools/AsyncTestObjectASIO.cpp \
 	APLTestTools/AsyncTestObject.cpp \
@@ -438,8 +444,8 @@ dnp3test_SOURCES = \
 	DNP3Test/TestTransportScalability.cpp \
 	DNP3Test/TestVtoInterface.cpp \
 	DNP3Test/TestVtoRouter.cpp \
-	DNP3Test/TestVtoRouterIntegration.cpp \
 	DNP3Test/TestVtoRouterManager.cpp \
+	DNP3Test/TestVtoWriter.cpp \
 	DNP3Test/TransportIntegrationStack.cpp \
 	DNP3Test/TransportLoopbackTestObject.cpp \
 	DNP3Test/TransportScalabilityTestObject.cpp \
