@@ -47,6 +47,7 @@ BOOST_AUTO_TEST_CASE(ForwardsOnLowerLayerUp)
 	BOOST_REQUIRE_FALSE(t.upper.IsLowerLayerUp());
 	t.link.OnLowerLayerUp();
 	BOOST_REQUIRE(t.upper.IsLowerLayerUp());
+	BOOST_REQUIRE_THROW(t.link.OnLowerLayerUp(), InvalidStateException);
 }
 
 // Check that once the layer comes up, validation errors can occur

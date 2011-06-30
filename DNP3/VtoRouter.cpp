@@ -37,6 +37,7 @@ VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVto
 	IVtoCallbacks(arSettings.CHANNEL_ID),
 	CleanupHelper(apTimerSrc),
 	mpVtoWriter(apWriter),
+	mReadBuffer(1024),
 	mReopenPhysicalLayer(false),
 	mPermanentlyStopped(false),
 	mCleanedup(false)
@@ -45,16 +46,6 @@ VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVto
 	assert(apWriter != NULL);
 	assert(apPhysLayer != NULL);
 	assert(apTimerSrc != NULL);
-
-}
-
-VtoRouter::~VtoRouter()
-{
-	size_t s = mVtoTxBuffer.size();
-	while(s-- > 0) {
-		delete mVtoTxBuffer.front();
-		mVtoTxBuffer.pop();
-	}
 }
 
 void VtoRouter::StopRouter()
@@ -70,7 +61,7 @@ void VtoRouter::DoStopRouter()
 
 void VtoRouter::OnVtoDataReceived(const VtoData& arData)
 {
-	LOG_BLOCK(LEV_INFO, "GotRemoteData: " << arData.GetSize() << " Type: " << ToString(arData.GetType()));
+	LOG_BLOCK(LEV_DEBUG, "GotRemoteData: " << arData.GetSize() << " Type: " << ToString(arData.GetType()));
 
 	/*
 	 * This will create a container object that allows us to hold the data
@@ -115,7 +106,10 @@ void VtoRouter::DoStop()
 void VtoRouter::_OnReceive(const boost::uint8_t* apData, size_t aLength)
 {
 	LOG_BLOCK(LEV_COMM, "GotLocalData: " << aLength);
-	mVtoTxBuffer.back()->mBuffer.AdvanceWrite(aLength);
+
+	// turn the incoming data into a VtoMessage object and enque it
+	VtoMessage msg(VTODT_DATA, apData, aLength);
+	this->mVtoTxBuffer.push_back(msg);
 
 	this->CheckForVtoWrite();
 	this->CheckForPhysRead();
@@ -126,34 +120,29 @@ void VtoRouter::CheckForVtoWrite()
 	// need to check mPermanentlyStopped, we will often get a physical layer closed notification after
 	// we have already stopped and disposed of the dnp3 stack so we need to not call anything on mpVtoWriter
 	if(!mPermanentlyStopped && !mVtoTxBuffer.empty()) {
-		VtoDataType type = mVtoTxBuffer.front()->mType;
+		VtoMessage msg = mVtoTxBuffer.front();
+		mVtoTxBuffer.pop_front();
+
 		// type DATA means this is a buffer and we need to pull the data out and send it to the vto writer
-		if(type == VTODT_DATA) {
-			ShiftableBuffer* pBuffer = &mVtoTxBuffer.front()->mBuffer;
-			size_t num = pBuffer->NumReadBytes();
-			if(num > 0) {
-				size_t numWritten = mpVtoWriter->Write(pBuffer->ReadBuff(), num, this->GetChannelId());
-				LOG_BLOCK(LEV_INTERPRET, "VtoWriter: " << numWritten << " of " << num);
-				pBuffer->AdvanceRead(numWritten);
-				pBuffer->Shift();
-				this->CheckForPhysRead();
+		if(msg.type == VTODT_DATA) {
+			size_t numWritten = mpVtoWriter->Write(msg.data.Buffer(), msg.data.Size(), this->GetChannelId());
+			LOG_BLOCK(LEV_INTERPRET, "VtoWriter: " << numWritten << " of " << msg.data.Size());
+			if(numWritten < msg.data.Size()) {
+				size_t remainder = msg.data.Size() - numWritten;
+				VtoMessage partial(VTODT_DATA, msg.data.Buffer() + numWritten, remainder);
+				mVtoTxBuffer.push_front(partial);
 			}
-			// if the buffer was empty and we have other types of data to send pop the buffer off and recheck
-			if(num == 0 && mVtoTxBuffer.size() > 1) {
-				delete mVtoTxBuffer.front();
-				mVtoTxBuffer.pop();
-				this->CheckForVtoWrite();
-			}
+			else this->CheckForVtoWrite();
 		}
 		else {
 			// if we have generated REMOTE_OPENED or REMOTE_CLOSED message we need to send the SetLocalVtoState
 			// update to the vtowriter so it can be serialized in the correct order.
-			mpVtoWriter->SetLocalVtoState(type == VTODT_REMOTE_OPENED, this->GetChannelId());
-			delete mVtoTxBuffer.front();
-			mVtoTxBuffer.pop();
+			mpVtoWriter->SetLocalVtoState(msg.type == VTODT_REMOTE_OPENED, this->GetChannelId());
 			this->CheckForVtoWrite();
 		}
 	}
+
+	this->CheckForPhysRead();
 }
 
 void VtoRouter::_OnSendSuccess()
@@ -174,14 +163,8 @@ void VtoRouter::_OnSendFailure()
 
 void VtoRouter::CheckForPhysRead()
 {
-	if(mpPhys->CanRead()) {
-		// the last entry in the buffer will always be the DATA buffer if we have a local
-		// connection open.
-		ShiftableBuffer* pBuffer = &mVtoTxBuffer.back()->mBuffer;
-		size_t num = pBuffer->NumWriteBytes();
-		if(num > 0) {
-			mpPhys->AsyncRead(pBuffer->WriteBuff(), num);
-		}
+	if(mpPhys->CanRead() && mVtoTxBuffer.size() < 10) {	//TODO - Make this configurable or track the size in bytes
+		mpPhys->AsyncRead(mReadBuffer, mReadBuffer.Size());
 	}
 }
 

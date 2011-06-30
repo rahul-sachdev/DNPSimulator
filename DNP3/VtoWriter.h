@@ -18,7 +18,7 @@
 #ifndef __VTO_WRITER_H_
 #define __VTO_WRITER_H_
 
-#include <queue>
+#include <deque>
 #include <set>
 
 #include <APL/Lock.h>
@@ -112,7 +112,7 @@ public:
 
 protected:
 
-	std::queue<VtoEvent> mQueue;
+	std::deque<VtoEvent> mQueue;
 
 private:
 

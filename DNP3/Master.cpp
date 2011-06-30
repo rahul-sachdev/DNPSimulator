@@ -221,22 +221,24 @@ void Master::ChangeUnsol(ITask* apTask, bool aEnable, int aClassMask)
 
 void Master::TransmitVtoData(ITask* apTask)
 {
-	size_t max = mVtoTransmitTask.mBuffer.NumAvailable();
-	VtoEventBufferAdapter adapter(&mVtoTransmitTask.mBuffer);
-	mVtoWriter.Flush(&adapter, max);
-
-	LOG_BLOCK(LEV_DEBUG, "TransmitVtoData: " << std::boolalpha << mVtoTransmitTask.mBuffer.IsFull() << " size: " << mVtoTransmitTask.mBuffer.Size());
-
-	/* Any data to transmit? */
-	if (mVtoTransmitTask.mBuffer.Size() > 0) {
-		/* Start the mVtoTransmitTask */
-		mpState->StartTask(this, apTask, &mVtoTransmitTask);
-	}
+	if(mpState == AMS_Closed::Inst()) apTask->Disable();
 	else {
-		/* Stop the mVtoTransmitTask */
-		apTask->Disable();
-	}
+		size_t max = mVtoTransmitTask.mBuffer.NumAvailable();
+		VtoEventBufferAdapter adapter(&mVtoTransmitTask.mBuffer);
+		mVtoWriter.Flush(&adapter, max);
 
+		LOG_BLOCK(LEV_DEBUG, "TransmitVtoData: " << std::boolalpha << mVtoTransmitTask.mBuffer.IsFull() << " size: " << mVtoTransmitTask.mBuffer.Size());
+
+		/* Any data to transmit? */
+		if (mVtoTransmitTask.mBuffer.Size() > 0) {
+			/* Start the mVtoTransmitTask */
+			mpState->StartTask(this, apTask, &mVtoTransmitTask);
+		}
+		else {
+			/* Stop the mVtoTransmitTask */
+			apTask->Disable();
+		}
+	}
 }
 
 /* Implement IAppUser */

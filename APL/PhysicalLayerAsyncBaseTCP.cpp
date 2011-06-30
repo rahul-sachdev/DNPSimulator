@@ -47,15 +47,8 @@ PhysicalLayerAsyncBaseTCP::PhysicalLayerAsyncBaseTCP(Logger* apLogger, boost::as
 
 void PhysicalLayerAsyncBaseTCP::DoClose()
 {
-	LOG_BLOCK(LEV_INFO, "Shutting down and closing socket");
-
-	boost::system::error_code ec;
-
-	mSocket.shutdown(ip::tcp::socket::shutdown_both, ec);
-	if(ec) LOG_BLOCK(LEV_WARNING, "Error while shutting down socket: " << ec.message());
-
-	mSocket.close(ec);
-	if(ec) LOG_BLOCK(LEV_WARNING, "Error while closing socket: " << ec.message());
+	this->ShutdownSocket();
+	this->CloseSocket();
 }
 
 void PhysicalLayerAsyncBaseTCP::DoAsyncRead(boost::uint8_t* apBuffer, size_t aMaxBytes)
@@ -80,7 +73,23 @@ void PhysicalLayerAsyncBaseTCP::DoAsyncWrite(const boost::uint8_t* apBuffer, siz
 void PhysicalLayerAsyncBaseTCP::DoOpenFailure()
 {
 	LOG_BLOCK(LEV_DEBUG, "Failed socket open, closing socket");
-	DoClose();
+	this->CloseSocket();
+}
+
+void PhysicalLayerAsyncBaseTCP::CloseSocket()
+{
+	boost::system::error_code ec;
+
+	mSocket.close(ec);
+	if(ec) LOG_BLOCK(LEV_WARNING, "Error while closing socket: " << ec.message());
+}
+
+void PhysicalLayerAsyncBaseTCP::ShutdownSocket()
+{
+	boost::system::error_code ec;
+
+	mSocket.shutdown(ip::tcp::socket::shutdown_both, ec);
+	if(ec) LOG_BLOCK(LEV_WARNING, "Error while shutting down socket: " << ec.message());
 }
 
 }

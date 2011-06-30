@@ -266,7 +266,7 @@ size_t Slave::FlushUpdates()
 
 	num += this->FlushVtoUpdates();
 
-	LOG_BLOCK(LEV_INFO, "Processed " << num << " updates");
+	LOG_BLOCK(LEV_DEBUG, "Processed " << num << " updates");
 	return num;
 }
 

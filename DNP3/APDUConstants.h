@@ -151,7 +151,6 @@ enum QualifierCode {
 
 bool IsResponse(FunctionCodes aCode);
 bool IsRequest(FunctionCodes aCode);
-bool IsConfirm(FunctionCodes aCode);
 
 std::string ToString(FunctionCodes aCode);
 

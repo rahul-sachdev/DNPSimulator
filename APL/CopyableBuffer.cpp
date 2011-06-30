@@ -24,8 +24,16 @@
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
 
+#include <APL/ToHex.h>
+
 namespace apl
 {
+
+std::ostream& operator<<(std::ostream& output, const CopyableBuffer& arBuff)
+{
+	output << "[" << toHex(arBuff.Buffer(), arBuff.Size(), true) << "]";
+	return output;
+}
 
 CopyableBuffer::CopyableBuffer() :
 	mpBuff(NULL),

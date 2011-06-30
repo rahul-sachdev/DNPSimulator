@@ -101,11 +101,10 @@ void XML_DNP3::Configure(APLXML_DNP::Stack_t& arStack, bool aSlave)
 	arStack.AppLayer.NumRetries = 3;
 }
 
-void XML_DNP3::AddVtoPort(APLXML_DNP::VtoPorts_t& arPorts, std::string aPhysicalLayer, int aChannel, bool aStartLocal, int aBufferSize, int aOpenRetry)
+void XML_DNP3::AddVtoPort(APLXML_DNP::VtoPorts_t& arPorts, std::string aPhysicalLayer, int aChannel, bool aStartLocal, int aOpenRetry)
 {
 	APLXML_DNP::VtoPort_t* port = new APLXML_DNP::VtoPort_t();
 	port->Index = aChannel;
-	port->BufferSize = aBufferSize;
 	port->StartLocal = aStartLocal;
 	port->PhysicalLayer = aPhysicalLayer;
 	port->OpenRetry = aOpenRetry;

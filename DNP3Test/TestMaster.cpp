@@ -33,7 +33,7 @@ using namespace boost;
 
 void TestForIntegrityPoll(MasterTestObject& t, bool aSucceed = true)
 {
-	BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06");
+	BOOST_REQUIRE_EQUAL("C0 01 3C 01 06", t.Read());
 	if(aSucceed) t.RespondToMaster("C0 81 00 00");
 	else t.master.OnSolFailure();
 }
@@ -601,6 +601,29 @@ BOOST_AUTO_TEST_CASE(EventPoll)
 	BOOST_REQUIRE(t.fdo.Check(true, BQ_ONLINE, 2, TimeStamp_t(0)));
 }
 
+BOOST_AUTO_TEST_CASE(VtoBufferedWhileStackIsOffline)
+{
+	MasterConfig master_cfg; master_cfg.IntegrityRate = -1;
+	MasterTestObject t(master_cfg);
+
+	//queue 2 bytes of Vto data
+	boost::uint8_t data[2] = {0xAB, 0xBC};
+	t.master.GetVtoWriter()->Write(data, 2, 0xFF);
+
+	// the master will still wake up, put will not process the buffer since it is offline
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	BOOST_REQUIRE_FALSE(t.mts.DispatchOne());
+
+	t.master.OnLowerLayerUp();
+	TestForIntegrityPoll(t);
+
+	BOOST_REQUIRE_EQUAL(t.Read(), "C0 02 70 02 17 01 FF AB BC");
+	t.RespondToMaster("C0 81 00 00");
+
+	BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0);  // no more data to transmit
+	BOOST_REQUIRE_FALSE(t.mts.DispatchOne()); // no more actions to dispatch
+}
+
 BOOST_AUTO_TEST_CASE(WriteSingleVtoByte)
 {
 	MasterConfig master_cfg; master_cfg.IntegrityRate = -1;
@@ -618,7 +641,7 @@ BOOST_AUTO_TEST_CASE(WriteSingleVtoByte)
 	BOOST_REQUIRE_FALSE(t.mts.DispatchOne());
 
 	/*
-	 * Queue a byte of Virtual Terminal data and expect this to cause an
+	 * Queue 2 bytes of Virtual Terminal data and expect this to cause an
 	 * event.
 	 */
 	boost::uint8_t data[2] = {0xAB, 0xBC};

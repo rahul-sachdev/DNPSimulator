@@ -22,6 +22,7 @@
 #include "Types.h"
 #include <stddef.h>
 #include <memory>
+#include <sstream>
 
 namespace apl
 {
@@ -32,6 +33,8 @@ namespace apl
 */
 class CopyableBuffer
 {
+
+	friend std::ostream& operator<<(std::ostream& output, const CopyableBuffer& arBuff);
 
 public:
 	// Construct null buffer
@@ -72,6 +75,7 @@ protected:
 private:
 	size_t mSize;
 };
+
 
 }
 

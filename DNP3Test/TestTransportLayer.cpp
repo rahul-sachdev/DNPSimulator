@@ -98,6 +98,14 @@ BOOST_AUTO_TEST_CASE(TestReceiveWrongSequence)
 	BOOST_REQUIRE_EQUAL(test.NextErrorCode(), TLERR_BAD_SEQUENCE);
 }
 
+BOOST_AUTO_TEST_CASE(TestReceiveNonFinLessThanMaxTpduSize)
+{
+	TransportTestObject test(true);
+	//send a FIR, followed by a FIN w/ the wrong sequence
+	test.lower.SendUp("40 0A 0B 0C"); // FIR/_/0
+	BOOST_REQUIRE_EQUAL(test.NextErrorCode(), TLERR_BAD_LENGTH);
+}
+
 BOOST_AUTO_TEST_CASE(TestReceiveSinglePacket)
 {
 	TransportTestObject test(true);

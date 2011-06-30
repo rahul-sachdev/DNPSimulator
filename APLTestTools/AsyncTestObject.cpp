@@ -41,6 +41,11 @@ bool AsyncTestObject::ProceedUntil(const EvalFunc& arFunc, millis_t aTimeout)
 	return false;
 }
 
+void AsyncTestObject::ProceedForTime(millis_t aTimeout)
+{
+	ProceedUntil(boost::bind(&AsyncTestObject::AlwaysBoolean, false), aTimeout);
+}
+
 bool AsyncTestObject::ProceedUntilFalse(const EvalFunc& arFunc, millis_t aTimeout)
 {
 	return ProceedUntil(boost::bind(&AsyncTestObject::Negate, arFunc), aTimeout);

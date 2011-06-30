@@ -342,7 +342,6 @@
       <xs:attribute name="PhysicalLayer" type="xs:string" use="required" />
       <xs:attribute name="Index" type="xs:int" use="required" />
       <xs:attribute name="StartLocal" type ="xs:boolean" use="required" />
-      <xs:attribute name="BufferSize" type ="xs:int" use="required" />
       <xs:attribute name="OpenRetry" type ="xs:int" use="required" />
     </xs:complexType>
   </xs:element>

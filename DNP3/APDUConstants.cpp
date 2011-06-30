@@ -41,11 +41,6 @@ bool IsRequest(FunctionCodes aCode)
 	}
 }
 
-bool IsConfirm(FunctionCodes aCode)
-{
-	return aCode == FC_CONFIRM;
-}
-
 std::string ToString(FunctionCodes aCode)
 {
 	switch(aCode) {

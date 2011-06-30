@@ -19,10 +19,11 @@
 #define __VTO_ROUTER_H_
 
 #include <queue>
+#include <deque>
 
 #include <APL/IHandlerAsync.h>
 #include <APL/AsyncPhysLayerMonitor.h>
-#include <APL/ShiftableBuffer.h>
+#include <APL/CopyableBuffer.h>
 
 #include "VtoDataInterface.h"
 #include "CleanupHelper.h"
@@ -44,14 +45,19 @@ struct VtoRouterSettings;
  * helper object that allows us to serialize data and up/down communication events into
  * the same data stream
  */
-class VtoDataChunk
+class VtoMessage
 {
 public:
-	VtoDataChunk(VtoDataType aType, size_t aBufferSize) :
-		mType(aType), mBuffer(aBufferSize) {}
 
-	VtoDataType     mType;
-	ShiftableBuffer mBuffer;
+	VtoMessage(VtoDataType aType) :
+		type(aType), data() {}
+
+
+	VtoMessage(VtoDataType aType, const boost::uint8_t* apBuffer, size_t aBufferSize) :
+		type(aType), data(apBuffer, aBufferSize) {}
+
+	VtoDataType    type;
+	CopyableBuffer data;
 };
 
 
@@ -94,10 +100,6 @@ public:
 	 */
 	VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc);
 
-	/**
-	 * cleans up any left over transmission data
-	 */
-	~VtoRouter();
 
 	/**
 	 * when we try to stop the router we call this thread safe function which sets a flag and
@@ -126,7 +128,6 @@ protected:
 
 	void CheckForPhysRead();
 	void CheckForPhysWrite();
-
 	void CheckForVtoWrite();
 
 	// Implement AsyncPhysLayerMonitor
@@ -192,11 +193,15 @@ protected:
 	std::queue<VtoData> mPhysLayerTxBuffer;
 
 	/**
-	 * The transmit buffer for physical layer -> Vto. The data that is put
-	 * into this buffer was originally received from the physical layer.
+	 * The transmit message buffer for vto actions (OPEN/CLOSE/DATA) from physical layer -> Vto.
+	 * The data that is put into this buffer was originally received from the physical layer.
 	 */
-	std::queue<VtoDataChunk*> mVtoTxBuffer;
+	std::deque<VtoMessage> mVtoTxBuffer;
 
+	/**
+	 * Buffer used to read from the physical layer
+	 */
+	CopyableBuffer mReadBuffer;
 
 	/**
 	 * while true we will let the AsyncPhysLayerMonitor implementation try
