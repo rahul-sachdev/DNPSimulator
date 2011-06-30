@@ -179,6 +179,11 @@ protected:
 	virtual void DoVtoRemoteConnectedChanged(bool aOpened) = 0;
 	virtual void SetLocalConnected(bool aConnected) = 0;
 
+	void FlushBuffers();
+	void NotifyRemoteSideOfState(bool aConnected);
+
+private:
+
 	/**
 	 * The VtoWriter instance that will be used to send the data
 	 * that is received by the IPhysicalLayerAsync instance to the

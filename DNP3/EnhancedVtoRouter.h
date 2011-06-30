@@ -43,8 +43,7 @@ public:
 	// and inform the remote side of local connection changes
 	void DoVtoRemoteConnectedChanged(bool aOpened);
 	void SetLocalConnected(bool aConnected);
-
-	void FlushBuffers();
+	
 	void StopAndFlushBuffers();
 
 	// concrete classes use these callbacks and the state

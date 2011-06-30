@@ -184,6 +184,22 @@ void VtoRouter::CheckForPhysWrite()
 	}
 }
 
+void VtoRouter::NotifyRemoteSideOfState(bool aConnected)
+{
+	mVtoTxBuffer.push_back(VtoMessage(aConnected ? VTODT_REMOTE_OPENED : VTODT_REMOTE_CLOSED));
+}
+
+void VtoRouter::FlushBuffers()
+{
+	// clear out all of the data when we close the local connection
+
+	while(mPhysLayerTxBuffer.size() > 0) {
+		LOG_BLOCK(LEV_WARNING, "Tossing data: " << this->mPhysLayerTxBuffer.front().GetType() << " size: " << this->mPhysLayerTxBuffer.front().GetSize());
+		this->mPhysLayerTxBuffer.pop();
+	}
+
+}
+
 void VtoRouter::OnBufferAvailable()
 {
 	this->CheckForVtoWrite();

@@ -50,22 +50,9 @@ void EnhancedVtoRouter::SetLocalConnected(bool aConnected)
 	if(mLocalConnected != aConnected) {
 		LOG_BLOCK(LEV_INFO, "Local connection: " << GetConnectionString(aConnected));
 		mLocalConnected = aConnected;
-
 		this->HandleSetLocalConnected();
-
-		mVtoTxBuffer.push_back(VtoMessage(aConnected ? VTODT_REMOTE_OPENED : VTODT_REMOTE_CLOSED));
+		this->NotifyRemoteSideOfState(aConnected);
 	}
-}
-
-void EnhancedVtoRouter::FlushBuffers()
-{
-	// clear out all of the data when we close the local connection
-
-	while(mPhysLayerTxBuffer.size() > 0) {
-		LOG_BLOCK(LEV_WARNING, "Tossing data: " << this->mPhysLayerTxBuffer.front().GetType() << " size: " << this->mPhysLayerTxBuffer.front().GetSize());
-		this->mPhysLayerTxBuffer.pop();
-	}
-
 }
 
 void EnhancedVtoRouter::StopAndFlushBuffers()
