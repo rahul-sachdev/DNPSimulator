@@ -172,12 +172,12 @@ protected:
 	void DoStart();
 	void DoStop();
 
-	void DoStopRouter();
+	void DoStopRouter();	
+
+protected:
 
 	virtual void DoVtoRemoteConnectedChanged(bool aOpened) = 0;
 	virtual void SetLocalConnected(bool aConnected) = 0;
-
-protected:
 
 	/**
 	 * The VtoWriter instance that will be used to send the data
@@ -202,6 +202,11 @@ protected:
 	 * Buffer used to read from the physical layer
 	 */
 	CopyableBuffer mReadBuffer;
+
+	/**
+	 * Buffer used to write to the physical layer
+	 */
+	VtoData mWriteData;
 
 	/**
 	 * while true we will let the AsyncPhysLayerMonitor implementation try

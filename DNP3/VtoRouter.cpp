@@ -38,6 +38,7 @@ VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVto
 	CleanupHelper(apTimerSrc),
 	mpVtoWriter(apWriter),
 	mReadBuffer(1024),
+	mWriteData(0),
 	mReopenPhysicalLayer(false),
 	mPermanentlyStopped(false),
 	mCleanedup(false)
@@ -147,18 +148,13 @@ void VtoRouter::CheckForVtoWrite()
 
 void VtoRouter::_OnSendSuccess()
 {
-	/*
-	 * If this function has been called, it means that we can now discard the
-	 * data that is at the head of the FIFO queue.
-	 */
-	this->mPhysLayerTxBuffer.pop();
+	// look for more data to write
 	this->CheckForPhysWrite();
 }
 
 void VtoRouter::_OnSendFailure()
 {
-	/* try to re-transmit the last packet */
-	this->CheckForPhysWrite();
+	/* Do nothing here because they layer will be closing anyway */	
 }
 
 void VtoRouter::CheckForPhysRead()
@@ -175,17 +171,15 @@ void VtoRouter::CheckForPhysWrite()
 		if(type == VTODT_DATA) {
 			// only write to the physical layer if we have a valid local connection
 			if(mpPhys->CanWrite()) {
-				mpPhys->AsyncWrite(mPhysLayerTxBuffer.front().mpData, mPhysLayerTxBuffer.front().GetSize());
-				LOG_BLOCK(LEV_COMM, "Wrote: " << mPhysLayerTxBuffer.front().GetSize());
+				mWriteData = mPhysLayerTxBuffer.front();
+				mPhysLayerTxBuffer.pop();
+				mpPhys->AsyncWrite(mWriteData.mpData, mWriteData.GetSize());
+				LOG_BLOCK(LEV_COMM, "Wrote: " << mWriteData.GetSize());
 			}
 		}
-		else {
-			// we only want to handle the remotely sent online/offline message when are not in the process
-			// of sending data (waiting for a SendSuccess or SendFailure message)
-			if(!mpPhys->IsWriting()) {
-				this->mPhysLayerTxBuffer.pop();
-				this->DoVtoRemoteConnectedChanged(type == VTODT_REMOTE_OPENED);
-			}
+		else {			
+			this->mPhysLayerTxBuffer.pop();
+			this->DoVtoRemoteConnectedChanged(type == VTODT_REMOTE_OPENED);			
 		}
 	}
 }
