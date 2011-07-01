@@ -177,7 +177,13 @@ protected:
 	virtual void DoVtoRemoteConnectedChanged(bool aOpened) = 0;
 	virtual void SetLocalConnected(bool aConnected) = 0;
 
-protected:
+	//return true if should be processed, false otherwise
+	virtual bool CheckIncomingVtoData(const VtoData& arData) = 0;
+
+	void FlushBuffers();
+	void NotifyRemoteSideOfState(bool aConnected);
+
+private:
 
 	/**
 	 * The VtoWriter instance that will be used to send the data
@@ -202,6 +208,11 @@ protected:
 	 * Buffer used to read from the physical layer
 	 */
 	CopyableBuffer mReadBuffer;
+
+	/**
+	 * Buffer used to write to the physical layer
+	 */
+	VtoData mWriteData;
 
 	/**
 	 * while true we will let the AsyncPhysLayerMonitor implementation try
