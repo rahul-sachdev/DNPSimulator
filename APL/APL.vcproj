@@ -17,8 +17,10 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;..\config\boost_includes.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\common_boost_defines.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;..\config\boost_includes.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\common_boost_defines.vsprops;..\config\disable_specific_warnings.vsprops"
 			CharacterSet="2"
 			>
 			<Tool
@@ -85,7 +87,7 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;..\config\boost_includes.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\common_boost_defines.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;..\config\boost_includes.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\common_boost_defines.vsprops;..\config\disable_specific_warnings.vsprops"
 			CharacterSet="2"
 			>
 			<Tool
