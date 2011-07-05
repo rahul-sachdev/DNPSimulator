@@ -809,6 +809,14 @@
 				Name="Data"
 				>
 				<File
+					RelativePath=".\BaseDataTypes.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\BaseDataTypes.h"
+					>
+				</File>
+				<File
 					RelativePath=".\ChangeBuffer.h"
 					>
 				</File>
@@ -850,10 +858,6 @@
 				</File>
 				<File
 					RelativePath=".\DataInterfaces.h"
-					>
-				</File>
-				<File
-					RelativePath=".\DataTypes.cpp"
 					>
 				</File>
 				<File
