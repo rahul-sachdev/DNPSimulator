@@ -105,7 +105,7 @@ Counter IntegrationTest::RandomCounter()
 
 void IntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 {
-	boost::uint16_t port = M_START_PORT + this->mMasterObservers.size();
+	boost::uint16_t port = M_START_PORT + static_cast<boost::uint16_t>(this->mMasterObservers.size());
 
 	FlexibleDataObserver* pMasterFDO = new FlexibleDataObserver(); mMasterObservers.push_back(pMasterFDO);
 	pMasterFDO->AddObserver(&mNotifier);

@@ -24,7 +24,7 @@ namespace apl
 namespace dnp
 {
 
-std::string ConvertToString(StackStates aState)
+std::string ConvertStackStateToString(StackStates aState)
 {
 	switch(aState) {
 	case(SS_COMMS_UP):

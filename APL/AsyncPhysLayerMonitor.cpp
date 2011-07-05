@@ -66,7 +66,7 @@ void AsyncPhysLayerMonitor::SetMonitor(IPhysMonitor* apMonitor)
 
 void AsyncPhysLayerMonitor::Notify(PhysLayerState aState)
 {
-	LOG_BLOCK(LEV_INFO, "Transition to state: " << ConvertToString(aState));
+	LOG_BLOCK(LEV_INFO, "Transition to state: " << ConvertPhysLayerStateToString(aState));
 	mPortState.Set(aState);
 	this->OnStateChange(aState);
 	if(mpMonitor) mpMonitor->OnStateChange(aState);

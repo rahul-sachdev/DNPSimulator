@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE(VtoWriteOverflow)
 	size_t len;
 
 	for (size_t i = 0; i < dataSize; ++i)
-		data[i] = i % 255;
+		data[i] = static_cast<boost::uint8_t>(i % 255);
 
 	/* Check the default size to make sure we have full space available */
 	BOOST_REQUIRE_EQUAL(writer.NumBytesAvailable(), emptySize);
@@ -154,6 +154,7 @@ BOOST_AUTO_TEST_CASE(VtoReaderRegisterChannels)
 	BOOST_REQUIRE_THROW(reader.RemoveVtoChannel(&channel), ArgumentException);
 }
 
+// TODO - Factor this test into smaller subtests, way too much going on here
 BOOST_AUTO_TEST_CASE(VtoReaderUpdate)
 {
 	EventLog log;
@@ -173,7 +174,7 @@ BOOST_AUTO_TEST_CASE(VtoReaderUpdate)
 	 * tests below.
 	 */
 	for (size_t i = 0; i < size; i++) {
-		buffer[i] = 'a' + i;
+		buffer[i] = static_cast<boost::uint8_t>('a' + i);
 	}
 
 	data.Copy(buffer, size);

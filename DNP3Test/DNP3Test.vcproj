@@ -16,8 +16,10 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\config\boost_includes.vsprops;..\config\boost_lib.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\common_boost_defines.vsprops"
+			InheritedPropertySheets="..\config\boost_includes.vsprops;..\config\boost_lib.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\common_boost_defines.vsprops;..\config\disable_specific_warnings.vsprops"
 			CharacterSet="2"
 			>
 			<Tool
@@ -91,7 +93,7 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\config\boost_includes.vsprops;..\config\boost_lib.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\common_boost_defines.vsprops"
+			InheritedPropertySheets="..\config\boost_includes.vsprops;..\config\boost_lib.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\common_boost_defines.vsprops;..\config\disable_specific_warnings.vsprops"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>

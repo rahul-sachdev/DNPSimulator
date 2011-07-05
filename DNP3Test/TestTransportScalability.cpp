@@ -56,9 +56,9 @@ BOOST_AUTO_TEST_CASE(TestSimpleSend)
 
 	// turned down the number of pairs for arm b/c of how long it takes to run.
 #ifdef ARM
-	size_t NUM_PAIRS = 50;
+	boost::uint16_t NUM_PAIRS = 50;
 #else
-	size_t NUM_PAIRS = 100;
+	boost::uint16_t NUM_PAIRS = 100;
 #endif
 
 	TransportScalabilityTestObject t(client, server, port, NUM_PAIRS);

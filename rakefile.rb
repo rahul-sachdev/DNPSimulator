@@ -14,7 +14,8 @@ require 'plugins/rake.source.rb'        # provides licensing helpers
 
 DEFAULT_INCLUDES << __FILE__.pathmap('%d')
 
-$USE_TEAM_CITY = !ENV['DNP3_TEAM_CITY'].nil?
+$USE_TEAM_CITY = !ENV['teamcity'].nil?
+$DNP3_JAVA = !ENV['java'].nil?
 
 #format is name => options, :dir is required
 $projects = {
@@ -31,9 +32,9 @@ $projects = {
 :aplxml => {:dir => 'APLXML'},
 :terminal => {:dir => 'Terminal'},
 :terminaltest => {:dir => 'TerminalTest'},
-#:dnp3java => {:dir => 'DNP3Java'},
 }
 
+$projects[:dnp3java] = {:dir => 'DNP3Java'} if $DNP3_JAVA
 $projects[:teamcity] = {:dir => 'TeamCitySupport'} if $USE_TEAM_CITY
 
 add_projects($projects) #removes projects that are not valid for $hw_os
