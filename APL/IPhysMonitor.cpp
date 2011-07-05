@@ -23,7 +23,7 @@ namespace apl
 {
 
 
-std::string ConvertToString(PhysLayerState aState)
+std::string ConvertPhysLayerStateToString(PhysLayerState aState)
 {
 	switch(aState) {
 	case(PLS_CLOSED):

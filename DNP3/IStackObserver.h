@@ -32,7 +32,7 @@ enum StackStates {
     SS_UNKNOWN
 };
 
-std::string ConvertToString(StackStates aState);
+std::string ConvertStackStateToString(StackStates aState);
 
 class IStackObserver
 {

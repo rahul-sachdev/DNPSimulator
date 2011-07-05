@@ -49,8 +49,8 @@ using namespace apl::dnp;
 %include "DNP3/LinkConfig.h"
 %include "DNP3/AppConfig.h"
 %include "DNP3/MasterConfigTypes.h"
-%include "DNP3/MasterObserver.h"
-%include <DNP3/ClassMask.h>
+%include "DNP3/IStackObserver.h"
+%include "DNP3/ClassMask.h"
 
 %template(VectorOfExceptionScan) std::vector<apl::dnp::ExceptionScan>;
 %include "DNP3/MasterConfig.h"

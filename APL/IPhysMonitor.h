@@ -32,7 +32,7 @@ enum PhysLayerState {
     PLS_STOPPED		// stopped and will no longer dispatch events
 };
 
-std::string ConvertToString(PhysLayerState aState);
+std::string ConvertPhysLayerStateToString(PhysLayerState aState);
 
 class IPhysMonitor
 {

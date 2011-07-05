@@ -108,7 +108,7 @@ Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IData
 void Master::UpdateState(StackStates aState)
 {
 	if(mState != aState) {
-		LOG_BLOCK(LEV_INFO, "StackState: " << ConvertToString(aState));
+		LOG_BLOCK(LEV_INFO, "StackState: " << ConvertStackStateToString(aState));
 		mState = aState;
 		if(mpObserver != NULL) mpObserver->OnStateChange(aState);
 		if(mState == SS_COMMS_UP) {

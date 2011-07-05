@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "DataTypes.h"
+#include "BaseDataTypes.h"
 
 #include "TimingTools.h"
 
@@ -58,7 +58,6 @@ void DataPoint :: SetToNow()
 {
 	mTime = TimeStamp::GetTimeStamp();
 }
-
 
 // BoolDataPoint
 

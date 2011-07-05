@@ -118,7 +118,7 @@ bool MockPhysicalLayerMonitor::NextStateIs(PhysLayerState aState)
 	if(mState.empty()) return false;
 	else {
 		PhysLayerState state = mState.front();
-		LOG_BLOCK(LEV_INFO, "Saw state: " + ConvertToString(state));
+		LOG_BLOCK(LEV_INFO, "Saw state: " + ConvertPhysLayerStateToString(state));
 		mState.pop();
 		return (state == aState);
 	}
