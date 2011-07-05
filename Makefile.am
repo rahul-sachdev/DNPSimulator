@@ -21,13 +21,13 @@ libopendnp3_apl_la_SOURCES = \
 	APL/AsyncTaskNonPeriodic.cpp \
 	APL/AsyncTaskPeriodic.cpp \
 	APL/AsyncTaskScheduler.cpp \
+	APL/BaseDataTypes.cpp \
 	APL/CommandManager.cpp \
 	APL/CommandQueue.cpp \
 	APL/CommandResponseQueue.cpp \
 	APL/CommandTypes.cpp \
 	APL/CopyableBuffer.cpp \
 	APL/CRC.cpp \
-	APL/DataTypes.cpp \
 	APL/EventLock.cpp \
 	APL/Exception.cpp \
 	APL/FlexibleDataObserver.cpp \
@@ -165,6 +165,7 @@ nobase_pkginclude_HEADERS= \
 	APL/AsyncTaskNonPeriodic.h \
 	APL/AsyncTaskPeriodic.h \
 	APL/AsyncTaskScheduler.h \
+	APL/BaseDataTypes.h \
 	APL/BoundNotifier.h \
 	APL/CachedLogVariable.h \
 	APL/ChangeBuffer.h \
