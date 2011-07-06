@@ -43,7 +43,7 @@ using namespace apl;
 using namespace apl::dnp;
 
 IntegrationTest::IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints) :
-	AsyncTestObjectASIO(),	
+	AsyncTestObjectASIO(),
 	M_START_PORT(aStartPort),
 	mChange(false),
 	mNotifier(boost::bind(&IntegrationTest::RegisterChange, this)),
@@ -56,7 +56,7 @@ IntegrationTest::IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::ui
 }
 
 void IntegrationTest::RegisterChange()
-{		
+{
 	mChange = true;
 }
 

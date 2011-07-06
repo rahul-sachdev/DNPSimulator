@@ -25,7 +25,7 @@
 
 #include "IntegrationTest.h"
 
-#define EXTRA_DEBUG				(0)
+#define EXTRA_DEBUG			(0)
 
 using namespace apl;
 using namespace apl::dnp;
@@ -58,14 +58,14 @@ const size_t NUM_CHANGES = 10;
 
 BOOST_AUTO_TEST_CASE(MasterToSlaveThroughput)
 {
-	EventLog log;	
+	EventLog log;
 	//LogToStdio::Inst()->SetPrintLocation(true);
 	//log.AddLogSubscriber(LogToStdio::Inst());
 
 	IntegrationTest t(log.GetLogger(LEV_INFO, "test"), LEV_INFO, START_PORT,
-	                  NUM_PAIRS, NUM_POINTS);	
+	                  NUM_PAIRS, NUM_POINTS);
 
-	
+
 	IDataObserver* pObs = t.GetFanout();
 
 	StopWatch sw;
@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(MasterToSlaveThroughput)
 		cout << "elapsed seconds: " << elapsed_sec << endl;
 		cout << "points/sec: " << points / elapsed_sec << endl;
 	}
-	
+
 }
 
 BOOST_AUTO_TEST_CASE(IntegrationTestConstructionDestruction)

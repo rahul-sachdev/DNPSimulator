@@ -22,17 +22,17 @@
 #include <boost/asio/io_service.hpp>
 #include <boost/bind.hpp>
 
-namespace apl 
+namespace apl
 {
-	
-IOServicePauser::IOServicePauser(boost::asio::io_service* apService, size_t aNumThreads) : 
+
+IOServicePauser::IOServicePauser(boost::asio::io_service* apService, size_t aNumThreads) :
 	mpService(apService),
 	mPausing(false),
 	mNumThreads(aNumThreads),
 	mPausedCount(0)
-	{}
+{}
 
-	
+
 
 void IOServicePauser::_Start()
 {
@@ -41,7 +41,7 @@ void IOServicePauser::_Start()
 	mpService->post(boost::bind(&IOServicePauser::Pause, this));
 	while(mPausedCount < mNumThreads) {
 		mLock.Wait();
-	}	
+	}
 }
 
 void IOServicePauser::_End()
@@ -54,9 +54,9 @@ void IOServicePauser::_End()
 void IOServicePauser::Pause()
 {
 	CriticalSection cs(&mLock);
-	++mPausedCount;	
+	++mPausedCount;
 	cs.Broadcast();
-	while(mPausing) cs.Wait();	
+	while(mPausing) cs.Wait();
 	--mPausedCount;
 }
 

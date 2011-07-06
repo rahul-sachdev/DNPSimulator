@@ -70,7 +70,7 @@ class AsyncStackManager : private Threadable, private Loggable
 {
 public:
 	/**
-		@param apLogger - Logger to use for all other loggers		
+		@param apLogger - Logger to use for all other loggers
 	*/
 	AsyncStackManager(Logger* apLogger);
 	~AsyncStackManager();
@@ -244,7 +244,7 @@ public:
 
 	// @return a vector of all the port names
 	std::vector<std::string> GetPortNames();
-	
+
 	/**
 	* Synchronously stops all running stacks and ports
 	* The back ground thread is still running and the manager
@@ -257,11 +257,13 @@ public:
 	* so that applications can write single-threaded applications using
 	* the same asynchronous machinery if desired.
 	*/
-	boost::asio::io_service* GetIOService() { return mService.Get(); }
+	boost::asio::io_service* GetIOService() {
+		return mService.Get();
+	}
 
 private:
 	IOService mService;
-	TimerSourceASIO mTimerSrc;	
+	TimerSourceASIO mTimerSrc;
 	IOServicePauser mIOServicePauser;
 	PhysicalLayerManager mMgr;
 	AsyncTaskScheduler mScheduler;
@@ -281,7 +283,7 @@ private:
 	LinkChannel* GetChannelOrExcept(const std::string& arName);
 	LinkChannel* GetChannelMaybeNull(const std::string& arName);
 	LinkChannel* CreateChannel(const std::string& arName);
-	LinkChannel* GetChannelByStackName(const std::string& arStackName);	
+	LinkChannel* GetChannelByStackName(const std::string& arStackName);
 	Stack* GetStackByName(const std::string& arStackName);
 
 	void Run();
@@ -289,8 +291,8 @@ private:
 	// Remove a stack
 	void SeverStack(LinkChannel* apChannel, const std::string& arStackName);
 
-	void OnAddStack(const std::string& arStackName, boost::shared_ptr<Stack> apStack, LinkChannel* apChannel, const LinkRoute&);	
-		
+	void OnAddStack(const std::string& arStackName, boost::shared_ptr<Stack> apStack, LinkChannel* apChannel, const LinkRoute&);
+
 	size_t NumStacks() {
 		return mStackNameToChannel.size();
 	}

@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(Reconnection)
 {
 	VtoLoopbackTestStack stack(true, false);
 
-	// start up everything, the local side should be able to open	
+	// start up everything, the local side should be able to open
 	stack.loopback.Start();
 	stack.local.Start();
 

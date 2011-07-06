@@ -42,7 +42,7 @@ PhysicalLayerAsyncBase::State::State() :
 	mClosing(false)
 {}
 
-bool PhysicalLayerAsyncBase::State::IsOpen() const 
+bool PhysicalLayerAsyncBase::State::IsOpen() const
 {
 	return mOpen;
 }
@@ -53,22 +53,22 @@ bool PhysicalLayerAsyncBase::State::IsOpening() const
 }
 
 bool PhysicalLayerAsyncBase::State::IsReading() const
-{ 
+{
 	return mReading;
 }
 
 bool PhysicalLayerAsyncBase::State::IsWriting() const
-{ 
+{
 	return mWriting;
-}		
+}
 
 bool PhysicalLayerAsyncBase::State::IsClosing() const
-{ 
+{
 	return mClosing;
-}						
+}
 
-bool PhysicalLayerAsyncBase::State::IsClosed() const 
-{ 
+bool PhysicalLayerAsyncBase::State::IsClosed() const
+{
 	return !(mOpening || mOpen || mClosing || mReading || mWriting);
 }
 

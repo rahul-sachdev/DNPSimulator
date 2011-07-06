@@ -56,16 +56,16 @@ static std::vector<U> GetKeys(T& arMap)
 }
 
 AsyncStackManager::AsyncStackManager(Logger* apLogger) :
-	Loggable(apLogger),		
+	Loggable(apLogger),
 	mService(),
-	mTimerSrc(mService.Get()),	
+	mTimerSrc(mService.Get()),
 	mIOServicePauser(mService.Get(), 1),
 	mMgr(apLogger->GetSubLogger("channels", LEV_WARNING), mService.Get()),
 	mScheduler(&mTimerSrc),
 	mVtoManager(apLogger->GetSubLogger("vto"), &mTimerSrc, &mMgr),
 	mThread(this),
 	mpInfiniteTimer(mTimerSrc.StartInfinite(boost::bind(&AsyncStackManager::NullActionForInfiniteTimer)))
-{	
+{
 	mThread.Start();
 }
 
@@ -136,7 +136,7 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 	pLogger->SetVarName(arStackName);
 
 	boost::shared_ptr<SlaveStack> pSlave(new SlaveStack(pLogger, &mTimerSrc, apCmdAcceptor, arCfg));
-	
+
 	LinkRoute route(arCfg.link.RemoteAddr, arCfg.link.LocalAddr);
 	this->OnAddStack(arStackName, pSlave, pChannel, route);
 
@@ -197,15 +197,17 @@ void AsyncStackManager::RemovePort(const std::string& arPortName)
 {
 	LinkChannel* pChannel = this->GetChannelOrExcept(arPortName);
 	vector<string> stacks = this->StacksOnChannel(arPortName);
-	BOOST_FOREACH(string s, stacks) { this->SeverStack(pChannel, s); }
+	BOOST_FOREACH(string s, stacks) {
+		this->SeverStack(pChannel, s);
+	}
 
 	this->mScheduler.ReleaseGroup(pChannel->GetGroup());
-	
+
 	pChannel->WaitForStop();
 	mChannelNameToChannel.erase(arPortName);
 
-	// remove the physical layer from the list	
-	mMgr.Remove(arPortName);	
+	// remove the physical layer from the list
+	mMgr.Remove(arPortName);
 }
 
 std::vector<std::string> AsyncStackManager::StacksOnChannel(const std::string& arPortName)
@@ -222,11 +224,11 @@ std::vector<std::string> AsyncStackManager::StacksOnChannel(const std::string& a
 void AsyncStackManager::RemoveStack(const std::string& arStackName)
 {
 	LinkChannel* pChannel = this->GetChannelByStackName(arStackName);
-	this->SeverStack(pChannel, arStackName);	
+	this->SeverStack(pChannel, arStackName);
 }
 
 void AsyncStackManager::SeverStack(LinkChannel* apChannel, const std::string& arStackName)
-{	
+{
 	/*
 	IVtoWriter* pWriter = this->GetStackByName(arStackName)->GetVtoWriter();
 	std::vector<VtoRouterManager::RouterRecord> records = mVtoManager.GetAllRoutersOnWriter(pWriter);
@@ -240,7 +242,7 @@ void AsyncStackManager::SeverStack(LinkChannel* apChannel, const std::string& ar
 	{
 		Transaction tr(&mIOServicePauser);
 		apChannel->RemoveStackFromChannel(arStackName);
-	}	
+	}
 
 	mStackNameToChannel.erase(arStackName);
 	mStackNameToStack.erase(arStackName);
@@ -264,19 +266,19 @@ Stack* AsyncStackManager::GetStackByName(const std::string& arStackName)
 }
 
 void AsyncStackManager::Shutdown()
-{	
+{
 	vector<string> ports = this->GetPortNames();
 	BOOST_FOREACH(string s, ports) {
 		LOG_BLOCK(LEV_INFO, "Removing port: " << s);
 		this->RemovePort(s);
 		LOG_BLOCK(LEV_INFO, "Done removing Port: " << s);
-	}		
+	}
 }
 
 LinkChannel* AsyncStackManager::GetOrCreateChannel(const std::string& arName)
 {
 	LinkChannel* pChannel = this->GetChannelMaybeNull(arName);
-	return (pChannel == NULL) ? this->CreateChannel(arName) : pChannel; 	
+	return (pChannel == NULL) ? this->CreateChannel(arName) : pChannel;
 }
 
 LinkChannel* AsyncStackManager::GetChannelOrExcept(const std::string& arName)
@@ -296,7 +298,7 @@ LinkChannel* AsyncStackManager::CreateChannel(const std::string& arName)
 	pChannelLogger->SetVarName(arName);
 	AsyncTaskGroup* pGroup = mScheduler.CreateNewGroup();
 
-	boost::shared_ptr<LinkChannel> pChannel(new LinkChannel(pChannelLogger, arName, &mTimerSrc, pPhys, pGroup, s.RetryTimeout));	
+	boost::shared_ptr<LinkChannel> pChannel(new LinkChannel(pChannelLogger, arName, &mTimerSrc, pPhys, pGroup, s.RetryTimeout));
 	mChannelNameToChannel[arName] = pChannel;
 	return pChannel.get();
 }
@@ -326,14 +328,15 @@ void AsyncStackManager::Run()
 
 void AsyncStackManager::OnAddStack(const std::string& arStackName, boost::shared_ptr<Stack> apStack, LinkChannel* apChannel, const LinkRoute& arRoute)
 {
-	
-	{	// when binding the stack to the router, we need to pause excution
+
+	{
+		// when binding the stack to the router, we need to pause excution
 		Transaction tr(&mIOServicePauser);
-		apChannel->BindStackToChannel(arStackName, apStack.get(), arRoute);		
+		apChannel->BindStackToChannel(arStackName, apStack.get(), arRoute);
 	}
-	
+
 	mStackNameToChannel[arStackName] = apChannel;	// map the stack name to a LinkChannel object
-	mStackNameToStack[arStackName] = apStack;		// map the stack name to a Stack object		
+	mStackNameToStack[arStackName] = apStack;		// map the stack name to a Stack object
 }
 
 }

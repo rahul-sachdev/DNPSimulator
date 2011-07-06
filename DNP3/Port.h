@@ -65,7 +65,7 @@ class Port : public Loggable, public IPhysMonitor
 		LinkRoute route;
 	};
 
-public:	
+public:
 
 	Port(const std::string& arName, Logger*, ITimerSource* apTimerSrc, IPhysicalLayerAsync*, millis_t aOpenDelay);
 
@@ -74,10 +74,10 @@ public:
 	}
 	void BindStackToPort(const std::string& arStackName, Stack* apStack, const LinkRoute& arRoute);
 	void RemoveStackFromPort(const std::string& arStackName);
-	
+
 	std::string Name() {
 		return mName;
-	}	
+	}
 
 //	void AddObserver(
 
@@ -94,7 +94,7 @@ private:
 	LinkLayerRouter mRouter;
 	AsyncTaskGroup* mpGroup;
 	IPhysicalLayerAsync* mpPhys;
-	PhysLayerState mState;	
+	PhysLayerState mState;
 
 private:
 

@@ -49,9 +49,9 @@ public:
 	StartupTeardownTest(FilterLevel aLevel, bool aImmediate = false);
 
 	void CreatePort(const std::string& arName, FilterLevel aLevel);
-	void AddMaster(const std::string& arName, const std::string& arPortName, boost::uint16_t aLocalAddress, FilterLevel aLevel);	
+	void AddMaster(const std::string& arName, const std::string& arPortName, boost::uint16_t aLocalAddress, FilterLevel aLevel);
 
-	EventLog log;	
+	EventLog log;
 	AsyncStackManager manager;
 	FlexibleDataObserver fdo;
 };

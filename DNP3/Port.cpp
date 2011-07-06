@@ -32,11 +32,11 @@ namespace dnp
 {
 
 Port::Port(const std::string& arName, Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, millis_t aOpenDelay) :
-	Loggable(apLogger->GetSubLogger("port")),	
+	Loggable(apLogger->GetSubLogger("port")),
 	mName(arName),
-	mRouter(apLogger, apPhys, apTimerSrc, aOpenDelay),	
+	mRouter(apLogger, apPhys, apTimerSrc, aOpenDelay),
 	mpPhys(apPhys),
-	mState(PLS_CLOSED)		
+	mState(PLS_CLOSED)
 {
 	mRouter.AddMonitor(this);
 }
@@ -58,9 +58,9 @@ void Port::BindStackToPort(const std::string& arStackName, Stack* apStack, const
 {
 	LOG_BLOCK(LEV_DEBUG, "Linking stack to port w/ route " << arRoute);
 	mRouter.AddContext(&apStack->mLink, arRoute); // this function can throw, do it first
-	apStack->mLink.SetRouter(&mRouter);	
+	apStack->mLink.SetRouter(&mRouter);
 	mStackMap[arStackName] = StackRecord(apStack, arRoute);
-	mRouter.Start();	
+	mRouter.Start();
 }
 
 void Port::RemoveStackFromPort(const std::string& arStackName)

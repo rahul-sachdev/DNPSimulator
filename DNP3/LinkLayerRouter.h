@@ -101,7 +101,7 @@ private:
 	void _OnSendSuccess();
 	void _OnSendFailure();
 
-	// Implement virtual AsyncPhysLayerMonitor	
+	// Implement virtual AsyncPhysLayerMonitor
 	void OnPhysicalLayerOpen();
 	void OnPhysicalLayerClose();
 

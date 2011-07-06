@@ -31,26 +31,26 @@ class io_service;
 }
 }
 
-namespace apl 
+namespace apl
 {
-	
+
 class IOServicePauser : public ITransactable
 {
-	public:
-		IOServicePauser(boost::asio::io_service* apService, size_t aNumThreads);
+public:
+	IOServicePauser(boost::asio::io_service* apService, size_t aNumThreads);
 
-	private:
+private:
 
-		void _Start();
-		void _End();
+	void _Start();
+	void _End();
 
-		void Pause();
+	void Pause();
 
-		boost::asio::io_service* mpService;
-		bool mPausing;
-		size_t mPausedCount;
-		size_t mNumThreads;
-		SigLock mLock;
+	boost::asio::io_service* mpService;
+	bool mPausing;
+	size_t mPausedCount;
+	size_t mNumThreads;
+	SigLock mLock;
 };
 
 

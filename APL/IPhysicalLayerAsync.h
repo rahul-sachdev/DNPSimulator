@@ -25,15 +25,15 @@ namespace apl
 
 class IHandlerAsync;
 
-class IPhysicalLayerState 
-{	
+class IPhysicalLayerState
+{
 
 public:
 
 	virtual bool CanOpen() const = 0;
-	
+
 	virtual bool CanClose() const = 0;
-	
+
 	virtual bool CanRead() const = 0;
 
 	virtual bool CanWrite() const = 0;
@@ -54,7 +54,7 @@ public:
 	virtual bool IsOpening() const = 0;
 
 	/** @return True if the layer is open for read/write */
-	virtual bool IsOpen() const = 0;	
+	virtual bool IsOpen() const = 0;
 };
 
 
@@ -66,7 +66,7 @@ class IPhysicalLayerAsync : public IPhysicalLayerState
 public:
 
 	virtual ~IPhysicalLayerAsync() {}
-		
+
 	/**
 	 * Starts an open operation.
 	 *

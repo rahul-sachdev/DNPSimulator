@@ -62,7 +62,7 @@ void PhysicalLayerAsyncTCPServer::DoOpen()
 		mAcceptor.listen(socket_base::max_connections, ec);
 		if(ec) throw Exception(LOCATION, ec.message());
 	}
-	
+
 	mAcceptor.async_accept(mSocket,
 	                       mRemoteEndpoint,
 	                       boost::bind(&PhysicalLayerAsyncTCPServer::OnOpenCallback,
@@ -80,12 +80,12 @@ void PhysicalLayerAsyncTCPServer::CloseAcceptor()
 }
 
 void PhysicalLayerAsyncTCPServer::DoOpenCallback()
-{	
+{
 	this->CloseAcceptor();
 }
 
 void PhysicalLayerAsyncTCPServer::DoOpeningClose()
-{	
+{
 	this->CloseAcceptor();
 }
 

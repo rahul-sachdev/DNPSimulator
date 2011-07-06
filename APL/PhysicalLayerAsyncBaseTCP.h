@@ -46,7 +46,7 @@ protected:
 	boost::asio::ip::tcp::socket mSocket;
 	void CloseSocket();
 
-private:	
+private:
 	void ShutdownSocket();
 
 };

@@ -93,7 +93,7 @@ class IntegrationTest : public AsyncTestObjectASIO
 {
 public:
 
-	IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints);	
+	IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints);
 
 	IDataObserver* GetFanout() {
 		return &mFanout;
@@ -105,20 +105,22 @@ public:
 	Analog RandomAnalog();
 	Counter RandomCounter();
 
-	AsyncStackManager* GetManager() { return &mManager; }
+	AsyncStackManager* GetManager() {
+		return &mManager;
+	}
 
 private:
 
-	void RegisterChange();	
-	void AddStackPair(FilterLevel aLevel, size_t aNumPoints);	
+	void RegisterChange();
+	void AddStackPair(FilterLevel aLevel, size_t aNumPoints);
 
-	std::vector<boost::shared_ptr<FlexibleDataObserver>> mMasterObservers;	
+	std::vector<boost::shared_ptr<FlexibleDataObserver>> mMasterObservers;
 	ObserverFanout mFanout;
 	const boost::uint16_t M_START_PORT;
 	Logger* mpLogger;
 
 	bool mChange;
-	BoundNotifier mNotifier;	
+	BoundNotifier mNotifier;
 	FlexibleDataObserver mLocalFDO;
 	MockCommandAcceptor mCmdAcceptor;
 	boost::mt19937 rng; //random number generator

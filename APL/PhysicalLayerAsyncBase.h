@@ -33,9 +33,9 @@ class PLAS_Base;
 // are called from a single thread.
 class PhysicalLayerAsyncBase : public IPhysicalLayerAsync, public Loggable
 {
-	class State : public IPhysicalLayerState 
+	class State : public IPhysicalLayerState
 	{
-		public:
+	public:
 		State();
 
 		bool mOpen;
@@ -56,7 +56,7 @@ class PhysicalLayerAsyncBase : public IPhysicalLayerAsync, public Loggable
 		bool CanRead() const;
 		bool CanWrite() const;
 
-		bool CallbacksPending() const;	
+		bool CallbacksPending() const;
 		std::string ToString() const;
 
 		bool CheckForClose();
@@ -70,18 +70,38 @@ public:
 	virtual ~PhysicalLayerAsyncBase() {}
 
 	/* Implement IPhysicalLayerState */
-	bool IsOpen() const { return mState.IsOpen(); }	
-	bool IsOpening() const { return mState.IsOpening(); }
-	bool IsReading() const { return mState.IsReading(); }
-	bool IsWriting() const { return mState.IsWriting(); }
-	bool IsClosing() const { return mState.IsClosing(); }
-	bool IsClosed() const { return mState.IsClosed(); }
+	bool IsOpen() const {
+		return mState.IsOpen();
+	}
+	bool IsOpening() const {
+		return mState.IsOpening();
+	}
+	bool IsReading() const {
+		return mState.IsReading();
+	}
+	bool IsWriting() const {
+		return mState.IsWriting();
+	}
+	bool IsClosing() const {
+		return mState.IsClosing();
+	}
+	bool IsClosed() const {
+		return mState.IsClosed();
+	}
 
-	bool CanOpen() const { return mState.CanOpen(); }
-	bool CanClose() const { return mState.CanClose(); }
-	bool CanRead() const { return mState.CanRead(); }
-	bool CanWrite() const { return mState.CanWrite(); }
-		
+	bool CanOpen() const {
+		return mState.CanOpen();
+	}
+	bool CanClose() const {
+		return mState.CanClose();
+	}
+	bool CanRead() const {
+		return mState.CanRead();
+	}
+	bool CanWrite() const {
+		return mState.CanWrite();
+	}
+
 	/* Implement IPhysicalLayerAsync - Events from the outside */
 	void AsyncOpen();
 	void AsyncClose();

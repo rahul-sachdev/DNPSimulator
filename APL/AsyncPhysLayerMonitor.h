@@ -47,7 +47,9 @@ public:
 	/// will close if we are open, since we will auto reconnect
 	void Reconnect();
 
-	PhysLayerState GetState() { return mState; }
+	PhysLayerState GetState() {
+		return mState;
+	}
 
 	void AddMonitor(IPhysMonitor* apMonitor);
 
@@ -66,8 +68,8 @@ protected:
 
 private:
 
-	void ChangeState(PhysLayerState);	
-	bool mStopOpenRetry;	
+	void ChangeState(PhysLayerState);
+	bool mStopOpenRetry;
 	const millis_t M_OPEN_RETRY;
 
 	// Implement from IHandlerAsync - Try to reconnect using a timer

@@ -67,7 +67,7 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 
 VtoIntegrationTestBase::~VtoIntegrationTestBase()
 {
-	
+
 }
 
 }

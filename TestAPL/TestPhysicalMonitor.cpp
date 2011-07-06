@@ -34,8 +34,8 @@ class TestPhysicalLayerMonitor : public AsyncPhysLayerMonitor
 {
 public:
 
-	TestPhysicalLayerMonitor(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc) :		
-		Loggable(apLogger),		
+	TestPhysicalLayerMonitor(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc) :
+		Loggable(apLogger),
 		AsyncPhysLayerMonitor(mpLogger->GetSubLogger("monitor"), apPhys, apTimerSrc, 1000) {
 	}
 
@@ -56,11 +56,11 @@ class TestObject
 {
 public:
 
-	TestObject() : 
+	TestObject() :
 		log(),
 		mts(),
 		phys(log.GetLogger(LEV_INFO, "mock-phys")),
-		monitor(log.GetLogger(LEV_INFO, "test"), &phys, &mts) 
+		monitor(log.GetLogger(LEV_INFO, "test"), &phys, &mts)
 	{}
 
 	EventLog log;
@@ -79,40 +79,40 @@ BOOST_AUTO_TEST_CASE(Construction)
 
 BOOST_AUTO_TEST_CASE(StartIsIdempotent)
 {
-	TestObject test;	
-	for(size_t i=0; i<3; ++i) {
+	TestObject test;
+	for(size_t i = 0; i < 3; ++i) {
 		test.monitor.Start();
 		BOOST_CHECK_EQUAL(PLS_OPENING, test.monitor.GetState());
- 		BOOST_REQUIRE(test.phys.IsOpening());		
-	}	
+		BOOST_REQUIRE(test.phys.IsOpening());
+	}
 }
 
 BOOST_AUTO_TEST_CASE(StopIsIdempotent)
 {
-	TestObject test;	
-	for(size_t i=0; i<3; ++i) {
+	TestObject test;
+	for(size_t i = 0; i < 3; ++i) {
 		test.monitor.Stop();
-		BOOST_CHECK_EQUAL(PLS_STOPPED, test.monitor.GetState()); 		
-	}	
+		BOOST_CHECK_EQUAL(PLS_STOPPED, test.monitor.GetState());
+	}
 }
 
 BOOST_AUTO_TEST_CASE(RetriesOpenFailures)
 {
-	TestObject test;	
+	TestObject test;
 	test.monitor.Start();
-	
-	for(size_t i=0; i<3; ++i) {
+
+	for(size_t i = 0; i < 3; ++i) {
 		BOOST_CHECK_EQUAL(PLS_OPENING, test.monitor.GetState());
 		test.phys.SignalOpenFailure();
 		BOOST_CHECK_EQUAL(PLS_WAITING, test.monitor.GetState());
 		BOOST_REQUIRE_EQUAL(1, test.mts.NumActive());
 		BOOST_REQUIRE(test.mts.DispatchOne());
-	}	
+	}
 }
 
 BOOST_AUTO_TEST_CASE(StopWhileOpeningDefersStateTransition)
 {
-	TestObject test;	
+	TestObject test;
 	test.monitor.Start();
 	BOOST_CHECK_EQUAL(PLS_OPENING, test.monitor.GetState());
 	test.monitor.Stop();

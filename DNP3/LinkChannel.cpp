@@ -34,14 +34,14 @@ namespace dnp
 LinkChannel::LinkChannel(Logger* apLogger, const std::string& arName, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, AsyncTaskGroup* apTaskGroup, millis_t aOpenRetry) :
 	Loggable(apLogger),
 	LinkLayerRouter(apLogger, apPhys, apTimerSrc, aOpenRetry),
-	mName(arName),		
+	mName(arName),
 	mState(PLS_CLOSED),
 	mpTaskGroup(apTaskGroup)
 {
-	
+
 }
 
-	void LinkChannel::OnStateChange(PhysLayerState aState)
+void LinkChannel::OnStateChange(PhysLayerState aState)
 {
 	CriticalSection cs(&mLock);
 	mState = aState;
@@ -58,9 +58,9 @@ void LinkChannel::BindStackToChannel(const std::string& arStackName, Stack* apSt
 {
 	LOG_BLOCK(LEV_DEBUG, "Linking stack to port w/ route " << arRoute);
 	this->AddContext(&apStack->mLink, arRoute); // this function can throw, do it first
-	apStack->mLink.SetRouter(this);	
-	mStackMap[arStackName] = StackRecord(apStack, arRoute);			
-	this->Start();	
+	apStack->mLink.SetRouter(this);
+	mStackMap[arStackName] = StackRecord(apStack, arRoute);
+	this->Start();
 }
 
 void LinkChannel::RemoveStackFromChannel(const std::string& arStackName)

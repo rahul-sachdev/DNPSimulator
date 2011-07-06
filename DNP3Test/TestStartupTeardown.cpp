@@ -33,7 +33,7 @@ void Configure(StartupTeardownTest& arTest, FilterLevel aLevel, boost::uint16_t 
 	for (boost::uint16_t i = 0; i < aNumPorts; ++i) {
 		ostringstream port;
 		port << "port" << i;
-		
+
 		arTest.CreatePort(port.str(), aLevel);
 
 		for(boost::uint16_t i = 0; i < aNumStacks; ++i) {
