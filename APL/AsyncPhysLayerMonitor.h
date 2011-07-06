@@ -61,8 +61,7 @@ protected:
 
 	virtual void OnPhysicalLayerOpen() = 0;
 	virtual void OnPhysicalLayerClose() = 0;
-	virtual void OnPhysicalLayerOpenFailure() {};
-
+	virtual void OnPhysicalLayerOpenFailure() {}
 	virtual void OnStateChange(PhysLayerState) {}
 
 private:
