@@ -34,14 +34,12 @@ namespace dnp
 VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
 	Loggable(apLogger),
 	AsyncPhysLayerMonitor(apLogger, apPhysLayer, apTimerSrc, arSettings.OPEN_RETRY_MS),
-	IVtoCallbacks(arSettings.CHANNEL_ID),
-	CleanupHelper(apTimerSrc),
+	IVtoCallbacks(arSettings.CHANNEL_ID),	
 	mpVtoWriter(apWriter),
 	mReadBuffer(1024),
 	mWriteData(0),
 	mReopenPhysicalLayer(false),
-	mPermanentlyStopped(false),
-	mCleanedup(false)
+	mPermanentlyStopped(false)	
 {
 	assert(apLogger != NULL);
 	assert(apWriter != NULL);
@@ -216,10 +214,7 @@ void VtoRouter::OnPhysicalLayerOpen()
 
 void VtoRouter::OnStateChange(PhysLayerState aState)
 {
-	if(mPermanentlyStopped && aState == PLS_STOPPED && !mCleanedup) {
-		mCleanedup = true;
-		this->Cleanup();
-	}
+	
 }
 
 void VtoRouter::OnPhysicalLayerClose()

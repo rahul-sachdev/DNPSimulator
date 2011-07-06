@@ -26,7 +26,6 @@
 #include <APL/CopyableBuffer.h>
 
 #include "VtoDataInterface.h"
-#include "CleanupHelper.h"
 
 namespace apl
 {
@@ -80,7 +79,7 @@ public:
  * implementations set policy on when to start and stop the reconnecting
  * behavior.
  */
-class VtoRouter : public AsyncPhysLayerMonitor, public IVtoCallbacks, public CleanupHelper
+class VtoRouter : public AsyncPhysLayerMonitor, public IVtoCallbacks
 {
 public:
 

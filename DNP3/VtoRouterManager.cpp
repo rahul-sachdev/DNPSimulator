@@ -58,12 +58,6 @@ VtoRouterManager::~VtoRouterManager()
 	assert(mRecords.size() == 0);
 }
 
-void VtoRouterManager::ClenupAfterRouter(IPhysicalLayerAsync* apPhys, VtoRouter* apRouter)
-{
-	delete apPhys;
-	delete apRouter;
-}
-
 VtoRouter* VtoRouterManager::StartRouter(
     const std::string& arPortName,
     const VtoRouterSettings& arSettings,
@@ -84,9 +78,6 @@ VtoRouter* VtoRouterManager::StartRouter(
 			pRouter = new ClientSocketVtoRouter(arSettings, pLogger, apWriter, pPhys, mpTimerSrc);
 		}
 	}
-
-	// when the router is completely stopped, it's physical layer will be deleted, followed by itself
-	pRouter->AddCleanupTask(boost::bind(&VtoRouterManager::ClenupAfterRouter, pPhys, pRouter));
 
 	RouterRecord record(arPortName, pRouter, apWriter, arSettings.CHANNEL_ID);
 
