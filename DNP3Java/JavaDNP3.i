@@ -41,7 +41,12 @@ using namespace apl::dnp;
 %include "APL/SerialTypes.h"
 %include "APL/QualityMasks.h"
 %include "APL/CommandTypes.h"
+
+%include "APL/BaseDataTypes.h"
+%template(DoublePoint) apl::TypedDataPoint<double>;
+%template(UnsignedPoint) apl::TypedDataPoint<boost::uint32_t>;
 %include "APL/DataTypes.h"
+
 %include "APL/DataInterfaces.h"
 %include "APL/CommandInterfaces.h"
 

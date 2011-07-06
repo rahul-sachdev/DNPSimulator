@@ -11,7 +11,7 @@ Master/Slave can now both notify of their current state using enumeration
 TestSet includes address scanning feature to detect devices that don't support broadcast addressing
 
 Bug fixes:
-#15, #9, #7
+Issue's 15, 9, 7
 
 ### 0.9.4 ###
 Rebased java namespace to org.totalgrid.reef.protocol.dnp3
