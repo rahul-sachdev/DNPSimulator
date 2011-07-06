@@ -60,9 +60,9 @@ AsyncStackManager::AsyncStackManager(Logger* apLogger) :
 	mService(),
 	mTimerSrc(mService.Get()),	
 	mIOServicePauser(mService.Get(), 1),
-	mMgr(apLogger->GetSubLogger("Channels", LEV_WARNING), mService.Get()),
+	mMgr(apLogger->GetSubLogger("channels", LEV_WARNING), mService.Get()),
 	mScheduler(&mTimerSrc),
-	mVtoManager(apLogger->GetSubLogger("VtoRouterManager"), &mTimerSrc, &mMgr),
+	mVtoManager(apLogger->GetSubLogger("vto"), &mTimerSrc, &mMgr),
 	mThread(this),
 	mpInfiniteTimer(mTimerSrc.StartInfinite(boost::bind(&AsyncStackManager::NullActionForInfiniteTimer)))
 {	

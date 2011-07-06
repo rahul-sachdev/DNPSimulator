@@ -51,10 +51,9 @@ public:
 	void CreatePort(const std::string& arName, FilterLevel aLevel);
 	void AddMaster(const std::string& arName, const std::string& arPortName, boost::uint16_t aLocalAddress, FilterLevel aLevel);	
 
-	EventLog mLog;
-	FilterLevel mLevel;
-	AsyncStackManager mMgr;
-	FlexibleDataObserver mFDO;
+	EventLog log;	
+	AsyncStackManager manager;
+	FlexibleDataObserver fdo;
 };
 
 }

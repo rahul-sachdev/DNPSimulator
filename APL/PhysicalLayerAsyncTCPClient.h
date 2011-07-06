@@ -33,6 +33,7 @@ public:
 
 	/* Implement the remaining actions */
 	void DoOpen();
+	void DoOpeningClose(); //override this to just close the socket insead of shutting is down too
 	void DoOpenSuccess();
 
 private:

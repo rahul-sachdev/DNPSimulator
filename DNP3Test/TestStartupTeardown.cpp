@@ -57,19 +57,14 @@ BOOST_AUTO_TEST_CASE(AutoStartAndStopWithDestructor)
 	Configure(test, LEVEL, NUM_STACKS, NUM_PORTS);
 }
 
-/*
-BOOST_AUTO_TEST_CASE(ManualStartAndStopWithDestructor)
+BOOST_AUTO_TEST_CASE(AutoStartAndStopWithExplicitShutdown)
 {
 	StartupTeardownTest test(LEVEL, false);
-	Configure(test, LEVEL, NUM_STACKS, NUM_PORTS);	
+	Configure(test, LEVEL, NUM_STACKS, NUM_PORTS);
+
+	test.manager.Shutdown();
 }
 
-BOOST_AUTO_TEST_CASE(ManualStartStop)
-{
-	StartupTeardownTest test(LEVEL, false);
-	Configure(test, LEVEL, NUM_STACKS, NUM_PORTS);		
-}
-*/
 
 BOOST_AUTO_TEST_SUITE_END()
 

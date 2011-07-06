@@ -30,23 +30,23 @@ using namespace apl;
 using namespace apl::dnp;
 
 StartupTeardownTest::StartupTeardownTest(FilterLevel aLevel, bool aImmediate) :
-	mLog(),
-	mMgr(mLog.GetLogger(aLevel, "mgr"))
+	log(),
+	manager(log.GetLogger(aLevel, "mgr"))
 {
-	if(aImmediate) mLog.AddLogSubscriber(LogToStdio::Inst());
+	if(aImmediate) log.AddLogSubscriber(LogToStdio::Inst());
 }
 
 void StartupTeardownTest::CreatePort(const std::string& arName, FilterLevel aLevel)
 {
 	std::string name = arName + " router";
 	PhysLayerSettings s(aLevel, 1000);
-	mMgr.AddTCPClient(arName, s, "127.0.0.1", 30000);
+	manager.AddTCPClient(arName, s, "127.0.0.1", 30000);
 }
 
 void StartupTeardownTest::AddMaster(const std::string& arStackName, const std::string& arPortName, boost::uint16_t aLocalAddress, FilterLevel aLevel)
 {
 	MasterStackConfig cfg;
 	cfg.link.LocalAddr = aLocalAddress;
-	mMgr.AddMaster(arPortName, arStackName, aLevel, &mFDO, cfg);
+	manager.AddMaster(arPortName, arStackName, aLevel, &fdo, cfg);
 }
 
