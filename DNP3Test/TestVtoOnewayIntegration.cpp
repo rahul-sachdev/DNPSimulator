@@ -70,7 +70,6 @@ void TestLargeDataOneWay(VtoOnewayTestStack& arTest, size_t aSizeInBytes)
 	// start everything
 	arTest.local.Start();
 	arTest.remote.Start();
-	arTest.manager.Start();
 
 	BOOST_REQUIRE(arTest.WaitForLocalState(PLS_OPEN));
 	BOOST_REQUIRE(arTest.WaitForRemoteState(PLS_OPEN));

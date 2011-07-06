@@ -33,12 +33,7 @@ void Configure(StartupTeardownTest& arTest, FilterLevel aLevel, boost::uint16_t 
 	for (boost::uint16_t i = 0; i < aNumPorts; ++i) {
 		ostringstream port;
 		port << "port" << i;
-
-		/*
-		 * If aAutoRun == true, the stack starts executing as soon as the
-		 * first stack is added.  Otherwise, the stack will wait until
-		 * Start() has been called below.
-		 */
+		
 		arTest.CreatePort(port.str(), aLevel);
 
 		for(boost::uint16_t i = 0; i < aNumStacks; ++i) {
@@ -56,32 +51,25 @@ const FilterLevel LEVEL = LEV_WARNING;
 const boost::uint16_t NUM_STACKS = 10;
 const boost::uint16_t NUM_PORTS = 10;
 
-BOOST_AUTO_TEST_CASE(NeverStart)
-{
-	StartupTeardownTest test(LEVEL, false);
-	Configure(test, LEVEL, NUM_STACKS, NUM_PORTS);
-}
-
 BOOST_AUTO_TEST_CASE(AutoStartAndStopWithDestructor)
 {
 	StartupTeardownTest test(LEVEL, true);
 	Configure(test, LEVEL, NUM_STACKS, NUM_PORTS);
 }
 
+/*
 BOOST_AUTO_TEST_CASE(ManualStartAndStopWithDestructor)
 {
 	StartupTeardownTest test(LEVEL, false);
-	Configure(test, LEVEL, NUM_STACKS, NUM_PORTS);
-	test.mMgr.Start();
+	Configure(test, LEVEL, NUM_STACKS, NUM_PORTS);	
 }
 
 BOOST_AUTO_TEST_CASE(ManualStartStop)
 {
 	StartupTeardownTest test(LEVEL, false);
-	Configure(test, LEVEL, NUM_STACKS, NUM_PORTS);
-	test.mMgr.Start();
-	test.mMgr.Stop();
+	Configure(test, LEVEL, NUM_STACKS, NUM_PORTS);		
 }
+*/
 
 BOOST_AUTO_TEST_SUITE_END()
 

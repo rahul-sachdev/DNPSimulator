@@ -58,12 +58,11 @@ const size_t NUM_CHANGES = 10;
 
 BOOST_AUTO_TEST_CASE(MasterToSlaveThroughput)
 {
-	EventLog log;
-	if (EXTRA_DEBUG)
-		log.AddLogSubscriber(LogToStdio::Inst());
+	EventLog log;	
+	log.AddLogSubscriber(LogToStdio::Inst());
 
-	IntegrationTest t(log.GetLogger(LEV_WARNING, "test"), LEV_WARNING, START_PORT,
-	                  NUM_PAIRS, NUM_POINTS);
+	IntegrationTest t(log.GetLogger(LEV_INFO, "test"), LEV_WARNING, START_PORT,
+	                  NUM_PAIRS, NUM_POINTS);	
 
 	IDataObserver* pObs = t.GetFanout();
 
@@ -120,7 +119,7 @@ BOOST_AUTO_TEST_CASE(IntegrationTestConstructionDestruction)
 		std::ostringstream oss;
 		oss << "Port: " << START_PORT << " Client ";
 
-		list = t.GetStackNames();
+		list = t.GetManager()->GetStackNames();
 		BOOST_REQUIRE_EQUAL(list.size(), NUM_PAIRS * 2);
 		BOOST_REQUIRE_EQUAL(list[0], oss.str());
 	}
@@ -132,7 +131,7 @@ BOOST_AUTO_TEST_CASE(IntegrationTestConstructionDestruction)
 		std::ostringstream oss;
 		oss << "Port: " << START_PORT << " Client ";
 
-		list = t.GetPortNames();
+		list = t.GetManager()->GetPortNames();
 		BOOST_REQUIRE_EQUAL(list.size(), NUM_PAIRS * 2);
 		BOOST_REQUIRE_EQUAL(list[0], oss.str());
 	}
@@ -149,14 +148,14 @@ BOOST_AUTO_TEST_CASE(IntegrationTestConstructionDestruction)
 		IVtoWriter* pWriter1b = NULL;
 		IVtoWriter* pWriter2 = NULL;
 
-		BOOST_REQUIRE_NO_THROW(pWriter1a = t.GetVtoWriter(client1));
-		BOOST_REQUIRE_NO_THROW(pWriter1b = t.GetVtoWriter(client1));
-		BOOST_REQUIRE_NO_THROW(pWriter2 = t.GetVtoWriter(client2));
+		BOOST_REQUIRE_NO_THROW(pWriter1a = t.GetManager()->GetVtoWriter(client1));
+		BOOST_REQUIRE_NO_THROW(pWriter1b = t.GetManager()->GetVtoWriter(client1));
+		BOOST_REQUIRE_NO_THROW(pWriter2 = t.GetManager()->GetVtoWriter(client2));
 
 		BOOST_REQUIRE(pWriter1a == pWriter1b);
 		BOOST_REQUIRE(pWriter1a != pWriter2);
 
-		BOOST_REQUIRE_THROW(t.GetVtoWriter("trash"), ArgumentException);
+		BOOST_REQUIRE_THROW(t.GetManager()->GetVtoWriter("trash"), ArgumentException);
 	}
 
 	/* Remove a stack, but leave the port associated */
@@ -166,31 +165,31 @@ BOOST_AUTO_TEST_CASE(IntegrationTestConstructionDestruction)
 		std::ostringstream oss;
 		oss << "Port: " << START_PORT << " Client ";
 
-		list = t.GetStackNames();
+		list = t.GetManager()->GetStackNames();
 		BOOST_REQUIRE_EQUAL(list.size(), NUM_PAIRS * 2);
 		BOOST_REQUIRE(list[0] == oss.str());
 
-		list = t.GetPortNames();
+		list = t.GetManager()->GetPortNames();
 		BOOST_REQUIRE_EQUAL(list.size(), NUM_PAIRS * 2);
 		BOOST_REQUIRE(list[0] == oss.str());
 
-		BOOST_REQUIRE_NO_THROW(t.RemoveStack(oss.str()));
+		BOOST_REQUIRE_NO_THROW(t.GetManager()->RemoveStack(oss.str()));
 
-		list = t.GetStackNames();
+		list = t.GetManager()->GetStackNames();
 		BOOST_REQUIRE_EQUAL(list.size(), (NUM_PAIRS * 2) - 1);
 		BOOST_REQUIRE(list[0] != oss.str());
 
-		list = t.GetPortNames();
+		list = t.GetManager()->GetPortNames();
 		BOOST_REQUIRE_EQUAL(list.size(), NUM_PAIRS * 2);
 		BOOST_REQUIRE(list[0] == oss.str());
 
-		BOOST_REQUIRE_NO_THROW(t.RemovePort(oss.str()));
+		BOOST_REQUIRE_NO_THROW(t.GetManager()->RemovePort(oss.str()));
 
-		list = t.GetStackNames();
+		list = t.GetManager()->GetStackNames();
 		BOOST_REQUIRE_EQUAL(list.size(), (NUM_PAIRS * 2) - 1);
 		BOOST_REQUIRE(list[0] != oss.str());
 
-		list = t.GetPortNames();
+		list = t.GetManager()->GetPortNames();
 		BOOST_REQUIRE_EQUAL(list.size(), (NUM_PAIRS * 2) - 1);
 		BOOST_REQUIRE(list[0] != oss.str());
 	}
@@ -202,29 +201,29 @@ BOOST_AUTO_TEST_CASE(IntegrationTestConstructionDestruction)
 		std::ostringstream oss;
 		oss << "Port: " << START_PORT << " Server ";
 
-		list = t.GetStackNames();
+		list = t.GetManager()->GetStackNames();
 		BOOST_REQUIRE_EQUAL(list.size(), (NUM_PAIRS * 2) - 1);
 		BOOST_REQUIRE(list[0] == oss.str());
 
-		list = t.GetPortNames();
+		list = t.GetManager()->GetPortNames();
 		BOOST_REQUIRE_EQUAL(list.size(), (NUM_PAIRS * 2) - 1);
 		BOOST_REQUIRE(list[0] == oss.str());
 
-		BOOST_REQUIRE_NO_THROW(t.RemovePort(oss.str()));
+		BOOST_REQUIRE_NO_THROW(t.GetManager()->RemovePort(oss.str()));
 
-		list = t.GetStackNames();
+		list = t.GetManager()->GetStackNames();
 		BOOST_REQUIRE_EQUAL(list.size(), (NUM_PAIRS * 2) - 2);
 		BOOST_REQUIRE(list[0] != oss.str());
 
-		list = t.GetPortNames();
+		list = t.GetManager()->GetPortNames();
 		BOOST_REQUIRE_EQUAL(list.size(), (NUM_PAIRS * 2) - 2);
 		BOOST_REQUIRE(list[0] != oss.str());
 	}
 
 	/* Try to remove a non-existant stack and port */
 	{
-		BOOST_REQUIRE_THROW(t.RemoveStack("trash"), ArgumentException);
-		BOOST_REQUIRE_THROW(t.RemovePort("trash"), ArgumentException);
+		BOOST_REQUIRE_THROW(t.GetManager()->RemoveStack("trash"), ArgumentException);
+		BOOST_REQUIRE_THROW(t.GetManager()->RemovePort("trash"), ArgumentException);
 	}
 }
 

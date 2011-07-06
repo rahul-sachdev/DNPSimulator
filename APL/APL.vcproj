@@ -413,6 +413,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\IOServicePauser.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\IOServicePauser.h"
+					>
+				</File>
+				<File
 					RelativePath=".\IOServiceThread.cpp"
 					>
 				</File>
@@ -422,6 +430,10 @@
 				</File>
 				<File
 					RelativePath=".\ISubject.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ITransactable.h"
 					>
 				</File>
 				<File

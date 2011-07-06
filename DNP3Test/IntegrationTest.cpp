@@ -43,7 +43,8 @@ using namespace apl;
 using namespace apl::dnp;
 
 IntegrationTest::IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints) :
-	AsyncStackManager(apLogger),
+	AsyncTestObjectASIO(),
+	mManager(apLogger),
 	M_START_PORT(aStartPort),
 	mChange(false),
 	mNotifier(boost::bind(&IntegrationTest::RegisterChange, this))
@@ -59,11 +60,6 @@ IntegrationTest::~IntegrationTest()
 	BOOST_FOREACH(FlexibleDataObserver * pFDO, mMasterObservers) {
 		delete pFDO;
 	}
-}
-
-void IntegrationTest::Next()
-{
-	AsyncTestObjectASIO::Next(this->mService.Get(), 10);
 }
 
 bool IntegrationTest::SameData()
@@ -116,8 +112,8 @@ void IntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 	std::string server = oss.str() + " Server ";
 
 	PhysLayerSettings s(aLevel, 1000);
-	this->AddTCPClient(client, s, "127.0.0.1", port);
-	this->AddTCPServer(server, s, "127.0.0.1", port);
+	this->mManager.AddTCPClient(client, s, "127.0.0.1", port);
+	this->mManager.AddTCPServer(server, s, "127.0.0.1", port);
 
 	/*
 	 * Add a Master instance.  The code is wrapped in braces so that we can
@@ -132,7 +128,7 @@ void IntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 		cfg.master.EnableUnsol = true;
 		cfg.master.DoUnsolOnStartup = true;
 		cfg.master.UnsolClassMask = PC_ALL_EVENTS;
-		this->AddMaster(client, client, aLevel, pMasterFDO, cfg);
+		this->mManager.AddMaster(client, client, aLevel, pMasterFDO, cfg);
 	}
 
 	/*
@@ -145,7 +141,7 @@ void IntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 		cfg.slave.mDisableUnsol = false;
 		cfg.slave.mUnsolPackDelay = 0;
 		cfg.device = DeviceTemplate(aNumPoints, aNumPoints, aNumPoints);
-		IDataObserver* pObs = this->AddSlave(server, server, aLevel, &mCmdAcceptor, cfg);
+		IDataObserver* pObs = this->mManager.AddSlave(server, server, aLevel, &mCmdAcceptor, cfg);
 		this->mFanout.Add(pObs);
 	}
 

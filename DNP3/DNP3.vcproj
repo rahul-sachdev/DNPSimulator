@@ -596,6 +596,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\LinkChannel.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\LinkChannel.h"
+					>
+				</File>
+				<File
 					RelativePath=".\MasterStackConfig.h"
 					>
 				</File>

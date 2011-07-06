@@ -22,8 +22,10 @@
 
 #include "IHandlerAsync.h"
 #include "TimerInterfaces.h"
-#include "IPhysMonitor.h"
 #include "Logger.h"
+#include "IPhysMonitor.h"
+
+#include <set>
 
 namespace apl
 {
@@ -45,36 +47,28 @@ public:
 	/// will close if we are open, since we will auto reconnect
 	void Reconnect();
 
-	bool IsRunning();
-	bool IsOpen();
+	PhysLayerState GetState() { return mState; }
 
-	void SetMonitor(IPhysMonitor* apMonitor);
+	void AddMonitor(IPhysMonitor* apMonitor);
 
 protected:
-
-	bool Opening() const {
-		return mOpening;
-	}
 
 	IPhysicalLayerAsync* mpPhys;
 	ITimerSource* mpTimerSrc;
 	ITimer* mpOpenTimer;
 	LogVariable mPortState;
+	PhysLayerState mState;
 
 	virtual void OnPhysicalLayerOpen() = 0;
 	virtual void OnPhysicalLayerClose() = 0;
-
 	virtual void OnPhysicalLayerOpenFailure() {};
+
+	virtual void OnStateChange(PhysLayerState) {}
 
 private:
 
-	void Notify(PhysLayerState);
-
-	virtual void OnStateChange(PhysLayerState) = 0;
-
-	bool mOpening;
-	bool mOpen;
-	bool mStopOpenRetry;
+	void ChangeState(PhysLayerState);	
+	bool mStopOpenRetry;	
 	const millis_t M_OPEN_RETRY;
 
 	// Implement from IHandlerAsync - Try to reconnect using a timer
@@ -82,7 +76,8 @@ private:
 	void _OnLowerLayerUp();
 	void _OnLowerLayerDown();
 
-	IPhysMonitor* mpMonitor;
+	typedef std::set<IPhysMonitor*> MonitorSet;
+	MonitorSet mMonitors;
 
 };
 }

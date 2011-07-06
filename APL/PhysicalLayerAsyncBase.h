@@ -69,12 +69,15 @@ public:
 	bool IsClosing() {
 		return mState.mClosing;
 	}
+	bool IsClosed() {
+		return !(mState.mOpening || mState.mOpen);
+	}
 	bool IsOpening() {
 		return mState.mOpening;
 	}
 	bool IsOpen() {
 		return mState.mOpen;
-	}
+	}	
 
 	/* Implement IPhysicalLayerAsync - Events from the outside */
 	void AsyncOpen();

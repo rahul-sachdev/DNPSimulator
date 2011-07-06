@@ -16,13 +16,12 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __STARTUP_TEARDOWN_TEST_H_
-#define __STARTUP_TEARDOWN_TEST_H_
 
-#include <APL/Log.h>
-#include <APL/FlexibleDataObserver.h>
-#include <DNP3/AsyncStackManager.h>
+#ifndef __IO_SERVICE_PAUSER_H_
+#define __IO_SERVICE_PAUSER_H_
 
+#include "ITransactable.h"
+#include "Lock.h"
 
 namespace boost
 {
@@ -32,33 +31,30 @@ class io_service;
 }
 }
 
-namespace apl
+namespace apl 
 {
-class IPhysicalLayerAsync;
-}
-
-namespace apl
+	
+class IOServicePauser : public ITransactable
 {
-namespace dnp
-{
+	public:
+		IOServicePauser(boost::asio::io_service* apService, size_t aNumThreads);
 
-class StartupTeardownTest
-{
-public:
+	private:
 
-	StartupTeardownTest(FilterLevel aLevel, bool aImmediate = false);
+		void _Start();
+		void _End();
 
-	void CreatePort(const std::string& arName, FilterLevel aLevel);
-	void AddMaster(const std::string& arName, const std::string& arPortName, boost::uint16_t aLocalAddress, FilterLevel aLevel);	
+		void Pause();
 
-	EventLog mLog;
-	FilterLevel mLevel;
-	AsyncStackManager mMgr;
-	FlexibleDataObserver mFDO;
+		boost::asio::io_service* mpService;
+		bool mPausing;
+		size_t mPausedCount;
+		size_t mNumThreads;
+		SigLock mLock;
 };
 
+
 }
-}
+/* vim: set ts=4 sw=4: */
 
 #endif
-

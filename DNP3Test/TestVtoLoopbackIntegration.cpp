@@ -65,8 +65,7 @@ BOOST_AUTO_TEST_CASE(Reconnection)
 {
 	VtoLoopbackTestStack stack(true, false);
 
-	// start up everything, the local side should be able to open
-	stack.manager.Start();
+	// start up everything, the local side should be able to open	
 	stack.loopback.Start();
 	stack.local.Start();
 
@@ -95,7 +94,6 @@ BOOST_AUTO_TEST_CASE(RemoteSideOpenFailureBouncesLocalConnection)
 
 	BOOST_REQUIRE(test.WaitForLocalState(PLS_CLOSED));
 
-	test.manager.Start();
 	test.local.Start();
 
 	for(size_t i = 0; i < 5; ++i) {
@@ -110,8 +108,7 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 {
 	VtoLoopbackTestStack stack(true, false);
 
-	// start all 4 components, should connect
-	stack.manager.Start();
+	// start all components, should connect
 	stack.loopback.Start();
 	stack.local.Start();
 
@@ -128,7 +125,6 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 void TestLargeDataLoopback(VtoLoopbackTestStack& arTest, size_t aSizeInBytes)
 {
 	// start everything
-	arTest.manager.Start();
 	arTest.loopback.Start();
 	arTest.local.Start();
 	BOOST_REQUIRE(arTest.WaitForLocalState(PLS_OPEN));

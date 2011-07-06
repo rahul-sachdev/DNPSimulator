@@ -21,6 +21,7 @@
 
 #include <DNP3/MasterStack.h>
 #include <APL/PhysicalLayerAsyncTCPClient.h>
+#include <APL/LogToStdIO.h>
 
 #include <boost/asio.hpp>
 #include <boost/foreach.hpp>
@@ -28,10 +29,12 @@
 using namespace apl;
 using namespace apl::dnp;
 
-StartupTeardownTest::StartupTeardownTest(FilterLevel aLevel, bool aAutoStart) :
+StartupTeardownTest::StartupTeardownTest(FilterLevel aLevel, bool aImmediate) :
 	mLog(),
-	mMgr(mLog.GetLogger(aLevel, "mgr"), aAutoStart)
-{}
+	mMgr(mLog.GetLogger(aLevel, "mgr"))
+{
+	if(aImmediate) mLog.AddLogSubscriber(LogToStdio::Inst());
+}
 
 void StartupTeardownTest::CreatePort(const std::string& arName, FilterLevel aLevel)
 {

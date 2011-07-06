@@ -73,14 +73,11 @@ IDataObserver* StackManager::AddSlave(const std::string& arPortName, const std::
 }
 
 
-void StackManager::Stop()
+void StackManager::Shutdown()
 {
-	mpImpl->Stop();
+	mpImpl->Shutdown();
 }
-void StackManager::Start()
-{
-	mpImpl->Start();
-}
+
 void StackManager::RemovePort(const std::string& arPortName)
 {
 	mpImpl->RemovePort(arPortName);

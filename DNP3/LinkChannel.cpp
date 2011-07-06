@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "Port.h"
+#include "LinkChannel.h"
 
 #include "Stack.h"
 #include <boost/foreach.hpp>
@@ -31,50 +31,50 @@ namespace apl
 namespace dnp
 {
 
-Port::Port(const std::string& arName, Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, millis_t aOpenDelay) :
-	Loggable(apLogger->GetSubLogger("port")),	
-	mName(arName),
-	mRouter(apLogger, apPhys, apTimerSrc, aOpenDelay),	
-	mpPhys(apPhys),
-	mState(PLS_CLOSED)		
+LinkChannel::LinkChannel(Logger* apLogger, const std::string& arName, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, AsyncTaskGroup* apTaskGroup, millis_t aOpenRetry) :
+	Loggable(apLogger),
+	LinkLayerRouter(apLogger, apPhys, apTimerSrc, aOpenRetry),
+	mName(arName),		
+	mState(PLS_CLOSED),
+	mpTaskGroup(apTaskGroup)
 {
-	mRouter.AddMonitor(this);
+	
 }
 
-void Port::OnStateChange(PhysLayerState aState)
+	void LinkChannel::OnStateChange(PhysLayerState aState)
 {
 	CriticalSection cs(&mLock);
 	mState = aState;
 	cs.Signal();
 }
 
-void Port::WaitForStop()
+void LinkChannel::WaitForStop()
 {
 	CriticalSection cs(&mLock);
 	while(mState != PLS_STOPPED) cs.Wait();
 }
 
-void Port::BindStackToPort(const std::string& arStackName, Stack* apStack, const LinkRoute& arRoute)
+void LinkChannel::BindStackToChannel(const std::string& arStackName, Stack* apStack, const LinkRoute& arRoute)
 {
 	LOG_BLOCK(LEV_DEBUG, "Linking stack to port w/ route " << arRoute);
-	mRouter.AddContext(&apStack->mLink, arRoute); // this function can throw, do it first
-	apStack->mLink.SetRouter(&mRouter);	
-	mStackMap[arStackName] = StackRecord(apStack, arRoute);
-	mRouter.Start();	
+	this->AddContext(&apStack->mLink, arRoute); // this function can throw, do it first
+	apStack->mLink.SetRouter(this);	
+	mStackMap[arStackName] = StackRecord(apStack, arRoute);			
+	this->Start();	
 }
 
-void Port::RemoveStackFromPort(const std::string& arStackName)
+void LinkChannel::RemoveStackFromChannel(const std::string& arStackName)
 {
 	StackMap::iterator i = mStackMap.find(arStackName);
 	if(i == mStackMap.end()) throw ArgumentException("Stack with that name not bound: " + arStackName);
 	else {
 		StackRecord r = i->second;
 		LOG_BLOCK(LEV_DEBUG, "Unlinking stack from port w/ route " << r.route);
-		mRouter.RemoveContext(r.route);
+		this->RemoveContext(r.route);
 		mStackMap.erase(i);
-		if(mRouter.NumContext() == 0) {
+		if(this->NumContext() == 0) {
 			LOG_BLOCK(LEV_DEBUG, "Stopping router");
-			mRouter.Stop();
+			this->Stop();
 		}
 	}
 }

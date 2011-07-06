@@ -40,7 +40,7 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 	mpMainLogger(mLog.GetLogger(level, "main")),
 	ltf(&mLog, "integration.log", true),
 	testObj(),
-	manager(mLog.GetLogger(level, "manager"), false),
+	manager(mLog.GetLogger(level, "manager")),
 	timerSource(testObj.GetService()),
 	client(mLog.GetLogger(level, "local-tcp-client"), testObj.GetService(), "127.0.0.1", port + 20),
 	server(mLog.GetLogger(level, "loopback-tcp-server"), testObj.GetService(), "0.0.0.0", port + 10)
@@ -67,7 +67,7 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 
 VtoIntegrationTestBase::~VtoIntegrationTestBase()
 {
-	manager.Stop();
+	
 }
 
 }

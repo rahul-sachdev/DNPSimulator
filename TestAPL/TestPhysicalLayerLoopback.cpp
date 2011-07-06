@@ -70,8 +70,6 @@ BOOST_AUTO_TEST_CASE(EchosDataOnRead)
 	test.phys.BufferEquals("0A 0B 0C");
 }
 
-
-
 BOOST_AUTO_TEST_CASE(ReadsAgainAfterDataIsWritten)
 {
 	LoopbackTest test;

@@ -22,6 +22,7 @@
 
 #include <map>
 #include <vector>
+#include <boost/shared_ptr.hpp>
 
 #include <APL/Loggable.h>
 #include <APL/TimerSourceASIO.h>
@@ -33,6 +34,7 @@
 #include <APL/AsyncTaskScheduler.h>
 #include <APL/Lock.h>
 #include <APL/IOService.h>
+#include <APL/IOServicePauser.h>
 
 #include "VtoDataInterface.h"
 #include "LinkRoute.h"
@@ -51,7 +53,7 @@ namespace apl
 namespace dnp
 {
 
-class Port;
+class LinkChannel;
 class Stack;
 struct VtoRouterSettings;
 
@@ -68,10 +70,9 @@ class AsyncStackManager : private Threadable, private Loggable
 {
 public:
 	/**
-		@param apLogger - Logger to use for all other loggers
-		@param aAutoRun	- Stacks begin execution immediately after being added
+		@param apLogger - Logger to use for all other loggers		
 	*/
-	AsyncStackManager(Logger* apLogger, bool aAutoRun = false);
+	AsyncStackManager(Logger* apLogger);
 	~AsyncStackManager();
 
 	// All the io_service marshalling now occurs here. It's now safe to add/remove while the manager is running.
@@ -232,10 +233,10 @@ public:
 	*/
 	IVtoWriter* GetVtoWriter(const std::string& arStackName);
 
-	// Remove a port and all associated stacks
+	// Synchronously remove a port and all associated stacks
 	void RemovePort(const std::string& arPortName);
 
-	// Remove only a single stack
+	// Synchronously remove a single stack
 	void RemoveStack(const std::string& arStackName);
 
 	// @return a vector of all the stack names
@@ -243,57 +244,60 @@ public:
 
 	// @return a vector of all the port names
 	std::vector<std::string> GetPortNames();
+	
+	/**
+	* Synchronously stops all running stacks and ports
+	* The back ground thread is still running and the manager
+	* is ready for new actions
+	*/
+	void Shutdown();
 
-	// Start the thead if it isn't running
-	void Start();
-
-	// Stop all running stacks and synchronously wait for a join
-	void Stop();
+	/**
+	* The underlying io_service object that drives the stack. This is exposed
+	* so that applications can write single-threaded applications using
+	* the same asynchronous machinery if desired.
+	*/
+	boost::asio::io_service* GetIOService() { return mService.Get(); }
 
 private:
+	IOService mService;
+	TimerSourceASIO mTimerSrc;	
+	IOServicePauser mIOServicePauser;
+	PhysicalLayerManager mMgr;
+	AsyncTaskScheduler mScheduler;
+	VtoRouterManager mVtoManager;
+	Thread mThread;
+	ITimer* mpInfiniteTimer;
 
-	static void DeletePort(Port* apPort);
-	static void DeleteLayer(IPhysicalLayerAsync* apLayer);
+	typedef std::map<std::string, boost::shared_ptr<Stack>> StackMap;
+	StackMap mStackNameToStack;		// maps a stack name a Stack instance
 
-	Port* AllocatePort(const std::string& arName);
-	Port* CreatePort(const std::string& arName);
-	Port* GetPort(const std::string& arName);
-	Port* GetPortByStackName(const std::string& arStackName);
-	Port* GetPortPointer(const std::string& arName);
+	typedef std::map<std::string, LinkChannel*> StackToChannelMap;
+	typedef std::map<std::string, boost::shared_ptr<LinkChannel>> ChannelToChannelMap;
+	StackToChannelMap mStackNameToChannel;				// maps a stack name a channel instance
+	ChannelToChannelMap mChannelNameToChannel;			// maps a channel name to a channel instance
+
+	LinkChannel* GetOrCreateChannel(const std::string& arName);
+	LinkChannel* GetChannelOrExcept(const std::string& arName);
+	LinkChannel* GetChannelMaybeNull(const std::string& arName);
+	LinkChannel* CreateChannel(const std::string& arName);
+	LinkChannel* GetChannelByStackName(const std::string& arStackName);	
 	Stack* GetStackByName(const std::string& arStackName);
 
 	void Run();
 
 	// Remove a stack
-	void SeverStack(Port* apPort, const std::string& arStackName);
+	void SeverStack(LinkChannel* apChannel, const std::string& arStackName);
 
-	void OnAddStack(const std::string& arStackName, Stack* apStack, Port* apPort, const LinkRoute&);
-	void CheckForJoin();
-
-	bool mRunASIO;
-	bool mRunning;
+	void OnAddStack(const std::string& arStackName, boost::shared_ptr<Stack> apStack, LinkChannel* apChannel, const LinkRoute&);	
+		
 	size_t NumStacks() {
-		return mStackNameToPort.size();
+		return mStackNameToChannel.size();
 	}
 
-	std::vector<std::string> StacksOnPort(const std::string& arPortName);
+	std::vector<std::string> StacksOnChannel(const std::string& arChannelName);
 
-protected:
-	IOService mService;
-	TimerSourceASIO mTimerSrc;
-
-private:
-	PhysicalLayerManager mMgr;
-	AsyncTaskScheduler mScheduler;
-	VtoRouterManager mVtoManager;
-	Thread mThread;
-
-	typedef std::map<std::string, Stack*> StackMap;
-	StackMap mStackNameToStack;		// maps a stack name a Stack instance
-
-	typedef std::map<std::string, Port*> PortMap;
-	PortMap mStackNameToPort;		// maps a stack name a port instance
-	PortMap mPortNameToPort;		// maps a port name to a port instance
+	static void NullActionForInfiniteTimer() {}
 
 };
 

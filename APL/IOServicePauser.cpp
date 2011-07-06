@@ -16,49 +16,52 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __STARTUP_TEARDOWN_TEST_H_
-#define __STARTUP_TEARDOWN_TEST_H_
 
-#include <APL/Log.h>
-#include <APL/FlexibleDataObserver.h>
-#include <DNP3/AsyncStackManager.h>
+#include "IOServicePauser.h"
 
+#include <boost/asio/io_service.hpp>
+#include <boost/bind.hpp>
 
-namespace boost
+namespace apl 
 {
-namespace asio
+	
+IOServicePauser::IOServicePauser(boost::asio::io_service* apService, size_t aNumThreads) : 
+	mpService(apService),
+	mPausing(false),
+	mNumThreads(aNumThreads),
+	mPausedCount(0)
+	{}
+
+	
+
+void IOServicePauser::_Start()
 {
-class io_service;
-}
-}
-
-namespace apl
-{
-class IPhysicalLayerAsync;
-}
-
-namespace apl
-{
-namespace dnp
-{
-
-class StartupTeardownTest
-{
-public:
-
-	StartupTeardownTest(FilterLevel aLevel, bool aImmediate = false);
-
-	void CreatePort(const std::string& arName, FilterLevel aLevel);
-	void AddMaster(const std::string& arName, const std::string& arPortName, boost::uint16_t aLocalAddress, FilterLevel aLevel);	
-
-	EventLog mLog;
-	FilterLevel mLevel;
-	AsyncStackManager mMgr;
-	FlexibleDataObserver mFDO;
-};
-
-}
+	CriticalSection cs(&mLock);
+	mPausing = true;
+	mpService->post(boost::bind(&IOServicePauser::Pause, this));
+	while(mPausedCount < mNumThreads) {
+		mLock.Wait();
+	}	
 }
 
-#endif
+void IOServicePauser::_End()
+{
+	CriticalSection cs(&mLock);
+	mPausing = false;
+	cs.Broadcast();
+}
+
+void IOServicePauser::Pause()
+{
+	CriticalSection cs(&mLock);
+	++mPausedCount;	
+	cs.Broadcast();
+	while(mPausing) cs.Wait();	
+	--mPausedCount;
+}
+
+}
+
+/* vim: set ts=4 sw=4: */
+
 

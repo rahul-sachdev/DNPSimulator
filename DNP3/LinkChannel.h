@@ -16,13 +16,11 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __PORT_H_
-#define __PORT_H_
-
+#ifndef __LINK_CHANNEL_H_
+#define __LINK_CHANNEL_H_
 
 #include "LinkLayerRouter.h"
 
-#include <APL/Loggable.h>
 #include <APL/Lock.h>
 
 #include <vector>
@@ -39,20 +37,10 @@ namespace dnp
 {
 
 class Stack;
-class AsyncStackManager;
 
-template <class T, class U>
-static std::vector<U> GetKeys(T& arMap)
+class LinkChannel : private LinkLayerRouter
 {
-	std::vector<U> ret;
-	for(typename T::iterator i = arMap.begin(); i != arMap.end(); ++i) {
-		ret.push_back(i->first);
-	}
-	return ret;
-}
-
-class Port : public Loggable, public IPhysMonitor
-{
+	
 	struct StackRecord {
 		StackRecord() : pStack(NULL), route()
 		{}
@@ -63,23 +51,22 @@ class Port : public Loggable, public IPhysMonitor
 
 		Stack* pStack;
 		LinkRoute route;
-	};
+	};	
 
 public:	
 
-	Port(const std::string& arName, Logger*, ITimerSource* apTimerSrc, IPhysicalLayerAsync*, millis_t aOpenDelay);
-
-	AsyncTaskGroup* GetGroup() {
-		return mpGroup;
-	}
-	void BindStackToPort(const std::string& arStackName, Stack* apStack, const LinkRoute& arRoute);
-	void RemoveStackFromPort(const std::string& arStackName);
+	LinkChannel(Logger* apLogger, const std::string& arName, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, AsyncTaskGroup* apTaskGroup, millis_t aOpenRetry);	
+	
+	void BindStackToChannel(const std::string& arStackName, Stack* apStack, const LinkRoute& arRoute);
+	void RemoveStackFromChannel(const std::string& arStackName);		
 	
 	std::string Name() {
 		return mName;
 	}	
 
-//	void AddObserver(
+	AsyncTaskGroup* GetGroup() {
+		return mpTaskGroup;
+	}	
 
 	/// Events from the router
 	void OnStateChange(PhysLayerState);
@@ -90,13 +77,9 @@ public:
 private:
 
 	SigLock mLock;
-	std::string mName;
-	LinkLayerRouter mRouter;
-	AsyncTaskGroup* mpGroup;
-	IPhysicalLayerAsync* mpPhys;
+	std::string mName;		
 	PhysLayerState mState;	
-
-private:
+	AsyncTaskGroup* mpTaskGroup;
 
 	typedef std::map<std::string, StackRecord> StackMap;
 	StackMap mStackMap;

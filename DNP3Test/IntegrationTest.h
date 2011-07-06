@@ -21,7 +21,7 @@
 
 #include <vector>
 #include <APL/FlexibleDataObserver.h>
-#include <APLTestTools/AsyncTestObject.h>
+#include <APLTestTools/AsyncTestObjectASIO.h>
 #include <APLTestTools/LogTester.h>
 #include <APLTestTools/MockCommandAcceptor.h>
 #include <DNP3/AsyncStackManager.h>
@@ -88,7 +88,7 @@ private:
 
 };
 
-class IntegrationTest : public AsyncTestObject, public AsyncStackManager
+class IntegrationTest : public AsyncTestObjectASIO
 {
 public:
 
@@ -105,14 +105,16 @@ public:
 	Analog RandomAnalog();
 	Counter RandomCounter();
 
+	AsyncStackManager* GetManager() { return &mManager; }
+
 private:
 
 	void RegisterChange() {
 		mChange = true;
 	}
-	void AddStackPair(FilterLevel aLevel, size_t aNumPoints);
-	void Next();
+	void AddStackPair(FilterLevel aLevel, size_t aNumPoints);	
 
+	AsyncStackManager mManager;
 	ObserverFanout mFanout;
 	const boost::uint16_t M_START_PORT;
 	Logger* mpLogger;

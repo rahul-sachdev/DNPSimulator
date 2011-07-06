@@ -61,7 +61,7 @@ void LinkLayerRouter::AddContext(ILinkContext* apContext, const LinkRoute& arRou
 	}
 
 	mAddressMap[arRoute] = apContext;
-	if(this->IsOpen()) apContext->OnLowerLayerUp();
+	if(this->GetState() == PLS_OPEN) apContext->OnLowerLayerUp();
 }
 
 void LinkLayerRouter::RemoveContext(const LinkRoute& arRoute)
@@ -70,7 +70,7 @@ void LinkLayerRouter::RemoveContext(const LinkRoute& arRoute)
 	if(i != mAddressMap.end()) {
 		ILinkContext* pContext = i->second;
 		mAddressMap.erase(i);
-		if(this->IsOpen()) pContext->OnLowerLayerDown();
+		if(this->GetState() == PLS_OPEN) pContext->OnLowerLayerDown();
 	}
 }
 
