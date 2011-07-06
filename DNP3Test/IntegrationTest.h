@@ -30,6 +30,7 @@
 #include <APL/BoundNotifier.h>
 
 #include <boost/random/mersenne_twister.hpp>
+#include <boost/shared_ptr.hpp>
 #include <memory>
 
 namespace boost
@@ -92,8 +93,7 @@ class IntegrationTest : public AsyncTestObjectASIO
 {
 public:
 
-	IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints);
-	virtual ~IntegrationTest();
+	IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints);	
 
 	IDataObserver* GetFanout() {
 		return &mFanout;
@@ -109,22 +109,21 @@ public:
 
 private:
 
-	void RegisterChange() {
-		mChange = true;
-	}
+	void RegisterChange();	
 	void AddStackPair(FilterLevel aLevel, size_t aNumPoints);	
 
-	AsyncStackManager mManager;
+	std::vector<boost::shared_ptr<FlexibleDataObserver>> mMasterObservers;	
 	ObserverFanout mFanout;
 	const boost::uint16_t M_START_PORT;
 	Logger* mpLogger;
 
 	bool mChange;
-	BoundNotifier mNotifier;
-	std::vector<FlexibleDataObserver*> mMasterObservers;
+	BoundNotifier mNotifier;	
 	FlexibleDataObserver mLocalFDO;
 	MockCommandAcceptor mCmdAcceptor;
 	boost::mt19937 rng; //random number generator
+
+	AsyncStackManager mManager;
 };
 
 }

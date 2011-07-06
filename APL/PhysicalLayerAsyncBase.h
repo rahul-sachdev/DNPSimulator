@@ -33,7 +33,9 @@ class PLAS_Base;
 // are called from a single thread.
 class PhysicalLayerAsyncBase : public IPhysicalLayerAsync, public Loggable
 {
-	struct State {
+	class State : public IPhysicalLayerState 
+	{
+		public:
 		State();
 
 		bool mOpen;
@@ -42,15 +44,22 @@ class PhysicalLayerAsyncBase : public IPhysicalLayerAsync, public Loggable
 		bool mWriting;
 		bool mClosing;
 
-		bool CanOpen();
-		bool CanClose();
-		bool CanRead();
-		bool CanWrite();
+		bool IsOpen() const;
+		bool IsOpening() const;
+		bool IsReading() const;
+		bool IsWriting() const;
+		bool IsClosing() const;
+		bool IsClosed() const;
 
-		bool CallbacksPending();
+		bool CanOpen() const;
+		bool CanClose() const;
+		bool CanRead() const;
+		bool CanWrite() const;
+
+		bool CallbacksPending() const;	
+		std::string ToString() const;
+
 		bool CheckForClose();
-
-		std::string ToString();
 	};
 
 public:
@@ -60,25 +69,19 @@ public:
 	// to avoid segfaulting. There are a # of asserts that make sure the object has been shutdown properly.
 	virtual ~PhysicalLayerAsyncBase() {}
 
-	bool IsReading() {
-		return mState.mReading;
-	}
-	bool IsWriting() {
-		return mState.mWriting;
-	}
-	bool IsClosing() {
-		return mState.mClosing;
-	}
-	bool IsClosed() {
-		return !(mState.mOpening || mState.mOpen);
-	}
-	bool IsOpening() {
-		return mState.mOpening;
-	}
-	bool IsOpen() {
-		return mState.mOpen;
-	}	
+	/* Implement IPhysicalLayerState */
+	bool IsOpen() const { return mState.IsOpen(); }	
+	bool IsOpening() const { return mState.IsOpening(); }
+	bool IsReading() const { return mState.IsReading(); }
+	bool IsWriting() const { return mState.IsWriting(); }
+	bool IsClosing() const { return mState.IsClosing(); }
+	bool IsClosed() const { return mState.IsClosed(); }
 
+	bool CanOpen() const { return mState.CanOpen(); }
+	bool CanClose() const { return mState.CanClose(); }
+	bool CanRead() const { return mState.CanRead(); }
+	bool CanWrite() const { return mState.CanWrite(); }
+		
 	/* Implement IPhysicalLayerAsync - Events from the outside */
 	void AsyncOpen();
 	void AsyncClose();

@@ -42,27 +42,57 @@ PhysicalLayerAsyncBase::State::State() :
 	mClosing(false)
 {}
 
-bool PhysicalLayerAsyncBase::State::CanOpen()
+bool PhysicalLayerAsyncBase::State::IsOpen() const 
 {
-	return !(mOpen || mOpening || mClosing);
+	return mOpen;
 }
 
-bool PhysicalLayerAsyncBase::State::CanClose()
+bool PhysicalLayerAsyncBase::State::IsOpening() const
+{
+	return mOpening;
+}
+
+bool PhysicalLayerAsyncBase::State::IsReading() const
+{ 
+	return mReading;
+}
+
+bool PhysicalLayerAsyncBase::State::IsWriting() const
+{ 
+	return mWriting;
+}		
+
+bool PhysicalLayerAsyncBase::State::IsClosing() const
+{ 
+	return mClosing;
+}						
+
+bool PhysicalLayerAsyncBase::State::IsClosed() const 
+{ 
+	return !(mOpening || mOpen || mClosing || mReading || mWriting);
+}
+
+bool PhysicalLayerAsyncBase::State::CanOpen() const
+{
+	return this->IsClosed();
+}
+
+bool PhysicalLayerAsyncBase::State::CanClose() const
 {
 	return (mOpen || mOpening) && !mClosing;
 }
 
-bool PhysicalLayerAsyncBase::State::CanRead()
+bool PhysicalLayerAsyncBase::State::CanRead() const
 {
 	return mOpen && !mClosing && !mReading;
 }
 
-bool PhysicalLayerAsyncBase::State::CanWrite()
+bool PhysicalLayerAsyncBase::State::CanWrite() const
 {
 	return mOpen && !mClosing && !mWriting;
 }
 
-bool PhysicalLayerAsyncBase::State::CallbacksPending()
+bool PhysicalLayerAsyncBase::State::CallbacksPending() const
 {
 	return mOpening || mReading || mWriting;
 }
@@ -76,7 +106,7 @@ bool PhysicalLayerAsyncBase::State::CheckForClose()
 	else return false;
 }
 
-std::string PhysicalLayerAsyncBase::State::ToString()
+std::string PhysicalLayerAsyncBase::State::ToString() const
 {
 	std::ostringstream oss;
 	oss << "Open: " << mOpen << " Opening: " << mOpening

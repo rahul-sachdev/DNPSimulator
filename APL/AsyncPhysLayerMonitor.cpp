@@ -97,7 +97,9 @@ void AsyncPhysLayerMonitor::Reconnect()
 void AsyncPhysLayerMonitor::_OnOpenFailure()
 {	
 	OnPhysicalLayerOpenFailure();
-	if(mStopOpenRetry) this->ChangeState(PLS_STOPPED);	
+	if(mStopOpenRetry) {
+		this->ChangeState(PLS_STOPPED);	
+	}
 	else {
 		this->ChangeState(PLS_WAITING);
 		mpOpenTimer = mpTimerSrc->Start(M_OPEN_RETRY, boost::bind(&AsyncPhysLayerMonitor::Start, this));

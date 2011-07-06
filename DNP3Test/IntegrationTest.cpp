@@ -43,11 +43,11 @@ using namespace apl;
 using namespace apl::dnp;
 
 IntegrationTest::IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints) :
-	AsyncTestObjectASIO(),
-	mManager(apLogger),
+	AsyncTestObjectASIO(),	
 	M_START_PORT(aStartPort),
 	mChange(false),
-	mNotifier(boost::bind(&IntegrationTest::RegisterChange, this))
+	mNotifier(boost::bind(&IntegrationTest::RegisterChange, this)),
+	mManager(apLogger)
 {
 	for (size_t i = 0; i < aNumPairs; ++i) {
 		AddStackPair(aLevel, aNumPoints);
@@ -55,24 +55,25 @@ IntegrationTest::IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::ui
 	mFanout.Add(&mLocalFDO);
 }
 
-IntegrationTest::~IntegrationTest()
-{
-	BOOST_FOREACH(FlexibleDataObserver * pFDO, mMasterObservers) {
-		delete pFDO;
-	}
+void IntegrationTest::RegisterChange()
+{		
+	mChange = true;
 }
 
 bool IntegrationTest::SameData()
 {
 	if(!mChange) return false;
+	else {
 
-	mChange = false;
+		mChange = false;
 
-	BOOST_FOREACH(FlexibleDataObserver * pObs, mMasterObservers) {
-		if(!FlexibleDataObserver::StrictEquality(*pObs, mLocalFDO)) return false;
+		BOOST_FOREACH(boost::shared_ptr<FlexibleDataObserver> pObs, mMasterObservers) {
+			Transaction tr(pObs.get());
+			if(!FlexibleDataObserver::StrictEquality(*(pObs.get()), mLocalFDO)) return false;
+		}
+
+		return true;
 	}
-
-	return true;
 }
 
 Binary IntegrationTest::RandomBinary()
@@ -103,7 +104,8 @@ void IntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 {
 	boost::uint16_t port = M_START_PORT + static_cast<boost::uint16_t>(this->mMasterObservers.size());
 
-	FlexibleDataObserver* pMasterFDO = new FlexibleDataObserver(); mMasterObservers.push_back(pMasterFDO);
+	boost::shared_ptr<FlexibleDataObserver> pMasterFDO(new FlexibleDataObserver());
+	mMasterObservers.push_back(pMasterFDO);
 	pMasterFDO->AddObserver(&mNotifier);
 
 	ostringstream oss;
@@ -128,7 +130,7 @@ void IntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 		cfg.master.EnableUnsol = true;
 		cfg.master.DoUnsolOnStartup = true;
 		cfg.master.UnsolClassMask = PC_ALL_EVENTS;
-		this->mManager.AddMaster(client, client, aLevel, pMasterFDO, cfg);
+		this->mManager.AddMaster(client, client, aLevel, pMasterFDO.get(), cfg);
 	}
 
 	/*

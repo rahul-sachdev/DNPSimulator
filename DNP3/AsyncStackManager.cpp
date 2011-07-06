@@ -198,6 +198,8 @@ void AsyncStackManager::RemovePort(const std::string& arPortName)
 	LinkChannel* pChannel = this->GetChannelOrExcept(arPortName);
 	vector<string> stacks = this->StacksOnChannel(arPortName);
 	BOOST_FOREACH(string s, stacks) { this->SeverStack(pChannel, s); }
+
+	this->mScheduler.ReleaseGroup(pChannel->GetGroup());
 	
 	pChannel->WaitForStop();
 	mChannelNameToChannel.erase(arPortName);
@@ -238,7 +240,7 @@ void AsyncStackManager::SeverStack(LinkChannel* apChannel, const std::string& ar
 	{
 		Transaction tr(&mIOServicePauser);
 		apChannel->RemoveStackFromChannel(arStackName);
-	}
+	}	
 
 	mStackNameToChannel.erase(arStackName);
 	mStackNameToStack.erase(arStackName);
@@ -265,9 +267,9 @@ void AsyncStackManager::Shutdown()
 {	
 	vector<string> ports = this->GetPortNames();
 	BOOST_FOREACH(string s, ports) {
-		LOG_BLOCK(LEV_DEBUG, "Removing port: " << s);
+		LOG_BLOCK(LEV_INFO, "Removing port: " << s);
 		this->RemovePort(s);
-		LOG_BLOCK(LEV_DEBUG, "Done removing Port: " << s);
+		LOG_BLOCK(LEV_INFO, "Done removing Port: " << s);
 	}		
 }
 

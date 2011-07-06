@@ -93,7 +93,6 @@ void VtoRouter::DoStart()
 
 void VtoRouter::DoStop()
 {
-
 	if(mReopenPhysicalLayer) {
 		mReopenPhysicalLayer = false;
 		LOG_BLOCK(LEV_DEBUG, "Stopping VtoRouted Port")

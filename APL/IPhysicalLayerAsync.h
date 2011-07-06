@@ -25,50 +25,48 @@ namespace apl
 
 class IHandlerAsync;
 
+class IPhysicalLayerState 
+{	
+
+public:
+
+	virtual bool CanOpen() const = 0;
+	
+	virtual bool CanClose() const = 0;
+	
+	virtual bool CanRead() const = 0;
+
+	virtual bool CanWrite() const = 0;
+
+	/** @return True if the layer is performing an async read */
+	virtual bool IsReading() const = 0;
+
+	/** @return True if the layer is performing an async write */
+	virtual bool IsWriting() const = 0;
+
+	/** @return True if the layer is performing an asynchronously closing */
+	virtual bool IsClosing() const = 0;
+
+	/** @return True if the layer is in the closed with no other activity */
+	virtual bool IsClosed() const = 0;
+
+	/** @return True if the layer is performing an asynchronously opening */
+	virtual bool IsOpening() const = 0;
+
+	/** @return True if the layer is open for read/write */
+	virtual bool IsOpen() const = 0;	
+};
+
 
 /**
  * Defines an asynchronous interface for serial/tcp/?
  */
-class IPhysicalLayerAsync
+class IPhysicalLayerAsync : public IPhysicalLayerState
 {
 public:
 
 	virtual ~IPhysicalLayerAsync() {}
-
-	/** @return True if the layer is performing an async read */
-	virtual bool IsReading() = 0;
-
-	/** @return True if the layer is performing an async write */
-	virtual bool IsWriting() = 0;
-
-	/** @return True if the layer is performing an asynchronously closing */
-	virtual bool IsClosing() = 0;
-
-	/** @return True if the layer is in the closed with no other activity */
-	virtual bool IsClosed() = 0;
-
-	/** @return True if the layer is performing an asynchronously opening */
-	virtual bool IsOpening() = 0;
-
-	/** @return True if the layer is open for read/write */
-	virtual bool IsOpen() = 0;
-
-	bool CanWrite() {
-		return IsOpen() && !IsWriting() && !IsClosing();
-	}
-	
-	bool CanRead() {
-		return IsOpen() && !IsReading() && !IsClosing();
-	}
-
-	bool CanOpen() {
-		return !(IsOpen() || IsOpening());
-	}
-
-	bool CanClose() {
-		return IsOpen() || IsOpening();
-	}	
-
+		
 	/**
 	 * Starts an open operation.
 	 *
