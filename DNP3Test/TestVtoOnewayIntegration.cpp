@@ -88,7 +88,7 @@ void TestLargeDataOneWay(VtoOnewayTestStack& arTest, size_t aSizeInBytes)
 
 BOOST_AUTO_TEST_CASE(LargeDataTransferMasterToSlave)
 {	
-	VtoOnewayTestStack stack(true, true);
+	VtoOnewayTestStack stack(true, false);
 	TestLargeDataOneWay(stack, MACRO_BUFFER_SIZE);	
 }
 

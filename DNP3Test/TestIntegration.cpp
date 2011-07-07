@@ -52,15 +52,16 @@ using namespace std;
 BOOST_AUTO_TEST_SUITE(IntegrationSuite)
 
 const boost::uint16_t START_PORT = MACRO_PORT_START;
-const size_t NUM_PAIRS = 1;//MACRO_NUM_PAIRS;
+const size_t NUM_PAIRS = 10;//MACRO_NUM_PAIRS;
 const size_t NUM_POINTS = 500;
 const size_t NUM_CHANGES = 10;
 
 BOOST_AUTO_TEST_CASE(MasterToSlaveThroughput)
 {
+	
 	EventLog log;
-	LogToStdio::Inst()->SetPrintLocation(true);
-	log.AddLogSubscriber(LogToStdio::Inst());
+	//LogToStdio::Inst()->SetPrintLocation(true);
+	//log.AddLogSubscriber(LogToStdio::Inst());
 
 	IntegrationTest t(log.GetLogger(LEV_INFO, "test"), LEV_INFO, START_PORT,
 	                  NUM_PAIRS, NUM_POINTS);
@@ -105,6 +106,7 @@ BOOST_AUTO_TEST_CASE(MasterToSlaveThroughput)
 
 }
 
+// TODO - Factor this test into smaller tests
 BOOST_AUTO_TEST_CASE(IntegrationTestConstructionDestruction)
 {
 	EventLog log;

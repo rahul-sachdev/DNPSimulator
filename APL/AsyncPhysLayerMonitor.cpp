@@ -66,25 +66,25 @@ bool AsyncPhysLayerMonitor::IsStopping()
 void AsyncPhysLayerMonitor::ChangeState(PhysLayerState aState)
 {
 	if(mState != aState) {
+		CriticalSection cs(&mLock); // signal to anyone waiting for a state change
 		mState = aState;
 		LOG_BLOCK(LEV_INFO, "Transition to state: " << ConvertPhysLayerStateToString(aState));
 		mPortState.Set(aState);
 		for(MonitorSet::iterator i = mMonitors.begin(); i != mMonitors.end(); ++i) (*i)->OnStateChange(aState);		
-		this->OnStateChange(aState);
-		CriticalSection cs(&mLock); // signal to anyone waiting for a state change
-		cs.Broadcast();				
+		this->OnStateChange(aState);		
+		cs.Broadcast();
 	}
 }
 
 void AsyncPhysLayerMonitor::WaitForState(PhysLayerState aState)
 {
-	CriticalSection cs(&mLock);
-	while(this->GetState() != aState) cs.Wait();
+	CriticalSection cs(&mLock);	
+	while(this->GetState() != aState) cs.Wait();	
 }
 
 void AsyncPhysLayerMonitor::Start()
 {
-	LOG_BLOCK(LEV_DEBUG, "Start");
+	LOG_BLOCK(LEV_INFO, "Start");
 	mIsStopping = false;
 	if(mpPhys->CanOpen()) {
 		mpPhys->AsyncOpen();

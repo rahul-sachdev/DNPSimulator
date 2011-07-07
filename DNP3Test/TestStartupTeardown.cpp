@@ -53,7 +53,7 @@ const boost::uint16_t NUM_PORTS = 10;
 
 BOOST_AUTO_TEST_CASE(AutoStartAndStopWithDestructor)
 {
-	StartupTeardownTest test(LEVEL, true);
+	StartupTeardownTest test(LEVEL, false);
 	Configure(test, LEVEL, NUM_STACKS, NUM_PORTS);
 }
 
