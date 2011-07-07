@@ -53,13 +53,15 @@ public:
 
 	void AddMonitor(IPhysMonitor* apMonitor);
 
+	void WaitForStopped();
+
 protected:
 
 	IPhysicalLayerAsync* mpPhys;
 	ITimerSource* mpTimerSrc;
 	ITimer* mpOpenTimer;
 	LogVariable mPortState;
-	PhysLayerState mState;
+	
 
 	virtual void OnPhysicalLayerOpen() = 0;
 	virtual void OnPhysicalLayerClose() = 0;
@@ -67,8 +69,15 @@ protected:
 	virtual void OnStateChange(PhysLayerState) {}
 
 private:
-
+	
+	/// Internal function used to change the state
 	void ChangeState(PhysLayerState);
+
+	/// Blocking function that waits for the port to stop (physical layer to be closed)
+	void WaitForState(PhysLayerState aState);
+
+	SigLock mLock;
+	PhysLayerState mState;
 	bool mStopOpenRetry;
 	const millis_t M_OPEN_RETRY;
 

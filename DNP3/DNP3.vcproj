@@ -600,14 +600,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Port.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Port.h"
-					>
-				</File>
-				<File
 					RelativePath=".\SlaveStackConfig.h"
 					>
 				</File>

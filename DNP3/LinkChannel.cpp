@@ -34,24 +34,10 @@ namespace dnp
 LinkChannel::LinkChannel(Logger* apLogger, const std::string& arName, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, AsyncTaskGroup* apTaskGroup, millis_t aOpenRetry) :
 	Loggable(apLogger),
 	LinkLayerRouter(apLogger, apPhys, apTimerSrc, aOpenRetry),
-	mName(arName),
-	mState(PLS_CLOSED),
+	mName(arName),	
 	mpTaskGroup(apTaskGroup)
 {
 
-}
-
-void LinkChannel::OnStateChange(PhysLayerState aState)
-{
-	CriticalSection cs(&mLock);
-	mState = aState;
-	cs.Signal();
-}
-
-void LinkChannel::WaitForStop()
-{
-	CriticalSection cs(&mLock);
-	while(mState != PLS_STOPPED) cs.Wait();
 }
 
 void LinkChannel::BindStackToChannel(const std::string& arStackName, Stack* apStack, const LinkRoute& arRoute)

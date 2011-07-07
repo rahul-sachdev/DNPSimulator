@@ -204,7 +204,7 @@ void AsyncStackManager::RemovePort(const std::string& arPortName)
 
 	this->mScheduler.ReleaseGroup(pChannel->GetGroup());
 
-	pChannel->WaitForStop();
+	pChannel->WaitUntilShutdown();
 	mChannelNameToChannel.erase(arPortName);
 
 	// remove the physical layer from the list

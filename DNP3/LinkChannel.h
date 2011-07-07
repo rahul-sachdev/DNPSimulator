@@ -68,17 +68,13 @@ public:
 		return mpTaskGroup;
 	}
 
-	/// Events from the router
-	void OnStateChange(PhysLayerState);
-
-	/// Blocking function that waits for the port to stop (physical layer to be closed)
-	void WaitForStop();
+	void WaitUntilShutdown() {
+		this->WaitForStopped();
+	}
 
 private:
-
-	SigLock mLock;
-	std::string mName;
-	PhysLayerState mState;
+	
+	std::string mName;	
 	AsyncTaskGroup* mpTaskGroup;
 
 	typedef std::map<std::string, StackRecord> StackMap;
