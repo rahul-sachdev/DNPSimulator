@@ -49,10 +49,8 @@ AsyncTaskGroup::~AsyncTaskGroup()
 	if(mpTimer) {
 		mpTimer->Cancel();
 		mpTimer = NULL;
-	}
-	BOOST_FOREACH(AsyncTaskBase * p, mTaskVec) {
-		delete p;
-	}
+	}	
+	BOOST_FOREACH(AsyncTaskBase* p, mTaskSet) { delete p; }
 }
 
 AsyncTaskBase* AsyncTaskGroup::Add(millis_t aPeriod, millis_t aRetryDelay, int aPriority, const TaskHandler& arCallback, const std::string& arName)
@@ -63,13 +61,13 @@ AsyncTaskBase* AsyncTaskGroup::Add(millis_t aPeriod, millis_t aRetryDelay, int a
 	else
 		pTask = new AsyncTaskNonPeriodic(aRetryDelay, aPriority, arCallback, this, arName);
 
-	mTaskVec.push_back(pTask);
+	mTaskSet.insert(pTask);
 	return pTask;
 }
 
 void AsyncTaskGroup::ResetTasks(int aMask)
 {
-	BOOST_FOREACH(AsyncTaskBase * p, mTaskVec) {
+	BOOST_FOREACH(AsyncTaskBase * p, mTaskSet) {
 		if(!p->IsRunning() && (p->GetFlags() & aMask)) p->Reset();
 	}
 }
@@ -77,13 +75,23 @@ void AsyncTaskGroup::ResetTasks(int aMask)
 AsyncTaskContinuous* AsyncTaskGroup::AddContinuous(int aPriority, const TaskHandler& arCallback, const std::string& arName)
 {
 	AsyncTaskContinuous* pTask = new AsyncTaskContinuous(aPriority, arCallback, this, arName);
-	mTaskVec.push_back(pTask);
+	mTaskSet.insert(pTask);
 	return pTask;
+}
+
+void AsyncTaskGroup::Remove(AsyncTaskBase* apTask)
+{
+	TaskSet::iterator i = mTaskSet.find(apTask);
+	if(i == mTaskSet.end()) throw ArgumentException(LOCATION, "Task not found");
+	else {
+		delete *i;
+		mTaskSet.erase(i);	
+	}
 }
 
 void AsyncTaskGroup::Enable()
 {
-	BOOST_FOREACH(AsyncTaskBase * p, mTaskVec) {
+	BOOST_FOREACH(AsyncTaskBase * p, mTaskSet) {
 		p->SilentEnable();
 	}
 	this->CheckState();
@@ -91,7 +99,7 @@ void AsyncTaskGroup::Enable()
 
 void AsyncTaskGroup::Disable()
 {
-	BOOST_FOREACH(AsyncTaskBase * p, mTaskVec) {
+	BOOST_FOREACH(AsyncTaskBase * p, mTaskSet) {
 		p->SilentDisable();
 	}
 	this->CheckState();
@@ -99,7 +107,7 @@ void AsyncTaskGroup::Disable()
 
 void AsyncTaskGroup::Enable(int aMask)
 {
-	BOOST_FOREACH(AsyncTaskBase * p, mTaskVec) {
+	BOOST_FOREACH(AsyncTaskBase * p, mTaskSet) {
 		if((p->GetFlags() & aMask) != 0) p->SilentEnable();
 	}
 	this->CheckState();
@@ -107,7 +115,7 @@ void AsyncTaskGroup::Enable(int aMask)
 
 void AsyncTaskGroup::Disable(int aMask)
 {
-	BOOST_FOREACH(AsyncTaskBase * p, mTaskVec) {
+	BOOST_FOREACH(AsyncTaskBase * p, mTaskSet) {
 		if((p->GetFlags() & aMask) != 0) p->SilentDisable();
 	}
 	this->CheckState();
@@ -116,10 +124,10 @@ void AsyncTaskGroup::Disable(int aMask)
 AsyncTaskBase* AsyncTaskGroup::GetNext(const boost::posix_time::ptime& arTime)
 {
 	this->Update(arTime);
-	TaskVec::iterator max = max_element(mTaskVec.begin(), mTaskVec.end(), AsyncTaskBase::LessThanGroupLevel);
+	TaskSet::iterator max = max_element(mTaskSet.begin(), mTaskSet.end(), AsyncTaskBase::LessThanGroupLevel);
 
 	AsyncTaskBase* pRet = NULL;
-	if(max != mTaskVec.end()) {
+	if(max != mTaskSet.end()) {
 		AsyncTaskBase* p = *max;
 		if(!p->IsRunning() && p->IsEnabled()) pRet = p;
 	}
@@ -158,7 +166,7 @@ boost::posix_time::ptime AsyncTaskGroup::GetUTC() const
 
 void AsyncTaskGroup::Update(const boost::posix_time::ptime& arTime)
 {
-	BOOST_FOREACH(AsyncTaskBase * p, mTaskVec) {
+	BOOST_FOREACH(AsyncTaskBase * p, mTaskSet) {
 		p->UpdateTime(arTime);
 	}
 }

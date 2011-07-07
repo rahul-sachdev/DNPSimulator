@@ -816,6 +816,14 @@
 					RelativePath=".\AsyncTaskScheduler.h"
 					>
 				</File>
+				<File
+					RelativePath=".\TrackingTaskGroup.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TrackingTaskGroup.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Data"

@@ -29,9 +29,12 @@ namespace apl
 namespace dnp
 {
 
-MasterSchedule::MasterSchedule(AsyncTaskGroup* apGroup) :
-	mpGroup(apGroup)
-{}
+MasterSchedule::MasterSchedule(AsyncTaskGroup* apGroup, Master* apMaster, const MasterConfig& arCfg) :
+	mpGroup(apGroup),
+	mTracking(apGroup)
+{
+	this->Init(arCfg, apMaster);
+}
 
 void MasterSchedule::EnableOnlineTasks()
 {
@@ -48,20 +51,18 @@ void MasterSchedule::ResetStartupTasks()
 	mpGroup->ResetTasks(START_UP_TASKS);
 }
 
-MasterSchedule MasterSchedule::GetSchedule(MasterConfig aCfg,
-        Master* apMaster,
-        AsyncTaskGroup* apGroup)
+void MasterSchedule::Init(const MasterConfig& arCfg, Master* apMaster)                
 {
-	AsyncTaskBase* pIntegrity = apGroup->Add(
-	                                aCfg.IntegrityRate,
-	                                aCfg.TaskRetryRate,
+	AsyncTaskBase* pIntegrity = mTracking.Add(
+	                                arCfg.IntegrityRate,
+	                                arCfg.TaskRetryRate,
 	                                AMP_POLL,
 	                                bind(&Master::IntegrityPoll, apMaster, _1),
 	                                "Integrity Poll");
 
 	pIntegrity->SetFlags(ONLINE_ONLY_TASKS | START_UP_TASKS);
 
-	if (aCfg.DoUnsolOnStartup) {
+	if (arCfg.DoUnsolOnStartup) {
 		/*
 		 * DNP3Spec-V2-Part2-ApplicationLayer-_20090315.pdf, page 8
 		 * says that UNSOL should be disabled before an integrity scan
@@ -72,10 +73,9 @@ MasterSchedule MasterSchedule::GetSchedule(MasterConfig aCfg,
 		                           _1,
 		                           false,
 		                           PC_ALL_EVENTS);
-		AsyncTaskBase* pUnsolDisable = apGroup->Add(
+		AsyncTaskBase* pUnsolDisable = mTracking.Add(
 		                                   -1,
-		                                   aCfg.
-		                                   TaskRetryRate,
+		                                   arCfg.TaskRetryRate,
 		                                   AMP_UNSOL_CHANGE,
 		                                   handler,
 		                                   "Unsol Disable");
@@ -83,17 +83,17 @@ MasterSchedule MasterSchedule::GetSchedule(MasterConfig aCfg,
 		pUnsolDisable->SetFlags(ONLINE_ONLY_TASKS | START_UP_TASKS);
 		pIntegrity->AddDependency(pUnsolDisable);
 
-		if (aCfg.EnableUnsol) {
+		if (arCfg.EnableUnsol) {
 			TaskHandler handler = bind(
 			                          &Master::ChangeUnsol,
 			                          apMaster,
 			                          _1,
 			                          true,
-			                          aCfg.UnsolClassMask);
+			                          arCfg.UnsolClassMask);
 
-			AsyncTaskBase* pUnsolEnable = apGroup->Add(
+			AsyncTaskBase* pUnsolEnable = mTracking.Add(
 			                                  -1,
-			                                  aCfg.TaskRetryRate,
+			                                  arCfg.TaskRetryRate,
 			                                  AMP_UNSOL_CHANGE,
 			                                  handler,
 			                                  "Unsol Enable");
@@ -107,46 +107,43 @@ MasterSchedule MasterSchedule::GetSchedule(MasterConfig aCfg,
 	 * Load any exception scans and make them dependent on the
 	 * integrity poll.
 	 */
-	BOOST_FOREACH(ExceptionScan e, aCfg.mScans) {
-		AsyncTaskBase* pEventScan = apGroup->Add(
+	BOOST_FOREACH(ExceptionScan e, arCfg.mScans) {
+		AsyncTaskBase* pEventScan = mTracking.Add(
 		                                e.ScanRate,
-		                                aCfg.TaskRetryRate,
+		                                arCfg.TaskRetryRate,
 		                                AMP_POLL,
 		                                bind(&Master::EventPoll, apMaster, _1, e.ClassMask),
 		                                "Event Scan");
 
 		pEventScan->SetFlags(ONLINE_ONLY_TASKS);
 		pEventScan->AddDependency(pIntegrity);
-	}
-
-	MasterSchedule schedule(apGroup);
+	}	
 
 	/* Tasks are executed when the master is is idle */
-	schedule.mpCommandTask = apGroup->AddContinuous(
+	mpCommandTask = mTracking.AddContinuous(
 	                             AMP_COMMAND,
 	                             boost::bind(&Master::ProcessCommand, apMaster, _1),
 	                             "Command");
 
-	schedule.mpTimeTask = apGroup->AddContinuous(
+	mpTimeTask = mTracking.AddContinuous(
 	                          AMP_TIME_SYNC,
 	                          boost::bind(&Master::SyncTime, apMaster, _1),
 	                          "TimeSync");
 
-	schedule.mpClearRestartTask = apGroup->AddContinuous(
+	mpClearRestartTask = mTracking.AddContinuous(
 	                                  AMP_CLEAR_RESTART,
 	                                  boost::bind(&Master::WriteIIN, apMaster, _1),
 	                                  "Clear IIN");
 
-	schedule.mpVtoTransmitTask = apGroup->AddContinuous(
+	mpVtoTransmitTask = mTracking.AddContinuous(
 	                                 AMP_VTO_TRANSMIT,
 	                                 boost::bind(&Master::TransmitVtoData, apMaster, _1),
 	                                 "Buffer VTO Data");
 
-	schedule.mpVtoTransmitTask->SetFlags(ONLINE_ONLY_TASKS);
-	schedule.mpTimeTask->SetFlags(ONLINE_ONLY_TASKS);
-	schedule.mpClearRestartTask->SetFlags(ONLINE_ONLY_TASKS);
-
-	return schedule;
+	mpVtoTransmitTask->SetFlags(ONLINE_ONLY_TASKS);
+	mpTimeTask->SetFlags(ONLINE_ONLY_TASKS);
+	mpClearRestartTask->SetFlags(ONLINE_ONLY_TASKS);
+	
 }
 
 }

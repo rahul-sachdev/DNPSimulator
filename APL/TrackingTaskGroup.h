@@ -16,29 +16,46 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __POSTING_NOTIFIER_SOURCE_H_
-#define __POSTING_NOTIFIER_SOURCE_H_
+#ifndef __TRACKING_TASK_GROUP_H_
+#define __TRACKING_TASK_GROUP_H_
 
-#include "TimerInterfaces.h"
 
-#include <vector>
-#include <boost/shared_ptr.hpp>
+#include "Types.h"
+#include "AsyncTaskInterfaces.h"
+#include "Uncopyable.h"
+
+#include <set>
+#include <queue>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
 
 namespace apl
 {
 
-class INotifier;
-class PostingNotifier;
+class AsyncTaskGroup;
+class AsyncTaskContinuous;
+class AsyncTaskBase;
 
-class PostingNotifierSource
+/**
+ Tracks all tasks that are created and releases them on destruction
+*/
+class TrackingTaskGroup
 {
+	
 public:
-	~PostingNotifierSource();
 
-	INotifier* Get(const ExpirationHandler&, ITimerSource*);
+	TrackingTaskGroup(AsyncTaskGroup* apGroup);
+	~TrackingTaskGroup();
+
+	AsyncTaskBase* Add(millis_t aPeriod, millis_t aRetryDelay, int aPriority, const TaskHandler& arCallback, const std::string& arName = "");
+	AsyncTaskContinuous* AddContinuous(int aPriority, const TaskHandler& arCallback, const std::string& arName = "");
+	
 
 private:
-	std::vector<boost::shared_ptr<PostingNotifier>> mNotifiers;
+
+	AsyncTaskGroup* mpGroup;
+
+	typedef std::vector<AsyncTaskBase*> TaskVec;
+	TaskVec mTaskVec;
 };
 
 }

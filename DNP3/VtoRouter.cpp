@@ -107,10 +107,8 @@ void VtoRouter::_OnReceive(const boost::uint8_t* apData, size_t aLength)
 }
 
 void VtoRouter::CheckForVtoWrite()
-{
-	// need to check mPermanentlyStopped, we will often get a physical layer closed notification after
-	// we have already stopped and disposed of the dnp3 stack so we need to not call anything on mpVtoWriter
-	if(!this->IsStopping() && !mVtoTxBuffer.empty()) {
+{	
+	if(!mVtoTxBuffer.empty()) {
 		VtoMessage msg = mVtoTxBuffer.front();
 		mVtoTxBuffer.pop_front();
 
