@@ -413,14 +413,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\IOServicePauser.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\IOServicePauser.h"
-					>
-				</File>
-				<File
 					RelativePath=".\IOServiceThread.cpp"
 					>
 				</File>
