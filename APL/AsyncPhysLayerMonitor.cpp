@@ -94,6 +94,7 @@ void AsyncPhysLayerMonitor::Start()
 
 void AsyncPhysLayerMonitor::OnOpenTimerExpiration()
 {
+	LOG_BLOCK(LEV_INFO, "Open timer expiration");
 	assert(mpOpenTimer != NULL);
 	mpOpenTimer = NULL;
 	this->Start();
@@ -104,6 +105,7 @@ void AsyncPhysLayerMonitor::Stop()
 	LOG_BLOCK(LEV_INFO, "Stopping phys monitor");
 	mIsStopping = true;
 	if(mpOpenTimer) {
+		LOG_BLOCK(LEV_INFO, "Canceling open timer");
 		mpOpenTimer->Cancel();
 		mpOpenTimer = NULL;
 	}
@@ -127,6 +129,7 @@ void AsyncPhysLayerMonitor::_OnOpenFailure()
 	}
 	else {
 		this->ChangeState(PLS_WAITING);
+		LOG_BLOCK(LEV_INFO, "Starting open timer");
 		mpOpenTimer = mpTimerSrc->Start(M_OPEN_RETRY, boost::bind(&AsyncPhysLayerMonitor::OnOpenTimerExpiration, this));
 	}
 }
