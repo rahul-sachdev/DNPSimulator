@@ -230,11 +230,13 @@ void AsyncStackManager::RemoveStack(const std::string& arStackName)
 
 void AsyncStackManager::SeverStack(LinkChannel* apChannel, const std::string& arStackName)
 {
+	LOG_BLOCK(LEV_INFO, "Begin severing stack: " << arStackName);
 	// Decouple and stop the stack first, this doesn't delete it yet
 	{
 		Transaction tr(&mSuspendTimerSource); //need to pause execution so that this action is safe
 		apChannel->RemoveStackFromChannel(arStackName);
 	}
+	LOG_BLOCK(LEV_INFO, "Done severing stack: " << arStackName);
 
 	// Now stop any associated vto routers
 	IVtoWriter* pWriter = this->GetStackByName(arStackName)->GetVtoWriter();
@@ -272,8 +274,6 @@ void AsyncStackManager::Shutdown()
 		LOG_BLOCK(LEV_INFO, "Removing port: " << s);
 		this->RemovePort(s);
 		LOG_BLOCK(LEV_INFO, "Done removing Port: " << s);
-		Thread::SleepFor(10000);
-		LOG_BLOCK(LEV_INFO, "Done sleeping");
 	}
 }
 

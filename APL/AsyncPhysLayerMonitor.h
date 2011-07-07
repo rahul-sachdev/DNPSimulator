@@ -71,6 +71,9 @@ protected:
 	virtual void OnStateChange(PhysLayerState) {}
 
 private:
+
+	/// Internal callback when open timer expires
+        void OnOpenTimerExpiration();
 	
 	/// Internal function used to change the state
 	void ChangeState(PhysLayerState);

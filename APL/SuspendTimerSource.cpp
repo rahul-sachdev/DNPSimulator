@@ -36,7 +36,7 @@ SuspendTimerSource::SuspendTimerSource(ITimerSource* apTimerSource) :
 }
 
 void SuspendTimerSource::_Start()
-{
+{	
 	CriticalSection cs(&mLock);	
 	mPausing = true;
 	mpTimerSource->Post(boost::bind(&SuspendTimerSource::Pause, this));
@@ -57,7 +57,9 @@ void SuspendTimerSource::Pause()
 	CriticalSection cs(&mLock);
 	mIsPaused = true;
 	cs.Broadcast();
-	while(mPausing) cs.Wait();
+	while(mPausing) {
+		cs.Wait();
+	}
 	mIsPaused = false;
 }
 
