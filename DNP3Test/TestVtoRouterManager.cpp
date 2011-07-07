@@ -19,7 +19,7 @@
 
 #include <APL/Log.h>
 #include <APL/Exception.h>
-#include <APL/LogToStdIO.h>
+#include <APL/LogToStdio.h>
 
 #include <DNP3/VtoRouterManager.h>
 #include <DNP3/VtoRouterSettings.h>

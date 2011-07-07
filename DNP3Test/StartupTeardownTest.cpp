@@ -21,7 +21,7 @@
 
 #include <DNP3/MasterStack.h>
 #include <APL/PhysicalLayerAsyncTCPClient.h>
-#include <APL/LogToStdIO.h>
+#include <APL/LogToStdio.h>
 
 #include <boost/asio.hpp>
 #include <boost/foreach.hpp>

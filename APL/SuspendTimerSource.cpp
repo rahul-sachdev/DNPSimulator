@@ -21,6 +21,8 @@
 
 #include "TimerInterfaces.h"
 
+#include <boost/bind.hpp>
+
 namespace apl
 {
 

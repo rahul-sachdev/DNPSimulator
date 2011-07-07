@@ -114,7 +114,7 @@ private:
 	void RegisterChange();
 	void AddStackPair(FilterLevel aLevel, size_t aNumPoints);
 
-	std::vector<boost::shared_ptr<FlexibleDataObserver>> mMasterObservers;
+	std::vector< boost::shared_ptr<FlexibleDataObserver> > mMasterObservers;
 	ObserverFanout mFanout;
 	const boost::uint16_t M_START_PORT;
 	Logger* mpLogger;

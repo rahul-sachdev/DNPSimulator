@@ -271,11 +271,11 @@ private:
 	Thread mThread;
 	ITimer* mpInfiniteTimer;
 
-	typedef std::map<std::string, boost::shared_ptr<Stack>> StackMap;
+	typedef std::map<std::string, boost::shared_ptr<Stack> > StackMap;
 	StackMap mStackNameToStack;		// maps a stack name a Stack instance
 
 	typedef std::map<std::string, LinkChannel*> StackToChannelMap;
-	typedef std::map<std::string, boost::shared_ptr<LinkChannel>> ChannelToChannelMap;
+	typedef std::map<std::string, boost::shared_ptr<LinkChannel> > ChannelToChannelMap;
 	StackToChannelMap mStackNameToChannel;				// maps a stack name a channel instance
 	ChannelToChannelMap mChannelNameToChannel;			// maps a channel name to a channel instance
 

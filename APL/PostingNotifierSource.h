@@ -38,7 +38,7 @@ public:
 	INotifier* Get(const ExpirationHandler&, ITimerSource*);
 
 private:
-	std::vector<boost::shared_ptr<PostingNotifier>> mNotifiers;
+	std::vector< boost::shared_ptr<PostingNotifier> > mNotifiers;
 };
 
 }

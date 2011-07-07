@@ -47,6 +47,7 @@ using namespace apl::dnp;
 %template(UnsignedPoint) apl::TypedDataPoint<boost::uint32_t>;
 %include "APL/DataTypes.h"
 
+%include "APL/ITransactable.h"
 %include "APL/DataInterfaces.h"
 %include "APL/CommandInterfaces.h"
 
