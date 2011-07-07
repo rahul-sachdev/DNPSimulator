@@ -34,7 +34,7 @@
 #include <APL/AsyncTaskScheduler.h>
 #include <APL/Lock.h>
 #include <APL/IOService.h>
-#include <APL/IOServicePauser.h>
+#include <APL/SuspendTimerSource.h>
 
 #include "VtoDataInterface.h"
 #include "LinkRoute.h"
@@ -264,7 +264,7 @@ public:
 private:
 	IOService mService;
 	TimerSourceASIO mTimerSrc;
-	IOServicePauser mIOServicePauser;
+	SuspendTimerSource mSuspendTimerSource;
 	PhysicalLayerManager mMgr;
 	AsyncTaskScheduler mScheduler;
 	VtoRouterManager mVtoManager;

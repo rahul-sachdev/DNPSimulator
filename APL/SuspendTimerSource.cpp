@@ -17,44 +17,50 @@
 // under the License.
 //
 
-#ifndef __IO_SERVICE_PAUSER_H_
-#define __IO_SERVICE_PAUSER_H_
+#include "SuspendTimerSource.h"
 
-#include "ITransactable.h"
-#include "Lock.h"
-
-namespace boost
-{
-namespace asio
-{
-class io_service;
-}
-}
+#include "TimerInterfaces.h"
 
 namespace apl
 {
 
-class IOServicePauser : public ITransactable
+SuspendTimerSource::SuspendTimerSource(ITimerSource* apTimerSource) :
+	mpTimerSource(apTimerSource),
+	mPausing(false),	
+	mIsPaused(false),
+	mLock()
 {
-public:
-	IOServicePauser(boost::asio::io_service* apService, size_t aNumThreads);
+		
+}
 
-private:
+void SuspendTimerSource::_Start()
+{
+	CriticalSection cs(&mLock);	
+	mPausing = true;
+	mpTimerSource->Post(boost::bind(&SuspendTimerSource::Pause, this));
+	while(!mIsPaused) {
+		mLock.Wait();
+	}
+}
 
-	void _Start();
-	void _End();
+void SuspendTimerSource::_End()
+{
+	CriticalSection cs(&mLock);
+	mPausing = false;
+	cs.Broadcast();
+}
 
-	void Pause();
-
-	boost::asio::io_service* mpService;
-	bool mPausing;
-	size_t mPausedCount;
-	size_t mNumThreads;
-	SigLock mLock;
-};
-
+void SuspendTimerSource::Pause()
+{
+	CriticalSection cs(&mLock);
+	mIsPaused = true;
+	cs.Broadcast();
+	while(mPausing) cs.Wait();
+	mIsPaused = false;
+}
 
 }
+
 /* vim: set ts=4 sw=4: */
 
-#endif
+

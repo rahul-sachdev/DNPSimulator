@@ -28,6 +28,7 @@
 #include <APL/Exception.h>
 #include <APL/Logger.h>
 #include <APL/IPhysicalLayerAsync.h>
+#include <APL/SuspendTimerSource.h>
 
 #include <DNP3/MasterStack.h>
 #include <DNP3/SlaveStack.h>
@@ -59,7 +60,7 @@ AsyncStackManager::AsyncStackManager(Logger* apLogger) :
 	Loggable(apLogger),
 	mService(),
 	mTimerSrc(mService.Get()),
-	mIOServicePauser(mService.Get(), 1),
+	mSuspendTimerSource(&mTimerSrc),
 	mMgr(apLogger->GetSubLogger("channels", LEV_WARNING), mService.Get()),
 	mScheduler(&mTimerSrc),
 	mVtoManager(apLogger->GetSubLogger("vto"), &mTimerSrc, &mMgr),
@@ -240,7 +241,7 @@ void AsyncStackManager::SeverStack(LinkChannel* apChannel, const std::string& ar
 
 	// when removing a stack, we need to pause execution
 	{
-		Transaction tr(&mIOServicePauser);
+		Transaction tr(&mSuspendTimerSource);
 		apChannel->RemoveStackFromChannel(arStackName);
 	}
 
@@ -331,7 +332,7 @@ void AsyncStackManager::OnAddStack(const std::string& arStackName, boost::shared
 
 	{
 		// when binding the stack to the router, we need to pause excution
-		Transaction tr(&mIOServicePauser);
+		Transaction tr(&mSuspendTimerSource);
 		apChannel->BindStackToChannel(arStackName, apStack.get(), arRoute);
 	}
 

@@ -17,51 +17,42 @@
 // under the License.
 //
 
-#include "IOServicePauser.h"
+#ifndef __SUSPEND_TIMER_SOURCE_H_
+#define __SUSPEND_TIMER_SOURCE_H_
 
-#include <boost/asio/io_service.hpp>
-#include <boost/bind.hpp>
+#include "Lock.h"
+#include "ITransactable.h"
 
 namespace apl
 {
 
-IOServicePauser::IOServicePauser(boost::asio::io_service* apService, size_t aNumThreads) :
-	mpService(apService),
-	mPausing(false),
-	mNumThreads(aNumThreads),
-	mPausedCount(0)
-{}
+class ITimerSource;
 
-
-
-void IOServicePauser::_Start()
+/**
+*  Pauses execution of the thread driving a TimerSource. Uses the ITransactable RAII
+*  pattern to guarantee that that the resource is released if an uncaught 
+*  exception is thrown 
+*
+*/
+class SuspendTimerSource : public ITransactable
 {
-	CriticalSection cs(&mLock);
-	mPausing = true;
-	mpService->post(boost::bind(&IOServicePauser::Pause, this));
-	while(mPausedCount < mNumThreads) {
-		mLock.Wait();
-	}
-}
+public:
+	SuspendTimerSource(ITimerSource* apTimerSource);	
 
-void IOServicePauser::_End()
-{
-	CriticalSection cs(&mLock);
-	mPausing = false;
-	cs.Broadcast();
-}
+private:
+	
+	void Pause();
+	void _Start();
+	void _End();
 
-void IOServicePauser::Pause()
-{
-	CriticalSection cs(&mLock);
-	++mPausedCount;
-	cs.Broadcast();
-	while(mPausing) cs.Wait();
-	--mPausedCount;
-}
+	ITimerSource* mpTimerSource;
+	bool mPausing;
+	bool mIsPaused;	
+	SigLock mLock;
+};
+
 
 }
-
 /* vim: set ts=4 sw=4: */
 
-
+#endif

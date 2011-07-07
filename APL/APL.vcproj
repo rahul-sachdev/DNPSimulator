@@ -741,6 +741,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\SuspendTimerSource.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\SuspendTimerSource.h"
+					>
+				</File>
+				<File
 					RelativePath=".\TimerASIO.cpp"
 					>
 				</File>
