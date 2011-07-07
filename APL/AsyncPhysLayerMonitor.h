@@ -55,6 +55,8 @@ public:
 
 	void WaitForStopped();
 
+	bool IsStopping();
+
 protected:
 
 	IPhysicalLayerAsync* mpPhys;
@@ -78,7 +80,7 @@ private:
 
 	SigLock mLock;
 	PhysLayerState mState;
-	bool mStopOpenRetry;
+	bool mIsStopping;
 	const millis_t M_OPEN_RETRY;
 
 	// Implement from IHandlerAsync - Try to reconnect using a timer

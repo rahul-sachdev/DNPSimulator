@@ -98,13 +98,7 @@ public:
 	 * @return				a new VtoRouter instance
 	 */
 	VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc);
-
-
-	/**
-	 * when we try to stop the router we call this thread safe function which sets a flag and
-	 * then posts a shutdown request to mpTimerSrc.
-	 */
-	void StopRouter();
+	
 
 	/**
 	 * Receives data from the VTO channel and forwards it to the
@@ -219,18 +213,6 @@ private:
 	 * for any reason
 	 */
 	bool mReopenPhysicalLayer;
-
-	/**
-	 * when StopRouter is called we start shutting down the vto router and
-	 * don't reconnect or send local connected callbacks
-	 */
-	bool mPermanentlyStopped;
-
-	/**
-	 * we use a delayed cleanup mechanism which we need to make sure we only
-	 * call once.
-	 */
-	bool mCleanedup;
 
 };
 

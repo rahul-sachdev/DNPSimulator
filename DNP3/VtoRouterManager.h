@@ -19,6 +19,7 @@
 #define __VTO_ROUTER_MANAGER_H_
 
 #include <vector>
+#include <boost/shared_ptr.hpp>
 
 #include <APL/Types.h>
 #include <APL/Loggable.h>
@@ -55,18 +56,16 @@ public:
 	class RouterRecord
 	{
 	public:
-		RouterRecord(const std::string& arPortName, VtoRouter* apRouter, IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
+		RouterRecord(const std::string& arPortName, boost::shared_ptr<VtoRouter> apRouter, IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
 
 		std::string mPortName;
-		VtoRouter* mpRouter;
+		boost::shared_ptr<VtoRouter> mpRouter;
 		IVtoWriter* mpWriter;
 		boost::uint8_t mVtoChannelId;
 	};
 
 
-	VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc);
-
-	~VtoRouterManager();
+	VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc);	
 
 	VtoRouter* StartRouter(
 	    const std::string& arPortName,
@@ -94,7 +93,7 @@ private:
 
 	RouterRecordVector mRecords;
 
-	ITimerSource* mpTimerSrc;
+	ITimerSource* mpTimerSrc;	
 	IPhysicalLayerSource* mpPhysSource;
 };
 

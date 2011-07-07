@@ -35,7 +35,7 @@ namespace apl
 namespace dnp
 {
 
-VtoRouterManager::RouterRecord::RouterRecord(const std::string& arPortName, VtoRouter* apRouter, IVtoWriter* apWriter, boost::uint8_t aVtoChannelId) :
+VtoRouterManager::RouterRecord::RouterRecord(const std::string& arPortName, boost::shared_ptr<VtoRouter> apRouter, IVtoWriter* apWriter, boost::uint8_t aVtoChannelId) :
 	mPortName(arPortName),
 	mpRouter(apRouter),
 	mpWriter(apWriter),
@@ -46,16 +46,11 @@ VtoRouterManager::RouterRecord::RouterRecord(const std::string& arPortName, VtoR
 
 VtoRouterManager::VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc) :
 	Loggable(apLogger),
-	mpTimerSrc(apTimerSrc),
+	mpTimerSrc(apTimerSrc),	
 	mpPhysSource(apPhysSrc)
 {
 	assert(apTimerSrc != NULL);
 	assert(apPhysSrc != NULL);
-}
-
-VtoRouterManager::~VtoRouterManager()
-{
-	assert(mRecords.size() == 0);
 }
 
 VtoRouter* VtoRouterManager::StartRouter(
@@ -66,16 +61,16 @@ VtoRouter* VtoRouterManager::StartRouter(
 	IPhysicalLayerAsync* pPhys = mpPhysSource->AcquireLayer(arPortName, false); //don't autodelete
 	Logger* pLogger = this->GetSubLogger(arPortName, arSettings.CHANNEL_ID);
 
-	VtoRouter* pRouter;
+	boost::shared_ptr<VtoRouter> pRouter;
 	if(arSettings.DISABLE_EXTENSIONS) {
-		pRouter = new AlwaysOpeningVtoRouter(arSettings, pLogger, apWriter, pPhys, mpTimerSrc);
+		pRouter.reset(new AlwaysOpeningVtoRouter(arSettings, pLogger, apWriter, pPhys, mpTimerSrc));
 	}
 	else {
 		if(arSettings.START_LOCAL) {
-			pRouter = new ServerSocketVtoRouter(arSettings, pLogger, apWriter, pPhys, mpTimerSrc);
+			pRouter.reset(new ServerSocketVtoRouter(arSettings, pLogger, apWriter, pPhys, mpTimerSrc));
 		}
 		else {
-			pRouter = new ClientSocketVtoRouter(arSettings, pLogger, apWriter, pPhys, mpTimerSrc);
+			pRouter.reset(new ClientSocketVtoRouter(arSettings, pLogger, apWriter, pPhys, mpTimerSrc));
 		}
 	}
 
@@ -83,7 +78,7 @@ VtoRouter* VtoRouterManager::StartRouter(
 
 	this->mRecords.push_back(record);
 
-	return pRouter;
+	return pRouter.get();
 }
 
 std::vector<VtoRouterManager::RouterRecord> VtoRouterManager::GetAllRouters()
@@ -95,7 +90,7 @@ std::vector<VtoRouterManager::RouterRecord> VtoRouterManager::GetAllRouters()
 
 void VtoRouterManager::StopRouter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId)
 {
-	this->StopRouter(this->GetRouterOnWriter(apWriter, aVtoChannelId).mpRouter);
+	this->StopRouter(this->GetRouterOnWriter(apWriter, aVtoChannelId).mpRouter.get());
 }
 
 std::vector<VtoRouterManager::RouterRecord> VtoRouterManager::GetAllRoutersOnWriter(IVtoWriter* apWriter)
@@ -144,11 +139,11 @@ VtoRouterManager::RouterRecordVector::iterator VtoRouterManager::Find(IVtoWriter
 void VtoRouterManager::StopRouter(VtoRouter* apRouter)
 {
 	for(RouterRecordVector::iterator i = mRecords.begin(); i != mRecords.end(); ++i) {
-		if(i->mpRouter == apRouter) {
-			LOG_BLOCK(LEV_INFO, "Releasing layer: " << i->mPortName);
-			i->mpRouter->StopRouter();
-			mpPhysSource->ReleaseLayer(i->mPortName);
-			mRecords.erase(i);
+		if(i->mpRouter.get() == apRouter) {
+			mpTimerSrc->Post(boost::bind(&AsyncPhysLayerMonitor::Stop, i->mpRouter.get())); // tell the router to stop from the main thread of execution 			
+			i->mpRouter->WaitForStopped();			  // blocking, when it returns we're done for good
+			mpPhysSource->ReleaseLayer(i->mPortName); // release the physical layer
+			mRecords.erase(i);						  // erasing from the vector will cause the shared_ptr to delete the VtoRouter*
 			return;
 		}
 	}

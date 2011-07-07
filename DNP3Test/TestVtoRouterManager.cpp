@@ -18,6 +18,8 @@
 #include <boost/test/unit_test.hpp>
 
 #include <APL/Log.h>
+#include <APL/Exception.h>
+#include <APL/LogToStdIO.h>
 
 #include <DNP3/VtoRouterManager.h>
 #include <DNP3/VtoRouterSettings.h>
@@ -25,18 +27,62 @@
 
 #include <APLTestTools/MockTimerSource.h>
 #include <APLTestTools/MockPhysicalLayerSource.h>
+#include <APLTestTools/MockPhysicalLayerAsync.h>
 
 using namespace apl;
 using namespace apl::dnp;
+
+class TestObject 
+{
+public:
+	TestObject(FilterLevel aLevel = LEV_INFO, bool aImmediate = false) :
+		log(),
+		mts(),
+		mpls(log.GetLogger(aLevel, "source"), &mts),
+		mgr(log.GetLogger(aLevel, "vto"), &mts, &mpls),
+		writer(log.GetLogger(aLevel, "writer"), 100)
+	{
+		if(aImmediate) log.AddLogSubscriber(LogToStdio::Inst());	
+	}
+
+	EventLog log;
+	MockTimerSource mts;
+	MockPhysicalLayerSource mpls;
+	VtoRouterManager mgr;
+	VtoWriter writer;
+};
 
 BOOST_AUTO_TEST_SUITE(VtoRouterManagerSuite)
 
 BOOST_AUTO_TEST_CASE(Construction)
 {
-	EventLog log;
-	MockTimerSource mts;
-	MockPhysicalLayerSource mpls(log.GetLogger(LEV_INFO, "source"));
-	VtoRouterManager mgr(log.GetLogger(LEV_INFO, "test"), &mts, &mpls);
+	TestObject t;
+}
+
+BOOST_AUTO_TEST_CASE(ManagerCreatesRouterAndStartsIt)
+{	
+	TestObject t;	
+	t.mgr.StartRouter("port", VtoRouterSettings(1, true, false), &t.writer);
+	MockPhysicalLayerAsync* pMock = t.mpls.GetMock("port");
+	BOOST_REQUIRE(pMock != NULL);
+	BOOST_REQUIRE(pMock->IsOpening());	
+}
+
+BOOST_AUTO_TEST_CASE(StoppingUnknownRouterExcepts)
+{
+	TestObject t;	
+	t.mgr.StartRouter("port", VtoRouterSettings(1, true, false), &t.writer);	
+	BOOST_REQUIRE_THROW(t.mgr.StopRouter(&t.writer, 2), ArgumentException); 
+		
+}
+
+BOOST_AUTO_TEST_CASE(CreatedRoutersCanBeManuallyDestroyed)
+{
+	TestObject t;
+	t.mts.SetAutoPost(true);
+	t.mgr.StartRouter("port", VtoRouterSettings(1, true, false), &t.writer);	
+	t.mgr.StopRouter(&t.writer, 1);
+		
 }
 
 BOOST_AUTO_TEST_SUITE_END()

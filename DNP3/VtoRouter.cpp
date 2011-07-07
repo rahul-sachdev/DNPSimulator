@@ -38,19 +38,12 @@ VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVto
 	mpVtoWriter(apWriter),
 	mReadBuffer(1024),
 	mWriteData(0),
-	mReopenPhysicalLayer(false),
-	mPermanentlyStopped(false)	
+	mReopenPhysicalLayer(false)	
 {
 	assert(apLogger != NULL);
 	assert(apWriter != NULL);
 	assert(apPhysLayer != NULL);
 	assert(apTimerSrc != NULL);
-}
-
-void VtoRouter::StopRouter()
-{
-	mPermanentlyStopped = true;
-	mpTimerSrc->Post(boost::bind(&VtoRouter::DoStopRouter, this));
 }
 
 void VtoRouter::DoStopRouter()
@@ -74,7 +67,7 @@ void VtoRouter::OnVtoDataReceived(const VtoData& arData)
 
 void VtoRouter::DoStart()
 {
-	if(mPermanentlyStopped) {
+	if(this->IsStopping()) {
 		LOG_BLOCK(LEV_DEBUG, "Permenantly Stopped")
 	}
 	else {
@@ -117,7 +110,7 @@ void VtoRouter::CheckForVtoWrite()
 {
 	// need to check mPermanentlyStopped, we will often get a physical layer closed notification after
 	// we have already stopped and disposed of the dnp3 stack so we need to not call anything on mpVtoWriter
-	if(!mPermanentlyStopped && !mVtoTxBuffer.empty()) {
+	if(!this->IsStopping() && !mVtoTxBuffer.empty()) {
 		VtoMessage msg = mVtoTxBuffer.front();
 		mVtoTxBuffer.pop_front();
 

@@ -177,7 +177,7 @@ void AsyncStackManager::StopVtoRouter(const std::string& arStackName, boost::uin
 	Stack* pStack = this->GetStackByName(arStackName);
 	IVtoWriter* pWriter = pStack->GetVtoWriter();
 	VtoRouterManager::RouterRecord rec = mVtoManager.GetRouterOnWriter(pWriter, aVtoChannelId);
-	this->RemoveVtoChannel(arStackName, rec.mpRouter);
+	this->RemoveVtoChannel(arStackName, rec.mpRouter.get());
 	mVtoManager.StopRouter(pWriter, aVtoChannelId);
 }
 

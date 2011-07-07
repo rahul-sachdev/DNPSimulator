@@ -23,6 +23,8 @@
 #include <APL/IPhysicalLayerSource.h>
 #include <APL/PhysicalLayerInstance.h>
 
+#include <boost/shared_ptr.hpp>
+
 #include <map>
 
 namespace apl
@@ -47,7 +49,7 @@ private:
 	ITimerSource* mpTimerSrc;
 
 	typedef std::map<std::string, PhysLayerInstance> InstanceMap;
-	typedef std::map<std::string, MockPhysicalLayerAsync*> MockMap;
+	typedef std::map<std::string, boost::shared_ptr<MockPhysicalLayerAsync>> MockMap;
 
 	InstanceMap mInstanceMap;
 	MockMap mMockMap;
