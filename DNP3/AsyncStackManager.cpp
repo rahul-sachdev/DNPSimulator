@@ -230,23 +230,22 @@ void AsyncStackManager::RemoveStack(const std::string& arStackName)
 
 void AsyncStackManager::SeverStack(LinkChannel* apChannel, const std::string& arStackName)
 {
-	/*
-	IVtoWriter* pWriter = this->GetStackByName(arStackName)->GetVtoWriter();
-	std::vector<VtoRouterManager::RouterRecord> records = mVtoManager.GetAllRoutersOnWriter(pWriter);
-	BOOST_FOREACH(VtoRouterManager::RouterRecord rec, records) {
-		this->RemoveVtoChannel(arStackName, rec.mpRouter);
-		mVtoManager.StopRouter(pWriter, rec.mVtoChannelId);
-	}
-	*/
-
-	// when removing a stack, we need to pause execution
+	// Decouple and stop the stack first, this doesn't delete it yet
 	{
-		Transaction tr(&mSuspendTimerSource);
+		Transaction tr(&mSuspendTimerSource); //need to pause execution so that this action is safe
 		apChannel->RemoveStackFromChannel(arStackName);
 	}
 
+	// Now stop any associated vto routers
+	IVtoWriter* pWriter = this->GetStackByName(arStackName)->GetVtoWriter();
+	std::vector<VtoRouterManager::RouterRecord> records = mVtoManager.GetAllRoutersOnWriter(pWriter);
+	BOOST_FOREACH(VtoRouterManager::RouterRecord rec, records) {
+		this->RemoveVtoChannel(arStackName, rec.mpRouter.get());
+		mVtoManager.StopRouter(pWriter, rec.mVtoChannelId); //router gets deleted here
+	}
+		
 	mStackNameToChannel.erase(arStackName);
-	mStackNameToStack.erase(arStackName);
+	mStackNameToStack.erase(arStackName); //erasing this will cause the shared_ptr to delete the stack
 }
 
 LinkChannel* AsyncStackManager::GetChannelByStackName(const std::string& arStackName)
