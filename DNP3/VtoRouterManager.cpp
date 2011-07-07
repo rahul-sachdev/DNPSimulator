@@ -47,7 +47,8 @@ VtoRouterManager::RouterRecord::RouterRecord(const std::string& arPortName, boos
 VtoRouterManager::VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc) :
 	Loggable(apLogger),
 	mpTimerSrc(apTimerSrc),	
-	mpPhysSource(apPhysSrc)
+	mpPhysSource(apPhysSrc),
+	mSuspendTimerSource(apTimerSrc)
 {
 	assert(apTimerSrc != NULL);
 	assert(apPhysSrc != NULL);
@@ -58,7 +59,7 @@ VtoRouter* VtoRouterManager::StartRouter(
     const VtoRouterSettings& arSettings,
     IVtoWriter* apWriter)
 {
-	IPhysicalLayerAsync* pPhys = mpPhysSource->AcquireLayer(arPortName, false); //don't autodelete
+	IPhysicalLayerAsync* pPhys = mpPhysSource->AcquireLayer(arPortName);
 	Logger* pLogger = this->GetSubLogger(arPortName, arSettings.CHANNEL_ID);
 
 	boost::shared_ptr<VtoRouter> pRouter;
@@ -140,7 +141,11 @@ void VtoRouterManager::StopRouter(VtoRouter* apRouter)
 {
 	for(RouterRecordVector::iterator i = mRecords.begin(); i != mRecords.end(); ++i) {
 		if(i->mpRouter.get() == apRouter) {
-			mpTimerSrc->Post(boost::bind(&AsyncPhysLayerMonitor::Stop, i->mpRouter.get())); // tell the router to stop from the main thread of execution 			
+			{
+				Transaction tr(&mSuspendTimerSource);
+				i->mpRouter->Stop();
+			}
+			
 			i->mpRouter->WaitForStopped();			  // blocking, when it returns we're done for good
 			mpPhysSource->ReleaseLayer(i->mPortName); // release the physical layer
 			mRecords.erase(i);						  // erasing from the vector will cause the shared_ptr to delete the VtoRouter*

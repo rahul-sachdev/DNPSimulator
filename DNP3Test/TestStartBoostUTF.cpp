@@ -17,6 +17,10 @@
 // under the License.
 //
 
+#ifdef WIN32
+#include "vld.h"
+#endif
+
 /*
  * Define the Boost UTF module name
  */

@@ -24,6 +24,7 @@
 #include <APL/Types.h>
 #include <APL/Loggable.h>
 #include <APL/IPhysMonitor.h>
+#include <APL/SuspendTimerSource.h>
 
 namespace apl
 {
@@ -95,6 +96,7 @@ private:
 
 	ITimerSource* mpTimerSrc;	
 	IPhysicalLayerSource* mpPhysSource;
+	SuspendTimerSource mSuspendTimerSource;
 };
 
 }

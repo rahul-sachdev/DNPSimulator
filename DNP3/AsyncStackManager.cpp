@@ -272,6 +272,8 @@ void AsyncStackManager::Shutdown()
 		LOG_BLOCK(LEV_INFO, "Removing port: " << s);
 		this->RemovePort(s);
 		LOG_BLOCK(LEV_INFO, "Done removing Port: " << s);
+		Thread::SleepFor(10000);
+		LOG_BLOCK(LEV_INFO, "Done sleeping");
 	}
 }
 

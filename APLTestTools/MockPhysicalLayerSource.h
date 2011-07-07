@@ -23,8 +23,6 @@
 #include <APL/IPhysicalLayerSource.h>
 #include <APL/PhysicalLayerInstance.h>
 
-#include <boost/shared_ptr.hpp>
-
 #include <map>
 
 namespace apl
@@ -38,9 +36,11 @@ public:
 
 	MockPhysicalLayerSource(Logger* apLogger, ITimerSource* apTimerSrc = NULL);
 
+	~MockPhysicalLayerSource();
+
 	MockPhysicalLayerAsync* GetMock(const std::string& arName);
 
-	IPhysicalLayerAsync* AcquireLayer(const std::string& arName, bool aAutoDelete);
+	IPhysicalLayerAsync* AcquireLayer(const std::string& arName);
 	void ReleaseLayer(const std::string& arName);
 
 private:
@@ -49,7 +49,7 @@ private:
 	ITimerSource* mpTimerSrc;
 
 	typedef std::map<std::string, PhysLayerInstance> InstanceMap;
-	typedef std::map<std::string, boost::shared_ptr<MockPhysicalLayerAsync>> MockMap;
+	typedef std::map<std::string, MockPhysicalLayerAsync*> MockMap;
 
 	InstanceMap mInstanceMap;
 	MockMap mMockMap;

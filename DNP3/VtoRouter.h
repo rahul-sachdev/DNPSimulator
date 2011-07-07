@@ -98,7 +98,6 @@ public:
 	 * @return				a new VtoRouter instance
 	 */
 	VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc);
-	
 
 	/**
 	 * Receives data from the VTO channel and forwards it to the

@@ -45,14 +45,14 @@ PhysLayerSettings PhysicalLayerMap ::GetSettings(const std::string& arName)
 	return _GetSettings(arName);
 }
 
-IPhysicalLayerAsync* PhysicalLayerMap::AcquireLayer(const std::string& arName, bool aAutoDelete)
+IPhysicalLayerAsync* PhysicalLayerMap::AcquireLayer(const std::string& arName)
 {
 	CriticalSection cs(&mLock);
 	PhysLayerSettings s = this->_GetSettings(arName);
 	PhysLayerInstance* pInstance = this->_GetInstance(arName);
 	if(pInstance->IsCreated()) throw ArgumentException("Layer with name has already been acquired: " + arName);
 	else {
-		IPhysicalLayerAsync* pLayer = pInstance->GetLayer(this->MakeLogger(arName, s.LogLevel), mpService, aAutoDelete);
+		IPhysicalLayerAsync* pLayer = pInstance->GetLayer(this->MakeLogger(arName, s.LogLevel), mpService);
 		mLayerToNameMap.insert(LayerToNameMap::value_type(pLayer, arName));
 		LOG_BLOCK(LEV_DEBUG, "Physical layer acquired: " << arName);
 		return pLayer;

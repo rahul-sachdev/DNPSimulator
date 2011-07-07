@@ -30,23 +30,21 @@ namespace apl
 PhysLayerInstance::PhysLayerInstance(IPhysicalLayerAsyncFactory aFactory) :
 	mFactoryAsync(aFactory),
 	mpLayer(NULL),
-	mpLogger(NULL),
-	mAutoDelete(true)
+	mpLogger(NULL)	
 {
 
 }
 
-PhysLayerInstance::PhysLayerInstance(IPhysicalLayerAsync* apPhys, Logger* apLogger, bool aAutoDelete) :
+PhysLayerInstance::PhysLayerInstance(IPhysicalLayerAsync* apPhys, Logger* apLogger) :
 	mpLayer(apPhys),
-	mpLogger(apLogger),
-	mAutoDelete(aAutoDelete)
+	mpLogger(apLogger)	
 {}
 
 void PhysLayerInstance::Release()
 {
 
-	if(mAutoDelete) delete mpLayer;
-	SetLayer(NULL, NULL, false);
+	delete mpLayer;
+	SetLayer(NULL, NULL);
 }
 
 bool PhysLayerInstance::IsCreated()
@@ -54,17 +52,16 @@ bool PhysLayerInstance::IsCreated()
 	return mpLayer != NULL;
 }
 
-IPhysicalLayerAsync*  PhysLayerInstance::GetLayer(Logger* apLogger, boost::asio::io_service* apService, bool aAutoDelete)
+IPhysicalLayerAsync*  PhysLayerInstance::GetLayer(Logger* apLogger, boost::asio::io_service* apService)
 {
-	if(mpLayer == NULL) this->SetLayer(mFactoryAsync(apLogger, apService), apLogger, aAutoDelete);
+	if(mpLayer == NULL) this->SetLayer(mFactoryAsync(apLogger, apService), apLogger);
 	return mpLayer;
 }
 
-void PhysLayerInstance::SetLayer(IPhysicalLayerAsync* apLayer, Logger* apLogger, bool aAutoDelete)
+void PhysLayerInstance::SetLayer(IPhysicalLayerAsync* apLayer, Logger* apLogger)
 {
 	mpLayer = apLayer;
-	mpLogger = apLogger;
-	mAutoDelete = aAutoDelete;
+	mpLogger = apLogger;	
 }
 
 

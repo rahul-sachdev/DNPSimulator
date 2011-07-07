@@ -76,15 +76,6 @@ BOOST_AUTO_TEST_CASE(StoppingUnknownRouterExcepts)
 		
 }
 
-BOOST_AUTO_TEST_CASE(CreatedRoutersCanBeManuallyDestroyed)
-{
-	TestObject t;
-	t.mts.SetAutoPost(true);
-	t.mgr.StartRouter("port", VtoRouterSettings(1, true, false), &t.writer);	
-	t.mgr.StopRouter(&t.writer, 1);
-		
-}
-
 BOOST_AUTO_TEST_SUITE_END()
 
 /* vim: set ts=4 sw=4: */
