@@ -30,14 +30,14 @@ namespace apl
 PhysLayerInstance::PhysLayerInstance(IPhysicalLayerAsyncFactory aFactory) :
 	mFactoryAsync(aFactory),
 	mpLayer(NULL),
-	mpLogger(NULL)	
+	mpLogger(NULL)
 {
 
 }
 
 PhysLayerInstance::PhysLayerInstance(IPhysicalLayerAsync* apPhys, Logger* apLogger) :
 	mpLayer(apPhys),
-	mpLogger(apLogger)	
+	mpLogger(apLogger)
 {}
 
 void PhysLayerInstance::Release()
@@ -61,7 +61,7 @@ IPhysicalLayerAsync*  PhysLayerInstance::GetLayer(Logger* apLogger, boost::asio:
 void PhysLayerInstance::SetLayer(IPhysicalLayerAsync* apLayer, Logger* apLogger)
 {
 	mpLayer = apLayer;
-	mpLogger = apLogger;	
+	mpLogger = apLogger;
 }
 
 

@@ -34,11 +34,11 @@ namespace dnp
 VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
 	Loggable(apLogger),
 	AsyncPhysLayerMonitor(apLogger, apPhysLayer, apTimerSrc, arSettings.OPEN_RETRY_MS),
-	IVtoCallbacks(arSettings.CHANNEL_ID),	
+	IVtoCallbacks(arSettings.CHANNEL_ID),
 	mpVtoWriter(apWriter),
 	mReadBuffer(1024),
 	mWriteData(0),
-	mReopenPhysicalLayer(false)	
+	mReopenPhysicalLayer(false)
 {
 	assert(apLogger != NULL);
 	assert(apWriter != NULL);
@@ -107,7 +107,7 @@ void VtoRouter::_OnReceive(const boost::uint8_t* apData, size_t aLength)
 }
 
 void VtoRouter::CheckForVtoWrite()
-{	
+{
 	if(!mVtoTxBuffer.empty()) {
 		VtoMessage msg = mVtoTxBuffer.front();
 		mVtoTxBuffer.pop_front();
@@ -205,7 +205,7 @@ void VtoRouter::OnPhysicalLayerOpen()
 
 void VtoRouter::OnStateChange(PhysicalLayerState aState)
 {
-	
+
 }
 
 void VtoRouter::OnPhysicalLayerClose()

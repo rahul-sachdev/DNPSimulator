@@ -46,7 +46,7 @@ AsyncTaskContinuous* TrackingTaskGroup::AddContinuous(int aPriority, const TaskH
 	mTaskVec.push_back(pTask);
 	return pTask;
 }
-	
+
 }
 
 

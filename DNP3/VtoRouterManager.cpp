@@ -46,7 +46,7 @@ VtoRouterManager::RouterRecord::RouterRecord(const std::string& arPortName, boos
 
 VtoRouterManager::VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc) :
 	Loggable(apLogger),
-	mpTimerSrc(apTimerSrc),	
+	mpTimerSrc(apTimerSrc),
 	mpPhysSource(apPhysSrc),
 	mSuspendTimerSource(apTimerSrc)
 {
@@ -145,7 +145,7 @@ void VtoRouterManager::StopRouter(VtoRouter* apRouter)
 				Transaction tr(&mSuspendTimerSource);
 				i->mpRouter->Stop();
 			}
-			
+
 			i->mpRouter->WaitForStopped();			  // blocking, when it returns we're done for good
 			mpPhysSource->ReleaseLayer(i->mPortName); // release the physical layer
 			mRecords.erase(i);						  // erasing from the vector will cause the shared_ptr to delete the VtoRouter*

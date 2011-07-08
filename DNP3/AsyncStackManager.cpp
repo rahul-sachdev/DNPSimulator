@@ -245,7 +245,7 @@ void AsyncStackManager::SeverStack(LinkChannel* apChannel, const std::string& ar
 		this->RemoveVtoChannel(arStackName, rec.mpRouter.get());
 		mVtoManager.StopRouter(pWriter, rec.mVtoChannelId); //router gets deleted here
 	}
-		
+
 	mStackNameToChannel.erase(arStackName);
 	mStackNameToStack.erase(arStackName); //erasing this will cause the shared_ptr to delete the stack
 }

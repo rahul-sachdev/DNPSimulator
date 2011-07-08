@@ -28,16 +28,16 @@ namespace apl
 
 SuspendTimerSource::SuspendTimerSource(ITimerSource* apTimerSource) :
 	mpTimerSource(apTimerSource),
-	mPausing(false),	
+	mPausing(false),
 	mIsPaused(false),
 	mLock()
 {
-		
+
 }
 
 void SuspendTimerSource::_Start()
-{	
-	CriticalSection cs(&mLock);	
+{
+	CriticalSection cs(&mLock);
 	mPausing = true;
 	mpTimerSource->Post(boost::bind(&SuspendTimerSource::Pause, this));
 	while(!mIsPaused) {

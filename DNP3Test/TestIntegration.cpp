@@ -58,7 +58,7 @@ const size_t NUM_CHANGES = 10;
 
 BOOST_AUTO_TEST_CASE(MasterToSlaveThroughput)
 {
-	
+
 	EventLog log;
 	//LogToStdio::Inst()->SetPrintLocation(true);
 	//log.AddLogSubscriber(LogToStdio::Inst());

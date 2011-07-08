@@ -66,7 +66,7 @@ public:
 	};
 
 
-	VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc);	
+	VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc);
 
 	VtoRouter* StartRouter(
 	    const std::string& arPortName,
@@ -94,7 +94,7 @@ private:
 
 	RouterRecordVector mRecords;
 
-	ITimerSource* mpTimerSrc;	
+	ITimerSource* mpTimerSrc;
 	IPhysicalLayerSource* mpPhysSource;
 	SuspendTimerSource mSuspendTimerSource;
 };

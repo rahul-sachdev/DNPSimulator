@@ -30,24 +30,24 @@ class ITimerSource;
 
 /**
 *  Pauses execution of the thread driving a TimerSource. Uses the ITransactable RAII
-*  pattern to guarantee that that the resource is released if an uncaught 
-*  exception is thrown 
+*  pattern to guarantee that that the resource is released if an uncaught
+*  exception is thrown
 *
 */
 class SuspendTimerSource : public ITransactable
 {
 public:
-	SuspendTimerSource(ITimerSource* apTimerSource);	
+	SuspendTimerSource(ITimerSource* apTimerSource);
 
 private:
-	
+
 	void Pause();
 	void _Start();
 	void _End();
 
 	ITimerSource* mpTimerSource;
 	bool mPausing;
-	bool mIsPaused;	
+	bool mIsPaused;
 	SigLock mLock;
 };
 

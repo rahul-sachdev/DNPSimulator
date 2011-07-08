@@ -63,7 +63,7 @@ protected:
 	ITimerSource* mpTimerSrc;
 	ITimer* mpOpenTimer;
 	LogVariable mPortState;
-	
+
 
 	virtual void OnPhysicalLayerOpen() = 0;
 	virtual void OnPhysicalLayerClose() = 0;
@@ -73,8 +73,8 @@ protected:
 private:
 
 	/// Internal callback when open timer expires
-        void OnOpenTimerExpiration();
-	
+	void OnOpenTimerExpiration();
+
 	/// Internal function used to change the state
 	void ChangeState(PhysicalLayerState);
 

@@ -117,7 +117,7 @@ class ClientVtoRouterTestClass : public VtoRouterTestClassBase
 public:
 	ClientVtoRouterTestClass(const VtoRouterSettings& arSettings = VtoRouterSettings(88, true, true), size_t aWriterSize = 100) :
 		VtoRouterTestClassBase(aWriterSize),
-		router(arSettings, mLog.GetLogger(LEV_DEBUG, "router"), &writer, &phys, &mts) {			
+		router(arSettings, mLog.GetLogger(LEV_DEBUG, "router"), &writer, &phys, &mts) {
 		pRouter = &router;
 		writer.AddVtoCallback(&router);
 	}
@@ -219,16 +219,16 @@ BOOST_AUTO_TEST_CASE(ClientSendsMagicChannelLocalConnected)
 	ClientVtoRouterTestClass rtc;
 
 	rtc.SetRemoteState(true);
-	
+
 	BOOST_REQUIRE(rtc.phys.IsOpening());
-	rtc.phys.SignalOpenSuccess();	
+	rtc.phys.SignalOpenSuccess();
 
 	rtc.CheckLocalChannelConnectedMessage(true);
 
 	rtc.phys.TriggerRead("01 02 03 04 05");
 	rtc.phys.TriggerRead("06 07 08 09 0A");
 
-	rtc.phys.TriggerClose();	
+	rtc.phys.TriggerClose();
 
 	BOOST_REQUIRE_EQUAL(rtc.phys.NumClose(), 1);
 

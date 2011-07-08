@@ -70,16 +70,16 @@ void AsyncPhysLayerMonitor::ChangeState(PhysicalLayerState aState)
 		mState = aState;
 		LOG_BLOCK(LEV_INFO, "Transition to state: " << ConvertPhysicalLayerStateToString(aState));
 		mPortState.Set(aState);
-		for(MonitorSet::iterator i = mMonitors.begin(); i != mMonitors.end(); ++i) (*i)->OnStateChange(aState);		
-		this->OnStateChange(aState);		
+		for(MonitorSet::iterator i = mMonitors.begin(); i != mMonitors.end(); ++i) (*i)->OnStateChange(aState);
+		this->OnStateChange(aState);
 		cs.Broadcast();
 	}
 }
 
 void AsyncPhysLayerMonitor::WaitForState(PhysicalLayerState aState)
 {
-	CriticalSection cs(&mLock);	
-	while(this->GetState() != aState) cs.Wait();	
+	CriticalSection cs(&mLock);
+	while(this->GetState() != aState) cs.Wait();
 }
 
 void AsyncPhysLayerMonitor::Start()

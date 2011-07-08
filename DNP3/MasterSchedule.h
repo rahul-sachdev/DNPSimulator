@@ -69,13 +69,13 @@ public:
 	void DisableOnlineTasks();
 
 	// Resets all of the tasks that run on startup. This is typically done after a failure
-	void ResetStartupTasks();	
+	void ResetStartupTasks();
 
 private:
 
 	void Init(const MasterConfig& arCfg, Master* mpMaster);
 
-	
+
 	AsyncTaskGroup* mpGroup;
 	TrackingTaskGroup mTracking;
 

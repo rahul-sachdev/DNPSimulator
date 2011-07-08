@@ -49,8 +49,10 @@ AsyncTaskGroup::~AsyncTaskGroup()
 	if(mpTimer) {
 		mpTimer->Cancel();
 		mpTimer = NULL;
-	}	
-	BOOST_FOREACH(AsyncTaskBase* p, mTaskSet) { delete p; }
+	}
+	BOOST_FOREACH(AsyncTaskBase * p, mTaskSet) {
+		delete p;
+	}
 }
 
 AsyncTaskBase* AsyncTaskGroup::Add(millis_t aPeriod, millis_t aRetryDelay, int aPriority, const TaskHandler& arCallback, const std::string& arName)
@@ -85,7 +87,7 @@ void AsyncTaskGroup::Remove(AsyncTaskBase* apTask)
 	if(i == mTaskSet.end()) throw ArgumentException(LOCATION, "Task not found");
 	else {
 		delete *i;
-		mTaskSet.erase(i);	
+		mTaskSet.erase(i);
 	}
 }
 

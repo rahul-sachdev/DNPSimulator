@@ -35,13 +35,13 @@ MockPhysicalLayerSource::MockPhysicalLayerSource(Logger* apLogger, ITimerSource*
 
 MockPhysicalLayerSource::~MockPhysicalLayerSource()
 {
-	for(InstanceMap::iterator i=mInstanceMap.begin(); i != mInstanceMap.end(); ++i) i->second.Release();
+	for(InstanceMap::iterator i = mInstanceMap.begin(); i != mInstanceMap.end(); ++i) i->second.Release();
 }
 
 MockPhysicalLayerAsync* MockPhysicalLayerSource::GetMock(const std::string& arName)
 {
 	MockMap::iterator i = mMockMap.find(arName);
-	return (i == this->mMockMap.end()) ? NULL : i->second;	
+	return (i == this->mMockMap.end()) ? NULL : i->second;
 }
 
 IPhysicalLayerAsync* MockPhysicalLayerSource::AcquireLayer(const std::string& arName)

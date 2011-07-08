@@ -32,7 +32,7 @@
 using namespace apl;
 using namespace apl::dnp;
 
-class TestObject 
+class TestObject
 {
 public:
 	TestObject(FilterLevel aLevel = LEV_INFO, bool aImmediate = false) :
@@ -40,9 +40,8 @@ public:
 		mts(),
 		mpls(log.GetLogger(aLevel, "source"), &mts),
 		mgr(log.GetLogger(aLevel, "vto"), &mts, &mpls),
-		writer(log.GetLogger(aLevel, "writer"), 100)
-	{
-		if(aImmediate) log.AddLogSubscriber(LogToStdio::Inst());	
+		writer(log.GetLogger(aLevel, "writer"), 100) {
+		if(aImmediate) log.AddLogSubscriber(LogToStdio::Inst());
 	}
 
 	EventLog log;
@@ -60,20 +59,20 @@ BOOST_AUTO_TEST_CASE(Construction)
 }
 
 BOOST_AUTO_TEST_CASE(ManagerCreatesRouterAndStartsIt)
-{	
-	TestObject t;	
+{
+	TestObject t;
 	t.mgr.StartRouter("port", VtoRouterSettings(1, true, false), &t.writer);
 	MockPhysicalLayerAsync* pMock = t.mpls.GetMock("port");
 	BOOST_REQUIRE(pMock != NULL);
-	BOOST_REQUIRE(pMock->IsOpening());	
+	BOOST_REQUIRE(pMock->IsOpening());
 }
 
 BOOST_AUTO_TEST_CASE(StoppingUnknownRouterExcepts)
 {
-	TestObject t;	
-	t.mgr.StartRouter("port", VtoRouterSettings(1, true, false), &t.writer);	
-	BOOST_REQUIRE_THROW(t.mgr.StopRouter(&t.writer, 2), ArgumentException); 
-		
+	TestObject t;
+	t.mgr.StartRouter("port", VtoRouterSettings(1, true, false), &t.writer);
+	BOOST_REQUIRE_THROW(t.mgr.StopRouter(&t.writer, 2), ArgumentException);
+
 }
 
 BOOST_AUTO_TEST_SUITE_END()

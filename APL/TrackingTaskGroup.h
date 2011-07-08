@@ -40,7 +40,7 @@ class AsyncTaskBase;
 */
 class TrackingTaskGroup
 {
-	
+
 public:
 
 	TrackingTaskGroup(AsyncTaskGroup* apGroup);
@@ -48,7 +48,7 @@ public:
 
 	AsyncTaskBase* Add(millis_t aPeriod, millis_t aRetryDelay, int aPriority, const TaskHandler& arCallback, const std::string& arName = "");
 	AsyncTaskContinuous* AddContinuous(int aPriority, const TaskHandler& arCallback, const std::string& arName = "");
-	
+
 
 private:
 

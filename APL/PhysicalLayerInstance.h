@@ -49,7 +49,7 @@ private:
 	IPhysicalLayerAsyncFactory mFactoryAsync;
 	IPhysicalLayerAsync* mpLayer;
 
-	Logger* mpLogger;	
+	Logger* mpLogger;
 
 	void SetLayer(IPhysicalLayerAsync* apLayer, Logger* apLogger);
 };

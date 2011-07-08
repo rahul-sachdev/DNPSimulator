@@ -41,7 +41,8 @@ std::string ConvertPhysicalLayerStateToString(PhysicalLayerState aState)
 	}
 }
 
-std::ostream& operator<<(std::ostream& output, PhysicalLayerState aState) {
+std::ostream& operator<<(std::ostream& output, PhysicalLayerState aState)
+{
 	output << ConvertPhysicalLayerStateToString(aState);
 	return output;
 }

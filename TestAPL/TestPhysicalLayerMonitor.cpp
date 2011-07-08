@@ -39,10 +39,10 @@ public:
 	}
 
 protected:
-	
+
 	void _OnReceive(const boost::uint8_t* apData, size_t aNumBytes) {}
 	void _OnSendSuccess() {}
-	void _OnSendFailure() {}	
+	void _OnSendFailure() {}
 };
 
 class TestObject
@@ -64,18 +64,62 @@ public:
 
 BOOST_AUTO_TEST_SUITE(PhysicalLayerMonitorTestSuite)
 
-BOOST_AUTO_TEST_CASE(ClosedExceptions)
+BOOST_AUTO_TEST_CASE(StateClosedExceptions)
 {
 	TestObject test;
-	BOOST_CHECK_EQUAL(PLS_CLOSED, test.monitor.GetState());
+	BOOST_REQUIRE_EQUAL(PLS_CLOSED, test.monitor.GetState());
 	BOOST_REQUIRE_THROW(test.monitor.OnLowerLayerUp(), InvalidStateException);
+	BOOST_REQUIRE_THROW(test.monitor.OnLowerLayerDown(), InvalidStateException);
+	BOOST_REQUIRE_THROW(test.monitor.OnOpenFailure(), InvalidStateException);
+	BOOST_REQUIRE_EQUAL(PLS_CLOSED, test.monitor.GetState());
 }
 
-BOOST_AUTO_TEST_CASE(StoppingWhileClosedGoesToStopped)
+BOOST_AUTO_TEST_CASE(StateClosedCanBeStopped)
 {
 	TestObject test;
 	test.monitor.Stop();
-	BOOST_CHECK_EQUAL(PLS_STOPPED, test.monitor.GetState());
+	BOOST_REQUIRE_EQUAL(PLS_STOPPED, test.monitor.GetState());
+}
+
+BOOST_AUTO_TEST_CASE(StopIsIdempotentWhileStopped)
+{
+	TestObject test;
+	test.monitor.Stop();
+	BOOST_REQUIRE_EQUAL(PLS_STOPPED, test.monitor.GetState());
+	test.monitor.Stop();
+	BOOST_REQUIRE_EQUAL(PLS_STOPPED, test.monitor.GetState());
+}
+
+BOOST_AUTO_TEST_CASE(StoppedLayerCannotBeStarted)
+{
+	TestObject test;
+	test.monitor.Stop();
+	test.monitor.Start();
+	BOOST_REQUIRE_EQUAL(PLS_STOPPED, test.monitor.GetState());
+	BOOST_REQUIRE(test.phys.IsClosed());
+}
+
+BOOST_AUTO_TEST_CASE(ClosedLayerCanBeOpened)
+{
+	TestObject test;
+	test.monitor.Start();
+	BOOST_REQUIRE_EQUAL(PLS_OPENING, test.monitor.GetState());
+	BOOST_REQUIRE(test.phys.IsOpening());
+}
+
+BOOST_AUTO_TEST_CASE(OpeningLayerExceptions)
+{
+	TestObject test;
+	test.monitor.Start();
+	BOOST_REQUIRE_THROW(test.monitor.OnLowerLayerDown(), InvalidStateException);
+}
+
+BOOST_AUTO_TEST_CASE(OpeningStateOpenSuccesGoesToOpenState)
+{
+	TestObject test;
+	test.monitor.Start();
+	test.monitor.OnLowerLayerUp();
+	BOOST_REQUIRE_EQUAL(PLS_OPEN, test.monitor.GetState());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

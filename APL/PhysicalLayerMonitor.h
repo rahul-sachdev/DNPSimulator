@@ -35,11 +35,22 @@ class IPhysicalLayerAsync;
 class IMonitorState;
 class IPhysicalLayerObserver;
 
-/** Manages the lifecycle of a physical layer  
+/** Manages the lifecycle of a physical layer
   */
 class PhysicalLayerMonitor : public IHandlerAsync
 {
+	friend class IgnoresClose;
+	friend class IgnoresStart;
+	friend class IgnoresStop;
+	friend class HandlesClose;
 	friend class MonitorStateClosed;
+	friend class MonitorStateStopped;
+	friend class MonitorStateOpening;
+	friend class MonitorStateOpen;
+	friend class MonitorStateClosing;
+	friend class MonitorStateStopping;
+	friend class MonitorStateWaiting;
+
 
 public:
 	PhysicalLayerMonitor(Logger*, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);
@@ -50,16 +61,16 @@ public:
 
 	/** Close the physical layer if it's open, may re-open - Idempotent*/
 	void Close();
-	
+
 	/** Permanently stop the monitor, further calls to Start() will do nothing - Idempotent */
 	void Stop();
-	
+
 	PhysicalLayerState GetState();
 
 	/** Add an observer to the set of state callbacks */
 	void AddObserver(IPhysicalLayerObserver* apObserver);
 
-	/** Blocks until the monitor has completely and permanently stopped */	
+	/** Blocks until the monitor has completely and permanently stopped */
 	void WaitForStopped();
 
 protected:
@@ -85,12 +96,15 @@ private:
 	/// Begins the open timer
 	void StartOpenTimer();
 
+	/// Cancels the open timer
+	void CancelOpenTimer();
+
 	/// Internal callback when open timer expires
-    void OnOpenTimerExpiration();
+	void OnOpenTimerExpiration();
 
 	/* --- Internal helper functions --- */
-	
-	SigLock mLock;	
+
+	SigLock mLock;
 	const millis_t M_OPEN_RETRY;
 
 	// Implement from IHandlerAsync - Try to reconnect using a timer

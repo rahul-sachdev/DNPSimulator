@@ -62,18 +62,18 @@ void PhysicalLayerMonitor::AddObserver(IPhysicalLayerObserver* apObserver)
 
 void PhysicalLayerMonitor::WaitForStopped()
 {
-	CriticalSection cs(&mLock);	
+	CriticalSection cs(&mLock);
 	while(this->GetState() != PLS_STOPPED) cs.Wait();
 }
 
 void PhysicalLayerMonitor::ChangeState(IMonitorState* apState)
-{	
+{
 	CriticalSection cs(&mLock);
 	mpState = apState;
 	LOG_BLOCK(LEV_INFO, "Transition to state: " << apState->Name());
-	if(mpState->GetState() != apState->GetState()) {				
-		LOG_BLOCK(LEV_INFO, "Transition to state: " << ConvertPhysicalLayerStateToString(apState->GetState()));		
-		for(ObserverSet::iterator i = mObservers.begin(); i != mObservers.end(); ++i) (*i)->OnStateChange(apState->GetState());						
+	if(mpState->GetState() != apState->GetState()) {
+		LOG_BLOCK(LEV_INFO, "Transition to state: " << ConvertPhysicalLayerStateToString(apState->GetState()));
+		for(ObserverSet::iterator i = mObservers.begin(); i != mObservers.end(); ++i) (*i)->OnStateChange(apState->GetState());
 		cs.Broadcast();	 // signal to anyone waiting for a state change
 	}
 }
@@ -83,13 +83,13 @@ void PhysicalLayerMonitor::ChangeState(IMonitorState* apState)
 void PhysicalLayerMonitor::Start()
 {
 	LOG_BLOCK(LEV_INFO, "Start()");
-	mpState->OnStart(this);	
+	mpState->OnStart(this);
 }
 
 void PhysicalLayerMonitor::Close()
 {
 	LOG_BLOCK(LEV_INFO, "Close()");
-	mpState->OnClose(this);	
+	mpState->OnClose(this);
 }
 
 void PhysicalLayerMonitor::Stop()
@@ -105,13 +105,13 @@ void PhysicalLayerMonitor::OnOpenTimerExpiration()
 	LOG_BLOCK(LEV_INFO, "OnOpenTimerExpiration()");
 	assert(mpOpenTimer != NULL);
 	mpOpenTimer = NULL;
-	mpState->OnOpenTimeout(this);	
+	mpState->OnOpenTimeout(this);
 }
 
 void PhysicalLayerMonitor::_OnOpenFailure()
 {
 	LOG_BLOCK(LEV_INFO, "_OnOpenFailure()");
-	mpState->OnOpenFailure(this);	
+	mpState->OnOpenFailure(this);
 }
 
 void PhysicalLayerMonitor::_OnLowerLayerUp()
@@ -132,6 +132,13 @@ void PhysicalLayerMonitor::StartOpenTimer()
 {
 	assert(mpOpenTimer == NULL);
 	mpOpenTimer = mpTimerSrc->Start(M_OPEN_RETRY, boost::bind(&PhysicalLayerMonitor::OnOpenTimerExpiration, this));
+}
+
+void PhysicalLayerMonitor::CancelOpenTimer()
+{
+	assert(mpOpenTimer != NULL);
+	mpOpenTimer->Cancel();
+	mpOpenTimer = NULL;
 }
 
 /* ------- Internal helper functions ------- */

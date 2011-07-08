@@ -87,15 +87,15 @@ void TestLargeDataOneWay(VtoOnewayTestStack& arTest, size_t aSizeInBytes)
 #define MACRO_BUFFER_SIZE 1<< 20 // 1 << 20 == 1MB, 1<<24 == 16MB
 
 BOOST_AUTO_TEST_CASE(LargeDataTransferMasterToSlave)
-{	
+{
 	VtoOnewayTestStack stack(true, false);
-	TestLargeDataOneWay(stack, MACRO_BUFFER_SIZE);	
+	TestLargeDataOneWay(stack, MACRO_BUFFER_SIZE);
 }
 
 BOOST_AUTO_TEST_CASE(LargeDataTransferSlaveToMaster)
-{	
+{
 	VtoOnewayTestStack stack(false, false);
-	TestLargeDataOneWay(stack, MACRO_BUFFER_SIZE);	
+	TestLargeDataOneWay(stack, MACRO_BUFFER_SIZE);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

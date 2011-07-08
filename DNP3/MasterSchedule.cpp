@@ -51,7 +51,7 @@ void MasterSchedule::ResetStartupTasks()
 	mpGroup->ResetTasks(START_UP_TASKS);
 }
 
-void MasterSchedule::Init(const MasterConfig& arCfg, Master* apMaster)                
+void MasterSchedule::Init(const MasterConfig& arCfg, Master* apMaster)
 {
 	AsyncTaskBase* pIntegrity = mTracking.Add(
 	                                arCfg.IntegrityRate,
@@ -117,33 +117,33 @@ void MasterSchedule::Init(const MasterConfig& arCfg, Master* apMaster)
 
 		pEventScan->SetFlags(ONLINE_ONLY_TASKS);
 		pEventScan->AddDependency(pIntegrity);
-	}	
+	}
 
 	/* Tasks are executed when the master is is idle */
 	mpCommandTask = mTracking.AddContinuous(
-	                             AMP_COMMAND,
-	                             boost::bind(&Master::ProcessCommand, apMaster, _1),
-	                             "Command");
+	                    AMP_COMMAND,
+	                    boost::bind(&Master::ProcessCommand, apMaster, _1),
+	                    "Command");
 
 	mpTimeTask = mTracking.AddContinuous(
-	                          AMP_TIME_SYNC,
-	                          boost::bind(&Master::SyncTime, apMaster, _1),
-	                          "TimeSync");
+	                 AMP_TIME_SYNC,
+	                 boost::bind(&Master::SyncTime, apMaster, _1),
+	                 "TimeSync");
 
 	mpClearRestartTask = mTracking.AddContinuous(
-	                                  AMP_CLEAR_RESTART,
-	                                  boost::bind(&Master::WriteIIN, apMaster, _1),
-	                                  "Clear IIN");
+	                         AMP_CLEAR_RESTART,
+	                         boost::bind(&Master::WriteIIN, apMaster, _1),
+	                         "Clear IIN");
 
 	mpVtoTransmitTask = mTracking.AddContinuous(
-	                                 AMP_VTO_TRANSMIT,
-	                                 boost::bind(&Master::TransmitVtoData, apMaster, _1),
-	                                 "Buffer VTO Data");
+	                        AMP_VTO_TRANSMIT,
+	                        boost::bind(&Master::TransmitVtoData, apMaster, _1),
+	                        "Buffer VTO Data");
 
 	mpVtoTransmitTask->SetFlags(ONLINE_ONLY_TASKS);
 	mpTimeTask->SetFlags(ONLINE_ONLY_TASKS);
 	mpClearRestartTask->SetFlags(ONLINE_ONLY_TASKS);
-	
+
 }
 
 }

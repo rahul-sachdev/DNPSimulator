@@ -73,8 +73,8 @@ public:
 	}
 
 private:
-	
-	std::string mName;	
+
+	std::string mName;
 	AsyncTaskGroup* mpTaskGroup;
 
 	typedef std::map<std::string, StackRecord> StackMap;

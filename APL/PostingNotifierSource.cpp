@@ -26,7 +26,7 @@ namespace apl
 
 PostingNotifierSource::~PostingNotifierSource()
 {
-	
+
 }
 
 INotifier* PostingNotifierSource::Get(const ExpirationHandler& arHandler, ITimerSource* apTimerSrc)
