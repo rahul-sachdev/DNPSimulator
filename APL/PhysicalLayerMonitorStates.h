@@ -97,8 +97,10 @@ public:
 
 // disable "inherits via dominance warning", it's erroneous b/c base
 // class is pure virtual and G++ correctly deduces this and doesn't care
+#ifdef WIN32
 #pragma warning(push)
 #pragma warning(disable:4250)
+#endif
 
 class MonitorStateStopped : public virtual IMonitorState,
 	private NotOpening, private NotOpen, private NotWaitingForTimer, private IgnoresClose, private IgnoresStart, private IgnoresStop
@@ -153,14 +155,16 @@ class MonitorStateClosing : public virtual IMonitorState,
 };
 
 class MonitorStateStopping : public virtual IMonitorState,
-	private NotOpening, private NotWaitingForTimer, private IgnoresStart, private IgnoresClose, private IgnoresStop, private IgnoresStop
+	private NotOpening, private NotWaitingForTimer, private IgnoresStart, private IgnoresClose, private IgnoresStop
 {
 	MACRO_MONITOR_SINGLETON(MonitorStateStopping, PLS_CLOSED);
 
 	void OnLayerClose(PhysicalLayerMonitor* apContext);
 };
 
+#ifdef WIN32
 #pragma warning(pop)
+#endif
 
 }
 

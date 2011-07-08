@@ -81,12 +81,15 @@ BOOST_AUTO_TEST_CASE(StateClosedCanBeStopped)
 	BOOST_REQUIRE_EQUAL(PLS_STOPPED, test.monitor.GetState());
 }
 
-BOOST_AUTO_TEST_CASE(StopIsIdempotentWhileStopped)
+BOOST_AUTO_TEST_CASE(StopAndCloseDoNothingWhileStopped)
 {
 	TestObject test;
 	test.monitor.Stop();
 	BOOST_REQUIRE_EQUAL(PLS_STOPPED, test.monitor.GetState());
+
 	test.monitor.Stop();
+	BOOST_REQUIRE_EQUAL(PLS_STOPPED, test.monitor.GetState());
+	test.monitor.Close();
 	BOOST_REQUIRE_EQUAL(PLS_STOPPED, test.monitor.GetState());
 }
 
