@@ -227,6 +227,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\TestPhysicalLayerMonitor.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\TestPhysicalMonitor.cpp"
 					>
 				</File>

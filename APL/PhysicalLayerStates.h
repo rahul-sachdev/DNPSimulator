@@ -16,41 +16,27 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __PHYS_LOOPBACK_H_
-#define __PHYS_LOOPBACK_H_
+#ifndef __PHYSICAL_LAYER_STATES_H_
+#define __PHYSICAL_LAYER_STATES_H_
 
-#include "AsyncPhysLayerMonitor.h"
-#include "CopyableBuffer.h"
+#include <string>
+
+#include <sstream>
 
 namespace apl
 {
 
-/**
-*	Buffers and sends all bytes received to back on the same layer.
-*/
-class PhysLoopback : public AsyncPhysLayerMonitor
-{
-public:
-	PhysLoopback(Logger*, IPhysicalLayerAsync*, ITimerSource*, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
-
-	size_t mBytesRead;
-	size_t mBytesWritten;
-
-private:
-
-	CopyableBuffer mBuffer;
-
-	void OnStateChange(PhysicalLayerState) {}
-
-	void _OnReceive(const boost::uint8_t*, size_t);
-	void _OnSendSuccess(void);
-	void _OnSendFailure(void);
-
-	void OnPhysicalLayerOpen(void);
-	void OnPhysicalLayerClose(void);
-
-	void StartRead();
+enum PhysicalLayerState {
+    PLS_CLOSED,		// layer is offline and idle
+    PLS_OPENING,	// layer is trying to open
+    PLS_WAITING,	// layer is waiting to open
+    PLS_OPEN,		// layer is open
+    PLS_STOPPED		// stopped and will never do anything again
 };
+
+std::string ConvertPhysicalLayerStateToString(PhysicalLayerState aState);
+
+std::ostream& operator<<(std::ostream& output, PhysicalLayerState aState);
 
 }
 

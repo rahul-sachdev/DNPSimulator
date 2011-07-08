@@ -17,30 +17,44 @@
 // under the License.
 //
 
-#include "IPhysMonitor.h"
+#include "PhysicalLayerMonitorStates.h"
+
+#include "PhysicalLayerMonitor.h"
+#include "Exception.h"
 
 namespace apl
 {
 
+/* --- NotOpening --- */
 
-std::string ConvertPhysLayerStateToString(PhysLayerState aState)
+void NotOpening::OnLayerOpen(PhysicalLayerMonitor* apContext)
 {
-	switch(aState) {
-	case(PLS_CLOSED):
-		return "Closed";
-	case(PLS_OPENING):
-		return "Opening";
-	case(PLS_WAITING):
-		return "Waiting";
-	case(PLS_OPEN):
-		return "Open";
-	case(PLS_STOPPED):
-		return "Stopped";
-	default:
-		return "Undefined state";
-	}
+	throw InvalidStateException(LOCATION, "Not opening: " + this->Name());
+}
+
+void NotOpening::OnOpenFailure(PhysicalLayerMonitor* apContext)
+{
+	throw InvalidStateException(LOCATION, "Not opening: " + this->Name());
+}
+
+/* --- NotOpen --- */
+
+void NotOpen::OnLayerClose(PhysicalLayerMonitor* apContext)
+{
+	throw InvalidStateException(LOCATION, "Not open: " + this->Name());
+}
+
+/* --- Stopped --- */
+
+MonitorStateStopped MonitorStateStopped::mInstance;
+
+/* --- Closed --- */
+
+MonitorStateClosed MonitorStateClosed::mInstance;
+
+void MonitorStateClosed::OnStop(PhysicalLayerMonitor* apContext) 
+{ 
+	apContext->ChangeState(MonitorStateStopped::Inst());
 }
 
 }
-
-

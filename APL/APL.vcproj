@@ -228,14 +228,6 @@
 						>
 					</File>
 					<File
-						RelativePath=".\IPhysMonitor.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\IPhysMonitor.h"
-						>
-					</File>
-					<File
 						RelativePath=".\PhysicalLayerAsyncASIO.h"
 						>
 					</File>
@@ -313,6 +305,38 @@
 					</File>
 					<File
 						RelativePath=".\PhysicalLayerAsyncTCPServer.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Monitor"
+					>
+					<File
+						RelativePath=".\IPhysicalLayerObserver.h"
+						>
+					</File>
+					<File
+						RelativePath=".\PhysicalLayerMonitor.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\PhysicalLayerMonitor.h"
+						>
+					</File>
+					<File
+						RelativePath=".\PhysicalLayerMonitorStates.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\PhysicalLayerMonitorStates.h"
+						>
+					</File>
+					<File
+						RelativePath=".\PhysicalLayerStates.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\PhysicalLayerStates.h"
 						>
 					</File>
 				</Filter>

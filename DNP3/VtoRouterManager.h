@@ -23,7 +23,7 @@
 
 #include <APL/Types.h>
 #include <APL/Loggable.h>
-#include <APL/IPhysMonitor.h>
+#include <APL/IPhysicalLayerObserver.h>
 #include <APL/SuspendTimerSource.h>
 
 namespace apl

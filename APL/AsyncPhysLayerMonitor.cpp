@@ -47,7 +47,7 @@ AsyncPhysLayerMonitor::AsyncPhysLayerMonitor(Logger* apLogger, IPhysicalLayerAsy
 AsyncPhysLayerMonitor::~AsyncPhysLayerMonitor()
 {}
 
-void AsyncPhysLayerMonitor::AddMonitor(IPhysMonitor* apMonitor)
+void AsyncPhysLayerMonitor::AddMonitor(IPhysicalLayerObserver* apMonitor)
 {
 	assert(apMonitor != NULL);
 	mMonitors.insert(apMonitor);
@@ -63,12 +63,12 @@ bool AsyncPhysLayerMonitor::IsStopping()
 	return mIsStopping;
 }
 
-void AsyncPhysLayerMonitor::ChangeState(PhysLayerState aState)
+void AsyncPhysLayerMonitor::ChangeState(PhysicalLayerState aState)
 {
 	if(mState != aState) {
 		CriticalSection cs(&mLock); // signal to anyone waiting for a state change
 		mState = aState;
-		LOG_BLOCK(LEV_INFO, "Transition to state: " << ConvertPhysLayerStateToString(aState));
+		LOG_BLOCK(LEV_INFO, "Transition to state: " << ConvertPhysicalLayerStateToString(aState));
 		mPortState.Set(aState);
 		for(MonitorSet::iterator i = mMonitors.begin(); i != mMonitors.end(); ++i) (*i)->OnStateChange(aState);		
 		this->OnStateChange(aState);		
@@ -76,7 +76,7 @@ void AsyncPhysLayerMonitor::ChangeState(PhysLayerState aState)
 	}
 }
 
-void AsyncPhysLayerMonitor::WaitForState(PhysLayerState aState)
+void AsyncPhysLayerMonitor::WaitForState(PhysicalLayerState aState)
 {
 	CriticalSection cs(&mLock);	
 	while(this->GetState() != aState) cs.Wait();	

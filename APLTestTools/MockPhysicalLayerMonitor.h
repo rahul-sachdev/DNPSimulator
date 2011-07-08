@@ -43,13 +43,13 @@ public:
 	CopyableBuffer mWriteBuffer;
 	CopyableBuffer mExpectReadBuffer;
 
-	std::queue< PhysLayerState > mState;
+	std::queue< PhysicalLayerState > mState;
 
 	void OnPhysicalLayerOpen();
 	void OnPhysicalLayerOpenFailure();
 	void OnPhysicalLayerClose();
 
-	void OnStateChange(PhysLayerState aState);
+	void OnStateChange(PhysicalLayerState aState);
 
 	void _OnReceive(const boost::uint8_t* apData, size_t aNumBytes);
 	void _OnSendSuccess(void);
@@ -58,7 +58,7 @@ public:
 	void WriteData(const CopyableBuffer& arData);
 	void ExpectData(const CopyableBuffer& arData);
 
-	bool NextStateIs(PhysLayerState aState);
+	bool NextStateIs(PhysicalLayerState aState);
 	bool AllExpectedDataHasBeenReceived();
 
 private:

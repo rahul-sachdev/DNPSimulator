@@ -16,14 +16,15 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __ASYNC_PHYS_LAYER_MONITOR_H_
-#define __ASYNC_PHYS_LAYER_MONITOR_H_
+#ifndef __PHYSICAL_LAYER_MONITOR_H_
+#define __PHYSICAL_LAYER_MONITOR_H_
 
 
 #include "IHandlerAsync.h"
 #include "TimerInterfaces.h"
-#include "Logger.h"
 #include "IPhysicalLayerObserver.h"
+
+#include <APL/Lock.h>
 
 #include <set>
 
@@ -31,59 +32,65 @@ namespace apl
 {
 
 class IPhysicalLayerAsync;
+class IMonitorState;
+class IPhysicalLayerObserver;
 
-/** Class keeps a physical layer open by kicking off
-  *	AsyncOpen requests on a timer
+/** Manages the lifecycle of a physical layer  
   */
-class AsyncPhysLayerMonitor : public IHandlerAsync
+class PhysicalLayerMonitor : public IHandlerAsync
 {
+	friend class MonitorStateClosed;
+
 public:
-	AsyncPhysLayerMonitor(Logger*, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);
-	~AsyncPhysLayerMonitor();
+	PhysicalLayerMonitor(Logger*, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);
+	~PhysicalLayerMonitor();
 
+	/** Begin monitor execution - Idempotent*/
 	void Start();
+
+	/** Close the physical layer if it's open, may re-open - Idempotent*/
+	void Close();
+	
+	/** Permanently stop the monitor, further calls to Start() will do nothing - Idempotent */
 	void Stop();
+	
+	PhysicalLayerState GetState();
 
-	/// will close if we are open, since we will auto reconnect
-	void Reconnect();
+	/** Add an observer to the set of state callbacks */
+	void AddObserver(IPhysicalLayerObserver* apObserver);
 
-	PhysicalLayerState GetState() {
-		return mState;
-	}
-
-	void AddMonitor(IPhysicalLayerObserver* apMonitor);
-
+	/** Blocks until the monitor has completely and permanently stopped */	
 	void WaitForStopped();
 
-	bool IsStopping();
-
 protected:
+
+	/*
+	virtual void OnPhysicalLayerOpen() = 0;
+	virtual void OnPhysicalLayerClose() = 0;
+	virtual void OnPhysicalLayerOpenFailure() = 0;
+	*/
+
+private:
 
 	IPhysicalLayerAsync* mpPhys;
 	ITimerSource* mpTimerSrc;
 	ITimer* mpOpenTimer;
-	LogVariable mPortState;
-	
+	IMonitorState* mpState;
 
-	virtual void OnPhysicalLayerOpen() = 0;
-	virtual void OnPhysicalLayerClose() = 0;
-	virtual void OnPhysicalLayerOpenFailure() {}
-	virtual void OnStateChange(PhysicalLayerState) {}
+	/* --- Actions for the states to call --- */
 
-private:
+	/// Internal function used to change the state
+	void ChangeState(IMonitorState* apState);
+
+	/// Begins the open timer
+	void StartOpenTimer();
 
 	/// Internal callback when open timer expires
-        void OnOpenTimerExpiration();
+    void OnOpenTimerExpiration();
+
+	/* --- Internal helper functions --- */
 	
-	/// Internal function used to change the state
-	void ChangeState(PhysicalLayerState);
-
-	/// Blocking function that waits for the port to stop (physical layer to be closed)
-	void WaitForState(PhysicalLayerState aState);
-
-	SigLock mLock;
-	PhysicalLayerState mState;
-	bool mIsStopping;
+	SigLock mLock;	
 	const millis_t M_OPEN_RETRY;
 
 	// Implement from IHandlerAsync - Try to reconnect using a timer
@@ -91,8 +98,8 @@ private:
 	void _OnLowerLayerUp();
 	void _OnLowerLayerDown();
 
-	typedef std::set<IPhysicalLayerObserver*> MonitorSet;
-	MonitorSet mMonitors;
+	typedef std::set<IPhysicalLayerObserver*> ObserverSet;
+	ObserverSet mObservers;
 
 };
 }

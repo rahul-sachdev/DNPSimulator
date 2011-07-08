@@ -44,7 +44,7 @@ protected:
 	void OnPhysicalLayerOpen() {}
 	void OnPhysicalLayerClose() {}
 	void OnPhysicalLayerOpenFailure() {}
-	void OnStateChange(PhysLayerState) {}
+	void OnStateChange(PhysicalLayerState) {}
 
 
 	void _OnReceive(const boost::uint8_t* apData, size_t aNumBytes) {}

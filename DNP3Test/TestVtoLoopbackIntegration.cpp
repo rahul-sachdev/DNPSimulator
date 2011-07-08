@@ -46,7 +46,7 @@ public:
 		loopback.Stop();
 	}
 
-	bool WaitForLocalState(PhysLayerState aState, millis_t aTimeout = 30000) {
+	bool WaitForLocalState(PhysicalLayerState aState, millis_t aTimeout = 30000) {
 		return testObj.ProceedUntil(boost::bind(&MockPhysicalLayerMonitor::NextStateIs, &local, aState), aTimeout);
 	}
 

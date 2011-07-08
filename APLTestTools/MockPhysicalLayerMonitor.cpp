@@ -62,7 +62,7 @@ void MockPhysicalLayerMonitor::OnPhysicalLayerOpenFailure()
 	mOpenFailures++;
 }
 
-void MockPhysicalLayerMonitor::OnStateChange(PhysLayerState aState)
+void MockPhysicalLayerMonitor::OnStateChange(PhysicalLayerState aState)
 {
 	mState.push(aState);
 }
@@ -113,12 +113,12 @@ void MockPhysicalLayerMonitor::_OnSendFailure(void)
 	BOOST_REQUIRE(false);
 }
 
-bool MockPhysicalLayerMonitor::NextStateIs(PhysLayerState aState)
+bool MockPhysicalLayerMonitor::NextStateIs(PhysicalLayerState aState)
 {
 	if(mState.empty()) return false;
 	else {
-		PhysLayerState state = mState.front();
-		LOG_BLOCK(LEV_INFO, "Saw state: " + ConvertPhysLayerStateToString(state));
+		PhysicalLayerState state = mState.front();
+		LOG_BLOCK(LEV_INFO, "Saw state: " + ConvertPhysicalLayerStateToString(state));
 		mState.pop();
 		return (state == aState);
 	}

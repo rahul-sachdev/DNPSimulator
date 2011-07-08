@@ -16,40 +16,24 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __PHYS_LOOPBACK_H_
-#define __PHYS_LOOPBACK_H_
+#ifndef __I_PHYSICAL_LAYER_OBSERVER_H_
+#define __I_PHYSICAL_LAYER_OBSERVER_H_
 
-#include "AsyncPhysLayerMonitor.h"
-#include "CopyableBuffer.h"
+#include <string>
+
+#include "PhysicalLayerStates.h"
 
 namespace apl
 {
 
-/**
-*	Buffers and sends all bytes received to back on the same layer.
-*/
-class PhysLoopback : public AsyncPhysLayerMonitor
+class IPhysicalLayerObserver
 {
 public:
-	PhysLoopback(Logger*, IPhysicalLayerAsync*, ITimerSource*, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
 
-	size_t mBytesRead;
-	size_t mBytesWritten;
+	virtual ~IPhysicalLayerObserver() {}
 
-private:
+	virtual void OnStateChange(PhysicalLayerState) = 0;
 
-	CopyableBuffer mBuffer;
-
-	void OnStateChange(PhysicalLayerState) {}
-
-	void _OnReceive(const boost::uint8_t*, size_t);
-	void _OnSendSuccess(void);
-	void _OnSendFailure(void);
-
-	void OnPhysicalLayerOpen(void);
-	void OnPhysicalLayerClose(void);
-
-	void StartRead();
 };
 
 }

@@ -158,7 +158,7 @@ protected:
 	/**
 	 * Implement AsyncPhysMonitor::OnStateChange
 	 */
-	void OnStateChange(PhysLayerState);
+	void OnStateChange(PhysicalLayerState);
 
 	// DoStart and DoStop are idempotent versions of Start/Stop
 	void DoStart();

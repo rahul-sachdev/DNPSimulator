@@ -203,7 +203,7 @@ void VtoRouter::OnPhysicalLayerOpen()
 	this->CheckForVtoWrite();
 }
 
-void VtoRouter::OnStateChange(PhysLayerState aState)
+void VtoRouter::OnStateChange(PhysicalLayerState aState)
 {
 	
 }

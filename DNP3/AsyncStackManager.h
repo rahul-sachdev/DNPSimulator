@@ -29,7 +29,7 @@
 #include <APL/Threadable.h>
 #include <APL/Thread.h>
 #include <APL/DataInterfaces.h>
-#include <APL/IPhysMonitor.h>
+#include <APL/IPhysicalLayerObserver.h>
 #include <APL/PhysicalLayerManager.h>
 #include <APL/AsyncTaskScheduler.h>
 #include <APL/Lock.h>

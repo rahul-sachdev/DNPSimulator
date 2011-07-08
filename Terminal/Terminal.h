@@ -37,7 +37,7 @@ public:
 	void AcceptLine(const std::string& arLine);
 	void _Up();
 	void _Down();
-	void OnStateChange(PhysLayerState) {}
+	void OnStateChange(PhysicalLayerState) {}
 
 	retcode ProcessLine(const std::string& arLine);
 
