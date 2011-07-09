@@ -133,7 +133,7 @@ void MonitorStateOpening::OnOpenFailure(PhysicalLayerMonitor* apContext)
 
 void MonitorStateOpening::OnLayerOpen(PhysicalLayerMonitor* apContext)
 {
-	apContext->ChangeState(MonitorStateOpen::Inst());
+	apContext->ChangeState(MonitorStateOpen::Inst());	
 }
 
 /* --- Open --- */

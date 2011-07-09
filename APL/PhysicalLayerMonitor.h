@@ -76,9 +76,11 @@ public:
 
 protected:
 
+	
+	virtual void OnPhysicalLayerOpenCallback() = 0;
+	virtual void OnPhysicalLayerCloseCallback() = 0;
+
 	/*
-	virtual void OnPhysicalLayerOpen() = 0;
-	virtual void OnPhysicalLayerClose() = 0;
 	virtual void OnPhysicalLayerOpenFailure() = 0;
 	*/
 		
@@ -88,9 +90,10 @@ protected:
 	/// Begins the open timer
 	void StartOpenTimer();
 
-private:
-
 	IPhysicalLayerAsync* mpPhys;
+
+private:
+	
 	ITimerSource* mpTimerSrc;
 	ITimer* mpOpenTimer;
 	IMonitorState* mpState;

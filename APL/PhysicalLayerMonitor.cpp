@@ -118,12 +118,14 @@ void PhysicalLayerMonitor::_OnLowerLayerUp()
 {
 	LOG_BLOCK(LEV_INFO, "_OnLowerLayerUp");
 	mpState->OnLayerOpen(this);
+	this->OnPhysicalLayerOpenCallback();
 }
 
 void PhysicalLayerMonitor::_OnLowerLayerDown()
 {
 	LOG_BLOCK(LEV_INFO, "_OnLowerLayerDown");
 	mpState->OnLayerClose(this);
+	this->OnPhysicalLayerCloseCallback();
 }
 
 /* ------- Actions for the states ------- */

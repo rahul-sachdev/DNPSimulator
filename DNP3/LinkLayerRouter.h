@@ -23,7 +23,7 @@
 #include <map>
 #include <queue>
 
-#include <APL/AsyncPhysLayerMonitor.h>
+#include <APL/PhysicalLayerMonitor.h>
 
 #include "LinkLayerReceiver.h"
 #include "IFrameSink.h"
@@ -44,9 +44,9 @@ class ILinkContext;
 class LinkFrame;
 
 //	Implements the parsing and de-multiplexing portion of
-//	of DNP 3 Data Link Layer. AsyncPhysLayerMonitor inherits
+//	of DNP 3 Data Link Layer. PhysicalLayerMonitor inherits
 // from IHandlerAsync, which inherits from IUpperLayer
-class LinkLayerRouter : public AsyncPhysLayerMonitor, public IFrameSink, public ILinkRouter
+class LinkLayerRouter : public PhysicalLayerMonitor, public IFrameSink, public ILinkRouter
 {
 public:
 
@@ -102,8 +102,8 @@ private:
 	void _OnSendFailure();
 
 	// Implement virtual AsyncPhysLayerMonitor
-	void OnPhysicalLayerOpen();
-	void OnPhysicalLayerClose();
+	void OnPhysicalLayerOpenCallback();
+	void OnPhysicalLayerCloseCallback();
 
 	std::string RecvString() {
 		return "<~";

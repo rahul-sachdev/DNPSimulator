@@ -37,7 +37,7 @@ namespace dnp
 
 LinkLayerRouter::LinkLayerRouter(apl::Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc, millis_t aOpenRetry) :
 	Loggable(apLogger),
-	AsyncPhysLayerMonitor(apLogger, apPhys, apTimerSrc, aOpenRetry),
+	PhysicalLayerMonitor(apLogger, apPhys, apTimerSrc, aOpenRetry),
 	mReceiver(apLogger, this),
 	mTransmitting(false)
 {}
@@ -208,7 +208,7 @@ void LinkLayerRouter::CheckForSend()
 	}
 }
 
-void LinkLayerRouter::OnPhysicalLayerOpen()
+void LinkLayerRouter::OnPhysicalLayerOpenCallback()
 {
 	if(mpPhys->CanRead())
 		mpPhys->AsyncRead(mReceiver.WriteBuff(), mReceiver.NumWriteBytes());
@@ -218,7 +218,7 @@ void LinkLayerRouter::OnPhysicalLayerOpen()
 	}
 }
 
-void LinkLayerRouter::OnPhysicalLayerClose()
+void LinkLayerRouter::OnPhysicalLayerCloseCallback()
 {
 	mTransmitting = false;
 	mTransmitQueue.erase(mTransmitQueue.begin(), mTransmitQueue.end());

@@ -37,6 +37,8 @@ public:
 	ConcretePhysicalLayerMonitor(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc) :
 		Loggable(apLogger),
 		PhysicalLayerMonitor(mpLogger->GetSubLogger("monitor"), apPhys, apTimerSrc, 1000),
+		mOpenCallbackCount(0),
+		mCloseCallbackCount(0),
 		mShouldOpen(true) {
 	}
 
@@ -44,7 +46,13 @@ public:
 
 	void SetShouldOpen(bool aShouldOpen) { mShouldOpen = aShouldOpen; }
 
+	size_t mOpenCallbackCount;
+	size_t mCloseCallbackCount;
+
 protected:
+
+	void OnPhysicalLayerOpenCallback() { ++mOpenCallbackCount; }
+	void OnPhysicalLayerCloseCallback() { ++mCloseCallbackCount; }
 
 	bool ShouldBeTryingToOpen() { return mShouldOpen; }
 
@@ -120,7 +128,7 @@ BOOST_AUTO_TEST_CASE(StoppedLayerCannotBeStarted)
 	BOOST_REQUIRE(test.phys.IsClosed());
 }
 
-BOOST_AUTO_TEST_CASE(ClosedLayerCanBeOpened)
+BOOST_AUTO_TEST_CASE(ClosedLayerCanBeStarted)
 {
 	TestObject test;
 	test.monitor.Start();
@@ -141,6 +149,7 @@ BOOST_AUTO_TEST_CASE(OpeningStateOpenSuccessGoesToOpenState)
 	test.monitor.Start();
 	test.monitor.OnLowerLayerUp();
 	BOOST_REQUIRE_EQUAL(PLS_OPEN, test.monitor.GetState());
+	BOOST_REQUIRE_EQUAL(1, test.monitor.mOpenCallbackCount); //check that the callback fired
 }
 
 BOOST_AUTO_TEST_CASE(OpenFailureGoesToWaiting)
