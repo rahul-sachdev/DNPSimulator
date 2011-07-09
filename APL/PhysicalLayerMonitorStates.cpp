@@ -21,7 +21,6 @@
 
 #include "Logger.h"
 #include "Exception.h"
-#include "PhysicalLayerMonitor.h"
 #include "IPhysicalLayerAsync.h"
 
 namespace apl

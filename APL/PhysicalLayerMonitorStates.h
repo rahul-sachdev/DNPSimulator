@@ -22,6 +22,7 @@
 
 #include "IPhysicalLayerObserver.h"
 #include "Singleton.h"
+#include "PhysicalLayerMonitor.h"
 
 #define MACRO_MONITOR_SINGLETON(type, state) \
 	MACRO_NAME_SINGLETON_INSTANCE(type) \
@@ -102,15 +103,10 @@ template <class T, bool Retry>
 class HandlesOpenFailure : public virtual IMonitorState
 {
 public:
-	void OnOpenFailure(PhysicalLayerMonitor* apContext)
-	{		
-		if(Retry && apContext->ShouldBeTryingToOpen()) {
-			apContext->StartOpenTimer();
-			apContext->ChangeState(MonitorStateWaiting::Inst());			
-		}
-		else apContext->ChangeState(T::Inst());
-	}
+	void OnOpenFailure(PhysicalLayerMonitor* apContext);
 };
+
+
 
 /* --- Concrete classes --- */
 
@@ -205,6 +201,16 @@ class MonitorStateStopping : public virtual IMonitorState,
 
 	void OnLayerClose(PhysicalLayerMonitor* apContext);
 };
+
+template <class T, bool Retry>
+void HandlesOpenFailure<T,Retry>::OnOpenFailure(PhysicalLayerMonitor* apContext)
+{		
+	if(Retry && apContext->ShouldBeTryingToOpen()) {
+		apContext->StartOpenTimer();
+		apContext->ChangeState(MonitorStateWaiting::Inst());			
+	}
+	else apContext->ChangeState(T::Inst());
+}
 
 #ifdef WIN32
 #pragma warning(pop)
