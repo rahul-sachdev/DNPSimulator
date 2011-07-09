@@ -69,9 +69,10 @@ void PhysicalLayerMonitor::WaitForStopped()
 void PhysicalLayerMonitor::ChangeState(IMonitorState* apState)
 {
 	CriticalSection cs(&mLock);
+	PhysicalLayerState last = mpState->GetState();
 	mpState = apState;
 	LOG_BLOCK(LEV_INFO, "Transition to state: " << apState->Name());
-	if(mpState->GetState() != apState->GetState()) {
+	if(last != apState->GetState()) {
 		LOG_BLOCK(LEV_INFO, "Transition to state: " << ConvertPhysicalLayerStateToString(apState->GetState()));
 		for(ObserverSet::iterator i = mObservers.begin(); i != mObservers.end(); ++i) (*i)->OnStateChange(apState->GetState());
 		cs.Broadcast();	 // signal to anyone waiting for a state change

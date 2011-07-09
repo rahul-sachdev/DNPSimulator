@@ -52,7 +52,7 @@ using namespace std;
 BOOST_AUTO_TEST_SUITE(IntegrationSuite)
 
 const boost::uint16_t START_PORT = MACRO_PORT_START;
-const size_t NUM_PAIRS = 10;//MACRO_NUM_PAIRS;
+const size_t NUM_PAIRS = MACRO_NUM_PAIRS;
 const size_t NUM_POINTS = 500;
 const size_t NUM_CHANGES = 10;
 

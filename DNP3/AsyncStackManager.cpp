@@ -197,13 +197,19 @@ IVtoWriter* AsyncStackManager::GetVtoWriter(const std::string& arStackName)
 void AsyncStackManager::RemovePort(const std::string& arPortName)
 {
 	LinkChannel* pChannel = this->GetChannelOrExcept(arPortName);
+
+	{	// Tell the channel to start shutting down permanently
+		Transaction tr(&mSuspendTimerSource);
+		pChannel->BeginShutdown();
+	}
+	
 	vector<string> stacks = this->StacksOnChannel(arPortName);
 	BOOST_FOREACH(string s, stacks) {
 		this->SeverStack(pChannel, s);
 	}
 
 	this->mScheduler.ReleaseGroup(pChannel->GetGroup());
-
+	
 	pChannel->WaitUntilShutdown();
 	mChannelNameToChannel.erase(arPortName);
 

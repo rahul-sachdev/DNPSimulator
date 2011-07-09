@@ -68,6 +68,10 @@ public:
 		return mpTaskGroup;
 	}
 
+	void BeginShutdown() {
+		this->Stop();
+	}
+
 	void WaitUntilShutdown() {
 		this->WaitForStopped();
 	}
