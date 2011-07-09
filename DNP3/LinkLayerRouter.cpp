@@ -62,6 +62,8 @@ void LinkLayerRouter::AddContext(ILinkContext* apContext, const LinkRoute& arRou
 
 	mAddressMap[arRoute] = apContext;
 	if(this->GetState() == PLS_OPEN) apContext->OnLowerLayerUp();
+
+	this->Start();
 }
 
 void LinkLayerRouter::RemoveContext(const LinkRoute& arRoute)
@@ -72,6 +74,15 @@ void LinkLayerRouter::RemoveContext(const LinkRoute& arRoute)
 		mAddressMap.erase(i);
 		if(this->GetState() == PLS_OPEN) pContext->OnLowerLayerDown();
 	}
+
+	// if no stacks are bound, close
+	if(mAddressMap.size() == 0) this->Close();
+}
+
+bool LinkLayerRouter::ShouldBeTryingToOpen()
+{
+	// if we have stacks bound, we should be trying to open
+	return this->mAddressMap.size() > 0;
 }
 
 

@@ -43,10 +43,9 @@ LinkChannel::LinkChannel(Logger* apLogger, const std::string& arName, ITimerSour
 void LinkChannel::BindStackToChannel(const std::string& arStackName, Stack* apStack, const LinkRoute& arRoute)
 {
 	LOG_BLOCK(LEV_DEBUG, "Linking stack to port w/ route " << arRoute);
-	this->AddContext(&apStack->mLink, arRoute); // this function can throw, do it first
 	apStack->mLink.SetRouter(this);
-	mStackMap[arStackName] = StackRecord(apStack, arRoute);
-	this->Start();
+	this->AddContext(&apStack->mLink, arRoute); // this function can throw, do it before adjusting the map
+	mStackMap[arStackName] = StackRecord(apStack, arRoute);	
 }
 
 void LinkChannel::RemoveStackFromChannel(const std::string& arStackName)
@@ -57,11 +56,7 @@ void LinkChannel::RemoveStackFromChannel(const std::string& arStackName)
 		StackRecord r = i->second;
 		LOG_BLOCK(LEV_DEBUG, "Unlinking stack from port w/ route " << r.route);
 		this->RemoveContext(r.route);
-		mStackMap.erase(i);
-		if(this->NumContext() == 0) {
-			LOG_BLOCK(LEV_DEBUG, "Stopping router");
-			this->Stop();
-		}
+		mStackMap.erase(i);		
 	}
 }
 

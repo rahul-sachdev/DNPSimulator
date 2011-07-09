@@ -43,6 +43,9 @@ class PhysicalLayerMonitor : public IHandlerAsync
 	friend class IgnoresStart;
 	friend class IgnoresStop;
 	friend class HandlesClose;
+	
+	template<class,bool> friend class HandlesOpenFailure;
+	
 	friend class MonitorStateClosed;
 	friend class MonitorStateStopped;
 	friend class MonitorStateOpening;
@@ -50,9 +53,8 @@ class PhysicalLayerMonitor : public IHandlerAsync
 	friend class MonitorStateClosing;
 	friend class MonitorStateStopping;
 	friend class MonitorStateWaiting;
-	friend class StopAndCloseRequestsCloseLayer;
-
-
+	friend class MonitorStateOpeningClosing;
+	
 public:
 	PhysicalLayerMonitor(Logger*, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);
 	~PhysicalLayerMonitor();

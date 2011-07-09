@@ -152,6 +152,37 @@ BOOST_AUTO_TEST_CASE(OpeningStateOpenSuccessGoesToOpenState)
 	BOOST_REQUIRE_EQUAL(1, test.monitor.mOpenCallbackCount); //check that the callback fired
 }
 
+BOOST_AUTO_TEST_CASE(StopWhileOpeningWaitsForOpenFailure)
+{
+	TestObject test;
+	test.monitor.Start();
+	test.monitor.Stop();
+	BOOST_REQUIRE_EQUAL(PLS_OPENING, test.monitor.GetState());
+	test.phys.SignalOpenFailure();
+	BOOST_REQUIRE_EQUAL(PLS_STOPPED, test.monitor.GetState());
+}
+
+BOOST_AUTO_TEST_CASE(CloseWhileOpeningWaitsForOpenFailureThenWaits)
+{
+	TestObject test;
+	test.monitor.Start();
+	test.monitor.Close();
+	BOOST_REQUIRE_EQUAL(PLS_OPENING, test.monitor.GetState());
+	test.phys.SignalOpenFailure();
+	BOOST_REQUIRE_EQUAL(PLS_WAITING, test.monitor.GetState());
+}
+
+BOOST_AUTO_TEST_CASE(CloseWhileOpeningAndThenStop)
+{
+	TestObject test;
+	test.monitor.Start();
+	test.monitor.Close();
+	test.monitor.Stop();
+	BOOST_REQUIRE_EQUAL(PLS_OPENING, test.monitor.GetState());
+	test.phys.SignalOpenFailure();
+	BOOST_REQUIRE_EQUAL(PLS_STOPPED, test.monitor.GetState());
+}
+
 BOOST_AUTO_TEST_CASE(OpenFailureGoesToWaiting)
 {
 	TestObject test;

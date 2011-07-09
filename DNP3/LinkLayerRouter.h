@@ -71,10 +71,11 @@ public:
 
 	// ILinkRouter interface
 	void Transmit(const LinkFrame&);
+	
+protected:
 
-	size_t NumContext() {
-		return mAddressMap.size();
-	}
+	// override from base class
+	bool ShouldBeTryingToOpen();
 
 private:
 
