@@ -55,7 +55,7 @@ void NotWaitingForTimer::OnOpenTimeout(PhysicalLayerMonitor* apContext)
 
 /* --- IgnoresClose --- */
 
-void IgnoresClose::OnClose(PhysicalLayerMonitor* apContext)
+void IgnoresClose::OnCloseRequest(PhysicalLayerMonitor* apContext)
 {
 	LOGGER_BLOCK(apContext->mpLogger, LEV_INFO, "Ignoring Close(): " << this->Name());
 }
@@ -70,16 +70,28 @@ void HandlesClose::OnLayerClose(PhysicalLayerMonitor* apContext)
 
 /* --- IgnoresStop --- */
 
-void IgnoresStop::OnStop(PhysicalLayerMonitor* apContext)
+void IgnoresStop::OnStopRequest(PhysicalLayerMonitor* apContext)
 {
 	LOGGER_BLOCK(apContext->mpLogger, LEV_INFO, "Ignoring Stop(): " << this->Name());
 }
 
 /* --- IgnoresStart --- */
 
-void IgnoresStart::OnStart(PhysicalLayerMonitor* apContext)
+void IgnoresStart::OnStartRequest(PhysicalLayerMonitor* apContext)
 {
 	LOGGER_BLOCK(apContext->mpLogger, LEV_INFO, "Ignoring Start(): " << this->Name());
+}
+
+void StopAndCloseRequestsCloseLayer::OnStopRequest(PhysicalLayerMonitor* apContext)
+{
+	apContext->mpPhys->AsyncClose();
+	apContext->ChangeState(MonitorStateStopping::Inst());
+}
+	
+void StopAndCloseRequestsCloseLayer::OnCloseRequest(PhysicalLayerMonitor* apContext)
+{
+	apContext->mpPhys->AsyncClose();
+	apContext->ChangeState(MonitorStateClosing::Inst());
 }
 
 /* ----------------- Concrete ----------------- */
@@ -93,13 +105,15 @@ MonitorStateStopped MonitorStateStopped::mInstance;
 
 MonitorStateClosed MonitorStateClosed::mInstance;
 
-void MonitorStateClosed::OnStart(PhysicalLayerMonitor* apContext)
+void MonitorStateClosed::OnStartRequest(PhysicalLayerMonitor* apContext)
 {
-	apContext->mpPhys->AsyncOpen();
-	apContext->ChangeState(MonitorStateOpening::Inst());
+	if(apContext->ShouldBeTryingToOpen()) {
+		apContext->mpPhys->AsyncOpen();
+		apContext->ChangeState(MonitorStateOpening::Inst());
+	}
 }
 
-void MonitorStateClosed::OnStop(PhysicalLayerMonitor* apContext)
+void MonitorStateClosed::OnStopRequest(PhysicalLayerMonitor* apContext)
 {
 	apContext->ChangeState(MonitorStateStopped::Inst());
 }
@@ -108,21 +122,13 @@ void MonitorStateClosed::OnStop(PhysicalLayerMonitor* apContext)
 
 MonitorStateOpening MonitorStateOpening::mInstance;
 
-void MonitorStateOpening::OnStop(PhysicalLayerMonitor* apContext)
-{
-	apContext->mpPhys->AsyncClose();
-	apContext->ChangeState(MonitorStateStopping::Inst());
-}
-
-void MonitorStateOpening::OnClose(PhysicalLayerMonitor* apContext)
-{
-	apContext->mpPhys->AsyncClose();
-	apContext->ChangeState(MonitorStateClosing::Inst());
-}
-
 void MonitorStateOpening::OnOpenFailure(PhysicalLayerMonitor* apContext)
 {
-	apContext->StartOpenTimer();
+	if(apContext->ShouldBeTryingToOpen()) {
+		apContext->StartOpenTimer();
+		apContext->ChangeState(MonitorStateWaiting::Inst());
+	}
+	else apContext->ChangeState(MonitorStateClosed::Inst());
 }
 
 void MonitorStateOpening::OnLayerOpen(PhysicalLayerMonitor* apContext)
@@ -134,21 +140,19 @@ void MonitorStateOpening::OnLayerOpen(PhysicalLayerMonitor* apContext)
 
 MonitorStateOpen MonitorStateOpen::mInstance;
 
-void MonitorStateOpen::OnStop(PhysicalLayerMonitor* apContext)
-{
-	apContext->mpPhys->AsyncClose();
-	apContext->ChangeState(MonitorStateStopping::Inst());
-}
-
-void MonitorStateOpen::OnClose(PhysicalLayerMonitor* apContext)
-{
-	apContext->mpPhys->AsyncClose();
-	apContext->ChangeState(MonitorStateClosing::Inst());
-}
-
 /* --- Waiting --- */
 
-void MonitorStateWaiting::OnStop(PhysicalLayerMonitor* apContext)
+MonitorStateWaiting MonitorStateWaiting::mInstance;
+
+void MonitorStateWaiting::OnCloseRequest(PhysicalLayerMonitor* apContext)
+{	
+	if(!apContext->ShouldBeTryingToOpen()) {
+		apContext->CancelOpenTimer();
+		apContext->ChangeState(MonitorStateClosed::Inst());
+	}	
+}
+
+void MonitorStateWaiting::OnStopRequest(PhysicalLayerMonitor* apContext)
 {
 	apContext->CancelOpenTimer();
 	apContext->ChangeState(MonitorStateStopped::Inst());
@@ -164,7 +168,7 @@ void MonitorStateWaiting::OnOpenTimeout(PhysicalLayerMonitor* apContext)
 
 MonitorStateClosing MonitorStateClosing::mInstance;
 
-void MonitorStateClosing::OnStop(PhysicalLayerMonitor* apContext)
+void MonitorStateClosing::OnStopRequest(PhysicalLayerMonitor* apContext)
 {
 	apContext->ChangeState(MonitorStateStopping::Inst());
 }

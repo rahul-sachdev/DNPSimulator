@@ -83,19 +83,19 @@ void PhysicalLayerMonitor::ChangeState(IMonitorState* apState)
 void PhysicalLayerMonitor::Start()
 {
 	LOG_BLOCK(LEV_INFO, "Start()");
-	mpState->OnStart(this);
+	mpState->OnStartRequest(this);
 }
 
 void PhysicalLayerMonitor::Close()
 {
 	LOG_BLOCK(LEV_INFO, "Close()");
-	mpState->OnClose(this);
+	mpState->OnCloseRequest(this);
 }
 
 void PhysicalLayerMonitor::Stop()
 {
 	LOG_BLOCK(LEV_INFO, "Stop()");
-	mpState->OnStop(this);
+	mpState->OnStopRequest(this);
 }
 
 /* ------- External events that occurs ------- */

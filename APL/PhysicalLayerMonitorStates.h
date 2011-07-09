@@ -38,9 +38,9 @@ class IMonitorState
 {
 public:
 
-	virtual void OnStart(PhysicalLayerMonitor* apContext) = 0;
-	virtual void OnStop(PhysicalLayerMonitor* apContext) = 0;
-	virtual void OnClose(PhysicalLayerMonitor* apContext) = 0;
+	virtual void OnStartRequest(PhysicalLayerMonitor* apContext) = 0;
+	virtual void OnStopRequest(PhysicalLayerMonitor* apContext) = 0;
+	virtual void OnCloseRequest(PhysicalLayerMonitor* apContext) = 0;
 	virtual void OnOpenTimeout(PhysicalLayerMonitor* apContext) = 0;
 	virtual void OnOpenFailure(PhysicalLayerMonitor* apContext) = 0;
 	virtual void OnLayerOpen(PhysicalLayerMonitor* apContext) = 0;
@@ -72,7 +72,7 @@ public:
 class IgnoresClose : public virtual IMonitorState
 {
 public:
-	void OnClose(PhysicalLayerMonitor* apContext);
+	void OnCloseRequest(PhysicalLayerMonitor* apContext);
 };
 
 class HandlesClose : public virtual IMonitorState
@@ -84,13 +84,20 @@ public:
 class IgnoresStop : public virtual IMonitorState
 {
 public:
-	void OnStop(PhysicalLayerMonitor* apContext);
+	void OnStopRequest(PhysicalLayerMonitor* apContext);
 };
 
 class IgnoresStart : public virtual IMonitorState
 {
 public:
-	void OnStart(PhysicalLayerMonitor* apContext);
+	void OnStartRequest(PhysicalLayerMonitor* apContext);
+};
+
+class StopAndCloseRequestsCloseLayer : public virtual IMonitorState
+{
+public:
+	void OnStopRequest(PhysicalLayerMonitor* apContext);
+	void OnCloseRequest(PhysicalLayerMonitor* apContext);
 };
 
 /* --- Concrete classes --- */
@@ -113,36 +120,32 @@ class MonitorStateClosed : public virtual IMonitorState,
 {
 	MACRO_MONITOR_SINGLETON(MonitorStateClosed, PLS_CLOSED);
 
-	void OnStart(PhysicalLayerMonitor* apContext);
-	void OnStop(PhysicalLayerMonitor* apContext);
+	void OnStartRequest(PhysicalLayerMonitor* apContext);
+	void OnStopRequest(PhysicalLayerMonitor* apContext);
 };
 
 class MonitorStateOpening : public virtual IMonitorState,
-	private NotOpen, private NotWaitingForTimer, private IgnoresStart
+	private NotOpen, private NotWaitingForTimer, private IgnoresStart, private StopAndCloseRequestsCloseLayer
 {
 	MACRO_MONITOR_SINGLETON(MonitorStateOpening, PLS_OPENING);
-
-	void OnStop(PhysicalLayerMonitor* apContext);
-	void OnClose(PhysicalLayerMonitor* apContext);
+	
 	void OnOpenFailure(PhysicalLayerMonitor* apContext);
 	void OnLayerOpen(PhysicalLayerMonitor* apContext);
 };
 
 class MonitorStateOpen : public virtual IMonitorState,
-	private NotOpening, private NotWaitingForTimer, private IgnoresStart, private HandlesClose
+	private NotOpening, private NotWaitingForTimer, private IgnoresStart, private HandlesClose, private StopAndCloseRequestsCloseLayer
 {
 	MACRO_MONITOR_SINGLETON(MonitorStateOpen, PLS_OPEN);
-
-	void OnStop(PhysicalLayerMonitor* apContext);
-	void OnClose(PhysicalLayerMonitor* apContext);
 };
 
 class MonitorStateWaiting : public virtual IMonitorState,
-	private NotOpening, private NotOpen, private IgnoresStart, private IgnoresClose
+	private NotOpening, private NotOpen, private IgnoresStart
 {
 	MACRO_MONITOR_SINGLETON(MonitorStateWaiting, PLS_WAITING);
 
-	void OnStop(PhysicalLayerMonitor* apContext);
+	void OnCloseRequest(PhysicalLayerMonitor* apContext);
+	void OnStopRequest(PhysicalLayerMonitor* apContext);
 	void OnOpenTimeout(PhysicalLayerMonitor* apContext);
 };
 
@@ -151,7 +154,7 @@ class MonitorStateClosing : public virtual IMonitorState,
 {
 	MACRO_MONITOR_SINGLETON(MonitorStateClosing, PLS_CLOSED);
 
-	void OnStop(PhysicalLayerMonitor* apContext);
+	void OnStopRequest(PhysicalLayerMonitor* apContext);
 };
 
 class MonitorStateStopping : public virtual IMonitorState,

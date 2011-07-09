@@ -50,6 +50,7 @@ class PhysicalLayerMonitor : public IHandlerAsync
 	friend class MonitorStateClosing;
 	friend class MonitorStateStopping;
 	friend class MonitorStateWaiting;
+	friend class StopAndCloseRequestsCloseLayer;
 
 
 public:
@@ -80,6 +81,12 @@ protected:
 	virtual void OnPhysicalLayerClose() = 0;
 	virtual void OnPhysicalLayerOpenFailure() = 0;
 	*/
+		
+	/** Default behavior is always trying to connect, but this is overridable */
+	virtual bool ShouldBeTryingToOpen() { return true; }
+
+	/// Begins the open timer
+	void StartOpenTimer();
 
 private:
 
@@ -93,14 +100,11 @@ private:
 	/// Internal function used to change the state
 	void ChangeState(IMonitorState* apState);
 
-	/// Begins the open timer
-	void StartOpenTimer();
+	/// Internal callback when open timer expires
+	void OnOpenTimerExpiration();
 
 	/// Cancels the open timer
 	void CancelOpenTimer();
-
-	/// Internal callback when open timer expires
-	void OnOpenTimerExpiration();
 
 	/* --- Internal helper functions --- */
 

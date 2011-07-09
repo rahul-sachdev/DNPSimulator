@@ -22,6 +22,7 @@
 #include <APL/Log.h>
 #include <APL/Exception.h>
 #include <APL/PhysicalLayerMonitor.h>
+#include <APL/PhysicalLayerMonitorStates.h>
 #include <APLTestTools/MockTimerSource.h>
 #include <APLTestTools/MockPhysicalLayerAsync.h>
 #include <APLTestTools/TestHelpers.h>
@@ -35,10 +36,19 @@ public:
 
 	ConcretePhysicalLayerMonitor(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc) :
 		Loggable(apLogger),
-		PhysicalLayerMonitor(mpLogger->GetSubLogger("monitor"), apPhys, apTimerSrc, 1000) {
+		PhysicalLayerMonitor(mpLogger->GetSubLogger("monitor"), apPhys, apTimerSrc, 1000),
+		mShouldOpen(true) {
 	}
 
+	void ReachInAndStartOpenTimer() { this->StartOpenTimer(); }
+
+	void SetShouldOpen(bool aShouldOpen) { mShouldOpen = aShouldOpen; }
+
 protected:
+
+	bool ShouldBeTryingToOpen() { return mShouldOpen; }
+
+	bool mShouldOpen;
 
 	void _OnReceive(const boost::uint8_t* apData, size_t aNumBytes) {}
 	void _OnSendSuccess() {}
@@ -70,7 +80,15 @@ BOOST_AUTO_TEST_CASE(StateClosedExceptions)
 	BOOST_REQUIRE_EQUAL(PLS_CLOSED, test.monitor.GetState());
 	BOOST_REQUIRE_THROW(test.monitor.OnLowerLayerUp(), InvalidStateException);
 	BOOST_REQUIRE_THROW(test.monitor.OnLowerLayerDown(), InvalidStateException);
-	BOOST_REQUIRE_THROW(test.monitor.OnOpenFailure(), InvalidStateException);
+	BOOST_REQUIRE_THROW(test.monitor.OnOpenFailure(), InvalidStateException);	
+	BOOST_REQUIRE_EQUAL(PLS_CLOSED, test.monitor.GetState());
+}
+
+BOOST_AUTO_TEST_CASE(ThrowsIfEverNotExpectingOpenTimer)
+{
+	TestObject test;
+	test.monitor.ReachInAndStartOpenTimer();
+	BOOST_REQUIRE_THROW(test.mts.DispatchOne(), InvalidStateException);
 	BOOST_REQUIRE_EQUAL(PLS_CLOSED, test.monitor.GetState());
 }
 
@@ -117,12 +135,62 @@ BOOST_AUTO_TEST_CASE(OpeningLayerExceptions)
 	BOOST_REQUIRE_THROW(test.monitor.OnLowerLayerDown(), InvalidStateException);
 }
 
-BOOST_AUTO_TEST_CASE(OpeningStateOpenSuccesGoesToOpenState)
+BOOST_AUTO_TEST_CASE(OpeningStateOpenSuccessGoesToOpenState)
 {
 	TestObject test;
 	test.monitor.Start();
 	test.monitor.OnLowerLayerUp();
 	BOOST_REQUIRE_EQUAL(PLS_OPEN, test.monitor.GetState());
+}
+
+BOOST_AUTO_TEST_CASE(OpenFailureGoesToWaiting)
+{
+	TestObject test;
+	test.monitor.Start();
+	test.monitor.OnOpenFailure();
+	BOOST_REQUIRE_EQUAL(PLS_WAITING, test.monitor.GetState());
+	BOOST_REQUIRE_EQUAL(1, test.mts.NumActive());
+}
+
+BOOST_AUTO_TEST_CASE(OpenFailureGoesToClosedIfShouldBeOpeningReturnsFalse)
+{
+	TestObject test;
+	test.monitor.Start();
+	test.monitor.SetShouldOpen(false);
+	test.monitor.OnOpenFailure();
+	BOOST_REQUIRE_EQUAL(PLS_CLOSED, test.monitor.GetState());
+	BOOST_REQUIRE_EQUAL(0, test.mts.NumActive());
+}
+
+BOOST_AUTO_TEST_CASE(StopWhileWaitingCancelsTimer)
+{
+	TestObject test;
+	test.monitor.Start();
+	test.monitor.OnOpenFailure();
+	test.monitor.Stop();
+	BOOST_REQUIRE_EQUAL(PLS_STOPPED, test.monitor.GetState());
+	BOOST_REQUIRE_EQUAL(0, test.mts.NumActive());
+}
+
+BOOST_AUTO_TEST_CASE(CloseWhileWaitingDoesNothing)
+{
+	TestObject test;
+	test.monitor.Start();
+	test.monitor.OnOpenFailure();	
+	test.monitor.Close();
+	BOOST_REQUIRE_EQUAL(PLS_WAITING, test.monitor.GetState());
+	BOOST_REQUIRE_EQUAL(1, test.mts.NumActive());	
+}
+
+BOOST_AUTO_TEST_CASE(CloseWhileWaitingStopsTimerIfShouldBeOpeningReturnsFalse)
+{
+	TestObject test;
+	test.monitor.Start();
+	test.monitor.OnOpenFailure();	
+	test.monitor.SetShouldOpen(false);
+	test.monitor.Close();
+	BOOST_REQUIRE_EQUAL(PLS_CLOSED, test.monitor.GetState());
+	BOOST_REQUIRE_EQUAL(0, test.mts.NumActive());	
 }
 
 BOOST_AUTO_TEST_SUITE_END()
