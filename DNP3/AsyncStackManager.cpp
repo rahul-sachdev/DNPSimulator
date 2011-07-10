@@ -198,19 +198,18 @@ void AsyncStackManager::RemovePort(const std::string& arPortName)
 {
 	LinkChannel* pChannel = this->GetChannelOrExcept(arPortName);
 
-	{	// Tell the channel to start shutting down permanently
-		Transaction tr(&mSuspendTimerSource);
-		pChannel->BeginShutdown();
-	}
-	
 	vector<string> stacks = this->StacksOnChannel(arPortName);
 	BOOST_FOREACH(string s, stacks) {
 		this->SeverStack(pChannel, s);
 	}
 
-	this->mScheduler.ReleaseGroup(pChannel->GetGroup());
-	
+	{	// Tell the channel to shut down permanently
+		Transaction tr(&mSuspendTimerSource);
+		pChannel->BeginShutdown();
+	}
+
 	pChannel->WaitUntilShutdown();
+	this->mScheduler.ReleaseGroup(pChannel->GetGroup());
 	mChannelNameToChannel.erase(arPortName);
 
 	// remove the physical layer from the list

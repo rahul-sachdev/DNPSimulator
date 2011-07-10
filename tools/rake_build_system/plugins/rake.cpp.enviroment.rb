@@ -34,7 +34,7 @@ preprocessor = ['BOOST_ASIO_ENABLE_CANCELIO', 'BOOST_REGEX_NO_LIB']
 
 preprocessor = case $hw_os
  when 'pc_cygwin'
-  ['APL_CYGWIN','_WIN32_WINNT=0x0501', '__USE_W32_SOCKETS']
+  ['APL_CYGWIN','__USE_W32_SOCKETS', '_WIN32_WINNT=0x0501']
  when 'pc_linux_arm'
   ['ARM','BOOST_ASIO_DISABLE_EPOLL']
  else []
@@ -44,7 +44,7 @@ if ENV['PREPROCESSOR']
   preprocessor << ENV['PREPROCESSOR']
 end
 
-$CC_PREPROCESSOR = preprocessor.collect { |d| "-D #{d}"}.join(' ')
+$CC_PREPROCESSOR = preprocessor.collect { |d| "-D#{d}"}.join(' ')
 
 $WINSOCK_LIBS = case $hw_os
   when 'pc_cygwin'

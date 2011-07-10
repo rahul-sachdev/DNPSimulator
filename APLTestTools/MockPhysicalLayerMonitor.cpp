@@ -43,7 +43,13 @@ MockPhysicalLayerMonitor::MockPhysicalLayerMonitor(Logger* apLogger, IPhysicalLa
 	mWriteBuffer(0),
 	mExpectReadBuffer(0)
 {
-	mState.push(PLS_CLOSED);
+	mState.push(this->GetState());
+	this->AddObserver(this);
+}
+
+void MockPhysicalLayerMonitor::OnStateChange(PhysicalLayerState aState)
+{
+	mState.push(aState);
 }
 
 void MockPhysicalLayerMonitor::OnPhysicalLayerOpenCallback()

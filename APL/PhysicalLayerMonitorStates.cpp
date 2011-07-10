@@ -116,14 +116,15 @@ MonitorStateOpening MonitorStateOpening::mInstance;
 
 void MonitorStateOpening::OnStopRequest(PhysicalLayerMonitor* apContext)
 {
-	apContext->mpPhys->AsyncClose();
 	apContext->ChangeState(MonitorStateOpeningStopping::Inst());
+	apContext->mpPhys->AsyncClose();
+	
 }
 	
 void MonitorStateOpening::OnCloseRequest(PhysicalLayerMonitor* apContext)
 {
-	apContext->mpPhys->AsyncClose();
 	apContext->ChangeState(MonitorStateOpeningClosing::Inst());
+	apContext->mpPhys->AsyncClose();	
 }
 
 void MonitorStateOpening::OnLayerOpen(PhysicalLayerMonitor* apContext)
