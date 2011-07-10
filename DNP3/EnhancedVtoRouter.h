@@ -48,7 +48,7 @@ public:
 
 protected:
 
-	void StopAndFlushBuffers();
+	void CloseAndFlushBuffers();
 
 	// concrete classes use these callbacks and the state
 	// variables to decide when to Start or Stop attempting
@@ -115,6 +115,12 @@ public:
 	void HandleReceivingDataWhenRemoteClosed();
 	void HandleDuplicateOpen();
 	void HandleDuplicateClose();
+
+protected:
+	// override from PhysLayerMonitor
+	bool ShouldBeTryingToOpen();
+	bool mShouldBeTryingToOpen;
+
 
 };
 

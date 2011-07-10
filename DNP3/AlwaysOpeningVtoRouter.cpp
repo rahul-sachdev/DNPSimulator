@@ -26,7 +26,6 @@ AlwaysOpeningVtoRouter::AlwaysOpeningVtoRouter(const VtoRouterSettings& arSettin
 	Loggable(apLogger),
 	VtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc)
 {
-	this->mOpenPhysicalLayer = true;
 	this->Start();
 }
 

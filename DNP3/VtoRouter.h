@@ -126,10 +126,7 @@ protected:
 
 	void OnPhysicalLayerOpenCallback();
 
-	void OnPhysicalLayerCloseCallback();	
-
-	// override this function to return the dynamic value of mReopenPhysicalLayer
-	bool ShouldBeTryingToOpen() { return mOpenPhysicalLayer; }
+	void OnPhysicalLayerCloseCallback();
 
 	/**
 	 * Receives data from the physical layer and forwards it to the
@@ -166,13 +163,6 @@ protected:
 
 	void FlushBuffers();
 	void NotifyRemoteSideOfState(bool aConnected);
-
-	/**
-	 * while true we will let the AsyncPhysLayerMonitor implementation try
-	 * to keep reconnecting the local physical layer if it gets disconnected
-	 * for any reason
-	 */
-	bool mOpenPhysicalLayer;
 
 private:
 

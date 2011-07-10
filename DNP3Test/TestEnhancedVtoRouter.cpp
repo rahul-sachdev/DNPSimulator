@@ -218,6 +218,8 @@ BOOST_AUTO_TEST_CASE(ClientSendsMagicChannelLocalConnected)
 {
 	ClientVtoRouterTestClass rtc;
 
+	BOOST_REQUIRE_FALSE(rtc.phys.IsOpening());
+
 	rtc.SetRemoteState(true);
 
 	BOOST_REQUIRE(rtc.phys.IsOpening());

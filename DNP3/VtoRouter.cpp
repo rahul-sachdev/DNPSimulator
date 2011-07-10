@@ -35,8 +35,7 @@ namespace dnp
 VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
 	Loggable(apLogger),
 	PhysicalLayerMonitor(apLogger, apPhysLayer, apTimerSrc, arSettings.OPEN_RETRY_MS),
-	IVtoCallbacks(arSettings.CHANNEL_ID),
-	mOpenPhysicalLayer(false),
+	IVtoCallbacks(arSettings.CHANNEL_ID),	
 	mpVtoWriter(apWriter),
 	mReadBuffer(1024),
 	mWriteData(0)	
