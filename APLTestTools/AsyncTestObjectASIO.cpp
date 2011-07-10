@@ -54,7 +54,7 @@ void AsyncTestObjectASIO::Next(boost::asio::io_service* apSrv, millis_t aSleep)
 	boost::system::error_code ec;
 	size_t num = apSrv->poll_one(ec);
 	if(ec) throw Exception(LOCATION, ec.message());
-	if(num == 0) {
+	if(num == 0) {		
 		Thread::SleepFor(aSleep);
 	}
 	apSrv->reset();

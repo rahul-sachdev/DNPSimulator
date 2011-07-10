@@ -230,10 +230,6 @@
 					RelativePath=".\TestPhysicalLayerMonitor.cpp"
 					>
 				</File>
-				<File
-					RelativePath=".\TestPhysicalMonitor.cpp"
-					>
-				</File>
 				<Filter
 					Name="Framework"
 					>

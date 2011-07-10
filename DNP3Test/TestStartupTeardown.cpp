@@ -48,12 +48,12 @@ void Configure(StartupTeardownTest& arTest, FilterLevel aLevel, boost::uint16_t 
 BOOST_AUTO_TEST_SUITE(StartupTeardownSuite)
 
 const FilterLevel LEVEL = LEV_INFO;
-const boost::uint16_t NUM_STACKS = 2;
-const boost::uint16_t NUM_PORTS = 1;
+const boost::uint16_t NUM_STACKS = 10;
+const boost::uint16_t NUM_PORTS = 10;
 
 BOOST_AUTO_TEST_CASE(AutoStartAndStopWithDestructor)
 {
-	StartupTeardownTest test(LEVEL, true);
+	StartupTeardownTest test(LEVEL, false);
 	Configure(test, LEVEL, NUM_STACKS, NUM_PORTS);
 }
 

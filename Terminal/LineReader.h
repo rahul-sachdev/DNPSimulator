@@ -2,7 +2,7 @@
 #define __LINE_READER_H_
 
 #include <APL/Uncopyable.h>
-#include <APL/AsyncPhysLayerMonitor.h>
+#include <APL/PhysicalLayerMonitor.h>
 #include <APL/CopyableBuffer.h>
 #include <string>
 
@@ -14,7 +14,7 @@ class ITimerSource;
 
 /** Abstracts the process of reading line from a physical layer.
 */
-class LineReader : public AsyncPhysLayerMonitor, private Uncopyable
+class LineReader : public PhysicalLayerMonitor, private Uncopyable
 {
 public:
 	LineReader(Logger* apLogger, IPhysicalLayerAsync* apPhysical, ITimerSource* apTimerSrc, size_t aBuffSize);
@@ -29,8 +29,8 @@ private:
 	bool mHasCR;
 
 	void Read();
-	void OnPhysicalLayerOpen();
-	void OnPhysicalLayerClose();
+	void OnPhysicalLayerOpenCallback();
+	void OnPhysicalLayerCloseCallback();
 	void Reset();
 
 	void _OnReceive(const boost::uint8_t*, size_t aNum);

@@ -20,6 +20,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <APL/IPhysicalLayerAsync.h>
+#include <APL/Logger.h>
 #include <APL/Util.h>
 #include <APL/ToHex.h>
 
@@ -31,10 +32,9 @@ namespace apl
 
 MockPhysicalLayerMonitor::MockPhysicalLayerMonitor(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimer, millis_t aOpenRetry) :
 	Loggable(apLogger),
-	AsyncPhysLayerMonitor(apLogger, apPhys, apTimer, aOpenRetry),
+	PhysicalLayerMonitor(apLogger, apPhys, apTimer, aOpenRetry),
 	mOpens(0),
-	mCloses(0),
-	mOpenFailures(0),
+	mCloses(0),	
 	mNumReads(0),
 	mBytesRead(0),
 	mBytesWritten(0),
@@ -46,25 +46,15 @@ MockPhysicalLayerMonitor::MockPhysicalLayerMonitor(Logger* apLogger, IPhysicalLa
 	mState.push(PLS_CLOSED);
 }
 
-void MockPhysicalLayerMonitor::OnPhysicalLayerOpen()
+void MockPhysicalLayerMonitor::OnPhysicalLayerOpenCallback()
 {
 	mOpens++;
 	mpPhys->AsyncRead(mReadBuffer, mReadBuffer.Size());
 }
 
-void MockPhysicalLayerMonitor::OnPhysicalLayerClose()
+void MockPhysicalLayerMonitor::OnPhysicalLayerCloseCallback()
 {
 	mCloses++;
-}
-
-void MockPhysicalLayerMonitor::OnPhysicalLayerOpenFailure()
-{
-	mOpenFailures++;
-}
-
-void MockPhysicalLayerMonitor::OnStateChange(PhysicalLayerState aState)
-{
-	mState.push(aState);
 }
 
 void MockPhysicalLayerMonitor::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)

@@ -17,7 +17,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include <APL/AsyncPhysLayerMonitor.h>
+#include <APL/PhysicalLayerMonitor.h>
 #include <APL/CopyableBuffer.h>
 
 #include <queue>
@@ -25,14 +25,13 @@
 namespace apl
 {
 
-class MockPhysicalLayerMonitor : public AsyncPhysLayerMonitor
+class MockPhysicalLayerMonitor : public PhysicalLayerMonitor
 {
 public:
 	MockPhysicalLayerMonitor(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimer, millis_t aOpenRetry);
 
 	size_t mOpens;
-	size_t mCloses;
-	size_t mOpenFailures;
+	size_t mCloses;	
 
 	size_t mNumReads;
 	size_t mBytesRead;
@@ -45,11 +44,8 @@ public:
 
 	std::queue< PhysicalLayerState > mState;
 
-	void OnPhysicalLayerOpen();
-	void OnPhysicalLayerOpenFailure();
-	void OnPhysicalLayerClose();
-
-	void OnStateChange(PhysicalLayerState aState);
+	void OnPhysicalLayerOpenCallback();	
+	void OnPhysicalLayerCloseCallback();	
 
 	void _OnReceive(const boost::uint8_t* apData, size_t aNumBytes);
 	void _OnSendSuccess(void);

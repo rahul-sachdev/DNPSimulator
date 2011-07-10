@@ -20,13 +20,14 @@
 #include "PhysLoopback.h"
 
 #include "IPhysicalLayerAsync.h"
+#include "Logger.h"
 
 namespace apl
 {
 
-PhysLoopback::PhysLoopback(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc, FilterLevel aLevel, bool aImmediate) :
+PhysLoopback::PhysLoopback(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc) :
 	Loggable(apLogger),
-	AsyncPhysLayerMonitor(apLogger, apPhys, apTimerSrc, 5000),
+	PhysicalLayerMonitor(apLogger, apPhys, apTimerSrc, 5000),
 	mBytesRead(0),
 	mBytesWritten(0),
 	mBuffer(1024)
@@ -56,13 +57,13 @@ void PhysLoopback::_OnSendFailure(void)
 
 }
 
-void PhysLoopback::OnPhysicalLayerOpen(void)
+void PhysLoopback::OnPhysicalLayerOpenCallback(void)
 {
 	LOG_BLOCK(LEV_INFO, "Opened");
 	this->StartRead();
 }
 
-void PhysLoopback::OnPhysicalLayerClose(void)
+void PhysLoopback::OnPhysicalLayerCloseCallback(void)
 {
 	LOG_BLOCK(LEV_INFO, "Closed");
 }

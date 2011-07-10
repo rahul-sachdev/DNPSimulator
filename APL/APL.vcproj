@@ -200,14 +200,6 @@
 					Name="Base"
 					>
 					<File
-						RelativePath=".\AsyncPhysLayerMonitor.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\AsyncPhysLayerMonitor.h"
-						>
-					</File>
-					<File
 						RelativePath=".\IHandlerAsync.cpp"
 						>
 					</File>

@@ -18,6 +18,7 @@
 #include "EnhancedVtoRouter.h"
 
 #include <APL/Exception.h>
+#include <APL/Logger.h>
 
 namespace apl
 {
@@ -95,9 +96,9 @@ void EnhancedVtoRouter::SetLocalConnected(bool aConnected)
 
 void EnhancedVtoRouter::StopAndFlushBuffers()
 {
-	FlushBuffers();
-
-	this->DoStop();
+	mOpenPhysicalLayer = false;
+	FlushBuffers();		
+	this->Close();
 }
 
 /*****************************************
@@ -109,19 +110,17 @@ ServerSocketVtoRouter::ServerSocketVtoRouter(const VtoRouterSettings& arSettings
 	EnhancedVtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc)
 {
 	// This type of router always runs
-	this->DoStart();
+	this->mOpenPhysicalLayer = true;
+	this->Start();
 }
 
 void ServerSocketVtoRouter::HandleVtoRemoteConnectedChanged()
 {
-	if(mRemoteConnected) {
-
-	}
-	else {
+	if(!mRemoteConnected) {
 		// if the remote side has closed we should close our
 		// local connection and then prepare for a new one
 		this->FlushBuffers();
-		this->Reconnect();
+		this->Close();
 	}
 
 }
@@ -136,7 +135,7 @@ void ServerSocketVtoRouter::HandleReceivingDataWhenRemoteClosed()
 
 	if(this->mLocalConnected) {
 		this->FlushBuffers();
-		this->Reconnect();
+		this->Close();
 	}
 	else {
 		this->NotifyRemoteSideOfState(false);
@@ -147,7 +146,7 @@ void ServerSocketVtoRouter::HandleDuplicateOpen()
 {
 	if(this->mLocalConnected) {
 		this->FlushBuffers();
-		this->Reconnect();
+		this->Close();
 	}
 }
 
@@ -155,7 +154,7 @@ void ServerSocketVtoRouter::HandleDuplicateClose()
 {
 	if(this->mLocalConnected) {
 		this->FlushBuffers();
-		this->Reconnect();
+		this->Close();
 	}
 }
 
@@ -179,7 +178,8 @@ void ClientSocketVtoRouter::HandleVtoRemoteConnectedChanged()
 		// can close the connection. Effectivley we tunnel the "connection
 		// refused" behavior as a "remote server terminated connection"
 		this->SetLocalConnected(true);
-		this->DoStart();
+		this->mOpenPhysicalLayer = true;
+		this->Start();
 	}
 	else {
 		// always stop the local connection attempts if the remote is disconnected

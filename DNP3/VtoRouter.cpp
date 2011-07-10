@@ -21,6 +21,7 @@
 
 #include <APL/Exception.h>
 #include <APL/IPhysicalLayerAsync.h>
+#include <APL/Logger.h>
 #include <APL/Util.h>
 
 #include "VtoReader.h"
@@ -33,12 +34,12 @@ namespace dnp
 
 VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
 	Loggable(apLogger),
-	AsyncPhysLayerMonitor(apLogger, apPhysLayer, apTimerSrc, arSettings.OPEN_RETRY_MS),
+	PhysicalLayerMonitor(apLogger, apPhysLayer, apTimerSrc, arSettings.OPEN_RETRY_MS),
 	IVtoCallbacks(arSettings.CHANNEL_ID),
+	mOpenPhysicalLayer(false),
 	mpVtoWriter(apWriter),
 	mReadBuffer(1024),
-	mWriteData(0),
-	mReopenPhysicalLayer(false)
+	mWriteData(0)	
 {
 	assert(apLogger != NULL);
 	assert(apWriter != NULL);
@@ -62,35 +63,6 @@ void VtoRouter::OnVtoDataReceived(const VtoData& arData)
 		 */
 		this->mPhysLayerTxBuffer.push(arData);
 		this->CheckForPhysWrite();
-	}
-}
-
-void VtoRouter::DoStart()
-{
-	if(this->IsStopping()) {
-		LOG_BLOCK(LEV_DEBUG, "Permenantly Stopped")
-	}
-	else {
-		if(!mReopenPhysicalLayer) {
-			mReopenPhysicalLayer = true;
-			LOG_BLOCK(LEV_DEBUG, "Starting VtoRouted Port")
-			this->Start();
-		}
-		else {
-			LOG_BLOCK(LEV_DEBUG, "Already started")
-		}
-	}
-}
-
-void VtoRouter::DoStop()
-{
-	if(mReopenPhysicalLayer) {
-		mReopenPhysicalLayer = false;
-		LOG_BLOCK(LEV_DEBUG, "Stopping VtoRouted Port")
-		this->Stop();
-	}
-	else {
-		LOG_BLOCK(LEV_DEBUG, "Already stopped")
 	}
 }
 
@@ -194,7 +166,7 @@ void VtoRouter::OnBufferAvailable()
 	this->CheckForVtoWrite();
 }
 
-void VtoRouter::OnPhysicalLayerOpen()
+void VtoRouter::OnPhysicalLayerOpenCallback()
 {
 	this->SetLocalConnected(true);
 
@@ -203,19 +175,7 @@ void VtoRouter::OnPhysicalLayerOpen()
 	this->CheckForVtoWrite();
 }
 
-void VtoRouter::OnStateChange(PhysicalLayerState aState)
-{
-
-}
-
-void VtoRouter::OnPhysicalLayerClose()
-{
-	this->SetLocalConnected(false);
-	this->CheckForPhysWrite();
-	this->CheckForVtoWrite();
-}
-
-void VtoRouter::OnPhysicalLayerOpenFailure()
+void VtoRouter::OnPhysicalLayerCloseCallback()
 {
 	this->SetLocalConnected(false);
 	this->CheckForPhysWrite();

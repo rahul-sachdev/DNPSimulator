@@ -22,7 +22,7 @@
 #include <deque>
 
 #include <APL/IHandlerAsync.h>
-#include <APL/AsyncPhysLayerMonitor.h>
+#include <APL/PhysicalLayerMonitor.h>
 #include <APL/CopyableBuffer.h>
 
 #include "VtoDataInterface.h"
@@ -79,7 +79,7 @@ public:
  * implementations set policy on when to start and stop the reconnecting
  * behavior.
  */
-class VtoRouter : public AsyncPhysLayerMonitor, public IVtoCallbacks
+class VtoRouter : public PhysicalLayerMonitor, public IVtoCallbacks
 {
 public:
 
@@ -124,11 +124,12 @@ protected:
 
 	// Implement AsyncPhysLayerMonitor
 
-	void OnPhysicalLayerOpen();
+	void OnPhysicalLayerOpenCallback();
 
-	void OnPhysicalLayerClose();
+	void OnPhysicalLayerCloseCallback();	
 
-	void OnPhysicalLayerOpenFailure();
+	// override this function to return the dynamic value of mReopenPhysicalLayer
+	bool ShouldBeTryingToOpen() { return mOpenPhysicalLayer; }
 
 	/**
 	 * Receives data from the physical layer and forwards it to the
@@ -155,15 +156,6 @@ protected:
 	 */
 	void _OnSendFailure();
 
-	/**
-	 * Implement AsyncPhysMonitor::OnStateChange
-	 */
-	void OnStateChange(PhysicalLayerState);
-
-	// DoStart and DoStop are idempotent versions of Start/Stop
-	void DoStart();
-	void DoStop();
-
 	void DoStopRouter();
 
 	virtual void DoVtoRemoteConnectedChanged(bool aOpened) = 0;
@@ -174,6 +166,13 @@ protected:
 
 	void FlushBuffers();
 	void NotifyRemoteSideOfState(bool aConnected);
+
+	/**
+	 * while true we will let the AsyncPhysLayerMonitor implementation try
+	 * to keep reconnecting the local physical layer if it gets disconnected
+	 * for any reason
+	 */
+	bool mOpenPhysicalLayer;
 
 private:
 
@@ -205,13 +204,6 @@ private:
 	 * Buffer used to write to the physical layer
 	 */
 	VtoData mWriteData;
-
-	/**
-	 * while true we will let the AsyncPhysLayerMonitor implementation try
-	 * to keep reconnecting the local physical layer if it gets disconnected
-	 * for any reason
-	 */
-	bool mReopenPhysicalLayer;
 
 };
 

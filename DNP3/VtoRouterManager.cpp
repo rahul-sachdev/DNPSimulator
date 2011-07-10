@@ -24,6 +24,7 @@
 #include <APL/Exception.h>
 #include <APL/IPhysicalLayerSource.h>
 #include <APL/IPhysicalLayerAsync.h>
+#include <APL/Logger.h>
 
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
