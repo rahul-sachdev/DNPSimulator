@@ -115,13 +115,6 @@ public:
 	void HandleReceivingDataWhenRemoteClosed();
 	void HandleDuplicateOpen();
 	void HandleDuplicateClose();
-
-protected:
-	// override from PhysLayerMonitor
-	bool ShouldBeTryingToOpen();
-	bool mShouldBeTryingToOpen;
-
-
 };
 
 }

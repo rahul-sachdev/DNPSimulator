@@ -72,11 +72,6 @@ public:
 	// ILinkRouter interface
 	void Transmit(const LinkFrame&);
 	
-protected:
-
-	// override from base class
-	bool ShouldBeTryingToOpen();
-
 private:
 
 	ILinkContext* GetDestination(boost::uint16_t aDest, boost::uint16_t aSrc);
@@ -103,7 +98,8 @@ private:
 	void _OnSendFailure();
 
 	// Implement virtual AsyncPhysLayerMonitor
-	void OnPhysicalLayerOpenCallback();
+	void OnPhysicalLayerOpenSuccessCallback();
+	void OnPhysicalLayerOpenFailureCallback() {}
 	void OnPhysicalLayerCloseCallback();
 
 	std::string RecvString() {

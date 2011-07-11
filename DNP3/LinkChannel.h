@@ -69,11 +69,11 @@ public:
 	}
 
 	void BeginShutdown() {
-		this->Stop();
+		this->Shutdown();
 	}
 
 	void WaitUntilShutdown() {
-		this->WaitForStopped();
+		this->WaitForShutdown();
 	}
 
 private:

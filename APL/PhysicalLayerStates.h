@@ -31,7 +31,7 @@ enum PhysicalLayerState {
     PLS_OPENING,	// layer is trying to open
     PLS_WAITING,	// layer is waiting to open
     PLS_OPEN,		// layer is open
-    PLS_STOPPED		// stopped and will never do anything again
+    PLS_SHUTDOWN	// stopped and will never do anything again
 };
 
 std::string ConvertPhysicalLayerStateToString(PhysicalLayerState aState);

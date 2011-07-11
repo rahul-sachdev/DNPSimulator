@@ -65,7 +65,7 @@ void AddressScanner::OnTimeout()
 
 void AddressScanner::NextFrame()
 {
-	if(mCurrent >= mStop) mRouter.Stop();
+	if(mCurrent >= mStop) mRouter.Shutdown();
 	else {
 		mpTimer = mTimerSrc.Start(mScanTimeout, boost::bind(&AddressScanner::OnTimeout, this));
 		mFrame.FormatResetLinkStates(true, mCurrent, mMasterAddr);
@@ -77,7 +77,7 @@ void AddressScanner::NextFrame()
 void AddressScanner::Ack(bool aIsMaster, bool aIsRcvBuffFull, boost::uint16_t aDest, boost::uint16_t aSrc)
 {
 	LOG_BLOCK(LEV_EVENT, "Received acknowledgement from address: " << aSrc);
-	mRouter.Stop();
+	mRouter.Shutdown();
 	if(mpTimer != NULL) mpTimer->Cancel();
 }
 

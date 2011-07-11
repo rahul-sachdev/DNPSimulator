@@ -39,21 +39,7 @@ class IPhysicalLayerObserver;
   */
 class PhysicalLayerMonitor : public IHandlerAsync
 {
-	friend class IgnoresClose;
-	friend class IgnoresStart;
-	friend class IgnoresStop;
-	friend class HandlesClose;
-	
-	template<class,bool> friend class HandlesOpenFailure;
-	
-	friend class MonitorStateClosed;
-	friend class MonitorStateStopped;
-	friend class MonitorStateOpening;
-	friend class MonitorStateOpen;
-	friend class MonitorStateClosing;
-	friend class MonitorStateStopping;
-	friend class MonitorStateWaiting;
-	friend class MonitorStateOpeningClosing;
+	friend class MonitorStateActions;	
 	
 public:
 	PhysicalLayerMonitor(Logger*, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);
@@ -62,11 +48,14 @@ public:
 	/** Begin monitor execution - Idempotent*/
 	void Start();
 
-	/** Close the physical layer if it's open, may re-open - Idempotent*/
+	/** Close the physical layer if it's open */
 	void Close();
 
-	/** Permanently stop the monitor, further calls to Start() will do nothing - Idempotent */
-	void Stop();
+	/** Close the physical layer and don't try until someone calls Start() */
+	void Suspend();
+
+	/** Permanently shutdown the monitor, further calls to Start() will do nothing - Idempotent */
+	void Shutdown();
 
 	PhysicalLayerState GetState();
 
@@ -74,21 +63,17 @@ public:
 	void AddObserver(IPhysicalLayerObserver* apObserver);
 
 	/** Blocks until the monitor has completely and permanently stopped */
-	void WaitForStopped();
+	void WaitForShutdown();
+
+	Logger* GetLogger() { return mpLogger; }
 
 protected:
 
 	
-	virtual void OnPhysicalLayerOpenCallback() = 0;
+	virtual void OnPhysicalLayerOpenSuccessCallback() = 0;
+	virtual void OnPhysicalLayerOpenFailureCallback() = 0;
 	virtual void OnPhysicalLayerCloseCallback() = 0;
-
-	/*
-	virtual void OnPhysicalLayerOpenFailure() = 0;
-	*/
-		
-	/** Default behavior is always trying to connect, but this is overridable */
-	virtual bool ShouldBeTryingToOpen() { return true; }
-
+			
 	/// Begins the open timer
 	void StartOpenTimer();
 

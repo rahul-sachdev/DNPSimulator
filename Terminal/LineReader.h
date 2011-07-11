@@ -29,7 +29,8 @@ private:
 	bool mHasCR;
 
 	void Read();
-	void OnPhysicalLayerOpenCallback();
+	void OnPhysicalLayerOpenSuccessCallback();
+	void OnPhysicalLayerOpenFailureCallback() {}
 	void OnPhysicalLayerCloseCallback();
 	void Reset();
 

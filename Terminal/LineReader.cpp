@@ -14,7 +14,7 @@ LineReader::LineReader(Logger* apLogger, IPhysicalLayerAsync* apPhysical, ITimer
 	this->Reset();
 }
 
-void LineReader::OnPhysicalLayerOpenCallback()
+void LineReader::OnPhysicalLayerOpenSuccessCallback()
 {
 	this->Read();
 	this->_Up();

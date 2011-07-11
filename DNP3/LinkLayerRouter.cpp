@@ -75,16 +75,9 @@ void LinkLayerRouter::RemoveContext(const LinkRoute& arRoute)
 		if(this->GetState() == PLS_OPEN) pContext->OnLowerLayerDown();
 	}
 
-	// if no stacks are bound, close
-	if(mAddressMap.size() == 0) this->Close();
+	// if no stacks are bound, suspend the router
+	if(mAddressMap.size() == 0) this->Suspend();
 }
-
-bool LinkLayerRouter::ShouldBeTryingToOpen()
-{
-	// if we have stacks bound, we should be trying to open
-	return this->mAddressMap.size() > 0;
-}
-
 
 ILinkContext* LinkLayerRouter::GetContext(const LinkRoute& arRoute)
 {
@@ -219,7 +212,7 @@ void LinkLayerRouter::CheckForSend()
 	}
 }
 
-void LinkLayerRouter::OnPhysicalLayerOpenCallback()
+void LinkLayerRouter::OnPhysicalLayerOpenSuccessCallback()
 {
 	if(mpPhys->CanRead())
 		mpPhys->AsyncRead(mReceiver.WriteBuff(), mReceiver.NumWriteBytes());

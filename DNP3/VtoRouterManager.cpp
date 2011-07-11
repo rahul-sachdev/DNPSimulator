@@ -144,10 +144,10 @@ void VtoRouterManager::StopRouter(VtoRouter* apRouter)
 		if(i->mpRouter.get() == apRouter) {
 			{
 				Transaction tr(&mSuspendTimerSource);
-				i->mpRouter->Stop();
+				i->mpRouter->Shutdown();
 			}
 
-			i->mpRouter->WaitForStopped();			  // blocking, when it returns we're done for good
+			i->mpRouter->WaitForShutdown();			  // blocking, when it returns we're done for good
 			mpPhysSource->ReleaseLayer(i->mPortName); // release the physical layer
 			mRecords.erase(i);						  // erasing from the vector will cause the shared_ptr to delete the VtoRouter*
 			return;

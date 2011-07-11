@@ -35,7 +35,7 @@ PhysicalLayerMonitor::PhysicalLayerMonitor(Logger* apLogger, IPhysicalLayerAsync
 	mpPhys(apPhys),
 	mpTimerSrc(apTimerSrc),
 	mpOpenTimer(NULL),
-	mpState(MonitorStateClosed::Inst()),
+	mpState(MonitorStateSuspended::Inst()),
 	M_OPEN_RETRY(aOpenRetry)
 {
 	assert(apPhys != NULL);
@@ -60,20 +60,19 @@ void PhysicalLayerMonitor::AddObserver(IPhysicalLayerObserver* apObserver)
 	mObservers.insert(apObserver);
 }
 
-void PhysicalLayerMonitor::WaitForStopped()
+void PhysicalLayerMonitor::WaitForShutdown()
 {
 	CriticalSection cs(&mLock);
-	while(this->GetState() != PLS_STOPPED) cs.Wait();
+	while(this->GetState() != PLS_SHUTDOWN) cs.Wait();
 }
 
 void PhysicalLayerMonitor::ChangeState(IMonitorState* apState)
 {
 	CriticalSection cs(&mLock);
-	PhysicalLayerState last = mpState->GetState();
-	mpState = apState;
-	LOG_BLOCK(LEV_INFO, "Transition to state: " << apState->Name());
-	if(last != apState->GetState()) {
-		LOG_BLOCK(LEV_INFO, "Transition to state: " << ConvertPhysicalLayerStateToString(apState->GetState()));
+	LOG_BLOCK(LEV_INFO, mpState->ConvertToString() << " -> " << apState->ConvertToString());
+	IMonitorState* pLast = mpState;
+	mpState = apState;	
+	if(pLast->GetState() != apState->GetState()) {		
 		for(ObserverSet::iterator i = mObservers.begin(); i != mObservers.end(); ++i) (*i)->OnStateChange(apState->GetState());
 		cs.Broadcast();	 // signal to anyone waiting for a state change
 	}
@@ -83,27 +82,33 @@ void PhysicalLayerMonitor::ChangeState(IMonitorState* apState)
 
 void PhysicalLayerMonitor::Start()
 {
-	LOG_BLOCK(LEV_INFO, "Start()");
+	LOG_BLOCK(LEV_DEBUG, "Start()");
 	mpState->OnStartRequest(this);
 }
 
 void PhysicalLayerMonitor::Close()
 {
-	LOG_BLOCK(LEV_INFO, "Close()");
+	LOG_BLOCK(LEV_DEBUG, "Close()");
 	mpState->OnCloseRequest(this);
 }
 
-void PhysicalLayerMonitor::Stop()
+void PhysicalLayerMonitor::Suspend()
 {
-	LOG_BLOCK(LEV_INFO, "Stop()");
-	mpState->OnStopRequest(this);
+	LOG_BLOCK(LEV_DEBUG, "Suspend()");
+	mpState->OnSuspendRequest(this);
+}
+
+void PhysicalLayerMonitor::Shutdown()
+{
+	LOG_BLOCK(LEV_DEBUG, "Shutdown()");
+	mpState->OnShutdownRequest(this);
 }
 
 /* ------- External events that occurs ------- */
 
 void PhysicalLayerMonitor::OnOpenTimerExpiration()
 {
-	LOG_BLOCK(LEV_INFO, "OnOpenTimerExpiration()");
+	LOG_BLOCK(LEV_DEBUG, "OnOpenTimerExpiration()");
 	assert(mpOpenTimer != NULL);
 	mpOpenTimer = NULL;
 	mpState->OnOpenTimeout(this);
@@ -111,20 +116,21 @@ void PhysicalLayerMonitor::OnOpenTimerExpiration()
 
 void PhysicalLayerMonitor::_OnOpenFailure()
 {
-	LOG_BLOCK(LEV_INFO, "_OnOpenFailure()");
+	LOG_BLOCK(LEV_DEBUG, "_OnOpenFailure()");
 	mpState->OnOpenFailure(this);
+	this->OnPhysicalLayerOpenFailureCallback();
 }
 
 void PhysicalLayerMonitor::_OnLowerLayerUp()
 {
-	LOG_BLOCK(LEV_INFO, "_OnLowerLayerUp");
+	LOG_BLOCK(LEV_DEBUG, "_OnLowerLayerUp");
 	mpState->OnLayerOpen(this);
-	this->OnPhysicalLayerOpenCallback();
+	this->OnPhysicalLayerOpenSuccessCallback();
 }
 
 void PhysicalLayerMonitor::_OnLowerLayerDown()
 {
-	LOG_BLOCK(LEV_INFO, "_OnLowerLayerDown");
+	LOG_BLOCK(LEV_DEBUG, "_OnLowerLayerDown");
 	mpState->OnLayerClose(this);
 	this->OnPhysicalLayerCloseCallback();
 }

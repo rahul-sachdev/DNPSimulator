@@ -24,7 +24,9 @@ namespace apl
 {
 
 LogTester::LogTester(bool aImmediate) :
-	mBuffer(100)
+	mLog(),
+	mpTestLogger(mLog.GetLogger(LEV_DEBUG, "LogTester")),	
+	mBuffer(100)	
 {
 	mLog.AddLogSubscriber(&mBuffer);
 	if(aImmediate) mLog.AddLogSubscriber(LogToStdio::Inst());
@@ -41,9 +43,9 @@ int LogTester::ClearLog()
 	return max;
 }
 
-void LogTester::SetVar(const std::string& aSource, const std::string& aVarName, int aValue)
+void LogTester::Log(const std::string& arLocation, const std::string& arMessage)
 {
-
+	mpTestLogger->Log(LEV_EVENT, arLocation, arMessage);
 }
 
 int LogTester::NextErrorCode()

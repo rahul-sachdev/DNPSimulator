@@ -33,17 +33,18 @@ public:
 	VtoLoopbackTestStack(
 	    bool clientOnSlave = true,
 	    bool aImmediateOutput = false,
+		bool aLogToFile = false,
 	    FilterLevel level = LEV_INFO,
 	    boost::uint16_t port = MACRO_PORT_VALUE) :
 
-		VtoIntegrationTestBase(clientOnSlave, aImmediateOutput, level, port),
+		VtoIntegrationTestBase(clientOnSlave, aImmediateOutput, aLogToFile, level, port),
 		loopback(mLog.GetLogger(level, "loopback"), &server, &timerSource),
 		local(mLog.GetLogger(level, "mock-client-connection"), &client, &timerSource, 500) {
 	}
 
 	virtual ~VtoLoopbackTestStack() {
-		local.Stop();
-		loopback.Stop();
+		local.Shutdown();
+		loopback.Shutdown();
 	}
 
 	bool WaitForLocalState(PhysicalLayerState aState, millis_t aTimeout = 30000) {

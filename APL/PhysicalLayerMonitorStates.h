@@ -40,8 +40,10 @@ class IMonitorState
 public:
 
 	virtual void OnStartRequest(PhysicalLayerMonitor* apContext) = 0;
-	virtual void OnStopRequest(PhysicalLayerMonitor* apContext) = 0;
 	virtual void OnCloseRequest(PhysicalLayerMonitor* apContext) = 0;
+	virtual void OnSuspendRequest(PhysicalLayerMonitor* apContext) = 0;
+	virtual void OnShutdownRequest(PhysicalLayerMonitor* apContext) = 0;
+	
 	virtual void OnOpenTimeout(PhysicalLayerMonitor* apContext) = 0;
 	virtual void OnOpenFailure(PhysicalLayerMonitor* apContext) = 0;
 	virtual void OnLayerOpen(PhysicalLayerMonitor* apContext) = 0;
@@ -49,6 +51,19 @@ public:
 
 	virtual PhysicalLayerState GetState() const = 0;
 	virtual std::string Name() const = 0;
+
+	std::string ConvertToString();
+};
+
+class MonitorStateActions
+{
+public:
+
+	static void ChangeState(PhysicalLayerMonitor* apContext, IMonitorState* apState);
+	static void StartOpenTimer(PhysicalLayerMonitor* apContext);
+	static void CancelOpenTimer(PhysicalLayerMonitor* apContext);	
+	static void AsyncClose(PhysicalLayerMonitor* apContext);
+	static void AsyncOpen(PhysicalLayerMonitor* apContext);
 };
 
 class ExceptsOnLayerOpen : public virtual IMonitorState
@@ -81,16 +96,22 @@ public:
 	void OnCloseRequest(PhysicalLayerMonitor* apContext);
 };
 
-class HandlesClose : public virtual IMonitorState
+class IgnoresSuspend : public virtual IMonitorState
+{
+public:
+	void OnSuspendRequest(PhysicalLayerMonitor* apContext);
+};
+
+class StartsOnClose : public virtual IMonitorState
 {
 public:
 	void OnLayerClose(PhysicalLayerMonitor* apContext);
 };
 
-class IgnoresStop : public virtual IMonitorState
+class IgnoresShutdown : public virtual IMonitorState
 {
 public:
-	void OnStopRequest(PhysicalLayerMonitor* apContext);
+	void OnShutdownRequest(PhysicalLayerMonitor* apContext);
 };
 
 class IgnoresStart : public virtual IMonitorState
@@ -99,8 +120,14 @@ public:
 	void OnStartRequest(PhysicalLayerMonitor* apContext);
 };
 
-template <class T, bool Retry>
-class HandlesOpenFailure : public virtual IMonitorState
+class OpenFailureCausesWait : public virtual IMonitorState
+{
+public:
+	void OnOpenFailure(PhysicalLayerMonitor* apContext);
+};
+
+template <class T>
+class OpenFailureGoesToState : public virtual IMonitorState
 {
 public:
 	void OnOpenFailure(PhysicalLayerMonitor* apContext);
@@ -117,28 +144,38 @@ public:
 #pragma warning(disable:4250)
 #endif
 
-class MonitorStateStopped : public virtual IMonitorState,
-	private NotOpening, private NotOpen, private NotWaitingForTimer, private IgnoresClose, private IgnoresStart, private IgnoresStop
+class MonitorStateShutdown : public virtual IMonitorState,
+	private NotOpening, 
+	private NotOpen, 
+	private NotWaitingForTimer, 
+	private IgnoresClose, 
+	private IgnoresStart, 
+	private IgnoresShutdown,
+	private IgnoresSuspend
 {
-	MACRO_MONITOR_SINGLETON(MonitorStateStopped, PLS_STOPPED);
+	MACRO_MONITOR_SINGLETON(MonitorStateShutdown, PLS_SHUTDOWN);
 };
 
-class MonitorStateClosed : public virtual IMonitorState,
-	private NotOpening, private NotOpen, private NotWaitingForTimer, private IgnoresClose
+class MonitorStateSuspended : public virtual IMonitorState,
+	private NotOpening, private NotOpen, private NotWaitingForTimer, private IgnoresClose, private IgnoresSuspend
 {
-	MACRO_MONITOR_SINGLETON(MonitorStateClosed, PLS_CLOSED);
+	MACRO_MONITOR_SINGLETON(MonitorStateSuspended, PLS_CLOSED);
 
 	void OnStartRequest(PhysicalLayerMonitor* apContext);
-	void OnStopRequest(PhysicalLayerMonitor* apContext);
+	void OnShutdownRequest(PhysicalLayerMonitor* apContext);
 };
 
 class MonitorStateOpening : public virtual IMonitorState,
-	private NotOpen, private NotWaitingForTimer, private HandlesOpenFailure<MonitorStateClosed, true>, private IgnoresStart
+	private NotOpen, 
+	private NotWaitingForTimer, 
+	private OpenFailureCausesWait,
+	private IgnoresStart
 {
 	MACRO_MONITOR_SINGLETON(MonitorStateOpening, PLS_OPENING);
 
 	void OnCloseRequest(PhysicalLayerMonitor* apContext);
-	void OnStopRequest(PhysicalLayerMonitor* apContext);	
+	void OnShutdownRequest(PhysicalLayerMonitor* apContext);	
+	void OnSuspendRequest(PhysicalLayerMonitor* apContext);
 	void OnLayerOpen(PhysicalLayerMonitor* apContext);
 };
 
@@ -146,70 +183,99 @@ class MonitorStateOpeningClosing : public virtual IMonitorState,
 	private NotOpen, 
 	private NotWaitingForTimer,
 	private ExceptsOnLayerOpen,
-	private HandlesOpenFailure<MonitorStateClosed, true>, 
+	private OpenFailureCausesWait, 
 	private IgnoresStart, 
 	private IgnoresClose
 {
 	MACRO_MONITOR_SINGLETON(MonitorStateOpeningClosing, PLS_OPENING);
 	
-	void OnStopRequest(PhysicalLayerMonitor* apContext);		
+	void OnShutdownRequest(PhysicalLayerMonitor* apContext);	
+	void OnSuspendRequest(PhysicalLayerMonitor* apContext);
 };
 
 class MonitorStateOpeningStopping : public virtual IMonitorState,
 	private NotOpen, 
 	private NotWaitingForTimer, 
 	private ExceptsOnLayerOpen,
-	private HandlesOpenFailure<MonitorStateStopped, false>, 
+	private OpenFailureGoesToState<MonitorStateShutdown>, 
 	private IgnoresStart, 
 	private IgnoresClose,
-	private IgnoresStop
+	private IgnoresSuspend,
+	private IgnoresShutdown
 {
 	MACRO_MONITOR_SINGLETON(MonitorStateOpeningStopping, PLS_OPENING);	
 };
 
+class MonitorStateOpeningSuspending : public virtual IMonitorState,
+	private NotOpen, 
+	private NotWaitingForTimer, 
+	private ExceptsOnLayerOpen,
+	private OpenFailureGoesToState<MonitorStateSuspended>, 	
+	private IgnoresClose,
+	private IgnoresSuspend
+{
+	MACRO_MONITOR_SINGLETON(MonitorStateOpeningSuspending, PLS_OPENING);	
+
+	void OnStartRequest(PhysicalLayerMonitor* apContext);
+	void OnShutdownRequest(PhysicalLayerMonitor* apContext);
+};
+
 class MonitorStateOpen : public virtual IMonitorState,
-	private NotOpening, private NotWaitingForTimer, private IgnoresStart, private HandlesClose
+	private NotOpening, private NotWaitingForTimer, private IgnoresStart, private StartsOnClose
 {
 	MACRO_MONITOR_SINGLETON(MonitorStateOpen, PLS_OPEN);
 
 	void OnCloseRequest(PhysicalLayerMonitor* apContext);
-	void OnStopRequest(PhysicalLayerMonitor* apContext);
+	void OnSuspendRequest(PhysicalLayerMonitor* apContext);
+	void OnShutdownRequest(PhysicalLayerMonitor* apContext);
 };
 
 class MonitorStateWaiting : public virtual IMonitorState,
-	private NotOpening, private NotOpen, private IgnoresStart
+	private NotOpening, private NotOpen, private IgnoresStart, private IgnoresClose
 {
 	MACRO_MONITOR_SINGLETON(MonitorStateWaiting, PLS_WAITING);
 
-	void OnCloseRequest(PhysicalLayerMonitor* apContext);
-	void OnStopRequest(PhysicalLayerMonitor* apContext);
+	void OnSuspendRequest(PhysicalLayerMonitor* apContext);	
+	void OnShutdownRequest(PhysicalLayerMonitor* apContext);
 	void OnOpenTimeout(PhysicalLayerMonitor* apContext);
 };
 
 class MonitorStateClosing : public virtual IMonitorState,
-	private NotOpening, private NotWaitingForTimer, private IgnoresStart, private IgnoresClose, private HandlesClose
+	private NotOpening, private NotWaitingForTimer, private IgnoresStart, private IgnoresClose, private StartsOnClose
 {
 	MACRO_MONITOR_SINGLETON(MonitorStateClosing, PLS_CLOSED);
 
-	void OnStopRequest(PhysicalLayerMonitor* apContext);
+	void OnSuspendRequest(PhysicalLayerMonitor* apContext);
+	void OnShutdownRequest(PhysicalLayerMonitor* apContext);
 };
 
-class MonitorStateStopping : public virtual IMonitorState,
-	private NotOpening, private NotWaitingForTimer, private IgnoresStart, private IgnoresClose, private IgnoresStop
+class MonitorStateSuspending : public virtual IMonitorState,
+	private NotOpening, private NotWaitingForTimer, private IgnoresClose, private IgnoresSuspend
 {
-	MACRO_MONITOR_SINGLETON(MonitorStateStopping, PLS_CLOSED);
+	MACRO_MONITOR_SINGLETON(MonitorStateSuspending, PLS_CLOSED);
+
+	void OnLayerClose(PhysicalLayerMonitor* apContext);
+	void OnStartRequest(PhysicalLayerMonitor* apContext);
+	void OnShutdownRequest(PhysicalLayerMonitor* apContext);
+};
+
+class MonitorStateShutingDown : public virtual IMonitorState,
+	private NotOpening, 
+	private NotWaitingForTimer, 
+	private IgnoresStart, 
+	private IgnoresClose,
+	private IgnoresShutdown,
+	private IgnoresSuspend
+{
+	MACRO_MONITOR_SINGLETON(MonitorStateShutingDown, PLS_CLOSED);
 
 	void OnLayerClose(PhysicalLayerMonitor* apContext);
 };
 
-template <class T, bool Retry>
-void HandlesOpenFailure<T,Retry>::OnOpenFailure(PhysicalLayerMonitor* apContext)
+template <class T>
+void OpenFailureGoesToState<T>::OnOpenFailure(PhysicalLayerMonitor* apContext)
 {		
-	if(Retry && apContext->ShouldBeTryingToOpen()) {
-		apContext->StartOpenTimer();
-		apContext->ChangeState(MonitorStateWaiting::Inst());			
-	}
-	else apContext->ChangeState(T::Inst());
+	MonitorStateActions::ChangeState(apContext, T::Inst());
 }
 
 #ifdef WIN32

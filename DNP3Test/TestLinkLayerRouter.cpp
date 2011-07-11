@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_CASE(ReentrantCloseWorks)
 	t.router.AddContext(&mfs, LinkRoute(1, 1024));
 	t.phys.SignalOpenSuccess();
 	BOOST_REQUIRE(mfs.mLowerOnline);
-	mfs.AddAction(boost::bind(&LinkLayerRouter::Stop, &t.router));
+	mfs.AddAction(boost::bind(&LinkLayerRouter::Shutdown, &t.router));
 	LinkFrame f; f.FormatAck(true, false, 1024, 1);
 	t.phys.TriggerRead(toHex(f.GetBuffer(), f.GetSize()));
 	BOOST_REQUIRE(t.IsLogErrorFree());

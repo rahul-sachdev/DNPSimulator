@@ -52,7 +52,7 @@ void MockPhysicalLayerMonitor::OnStateChange(PhysicalLayerState aState)
 	mState.push(aState);
 }
 
-void MockPhysicalLayerMonitor::OnPhysicalLayerOpenCallback()
+void MockPhysicalLayerMonitor::OnPhysicalLayerOpenSuccessCallback()
 {
 	mOpens++;
 	mpPhys->AsyncRead(mReadBuffer, mReadBuffer.Size());

@@ -46,11 +46,6 @@ VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVto
 	assert(apTimerSrc != NULL);
 }
 
-void VtoRouter::DoStopRouter()
-{
-	this->Stop();
-}
-
 void VtoRouter::OnVtoDataReceived(const VtoData& arData)
 {
 	LOG_BLOCK(LEV_DEBUG, "GotRemoteData: " << arData.GetSize() << " Type: " << ToString(arData.GetType()));
@@ -165,11 +160,18 @@ void VtoRouter::OnBufferAvailable()
 	this->CheckForVtoWrite();
 }
 
-void VtoRouter::OnPhysicalLayerOpenCallback()
+void VtoRouter::OnPhysicalLayerOpenSuccessCallback()
 {
 	this->SetLocalConnected(true);
 
 	this->CheckForPhysRead();
+	this->CheckForPhysWrite();
+	this->CheckForVtoWrite();
+}
+
+void VtoRouter::OnPhysicalLayerOpenFailureCallback()
+{
+	this->SetLocalConnected(false);
 	this->CheckForPhysWrite();
 	this->CheckForVtoWrite();
 }

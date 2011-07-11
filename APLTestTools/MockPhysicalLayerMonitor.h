@@ -45,7 +45,8 @@ public:
 	void OnStateChange(PhysicalLayerState);
 	std::queue< PhysicalLayerState > mState;
 
-	void OnPhysicalLayerOpenCallback();	
+	void OnPhysicalLayerOpenSuccessCallback();
+	void OnPhysicalLayerOpenFailureCallback() {}
 	void OnPhysicalLayerCloseCallback();	
 
 	void _OnReceive(const boost::uint8_t* apData, size_t aNumBytes);

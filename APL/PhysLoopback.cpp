@@ -57,15 +57,9 @@ void PhysLoopback::_OnSendFailure(void)
 
 }
 
-void PhysLoopback::OnPhysicalLayerOpenCallback(void)
-{
-	LOG_BLOCK(LEV_INFO, "Opened");
+void PhysLoopback::OnPhysicalLayerOpenSuccessCallback(void)
+{	
 	this->StartRead();
-}
-
-void PhysLoopback::OnPhysicalLayerCloseCallback(void)
-{
-	LOG_BLOCK(LEV_INFO, "Closed");
 }
 
 }

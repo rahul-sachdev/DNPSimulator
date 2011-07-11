@@ -124,7 +124,9 @@ protected:
 
 	// Implement AsyncPhysLayerMonitor
 
-	void OnPhysicalLayerOpenCallback();
+	void OnPhysicalLayerOpenSuccessCallback();
+
+	void OnPhysicalLayerOpenFailureCallback();
 
 	void OnPhysicalLayerCloseCallback();
 
@@ -151,9 +153,7 @@ protected:
 	 * inherited via IHandlerAsync.  Called when an asynchronous
 	 * transmission to the physical layer was not successful.
 	 */
-	void _OnSendFailure();
-
-	void DoStopRouter();
+	void _OnSendFailure();	
 
 	virtual void DoVtoRemoteConnectedChanged(bool aOpened) = 0;
 	virtual void SetLocalConnected(bool aConnected) = 0;

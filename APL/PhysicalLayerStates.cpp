@@ -27,15 +27,15 @@ std::string ConvertPhysicalLayerStateToString(PhysicalLayerState aState)
 {
 	switch(aState) {
 	case(PLS_CLOSED):
-		return "Closed";
+		return "PLS_CLOSED";
 	case(PLS_OPENING):
-		return "Opening";
+		return "PLS_OPENING";
 	case(PLS_WAITING):
-		return "Waiting";
+		return "PLS_WAITING";
 	case(PLS_OPEN):
-		return "Open";
-	case(PLS_STOPPED):
-		return "Stopped";
+		return "PLS_OPEN";
+	case(PLS_SHUTDOWN):
+		return "PLS_SHUTDOWN";
 	default:
 		return "Undefined state";
 	}

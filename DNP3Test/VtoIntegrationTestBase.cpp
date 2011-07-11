@@ -33,10 +33,12 @@ namespace dnp
 VtoIntegrationTestBase::VtoIntegrationTestBase(
     bool clientOnSlave,
     bool aImmediateOutput,
+	bool aLogToFile,
     FilterLevel level,
     boost::uint16_t port) :
 
 	LogTester(),
+	Loggable(mpTestLogger),
 	mpMainLogger(mLog.GetLogger(level, "main")),
 	ltf(&mLog, "integration.log", true),
 	testObj(),
@@ -47,6 +49,7 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 {
 
 	if(aImmediateOutput) mLog.AddLogSubscriber(LogToStdio::Inst());
+	if(aLogToFile) mLog.AddLogSubscriber(&ltf);
 
 	manager.AddTCPServer("dnp-tcp-server", PhysLayerSettings(), "127.0.0.1", port);
 	manager.AddSlave("dnp-tcp-server", "slave", level, &cmdAcceptor, SlaveStackConfig());
@@ -63,11 +66,6 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 	manager.StartVtoRouter("vto-tcp-client", clientSideOfStack, VtoRouterSettings(88, false, false, 1000));
 	manager.AddTCPServer("vto-tcp-server", PhysLayerSettings(), "127.0.0.1", port + 20);
 	manager.StartVtoRouter("vto-tcp-server", serverSideOfStack, VtoRouterSettings(88, true, false, 1000));
-}
-
-VtoIntegrationTestBase::~VtoIntegrationTestBase()
-{
-
 }
 
 }
