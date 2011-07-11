@@ -61,67 +61,6 @@ public:
 
 BOOST_AUTO_TEST_SUITE(VtoLoopbackIntegrationSuite)
 
-BOOST_AUTO_TEST_CASE(Reconnection)
-{
-	VtoLoopbackTestStack stack(true, false);
-
-	// start up everything, the local side should be able to open
-	stack.loopback.Start();
-	stack.local.Start();
-
-	RandomizedBuffer data(100);
-
-	for(size_t i = 0; i < 3; ++i) {
-
-		BOOST_REQUIRE(stack.WaitForLocalState(PLS_OPEN));
-
-		// test that data is correctly sent both ways
-		data.Randomize();
-		stack.local.ExpectData(data);
-		stack.local.WriteData(data);
-		BOOST_REQUIRE(stack.WaitForExpectedDataToBeReceived());
-
-		// stop the remote loopback server, which should cause the local vto socket to close and reopen
-		stack.loopback.Stop();
-		BOOST_REQUIRE(stack.WaitForLocalState(PLS_CLOSED));
-		stack.loopback.Start();
-	}
-}
-
-BOOST_AUTO_TEST_CASE(RemoteSideOpenFailureBouncesLocalConnection)
-{
-	VtoLoopbackTestStack test(true, false);
-
-	BOOST_REQUIRE(test.WaitForLocalState(PLS_CLOSED));
-
-	test.local.Start();
-
-	for(size_t i = 0; i < 5; ++i) {
-		// start local connection, we should immediately be able to connect to this side
-		BOOST_REQUIRE(test.WaitForLocalState(PLS_OPEN));
-		// since the remote side can't connect to the port we should have our local connection bounced
-		BOOST_REQUIRE(test.WaitForLocalState(PLS_CLOSED));
-	}
-}
-
-BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
-{
-	VtoLoopbackTestStack stack(true, false);
-
-	// start all components, should connect
-	stack.loopback.Start();
-	stack.local.Start();
-
-	BOOST_REQUIRE(stack.WaitForLocalState(PLS_OPEN));
-
-	// kill remote connection, should kill our local connection
-	stack.mpMainLogger->Log(LEV_EVENT, LOCATION, "Stopping loopback");
-	stack.loopback.Stop();
-	stack.mpMainLogger->Log(LEV_EVENT, LOCATION, "Stopped loopback");
-
-	BOOST_REQUIRE(stack.WaitForLocalState(PLS_CLOSED));
-}
-
 void TestLargeDataLoopback(VtoLoopbackTestStack& arTest, size_t aSizeInBytes)
 {
 	// start everything
