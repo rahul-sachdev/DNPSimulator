@@ -65,7 +65,8 @@ AsyncStackManager::AsyncStackManager(Logger* apLogger) :
 	mScheduler(&mTimerSrc),
 	mVtoManager(apLogger->GetSubLogger("vto"), &mTimerSrc, &mMgr),
 	mThread(this),
-	mpInfiniteTimer(mTimerSrc.StartInfinite(boost::bind(&AsyncStackManager::NullActionForInfiniteTimer)))
+	mpInfiniteTimer(mTimerSrc.StartInfinite(boost::bind(&AsyncStackManager::NullActionForInfiniteTimer))),
+	mIsShutdown(false)
 {
 	mThread.Start();
 }
@@ -77,15 +78,11 @@ AsyncStackManager::~AsyncStackManager()
 	 */
 	this->Shutdown();
 
-	// if we've cleaned up correctly, canceling the infinite timer will cause the thread to stop executing
-	mpInfiniteTimer->Cancel();
-	LOG_BLOCK(LEV_DEBUG, "Joining on io_service thread");
-	mThread.WaitForStop();
-	LOG_BLOCK(LEV_DEBUG, "Join complete on io_service thread");
 }
 
 std::vector<std::string> AsyncStackManager::GetStackNames()
 {
+
 	return GetKeys<StackToChannelMap, string>(mStackNameToChannel);
 }
 
@@ -96,22 +93,26 @@ std::vector<std::string> AsyncStackManager::GetPortNames()
 
 void AsyncStackManager::AddTCPClient(const std::string& arName, PhysLayerSettings aSettings, const std::string& arAddr, boost::uint16_t aPort)
 {
+	this->ThrowIfAlreadyShutdown();
 	mMgr.AddTCPClient(arName, aSettings, arAddr, aPort);
 }
 
 void AsyncStackManager::AddTCPServer(const std::string& arName, PhysLayerSettings aSettings, const std::string& arEndpoint, boost::uint16_t aPort)
 {
+	this->ThrowIfAlreadyShutdown();
 	mMgr.AddTCPServer(arName, aSettings, arEndpoint, aPort);
 }
 
 void AsyncStackManager::AddSerial(const std::string& arName, PhysLayerSettings aSettings, SerialSettings aSerial)
 {
+	this->ThrowIfAlreadyShutdown();
 	mMgr.AddSerial(arName, aSettings, aSerial);
 }
 
 ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel, IDataObserver* apPublisher,
         const MasterStackConfig& arCfg)
 {
+	this->ThrowIfAlreadyShutdown();
 	LinkChannel* pChannel = this->GetOrCreateChannel(arPortName);
 	Logger* pLogger = mpLogger->GetSubLogger(arStackName, aLevel);
 	pLogger->SetVarName(arStackName);
@@ -132,6 +133,7 @@ ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, c
 IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel, ICommandAcceptor* apCmdAcceptor,
         const SlaveStackConfig& arCfg)
 {
+	this->ThrowIfAlreadyShutdown();
 	LinkChannel* pChannel = this->GetOrCreateChannel(arPortName);
 	Logger* pLogger = mpLogger->GetSubLogger(arStackName, aLevel);
 	pLogger->SetVarName(arStackName);
@@ -152,6 +154,7 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 void AsyncStackManager::AddVtoChannel(const std::string& arStackName,
                                       IVtoCallbacks* apCallbacks)
 {
+	this->ThrowIfAlreadyShutdown();
 	Stack* pStack = this->GetStackByName(arStackName);
 	pStack->GetVtoWriter()->AddVtoCallback(apCallbacks);
 	pStack->GetVtoReader()->AddVtoChannel(apCallbacks);
@@ -159,6 +162,7 @@ void AsyncStackManager::AddVtoChannel(const std::string& arStackName,
 
 void AsyncStackManager::RemoveVtoChannel(const std::string& arStackName, IVtoCallbacks* apCallbacks)
 {
+	this->ThrowIfAlreadyShutdown();
 	Stack* pStack = this->GetStackByName(arStackName);
 	pStack->GetVtoWriter()->RemoveVtoCallback(apCallbacks);
 	pStack->GetVtoReader()->RemoveVtoChannel(apCallbacks);
@@ -167,6 +171,7 @@ void AsyncStackManager::RemoveVtoChannel(const std::string& arStackName, IVtoCal
 void AsyncStackManager::StartVtoRouter(const std::string& arPortName,
                                        const std::string& arStackName, const VtoRouterSettings& arSettings)
 {
+	this->ThrowIfAlreadyShutdown();
 	Stack* pStack = this->GetStackByName(arStackName);
 	VtoRouter* pRouter = mVtoManager.StartRouter(arPortName, arSettings, pStack->GetVtoWriter());
 	this->AddVtoChannel(arStackName, pRouter);
@@ -174,6 +179,7 @@ void AsyncStackManager::StartVtoRouter(const std::string& arPortName,
 
 void AsyncStackManager::StopVtoRouter(const std::string& arStackName, boost::uint8_t aVtoChannelId)
 {
+	this->ThrowIfAlreadyShutdown();
 	Stack* pStack = this->GetStackByName(arStackName);
 	IVtoWriter* pWriter = pStack->GetVtoWriter();
 	VtoRouterManager::RouterRecord rec = mVtoManager.GetRouterOnWriter(pWriter, aVtoChannelId);
@@ -183,6 +189,7 @@ void AsyncStackManager::StopVtoRouter(const std::string& arStackName, boost::uin
 
 void AsyncStackManager::StopAllRoutersOnStack(const std::string& arStackName)
 {
+	this->ThrowIfAlreadyShutdown();
 	IVtoWriter* pWriter = this->GetVtoWriter(arStackName);
 	//mVtoManager.StopAllRoutersOnWriter(pWriter);
 	//TODO - figure out why this is commented out
@@ -190,12 +197,14 @@ void AsyncStackManager::StopAllRoutersOnStack(const std::string& arStackName)
 
 IVtoWriter* AsyncStackManager::GetVtoWriter(const std::string& arStackName)
 {
+	this->ThrowIfAlreadyShutdown();
 	return this->GetStackByName(arStackName)->GetVtoWriter();
 }
 
 // Remove a port and all associated stacks
 void AsyncStackManager::RemovePort(const std::string& arPortName)
 {
+	this->ThrowIfAlreadyShutdown();
 	LinkChannel* pChannel = this->GetChannelOrExcept(arPortName);
 
 	vector<string> stacks = this->StacksOnChannel(arPortName);
@@ -219,6 +228,7 @@ void AsyncStackManager::RemovePort(const std::string& arPortName)
 
 std::vector<std::string> AsyncStackManager::StacksOnChannel(const std::string& arPortName)
 {
+	this->ThrowIfAlreadyShutdown();
 	std::vector<std::string> ret;
 	for(StackToChannelMap::iterator i = this->mStackNameToChannel.begin(); i != mStackNameToChannel.end(); ++i) {
 		if(i->second->Name() == arPortName) {
@@ -230,6 +240,7 @@ std::vector<std::string> AsyncStackManager::StacksOnChannel(const std::string& a
 
 void AsyncStackManager::RemoveStack(const std::string& arStackName)
 {
+	this->ThrowIfAlreadyShutdown();
 	LinkChannel* pChannel = this->GetChannelByStackName(arStackName);
 	this->SeverStack(pChannel, arStackName);
 }
@@ -273,13 +284,29 @@ Stack* AsyncStackManager::GetStackByName(const std::string& arStackName)
 	return i->second.get();
 }
 
+void AsyncStackManager::ThrowIfAlreadyShutdown()
+{
+	if(mIsShutdown) throw InvalidStateException(LOCATION, "Stack has been permanently shutdown");
+}
+
 void AsyncStackManager::Shutdown()
 {
-	vector<string> ports = this->GetPortNames();
-	BOOST_FOREACH(string s, ports) {
-		LOG_BLOCK(LEV_INFO, "Removing port: " << s);
-		this->RemovePort(s);
-		LOG_BLOCK(LEV_INFO, "Done removing Port: " << s);
+	if(!mIsShutdown) {
+
+		vector<string> ports = this->GetPortNames();
+		BOOST_FOREACH(string s, ports) {
+			LOG_BLOCK(LEV_DEBUG, "Removing port: " << s);
+			this->RemovePort(s);
+			LOG_BLOCK(LEV_DEBUG, "Done removing Port: " << s);
+		}
+
+		// if we've cleaned up correctly, canceling the infinite timer will cause the thread to stop executing
+		mpInfiniteTimer->Cancel();
+		LOG_BLOCK(LEV_DEBUG, "Joining on io_service thread");
+		mThread.WaitForStop();
+		LOG_BLOCK(LEV_DEBUG, "Join complete on io_service thread");
+
+		mIsShutdown = true;
 	}
 }
 

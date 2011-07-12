@@ -246,9 +246,8 @@ public:
 	std::vector<std::string> GetPortNames();
 
 	/**
-	* Synchronously stops all running stacks and ports
-	* The back ground thread is still running and the manager
-	* is ready for new actions
+	* Synchronously stops all running stacks and ports. Permanently
+	* stops the running background thread.
 	*/
 	void Shutdown();
 
@@ -270,6 +269,9 @@ private:
 	VtoRouterManager mVtoManager;
 	Thread mThread;
 	ITimer* mpInfiniteTimer;
+	bool mIsShutdown;
+
+	void ThrowIfAlreadyShutdown();
 
 	typedef std::map<std::string, boost::shared_ptr<Stack> > StackMap;
 	StackMap mStackNameToStack;		// maps a stack name a Stack instance
