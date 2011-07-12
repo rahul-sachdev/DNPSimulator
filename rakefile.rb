@@ -1,7 +1,7 @@
 
 $: << './tools/rake_build_system' #make sure this rakefile can see all the build system files
 
-ENV['BOOST_VERSION']='boost_1_46_1'
+ENV['BOOST_VERSION']='boost_1_47_0'
 
 require 'rake/clean'
 CLOBBER.include('doc')					# remove any doxygen-generated files

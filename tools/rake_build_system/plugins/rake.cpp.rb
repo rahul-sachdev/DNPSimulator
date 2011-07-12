@@ -31,9 +31,8 @@ end
 def make_obj_file(source, obj_file, includes, cc_flags, warn_flags)
   inc = include_string(includes)
   warn = warn_flags.join(' ')
-  #puts "compiling #{source} with #{$CC} #{cc_flags} #{warn} #{$CC_PREPROCESSOR}"
   cmd = "#{$CC} #{cc_flags} #{warn} -c -o #{obj_file} #{source} #{inc} #{$CC_PREPROCESSOR}"
-  puts cmd
+  puts "compiling #{source} with #{$CC} #{cc_flags} #{warn} #{$CC_PREPROCESSOR}"
   sh cmd
 end
 

@@ -34,7 +34,7 @@ preprocessor = ['BOOST_ASIO_ENABLE_CANCELIO', 'BOOST_REGEX_NO_LIB']
 
 preprocessor = case $hw_os
  when 'pc_cygwin'
-  ['APL_CYGWIN','__USE_W32_SOCKETS', '_WIN32_WINNT=0x0501']
+  ['_WIN32_WINNT=0x0501', '__USE_W32_SOCKETS']
  when 'pc_linux_arm'
   ['ARM','BOOST_ASIO_DISABLE_EPOLL']
  else []
@@ -53,16 +53,43 @@ $WINSOCK_LIBS = case $hw_os
     []
 end
 
+def get_release_cc_flags
+  case $hw_os
+    when 'pc_linux_arm'
+      ['-O3']
+    when 'pc_cygwin'       
+      ['-O3']
+    else
+      ['-O3 -fpic']
+  end	
+end
+
+def get_debug_cc_flags
+  case $hw_os
+    when 'pc_linux_arm' []
+    else ['-g -fpic']
+  end	
+end
+
+def get_coverage_cc_flags
+  case $hw_os
+    when 'pc_linux_arm'
+      []
+    else
+      ['-g -fPIC -O0 -fprofile-arcs -ftest-coverage -DNDEBUG -DPSI_LOGALL']
+  end	
+end
+
 #By default, the build is set to debug
 $WARN_FLAGS   = ['-Wall', '-Wno-strict-aliasing']
 $RELEASE_TYPE = ENV['debug'] ? 'debug' : (ENV['coverage'] ? 'coverage' : 'release')
 $CC_FLAGS     = case $RELEASE_TYPE
   when 'release'
-    $hw_os == 'pc_linux_arm' ? ['-O3'] : ['-O3 -fPIC']
+    get_release_cc_flags()
   when 'debug'
-    $hw_os == 'pc_linux_arm' ? []      : ['-g -fPIC']      # no gdb on arm, so no debug needed
+    get_debug_cc_flags()
   when 'coverage'
-    $hw_os == 'pc_linux_arm' ? []      : ['-g -fPIC -O0 -fprofile-arcs -ftest-coverage -DNDEBUG -DPSI_LOGALL']
+    get_coverage_cc_flags()
   else
     puts "Unknown $RELEASE_TYPE = #{$RELEASE_TYPE}"
     Process.exit 1
