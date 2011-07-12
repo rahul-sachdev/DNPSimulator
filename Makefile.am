@@ -14,7 +14,6 @@ libopendnp3_apl_la_LDFLAGS = -version-info 0:0:0
 libopendnp3_apl_la_SOURCES = \
 	APL/ASIOSerialHelpers.cpp \
 	APL/AsyncLayerInterfaces.cpp \
-	APL/AsyncPhysLayerMonitor.cpp \
 	APL/AsyncTaskBase.cpp \
 	APL/AsyncTaskContinuous.cpp \
 	APL/AsyncTaskGroup.cpp \
@@ -34,7 +33,6 @@ libopendnp3_apl_la_SOURCES = \
 	APL/IHandlerAsync.cpp \
 	APL/IOService.cpp \
 	APL/IOServiceThread.cpp \
-	APL/IPhysMonitor.cpp \
 	APL/LockBase.cpp \
 	APL/LockBoost.cpp \
 	APL/Log.cpp \
@@ -59,6 +57,9 @@ libopendnp3_apl_la_SOURCES = \
 	APL/PhysicalLayerInstance.cpp \
 	APL/PhysicalLayerManager.cpp \
 	APL/PhysicalLayerMap.cpp \
+	APL/PhysicalLayerMonitor.cpp \
+	APL/PhysicalLayerMonitorStates.cpp \
+	APL/PhysicalLayerStates.cpp \
 	APL/PhysLoopback.cpp \
 	APL/PostingNotifier.cpp \
 	APL/PostingNotifierSource.cpp \
@@ -66,6 +67,7 @@ libopendnp3_apl_la_SOURCES = \
 	APL/QualityConverter.cpp \
 	APL/RandomizedBuffer.cpp \
 	APL/ShiftableBuffer.cpp \
+	APL/SuspendTimerSource.cpp \
 	APL/Threadable.cpp \
 	APL/ThreadBase.cpp \
 	APL/ThreadBoost.cpp \
@@ -77,6 +79,7 @@ libopendnp3_apl_la_SOURCES = \
 	APL/TimeSource.cpp \
 	APL/TimingTools.cpp \
 	APL/ToHex.cpp \
+	APL/TrackingTaskGroup.cpp \
 	APL/Util.cpp
 
 libopendnp3_dnp3_la_LDFLAGS = -version-info 0:0:0
@@ -93,7 +96,6 @@ libopendnp3_dnp3_la_SOURCES = \
 	DNP3/AsyncStackManager.cpp \
 	DNP3/BufferTypes.cpp \
 	DNP3/ClassCounter.cpp \
-	DNP3/CleanupHelper.cpp \
 	DNP3/ControlTasks.cpp \
 	DNP3/Database.cpp \
 	DNP3/DataPoll.cpp \
@@ -105,6 +107,7 @@ libopendnp3_dnp3_la_SOURCES = \
 	DNP3/HeaderReadIterator.cpp \
 	DNP3/IndexedWriteIterator.cpp \
 	DNP3/IStackObserver.cpp \
+	DNP3/LinkChannel.cpp \
 	DNP3/LinkFrame.cpp \
 	DNP3/LinkHeader.cpp \
 	DNP3/LinkLayerConstants.cpp \
@@ -124,7 +127,6 @@ libopendnp3_dnp3_la_SOURCES = \
 	DNP3/Objects.cpp \
 	DNP3/ObjectWriteIterator.cpp \
 	DNP3/PointClass.cpp \
-	DNP3/Port.cpp \
 	DNP3/PriLinkLayerStates.cpp \
 	DNP3/ResponseContext.cpp \
 	DNP3/ResponseLoader.cpp \
@@ -157,7 +159,6 @@ nobase_pkginclude_HEADERS= \
 	version.hpp \
 	APL/ASIOSerialHelpers.h \
 	APL/AsyncLayerInterfaces.h \
-	APL/AsyncPhysLayerMonitor.h \
 	APL/AsyncTaskBase.h \
 	APL/AsyncTaskContinuous.h \
 	APL/AsyncTaskGroup.h \
@@ -190,10 +191,11 @@ nobase_pkginclude_HEADERS= \
 	APL/IOService.h \
 	APL/IOServiceThread.h \
 	APL/IPhysicalLayerAsync.h \
+	APL/IPhysicalLayerObserver.h \
 	APL/IPhysicalLayerSource.h \
-	APL/IPhysMonitor.h \
 	APL/ISubject.h \
 	APL/ITimeSource.h \
+	APL/ITransactable.h \
 	APL/LockBase.h \
 	APL/LockBoost.h \
 	APL/Lock.h \
@@ -225,6 +227,9 @@ nobase_pkginclude_HEADERS= \
 	APL/PhysicalLayerInstance.h \
 	APL/PhysicalLayerManager.h \
 	APL/PhysicalLayerMap.h \
+	APL/PhysicalLayerMonitor.h \
+	APL/PhysicalLayerMonitorStates.h \
+	APL/PhysicalLayerStates.h \
 	APL/PhysLayerSettings.h \
 	APL/PhysLoopback.h \
 	APL/PostingNotifier.h \
@@ -239,6 +244,7 @@ nobase_pkginclude_HEADERS= \
 	APL/ShiftableBuffer.h \
 	APL/Singleton.h \
 	APL/SubjectBase.h \
+	APL/SuspendTimerSource.h \
 	APL/SyncVar.h \
 	APL/Threadable.h \
 	APL/ThreadBase.h \
@@ -254,6 +260,7 @@ nobase_pkginclude_HEADERS= \
 	APL/TimeTypes.h \
 	APL/TimingTools.h \
 	APL/ToHex.h \
+	APL/TrackingTaskGroup.h \
 	APL/Types.h \
 	APL/Uncopyable.h \
 	APL/Util.h \
@@ -271,7 +278,6 @@ nobase_pkginclude_HEADERS= \
 	DNP3/BufferTypes.h \
 	DNP3/ClassCounter.h \
 	DNP3/ClassMask.h \
-	DNP3/CleanupHelper.h \
 	DNP3/ControlTasks.h \
 	DNP3/CTOHistory.h \
 	DNP3/Database.h \
@@ -298,6 +304,7 @@ nobase_pkginclude_HEADERS= \
 	DNP3/IndexedWriteIterator.h \
 	DNP3/IStackObserver.h \
 	DNP3/IVtoEventAcceptor.h \
+	DNP3/LinkChannel.h \
 	DNP3/LinkConfig.h \
 	DNP3/LinkFrame.h \
 	DNP3/LinkHeader.h \
@@ -321,7 +328,6 @@ nobase_pkginclude_HEADERS= \
 	DNP3/Objects.h \
 	DNP3/ObjectWriteIterator.h \
 	DNP3/PointClass.h \
-	DNP3/Port.h \
 	DNP3/PriLinkLayerStates.h \
 	DNP3/ResponseContext.h \
 	DNP3/ResponseLoader.h \
@@ -403,6 +409,7 @@ dnp3test_SOURCES = \
 	APLTestTools/MockLowerLayer.cpp \
 	APLTestTools/MockPhysicalLayerAsync.cpp \
 	APLTestTools/MockPhysicalLayerAsyncTS.cpp \
+	APLTestTools/MockPhysicalLayerMonitor.cpp \
 	APLTestTools/MockPhysicalLayerSource.cpp \
 	APLTestTools/MockResponseAcceptor.cpp \
 	APLTestTools/MockTimerSource.cpp \
@@ -444,6 +451,8 @@ dnp3test_SOURCES = \
 	DNP3Test/TestTransportLoopback.cpp \
 	DNP3Test/TestTransportScalability.cpp \
 	DNP3Test/TestVtoInterface.cpp \
+	DNP3Test/TestVtoLoopbackIntegration.cpp \
+	DNP3Test/TestVtoOnewayIntegration.cpp \
 	DNP3Test/TestVtoRouter.cpp \
 	DNP3Test/TestVtoRouterManager.cpp \
 	DNP3Test/TestVtoWriter.cpp \
@@ -451,7 +460,8 @@ dnp3test_SOURCES = \
 	DNP3Test/TransportLoopbackTestObject.cpp \
 	DNP3Test/TransportScalabilityTestObject.cpp \
 	DNP3Test/TransportStackPair.cpp \
-	DNP3Test/TransportTestObject.cpp
+	DNP3Test/TransportTestObject.cpp \
+	DNP3Test/VtoIntegrationTestBase.cpp
 
 ASTYLE=astyle --options=config/astyle.cfg
 
