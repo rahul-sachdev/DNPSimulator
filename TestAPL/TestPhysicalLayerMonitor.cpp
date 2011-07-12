@@ -41,17 +41,25 @@ public:
 		mCloseCallbackCount(0) {
 	}
 
-	void ReachInAndStartOpenTimer() { this->StartOpenTimer(); }
-	
+	void ReachInAndStartOpenTimer() {
+		this->StartOpenTimer();
+	}
+
 	size_t mOpenCallbackCount;
 	size_t mCloseCallbackCount;
 
 protected:
 
-	void OnPhysicalLayerOpenSuccessCallback() { ++mOpenCallbackCount; }
-	void OnPhysicalLayerOpenFailureCallback() { ++mOpenCallbackCount; }
-	void OnPhysicalLayerCloseCallback() { ++mCloseCallbackCount; }
-		
+	void OnPhysicalLayerOpenSuccessCallback() {
+		++mOpenCallbackCount;
+	}
+	void OnPhysicalLayerOpenFailureCallback() {
+		++mOpenCallbackCount;
+	}
+	void OnPhysicalLayerCloseCallback() {
+		++mCloseCallbackCount;
+	}
+
 	void _OnReceive(const boost::uint8_t* apData, size_t aNumBytes) {}
 	void _OnSendSuccess() {}
 	void _OnSendFailure() {}
@@ -82,7 +90,7 @@ BOOST_AUTO_TEST_CASE(StateClosedExceptions)
 	BOOST_REQUIRE_EQUAL(PLS_CLOSED, test.monitor.GetState());
 	BOOST_REQUIRE_THROW(test.monitor.OnLowerLayerUp(), InvalidStateException);
 	BOOST_REQUIRE_THROW(test.monitor.OnLowerLayerDown(), InvalidStateException);
-	BOOST_REQUIRE_THROW(test.monitor.OnOpenFailure(), InvalidStateException);	
+	BOOST_REQUIRE_THROW(test.monitor.OnOpenFailure(), InvalidStateException);
 	BOOST_REQUIRE_EQUAL(PLS_CLOSED, test.monitor.GetState());
 }
 
@@ -211,7 +219,7 @@ BOOST_AUTO_TEST_CASE(LayerKeepsTryingToOpen)
 	TestObject test;
 	test.monitor.Start();
 
-	for(size_t i=0; i<3; ++i) {
+	for(size_t i = 0; i < 3; ++i) {
 		test.phys.SignalOpenFailure();
 		BOOST_REQUIRE(test.mts.DispatchOne());
 		BOOST_REQUIRE_EQUAL(PLS_OPENING, test.monitor.GetState());
@@ -225,14 +233,14 @@ BOOST_AUTO_TEST_CASE(CloseWhileWaitingDoesNothing)
 	test.phys.SignalOpenFailure();
 	test.monitor.Close();
 	BOOST_REQUIRE_EQUAL(PLS_WAITING, test.monitor.GetState());
-	BOOST_REQUIRE_EQUAL(1, test.mts.NumActive());	
+	BOOST_REQUIRE_EQUAL(1, test.mts.NumActive());
 }
 
 BOOST_AUTO_TEST_CASE(LayerCloseWhileOpen)
 {
 	TestObject test;
 	test.monitor.Start();
-	test.phys.SignalOpenSuccess();	
+	test.phys.SignalOpenSuccess();
 	test.phys.AsyncClose();
 	BOOST_REQUIRE_EQUAL(PLS_OPENING, test.monitor.GetState());
 }
@@ -241,26 +249,26 @@ BOOST_AUTO_TEST_CASE(RequestCloseWhileOpen)
 {
 	TestObject test;
 	test.monitor.Start();
-	test.phys.SignalOpenSuccess();	
+	test.phys.SignalOpenSuccess();
 	test.monitor.Close();
-	BOOST_REQUIRE_EQUAL(PLS_OPENING, test.monitor.GetState());	
+	BOOST_REQUIRE_EQUAL(PLS_OPENING, test.monitor.GetState());
 }
 
 BOOST_AUTO_TEST_CASE(RequestStopWhileOpen)
 {
 	TestObject test;
 	test.monitor.Start();
-	test.phys.SignalOpenSuccess();	
+	test.phys.SignalOpenSuccess();
 	test.monitor.Shutdown();
-	BOOST_REQUIRE_EQUAL(PLS_SHUTDOWN, test.monitor.GetState());	
+	BOOST_REQUIRE_EQUAL(PLS_SHUTDOWN, test.monitor.GetState());
 }
 
 BOOST_AUTO_TEST_CASE(LayerSuspendWhileOpenDontRetry)
 {
 	TestObject test;
 	test.monitor.Start();
-	test.phys.SignalOpenSuccess();	
-	test.monitor.Suspend();	
+	test.phys.SignalOpenSuccess();
+	test.monitor.Suspend();
 	BOOST_REQUIRE_EQUAL(PLS_CLOSED, test.monitor.GetState());
 }
 
@@ -268,10 +276,10 @@ BOOST_AUTO_TEST_CASE(SuspendWhileWaitingCancelsTimer)
 {
 	TestObject test;
 	test.monitor.Start();
-	test.phys.SignalOpenFailure();	
+	test.phys.SignalOpenFailure();
 	test.monitor.Suspend();
 	BOOST_REQUIRE_EQUAL(PLS_CLOSED, test.monitor.GetState());
-	BOOST_REQUIRE_EQUAL(0, test.mts.NumActive());	
+	BOOST_REQUIRE_EQUAL(0, test.mts.NumActive());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

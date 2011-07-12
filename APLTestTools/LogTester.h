@@ -28,7 +28,7 @@ class LogTester
 {
 public:
 	LogTester(bool aImmediate = false);
-	
+
 	void Log(const std::string& aLocation, const std::string& aMessage);
 
 	int ClearLog();
@@ -41,7 +41,7 @@ public:
 protected:
 	Logger* mpTestLogger;
 	LogEntryCircularBuffer mBuffer;
-	
+
 
 };
 

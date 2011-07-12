@@ -31,7 +31,7 @@ public:
 	MockPhysicalLayerMonitor(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimer, millis_t aOpenRetry);
 
 	size_t mOpens;
-	size_t mCloses;	
+	size_t mCloses;
 
 	size_t mNumReads;
 	size_t mBytesRead;
@@ -47,7 +47,7 @@ public:
 
 	void OnPhysicalLayerOpenSuccessCallback();
 	void OnPhysicalLayerOpenFailureCallback() {}
-	void OnPhysicalLayerCloseCallback();	
+	void OnPhysicalLayerCloseCallback();
 
 	void _OnReceive(const boost::uint8_t* apData, size_t aNumBytes);
 	void _OnSendSuccess(void);

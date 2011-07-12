@@ -46,11 +46,11 @@ BOOST_AUTO_TEST_CASE(UnknownSourceException)
 BOOST_AUTO_TEST_CASE(UnknownDestination)
 {
 	LinkLayerRouterTest t;
-	
+
 	MockFrameSink mfs;
-	t.router.AddContext(&mfs, LinkRoute(1, 1024));	
+	t.router.AddContext(&mfs, LinkRoute(1, 1024));
 	t.phys.SignalOpenSuccess();
-	
+
 	t.phys.TriggerRead("05 64 05 C0 01 00 00 04 E9 21");
 	LogEntry le;
 	BOOST_REQUIRE(t.GetNextEntry(le));

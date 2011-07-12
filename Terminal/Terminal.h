@@ -36,7 +36,7 @@ public:
 
 	void AcceptLine(const std::string& arLine);
 	void _Up();
-	void _Down();	
+	void _Down();
 
 	retcode ProcessLine(const std::string& arLine);
 
@@ -50,7 +50,7 @@ public:
 
 	void Init() {
 		this->Start();
-	}	
+	}
 
 	void ShutdownForever() {
 		this->Shutdown();

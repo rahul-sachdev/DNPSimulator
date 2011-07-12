@@ -203,7 +203,8 @@ void AsyncStackManager::RemovePort(const std::string& arPortName)
 		this->SeverStack(pChannel, s);
 	}
 
-	{	// Tell the channel to shut down permanently
+	{
+		// Tell the channel to shut down permanently
 		Transaction tr(&mSuspendTimerSource);
 		pChannel->BeginShutdown();
 	}

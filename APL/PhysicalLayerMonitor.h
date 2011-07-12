@@ -39,8 +39,8 @@ class IPhysicalLayerObserver;
   */
 class PhysicalLayerMonitor : public IHandlerAsync
 {
-	friend class MonitorStateActions;	
-	
+	friend class MonitorStateActions;
+
 public:
 	PhysicalLayerMonitor(Logger*, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);
 	~PhysicalLayerMonitor();
@@ -68,22 +68,24 @@ public:
 	/** Blocks until the monitor has completely and permanently stopped */
 	void WaitForShutdown();
 
-	Logger* GetLogger() { return mpLogger; }
+	Logger* GetLogger() {
+		return mpLogger;
+	}
 
 protected:
 
-	
+
 	virtual void OnPhysicalLayerOpenSuccessCallback() = 0;
 	virtual void OnPhysicalLayerOpenFailureCallback() = 0;
 	virtual void OnPhysicalLayerCloseCallback() = 0;
-			
+
 	/// Begins the open timer
 	void StartOpenTimer();
 
 	IPhysicalLayerAsync* mpPhys;
 
 private:
-	
+
 	ITimerSource* mpTimerSrc;
 	ITimer* mpOpenTimer;
 	IMonitorState* mpState;

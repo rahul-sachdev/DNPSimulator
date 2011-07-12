@@ -71,7 +71,7 @@ public:
 
 	// ILinkRouter interface
 	void Transmit(const LinkFrame&);
-	
+
 private:
 
 	ILinkContext* GetDestination(boost::uint16_t aDest, boost::uint16_t aSrc);

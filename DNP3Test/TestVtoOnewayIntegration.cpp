@@ -32,7 +32,7 @@ public:
 	VtoOnewayTestStack(
 	    bool clientOnSlave = true,
 	    bool aImmediateOutput = false,
-		bool aLogToFile = false,
+	    bool aLogToFile = false,
 	    FilterLevel level = LEV_INFO,
 	    boost::uint16_t port = MACRO_PORT_VALUE) :
 
@@ -83,20 +83,20 @@ BOOST_AUTO_TEST_CASE(Reconnection)
 	RandomizedBuffer data(100);
 
 	for(size_t i = 0; i < 1; ++i) {
-		
+
 		stack.Log(LOCATION, "Begin iteration");
 
-		BOOST_REQUIRE(stack.WaitForBothSides(PLS_OPEN));		
-		
+		BOOST_REQUIRE(stack.WaitForBothSides(PLS_OPEN));
+
 		// test that data is correctly sent both ways
 		data.Randomize();
 		stack.local.ExpectData(data);
 		stack.local.WriteData(data);
-		BOOST_REQUIRE(stack.WaitForExpectedDataToBeReceived());		
+		BOOST_REQUIRE(stack.WaitForExpectedDataToBeReceived());
 
 		// close the remote loopback server, which will cause both sides to close and reopen
-		stack.remote.Close();		
-		BOOST_REQUIRE(stack.WaitForBothSides(PLS_CLOSED));		
+		stack.remote.Close();
+		BOOST_REQUIRE(stack.WaitForBothSides(PLS_CLOSED));
 
 		stack.Log(LOCATION, "End iteration");
 	}
@@ -125,12 +125,12 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 	// start all components, should connect
 	stack.remote.Start();
 	stack.local.Start();
-	
-	for(size_t i=0; i<3; ++i) {
-		BOOST_REQUIRE(stack.WaitForBothSides(PLS_OPEN));		
-		// kill remote connection, should kill our local connection	
-		stack.remote.Close();	
-		BOOST_REQUIRE(stack.WaitForBothSides(PLS_CLOSED));		
+
+	for(size_t i = 0; i < 3; ++i) {
+		BOOST_REQUIRE(stack.WaitForBothSides(PLS_OPEN));
+		// kill remote connection, should kill our local connection
+		stack.remote.Close();
+		BOOST_REQUIRE(stack.WaitForBothSides(PLS_CLOSED));
 	}
 }
 
@@ -140,7 +140,7 @@ void TestLargeDataOneWay(VtoOnewayTestStack& arTest, size_t aSizeInBytes)
 	arTest.local.Start();
 	arTest.remote.Start();
 
-	BOOST_REQUIRE(arTest.WaitForBothSides(PLS_OPEN));	
+	BOOST_REQUIRE(arTest.WaitForBothSides(PLS_OPEN));
 
 	// test that a large set of data flowing one way works
 	RandomizedBuffer data(aSizeInBytes);
@@ -157,7 +157,7 @@ void TestLargeDataOneWay(VtoOnewayTestStack& arTest, size_t aSizeInBytes)
 BOOST_AUTO_TEST_CASE(LargeDataTransferMasterToSlave)
 {
 	VtoOnewayTestStack stack(true, false);
-	TestLargeDataOneWay(stack, MACRO_BUFFER_SIZE);	
+	TestLargeDataOneWay(stack, MACRO_BUFFER_SIZE);
 }
 
 BOOST_AUTO_TEST_CASE(LargeDataTransferSlaveToMaster)

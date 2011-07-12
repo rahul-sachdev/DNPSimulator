@@ -25,8 +25,8 @@ namespace apl
 
 LogTester::LogTester(bool aImmediate) :
 	mLog(),
-	mpTestLogger(mLog.GetLogger(LEV_DEBUG, "LogTester")),	
-	mBuffer(100)	
+	mpTestLogger(mLog.GetLogger(LEV_DEBUG, "LogTester")),
+	mBuffer(100)
 {
 	mLog.AddLogSubscriber(&mBuffer);
 	if(aImmediate) mLog.AddLogSubscriber(LogToStdio::Inst());

@@ -45,7 +45,7 @@ void LinkChannel::BindStackToChannel(const std::string& arStackName, Stack* apSt
 	LOG_BLOCK(LEV_DEBUG, "Linking stack to port w/ route " << arRoute);
 	apStack->mLink.SetRouter(this);
 	this->AddContext(&apStack->mLink, arRoute); // this function can throw, do it before adjusting the map
-	mStackMap[arStackName] = StackRecord(apStack, arRoute);	
+	mStackMap[arStackName] = StackRecord(apStack, arRoute);
 }
 
 void LinkChannel::RemoveStackFromChannel(const std::string& arStackName)
@@ -56,7 +56,7 @@ void LinkChannel::RemoveStackFromChannel(const std::string& arStackName)
 		StackRecord r = i->second;
 		LOG_BLOCK(LEV_DEBUG, "Unlinking stack from port w/ route " << r.route);
 		this->RemoveContext(r.route);
-		mStackMap.erase(i);		
+		mStackMap.erase(i);
 	}
 }
 

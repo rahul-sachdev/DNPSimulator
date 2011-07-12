@@ -58,7 +58,7 @@ void PhysLoopback::_OnSendFailure(void)
 }
 
 void PhysLoopback::OnPhysicalLayerOpenSuccessCallback(void)
-{	
+{
 	this->StartRead();
 }
 

@@ -33,7 +33,7 @@ Terminal::Terminal(Logger* apLogger, IPhysicalLayerAsync* apPhysical, ITimerSour
 	mBanner(arBanner),
 	mIOMode(aIOMode)
 {
-	this->InitCmdHandlers();	
+	this->InitCmdHandlers();
 }
 
 void Terminal::InitCmdHandlers()

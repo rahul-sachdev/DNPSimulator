@@ -96,7 +96,7 @@ void EnhancedVtoRouter::SetLocalConnected(bool aConnected)
 
 void EnhancedVtoRouter::CloseAndFlushBuffers()
 {
-	FlushBuffers();		
+	FlushBuffers();
 	this->Close();
 }
 
@@ -160,7 +160,7 @@ void ServerSocketVtoRouter::HandleDuplicateClose()
  *************************************/
 ClientSocketVtoRouter::ClientSocketVtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
 	Loggable(apLogger),
-	EnhancedVtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc)	
+	EnhancedVtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc)
 {
 
 }
@@ -174,10 +174,10 @@ void ClientSocketVtoRouter::HandleVtoRemoteConnectedChanged()
 		// will cause a "disconnected" message to be sent so the server side
 		// can close the connection. Effectivley we tunnel the "connection
 		// refused" behavior as a "remote server terminated connection"
-		this->SetLocalConnected(true);		
+		this->SetLocalConnected(true);
 		this->StartOne();
 	}
-	else {		
+	else {
 		this->FlushBuffers();
 		this->Suspend(); //stop local connection attempts when we lose the remote side
 	}

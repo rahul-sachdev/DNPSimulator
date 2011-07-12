@@ -34,7 +34,7 @@ MockPhysicalLayerMonitor::MockPhysicalLayerMonitor(Logger* apLogger, IPhysicalLa
 	Loggable(apLogger),
 	PhysicalLayerMonitor(apLogger, apPhys, apTimer, aOpenRetry),
 	mOpens(0),
-	mCloses(0),	
+	mCloses(0),
 	mNumReads(0),
 	mBytesRead(0),
 	mBytesWritten(0),

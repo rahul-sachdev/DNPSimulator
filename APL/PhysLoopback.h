@@ -38,7 +38,7 @@ private:
 	size_t mBytesRead;
 	size_t mBytesWritten;
 
-	CopyableBuffer mBuffer;	
+	CopyableBuffer mBuffer;
 
 	void _OnReceive(const boost::uint8_t*, size_t);
 	void _OnSendSuccess(void);

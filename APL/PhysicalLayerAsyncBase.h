@@ -102,7 +102,9 @@ public:
 		return mState.CanWrite();
 	}
 
-	std::string ConvertStateToString() const { return mState.ConvertStateToString(); }
+	std::string ConvertStateToString() const {
+		return mState.ConvertStateToString();
+	}
 
 	/* Implement IPhysicalLayerAsync - Events from the outside */
 	void AsyncOpen();
