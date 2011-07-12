@@ -56,7 +56,7 @@ public:
 	    boost::uint16_t port = MACRO_PORT_VALUE);	
 
 	Logger* mpMainLogger;
-	LogToFile ltf;
+	std::auto_ptr<LogToFile> mpLtf;
 	MockCommandAcceptor cmdAcceptor;
 
 	AsyncTestObjectASIO testObj;

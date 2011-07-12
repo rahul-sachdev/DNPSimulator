@@ -69,7 +69,7 @@ void PhysicalLayerMonitor::WaitForShutdown()
 void PhysicalLayerMonitor::ChangeState(IMonitorState* apState)
 {
 	CriticalSection cs(&mLock);
-	LOG_BLOCK(LEV_INFO, mpState->ConvertToString() << " -> " << apState->ConvertToString());
+	LOG_BLOCK(LEV_INFO, mpState->ConvertToString() << " -> " << apState->ConvertToString() << " : " << mpPhys->ConvertStateToString());
 	IMonitorState* pLast = mpState;
 	mpState = apState;	
 	if(pLast->GetState() != apState->GetState()) {		
@@ -115,24 +115,28 @@ void PhysicalLayerMonitor::OnOpenTimerExpiration()
 }
 
 void PhysicalLayerMonitor::_OnOpenFailure()
-{
+{	
 	LOG_BLOCK(LEV_DEBUG, "_OnOpenFailure()");
+	 //This guard keeps the monitor from making callbacks after it is potentially deleted
+	bool shutdown = mpState->IsShuttingDown();
 	mpState->OnOpenFailure(this);
-	this->OnPhysicalLayerOpenFailureCallback();
+	if(!shutdown) this->OnPhysicalLayerOpenFailureCallback();
 }
 
 void PhysicalLayerMonitor::_OnLowerLayerUp()
 {
-	LOG_BLOCK(LEV_DEBUG, "_OnLowerLayerUp");
-	mpState->OnLayerOpen(this);
+	LOG_BLOCK(LEV_DEBUG, "_OnLowerLayerUp");	
+	mpState->OnLayerOpen(this);	
 	this->OnPhysicalLayerOpenSuccessCallback();
 }
 
 void PhysicalLayerMonitor::_OnLowerLayerDown()
 {
-	LOG_BLOCK(LEV_DEBUG, "_OnLowerLayerDown");
-	mpState->OnLayerClose(this);
-	this->OnPhysicalLayerCloseCallback();
+	LOG_BLOCK(LEV_DEBUG, "_OnLowerLayerDown");	
+	//This guard keeps the monitor from making callbacks after it is potentially deleted
+	bool shutdown = mpState->IsShuttingDown();
+	mpState->OnLayerClose(this);	
+	if(!shutdown) this->OnPhysicalLayerCloseCallback();
 }
 
 /* ------- Actions for the states ------- */

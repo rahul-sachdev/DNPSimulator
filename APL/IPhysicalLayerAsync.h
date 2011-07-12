@@ -55,6 +55,9 @@ public:
 
 	/** @return True if the layer is open for read/write */
 	virtual bool IsOpen() const = 0;
+
+	/** @return A string representing the state of the physical layer */
+	virtual std::string ConvertStateToString() const = 0;
 };
 
 
@@ -123,7 +126,6 @@ public:
 	 * 						callbacks
 	 */
 	virtual void SetHandler(IHandlerAsync* apHandler) = 0;
-
 };
 
 };

@@ -39,7 +39,8 @@ class IPhysicalLayerObserver;
   */
 class PhysicalLayerMonitor : public IHandlerAsync
 {
-	friend class MonitorStateActions;	
+	friend class MonitorStateActions;
+	friend class MonitorStateOpeningClosing;
 	
 public:
 	PhysicalLayerMonitor(Logger*, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);

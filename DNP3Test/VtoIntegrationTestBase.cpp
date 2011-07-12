@@ -40,7 +40,7 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 	LogTester(),
 	Loggable(mpTestLogger),
 	mpMainLogger(mLog.GetLogger(level, "main")),
-	ltf(&mLog, "integration.log", true),
+	mpLtf(aLogToFile ? new LogToFile(&mLog, "integration.log", true) : NULL),
 	testObj(),
 	manager(mLog.GetLogger(level, "manager")),
 	timerSource(testObj.GetService()),
@@ -48,8 +48,7 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 	server(mLog.GetLogger(level, "loopback-tcp-server"), testObj.GetService(), "0.0.0.0", port + 10)
 {
 
-	if(aImmediateOutput) mLog.AddLogSubscriber(LogToStdio::Inst());
-	if(aLogToFile) mLog.AddLogSubscriber(&ltf);
+	if(aImmediateOutput) mLog.AddLogSubscriber(LogToStdio::Inst());	
 
 	manager.AddTCPServer("dnp-tcp-server", PhysLayerSettings(), "127.0.0.1", port);
 	manager.AddSlave("dnp-tcp-server", "slave", level, &cmdAcceptor, SlaveStackConfig());

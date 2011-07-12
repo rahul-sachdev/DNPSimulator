@@ -57,7 +57,7 @@ class PhysicalLayerAsyncBase : public IPhysicalLayerAsync, public Loggable
 		bool CanWrite() const;
 
 		bool CallbacksPending() const;
-		std::string ToString() const;
+		std::string ConvertStateToString() const;
 
 		bool CheckForClose();
 	};
@@ -101,6 +101,8 @@ public:
 	bool CanWrite() const {
 		return mState.CanWrite();
 	}
+
+	std::string ConvertStateToString() const { return mState.ConvertStateToString(); }
 
 	/* Implement IPhysicalLayerAsync - Events from the outside */
 	void AsyncOpen();
