@@ -18,6 +18,7 @@
 #include "EnhancedVtoRouter.h"
 
 #include <APL/Exception.h>
+#include <APL/Logger.h>
 
 namespace apl
 {
@@ -93,11 +94,10 @@ void EnhancedVtoRouter::SetLocalConnected(bool aConnected)
 	}
 }
 
-void EnhancedVtoRouter::StopAndFlushBuffers()
+void EnhancedVtoRouter::CloseAndFlushBuffers()
 {
 	FlushBuffers();
-
-	this->DoStop();
+	this->Close();
 }
 
 /*****************************************
@@ -108,20 +108,16 @@ ServerSocketVtoRouter::ServerSocketVtoRouter(const VtoRouterSettings& arSettings
 	Loggable(apLogger),
 	EnhancedVtoRouter(arSettings, apLogger, apWriter, apPhysLayer, apTimerSrc)
 {
-	// This type of router always runs
-	this->DoStart();
+	this->Start();
 }
 
 void ServerSocketVtoRouter::HandleVtoRemoteConnectedChanged()
 {
-	if(mRemoteConnected) {
-
-	}
-	else {
+	if(!mRemoteConnected) {
 		// if the remote side has closed we should close our
 		// local connection and then prepare for a new one
 		this->FlushBuffers();
-		this->Reconnect();
+		this->Close();
 	}
 
 }
@@ -136,7 +132,7 @@ void ServerSocketVtoRouter::HandleReceivingDataWhenRemoteClosed()
 
 	if(this->mLocalConnected) {
 		this->FlushBuffers();
-		this->Reconnect();
+		this->Close();
 	}
 	else {
 		this->NotifyRemoteSideOfState(false);
@@ -147,7 +143,7 @@ void ServerSocketVtoRouter::HandleDuplicateOpen()
 {
 	if(this->mLocalConnected) {
 		this->FlushBuffers();
-		this->Reconnect();
+		this->Close();
 	}
 }
 
@@ -155,7 +151,7 @@ void ServerSocketVtoRouter::HandleDuplicateClose()
 {
 	if(this->mLocalConnected) {
 		this->FlushBuffers();
-		this->Reconnect();
+		this->Close();
 	}
 }
 
@@ -179,24 +175,24 @@ void ClientSocketVtoRouter::HandleVtoRemoteConnectedChanged()
 		// can close the connection. Effectivley we tunnel the "connection
 		// refused" behavior as a "remote server terminated connection"
 		this->SetLocalConnected(true);
-		this->DoStart();
+		this->StartOne();
 	}
 	else {
-		// always stop the local connection attempts if the remote is disconnected
-		this->StopAndFlushBuffers();
+		this->FlushBuffers();
+		this->Suspend(); //stop local connection attempts when we lose the remote side
 	}
 }
 
 void ClientSocketVtoRouter::HandleSetLocalConnected()
 {
 	// we shouldn't automatically reconnect when the connection drops
-	if(!mLocalConnected) this->StopAndFlushBuffers();
+	if(!mLocalConnected) this->CloseAndFlushBuffers();
 }
 
 void ClientSocketVtoRouter::HandleReceivingDataWhenRemoteClosed()
 {
 	if(this->mLocalConnected) {
-		this->StopAndFlushBuffers();
+		this->CloseAndFlushBuffers();
 	}
 	else {
 		this->NotifyRemoteSideOfState(false);
@@ -206,7 +202,7 @@ void ClientSocketVtoRouter::HandleReceivingDataWhenRemoteClosed()
 void ClientSocketVtoRouter::HandleDuplicateOpen()
 {
 	if(this->mLocalConnected) {
-		this->StopAndFlushBuffers();
+		this->CloseAndFlushBuffers();
 	}
 }
 

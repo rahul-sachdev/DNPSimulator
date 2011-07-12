@@ -33,14 +33,16 @@ namespace dnp
 VtoIntegrationTestBase::VtoIntegrationTestBase(
     bool clientOnSlave,
     bool aImmediateOutput,
+    bool aLogToFile,
     FilterLevel level,
     boost::uint16_t port) :
 
 	LogTester(),
+	Loggable(mpTestLogger),
 	mpMainLogger(mLog.GetLogger(level, "main")),
-	ltf(&mLog, "integration.log", true),
+	mpLtf(aLogToFile ? new LogToFile(&mLog, "integration.log", true) : NULL),
 	testObj(),
-	manager(mLog.GetLogger(level, "manager"), false),
+	manager(mLog.GetLogger(level, "manager")),
 	timerSource(testObj.GetService()),
 	client(mLog.GetLogger(level, "local-tcp-client"), testObj.GetService(), "127.0.0.1", port + 20),
 	server(mLog.GetLogger(level, "loopback-tcp-server"), testObj.GetService(), "0.0.0.0", port + 10)
@@ -63,11 +65,6 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 	manager.StartVtoRouter("vto-tcp-client", clientSideOfStack, VtoRouterSettings(88, false, false, 1000));
 	manager.AddTCPServer("vto-tcp-server", PhysLayerSettings(), "127.0.0.1", port + 20);
 	manager.StartVtoRouter("vto-tcp-server", serverSideOfStack, VtoRouterSettings(88, true, false, 1000));
-}
-
-VtoIntegrationTestBase::~VtoIntegrationTestBase()
-{
-	manager.Stop();
 }
 
 }

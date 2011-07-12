@@ -218,12 +218,12 @@ BOOST_AUTO_TEST_CASE(ClientSendsMagicChannelLocalConnected)
 {
 	ClientVtoRouterTestClass rtc;
 
+	BOOST_REQUIRE_FALSE(rtc.phys.IsOpening());
+
 	rtc.SetRemoteState(true);
 
-	rtc.mts.Dispatch();
 	BOOST_REQUIRE(rtc.phys.IsOpening());
 	rtc.phys.SignalOpenSuccess();
-	rtc.mts.Dispatch();
 
 	rtc.CheckLocalChannelConnectedMessage(true);
 
@@ -231,7 +231,6 @@ BOOST_AUTO_TEST_CASE(ClientSendsMagicChannelLocalConnected)
 	rtc.phys.TriggerRead("06 07 08 09 0A");
 
 	rtc.phys.TriggerClose();
-	rtc.mts.Dispatch();
 
 	BOOST_REQUIRE_EQUAL(rtc.phys.NumClose(), 1);
 

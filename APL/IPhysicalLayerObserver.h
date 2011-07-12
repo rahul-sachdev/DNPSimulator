@@ -16,51 +16,26 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+#ifndef __I_PHYSICAL_LAYER_OBSERVER_H_
+#define __I_PHYSICAL_LAYER_OBSERVER_H_
 
-#include "PhysLoopback.h"
+#include <string>
 
-#include "IPhysicalLayerAsync.h"
-#include "Logger.h"
+#include "PhysicalLayerStates.h"
 
 namespace apl
 {
 
-PhysLoopback::PhysLoopback(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc) :
-	Loggable(apLogger),
-	PhysicalLayerMonitor(apLogger, apPhys, apTimerSrc, 5000),
-	mBytesRead(0),
-	mBytesWritten(0),
-	mBuffer(1024)
+class IPhysicalLayerObserver
 {
+public:
+
+	virtual ~IPhysicalLayerObserver() {}
+
+	virtual void OnStateChange(PhysicalLayerState) = 0;
+
+};
 
 }
 
-void PhysLoopback::StartRead()
-{
-	mpPhys->AsyncRead(mBuffer, mBuffer.Size());
-}
-
-void PhysLoopback::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
-{
-	mBytesRead += aNumBytes;
-	mBytesWritten += aNumBytes;
-	mpPhys->AsyncWrite(mBuffer, aNumBytes);
-}
-
-void PhysLoopback::_OnSendSuccess(void)
-{
-	this->StartRead();
-}
-
-void PhysLoopback::_OnSendFailure(void)
-{
-
-}
-
-void PhysLoopback::OnPhysicalLayerOpenSuccessCallback(void)
-{
-	this->StartRead();
-}
-
-}
-
+#endif

@@ -226,6 +226,10 @@
 					RelativePath=".\TestPhysicalLayerLoopback.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\TestPhysicalLayerMonitor.cpp"
+					>
+				</File>
 				<Filter
 					Name="Framework"
 					>

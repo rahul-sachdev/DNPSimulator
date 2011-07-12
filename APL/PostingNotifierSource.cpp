@@ -26,16 +26,14 @@ namespace apl
 
 PostingNotifierSource::~PostingNotifierSource()
 {
-	BOOST_FOREACH(PostingNotifier * p, mNotifiers) {
-		delete p;
-	}
+
 }
 
 INotifier* PostingNotifierSource::Get(const ExpirationHandler& arHandler, ITimerSource* apTimerSrc)
 {
-	PostingNotifier* pRet = new PostingNotifier(apTimerSrc, arHandler);
+	boost::shared_ptr<PostingNotifier> pRet(new PostingNotifier(apTimerSrc, arHandler));
 	mNotifiers.push_back(pRet);
-	return pRet;
+	return pRet.get();
 }
 
 }

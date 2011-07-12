@@ -27,7 +27,7 @@ using namespace boost::posix_time;
 namespace apl
 {
 
-MockTimerSource::MockTimerSource()
+MockTimerSource::MockTimerSource() : mPostIsSynchronous(false)
 {
 
 }
@@ -76,7 +76,8 @@ size_t MockTimerSource::Dispatch(size_t aMaximum)
 
 void MockTimerSource::Post(const ExpirationHandler& arHandler)
 {
-	mPostQueue.push_back(arHandler);
+	if(mPostIsSynchronous) arHandler();
+	else mPostQueue.push_back(arHandler);
 }
 
 ITimer* MockTimerSource::Start(millis_t aDelay, const ExpirationHandler& arCallback)

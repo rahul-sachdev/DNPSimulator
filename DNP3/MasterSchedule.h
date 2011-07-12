@@ -22,11 +22,7 @@
 
 #include "MasterConfig.h"
 
-namespace apl
-{
-class AsyncTaskGroup;
-class AsyncTaskBase;
-}
+#include <APL/TrackingTaskGroup.h>
 
 namespace apl
 {
@@ -42,6 +38,8 @@ class Master;
 class MasterSchedule
 {
 public:
+
+	MasterSchedule(AsyncTaskGroup* apGroup, Master* apMaster, const MasterConfig& arCfg);
 
 	/**
 	 * A task to read the Master::mCommandQueue and pass objects to
@@ -73,14 +71,13 @@ public:
 	// Resets all of the tasks that run on startup. This is typically done after a failure
 	void ResetStartupTasks();
 
-	// Returns a configured MasterSchedule
-	static MasterSchedule GetSchedule(MasterConfig aCfg, Master*, AsyncTaskGroup*);
-
 private:
 
-	MasterSchedule(AsyncTaskGroup*);
+	void Init(const MasterConfig& arCfg, Master* mpMaster);
+
 
 	AsyncTaskGroup* mpGroup;
+	TrackingTaskGroup mTracking;
 
 	enum MasterPriority {
 	    AMP_VTO_TRANSMIT,

@@ -219,7 +219,7 @@ BOOST_AUTO_TEST_CASE(Loopback)
 	TimerSourceASIO timerSource(test.GetService());
 	PhysicalLayerAsyncTCPServer server(pLogger->GetSubLogger("server"), test.GetService(), "127.0.0.1", 30000);
 
-	PhysLoopback loopback(pLogger->GetSubLogger("loopback"), &server, &timerSource, LEV_WARNING, false);
+	PhysLoopback loopback(pLogger->GetSubLogger("loopback"), &server, &timerSource);
 	loopback.Start();
 
 	PhysicalLayerAsyncTCPClient client(pLogger->GetSubLogger("client"), test.GetService(), "127.0.0.1", 30000);

@@ -32,25 +32,32 @@ public:
 	VtoOnewayTestStack(
 	    bool clientOnSlave = true,
 	    bool aImmediateOutput = false,
+	    bool aLogToFile = false,
 	    FilterLevel level = LEV_INFO,
 	    boost::uint16_t port = MACRO_PORT_VALUE) :
 
-		VtoIntegrationTestBase(clientOnSlave, aImmediateOutput, level, port),
+		VtoIntegrationTestBase(clientOnSlave, aImmediateOutput, aLogToFile, level, port),
 		local(mLog.GetLogger(level, "local-mock-phys-monitor"), &client, &timerSource, 500),
 		remote(mLog.GetLogger(level, "remote-mock-phys-monitor"), &server, &timerSource, 500) {
 
 	}
 
 	virtual ~VtoOnewayTestStack() {
-		local.Stop();
-		remote.Stop();
+		local.Shutdown();
+		remote.Shutdown();
 	}
 
-	bool WaitForLocalState(PhysLayerState aState, millis_t aTimeout = 30000) {
+	bool WaitForBothSides(PhysicalLayerState aState, millis_t aTimeout = 30000) {
+		return this->WaitForLocalState(aState) && this->WaitForRemoteState(aState);
+	}
+
+	bool WaitForLocalState(PhysicalLayerState aState, millis_t aTimeout = 30000) {
+		LOG_BLOCK(LEV_EVENT, "Waiting for local state: " << ConvertPhysicalLayerStateToString(aState));
 		return testObj.ProceedUntil(boost::bind(&MockPhysicalLayerMonitor::NextStateIs, &local, aState), aTimeout);
 	}
 
-	bool WaitForRemoteState(PhysLayerState aState, millis_t aTimeout = 30000) {
+	bool WaitForRemoteState(PhysicalLayerState aState, millis_t aTimeout = 30000) {
+		LOG_BLOCK(LEV_EVENT, "Waiting for remote state: " << ConvertPhysicalLayerStateToString(aState));
 		return testObj.ProceedUntil(boost::bind(&MockPhysicalLayerMonitor::NextStateIs, &remote, aState), aTimeout);
 	}
 
@@ -65,15 +72,75 @@ public:
 
 BOOST_AUTO_TEST_SUITE(VtoOnewayIntegrationSuite)
 
+BOOST_AUTO_TEST_CASE(Reconnection)
+{
+	VtoOnewayTestStack stack(true, false, false);
+
+	// start up everything, the local side should be able to open
+	stack.remote.Start();
+	stack.local.Start();
+
+	RandomizedBuffer data(100);
+
+	for(size_t i = 0; i < 1; ++i) {
+
+		stack.Log(LOCATION, "Begin iteration");
+
+		BOOST_REQUIRE(stack.WaitForBothSides(PLS_OPEN));
+
+		// test that data is correctly sent both ways
+		data.Randomize();
+		stack.local.ExpectData(data);
+		stack.local.WriteData(data);
+		BOOST_REQUIRE(stack.WaitForExpectedDataToBeReceived());
+
+		// close the remote loopback server, which will cause both sides to close and reopen
+		stack.remote.Close();
+		BOOST_REQUIRE(stack.WaitForBothSides(PLS_CLOSED));
+
+		stack.Log(LOCATION, "End iteration");
+	}
+}
+
+BOOST_AUTO_TEST_CASE(RemoteSideOpenFailureBouncesLocalConnection)
+{
+	VtoOnewayTestStack test(true, false);
+
+	BOOST_REQUIRE(test.WaitForLocalState(PLS_CLOSED));
+
+	test.local.Start();
+
+	for(size_t i = 0; i < 3; ++i) {
+		// start local connection, we should immediately be able to connect to this side
+		BOOST_REQUIRE(test.WaitForLocalState(PLS_OPEN));
+		// since the remote side can't connect to the port we should have our local connection bounced
+		BOOST_REQUIRE(test.WaitForLocalState(PLS_CLOSED));
+	}
+}
+
+BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
+{
+	VtoOnewayTestStack stack(true, false, false);
+
+	// start all components, should connect
+	stack.remote.Start();
+	stack.local.Start();
+
+	for(size_t i = 0; i < 3; ++i) {
+		BOOST_REQUIRE(stack.WaitForBothSides(PLS_OPEN));
+		// kill remote connection, should kill our local connection
+		stack.remote.Close();
+		BOOST_REQUIRE(stack.WaitForBothSides(PLS_CLOSED));
+	}
+}
+
 void TestLargeDataOneWay(VtoOnewayTestStack& arTest, size_t aSizeInBytes)
 {
 	// start everything
 	arTest.local.Start();
 	arTest.remote.Start();
-	arTest.manager.Start();
 
-	BOOST_REQUIRE(arTest.WaitForLocalState(PLS_OPEN));
-	BOOST_REQUIRE(arTest.WaitForRemoteState(PLS_OPEN));
+	BOOST_REQUIRE(arTest.WaitForBothSides(PLS_OPEN));
 
 	// test that a large set of data flowing one way works
 	RandomizedBuffer data(aSizeInBytes);

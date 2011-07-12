@@ -16,46 +16,43 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __CLEANUP_HELPER_H_
-#define __CLEANUP_HELPER_H_
 
-#include <APL/Lock.h>
-#include <vector>
+#ifndef __SUSPEND_TIMER_SOURCE_H_
+#define __SUSPEND_TIMER_SOURCE_H_
 
-#include <boost/function.hpp>
+#include "Lock.h"
+#include "ITransactable.h"
 
 namespace apl
 {
+
 class ITimerSource;
-}
 
-namespace apl
+/**
+*  Pauses execution of the thread driving a TimerSource. Uses the ITransactable RAII
+*  pattern to guarantee that that the resource is released if an uncaught
+*  exception is thrown
+*
+*/
+class SuspendTimerSource : public ITransactable
 {
-namespace dnp
-{
-
-class CleanupHelper
-{
-	typedef boost::function<void ()> CleanupTask;
-	typedef std::vector<CleanupTask> CleanupTaskVector;
-
 public:
-
-	CleanupHelper(ITimerSource* apTimerSource);
-
-	void AddCleanupTask(const CleanupTask& arCleanupTask);
-
-protected:
-
-	void Cleanup();
+	SuspendTimerSource(ITimerSource* apTimerSource);
 
 private:
-	SigLock mCleanupHelperLock;
-	CleanupTaskVector mCleanupTasks;
+
+	void Pause();
+	void _Start();
+	void _End();
+
 	ITimerSource* mpTimerSource;
+	bool mPausing;
+	bool mIsPaused;
+	SigLock mLock;
 };
 
+
 }
-}
+/* vim: set ts=4 sw=4: */
 
 #endif

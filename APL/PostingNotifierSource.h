@@ -22,6 +22,7 @@
 #include "TimerInterfaces.h"
 
 #include <vector>
+#include <boost/shared_ptr.hpp>
 
 namespace apl
 {
@@ -37,7 +38,7 @@ public:
 	INotifier* Get(const ExpirationHandler&, ITimerSource*);
 
 private:
-	std::vector<PostingNotifier*> mNotifiers;
+	std::vector< boost::shared_ptr<PostingNotifier> > mNotifiers;
 };
 
 }

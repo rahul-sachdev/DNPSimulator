@@ -33,7 +33,9 @@ class PLAS_Base;
 // are called from a single thread.
 class PhysicalLayerAsyncBase : public IPhysicalLayerAsync, public Loggable
 {
-	struct State {
+	class State : public IPhysicalLayerState
+	{
+	public:
 		State();
 
 		bool mOpen;
@@ -42,15 +44,22 @@ class PhysicalLayerAsyncBase : public IPhysicalLayerAsync, public Loggable
 		bool mWriting;
 		bool mClosing;
 
-		bool CanOpen();
-		bool CanClose();
-		bool CanRead();
-		bool CanWrite();
+		bool IsOpen() const;
+		bool IsOpening() const;
+		bool IsReading() const;
+		bool IsWriting() const;
+		bool IsClosing() const;
+		bool IsClosed() const;
 
-		bool CallbacksPending();
+		bool CanOpen() const;
+		bool CanClose() const;
+		bool CanRead() const;
+		bool CanWrite() const;
+
+		bool CallbacksPending() const;
+		std::string ConvertStateToString() const;
+
 		bool CheckForClose();
-
-		std::string ToString();
 	};
 
 public:
@@ -60,20 +69,41 @@ public:
 	// to avoid segfaulting. There are a # of asserts that make sure the object has been shutdown properly.
 	virtual ~PhysicalLayerAsyncBase() {}
 
-	bool IsReading() {
-		return mState.mReading;
+	/* Implement IPhysicalLayerState */
+	bool IsOpen() const {
+		return mState.IsOpen();
 	}
-	bool IsWriting() {
-		return mState.mWriting;
+	bool IsOpening() const {
+		return mState.IsOpening();
 	}
-	bool IsClosing() {
-		return mState.mClosing;
+	bool IsReading() const {
+		return mState.IsReading();
 	}
-	bool IsOpening() {
-		return mState.mOpening;
+	bool IsWriting() const {
+		return mState.IsWriting();
 	}
-	bool IsOpen() {
-		return mState.mOpen;
+	bool IsClosing() const {
+		return mState.IsClosing();
+	}
+	bool IsClosed() const {
+		return mState.IsClosed();
+	}
+
+	bool CanOpen() const {
+		return mState.CanOpen();
+	}
+	bool CanClose() const {
+		return mState.CanClose();
+	}
+	bool CanRead() const {
+		return mState.CanRead();
+	}
+	bool CanWrite() const {
+		return mState.CanWrite();
+	}
+
+	std::string ConvertStateToString() const {
+		return mState.ConvertStateToString();
 	}
 
 	/* Implement IPhysicalLayerAsync - Events from the outside */

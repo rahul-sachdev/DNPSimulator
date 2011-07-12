@@ -21,6 +21,7 @@
 
 #include <APL/Exception.h>
 #include <APL/IPhysicalLayerAsync.h>
+#include <APL/Logger.h>
 #include <APL/Util.h>
 
 #include "VtoReader.h"
@@ -33,31 +34,16 @@ namespace dnp
 
 VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc) :
 	Loggable(apLogger),
-	AsyncPhysLayerMonitor(apLogger, apPhysLayer, apTimerSrc, arSettings.OPEN_RETRY_MS),
+	PhysicalLayerMonitor(apLogger, apPhysLayer, apTimerSrc, arSettings.OPEN_RETRY_MS),
 	IVtoCallbacks(arSettings.CHANNEL_ID),
-	CleanupHelper(apTimerSrc),
 	mpVtoWriter(apWriter),
 	mReadBuffer(1024),
-	mWriteData(0),
-	mReopenPhysicalLayer(false),
-	mPermanentlyStopped(false),
-	mCleanedup(false)
+	mWriteData(0)
 {
 	assert(apLogger != NULL);
 	assert(apWriter != NULL);
 	assert(apPhysLayer != NULL);
 	assert(apTimerSrc != NULL);
-}
-
-void VtoRouter::StopRouter()
-{
-	mPermanentlyStopped = true;
-	mpTimerSrc->Post(boost::bind(&VtoRouter::DoStopRouter, this));
-}
-
-void VtoRouter::DoStopRouter()
-{
-	this->Stop();
 }
 
 void VtoRouter::OnVtoDataReceived(const VtoData& arData)
@@ -71,36 +57,6 @@ void VtoRouter::OnVtoDataReceived(const VtoData& arData)
 		 */
 		this->mPhysLayerTxBuffer.push(arData);
 		this->CheckForPhysWrite();
-	}
-}
-
-void VtoRouter::DoStart()
-{
-	if(mPermanentlyStopped) {
-		LOG_BLOCK(LEV_DEBUG, "Permenantly Stopped")
-	}
-	else {
-		if(!mReopenPhysicalLayer) {
-			mReopenPhysicalLayer = true;
-			LOG_BLOCK(LEV_DEBUG, "Starting VtoRouted Port")
-			this->Start();
-		}
-		else {
-			LOG_BLOCK(LEV_DEBUG, "Already started")
-		}
-	}
-}
-
-void VtoRouter::DoStop()
-{
-
-	if(mReopenPhysicalLayer) {
-		mReopenPhysicalLayer = false;
-		LOG_BLOCK(LEV_DEBUG, "Stopping VtoRouted Port")
-		this->Stop();
-	}
-	else {
-		LOG_BLOCK(LEV_DEBUG, "Already stopped")
 	}
 }
 
@@ -118,9 +74,7 @@ void VtoRouter::_OnReceive(const boost::uint8_t* apData, size_t aLength)
 
 void VtoRouter::CheckForVtoWrite()
 {
-	// need to check mPermanentlyStopped, we will often get a physical layer closed notification after
-	// we have already stopped and disposed of the dnp3 stack so we need to not call anything on mpVtoWriter
-	if(!mPermanentlyStopped && !mVtoTxBuffer.empty()) {
+	if(!mVtoTxBuffer.empty()) {
 		VtoMessage msg = mVtoTxBuffer.front();
 		mVtoTxBuffer.pop_front();
 
@@ -206,7 +160,7 @@ void VtoRouter::OnBufferAvailable()
 	this->CheckForVtoWrite();
 }
 
-void VtoRouter::OnPhysicalLayerOpen()
+void VtoRouter::OnPhysicalLayerOpenSuccessCallback()
 {
 	this->SetLocalConnected(true);
 
@@ -215,22 +169,14 @@ void VtoRouter::OnPhysicalLayerOpen()
 	this->CheckForVtoWrite();
 }
 
-void VtoRouter::OnStateChange(PhysLayerState aState)
-{
-	if(mPermanentlyStopped && aState == PLS_STOPPED && !mCleanedup) {
-		mCleanedup = true;
-		this->Cleanup();
-	}
-}
-
-void VtoRouter::OnPhysicalLayerClose()
+void VtoRouter::OnPhysicalLayerOpenFailureCallback()
 {
 	this->SetLocalConnected(false);
 	this->CheckForPhysWrite();
 	this->CheckForVtoWrite();
 }
 
-void VtoRouter::OnPhysicalLayerOpenFailure()
+void VtoRouter::OnPhysicalLayerCloseCallback()
 {
 	this->SetLocalConnected(false);
 	this->CheckForPhysWrite();

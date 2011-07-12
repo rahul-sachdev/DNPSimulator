@@ -114,7 +114,7 @@ public:
 
 	BinaryOutput();
 
-	BinaryOutput(ControlCode aCode, boost::uint8_t aCount = 1, boost::uint8_t aOnTime = 100, boost::uint8_t aOffTime = 100);
+	BinaryOutput(ControlCode aCode, boost::uint8_t aCount = 1, boost::uint32_t aOnTime = 100, boost::uint32_t aOffTime = 100);
 
 	ControlCode GetCode() const;
 

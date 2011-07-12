@@ -580,14 +580,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\CleanupHelper.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\CleanupHelper.h"
-					>
-				</File>
-				<File
 					RelativePath=".\IStackObserver.cpp"
 					>
 				</File>
@@ -596,15 +588,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\LinkChannel.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\LinkChannel.h"
+					>
+				</File>
+				<File
 					RelativePath=".\MasterStackConfig.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Port.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Port.h"
 					>
 				</File>
 				<File

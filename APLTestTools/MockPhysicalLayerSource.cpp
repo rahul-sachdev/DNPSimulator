@@ -25,6 +25,7 @@
 
 namespace apl
 {
+
 MockPhysicalLayerSource::MockPhysicalLayerSource(Logger* apLogger, ITimerSource* apTimerSrc) :
 	mpLogger(apLogger),
 	mpTimerSrc(apTimerSrc)
@@ -32,20 +33,24 @@ MockPhysicalLayerSource::MockPhysicalLayerSource(Logger* apLogger, ITimerSource*
 
 }
 
+MockPhysicalLayerSource::~MockPhysicalLayerSource()
+{
+	for(InstanceMap::iterator i = mInstanceMap.begin(); i != mInstanceMap.end(); ++i) i->second.Release();
+}
+
 MockPhysicalLayerAsync* MockPhysicalLayerSource::GetMock(const std::string& arName)
 {
 	MockMap::iterator i = mMockMap.find(arName);
-	if(i == this->mMockMap.end()) return NULL;
-	else return i->second;
+	return (i == this->mMockMap.end()) ? NULL : i->second;
 }
 
-IPhysicalLayerAsync* MockPhysicalLayerSource::AcquireLayer(const std::string& arName, bool aAutoDelete)
+IPhysicalLayerAsync* MockPhysicalLayerSource::AcquireLayer(const std::string& arName)
 {
 	InstanceMap::iterator i = mInstanceMap.find(arName);
 	if(i == this->mInstanceMap.end()) {
 		Logger* pLogger = mpLogger->GetSubLogger(arName);
 		MockPhysicalLayerAsync* pLayer = new MockPhysicalLayerAsync(pLogger, mpTimerSrc);
-		PhysLayerInstance pli(pLayer, pLogger, aAutoDelete);
+		PhysLayerInstance pli(pLayer, pLogger);
 		mInstanceMap.insert(InstanceMap::value_type(arName, pli));
 		mMockMap.insert(MockMap::value_type(arName, pLayer));
 		return pLayer;

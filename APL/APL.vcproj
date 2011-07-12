@@ -200,14 +200,6 @@
 					Name="Base"
 					>
 					<File
-						RelativePath=".\AsyncPhysLayerMonitor.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\AsyncPhysLayerMonitor.h"
-						>
-					</File>
-					<File
 						RelativePath=".\IHandlerAsync.cpp"
 						>
 					</File>
@@ -225,14 +217,6 @@
 					</File>
 					<File
 						RelativePath=".\IPhysicalLayerAsync.h"
-						>
-					</File>
-					<File
-						RelativePath=".\IPhysMonitor.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\IPhysMonitor.h"
 						>
 					</File>
 					<File
@@ -313,6 +297,38 @@
 					</File>
 					<File
 						RelativePath=".\PhysicalLayerAsyncTCPServer.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Monitor"
+					>
+					<File
+						RelativePath=".\IPhysicalLayerObserver.h"
+						>
+					</File>
+					<File
+						RelativePath=".\PhysicalLayerMonitor.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\PhysicalLayerMonitor.h"
+						>
+					</File>
+					<File
+						RelativePath=".\PhysicalLayerMonitorStates.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\PhysicalLayerMonitorStates.h"
+						>
+					</File>
+					<File
+						RelativePath=".\PhysicalLayerStates.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\PhysicalLayerStates.h"
 						>
 					</File>
 				</Filter>
@@ -422,6 +438,10 @@
 				</File>
 				<File
 					RelativePath=".\ISubject.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ITransactable.h"
 					>
 				</File>
 				<File
@@ -729,6 +749,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\SuspendTimerSource.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\SuspendTimerSource.h"
+					>
+				</File>
+				<File
 					RelativePath=".\TimerASIO.cpp"
 					>
 				</File>
@@ -802,6 +830,14 @@
 				</File>
 				<File
 					RelativePath=".\AsyncTaskScheduler.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TrackingTaskGroup.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TrackingTaskGroup.h"
 					>
 				</File>
 			</Filter>

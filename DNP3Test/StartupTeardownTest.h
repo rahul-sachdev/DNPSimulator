@@ -46,19 +46,14 @@ class StartupTeardownTest
 {
 public:
 
-	StartupTeardownTest(FilterLevel aLevel, bool aAutoStart);
+	StartupTeardownTest(FilterLevel aLevel, bool aImmediate = false);
 
 	void CreatePort(const std::string& arName, FilterLevel aLevel);
 	void AddMaster(const std::string& arName, const std::string& arPortName, boost::uint16_t aLocalAddress, FilterLevel aLevel);
 
-	void StartService() {
-		mMgr.Start();
-	}
-
-	EventLog mLog;
-	FilterLevel mLevel;
-	AsyncStackManager mMgr;
-	FlexibleDataObserver mFDO;
+	EventLog log;
+	AsyncStackManager manager;
+	FlexibleDataObserver fdo;
 };
 
 }

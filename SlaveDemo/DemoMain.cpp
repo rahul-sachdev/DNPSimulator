@@ -86,10 +86,6 @@ int main(int argc, char* argv[])
 	// Tell the app where to write opdates
 	app.SetDataObserver(pDataObserver);
 
-	// start the stack manager (this starts up 1 or more threads that handle the communications)
-	// will automatically stop and cleanup on destruction
-	mgr.Start();
-
 	//configure signal handlers so we can exit gracefully
 	SetDemo(&app);
 	signal(SIGTERM, &Terminate);

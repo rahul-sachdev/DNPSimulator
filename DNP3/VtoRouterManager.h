@@ -19,10 +19,12 @@
 #define __VTO_ROUTER_MANAGER_H_
 
 #include <vector>
+#include <boost/shared_ptr.hpp>
 
 #include <APL/Types.h>
 #include <APL/Loggable.h>
-#include <APL/IPhysMonitor.h>
+#include <APL/IPhysicalLayerObserver.h>
+#include <APL/SuspendTimerSource.h>
 
 namespace apl
 {
@@ -55,18 +57,16 @@ public:
 	class RouterRecord
 	{
 	public:
-		RouterRecord(const std::string& arPortName, VtoRouter* apRouter, IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
+		RouterRecord(const std::string& arPortName, boost::shared_ptr<VtoRouter> apRouter, IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
 
 		std::string mPortName;
-		VtoRouter* mpRouter;
+		boost::shared_ptr<VtoRouter> mpRouter;
 		IVtoWriter* mpWriter;
 		boost::uint8_t mVtoChannelId;
 	};
 
 
 	VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc);
-
-	~VtoRouterManager();
 
 	VtoRouter* StartRouter(
 	    const std::string& arPortName,
@@ -83,12 +83,9 @@ private:
 
 	void StopRouter(VtoRouter* apRouter);
 
-	static void ClenupAfterRouter(IPhysicalLayerAsync* apPhys, VtoRouter* apRouter);
-
 	typedef std::vector<RouterRecord> RouterRecordVector;
 
 	RouterRecordVector::iterator Find(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
-
 	RouterRecordVector::iterator Find(IVtoWriter* apWriter);
 
 	Logger* GetSubLogger(const std::string& arId, boost::uint8_t aVtoChannelId);
@@ -99,6 +96,7 @@ private:
 
 	ITimerSource* mpTimerSrc;
 	IPhysicalLayerSource* mpPhysSource;
+	SuspendTimerSource mSuspendTimerSource;
 };
 
 }

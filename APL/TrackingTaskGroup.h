@@ -16,51 +16,48 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+#ifndef __TRACKING_TASK_GROUP_H_
+#define __TRACKING_TASK_GROUP_H_
 
-#include "PhysLoopback.h"
 
-#include "IPhysicalLayerAsync.h"
-#include "Logger.h"
+#include "Types.h"
+#include "AsyncTaskInterfaces.h"
+#include "Uncopyable.h"
+
+#include <set>
+#include <queue>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
 
 namespace apl
 {
 
-PhysLoopback::PhysLoopback(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc) :
-	Loggable(apLogger),
-	PhysicalLayerMonitor(apLogger, apPhys, apTimerSrc, 5000),
-	mBytesRead(0),
-	mBytesWritten(0),
-	mBuffer(1024)
+class AsyncTaskGroup;
+class AsyncTaskContinuous;
+class AsyncTaskBase;
+
+/**
+ Tracks all tasks that are created and releases them on destruction
+*/
+class TrackingTaskGroup
 {
 
-}
+public:
 
-void PhysLoopback::StartRead()
-{
-	mpPhys->AsyncRead(mBuffer, mBuffer.Size());
-}
+	TrackingTaskGroup(AsyncTaskGroup* apGroup);
+	~TrackingTaskGroup();
 
-void PhysLoopback::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
-{
-	mBytesRead += aNumBytes;
-	mBytesWritten += aNumBytes;
-	mpPhys->AsyncWrite(mBuffer, aNumBytes);
-}
+	AsyncTaskBase* Add(millis_t aPeriod, millis_t aRetryDelay, int aPriority, const TaskHandler& arCallback, const std::string& arName = "");
+	AsyncTaskContinuous* AddContinuous(int aPriority, const TaskHandler& arCallback, const std::string& arName = "");
 
-void PhysLoopback::_OnSendSuccess(void)
-{
-	this->StartRead();
-}
 
-void PhysLoopback::_OnSendFailure(void)
-{
+private:
+
+	AsyncTaskGroup* mpGroup;
+
+	typedef std::vector<AsyncTaskBase*> TaskVec;
+	TaskVec mTaskVec;
+};
 
 }
 
-void PhysLoopback::OnPhysicalLayerOpenSuccessCallback(void)
-{
-	this->StartRead();
-}
-
-}
-
+#endif

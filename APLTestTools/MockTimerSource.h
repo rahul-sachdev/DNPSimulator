@@ -43,6 +43,11 @@ public:
 	ITimer* Start(const boost::posix_time::ptime&, const ExpirationHandler&);
 	void Post(const ExpirationHandler&);
 
+	/** Turns the auto-post feature on/off. When Auto post is on, Post() is executed synchronously */
+	void SetAutoPost(bool aAutoPost) {
+		this->mPostIsSynchronous = aAutoPost;
+	}
+
 	/**	Call the next (by expiration time) without caring about the time requirement.
 		@returns true if a timer was dispatched */
 	bool DispatchOne();
@@ -67,6 +72,7 @@ private:
 	typedef std::multimap<boost::posix_time::ptime, MockTimer*> TimerMap;
 	typedef std::deque<MockTimer*> TimerQueue;
 
+	bool mPostIsSynchronous;
 	PostQueue mPostQueue;
 	TimerMap mTimerMap;
 	TimerQueue mIdle;

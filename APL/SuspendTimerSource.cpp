@@ -16,34 +16,55 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __I_PHYS_MONITOR_H_
-#define __I_PHYS_MONITOR_H_
 
-#include <string>
+#include "SuspendTimerSource.h"
+
+#include "TimerInterfaces.h"
+
+#include <boost/bind.hpp>
 
 namespace apl
 {
 
-enum PhysLayerState {
-    PLS_CLOSED,		// layer is offline and idle
-    PLS_OPENING,	// layer is trying to open
-    PLS_WAITING,
-    PLS_OPEN,		// layer is open
-    PLS_STOPPED		// stopped and will no longer dispatch events
-};
-
-std::string ConvertPhysLayerStateToString(PhysLayerState aState);
-
-class IPhysMonitor
+SuspendTimerSource::SuspendTimerSource(ITimerSource* apTimerSource) :
+	mpTimerSource(apTimerSource),
+	mPausing(false),
+	mIsPaused(false),
+	mLock()
 {
-public:
-
-	virtual ~IPhysMonitor() {}
-
-	virtual void OnStateChange(PhysLayerState) = 0;
-
-};
 
 }
 
-#endif
+void SuspendTimerSource::_Start()
+{
+	CriticalSection cs(&mLock);
+	mPausing = true;
+	mpTimerSource->Post(boost::bind(&SuspendTimerSource::Pause, this));
+	while(!mIsPaused) {
+		mLock.Wait();
+	}
+}
+
+void SuspendTimerSource::_End()
+{
+	CriticalSection cs(&mLock);
+	mPausing = false;
+	cs.Broadcast();
+}
+
+void SuspendTimerSource::Pause()
+{
+	CriticalSection cs(&mLock);
+	mIsPaused = true;
+	cs.Broadcast();
+	while(mPausing) {
+		cs.Wait();
+	}
+	mIsPaused = false;
+}
+
+}
+
+/* vim: set ts=4 sw=4: */
+
+

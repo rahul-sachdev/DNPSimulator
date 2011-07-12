@@ -24,14 +24,12 @@
 namespace apl
 {
 
-class LogTester : public ILogBase
+class LogTester
 {
 public:
 	LogTester(bool aImmediate = false);
 
-	// updating a variable/metric in the system
-	void SetVar(const std::string& aSource, const std::string& aVarName, int aValue);
-	void Log( const apl::LogEntry& arEntry ) {}
+	void Log(const std::string& aLocation, const std::string& aMessage);
 
 	int ClearLog();
 	int NextErrorCode();
@@ -41,7 +39,9 @@ public:
 	EventLog mLog;
 
 protected:
+	Logger* mpTestLogger;
 	LogEntryCircularBuffer mBuffer;
+
 
 };
 

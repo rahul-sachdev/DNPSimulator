@@ -67,7 +67,7 @@ TransportLoopbackTestObject::TransportLoopbackTestObject(
 
 TransportLoopbackTestObject::~TransportLoopbackTestObject()
 {
-	mRouter.Stop();
+	mRouter.Shutdown();
 }
 
 bool TransportLoopbackTestObject::LayersUp()

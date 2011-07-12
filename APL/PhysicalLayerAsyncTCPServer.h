@@ -38,6 +38,8 @@ public:
 
 private:
 
+	void CloseAcceptor();
+
 	boost::asio::ip::tcp::endpoint mLocalEndpoint;
 	boost::asio::ip::tcp::endpoint mRemoteEndpoint;
 

@@ -23,6 +23,7 @@
 
 #include <APL/FlexibleDataObserver.h>
 #include <APL/LogToFile.h>
+#include <APL/Loggable.h>
 #include <APL/PhysicalLayerAsyncTCPClient.h>
 #include <APL/PhysicalLayerAsyncTCPServer.h>
 
@@ -44,19 +45,18 @@ namespace apl
 namespace dnp
 {
 
-class VtoIntegrationTestBase : public LogTester
+class VtoIntegrationTestBase : public LogTester, protected Loggable
 {
 public:
 	VtoIntegrationTestBase(
 	    bool clientOnSlave = true,
 	    bool aImmediateOutput = false,
+	    bool aLogToFile = false,
 	    FilterLevel level = LEV_INFO,
 	    boost::uint16_t port = MACRO_PORT_VALUE);
 
-	~VtoIntegrationTestBase();
-
 	Logger* mpMainLogger;
-	LogToFile ltf;
+	std::auto_ptr<LogToFile> mpLtf;
 	MockCommandAcceptor cmdAcceptor;
 
 	AsyncTestObjectASIO testObj;

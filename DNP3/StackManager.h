@@ -80,8 +80,7 @@ public:
 	std::vector<std::string> GetPortNames();
 
 
-	void Stop();
-	void Start();
+	void Shutdown();
 
 private:
 	EventLog* mpLog;

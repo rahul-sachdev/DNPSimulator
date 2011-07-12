@@ -60,7 +60,7 @@ Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IData
 	mpScheduledTask(NULL),
 	mpObserver(aCfg.mpObserver),
 	mState(SS_UNKNOWN),
-	mSchedule(MasterSchedule::GetSchedule(aCfg, this, apTaskGroup)),
+	mSchedule(apTaskGroup, this, aCfg),
 	mClassPoll(apLogger, apPublisher, &mVtoReader),
 	mClearRestart(apLogger),
 	mConfigureUnsol(apLogger),

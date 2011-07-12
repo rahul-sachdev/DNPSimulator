@@ -58,6 +58,11 @@ void PhysicalLayerAsyncTCPClient::DoOpen()
 	                                  boost::asio::placeholders::error));
 }
 
+void PhysicalLayerAsyncTCPClient::DoOpeningClose()
+{
+	this->CloseSocket();
+}
+
 void PhysicalLayerAsyncTCPClient::DoOpenSuccess()
 {
 	LOG_BLOCK(LEV_INFO, "Connected to: " << mRemoteEndpoint);

@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE(TerminalInteractions)
 	MockPhysicalLayerAsyncTS phys(log.GetLogger(LEV_INTERPRET, "Phys"), &mts);
 
 	LogTerminalExtension lte(&log);
-	Terminal trm(pLoggerA, &phys, &mts, "Test Terminal", false, false);
+	Terminal trm(pLoggerA, &phys, &mts, "Test Terminal", false);
 	trm.AddExtension(&lte);
 	trm.Init();
 
@@ -167,7 +167,7 @@ BOOST_AUTO_TEST_CASE(TerminalInteractions)
 	TestSetCommands(&phys);
 	TestRunCommands(&phys, logger);
 
-	trm.Shutdown();
+	trm.ShutdownForever();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

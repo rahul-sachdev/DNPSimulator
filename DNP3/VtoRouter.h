@@ -22,11 +22,10 @@
 #include <deque>
 
 #include <APL/IHandlerAsync.h>
-#include <APL/AsyncPhysLayerMonitor.h>
+#include <APL/PhysicalLayerMonitor.h>
 #include <APL/CopyableBuffer.h>
 
 #include "VtoDataInterface.h"
-#include "CleanupHelper.h"
 
 namespace apl
 {
@@ -80,7 +79,7 @@ public:
  * implementations set policy on when to start and stop the reconnecting
  * behavior.
  */
-class VtoRouter : public AsyncPhysLayerMonitor, public IVtoCallbacks, public CleanupHelper
+class VtoRouter : public PhysicalLayerMonitor, public IVtoCallbacks
 {
 public:
 
@@ -99,13 +98,6 @@ public:
 	 * @return				a new VtoRouter instance
 	 */
 	VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc);
-
-
-	/**
-	 * when we try to stop the router we call this thread safe function which sets a flag and
-	 * then posts a shutdown request to mpTimerSrc.
-	 */
-	void StopRouter();
 
 	/**
 	 * Receives data from the VTO channel and forwards it to the
@@ -132,11 +124,11 @@ protected:
 
 	// Implement AsyncPhysLayerMonitor
 
-	void OnPhysicalLayerOpen();
+	void OnPhysicalLayerOpenSuccessCallback();
 
-	void OnPhysicalLayerClose();
+	void OnPhysicalLayerOpenFailureCallback();
 
-	void OnPhysicalLayerOpenFailure();
+	void OnPhysicalLayerCloseCallback();
 
 	/**
 	 * Receives data from the physical layer and forwards it to the
@@ -162,17 +154,6 @@ protected:
 	 * transmission to the physical layer was not successful.
 	 */
 	void _OnSendFailure();
-
-	/**
-	 * Implement AsyncPhysMonitor::OnStateChange
-	 */
-	void OnStateChange(PhysLayerState);
-
-	// DoStart and DoStop are idempotent versions of Start/Stop
-	void DoStart();
-	void DoStop();
-
-	void DoStopRouter();
 
 	virtual void DoVtoRemoteConnectedChanged(bool aOpened) = 0;
 	virtual void SetLocalConnected(bool aConnected) = 0;
@@ -213,25 +194,6 @@ private:
 	 * Buffer used to write to the physical layer
 	 */
 	VtoData mWriteData;
-
-	/**
-	 * while true we will let the AsyncPhysLayerMonitor implementation try
-	 * to keep reconnecting the local physical layer if it gets disconnected
-	 * for any reason
-	 */
-	bool mReopenPhysicalLayer;
-
-	/**
-	 * when StopRouter is called we start shutting down the vto router and
-	 * don't reconnect or send local connected callbacks
-	 */
-	bool mPermanentlyStopped;
-
-	/**
-	 * we use a delayed cleanup mechanism which we need to make sure we only
-	 * call once.
-	 */
-	bool mCleanedup;
 
 };
 

@@ -20,6 +20,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <APL/IPhysicalLayerAsync.h>
+#include <APL/Logger.h>
 #include <APL/Util.h>
 #include <APL/ToHex.h>
 
@@ -31,10 +32,9 @@ namespace apl
 
 MockPhysicalLayerMonitor::MockPhysicalLayerMonitor(Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimer, millis_t aOpenRetry) :
 	Loggable(apLogger),
-	AsyncPhysLayerMonitor(apLogger, apPhys, apTimer, aOpenRetry),
+	PhysicalLayerMonitor(apLogger, apPhys, apTimer, aOpenRetry),
 	mOpens(0),
 	mCloses(0),
-	mOpenFailures(0),
 	mNumReads(0),
 	mBytesRead(0),
 	mBytesWritten(0),
@@ -43,28 +43,24 @@ MockPhysicalLayerMonitor::MockPhysicalLayerMonitor(Logger* apLogger, IPhysicalLa
 	mWriteBuffer(0),
 	mExpectReadBuffer(0)
 {
-	mState.push(PLS_CLOSED);
+	mState.push(this->GetState());
+	this->AddObserver(this);
 }
 
-void MockPhysicalLayerMonitor::OnPhysicalLayerOpen()
+void MockPhysicalLayerMonitor::OnStateChange(PhysicalLayerState aState)
+{
+	mState.push(aState);
+}
+
+void MockPhysicalLayerMonitor::OnPhysicalLayerOpenSuccessCallback()
 {
 	mOpens++;
 	mpPhys->AsyncRead(mReadBuffer, mReadBuffer.Size());
 }
 
-void MockPhysicalLayerMonitor::OnPhysicalLayerClose()
+void MockPhysicalLayerMonitor::OnPhysicalLayerCloseCallback()
 {
 	mCloses++;
-}
-
-void MockPhysicalLayerMonitor::OnPhysicalLayerOpenFailure()
-{
-	mOpenFailures++;
-}
-
-void MockPhysicalLayerMonitor::OnStateChange(PhysLayerState aState)
-{
-	mState.push(aState);
 }
 
 void MockPhysicalLayerMonitor::_OnReceive(const boost::uint8_t* apData, size_t aNumBytes)
@@ -113,12 +109,12 @@ void MockPhysicalLayerMonitor::_OnSendFailure(void)
 	BOOST_REQUIRE(false);
 }
 
-bool MockPhysicalLayerMonitor::NextStateIs(PhysLayerState aState)
+bool MockPhysicalLayerMonitor::NextStateIs(PhysicalLayerState aState)
 {
 	if(mState.empty()) return false;
 	else {
-		PhysLayerState state = mState.front();
-		LOG_BLOCK(LEV_INFO, "Saw state: " + ConvertPhysLayerStateToString(state));
+		PhysicalLayerState state = mState.front();
+		LOG_BLOCK(LEV_INFO, "Saw state: " + ConvertPhysicalLayerStateToString(state));
 		mState.pop();
 		return (state == aState);
 	}

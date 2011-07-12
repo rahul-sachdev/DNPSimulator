@@ -8,19 +8,19 @@ namespace apl
 {
 LineReader::LineReader(Logger* apLogger, IPhysicalLayerAsync* apPhysical, ITimerSource* apTimerSrc, size_t aBuffSize) :
 	Loggable(apLogger),
-	AsyncPhysLayerMonitor(apLogger, apPhysical, apTimerSrc, 5000),
+	PhysicalLayerMonitor(apLogger, apPhysical, apTimerSrc, 5000),
 	mBuffer(aBuffSize)
 {
 	this->Reset();
 }
 
-void LineReader::OnPhysicalLayerOpen()
+void LineReader::OnPhysicalLayerOpenSuccessCallback()
 {
 	this->Read();
 	this->_Up();
 }
 
-void LineReader::OnPhysicalLayerClose()
+void LineReader::OnPhysicalLayerCloseCallback()
 {
 	this->Reset();
 	this->_Down();

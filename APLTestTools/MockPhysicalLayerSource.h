@@ -36,9 +36,11 @@ public:
 
 	MockPhysicalLayerSource(Logger* apLogger, ITimerSource* apTimerSrc = NULL);
 
+	~MockPhysicalLayerSource();
+
 	MockPhysicalLayerAsync* GetMock(const std::string& arName);
 
-	IPhysicalLayerAsync* AcquireLayer(const std::string& arName, bool aAutoDelete);
+	IPhysicalLayerAsync* AcquireLayer(const std::string& arName);
 	void ReleaseLayer(const std::string& arName);
 
 private:

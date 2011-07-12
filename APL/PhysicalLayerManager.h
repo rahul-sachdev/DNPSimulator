@@ -26,7 +26,7 @@
 namespace apl
 {
 class EventLog;
-class IPhysMonitor;
+class IPhysicalLayerObserver;
 
 class PhysicalLayerManager : public PhysicalLayerMap
 {

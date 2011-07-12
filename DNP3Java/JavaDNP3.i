@@ -2,7 +2,7 @@
 %{
 /* Includes the header in the wrapper code */
 
-#include <APL/IPhysMonitor.h>
+#include <APL/IPhysicalLayerObserver.h>
 #include <DNP3/StackManager.h>
 
 using namespace apl;
@@ -35,8 +35,10 @@ using namespace apl::dnp;
 %include "APL/Types.h"
 %include "APL/INotifier.h"
 %include "APL/LogTypes.h"
+%include "APL/LogEntry.h"
 %include "APL/LogBase.h"
-%include "APL/IPhysMonitor.h"
+%include "APL/PhysicalLayerStates.h"
+%include "APL/IPhysicalLayerObserver.h"
 %include "APL/PhysLayerSettings.h"
 %include "APL/SerialTypes.h"
 %include "APL/QualityMasks.h"
@@ -47,6 +49,7 @@ using namespace apl::dnp;
 %template(UnsignedPoint) apl::TypedDataPoint<boost::uint32_t>;
 %include "APL/DataTypes.h"
 
+%include "APL/ITransactable.h"
 %include "APL/DataInterfaces.h"
 %include "APL/CommandInterfaces.h"
 

@@ -37,7 +37,7 @@ namespace dnp
 
 LinkLayerRouter::LinkLayerRouter(apl::Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc, millis_t aOpenRetry) :
 	Loggable(apLogger),
-	AsyncPhysLayerMonitor(apLogger, apPhys, apTimerSrc, aOpenRetry),
+	PhysicalLayerMonitor(apLogger, apPhys, apTimerSrc, aOpenRetry),
 	mReceiver(apLogger, this),
 	mTransmitting(false)
 {}
@@ -61,7 +61,9 @@ void LinkLayerRouter::AddContext(ILinkContext* apContext, const LinkRoute& arRou
 	}
 
 	mAddressMap[arRoute] = apContext;
-	if(this->IsOpen()) apContext->OnLowerLayerUp();
+	if(this->GetState() == PLS_OPEN) apContext->OnLowerLayerUp();
+
+	this->Start();
 }
 
 void LinkLayerRouter::RemoveContext(const LinkRoute& arRoute)
@@ -70,10 +72,12 @@ void LinkLayerRouter::RemoveContext(const LinkRoute& arRoute)
 	if(i != mAddressMap.end()) {
 		ILinkContext* pContext = i->second;
 		mAddressMap.erase(i);
-		if(this->IsOpen()) pContext->OnLowerLayerDown();
+		if(this->GetState() == PLS_OPEN) pContext->OnLowerLayerDown();
 	}
-}
 
+	// if no stacks are bound, suspend the router
+	if(mAddressMap.size() == 0) this->Suspend();
+}
 
 ILinkContext* LinkLayerRouter::GetContext(const LinkRoute& arRoute)
 {
@@ -208,7 +212,7 @@ void LinkLayerRouter::CheckForSend()
 	}
 }
 
-void LinkLayerRouter::OnPhysicalLayerOpen()
+void LinkLayerRouter::OnPhysicalLayerOpenSuccessCallback()
 {
 	if(mpPhys->CanRead())
 		mpPhys->AsyncRead(mReceiver.WriteBuff(), mReceiver.NumWriteBytes());
@@ -218,7 +222,7 @@ void LinkLayerRouter::OnPhysicalLayerOpen()
 	}
 }
 
-void LinkLayerRouter::OnPhysicalLayerClose()
+void LinkLayerRouter::OnPhysicalLayerCloseCallback()
 {
 	mTransmitting = false;
 	mTransmitQueue.erase(mTransmitQueue.begin(), mTransmitQueue.end());

@@ -24,7 +24,7 @@ class Terminal : private LineReader, public ITerminal
 {
 public:
 
-	Terminal(Logger* apLogger, IPhysicalLayerAsync* apPhysical, ITimerSource* apTimerSrc, const std::string& arBanner = "Terminal", bool aIOMode = false, bool aHoldTimer = true);
+	Terminal(Logger* apLogger, IPhysicalLayerAsync* apPhysical, ITimerSource* apTimerSrc, const std::string& arBanner = "Terminal", bool aIOMode = false);
 
 	void BindCommand(const CommandNode& arNode, const std::string& arFullCommand);
 
@@ -37,7 +37,6 @@ public:
 	void AcceptLine(const std::string& arLine);
 	void _Up();
 	void _Down();
-	void OnStateChange(PhysLayerState) {}
 
 	retcode ProcessLine(const std::string& arLine);
 
@@ -52,10 +51,11 @@ public:
 	void Init() {
 		this->Start();
 	}
-	void Shutdown() {
-		if(mpInfiniteTimer) mpInfiniteTimer->Cancel();
-		this->Stop();
+
+	void ShutdownForever() {
+		this->Shutdown();
 	}
+
 
 private:
 

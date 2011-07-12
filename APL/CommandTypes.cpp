@@ -130,7 +130,7 @@ BinaryOutput::BinaryOutput() :
 
 }
 
-BinaryOutput::BinaryOutput(ControlCode aCode, boost::uint8_t aCount, boost::uint8_t aOnTime, boost::uint8_t aOffTime) :
+BinaryOutput::BinaryOutput(ControlCode aCode, boost::uint8_t aCount, boost::uint32_t aOnTime, boost::uint32_t aOffTime) :
 	CommandRequest(CT_BINARY_OUTPUT),
 	mRawCode(aCode),
 	mCount(aCount),

@@ -16,39 +16,28 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+#ifndef __PHYSICAL_LAYER_STATES_H_
+#define __PHYSICAL_LAYER_STATES_H_
 
-#include "CleanupHelper.h"
+#include <string>
 
-#include <APL/TimerInterfaces.h>
-
-#include <boost/foreach.hpp>
+#include <sstream>
 
 namespace apl
 {
-namespace dnp
-{
 
-CleanupHelper::CleanupHelper(ITimerSource* apTimerSource) :
-	mpTimerSource(apTimerSource)
-{
+enum PhysicalLayerState {
+    PLS_CLOSED,		// layer is offline and idle
+    PLS_OPENING,	// layer is trying to open
+    PLS_WAITING,	// layer is waiting to open
+    PLS_OPEN,		// layer is open
+    PLS_SHUTDOWN	// stopped and will never do anything again
+};
 
-}
+std::string ConvertPhysicalLayerStateToString(PhysicalLayerState aState);
 
-// implement the ISubject interface
-void CleanupHelper::AddCleanupTask(const CleanupTask& arCleanupTask)
-{
-	CriticalSection cs(&mCleanupHelperLock);
-	mCleanupTasks.push_back(arCleanupTask);
-}
-
-void CleanupHelper::Cleanup()
-{
-	CriticalSection cs(&mCleanupHelperLock);
-	BOOST_FOREACH(CleanupTask task, mCleanupTasks) {
-		mpTimerSource->Post(task);
-	}
-}
+std::ostream& operator<<(std::ostream& output, PhysicalLayerState aState);
 
 }
-}
 
+#endif

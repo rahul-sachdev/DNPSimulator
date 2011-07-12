@@ -37,7 +37,7 @@ public:
 	PhysicalLayerMap(Logger* apBaseLogger, boost::asio::io_service*);
 	virtual ~PhysicalLayerMap();
 
-	IPhysicalLayerAsync* AcquireLayer(const std::string& arName, bool aAutoDelete = true);
+	IPhysicalLayerAsync* AcquireLayer(const std::string& arName);
 	void ReleaseLayer(const std::string& arName);
 	PhysLayerSettings GetSettings(const std::string& arName);
 

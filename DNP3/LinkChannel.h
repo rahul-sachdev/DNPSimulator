@@ -16,15 +16,13 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __PORT_H_
-#define __PORT_H_
-
+#ifndef __LINK_CHANNEL_H_
+#define __LINK_CHANNEL_H_
 
 #include "LinkLayerRouter.h"
 
-#include "CleanupHelper.h"
+#include <APL/Lock.h>
 
-#include <APL/Loggable.h>
 #include <vector>
 
 namespace apl
@@ -39,20 +37,10 @@ namespace dnp
 {
 
 class Stack;
-class AsyncStackManager;
 
-template <class T, class U>
-static std::vector<U> GetKeys(T& arMap)
+class LinkChannel : private LinkLayerRouter
 {
-	std::vector<U> ret;
-	for(typename T::iterator i = arMap.begin(); i != arMap.end(); ++i) {
-		ret.push_back(i->first);
-	}
-	return ret;
-}
 
-class Port : public Loggable, public IPhysMonitor, public CleanupHelper
-{
 	struct StackRecord {
 		StackRecord() : pStack(NULL), route()
 		{}
@@ -67,37 +55,31 @@ class Port : public Loggable, public IPhysMonitor, public CleanupHelper
 
 public:
 
-	static void Delete(Port* apPort) {
-		delete apPort;
-	}
+	LinkChannel(Logger* apLogger, const std::string& arName, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, AsyncTaskGroup* apTaskGroup, millis_t aOpenRetry);
 
-	Port(const std::string& arName, Logger*, AsyncTaskGroup*, ITimerSource* apTimerSrc, IPhysicalLayerAsync*, millis_t aOpenDelay, IPhysMonitor*);
-
-	AsyncTaskGroup* GetGroup() {
-		return mpGroup;
-	}
-	void Associate(const std::string& arStackName, Stack* apStack, const LinkRoute& arRoute);
-	void Disassociate(const std::string& arStackName);
+	void BindStackToChannel(const std::string& arStackName, Stack* apStack, const LinkRoute& arRoute);
+	void RemoveStackFromChannel(const std::string& arStackName);
 
 	std::string Name() {
 		return mName;
 	}
 
-	void Release();
+	AsyncTaskGroup* GetGroup() {
+		return mpTaskGroup;
+	}
 
-	//Events from the router
-	void OnStateChange(PhysLayerState);
+	void BeginShutdown() {
+		this->Shutdown();
+	}
+
+	void WaitUntilShutdown() {
+		this->WaitForShutdown();
+	}
 
 private:
 
 	std::string mName;
-	LinkLayerRouter mRouter;
-	AsyncTaskGroup* mpGroup;
-	IPhysicalLayerAsync* mpPhys;
-	IPhysMonitor* mpObserver;
-	bool mRelease;
-
-private:
+	AsyncTaskGroup* mpTaskGroup;
 
 	typedef std::map<std::string, StackRecord> StackMap;
 	StackMap mStackMap;

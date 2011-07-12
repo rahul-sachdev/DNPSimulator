@@ -24,7 +24,7 @@
 #include "AsyncTaskInterfaces.h"
 #include "Uncopyable.h"
 
-#include <vector>
+#include <set>
 #include <queue>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
@@ -55,6 +55,7 @@ public:
 
 	AsyncTaskBase* Add(millis_t aPeriod, millis_t aRetryDelay, int aPriority, const TaskHandler& arCallback, const std::string& arName = "");
 	AsyncTaskContinuous* AddContinuous(int aPriority, const TaskHandler& arCallback, const std::string& arName = "");
+	void Remove(AsyncTaskBase* apTask);
 
 	void Enable();
 	void Disable();
@@ -87,8 +88,8 @@ private:
 
 	AsyncTaskGroup(ITimerSource*, ITimeSource*);
 
-	typedef std::vector<AsyncTaskBase*> TaskVec;
-	TaskVec mTaskVec;
+	typedef std::set<AsyncTaskBase*> TaskSet;
+	TaskSet mTaskSet;
 };
 
 }

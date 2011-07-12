@@ -23,7 +23,7 @@ using namespace boost;
 namespace apl
 {
 
-Terminal::Terminal(Logger* apLogger, IPhysicalLayerAsync* apPhysical, ITimerSource* apTimerSrc, const std::string& arBanner, bool aIOMode, bool aHoldTimer) :
+Terminal::Terminal(Logger* apLogger, IPhysicalLayerAsync* apPhysical, ITimerSource* apTimerSrc, const std::string& arBanner, bool aIOMode) :
 	Loggable(apLogger),
 	LineReader(apLogger, apPhysical, apTimerSrc, 100),
 	mSendBuffer(1024),
@@ -34,9 +34,6 @@ Terminal::Terminal(Logger* apLogger, IPhysicalLayerAsync* apPhysical, ITimerSour
 	mIOMode(aIOMode)
 {
 	this->InitCmdHandlers();
-	if(aHoldTimer) {
-		mpInfiniteTimer = mpTimerSrc->StartInfinite(boost::bind(&Terminal::Null, this));
-	}
 }
 
 void Terminal::InitCmdHandlers()
@@ -305,7 +302,7 @@ void Terminal::PrintClearScreen()
 
 retcode Terminal::HandleBye(std::vector<std::string>&)
 {
-	this->Stop();
+	this->Close();
 	return SUCCESS;
 }
 

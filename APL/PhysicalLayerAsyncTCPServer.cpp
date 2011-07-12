@@ -70,7 +70,7 @@ void PhysicalLayerAsyncTCPServer::DoOpen()
 	                                   boost::asio::placeholders::error));
 }
 
-void PhysicalLayerAsyncTCPServer::DoOpenCallback()
+void PhysicalLayerAsyncTCPServer::CloseAcceptor()
 {
 	boost::system::error_code ec;
 	mAcceptor.close(ec);
@@ -79,13 +79,14 @@ void PhysicalLayerAsyncTCPServer::DoOpenCallback()
 	}
 }
 
+void PhysicalLayerAsyncTCPServer::DoOpenCallback()
+{
+	this->CloseAcceptor();
+}
+
 void PhysicalLayerAsyncTCPServer::DoOpeningClose()
 {
-	boost::system::error_code ec;
-	mAcceptor.cancel(ec);
-	if(ec) {
-		LOG_BLOCK(LEV_WARNING, "Error while canceling tcp acceptor: " << ec);
-	}
+	this->CloseAcceptor();
 }
 
 void PhysicalLayerAsyncTCPServer::DoOpenSuccess()
