@@ -19,9 +19,18 @@
 #ifndef __RANDOM_H_
 #define __RANDOM_H_
 
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable:4244)
+#endif
+
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
+
+#ifdef WIN32
+#pragma warning(pop)
+#endif
 
 namespace apl
 {
