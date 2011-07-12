@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_SUITE(VtoOnewayIntegrationSuite)
 
 BOOST_AUTO_TEST_CASE(Reconnection)
 {
-	VtoOnewayTestStack stack(true, false, true);
+	VtoOnewayTestStack stack(true, false, false);
 
 	// start up everything, the local side should be able to open
 	stack.remote.Start();
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(Reconnection)
 
 	RandomizedBuffer data(100);
 
-	for(size_t i = 0; i < 3; ++i) {
+	for(size_t i = 0; i < 1; ++i) {
 		
 		stack.Log(LOCATION, "Begin iteration");
 
@@ -102,7 +102,6 @@ BOOST_AUTO_TEST_CASE(Reconnection)
 	}
 }
 
-/*
 BOOST_AUTO_TEST_CASE(RemoteSideOpenFailureBouncesLocalConnection)
 {
 	VtoOnewayTestStack test(true, false);
@@ -111,14 +110,13 @@ BOOST_AUTO_TEST_CASE(RemoteSideOpenFailureBouncesLocalConnection)
 
 	test.local.Start();
 
-	for(size_t i = 0; i < 5; ++i) {
+	for(size_t i = 0; i < 3; ++i) {
 		// start local connection, we should immediately be able to connect to this side
 		BOOST_REQUIRE(test.WaitForLocalState(PLS_OPEN));
 		// since the remote side can't connect to the port we should have our local connection bounced
 		BOOST_REQUIRE(test.WaitForLocalState(PLS_CLOSED));
 	}
 }
-*/
 
 BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 {

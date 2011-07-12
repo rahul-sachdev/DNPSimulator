@@ -39,15 +39,17 @@ class IPhysicalLayerObserver;
   */
 class PhysicalLayerMonitor : public IHandlerAsync
 {
-	friend class MonitorStateActions;
-	friend class MonitorStateOpeningClosing;
+	friend class MonitorStateActions;	
 	
 public:
 	PhysicalLayerMonitor(Logger*, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);
 	~PhysicalLayerMonitor();
 
-	/** Begin monitor execution - Idempotent*/
+	/** Begin monitor execution, retry indefinitely on failure - Idempotent*/
 	void Start();
+
+	/** Begin monitor execution, don't reconnect automatically on failure - Idempotent*/
+	void StartOne();
 
 	/** Close the physical layer if it's open */
 	void Close();

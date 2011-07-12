@@ -175,7 +175,7 @@ void ClientSocketVtoRouter::HandleVtoRemoteConnectedChanged()
 		// can close the connection. Effectivley we tunnel the "connection
 		// refused" behavior as a "remote server terminated connection"
 		this->SetLocalConnected(true);		
-		this->Start();
+		this->StartOne();
 	}
 	else {		
 		this->FlushBuffers();

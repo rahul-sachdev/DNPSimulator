@@ -86,6 +86,12 @@ void PhysicalLayerMonitor::Start()
 	mpState->OnStartRequest(this);
 }
 
+void PhysicalLayerMonitor::StartOne()
+{
+	LOG_BLOCK(LEV_DEBUG, "StartOne()");
+	mpState->OnStartOneRequest(this);
+}
+
 void PhysicalLayerMonitor::Close()
 {
 	LOG_BLOCK(LEV_DEBUG, "Close()");

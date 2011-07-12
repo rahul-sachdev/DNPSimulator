@@ -33,13 +33,6 @@ using namespace apl::dnp;
 
 BOOST_AUTO_TEST_SUITE(LinkLayerRouterSuite)
 
-BOOST_AUTO_TEST_CASE(LayerDoesNotOpenWithoutAnyStacks)
-{
-	LinkLayerRouterTest t;
-	t.router.Start(); //starting the 
-	BOOST_REQUIRE_EQUAL(t.phys.NumOpen(), 0);
-}
-
 // Test that send frames from unknown sources are rejected
 BOOST_AUTO_TEST_CASE(UnknownSourceException)
 {
