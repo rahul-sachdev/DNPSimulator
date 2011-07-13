@@ -170,19 +170,8 @@ bool AsyncTaskBase::LessThanGroupLevelNoString(const AsyncTaskBase* l, const Asy
 }
 
 bool AsyncTaskBase::LessThanGroupLevel(const AsyncTaskBase* l, const AsyncTaskBase* r)
-{
-	bool less_than = LessThanGroupLevelNoString(l, r);
-
-	/*
-	if(less_than) {
-		std::cout << r->Name() << " higher prioity than " << l->Name() << std::endl;
-	}
-	else {
-		std::cout << l->Name() << " higher prioity than " << r->Name() << std::endl;
-	}
-	*/
-
-	return less_than;
+{		
+	return LessThanGroupLevelNoString(l, r);
 }
 
 

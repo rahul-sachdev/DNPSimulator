@@ -136,10 +136,6 @@ BOOST_AUTO_TEST_CASE(ContinousTask)
 	BOOST_REQUIRE_EQUAL(mth.Size(), 1);
 	BOOST_REQUIRE_EQUAL(mth.Front(), pT1);
 	pT1->Disable();
-
-
-
-
 }
 
 // Two groups that execute independently of one another
@@ -169,15 +165,15 @@ BOOST_AUTO_TEST_CASE(NonPeriodic)
 {
 	MockTaskHandler mth;
 	MockTimerSource mts;
-	MockTimeSource fake_time;
-	AsyncTaskScheduler ats(&mts, &fake_time);
-
+	MockTimeSource fakeTime;
+	fakeTime.SetToNow();
+	AsyncTaskScheduler ats(&mts, &fakeTime);
 	AsyncTaskGroup* pGroup = ats.CreateNewGroup();
-	fake_time.SetToNow();
+	
 
 	AsyncTaskBase* pT1 = pGroup->Add(-1, 100, 0, mth.GetHandler()); //non-periodic task
 	AsyncTaskBase* pT2 = pGroup->Add(2000, 100, 0, mth.GetHandler());
-
+	
 	pGroup->Enable();
 
 	//complete both the tasks
@@ -191,7 +187,7 @@ BOOST_AUTO_TEST_CASE(NonPeriodic)
 	// a timer should be registered for the next periodic task execution
 	BOOST_REQUIRE_EQUAL(mts.NumActive(), 1);
 	BOOST_REQUIRE_EQUAL(mth.Size(), 0);
-	fake_time.Advance(2000);
+	fakeTime.Advance(2000);
 	BOOST_REQUIRE(mts.DispatchOne());
 	BOOST_REQUIRE_EQUAL(mth.Size(), 1);
 	BOOST_REQUIRE_EQUAL(mth.Front(), pT2);
