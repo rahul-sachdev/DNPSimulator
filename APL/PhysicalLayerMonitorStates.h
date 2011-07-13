@@ -172,7 +172,11 @@ class MonitorStateShutdown : public virtual IMonitorState,
 };
 
 class MonitorStateSuspended : public virtual IMonitorState,
-	private NotOpening, private NotOpen, private NotWaitingForTimer, private IgnoresClose, private IgnoresSuspend
+	private NotOpening,
+	private NotOpen,
+	private NotWaitingForTimer,
+	private IgnoresClose,
+	private IgnoresSuspend
 {
 	MACRO_MONITOR_SINGLETON(MonitorStateSuspended, PLS_CLOSED, false);
 
@@ -181,9 +185,16 @@ class MonitorStateSuspended : public virtual IMonitorState,
 	void OnShutdownRequest(PhysicalLayerMonitor* apContext);
 };
 
-class MonitorStateOpening : public virtual IMonitorState,
+class MonitorStateOpeningBase : public virtual IMonitorState,
 	private NotOpen,
-	private NotWaitingForTimer,
+	private NotWaitingForTimer
+{
+	void OnShutdownRequest(PhysicalLayerMonitor* apContext);
+	void OnSuspendRequest(PhysicalLayerMonitor* apContext);
+};
+
+
+class MonitorStateOpening : public MonitorStateOpeningBase,
 	private OpenFailureCausesWait,
 	private IgnoresStart
 {
@@ -191,23 +202,17 @@ class MonitorStateOpening : public virtual IMonitorState,
 
 	void OnStartOneRequest(PhysicalLayerMonitor* apContext);
 	void OnCloseRequest(PhysicalLayerMonitor* apContext);
-	void OnShutdownRequest(PhysicalLayerMonitor* apContext);
-	void OnSuspendRequest(PhysicalLayerMonitor* apContext);
 	void OnLayerOpen(PhysicalLayerMonitor* apContext);
 };
 
-class MonitorStateOpeningOne : public virtual IMonitorState,
-	private NotOpen,
-	private NotWaitingForTimer,
-	private OpenFailureCausesWait,
+class MonitorStateOpeningOne : public MonitorStateOpeningBase,
 	private IgnoresStartOne
 {
 	MACRO_MONITOR_SINGLETON(MonitorStateOpeningOne, PLS_OPENING, false);
 
+	void OnOpenFailure(PhysicalLayerMonitor* apContext);
 	void OnStartRequest(PhysicalLayerMonitor* apContext);
 	void OnCloseRequest(PhysicalLayerMonitor* apContext);
-	void OnShutdownRequest(PhysicalLayerMonitor* apContext);
-	void OnSuspendRequest(PhysicalLayerMonitor* apContext);
 	void OnLayerOpen(PhysicalLayerMonitor* apContext);
 };
 

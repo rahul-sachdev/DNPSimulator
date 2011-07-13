@@ -6,6 +6,6 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories="$(TOOLS_HOME)\boostlib\boost_1_46_1\include"
+		AdditionalIncludeDirectories="$(TOOLS_HOME)\boostlib\boost_1_47_0\include"
 	/>
 </VisualStudioPropertySheet>

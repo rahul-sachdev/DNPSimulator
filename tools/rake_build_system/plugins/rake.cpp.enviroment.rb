@@ -66,8 +66,10 @@ end
 
 def get_debug_cc_flags
   case $hw_os
-    when 'pc_linux_arm' []
-    else ['-g -fpic']
+    when 'pc_linux_arm'
+      []
+    else
+      ['-g -fpic']
   end	
 end
 
@@ -81,7 +83,7 @@ def get_coverage_cc_flags
 end
 
 #By default, the build is set to debug
-$WARN_FLAGS   = ['-Wall', '-Wno-strict-aliasing']
+$WARN_FLAGS   = ['-Wall']#, '-Wno-strict-aliasing']
 $RELEASE_TYPE = ENV['debug'] ? 'debug' : (ENV['coverage'] ? 'coverage' : 'release')
 $CC_FLAGS     = case $RELEASE_TYPE
   when 'release'

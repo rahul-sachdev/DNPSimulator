@@ -109,6 +109,66 @@ BOOST_AUTO_TEST_CASE(StateClosedCanBeStopped)
 	BOOST_REQUIRE_EQUAL(PLS_SHUTDOWN, test.monitor.GetState());
 }
 
+BOOST_AUTO_TEST_CASE(StateClosedIgnoresSuspend)
+{
+	TestObject test;
+	test.monitor.Suspend();
+	BOOST_REQUIRE_EQUAL(PLS_CLOSED, test.monitor.GetState());
+}
+
+BOOST_AUTO_TEST_CASE(StartOneBeginsOpening)
+{
+	TestObject test;
+	test.monitor.StartOne();
+	BOOST_REQUIRE_EQUAL(PLS_OPENING, test.monitor.GetState());
+}
+
+BOOST_AUTO_TEST_CASE(StartOneFailureDoesNotRetry)
+{
+	TestObject test;
+	test.monitor.StartOne();
+	test.phys.SignalOpenFailure();
+	BOOST_REQUIRE_EQUAL(PLS_CLOSED, test.monitor.GetState());
+}
+
+BOOST_AUTO_TEST_CASE(StartingWhileOpeningOneWillRetry)
+{
+	TestObject test;
+	test.monitor.StartOne();
+	test.monitor.Start();
+	test.phys.SignalOpenFailure();
+	BOOST_REQUIRE_EQUAL(PLS_WAITING, test.monitor.GetState());
+}
+
+BOOST_AUTO_TEST_CASE(ClosingWhileOpeningOneWillNotRetry)
+{
+	TestObject test;
+	test.monitor.StartOne();
+	test.monitor.Close();
+	test.phys.SignalOpenFailure();
+	BOOST_REQUIRE_EQUAL(PLS_CLOSED, test.monitor.GetState());
+}
+
+BOOST_AUTO_TEST_CASE(SuspendWhileOpeningClosingWillNotRetry)
+{
+	TestObject test;
+	test.monitor.Start();
+	test.monitor.Close();
+	test.monitor.Suspend();
+	test.phys.SignalOpenFailure();
+	BOOST_REQUIRE_EQUAL(PLS_CLOSED, test.monitor.GetState());
+}
+
+BOOST_AUTO_TEST_CASE(LayerCloseAfterStartOneDoesNotRetry)
+{
+	TestObject test;
+	test.monitor.StartOne();
+	test.phys.SignalOpenSuccess();
+	BOOST_REQUIRE_EQUAL(PLS_OPEN, test.monitor.GetState());
+	test.phys.AsyncClose();
+	BOOST_REQUIRE_EQUAL(PLS_CLOSED, test.monitor.GetState());
+}
+
 BOOST_AUTO_TEST_CASE(StopAndCloseDoNothingWhileStopped)
 {
 	TestObject test;
@@ -126,6 +186,7 @@ BOOST_AUTO_TEST_CASE(StoppedLayerCannotBeStarted)
 	TestObject test;
 	test.monitor.Shutdown();
 	test.monitor.Start();
+	test.monitor.StartOne();
 	BOOST_REQUIRE_EQUAL(PLS_SHUTDOWN, test.monitor.GetState());
 	BOOST_REQUIRE(test.phys.IsClosed());
 }
@@ -143,6 +204,15 @@ BOOST_AUTO_TEST_CASE(OpeningLayerExceptions)
 	TestObject test;
 	test.monitor.Start();
 	BOOST_REQUIRE_THROW(test.monitor.OnLowerLayerDown(), InvalidStateException);
+}
+
+BOOST_AUTO_TEST_CASE(OpeningStartOneGoesToOpeningOne)
+{
+	TestObject test;
+	test.monitor.Start();
+	test.monitor.StartOne();
+	test.phys.SignalOpenFailure();
+	BOOST_REQUIRE_EQUAL(PLS_CLOSED, test.monitor.GetState());
 }
 
 BOOST_AUTO_TEST_CASE(OpeningStateOpenSuccessGoesToOpenState)

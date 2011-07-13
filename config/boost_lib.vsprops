@@ -6,6 +6,6 @@
 	>
 	<Tool
 		Name="VCLinkerTool"
-		AdditionalLibraryDirectories="$(TOOLS_HOME)\boostlib\boost_1_46_1\windows"
+		AdditionalLibraryDirectories="$(TOOLS_HOME)\boostlib\boost_1_47_0\windows"
 	/>
 </VisualStudioPropertySheet>

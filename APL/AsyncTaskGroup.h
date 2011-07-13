@@ -88,8 +88,8 @@ private:
 
 	AsyncTaskGroup(ITimerSource*, ITimeSource*);
 
-	typedef std::set<AsyncTaskBase*> TaskSet;
-	TaskSet mTaskSet;
+	typedef std::vector< AsyncTaskBase* > TaskVec;
+	TaskVec mTaskVec;
 };
 
 }
