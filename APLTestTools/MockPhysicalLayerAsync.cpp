@@ -19,7 +19,7 @@
 #include "MockPhysicalLayerAsync.h"
 
 #include "BufferHelpers.h"
-#include <APL/TimerInterfaces.h>
+#include <APL/ITimerSource.h>
 
 #include <memory.h>
 #include <boost/bind.hpp>

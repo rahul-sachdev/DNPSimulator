@@ -19,7 +19,7 @@
 #include "AppLayerChannel.h"
 
 #include <APL/Logger.h>
-#include <APL/TimerInterfaces.h>
+#include <APL/ITimerSource.h>
 
 #include "AppLayer.h"
 #include "AppChannelStates.h"

@@ -21,7 +21,7 @@
 
 
 #include <APL/Logger.h>
-#include <APL/TimerInterfaces.h>
+#include <APL/ITimerSource.h>
 
 using namespace std;
 

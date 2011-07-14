@@ -16,55 +16,22 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __TRANSPORT_STACK_PAIR_H_
-#define __TRANSPORT_STACK_PAIR_H_
+#include "ITimerSource.h"
 
-namespace boost
-{
-namespace asio
-{
-class io_service;
-}
-}
-
-
-#include <APL/PhysicalLayerAsyncTCPClient.h>
-#include <APL/PhysicalLayerAsyncTCPServer.h>
-#include <APL/ITimerSource.h>
-
-#include "TransportIntegrationStack.h"
+#include <boost/bind.hpp>
 
 namespace apl
 {
-namespace dnp
+
+ITimer* ITimerSource::StartInfinite() 
 {
-
-class TransportStackPair
-{
-public:
-	TransportStackPair(
-	    LinkConfig aClientCfg,
-	    LinkConfig aServerCfg,
-	    Logger* apLogger,
-	    boost::asio::io_service* apService,
-	    ITimerSource* apTimerSrc,
-	    boost::uint16_t aPort);
-
-	void Start();
-
-	//test helper functions
-	bool BothLayersUp();
-
-public:
-	PhysicalLayerAsyncTCPClient mClient;
-	PhysicalLayerAsyncTCPServer mServer;
-
-	TransportIntegrationStack mClientStack;
-	TransportIntegrationStack mServerStack;
-
-};
-
-}
+	boost::posix_time::ptime t(boost::date_time::max_date_time);
+	return this->Start(t, boost::bind(&ITimerSource::NullActionForInfiniteTimer));
 }
 
-#endif
+void ITimerSource::NullActionForInfiniteTimer()
+{
+
+}
+
+}

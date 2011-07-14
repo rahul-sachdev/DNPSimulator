@@ -16,55 +16,23 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __TRANSPORT_STACK_PAIR_H_
-#define __TRANSPORT_STACK_PAIR_H_
 
-namespace boost
-{
-namespace asio
-{
-class io_service;
-}
-}
+#ifndef __DELETE_ANY_H_
+#define __DELETE_ANY_H_
 
-
-#include <APL/PhysicalLayerAsyncTCPClient.h>
-#include <APL/PhysicalLayerAsyncTCPServer.h>
-#include <APL/ITimerSource.h>
-
-#include "TransportIntegrationStack.h"
+#include <vector>
 
 namespace apl
 {
-namespace dnp
+
+/** Useful for posting to a timer source */
+template <class T>
+void DeleteAny(const T* apType)
 {
-
-class TransportStackPair
-{
-public:
-	TransportStackPair(
-	    LinkConfig aClientCfg,
-	    LinkConfig aServerCfg,
-	    Logger* apLogger,
-	    boost::asio::io_service* apService,
-	    ITimerSource* apTimerSrc,
-	    boost::uint16_t aPort);
-
-	void Start();
-
-	//test helper functions
-	bool BothLayersUp();
-
-public:
-	PhysicalLayerAsyncTCPClient mClient;
-	PhysicalLayerAsyncTCPServer mServer;
-
-	TransportIntegrationStack mClientStack;
-	TransportIntegrationStack mServerStack;
-
-};
-
+	delete apType;
 }
+
 }
 
 #endif
+

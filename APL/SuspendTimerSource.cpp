@@ -19,7 +19,7 @@
 
 #include "SuspendTimerSource.h"
 
-#include "TimerInterfaces.h"
+#include "ITimerSource.h"
 
 #include <boost/bind.hpp>
 

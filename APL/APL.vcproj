@@ -541,6 +541,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\DeleteAny.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Exception.cpp"
 					>
 				</File>
@@ -737,6 +741,18 @@
 				Name="Timers"
 				>
 				<File
+					RelativePath=".\ITimer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ITimerSource.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ITimerSource.h"
+					>
+				</File>
+				<File
 					RelativePath=".\PostingNotifier.cpp"
 					>
 				</File>
@@ -766,10 +782,6 @@
 				</File>
 				<File
 					RelativePath=".\TimerASIO.h"
-					>
-				</File>
-				<File
-					RelativePath=".\TimerInterfaces.h"
 					>
 				</File>
 				<File

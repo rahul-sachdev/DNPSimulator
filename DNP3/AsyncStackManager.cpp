@@ -173,7 +173,7 @@ void AsyncStackManager::StopVtoRouter(const std::string& arStackName, boost::uin
 {
 	this->ThrowIfAlreadyShutdown();	
 	IVtoWriter* pWriter = this->GetVtoWriter(arStackName);
-	VtoRouterManager::RouterRecord rec = mVtoManager.GetRouterOnWriter(pWriter, aVtoChannelId);
+	RouterRecord rec = mVtoManager.GetRouterOnWriter(pWriter, aVtoChannelId);
 	this->RemoveVtoChannel(arStackName, rec.mpRouter.get());
 	mVtoManager.StopRouter(pWriter, aVtoChannelId);
 }
@@ -208,10 +208,9 @@ void AsyncStackManager::RemovePort(const std::string& arPortName)
 	pChannel->WaitUntilShutdown();	
 	
 	vector<string> stacks = pChannel->StacksOnChannel();
-	BOOST_FOREACH(string s, stacks) {
-		delete this->SeverStackFromChannel(s);
-	}
-		
+	BOOST_FOREACH(string s, stacks) { 
+		this->RemoveStack(s); 
+	}				
 	this->mScheduler.ReleaseGroup(pChannel->GetGroup());
 
 	// remove the physical layer from the list
@@ -220,8 +219,10 @@ void AsyncStackManager::RemovePort(const std::string& arPortName)
 
 void AsyncStackManager::RemoveStack(const std::string& arStackName)
 {
-	this->ThrowIfAlreadyShutdown();	
-	delete this->SeverStackFromChannel(arStackName);	
+	this->ThrowIfAlreadyShutdown();
+	std::auto_ptr<Stack> pStack(this->SeverStackFromChannel(arStackName));
+	this->OnPreStackDeletion(pStack.get());
+	//mTimerSrc.DeleteViaPost<Stack>(pStack);	
 }
 
 AsyncStackManager::StackRecord AsyncStackManager::GetStackRecordByName(const std::string& arStackName)
@@ -311,6 +312,15 @@ void AsyncStackManager::Run()
 	mService.Get()->reset();
 }
 
+void AsyncStackManager::OnPreStackDeletion(Stack* apStack)
+{
+	RouterRecordVector recs = this->mVtoManager.GetAllRoutersOnWriter(apStack->GetVtoWriter());
+
+	for(RouterRecordVector::iterator i = recs.begin(); i != recs.end(); ++i) {		
+		this->mVtoManager.StopRouter(apStack->GetVtoWriter(), i->mVtoChannelId);
+	}	
+}
+
 Stack* AsyncStackManager::SeverStackFromChannel(const std::string& arStackName)
 {	
 	StackMap::iterator i = mStackMap.find(arStackName);
@@ -322,7 +332,7 @@ Stack* AsyncStackManager::SeverStackFromChannel(const std::string& arStackName)
 	LOG_BLOCK(LEV_DEBUG, "Begin severing stack: " << arStackName);	
 	{
 		Transaction tr(&mSuspendTimerSource); //need to pause execution so that this action is safe
-		rec.channel->RemoveStackFromChannel(arStackName);
+		rec.channel->RemoveStackFromChannel(arStackName);		
 	}
 	LOG_BLOCK(LEV_DEBUG, "Done severing stack: " << arStackName);
 

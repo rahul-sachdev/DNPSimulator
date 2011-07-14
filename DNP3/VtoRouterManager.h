@@ -51,19 +51,23 @@ struct VtoRouterSettings;
 class IVtoWriter;
 class IVtoDataHandler;
 
-class VtoRouterManager : private Loggable
+class RouterRecord
 {
-public:
-	class RouterRecord
-	{
 	public:
 		RouterRecord(const std::string& arPortName, boost::shared_ptr<VtoRouter> apRouter, IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
 
-		std::string mPortName;
-		boost::shared_ptr<VtoRouter> mpRouter;
-		IVtoWriter* mpWriter;
-		boost::uint8_t mVtoChannelId;
-	};
+	std::string mPortName;
+	boost::shared_ptr<VtoRouter> mpRouter;
+	IVtoWriter* mpWriter;
+	boost::uint8_t mVtoChannelId;
+};
+
+typedef std::vector<RouterRecord> RouterRecordVector;
+
+class VtoRouterManager : private Loggable
+{
+public:
+
 
 
 	VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc);
@@ -81,9 +85,7 @@ public:
 
 private:
 
-	void StopRouter(VtoRouter* apRouter);
-
-	typedef std::vector<RouterRecord> RouterRecordVector;
+	void StopRouter(VtoRouter* apRouter, IVtoWriter* apWriter);	
 
 	RouterRecordVector::iterator Find(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
 	RouterRecordVector::iterator Find(IVtoWriter* apWriter);

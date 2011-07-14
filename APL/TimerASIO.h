@@ -21,7 +21,7 @@
 
 
 #include <boost/asio.hpp>
-#include "TimerInterfaces.h"
+#include "ITimerSource.h"
 
 namespace apl
 {

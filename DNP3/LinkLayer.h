@@ -22,7 +22,7 @@
 
 #include <queue>
 #include <APL/AsyncLayerInterfaces.h>
-#include <APL/TimerInterfaces.h>
+#include <APL/ITimerSource.h>
 
 #include "ILinkContext.h"
 #include "LinkFrame.h"

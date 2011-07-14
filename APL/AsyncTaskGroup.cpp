@@ -25,7 +25,7 @@
 #include "AsyncTaskScheduler.h"
 #include "Exception.h"
 
-#include "TimerInterfaces.h"
+#include "ITimerSource.h"
 
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>

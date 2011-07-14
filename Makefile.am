@@ -254,7 +254,7 @@ nobase_pkginclude_HEADERS= \
 	APL/TimeBoost.h \
 	APL/Timeout.h \
 	APL/TimerASIO.h \
-	APL/TimerInterfaces.h \
+	APL/ITimerSource.h \
 	APL/TimerSourceASIO.h \
 	APL/TimeSource.h \
 	APL/TimeTypes.h \

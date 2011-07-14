@@ -261,6 +261,17 @@ public:
 
 private:
 
+	// Implement IThreadable
+	void Run();
+
+	void OnPreStackDeletion(Stack* apStack);	
+
+	// Remove and close a stack, but delegate responsibility for deletion
+	Stack* SeverStackFromChannel(const std::string& arStackName);
+
+	// Add a stack from to a specified channel
+	void AddStackToChannel(const std::string& arStackName, Stack* apStack, LinkChannel* apChannel, const LinkRoute& arRoute);
+
 	IOService mService;
 	TimerSourceASIO mTimerSrc;
 	SuspendTimerSource mSuspendTimerSource;
@@ -299,17 +310,8 @@ private:
 		
 	StackRecord GetStackRecordByName(const std::string& arName);
 
-	void Run();
-
-	// Remove and close a stack, but delegate responsibility for deletion
-	Stack* SeverStackFromChannel(const std::string& arStackName);
-
-	// Add a stack from to a specified channel
-	void AddStackToChannel(const std::string& arStackName, Stack* apStack, LinkChannel* apChannel, const LinkRoute& arRoute);
-
-	size_t NumStacks() {
-		return mStackMap.size();
-	}		
+	
+	
 
 };
 

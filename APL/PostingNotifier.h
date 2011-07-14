@@ -20,7 +20,7 @@
 #define __POSTING_NOTIFIER_H_
 
 #include "INotifier.h"
-#include "TimerInterfaces.h"
+#include "ITimerSource.h"
 
 namespace apl
 {

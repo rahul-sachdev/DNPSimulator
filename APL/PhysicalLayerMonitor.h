@@ -21,7 +21,7 @@
 
 
 #include "IHandlerAsync.h"
-#include "TimerInterfaces.h"
+#include "ITimerSource.h"
 #include "IPhysicalLayerObserver.h"
 
 #include <APL/Lock.h>

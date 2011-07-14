@@ -36,7 +36,7 @@ namespace apl
 namespace dnp
 {
 
-VtoRouterManager::RouterRecord::RouterRecord(const std::string& arPortName, boost::shared_ptr<VtoRouter> apRouter, IVtoWriter* apWriter, boost::uint8_t aVtoChannelId) :
+RouterRecord::RouterRecord(const std::string& arPortName, boost::shared_ptr<VtoRouter> apRouter, IVtoWriter* apWriter, boost::uint8_t aVtoChannelId) :
 	mPortName(arPortName),
 	mpRouter(apRouter),
 	mpWriter(apWriter),
@@ -83,21 +83,22 @@ VtoRouter* VtoRouterManager::StartRouter(
 	return pRouter.get();
 }
 
-std::vector<VtoRouterManager::RouterRecord> VtoRouterManager::GetAllRouters()
+std::vector<RouterRecord> VtoRouterManager::GetAllRouters()
 {
-	std::vector<VtoRouterManager::RouterRecord> ret;
+	std::vector<RouterRecord> ret;
 	for(size_t i = 0; i < mRecords.size(); ++i) ret.push_back(mRecords[i]);
 	return ret;
 }
 
 void VtoRouterManager::StopRouter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId)
 {
-	this->StopRouter(this->GetRouterOnWriter(apWriter, aVtoChannelId).mpRouter.get());
+	VtoRouter* pRouter = this->GetRouterOnWriter(apWriter, aVtoChannelId).mpRouter.get();
+	this->StopRouter(pRouter, apWriter);
 }
 
-std::vector<VtoRouterManager::RouterRecord> VtoRouterManager::GetAllRoutersOnWriter(IVtoWriter* apWriter)
+std::vector<RouterRecord> VtoRouterManager::GetAllRoutersOnWriter(IVtoWriter* apWriter)
 {
-	std::vector< VtoRouterManager::RouterRecord > ret;
+	std::vector< RouterRecord > ret;
 
 	for(RouterRecordVector::iterator i = this->mRecords.begin(); i != mRecords.end(); ++i) {
 		if(i->mpWriter == apWriter) ret.push_back(*i);
@@ -106,7 +107,7 @@ std::vector<VtoRouterManager::RouterRecord> VtoRouterManager::GetAllRoutersOnWri
 	return ret;
 }
 
-VtoRouterManager::RouterRecord VtoRouterManager::GetRouterOnWriter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId)
+RouterRecord VtoRouterManager::GetRouterOnWriter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId)
 {
 	for(RouterRecordVector::iterator i = this->mRecords.begin(); i != mRecords.end(); ++i) {
 		if(i->mpWriter == apWriter && i->mVtoChannelId == aVtoChannelId) return *i;
@@ -116,7 +117,7 @@ VtoRouterManager::RouterRecord VtoRouterManager::GetRouterOnWriter(IVtoWriter* a
 }
 
 
-VtoRouterManager::RouterRecordVector::iterator VtoRouterManager::Find(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId)
+RouterRecordVector::iterator VtoRouterManager::Find(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId)
 {
 	RouterRecordVector::iterator i = this->mRecords.begin();
 
@@ -127,7 +128,7 @@ VtoRouterManager::RouterRecordVector::iterator VtoRouterManager::Find(IVtoWriter
 	return i;
 }
 
-VtoRouterManager::RouterRecordVector::iterator VtoRouterManager::Find(IVtoWriter* apWriter)
+RouterRecordVector::iterator VtoRouterManager::Find(IVtoWriter* apWriter)
 {
 	RouterRecordVector::iterator i = this->mRecords.begin();
 
@@ -138,13 +139,15 @@ VtoRouterManager::RouterRecordVector::iterator VtoRouterManager::Find(IVtoWriter
 	return i;
 }
 
-void VtoRouterManager::StopRouter(VtoRouter* apRouter)
+void VtoRouterManager::StopRouter(VtoRouter* apRouter, IVtoWriter* apWriter)
 {
 	for(RouterRecordVector::iterator i = mRecords.begin(); i != mRecords.end(); ++i) {
 		if(i->mpRouter.get() == apRouter) {
+			
 			{
 				Transaction tr(&mSuspendTimerSource);
-				i->mpRouter->Shutdown();
+				apWriter->RemoveVtoCallback(apRouter);
+				i->mpRouter->Shutdown();				
 			}
 
 			i->mpRouter->WaitForShutdown();			  // blocking, when it returns we're done for good
