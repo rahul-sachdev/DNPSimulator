@@ -22,7 +22,6 @@
 
 #include <map>
 #include <vector>
-#include <boost/shared_ptr.hpp>
 
 #include <APL/Loggable.h>
 #include <APL/TimerSourceASIO.h>
@@ -261,6 +260,7 @@ public:
 	}
 
 private:
+
 	IOService mService;
 	TimerSourceASIO mTimerSrc;
 	SuspendTimerSource mSuspendTimerSource;
@@ -273,33 +273,41 @@ private:
 
 	void ThrowIfAlreadyShutdown();
 
-	typedef std::map<std::string, boost::shared_ptr<Stack> > StackMap;
-	StackMap mStackNameToStack;		// maps a stack name a Stack instance
+	struct StackRecord {
+			StackRecord() : 
+			  stack(NULL), channel(NULL)
+			  {}
 
-	typedef std::map<std::string, LinkChannel*> StackToChannelMap;
-	typedef std::map<std::string, boost::shared_ptr<LinkChannel> > ChannelToChannelMap;
-	StackToChannelMap mStackNameToChannel;				// maps a stack name a channel instance
-	ChannelToChannelMap mChannelNameToChannel;			// maps a channel name to a channel instance
+			StackRecord(Stack* apStack, LinkChannel* apChannel) :
+			  stack(apStack), channel(apChannel)
+			  {}
+
+		  Stack* stack;
+		  LinkChannel* channel;
+	};
+
+	typedef std::map<std::string, StackRecord> StackMap; // maps a stack name the stack and it's channel
+	StackMap mStackMap;
+		
+	typedef std::map<std::string, LinkChannel*> ChannelToChannelMap;	
+	ChannelToChannelMap mChannelNameToChannel;	// maps a channel name to a channel instance
 
 	LinkChannel* GetOrCreateChannel(const std::string& arName);
 	LinkChannel* GetChannelOrExcept(const std::string& arName);
 	LinkChannel* GetChannelMaybeNull(const std::string& arName);
 	LinkChannel* CreateChannel(const std::string& arName);
-	LinkChannel* GetChannelByStackName(const std::string& arStackName);
-	Stack* GetStackByName(const std::string& arStackName);
+		
+	StackRecord GetStackRecordByName(const std::string& arName);
 
 	void Run();
 
-	// Remove a stack
-	void SeverStack(LinkChannel* apChannel, const std::string& arStackName);
-
-	void OnAddStack(const std::string& arStackName, boost::shared_ptr<Stack> apStack, LinkChannel* apChannel, const LinkRoute&);
+	// Remove a stack, be responsible for it's deletion
+	Stack* SeverStackFromChannel(const std::string& arStackName);
+	void AddStackToChannel(const std::string& arStackName, Stack* apStack, LinkChannel* apChannel, const LinkRoute& arRoute);
 
 	size_t NumStacks() {
-		return mStackNameToChannel.size();
-	}
-
-	std::vector<std::string> StacksOnChannel(const std::string& arChannelName);
+		return mStackMap.size();
+	}	
 
 	static void NullActionForInfiniteTimer() {}
 

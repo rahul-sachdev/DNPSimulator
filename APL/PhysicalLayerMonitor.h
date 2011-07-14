@@ -89,6 +89,7 @@ private:
 	ITimerSource* mpTimerSrc;
 	ITimer* mpOpenTimer;
 	IMonitorState* mpState;
+	bool mFinalShutdown;
 
 	/* --- Actions for the states to call --- */
 
@@ -99,9 +100,11 @@ private:
 	void OnOpenTimerExpiration();
 
 	/// Cancels the open timer
-	void CancelOpenTimer();
+	void CancelOpenTimer();	
 
 	/* --- Internal helper functions --- */
+
+	void DoFinalShutdown();
 
 	SigLock mLock;
 	const millis_t M_OPEN_RETRY;

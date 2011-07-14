@@ -57,6 +57,8 @@ public:
 	AsyncTaskContinuous* AddContinuous(int aPriority, const TaskHandler& arCallback, const std::string& arName = "");
 	void Remove(AsyncTaskBase* apTask);
 
+	void Shutdown();
+
 	void Enable();
 	void Disable();
 
@@ -82,6 +84,7 @@ private:
 	AsyncTaskBase* GetNext(const boost::posix_time::ptime& arTime);
 
 	bool mIsRunning;
+	bool mShutdown;
 	ITimerSource* mpTimerSrc;
 	ITimeSource* mpTimeSrc;
 	ITimer* mpTimer;

@@ -25,6 +25,7 @@
 #include <APL/Logger.h>
 #include <APL/IPhysicalLayerAsync.h>
 #include <APL/AsyncTaskGroup.h>
+#include <APL/GetKeys.h>
 
 namespace apl
 {
@@ -58,6 +59,11 @@ void LinkChannel::RemoveStackFromChannel(const std::string& arStackName)
 		this->RemoveContext(r.route);
 		mStackMap.erase(i);
 	}
+}
+
+std::vector<std::string> LinkChannel::StacksOnChannel()
+{
+	return GetKeys<StackMap, std::string>(mStackMap);
 }
 
 }

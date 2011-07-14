@@ -106,10 +106,10 @@ void FlexibleObserverTerminalExtension::_BindToTerminal(ITerminal* apTerminal)
 }
 
 template <class T>
-void DisplayPoints(ostringstream& arOss, typename FlexibleDataObserver::PointMap<T>::Type& arMap, FlexibleObserverTerminalExtension::NameMap aNameMap, const char* arTitle, const ShowRange& aRange, size_t aLongestName)
+void DisplayPoints(ostringstream& arOss, typename PointMap<T>::Type& arMap, FlexibleObserverTerminalExtension::NameMap aNameMap, const char* arTitle, const ShowRange& aRange, size_t aLongestName)
 {
 
-	typename FlexibleDataObserver::PointMap<T>::Type::iterator  i = arMap.begin();
+	typename PointMap<T>::Type::iterator  i = arMap.begin();
 
 	arOss << arTitle << ITerminal::EOL;
 

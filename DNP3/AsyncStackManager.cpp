@@ -29,6 +29,8 @@
 #include <APL/Logger.h>
 #include <APL/IPhysicalLayerAsync.h>
 #include <APL/SuspendTimerSource.h>
+#include <APL/AsyncTaskGroup.h>
+#include <APL/GetKeys.h>
 
 #include <DNP3/MasterStack.h>
 #include <DNP3/SlaveStack.h>
@@ -45,16 +47,6 @@ namespace apl
 {
 namespace dnp
 {
-
-template <class T, class U>
-static std::vector<U> GetKeys(T& arMap)
-{
-	std::vector<U> ret;
-	for(typename T::iterator i = arMap.begin(); i != arMap.end(); ++i) {
-		ret.push_back(i->first);
-	}
-	return ret;
-}
 
 AsyncStackManager::AsyncStackManager(Logger* apLogger) :
 	Loggable(apLogger),
@@ -83,7 +75,7 @@ AsyncStackManager::~AsyncStackManager()
 std::vector<std::string> AsyncStackManager::GetStackNames()
 {
 
-	return GetKeys<StackToChannelMap, string>(mStackNameToChannel);
+	return GetKeys<StackMap, string>(mStackMap);
 }
 
 std::vector<std::string> AsyncStackManager::GetPortNames()
@@ -117,10 +109,10 @@ ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, c
 	Logger* pLogger = mpLogger->GetSubLogger(arStackName, aLevel);
 	pLogger->SetVarName(arStackName);
 
-	boost::shared_ptr<MasterStack> pMaster(new MasterStack(pLogger, &mTimerSrc, apPublisher, pChannel->GetGroup(), arCfg));
+	MasterStack* pMaster = new MasterStack(pLogger, &mTimerSrc, apPublisher, pChannel->GetGroup(), arCfg);
 	LinkRoute route(arCfg.link.RemoteAddr, arCfg.link.LocalAddr);
 
-	this->OnAddStack(arStackName, pMaster, pChannel, route);
+	this->AddStackToChannel(arStackName, pMaster, pChannel, route);
 
 	// add any vto routers we've configured
 	BOOST_FOREACH(VtoRouterConfig s, arCfg.vto.mRouterConfigs) {
@@ -138,10 +130,10 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 	Logger* pLogger = mpLogger->GetSubLogger(arStackName, aLevel);
 	pLogger->SetVarName(arStackName);
 
-	boost::shared_ptr<SlaveStack> pSlave(new SlaveStack(pLogger, &mTimerSrc, apCmdAcceptor, arCfg));
+	SlaveStack* pSlave = new SlaveStack(pLogger, &mTimerSrc, apCmdAcceptor, arCfg);
 
 	LinkRoute route(arCfg.link.RemoteAddr, arCfg.link.LocalAddr);
-	this->OnAddStack(arStackName, pSlave, pChannel, route);
+	this->AddStackToChannel(arStackName, pSlave, pChannel, route);
 
 	// add any vto routers we've configured
 	BOOST_FOREACH(VtoRouterConfig s, arCfg.vto.mRouterConfigs) {
@@ -155,33 +147,32 @@ void AsyncStackManager::AddVtoChannel(const std::string& arStackName,
                                       IVtoCallbacks* apCallbacks)
 {
 	this->ThrowIfAlreadyShutdown();
-	Stack* pStack = this->GetStackByName(arStackName);
-	pStack->GetVtoWriter()->AddVtoCallback(apCallbacks);
-	pStack->GetVtoReader()->AddVtoChannel(apCallbacks);
+	StackRecord rec = this->GetStackRecordByName(arStackName);
+	rec.stack->GetVtoWriter()->AddVtoCallback(apCallbacks);
+	rec.stack->GetVtoReader()->AddVtoChannel(apCallbacks);
 }
 
 void AsyncStackManager::RemoveVtoChannel(const std::string& arStackName, IVtoCallbacks* apCallbacks)
 {
 	this->ThrowIfAlreadyShutdown();
-	Stack* pStack = this->GetStackByName(arStackName);
-	pStack->GetVtoWriter()->RemoveVtoCallback(apCallbacks);
-	pStack->GetVtoReader()->RemoveVtoChannel(apCallbacks);
+	StackRecord rec = this->GetStackRecordByName(arStackName);
+	rec.stack->GetVtoWriter()->RemoveVtoCallback(apCallbacks);
+	rec.stack->GetVtoReader()->RemoveVtoChannel(apCallbacks);
 }
 
 void AsyncStackManager::StartVtoRouter(const std::string& arPortName,
                                        const std::string& arStackName, const VtoRouterSettings& arSettings)
 {
 	this->ThrowIfAlreadyShutdown();
-	Stack* pStack = this->GetStackByName(arStackName);
-	VtoRouter* pRouter = mVtoManager.StartRouter(arPortName, arSettings, pStack->GetVtoWriter());
+	StackRecord rec = this->GetStackRecordByName(arStackName);
+	VtoRouter* pRouter = mVtoManager.StartRouter(arPortName, arSettings, rec.stack->GetVtoWriter());
 	this->AddVtoChannel(arStackName, pRouter);
 }
 
 void AsyncStackManager::StopVtoRouter(const std::string& arStackName, boost::uint8_t aVtoChannelId)
 {
-	this->ThrowIfAlreadyShutdown();
-	Stack* pStack = this->GetStackByName(arStackName);
-	IVtoWriter* pWriter = pStack->GetVtoWriter();
+	this->ThrowIfAlreadyShutdown();	
+	IVtoWriter* pWriter = this->GetVtoWriter(arStackName);
 	VtoRouterManager::RouterRecord rec = mVtoManager.GetRouterOnWriter(pWriter, aVtoChannelId);
 	this->RemoveVtoChannel(arStackName, rec.mpRouter.get());
 	mVtoManager.StopRouter(pWriter, aVtoChannelId);
@@ -198,90 +189,46 @@ void AsyncStackManager::StopAllRoutersOnStack(const std::string& arStackName)
 IVtoWriter* AsyncStackManager::GetVtoWriter(const std::string& arStackName)
 {
 	this->ThrowIfAlreadyShutdown();
-	return this->GetStackByName(arStackName)->GetVtoWriter();
+	return this->GetStackRecordByName(arStackName).stack->GetVtoWriter();
 }
 
 // Remove a port and all associated stacks
 void AsyncStackManager::RemovePort(const std::string& arPortName)
 {
 	this->ThrowIfAlreadyShutdown();
-	LinkChannel* pChannel = this->GetChannelOrExcept(arPortName);
-
-	vector<string> stacks = this->StacksOnChannel(arPortName);
-	BOOST_FOREACH(string s, stacks) {
-		this->SeverStack(pChannel, s);
-	}
+	std::auto_ptr<LinkChannel> pChannel(this->GetChannelOrExcept(arPortName)); //will delete at end of function	
+	mChannelNameToChannel.erase(arPortName);
 
 	{
 		// Tell the channel to shut down permanently
 		Transaction tr(&mSuspendTimerSource);
-		pChannel->BeginShutdown();
+		pChannel->GetGroup()->Shutdown(); // no more task callbacks
+		pChannel->BeginShutdown(); 
 	}
-
-	pChannel->WaitUntilShutdown();
+	pChannel->WaitUntilShutdown();	
+	
+	vector<string> stacks = pChannel->StacksOnChannel();
+	BOOST_FOREACH(string s, stacks) {
+		delete this->SeverStackFromChannel(s);
+	}
+		
 	this->mScheduler.ReleaseGroup(pChannel->GetGroup());
-	mChannelNameToChannel.erase(arPortName);
 
 	// remove the physical layer from the list
 	mMgr.Remove(arPortName);
 }
 
-std::vector<std::string> AsyncStackManager::StacksOnChannel(const std::string& arPortName)
-{
-	this->ThrowIfAlreadyShutdown();
-	std::vector<std::string> ret;
-	for(StackToChannelMap::iterator i = this->mStackNameToChannel.begin(); i != mStackNameToChannel.end(); ++i) {
-		if(i->second->Name() == arPortName) {
-			ret.push_back(i->first);
-		}
-	}
-	return ret;
-}
-
 void AsyncStackManager::RemoveStack(const std::string& arStackName)
 {
-	this->ThrowIfAlreadyShutdown();
-	LinkChannel* pChannel = this->GetChannelByStackName(arStackName);
-	this->SeverStack(pChannel, arStackName);
+	this->ThrowIfAlreadyShutdown();	
+	delete this->SeverStackFromChannel(arStackName);	
 }
 
-void AsyncStackManager::SeverStack(LinkChannel* apChannel, const std::string& arStackName)
+AsyncStackManager::StackRecord AsyncStackManager::GetStackRecordByName(const std::string& arStackName)
 {
-	LOG_BLOCK(LEV_INFO, "Begin severing stack: " << arStackName);
-	// Decouple and stop the stack first, this doesn't delete it yet
-	{
-		Transaction tr(&mSuspendTimerSource); //need to pause execution so that this action is safe
-		apChannel->RemoveStackFromChannel(arStackName);
-	}
-	LOG_BLOCK(LEV_INFO, "Done severing stack: " << arStackName);
-
-	// Now stop any associated vto routers
-	IVtoWriter* pWriter = this->GetStackByName(arStackName)->GetVtoWriter();
-	std::vector<VtoRouterManager::RouterRecord> records = mVtoManager.GetAllRoutersOnWriter(pWriter);
-	BOOST_FOREACH(VtoRouterManager::RouterRecord rec, records) {
-		this->RemoveVtoChannel(arStackName, rec.mpRouter.get());
-		mVtoManager.StopRouter(pWriter, rec.mVtoChannelId); //router gets deleted here
-	}
-
-	mStackNameToChannel.erase(arStackName);
-	mStackNameToStack.erase(arStackName); //erasing this will cause the shared_ptr to delete the stack
-}
-
-LinkChannel* AsyncStackManager::GetChannelByStackName(const std::string& arStackName)
-{
-	StackToChannelMap::iterator i = mStackNameToChannel.find(arStackName);
-	if(i == mStackNameToChannel.end()) throw ArgumentException(LOCATION, "Unknown stack: " + arStackName);
+	StackMap::iterator i = mStackMap.find(arStackName);
+	if (i == mStackMap.end()) throw ArgumentException(LOCATION, "Unknown stack");	
 	return i->second;
-}
-
-Stack* AsyncStackManager::GetStackByName(const std::string& arStackName)
-{
-	StackMap::iterator i = mStackNameToStack.find(arStackName);
-	if (i == mStackNameToStack.end()) {
-		throw ArgumentException(LOCATION, "Unknown stack");
-	}
-
-	return i->second.get();
 }
 
 void AsyncStackManager::ThrowIfAlreadyShutdown()
@@ -333,15 +280,18 @@ LinkChannel* AsyncStackManager::CreateChannel(const std::string& arName)
 	pChannelLogger->SetVarName(arName);
 	AsyncTaskGroup* pGroup = mScheduler.CreateNewGroup();
 
-	boost::shared_ptr<LinkChannel> pChannel(new LinkChannel(pChannelLogger, arName, &mTimerSrc, pPhys, pGroup, s.RetryTimeout));
+	//boost::shared_ptr<LinkChannel> pChannel(new LinkChannel(pChannelLogger, arName, &mTimerSrc, pPhys, pGroup, s.RetryTimeout));
+	LinkChannel* pChannel = new LinkChannel(pChannelLogger, arName, &mTimerSrc, pPhys, pGroup, s.RetryTimeout);
 	mChannelNameToChannel[arName] = pChannel;
-	return pChannel.get();
+	//return pChannel.get();
+	return pChannel;
 }
 
 LinkChannel* AsyncStackManager::GetChannelMaybeNull(const std::string& arName)
 {
 	ChannelToChannelMap::iterator i = mChannelNameToChannel.find(arName);
-	return (i == mChannelNameToChannel.end()) ? NULL : i->second.get();
+	//return (i == mChannelNameToChannel.end()) ? NULL : i->second.get();
+	return (i == mChannelNameToChannel.end()) ? NULL : i->second;
 }
 
 void AsyncStackManager::Run()
@@ -361,17 +311,33 @@ void AsyncStackManager::Run()
 	mService.Get()->reset();
 }
 
-void AsyncStackManager::OnAddStack(const std::string& arStackName, boost::shared_ptr<Stack> apStack, LinkChannel* apChannel, const LinkRoute& arRoute)
-{
+Stack* AsyncStackManager::SeverStackFromChannel(const std::string& arStackName)
+{	
+	StackMap::iterator i = mStackMap.find(arStackName);
+	if(i == mStackMap.end()) throw ArgumentException(LOCATION, "Stack not found: " + arStackName);
 
+	StackRecord rec = i->second;
+	mStackMap.erase(i);
+		
+	LOG_BLOCK(LEV_DEBUG, "Begin severing stack: " << arStackName);	
+	{
+		Transaction tr(&mSuspendTimerSource); //need to pause execution so that this action is safe
+		rec.channel->RemoveStackFromChannel(arStackName);
+	}
+	LOG_BLOCK(LEV_DEBUG, "Done severing stack: " << arStackName);
+
+	return rec.stack;
+}
+
+void AsyncStackManager::AddStackToChannel(const std::string& arStackName, Stack* apStack, LinkChannel* apChannel, const LinkRoute& arRoute)
+{
 	{
 		// when binding the stack to the router, we need to pause excution
 		Transaction tr(&mSuspendTimerSource);
-		apChannel->BindStackToChannel(arStackName, apStack.get(), arRoute);
+		apChannel->BindStackToChannel(arStackName, apStack, arRoute);
 	}
 
-	mStackNameToChannel[arStackName] = apChannel;	// map the stack name to a LinkChannel object
-	mStackNameToStack[arStackName] = apStack;		// map the stack name to a Stack object
+	mStackMap[arStackName] = StackRecord(apStack, apChannel);
 }
 
 }

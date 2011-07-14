@@ -42,76 +42,118 @@ using namespace std;
 using namespace apl;
 using namespace apl::dnp;
 
-IntegrationTest::IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints) :
-	AsyncTestObjectASIO(),
-	M_START_PORT(aStartPort),
-	mChange(false),
-	mNotifier(boost::bind(&IntegrationTest::RegisterChange, this)),
-	mManager(apLogger)
+IntegrationTest::IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints) :	
+	Loggable(apLogger),
+	M_START_PORT(aStartPort),	
+	mManager(apLogger),
+	NUM_POINTS(aNumPoints)
 {
+	this->InitLocalObserver();
+
 	for (size_t i = 0; i < aNumPairs; ++i) {
 		AddStackPair(aLevel, aNumPoints);
 	}
-	mFanout.Add(&mLocalFDO);
+	mFanout.AddObserver(&mLocalFDO);	
 }
 
-void IntegrationTest::RegisterChange()
+void IntegrationTest::InitLocalObserver()
 {
-	mChange = true;
+	Transaction tr(&mLocalFDO);
+	for (size_t i = 0; i < NUM_POINTS; ++i) {
+		mLocalFDO.Update(this->RandomBinary(), i);
+		mLocalFDO.Update(this->RandomAnalog(), i);
+		mLocalFDO.Update(this->RandomCounter(), i);
+	}	
 }
 
-bool IntegrationTest::SameData()
+void IntegrationTest::ResetObservers()
 {
-	if(!mChange) return false;
-	else {
-
-		mChange = false;
-
-		BOOST_FOREACH(boost::shared_ptr<FlexibleDataObserver> pObs, mMasterObservers) {
-			Transaction tr(pObs.get());
-			if(!FlexibleDataObserver::StrictEquality(*(pObs.get()), mLocalFDO)) return false;
-		}
-
-		return true;
+	for (size_t i = 0; i < this->mMasterObservers.size(); ++i) {
+		mMasterObservers[i]->Reset();
 	}
+}
+
+bool IntegrationTest::WaitForSameData(millis_t aTimeout, bool aDescribeAnyMissingData)
+{	
+	LOG_BLOCK(LEV_EVENT, "Wait for same data");
+
+	for (size_t i = 0; i < this->mMasterObservers.size(); ++i) {
+		ComparingDataObserver* pObs = mMasterObservers[i].get();
+		if(!pObs->WaitForSameData(aTimeout)) {
+			if(aDescribeAnyMissingData) pObs->DescribeMissingData();
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void IntegrationTest::IncrementData()
+{
+	LOG_BLOCK(LEV_EVENT, "Incrementing data");
+
+	this->ResetObservers();
+	/*
+	 * Resource Acquisition Is Initialization (RAII) Pattern.
+	 * When the Transaction instance is created, it acquires the resource.
+	 * When it is destroyed, it releases the resource.  The scoping using
+	 * the {} block forces destruction of the Transaction at the right time.
+	 */	
+	Transaction tr(&mFanout);
+	for (size_t i = 0; i < NUM_POINTS; ++i) {
+		mFanout.Update(this->Next(mLocalFDO.mBinaryMap[i]), i);
+		mFanout.Update(this->Next(mLocalFDO.mAnalogMap[i]), i);
+		mFanout.Update(this->Next(mLocalFDO.mCounterMap[i]), i);
+	}	
 }
 
 Binary IntegrationTest::RandomBinary()
 {
-	boost::uniform_int<> num(0, 1);
-	boost::variate_generator<boost::mt19937&, boost::uniform_int<> > val(rng, num);
-	Binary v(val() ? true : false, BQ_ONLINE);
+	Binary v(mRandomBool.NextBool(), BQ_ONLINE);
 	return v;
 }
 
 Analog IntegrationTest::RandomAnalog()
-{
-	boost::uniform_int<boost::int32_t> num;
-	boost::variate_generator<boost::mt19937&, boost::uniform_int<boost::int32_t> > val(rng, num);
-	Analog v(val(), AQ_ONLINE);
+{	
+	Analog v(mRandomInt32.Next(), AQ_ONLINE);
 	return v;
 }
 
 Counter IntegrationTest::RandomCounter()
-{
-	boost::uniform_int<boost::uint32_t> num;
-	boost::variate_generator<boost::mt19937&, boost::uniform_int<boost::uint32_t> > val(rng, num);
-	Counter v(val(), CQ_ONLINE);
+{	
+	Counter v(mRandomUInt32.Next(), CQ_ONLINE);
 	return v;
+}
+
+Binary IntegrationTest::Next(const Binary& arPoint)
+{
+	Binary point(!arPoint.GetValue(), arPoint.GetQuality());	
+	return point;
+}
+
+Analog IntegrationTest::Next(const Analog& arPoint)
+{
+	Analog point(arPoint.GetValue()+1, arPoint.GetQuality());
+	return point;
+}
+
+Counter IntegrationTest::Next(const Counter& arPoint)
+{
+	Counter point(arPoint.GetValue()+1, arPoint.GetQuality());
+	return point;
 }
 
 void IntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 {
 	boost::uint16_t port = M_START_PORT + static_cast<boost::uint16_t>(this->mMasterObservers.size());
 
-	boost::shared_ptr<FlexibleDataObserver> pMasterFDO(new FlexibleDataObserver());
-	mMasterObservers.push_back(pMasterFDO);
-	pMasterFDO->AddObserver(&mNotifier);
-
 	ostringstream oss;
 	oss << "Port: " << port;
 	std::string client = oss.str() + " Client ";
 	std::string server = oss.str() + " Server ";
+
+	boost::shared_ptr<ComparingDataObserver> pMasterFDO(new ComparingDataObserver(mpLogger->GetSubLogger(client), &mLocalFDO));
+	mMasterObservers.push_back(pMasterFDO);
 
 	PhysLayerSettings s(aLevel, 1000);
 	this->mManager.AddTCPClient(client, s, "127.0.0.1", port);
@@ -144,7 +186,7 @@ void IntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 		cfg.slave.mUnsolPackDelay = 0;
 		cfg.device = DeviceTemplate(aNumPoints, aNumPoints, aNumPoints);
 		IDataObserver* pObs = this->mManager.AddSlave(server, server, aLevel, &mCmdAcceptor, cfg);
-		this->mFanout.Add(pObs);
+		this->mFanout.AddObserver(pObs);
 	}
 
 }

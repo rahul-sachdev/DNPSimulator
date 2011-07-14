@@ -549,6 +549,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\GetKeys.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Parsing.cpp"
 					>
 				</File>

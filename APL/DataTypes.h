@@ -33,8 +33,8 @@ class Binary : public BoolDataPoint
 {
 public:
 	Binary(bool aValue, boost::uint8_t aQuality = BQ_RESTART) : BoolDataPoint(BQ_RESTART, DT_BINARY, BQ_STATE) {
-		SetValue(aValue);
 		SetQuality(aQuality);
+		SetValue(aValue);		
 	}
 	Binary() : BoolDataPoint(BQ_RESTART, DT_BINARY, BQ_STATE) {}
 

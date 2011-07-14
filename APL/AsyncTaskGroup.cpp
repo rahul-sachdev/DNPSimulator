@@ -37,6 +37,7 @@ namespace apl
 
 AsyncTaskGroup::AsyncTaskGroup(ITimerSource* apTimerSrc, ITimeSource* apTimeSrc) :
 	mIsRunning(false),
+	mShutdown(false),
 	mpTimerSrc(apTimerSrc),
 	mpTimeSrc(apTimeSrc),
 	mpTimer(NULL)
@@ -46,10 +47,7 @@ AsyncTaskGroup::AsyncTaskGroup(ITimerSource* apTimerSrc, ITimeSource* apTimeSrc)
 
 AsyncTaskGroup::~AsyncTaskGroup()
 {
-	if(mpTimer) {
-		mpTimer->Cancel();
-		mpTimer = NULL;
-	}
+	this->Shutdown();
 
 	BOOST_FOREACH(AsyncTaskBase* p, mTaskVec) {
 		delete p;
@@ -92,6 +90,16 @@ void AsyncTaskGroup::Remove(AsyncTaskBase* apTask)
 		}
 	}
 	throw ArgumentException(LOCATION, "Task not found");
+}
+
+void AsyncTaskGroup::Shutdown()
+{
+	if(mpTimer) {
+		mpTimer->Cancel();
+		mpTimer = NULL;
+	}
+
+	mShutdown = true;
 }
 
 void AsyncTaskGroup::Enable()
@@ -142,18 +150,20 @@ AsyncTaskBase* AsyncTaskGroup::GetNext(const boost::posix_time::ptime& arTime)
 
 void AsyncTaskGroup::CheckState()
 {
-	ptime now = GetUTC();
-	AsyncTaskBase* pTask = GetNext(now);
+	if(!mShutdown) {
+		ptime now = GetUTC();
+		AsyncTaskBase* pTask = GetNext(now);
 
-	if(pTask == NULL) return;
-	if(pTask->NextRunTime() == max_date_time) return;
+		if(pTask == NULL) return;
+		if(pTask->NextRunTime() == max_date_time) return;
 
-	if(pTask->NextRunTime() <= now) {
-		mIsRunning = true;
-		pTask->Dispatch();
-	}
-	else {
-		this->RestartTimer(pTask->NextRunTime());
+		if(pTask->NextRunTime() <= now) {
+			mIsRunning = true;
+			pTask->Dispatch();
+		}
+		else {
+			this->RestartTimer(pTask->NextRunTime());
+		}
 	}
 }
 

@@ -55,10 +55,11 @@ class LinkChannel : private LinkLayerRouter
 
 public:
 
-	LinkChannel(Logger* apLogger, const std::string& arName, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, AsyncTaskGroup* apTaskGroup, millis_t aOpenRetry);
+	LinkChannel(Logger* apLogger, const std::string& arName, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, AsyncTaskGroup* apTaskGroup, millis_t aOpenRetry);	
 
 	void BindStackToChannel(const std::string& arStackName, Stack* apStack, const LinkRoute& arRoute);
 	void RemoveStackFromChannel(const std::string& arStackName);
+	std::vector<std::string> StacksOnChannel();
 
 	std::string Name() {
 		return mName;
