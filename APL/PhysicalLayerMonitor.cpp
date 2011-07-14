@@ -61,10 +61,20 @@ void PhysicalLayerMonitor::AddObserver(IPhysicalLayerObserver* apObserver)
 	mObservers.insert(apObserver);
 }
 
-void PhysicalLayerMonitor::WaitForShutdown()
+bool PhysicalLayerMonitor::WaitForShutdown(millis_t aTimeoutMs)
 {
 	CriticalSection cs(&mLock);	
-	while(!mFinalShutdown) cs.Wait();	
+
+	while(!mFinalShutdown)
+	{
+		if(aTimeoutMs < 0) cs.Wait();
+		else {
+			cs.TimedWait(aTimeoutMs);
+			break;
+		}
+	}
+	
+	return mFinalShutdown;
 }
 
 void PhysicalLayerMonitor::ChangeState(IMonitorState* apState)
