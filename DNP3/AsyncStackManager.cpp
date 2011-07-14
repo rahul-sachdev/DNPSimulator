@@ -171,7 +171,7 @@ void AsyncStackManager::StartVtoRouter(const std::string& arPortName,
 
 void AsyncStackManager::StopVtoRouter(const std::string& arStackName, boost::uint8_t aVtoChannelId)
 {
-	this->ThrowIfAlreadyShutdown();	
+	this->ThrowIfAlreadyShutdown();
 	IVtoWriter* pWriter = this->GetVtoWriter(arStackName);
 	RouterRecord rec = mVtoManager.GetRouterOnWriter(pWriter, aVtoChannelId);
 	this->RemoveVtoChannel(arStackName, rec.mpRouter.get());
@@ -182,8 +182,7 @@ void AsyncStackManager::StopAllRoutersOnStack(const std::string& arStackName)
 {
 	this->ThrowIfAlreadyShutdown();
 	IVtoWriter* pWriter = this->GetVtoWriter(arStackName);
-	//mVtoManager.StopAllRoutersOnWriter(pWriter);
-	//TODO - figure out why this is commented out
+	this->mVtoManager.StopAllRoutersOnWriter(pWriter);	
 }
 
 IVtoWriter* AsyncStackManager::GetVtoWriter(const std::string& arStackName)
@@ -221,8 +220,7 @@ void AsyncStackManager::RemoveStack(const std::string& arStackName)
 {
 	this->ThrowIfAlreadyShutdown();
 	std::auto_ptr<Stack> pStack(this->SeverStackFromChannel(arStackName));
-	this->OnPreStackDeletion(pStack.get());
-	//mTimerSrc.DeleteViaPost<Stack>(pStack);	
+	mVtoManager.StopAllRoutersOnWriter(pStack->GetVtoWriter());
 }
 
 AsyncStackManager::StackRecord AsyncStackManager::GetStackRecordByName(const std::string& arStackName)
@@ -310,15 +308,6 @@ void AsyncStackManager::Run()
 	while(num > 0);
 
 	mService.Get()->reset();
-}
-
-void AsyncStackManager::OnPreStackDeletion(Stack* apStack)
-{
-	RouterRecordVector recs = this->mVtoManager.GetAllRoutersOnWriter(apStack->GetVtoWriter());
-
-	for(RouterRecordVector::iterator i = recs.begin(); i != recs.end(); ++i) {		
-		this->mVtoManager.StopRouter(apStack->GetVtoWriter(), i->mVtoChannelId);
-	}	
 }
 
 Stack* AsyncStackManager::SeverStackFromChannel(const std::string& arStackName)

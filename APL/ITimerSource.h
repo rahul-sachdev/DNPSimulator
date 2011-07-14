@@ -25,6 +25,7 @@
 #include "DeleteAny.h"
 
 #include <boost/function.hpp>
+#include <boost/bind.hpp>
 
 namespace apl
 {

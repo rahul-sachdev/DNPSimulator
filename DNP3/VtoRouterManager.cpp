@@ -96,6 +96,15 @@ void VtoRouterManager::StopRouter(IVtoWriter* apWriter, boost::uint8_t aVtoChann
 	this->StopRouter(pRouter, apWriter);
 }
 
+void VtoRouterManager::StopAllRoutersOnWriter(IVtoWriter* apWriter)
+{
+	RouterRecordVector recs = this->GetAllRoutersOnWriter(apWriter);
+
+	for(RouterRecordVector::iterator i = recs.begin(); i != recs.end(); ++i) {		
+		this->StopRouter(i->mpRouter.get(), apWriter);
+	}	
+}
+
 std::vector<RouterRecord> VtoRouterManager::GetAllRoutersOnWriter(IVtoWriter* apWriter)
 {
 	std::vector< RouterRecord > ret;

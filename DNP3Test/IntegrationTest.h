@@ -47,11 +47,7 @@ class IntegrationTest : private Loggable
 public:
 
 	IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints);
-
-	IDataObserver* GetFanout() {
-		return &mFanout;
-	}
-
+	
 	void IncrementData();
 	
 	bool WaitForSameData(millis_t aTimeout, bool aDescribeAnyMissingData);

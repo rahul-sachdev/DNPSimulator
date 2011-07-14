@@ -65,9 +65,7 @@ BOOST_AUTO_TEST_CASE(MasterToSlaveThroughput)
 	//log.AddLogSubscriber(LogToStdio::Inst());	
 
 	IntegrationTest t(log.GetLogger(FILTER_LEVEL, "test"), FILTER_LEVEL, START_PORT,
-	                  NUM_PAIRS, NUM_POINTS);
-
-	IDataObserver* pObs = t.GetFanout();
+	                  NUM_PAIRS, NUM_POINTS);	
 
 	StopWatch sw;
 	for (size_t j = 0; j < NUM_CHANGES; ++j) {

@@ -82,7 +82,7 @@ private:
 template <class T>
 void ComparingDataObserver::DescribeAny(const typename PointMap<T>::Type& arMap, const CompareMap& arCompareMap)
 {
-	for(PointMap<T>::Type::const_iterator i = arMap.begin(); i != arMap.end(); ++i) {
+	for(typename PointMap<T>::Type::const_iterator i = arMap.begin(); i != arMap.end(); ++i) {
 		CompareMap::const_iterator j = arCompareMap.find(i->first);
 		if(j == arCompareMap.end()) {
 			LOG_BLOCK(LEV_EVENT, "Missing: " << i->first << " - " << i->second.ToString());
@@ -93,7 +93,7 @@ void ComparingDataObserver::DescribeAny(const typename PointMap<T>::Type& arMap,
 template <class T>
 void ComparingDataObserver::UpdateAny(const T& arPoint, size_t aIndex, const typename PointMap<T>::Type& arMap, CompareMap& arCompareMap)
 {
-	PointMap<T>::Type::const_iterator i = arMap.find(aIndex);
+	typename PointMap<T>::Type::const_iterator i = arMap.find(aIndex);
 	if(i == arMap.end()) {
 		LOG_BLOCK(LEV_ERROR, "Unexpected index: " << aIndex << " - " << arPoint.ToString());
 	}

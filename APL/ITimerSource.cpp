@@ -18,8 +18,6 @@
 //
 #include "ITimerSource.h"
 
-#include <boost/bind.hpp>
-
 namespace apl
 {
 

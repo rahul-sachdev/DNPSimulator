@@ -78,6 +78,7 @@ public:
 	    IVtoWriter* apWriter);
 
 	void StopRouter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
+	void StopAllRoutersOnWriter(IVtoWriter* apWriter);
 
 	RouterRecord GetRouterOnWriter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
 	std::vector<RouterRecord> GetAllRoutersOnWriter(IVtoWriter* apWriter);
