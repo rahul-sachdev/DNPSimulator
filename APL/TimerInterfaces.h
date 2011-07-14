@@ -23,6 +23,7 @@
 #include "Types.h"
 #include "TimeTypes.h"
 #include <boost/function.hpp>
+#include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
 namespace apl
@@ -72,11 +73,11 @@ typedef boost::function<void ()> ExpirationHandler;
 class ITimerSource
 {
 public:
-	virtual ~ITimerSource() {}
+	virtual ~ITimerSource() {}	
 
-	ITimer* StartInfinite(const ExpirationHandler& arHandler) {
+	ITimer* StartInfinite() {
 		boost::posix_time::ptime t(boost::date_time::max_date_time);
-		return this->Start(t, arHandler);
+		return this->Start(t, boost::bind(&ITimerSource::NullActionForInfiniteTimer));
 	}
 
 	/** Returns a new timer based on a relative time */
@@ -87,6 +88,10 @@ public:
 
 	/** Thread-safe way to post an event to handled asynchronously */
 	virtual void Post(const ExpirationHandler&) = 0;
+
+private:
+	static void NullActionForInfiniteTimer() {}
+
 };
 
 }

@@ -301,15 +301,15 @@ private:
 
 	void Run();
 
-	// Remove a stack, be responsible for it's deletion
+	// Remove and close a stack, but delegate responsibility for deletion
 	Stack* SeverStackFromChannel(const std::string& arStackName);
+
+	// Add a stack from to a specified channel
 	void AddStackToChannel(const std::string& arStackName, Stack* apStack, LinkChannel* apChannel, const LinkRoute& arRoute);
 
 	size_t NumStacks() {
 		return mStackMap.size();
-	}	
-
-	static void NullActionForInfiniteTimer() {}
+	}		
 
 };
 

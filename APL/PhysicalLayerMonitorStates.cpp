@@ -110,8 +110,8 @@ void IgnoresSuspend::OnSuspendRequest(PhysicalLayerMonitor* apContext)
 
 void StartsOnClose::OnLayerClose(PhysicalLayerMonitor* apContext)
 {
-	MonitorStateActions::ChangeState(apContext, MonitorStateOpening::Inst());
-	MonitorStateActions::AsyncOpen(apContext);
+	MonitorStateActions::ChangeState(apContext, MonitorStateSuspended::Inst());
+	apContext->Start();
 }
 
 /* --- IgnoresShutdown --- */

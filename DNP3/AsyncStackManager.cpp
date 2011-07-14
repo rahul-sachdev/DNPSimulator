@@ -57,7 +57,7 @@ AsyncStackManager::AsyncStackManager(Logger* apLogger) :
 	mScheduler(&mTimerSrc),
 	mVtoManager(apLogger->GetSubLogger("vto"), &mTimerSrc, &mMgr),
 	mThread(this),
-	mpInfiniteTimer(mTimerSrc.StartInfinite(boost::bind(&AsyncStackManager::NullActionForInfiniteTimer))),
+	mpInfiniteTimer(mTimerSrc.StartInfinite()),
 	mIsShutdown(false)
 {
 	mThread.Start();

@@ -29,11 +29,9 @@ namespace dnp
 SlaveDemoBase::SlaveDemoBase(Logger* apLogger) :
 	IOService(),
 	IOServiceThread(apLogger, this->Get()),
-	mTimerSource(this->Get())
-{
-	// Start a timer that will do nothing but keep the boost asio service from returning when it has no work to do
-	mpInfiniteTimer = mTimerSource.StartInfinite(boost::bind(&SlaveDemoBase::Timeout, this));
-
+	mTimerSource(this->Get()),
+	mpInfiniteTimer(mTimerSource.StartInfinite())
+{	
 	// Create a notifier that when called will post a call to OnCommandNotify
 	INotifier* pNotifier = mPostSource.Get(boost::bind(&SlaveDemoBase::OnCommandNotify, this), &mTimerSource);
 
