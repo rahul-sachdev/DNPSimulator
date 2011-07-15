@@ -19,7 +19,7 @@
 #ifndef __POSTING_NOTIFIER_SOURCE_H_
 #define __POSTING_NOTIFIER_SOURCE_H_
 
-#include "TimerInterfaces.h"
+#include "ITimerSource.h"
 
 #include <vector>
 #include <boost/shared_ptr.hpp>

@@ -31,6 +31,7 @@ libopendnp3_apl_la_SOURCES = \
 	APL/Exception.cpp \
 	APL/FlexibleDataObserver.cpp \
 	APL/IHandlerAsync.cpp \
+	APL/ITimerSource.cpp \
 	APL/IOService.cpp \
 	APL/IOServiceThread.cpp \
 	APL/LockBase.cpp \
@@ -254,7 +255,7 @@ nobase_pkginclude_HEADERS= \
 	APL/TimeBoost.h \
 	APL/Timeout.h \
 	APL/TimerASIO.h \
-	APL/TimerInterfaces.h \
+	APL/ITimerSource.h \
 	APL/TimerSourceASIO.h \
 	APL/TimeSource.h \
 	APL/TimeTypes.h \
@@ -415,6 +416,7 @@ dnp3test_SOURCES = \
 	APLTestTools/MockTimerSource.cpp \
 	APLTestTools/MockUpperLayer.cpp \
 	DNP3Test/AppLayerTest.cpp \
+	DNP3Test/ComparingDataObserver.cpp \
 	DNP3Test/DNPHelpers.cpp \
 	DNP3Test/IntegrationTest.cpp \
 	DNP3Test/LinkLayerRouterTest.cpp \

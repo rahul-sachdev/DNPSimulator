@@ -16,45 +16,20 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-
-#include "LinkRoute.h"
-
-#include <sstream>
+#include "ITimerSource.h"
 
 namespace apl
 {
-namespace dnp
+
+ITimer* ITimerSource::StartInfinite()
+{
+	boost::posix_time::ptime t(boost::date_time::max_date_time);
+	return this->Start(t, boost::bind(&ITimerSource::NullActionForInfiniteTimer));
+}
+
+void ITimerSource::NullActionForInfiniteTimer()
 {
 
-LinkRoute::LinkRoute(const boost::uint16_t aRemoteAddr, const boost::uint16_t aLocalAddr) :
-	remote(aRemoteAddr),
-	local(aLocalAddr)
-{}
-
-LinkRoute::LinkRoute() :
-	remote(0),
-	local(0)
-{}
-
-bool LinkRoute::LessThan::operator ()(const LinkRoute& a, const LinkRoute& b) const
-{
-	if(a.remote < b.remote) return true;
-	else if(b.remote < a.remote) return false;
-	else return a.local < b.local;
-}
-
-std::string LinkRoute::ToString() const
-{
-	std::ostringstream oss;
-	oss << *this;
-	return oss.str();
-}
-
-std::ostream& operator<<(std::ostream& oss, const LinkRoute& arRoute)
-{
-	return oss << " Local: " << arRoute.local << " Remote: " << arRoute.remote;
 }
 
 }
-}
-

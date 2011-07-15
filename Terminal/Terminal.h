@@ -48,13 +48,11 @@ public:
 	void _OnSendSuccess();
 	void _OnSendFailure();
 
+	/*
 	void Init() {
 		this->Start();
 	}
-
-	void ShutdownForever() {
-		this->Shutdown();
-	}
+	*/
 
 
 private:
@@ -75,8 +73,7 @@ private:
 	IPhysicalLayerAsync* mpPhysical;
 	ITimerSource* mpTimerSrc;
 
-	ITimer* mpInfiniteTimer;
-	void Null();
+	ITimer* mpInfiniteTimer;	
 
 	std::string mBanner;
 	bool mIOMode;

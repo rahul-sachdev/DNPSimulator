@@ -20,7 +20,7 @@
 #define __MOCK_TIMER_SOURCE_H_
 
 
-#include <APL/TimerInterfaces.h>
+#include <APL/ITimerSource.h>
 #include <map>
 #include <queue>
 

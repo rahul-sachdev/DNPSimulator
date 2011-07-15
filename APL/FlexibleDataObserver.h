@@ -19,7 +19,6 @@
 #ifndef __FLEXIBLE_DATA_OBSERVER_H_
 #define __FLEXIBLE_DATA_OBSERVER_H_
 
-
 #include "DataInterfaces.h"
 #include "Lock.h"
 #include "SubjectBase.h"
@@ -30,6 +29,12 @@
 
 namespace apl
 {
+
+template <typename T>
+struct PointMap {
+	typedef std::map<size_t, T> Type;
+};
+
 /** Simple data obsever that stores the current value of anything it receives. SubjectBase implictly
 notifies observers of any updates.
 
@@ -40,11 +45,6 @@ class FlexibleDataObserver : public apl::IDataObserver, public SubjectBase<SigLo
 public:
 
 	FlexibleDataObserver();
-
-	template <typename T>
-	struct PointMap {
-		typedef std::map<size_t, T> Type;
-	};
 
 	// allow direct access to the maps
 	PointMap<Binary>::Type mBinaryMap;
@@ -256,7 +256,7 @@ template <class T>
 void FlexibleDataObserver::Print(typename PointMap<T>::Type& arMap)
 {
 	int j = 0;
-	typename FlexibleDataObserver::PointMap<T>::Type::iterator i = arMap.begin();
+	typename PointMap<T>::Type::iterator i = arMap.begin();
 	for(; i != arMap.end(); ++i) {
 		std::cout << j << ", " << i->second.GetValue() << ", " << static_cast<int>(i->second.GetQuality()) << std::endl;
 		++j;

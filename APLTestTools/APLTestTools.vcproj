@@ -277,6 +277,10 @@
 				Name="DataMocks"
 				>
 				<File
+					RelativePath=".\FanoutDataObserver.h"
+					>
+				</File>
+				<File
 					RelativePath=".\MockCommandAcceptor.h"
 					>
 				</File>

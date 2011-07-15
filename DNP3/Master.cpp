@@ -31,7 +31,7 @@
 #include <APL/AsyncTaskPeriodic.h>
 #include <APL/AsyncTaskNonPeriodic.h>
 #include <APL/Logger.h>
-#include <APL/TimerInterfaces.h>
+#include <APL/ITimerSource.h>
 #include <APL/AsyncTaskContinuous.h>
 #include <APL/CopyableBuffer.h>
 

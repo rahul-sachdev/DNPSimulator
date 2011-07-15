@@ -171,18 +171,27 @@ class MonitorStateShutdown : public virtual IMonitorState,
 	MACRO_MONITOR_SINGLETON(MonitorStateShutdown, PLS_SHUTDOWN, true);
 };
 
-class MonitorStateSuspended : public virtual IMonitorState,
+class MonitorStateSuspendedBase : public virtual IMonitorState,
 	private NotOpening,
 	private NotOpen,
 	private NotWaitingForTimer,
 	private IgnoresClose,
 	private IgnoresSuspend
 {
-	MACRO_MONITOR_SINGLETON(MonitorStateSuspended, PLS_CLOSED, false);
-
 	void OnStartRequest(PhysicalLayerMonitor* apContext);
 	void OnStartOneRequest(PhysicalLayerMonitor* apContext);
 	void OnShutdownRequest(PhysicalLayerMonitor* apContext);
+};
+
+
+class MonitorStateSuspended : public MonitorStateSuspendedBase
+{
+	MACRO_MONITOR_SINGLETON(MonitorStateSuspended, PLS_CLOSED, false);
+};
+
+class MonitorStateInit : public MonitorStateSuspendedBase
+{
+	MACRO_MONITOR_SINGLETON(MonitorStateInit, PLS_CLOSED, false);
 };
 
 class MonitorStateOpeningBase : public virtual IMonitorState,

@@ -30,7 +30,7 @@ class io_service;
 
 #include <APL/PhysicalLayerAsyncTCPClient.h>
 #include <APL/PhysicalLayerAsyncTCPServer.h>
-#include <APL/TimerInterfaces.h>
+#include <APL/ITimerSource.h>
 
 #include "TransportIntegrationStack.h"
 

@@ -58,6 +58,17 @@ private:
 	boost::variate_generator<boost::mt19937&, boost::uniform_int<T> > nextRand;
 };
 
+class RandomBool : private Random<boost::uint32_t>
+{
+public:
+	RandomBool() : Random<boost::uint32_t>(0, 1)
+	{}
+
+	bool NextBool() {
+		return Next() ? true : false;
+	}
+};
+
 
 }
 

@@ -19,7 +19,7 @@
 #ifndef __TIMER_SOURCE_ASIO_H_
 #define __TIMER_SOURCE_ASIO_H_
 
-#include "TimerInterfaces.h"
+#include "ITimerSource.h"
 
 #include <queue>
 

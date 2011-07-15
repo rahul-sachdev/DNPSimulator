@@ -52,6 +52,8 @@ public:
 		// Const to fix VS compilation bug
 		bool operator()(const LinkRoute& a, const LinkRoute& b) const;
 	};
+
+	std::string ToString() const;
 };
 
 std::ostream& operator<<(std::ostream& oss, const LinkRoute&);

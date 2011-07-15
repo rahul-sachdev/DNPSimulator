@@ -19,91 +19,38 @@
 #ifndef __INTEGRATION_TEST_H_
 #define __INTEGRATION_TEST_H_
 
-#include <vector>
-#include <APL/FlexibleDataObserver.h>
 #include <APLTestTools/AsyncTestObjectASIO.h>
 #include <APLTestTools/LogTester.h>
 #include <APLTestTools/MockCommandAcceptor.h>
-#include <DNP3/AsyncStackManager.h>
-#include <boost/foreach.hpp>
-#include <APL/ChangeBuffer.h>
-#include <APL/BoundNotifier.h>
+#include <APLTestTools/FanoutDataObserver.h>
+#include <APL/Loggable.h>
 
-#include <boost/random/mersenne_twister.hpp>
+#include <APL/FlexibleDataObserver.h>
+#include <APL/Random.h>
+
+#include <DNP3/AsyncStackManager.h>
+
+#include "ComparingDataObserver.h"
+
+#include <vector>
+#include <boost/foreach.hpp>
 #include <boost/shared_ptr.hpp>
 #include <memory>
-
-namespace boost
-{
-namespace asio
-{
-class io_service;
-}
-}
 
 namespace apl
 {
 namespace dnp
 {
 
-class ObserverFanout : public IDataObserver
-{
-public:
-
-	void Add(IDataObserver* apObserver) {
-		mObservers.push_back(apObserver);
-	}
-
-	void _Start() {
-		mBuffer.Start();
-	}
-	void _End() {
-		mBuffer.End();
-
-		BOOST_FOREACH(IDataObserver * p, mObservers) {
-			mBuffer.FlushUpdates(p, false);
-		}
-
-		Transaction tr(&mBuffer); mBuffer.Clear();
-	}
-
-	void _Update(const Binary& arPoint, size_t aIndex) {
-		mBuffer.Update(arPoint, aIndex);
-	}
-	void _Update(const Analog& arPoint, size_t aIndex) {
-		mBuffer.Update(arPoint, aIndex);
-	}
-	void _Update(const Counter& arPoint, size_t aIndex) {
-		mBuffer.Update(arPoint, aIndex);
-	}
-	void _Update(const ControlStatus& arPoint, size_t aIndex) {
-		mBuffer.Update(arPoint, aIndex);
-	}
-	void _Update(const SetpointStatus& arPoint, size_t aIndex) {
-		mBuffer.Update(arPoint, aIndex);
-	}
-
-private:
-	ChangeBuffer<NullLock> mBuffer;
-	std::vector<IDataObserver*> mObservers;
-
-};
-
-class IntegrationTest : public AsyncTestObjectASIO
+class IntegrationTest : private Loggable
 {
 public:
 
 	IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints);
 
-	IDataObserver* GetFanout() {
-		return &mFanout;
-	}
+	size_t IncrementData();
 
-	bool SameData();
-
-	Binary RandomBinary();
-	Analog RandomAnalog();
-	Counter RandomCounter();
+	bool WaitForSameData(millis_t aTimeout, bool aDescribeAnyMissingData);
 
 	AsyncStackManager* GetManager() {
 		return &mManager;
@@ -111,21 +58,36 @@ public:
 
 private:
 
+	void InitLocalObserver();
+
+	void ResetObservers();
+
+	Binary RandomBinary();
+	Analog RandomAnalog();
+	Counter RandomCounter();
+
+	Binary Next(const Binary& arPoint);
+	Analog Next(const Analog& arPoint);
+	Counter Next(const Counter& arPoint);
+
+
 	void RegisterChange();
 	void AddStackPair(FilterLevel aLevel, size_t aNumPoints);
 
-	std::vector< boost::shared_ptr<FlexibleDataObserver> > mMasterObservers;
-	ObserverFanout mFanout;
-	const boost::uint16_t M_START_PORT;
-	Logger* mpLogger;
+	std::vector< boost::shared_ptr<ComparingDataObserver> > mMasterObservers;
+	FanoutDataObserver<NullLock> mFanout;
 
-	bool mChange;
-	BoundNotifier mNotifier;
+	Random<boost::int32_t> mRandomInt32;
+	Random<boost::uint32_t> mRandomUInt32;
+	RandomBool mRandomBool;
+
+	const boost::uint16_t M_START_PORT;
+
 	FlexibleDataObserver mLocalFDO;
 	MockCommandAcceptor mCmdAcceptor;
-	boost::mt19937 rng; //random number generator
 
 	AsyncStackManager mManager;
+	size_t NUM_POINTS;
 };
 
 }

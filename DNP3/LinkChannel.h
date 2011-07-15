@@ -59,6 +59,7 @@ public:
 
 	void BindStackToChannel(const std::string& arStackName, Stack* apStack, const LinkRoute& arRoute);
 	void RemoveStackFromChannel(const std::string& arStackName);
+	std::vector<std::string> StacksOnChannel();
 
 	std::string Name() {
 		return mName;

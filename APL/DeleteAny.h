@@ -17,44 +17,22 @@
 // under the License.
 //
 
-#include "LinkRoute.h"
+#ifndef __DELETE_ANY_H_
+#define __DELETE_ANY_H_
 
-#include <sstream>
+#include <vector>
 
 namespace apl
 {
-namespace dnp
+
+/** Useful for posting to a timer source */
+template <class T>
+void DeleteAny(const T* apType)
 {
-
-LinkRoute::LinkRoute(const boost::uint16_t aRemoteAddr, const boost::uint16_t aLocalAddr) :
-	remote(aRemoteAddr),
-	local(aLocalAddr)
-{}
-
-LinkRoute::LinkRoute() :
-	remote(0),
-	local(0)
-{}
-
-bool LinkRoute::LessThan::operator ()(const LinkRoute& a, const LinkRoute& b) const
-{
-	if(a.remote < b.remote) return true;
-	else if(b.remote < a.remote) return false;
-	else return a.local < b.local;
-}
-
-std::string LinkRoute::ToString() const
-{
-	std::ostringstream oss;
-	oss << *this;
-	return oss.str();
-}
-
-std::ostream& operator<<(std::ostream& oss, const LinkRoute& arRoute)
-{
-	return oss << " Local: " << arRoute.local << " Remote: " << arRoute.remote;
+	delete apType;
 }
 
 }
-}
+
+#endif
 

@@ -308,6 +308,14 @@
 					Name="Framework"
 					>
 					<File
+						RelativePath=".\ComparingDataObserver.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ComparingDataObserver.h"
+						>
+					</File>
+					<File
 						RelativePath=".\IntegrationTest.cpp"
 						>
 					</File>

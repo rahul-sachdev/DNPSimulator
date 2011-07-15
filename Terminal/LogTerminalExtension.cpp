@@ -1,7 +1,7 @@
 #include "LogTerminalExtension.h"
 
 #include <APL/Util.h>
-#include <APL/TimerInterfaces.h>
+#include <APL/ITimerSource.h>
 
 #include <boost/bind.hpp>
 #include <sstream>

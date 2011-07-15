@@ -62,9 +62,6 @@ private:
 		causes a single command to be processed */
 	void OnCommandNotify();
 
-	// Placeholder method for the boost timer system.
-	void Timeout() {}
-
 	// The CommandQueue object serves as a thread-safe cache and notification mechanism. It implements the
 	// ICommandAcceptor/IResponseAcceptor/ICommandSource interface, which is used by the slave/application
 	// during control sequences

@@ -21,7 +21,7 @@
 
 
 #include "IHandlerAsync.h"
-#include "TimerInterfaces.h"
+#include "ITimerSource.h"
 #include "IPhysicalLayerObserver.h"
 
 #include <APL/Lock.h>
@@ -65,8 +65,11 @@ public:
 	/** Add an observer to the set of state callbacks */
 	void AddObserver(IPhysicalLayerObserver* apObserver);
 
-	/** Blocks until the monitor has completely and permanently stopped */
-	void WaitForShutdown();
+	/** Blocks until the monitor has permanently stopped or the timeout expires.
+		@param aTimeoutMS Timeout in milliseconds, < 0 waits forever
+		@return True of the shutdown condition was met, false otherwise
+	*/
+	bool WaitForShutdown(millis_t aTimeoutMs = -1);
 
 	Logger* GetLogger() {
 		return mpLogger;
@@ -89,6 +92,7 @@ private:
 	ITimerSource* mpTimerSrc;
 	ITimer* mpOpenTimer;
 	IMonitorState* mpState;
+	bool mFinalShutdown;
 
 	/* --- Actions for the states to call --- */
 
@@ -102,6 +106,8 @@ private:
 	void CancelOpenTimer();
 
 	/* --- Internal helper functions --- */
+
+	void DoFinalShutdown();
 
 	SigLock mLock;
 	const millis_t M_OPEN_RETRY;

@@ -16,13 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __TIMER_INTERFACES_H_
-#define __TIMER_INTERFACES_H_
+#ifndef __I_TIMER_H_
+#define __I_TIMER_H_
 
-
-#include "Types.h"
-#include "TimeTypes.h"
-#include <boost/function.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
 namespace apl
@@ -49,44 +45,6 @@ public:
 	virtual ~ITimer() {}
 	virtual void Cancel() = 0;
 	virtual boost::posix_time::ptime ExpiresAt() = 0;
-};
-
-/** @section desc Parameterless signature for Expiration callbacks */
-typedef boost::function<void ()> ExpirationHandler;
-
-
-/**
- * Interface for posting events to a queue.  Events can be posted for
- * immediate consumption or some time in the future.  Events can be consumbed
- * by the posting thread or another thread.
- *
- * @section Usage
- *
- * \code
- * 	 asio::io_service srv;
- * 	 TimerSourceASIO timers(&srv);
- * \endcode
- *
- * @see TimerASIO
- */
-class ITimerSource
-{
-public:
-	virtual ~ITimerSource() {}
-
-	ITimer* StartInfinite(const ExpirationHandler& arHandler) {
-		boost::posix_time::ptime t(boost::date_time::max_date_time);
-		return this->Start(t, arHandler);
-	}
-
-	/** Returns a new timer based on a relative time */
-	virtual ITimer* Start(millis_t, const ExpirationHandler&) = 0;
-
-	/** Returns a new timer based on an absolute time */
-	virtual ITimer* Start(const boost::posix_time::ptime&, const ExpirationHandler&) = 0;
-
-	/** Thread-safe way to post an event to handled asynchronously */
-	virtual void Post(const ExpirationHandler&) = 0;
 };
 
 }

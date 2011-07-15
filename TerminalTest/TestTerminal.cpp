@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE(TerminalInteractions)
 	LogTerminalExtension lte(&log);
 	Terminal trm(pLoggerA, &phys, &mts, "Test Terminal", false);
 	trm.AddExtension(&lte);
-	trm.Init();
+	//trm.Init();
 
 	BOOST_REQUIRE(mts.DispatchOne());
 
@@ -166,8 +166,6 @@ BOOST_AUTO_TEST_CASE(TerminalInteractions)
 
 	TestSetCommands(&phys);
 	TestRunCommands(&phys, logger);
-
-	trm.ShutdownForever();
 }
 
 BOOST_AUTO_TEST_SUITE_END()

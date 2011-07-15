@@ -17,44 +17,25 @@
 // under the License.
 //
 
-#include "LinkRoute.h"
+#ifndef __KEY_KEYS_H_
+#define __KEY_KEYS_H_
 
-#include <sstream>
+#include <vector>
 
 namespace apl
 {
-namespace dnp
+
+template <class T, class U>
+static std::vector<U> GetKeys(const T& arMap)
 {
-
-LinkRoute::LinkRoute(const boost::uint16_t aRemoteAddr, const boost::uint16_t aLocalAddr) :
-	remote(aRemoteAddr),
-	local(aLocalAddr)
-{}
-
-LinkRoute::LinkRoute() :
-	remote(0),
-	local(0)
-{}
-
-bool LinkRoute::LessThan::operator ()(const LinkRoute& a, const LinkRoute& b) const
-{
-	if(a.remote < b.remote) return true;
-	else if(b.remote < a.remote) return false;
-	else return a.local < b.local;
-}
-
-std::string LinkRoute::ToString() const
-{
-	std::ostringstream oss;
-	oss << *this;
-	return oss.str();
-}
-
-std::ostream& operator<<(std::ostream& oss, const LinkRoute& arRoute)
-{
-	return oss << " Local: " << arRoute.local << " Remote: " << arRoute.remote;
+	std::vector<U> ret;
+	for(typename T::const_iterator i = arMap.begin(); i != arMap.end(); ++i) {
+		ret.push_back(i->first);
+	}
+	return ret;
 }
 
 }
-}
+
+#endif
 
