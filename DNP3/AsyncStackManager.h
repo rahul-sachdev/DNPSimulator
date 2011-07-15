@@ -264,7 +264,7 @@ private:
 	// Implement IThreadable
 	void Run();
 
-	void OnPreStackDeletion(Stack* apStack);	
+	void OnPreStackDeletion(Stack* apStack);
 
 	// Remove and close a stack, but delegate responsibility for deletion
 	Stack* SeverStackFromChannel(const std::string& arStackName);
@@ -285,33 +285,33 @@ private:
 	void ThrowIfAlreadyShutdown();
 
 	struct StackRecord {
-			StackRecord() : 
-			  stack(NULL), channel(NULL)
-			  {}
+		StackRecord() :
+			stack(NULL), channel(NULL)
+		{}
 
-			StackRecord(Stack* apStack, LinkChannel* apChannel) :
-			  stack(apStack), channel(apChannel)
-			  {}
+		StackRecord(Stack* apStack, LinkChannel* apChannel) :
+			stack(apStack), channel(apChannel)
+		{}
 
-		  Stack* stack;
-		  LinkChannel* channel;
+		Stack* stack;
+		LinkChannel* channel;
 	};
 
 	typedef std::map<std::string, StackRecord> StackMap; // maps a stack name the stack and it's channel
 	StackMap mStackMap;
-		
-	typedef std::map<std::string, LinkChannel*> ChannelToChannelMap;	
+
+	typedef std::map<std::string, LinkChannel*> ChannelToChannelMap;
 	ChannelToChannelMap mChannelNameToChannel;	// maps a channel name to a channel instance
 
 	LinkChannel* GetOrCreateChannel(const std::string& arName);
 	LinkChannel* GetChannelOrExcept(const std::string& arName);
 	LinkChannel* GetChannelMaybeNull(const std::string& arName);
 	LinkChannel* CreateChannel(const std::string& arName);
-		
+
 	StackRecord GetStackRecordByName(const std::string& arName);
 
-	
-	
+
+
 
 };
 

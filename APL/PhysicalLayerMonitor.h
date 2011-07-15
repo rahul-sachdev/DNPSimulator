@@ -103,7 +103,7 @@ private:
 	void OnOpenTimerExpiration();
 
 	/// Cancels the open timer
-	void CancelOpenTimer();	
+	void CancelOpenTimer();
 
 	/* --- Internal helper functions --- */
 

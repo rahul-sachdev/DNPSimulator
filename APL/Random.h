@@ -60,11 +60,13 @@ private:
 
 class RandomBool : private Random<boost::uint32_t>
 {
-	public:
-		RandomBool() : Random<boost::uint32_t>(0,1)
-		{}
+public:
+	RandomBool() : Random<boost::uint32_t>(0, 1)
+	{}
 
-	bool NextBool() { return Next() ? true : false; }
+	bool NextBool() {
+		return Next() ? true : false;
+	}
 };
 
 

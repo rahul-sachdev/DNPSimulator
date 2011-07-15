@@ -42,9 +42,9 @@ using namespace std;
 using namespace apl;
 using namespace apl::dnp;
 
-IntegrationTest::IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints) :	
+IntegrationTest::IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints) :
 	Loggable(apLogger),
-	M_START_PORT(aStartPort),	
+	M_START_PORT(aStartPort),
 	mManager(apLogger),
 	NUM_POINTS(aNumPoints)
 {
@@ -53,7 +53,7 @@ IntegrationTest::IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::ui
 	for (size_t i = 0; i < aNumPairs; ++i) {
 		AddStackPair(aLevel, aNumPoints);
 	}
-	mFanout.AddObserver(&mLocalFDO);	
+	mFanout.AddObserver(&mLocalFDO);
 }
 
 void IntegrationTest::InitLocalObserver()
@@ -63,7 +63,7 @@ void IntegrationTest::InitLocalObserver()
 		mLocalFDO.Update(this->RandomBinary(), i);
 		mLocalFDO.Update(this->RandomAnalog(), i);
 		mLocalFDO.Update(this->RandomCounter(), i);
-	}	
+	}
 }
 
 void IntegrationTest::ResetObservers()
@@ -74,7 +74,7 @@ void IntegrationTest::ResetObservers()
 }
 
 bool IntegrationTest::WaitForSameData(millis_t aTimeout, bool aDescribeAnyMissingData)
-{	
+{
 	LOG_BLOCK(LEV_EVENT, "Wait for same data");
 
 	for (size_t i = 0; i < this->mMasterObservers.size(); ++i) {
@@ -88,9 +88,11 @@ bool IntegrationTest::WaitForSameData(millis_t aTimeout, bool aDescribeAnyMissin
 	return true;
 }
 
-void IntegrationTest::IncrementData()
+size_t IntegrationTest::IncrementData()
 {
 	LOG_BLOCK(LEV_EVENT, "Incrementing data");
+
+	size_t num = 0;
 
 	this->ResetObservers();
 	/*
@@ -98,13 +100,15 @@ void IntegrationTest::IncrementData()
 	 * When the Transaction instance is created, it acquires the resource.
 	 * When it is destroyed, it releases the resource.  The scoping using
 	 * the {} block forces destruction of the Transaction at the right time.
-	 */	
+	*/
 	Transaction tr(&mFanout);
 	for (size_t i = 0; i < NUM_POINTS; ++i) {
 		mFanout.Update(this->Next(mLocalFDO.mBinaryMap[i]), i);
 		mFanout.Update(this->Next(mLocalFDO.mAnalogMap[i]), i);
 		mFanout.Update(this->Next(mLocalFDO.mCounterMap[i]), i);
-	}	
+		num += 3;
+	}
+	return num;
 }
 
 Binary IntegrationTest::RandomBinary()
@@ -114,32 +118,32 @@ Binary IntegrationTest::RandomBinary()
 }
 
 Analog IntegrationTest::RandomAnalog()
-{	
+{
 	Analog v(mRandomInt32.Next(), AQ_ONLINE);
 	return v;
 }
 
 Counter IntegrationTest::RandomCounter()
-{	
+{
 	Counter v(mRandomUInt32.Next(), CQ_ONLINE);
 	return v;
 }
 
 Binary IntegrationTest::Next(const Binary& arPoint)
 {
-	Binary point(!arPoint.GetValue(), arPoint.GetQuality());	
+	Binary point(!arPoint.GetValue(), arPoint.GetQuality());
 	return point;
 }
 
 Analog IntegrationTest::Next(const Analog& arPoint)
 {
-	Analog point(arPoint.GetValue()+1, arPoint.GetQuality());
+	Analog point(arPoint.GetValue() + 1, arPoint.GetQuality());
 	return point;
 }
 
 Counter IntegrationTest::Next(const Counter& arPoint)
 {
-	Counter point(arPoint.GetValue()+1, arPoint.GetQuality());
+	Counter point(arPoint.GetValue() + 1, arPoint.GetQuality());
 	return point;
 }
 

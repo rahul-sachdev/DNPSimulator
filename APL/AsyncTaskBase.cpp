@@ -170,7 +170,7 @@ bool AsyncTaskBase::LessThanGroupLevelNoString(const AsyncTaskBase* l, const Asy
 }
 
 bool AsyncTaskBase::LessThanGroupLevel(const AsyncTaskBase* l, const AsyncTaskBase* r)
-{		
+{
 	return LessThanGroupLevelNoString(l, r);
 }
 

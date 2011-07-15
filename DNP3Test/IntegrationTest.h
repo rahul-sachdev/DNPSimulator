@@ -47,14 +47,14 @@ class IntegrationTest : private Loggable
 public:
 
 	IntegrationTest(Logger* apLogger, FilterLevel aLevel, boost::uint16_t aStartPort, size_t aNumPairs, size_t aNumPoints);
-	
-	void IncrementData();
-	
+
+	size_t IncrementData();
+
 	bool WaitForSameData(millis_t aTimeout, bool aDescribeAnyMissingData);
-	
+
 	AsyncStackManager* GetManager() {
 		return &mManager;
-	}	
+	}
 
 private:
 
@@ -69,7 +69,7 @@ private:
 	Binary Next(const Binary& arPoint);
 	Analog Next(const Analog& arPoint);
 	Counter Next(const Counter& arPoint);
-	
+
 
 	void RegisterChange();
 	void AddStackPair(FilterLevel aLevel, size_t aNumPoints);
@@ -82,7 +82,7 @@ private:
 	RandomBool mRandomBool;
 
 	const boost::uint16_t M_START_PORT;
-	
+
 	FlexibleDataObserver mLocalFDO;
 	MockCommandAcceptor mCmdAcceptor;
 

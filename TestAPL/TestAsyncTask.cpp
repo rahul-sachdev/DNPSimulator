@@ -169,11 +169,11 @@ BOOST_AUTO_TEST_CASE(NonPeriodic)
 	fakeTime.SetToNow();
 	AsyncTaskScheduler ats(&mts, &fakeTime);
 	AsyncTaskGroup* pGroup = ats.CreateNewGroup();
-	
+
 
 	AsyncTaskBase* pT1 = pGroup->Add(-1, 100, 0, mth.GetHandler()); //non-periodic task
 	AsyncTaskBase* pT2 = pGroup->Add(2000, 100, 0, mth.GetHandler());
-	
+
 	pGroup->Enable();
 
 	//complete both the tasks

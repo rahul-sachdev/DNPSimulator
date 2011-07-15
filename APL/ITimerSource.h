@@ -49,7 +49,7 @@ typedef boost::function<void ()> ExpirationHandler;
 class ITimerSource
 {
 public:
-	virtual ~ITimerSource() {}	
+	virtual ~ITimerSource() {}
 
 	ITimer* StartInfinite();
 
@@ -65,7 +65,7 @@ public:
 	/** Delete any type via a Post */
 	template <class T>
 	void DeleteViaPost(T* apType);
-	
+
 
 private:
 	static void NullActionForInfiniteTimer();

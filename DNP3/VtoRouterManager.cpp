@@ -100,9 +100,9 @@ void VtoRouterManager::StopAllRoutersOnWriter(IVtoWriter* apWriter)
 {
 	RouterRecordVector recs = this->GetAllRoutersOnWriter(apWriter);
 
-	for(RouterRecordVector::iterator i = recs.begin(); i != recs.end(); ++i) {		
+	for(RouterRecordVector::iterator i = recs.begin(); i != recs.end(); ++i) {
 		this->StopRouter(i->mpRouter.get(), apWriter);
-	}	
+	}
 }
 
 std::vector<RouterRecord> VtoRouterManager::GetAllRoutersOnWriter(IVtoWriter* apWriter)
@@ -152,11 +152,11 @@ void VtoRouterManager::StopRouter(VtoRouter* apRouter, IVtoWriter* apWriter)
 {
 	for(RouterRecordVector::iterator i = mRecords.begin(); i != mRecords.end(); ++i) {
 		if(i->mpRouter.get() == apRouter) {
-			
+
 			{
 				Transaction tr(&mSuspendTimerSource);
 				apWriter->RemoveVtoCallback(apRouter);
-				i->mpRouter->Shutdown();				
+				i->mpRouter->Shutdown();
 			}
 
 			i->mpRouter->WaitForShutdown();			  // blocking, when it returns we're done for good

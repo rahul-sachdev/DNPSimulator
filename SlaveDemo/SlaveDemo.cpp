@@ -31,7 +31,7 @@ SlaveDemoBase::SlaveDemoBase(Logger* apLogger) :
 	IOServiceThread(apLogger, this->Get()),
 	mTimerSource(this->Get()),
 	mpInfiniteTimer(mTimerSource.StartInfinite())
-{	
+{
 	// Create a notifier that when called will post a call to OnCommandNotify
 	INotifier* pNotifier = mPostSource.Get(boost::bind(&SlaveDemoBase::OnCommandNotify, this), &mTimerSource);
 

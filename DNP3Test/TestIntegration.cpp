@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_SUITE(IntegrationSuite)
 const boost::uint16_t START_PORT = MACRO_PORT_START;
 const size_t NUM_PAIRS = MACRO_NUM_PAIRS;
 const size_t NUM_POINTS = 500;
-const size_t NUM_CHANGES = 10;
+const size_t NUM_CHANGE_SETS = 10;
 const FilterLevel FILTER_LEVEL = LEV_WARNING;
 
 BOOST_AUTO_TEST_CASE(MasterToSlaveThroughput)
@@ -62,20 +62,21 @@ BOOST_AUTO_TEST_CASE(MasterToSlaveThroughput)
 
 	EventLog log;
 	//LogToStdio::Inst()->SetPrintLocation(true);
-	//log.AddLogSubscriber(LogToStdio::Inst());	
+	//log.AddLogSubscriber(LogToStdio::Inst());
 
 	IntegrationTest t(log.GetLogger(FILTER_LEVEL, "test"), FILTER_LEVEL, START_PORT,
-	                  NUM_PAIRS, NUM_POINTS);	
+	                  NUM_PAIRS, NUM_POINTS);
 
+	size_t num_points_per_pair = 0;
 	StopWatch sw;
-	for (size_t j = 0; j < NUM_CHANGES; ++j) {
-		t.IncrementData();		
-		BOOST_REQUIRE(t.WaitForSameData(20000, true));		
-	}	
+	for (size_t j = 0; j < NUM_CHANGE_SETS; ++j) {
+		num_points_per_pair += t.IncrementData();
+		BOOST_REQUIRE(t.WaitForSameData(20000, true));
+	}
 
 	if (OUTPUT_PERF_NUMBERS) {
 		double elapsed_sec = sw.Elapsed() / 1000.0;
-		size_t points = 3 * NUM_POINTS * NUM_CHANGES * NUM_PAIRS * 2;
+		size_t points = num_points_per_pair * NUM_PAIRS * 2;
 		cout << "num points: " << points << endl;
 		cout << "elapsed seconds: " << elapsed_sec << endl;
 		cout << "points/sec: " << points / elapsed_sec << endl;
@@ -86,7 +87,7 @@ BOOST_AUTO_TEST_CASE(MasterToSlaveThroughput)
 // TODO - Factor this test into smaller tests
 BOOST_AUTO_TEST_CASE(IntegrationTestConstructionDestruction)
 {
-	EventLog log;	
+	EventLog log;
 	//log.AddLogSubscriber(LogToStdio::Inst());
 
 	IntegrationTest t(log.GetLogger(LEV_WARNING, "test"), LEV_WARNING, START_PORT,

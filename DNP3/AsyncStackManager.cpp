@@ -182,7 +182,7 @@ void AsyncStackManager::StopAllRoutersOnStack(const std::string& arStackName)
 {
 	this->ThrowIfAlreadyShutdown();
 	IVtoWriter* pWriter = this->GetVtoWriter(arStackName);
-	this->mVtoManager.StopAllRoutersOnWriter(pWriter);	
+	this->mVtoManager.StopAllRoutersOnWriter(pWriter);
 }
 
 IVtoWriter* AsyncStackManager::GetVtoWriter(const std::string& arStackName)
@@ -195,21 +195,21 @@ IVtoWriter* AsyncStackManager::GetVtoWriter(const std::string& arStackName)
 void AsyncStackManager::RemovePort(const std::string& arPortName)
 {
 	this->ThrowIfAlreadyShutdown();
-	std::auto_ptr<LinkChannel> pChannel(this->GetChannelOrExcept(arPortName)); //will delete at end of function	
+	std::auto_ptr<LinkChannel> pChannel(this->GetChannelOrExcept(arPortName)); //will delete at end of function
 	mChannelNameToChannel.erase(arPortName);
 
 	{
 		// Tell the channel to shut down permanently
 		Transaction tr(&mSuspendTimerSource);
 		pChannel->GetGroup()->Shutdown(); // no more task callbacks
-		pChannel->BeginShutdown(); 
+		pChannel->BeginShutdown();
 	}
-	pChannel->WaitUntilShutdown();	
-	
+	pChannel->WaitUntilShutdown();
+
 	vector<string> stacks = pChannel->StacksOnChannel();
-	BOOST_FOREACH(string s, stacks) { 
-		this->RemoveStack(s); 
-	}				
+	BOOST_FOREACH(string s, stacks) {
+		this->RemoveStack(s);
+	}
 	this->mScheduler.ReleaseGroup(pChannel->GetGroup());
 
 	// remove the physical layer from the list
@@ -226,7 +226,7 @@ void AsyncStackManager::RemoveStack(const std::string& arStackName)
 AsyncStackManager::StackRecord AsyncStackManager::GetStackRecordByName(const std::string& arStackName)
 {
 	StackMap::iterator i = mStackMap.find(arStackName);
-	if (i == mStackMap.end()) throw ArgumentException(LOCATION, "Unknown stack");	
+	if (i == mStackMap.end()) throw ArgumentException(LOCATION, "Unknown stack");
 	return i->second;
 }
 
@@ -311,17 +311,17 @@ void AsyncStackManager::Run()
 }
 
 Stack* AsyncStackManager::SeverStackFromChannel(const std::string& arStackName)
-{	
+{
 	StackMap::iterator i = mStackMap.find(arStackName);
 	if(i == mStackMap.end()) throw ArgumentException(LOCATION, "Stack not found: " + arStackName);
 
 	StackRecord rec = i->second;
 	mStackMap.erase(i);
-		
-	LOG_BLOCK(LEV_DEBUG, "Begin severing stack: " << arStackName);	
+
+	LOG_BLOCK(LEV_DEBUG, "Begin severing stack: " << arStackName);
 	{
 		Transaction tr(&mSuspendTimerSource); //need to pause execution so that this action is safe
-		rec.channel->RemoveStackFromChannel(arStackName);		
+		rec.channel->RemoveStackFromChannel(arStackName);
 	}
 	LOG_BLOCK(LEV_DEBUG, "Done severing stack: " << arStackName);
 

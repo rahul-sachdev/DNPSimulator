@@ -53,8 +53,8 @@ class IVtoDataHandler;
 
 class RouterRecord
 {
-	public:
-		RouterRecord(const std::string& arPortName, boost::shared_ptr<VtoRouter> apRouter, IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
+public:
+	RouterRecord(const std::string& arPortName, boost::shared_ptr<VtoRouter> apRouter, IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
 
 	std::string mPortName;
 	boost::shared_ptr<VtoRouter> mpRouter;
@@ -86,7 +86,7 @@ public:
 
 private:
 
-	void StopRouter(VtoRouter* apRouter, IVtoWriter* apWriter);	
+	void StopRouter(VtoRouter* apRouter, IVtoWriter* apWriter);
 
 	RouterRecordVector::iterator Find(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
 	RouterRecordVector::iterator Find(IVtoWriter* apWriter);

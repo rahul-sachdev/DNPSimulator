@@ -24,12 +24,12 @@ namespace apl
 namespace dnp
 {
 
-ComparingDataObserver::ComparingDataObserver(Logger* apLogger, FlexibleDataObserver* apObserver) : 
+ComparingDataObserver::ComparingDataObserver(Logger* apLogger, FlexibleDataObserver* apObserver) :
 	Loggable(apLogger),
 	mSameData(false),
 	mpObserver(apObserver)
 {
-	
+
 }
 
 void ComparingDataObserver::Reset()
@@ -39,24 +39,24 @@ void ComparingDataObserver::Reset()
 	mAnalogMap.clear();
 	mCounterMap.clear();
 	mControlStatusMap.clear();
-	mSetpointStatusMap.clear();	
+	mSetpointStatusMap.clear();
 	mSameData = false;
 }
 
 bool ComparingDataObserver::IsSameData()
-{	
-	size_t required = mpObserver->mBinaryMap.size() + 
-					  mpObserver->mAnalogMap.size() + 
-					  mpObserver->mCounterMap.size();
+{
+	size_t required = mpObserver->mBinaryMap.size() +
+	                  mpObserver->mAnalogMap.size() +
+	                  mpObserver->mCounterMap.size();
 
-	size_t actual = mBinaryMap.size() + 
-					mAnalogMap.size() + 
-					mCounterMap.size();
+	size_t actual = mBinaryMap.size() +
+	                mAnalogMap.size() +
+	                mCounterMap.size();
 
 	LOG_BLOCK(LEV_EVENT, actual << " of " << required);
 
 	return (required == actual);
-		
+
 }
 
 bool ComparingDataObserver::WaitForSameData(millis_t aWaitMs)
@@ -79,13 +79,13 @@ void ComparingDataObserver::_Start()
 }
 
 void ComparingDataObserver::_End()
-{		
+{
 	if(this->IsSameData()) {
 		mSameData = true;
 		mLock.Broadcast();
 	}
 	mLock.Unlock();
-	
+
 }
 
 void ComparingDataObserver::_Update(const Binary& arPoint, size_t aIndex)

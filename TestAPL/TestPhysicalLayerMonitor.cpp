@@ -276,12 +276,12 @@ BOOST_AUTO_TEST_CASE(OpenFailureGoesToClosedIfSuspended)
 
 BOOST_AUTO_TEST_CASE(ShutdownPostsToTimer)
 {
-	TestObject test;	
+	TestObject test;
 	BOOST_REQUIRE_EQUAL(0, test.mts.NumActive());
 	BOOST_REQUIRE_FALSE(test.monitor.WaitForShutdown(0));
 	test.monitor.Shutdown();
 	BOOST_REQUIRE_EQUAL(PLS_SHUTDOWN, test.monitor.GetState());
-	BOOST_REQUIRE_EQUAL(1, test.mts.NumActive());	
+	BOOST_REQUIRE_EQUAL(1, test.mts.NumActive());
 	BOOST_REQUIRE_FALSE(test.monitor.WaitForShutdown(0));
 	BOOST_REQUIRE(test.mts.DispatchOne());
 	BOOST_REQUIRE(test.monitor.WaitForShutdown()); //wait indefinitely, but it's already shutdown

@@ -71,19 +71,19 @@ void LinkLayerRouter::RemoveContext(const LinkRoute& arRoute)
 	AddressMap::iterator i = mAddressMap.find(arRoute);
 	if(i == mAddressMap.end()) throw ArgumentException(LOCATION, "LinkRoute not bound: " + arRoute.ToString());
 	else {
-		
+
 		ILinkContext* pContext = i->second;
 		mAddressMap.erase(i);
 
 		if(this->GetState() == PLS_OPEN) pContext->OnLowerLayerDown();
-		
+
 		// if no stacks are bound, suspend the router
 		if(mAddressMap.size() == 0) {
 			this->Suspend();
 		}
 	}
 
-	
+
 }
 
 ILinkContext* LinkLayerRouter::GetContext(const LinkRoute& arRoute)

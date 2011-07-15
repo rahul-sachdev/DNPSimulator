@@ -30,7 +30,7 @@ class FanoutDataObserver : public IDataObserver
 {
 public:
 
-	void AddObserver(IDataObserver* apObserver) {	
+	void AddObserver(IDataObserver* apObserver) {
 		mObservers.push_back(apObserver);
 	}
 
@@ -40,9 +40,9 @@ public:
 	void _End() {
 		mBuffer.End();
 
-		BOOST_FOREACH(IDataObserver* p, mObservers) {
+		BOOST_FOREACH(IDataObserver * p, mObservers) {
 			mBuffer.FlushUpdates(p, false);
-		}		
+		}
 	}
 
 	void _Update(const Binary& arPoint, size_t aIndex) {

@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(Reconnection)
 		BOOST_REQUIRE(stack.WaitForBothSides(PLS_OPEN));
 
 		// test that data is correctly sent both ways
-		
+
 		data.Randomize();
 		stack.local.ExpectData(data);
 		stack.local.WriteData(data);
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(Reconnection)
 		// close the remote loopback server, which will cause both sides to close and reopen
 		stack.remote.Close();
 		stack.Log(LOCATION, "Waiting for both sides to close");
-		BOOST_REQUIRE(stack.WaitForBothSides(PLS_CLOSED));		
+		BOOST_REQUIRE(stack.WaitForBothSides(PLS_CLOSED));
 	}
 }
 

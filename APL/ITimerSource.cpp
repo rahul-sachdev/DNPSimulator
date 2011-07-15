@@ -21,7 +21,7 @@
 namespace apl
 {
 
-ITimer* ITimerSource::StartInfinite() 
+ITimer* ITimerSource::StartInfinite()
 {
 	boost::posix_time::ptime t(boost::date_time::max_date_time);
 	return this->Start(t, boost::bind(&ITimerSource::NullActionForInfiniteTimer));

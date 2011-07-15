@@ -63,17 +63,16 @@ void PhysicalLayerMonitor::AddObserver(IPhysicalLayerObserver* apObserver)
 
 bool PhysicalLayerMonitor::WaitForShutdown(millis_t aTimeoutMs)
 {
-	CriticalSection cs(&mLock);	
+	CriticalSection cs(&mLock);
 
-	while(!mFinalShutdown)
-	{
+	while(!mFinalShutdown) {
 		if(aTimeoutMs < 0) cs.Wait();
 		else {
 			cs.TimedWait(aTimeoutMs);
 			break;
 		}
 	}
-	
+
 	return mFinalShutdown;
 }
 
@@ -82,7 +81,7 @@ void PhysicalLayerMonitor::ChangeState(IMonitorState* apState)
 	LOG_BLOCK(LEV_DEBUG, mpState->ConvertToString() << " -> " << apState->ConvertToString() << " : " << mpPhys->ConvertStateToString());
 	IMonitorState* pLast = mpState;
 
-	CriticalSection cs(&mLock);		
+	CriticalSection cs(&mLock);
 	mpState = apState;
 	if(pLast->GetState() != apState->GetState()) {
 		for(ObserverSet::iterator i = mObservers.begin(); i != mObservers.end(); ++i) (*i)->OnStateChange(apState->GetState());
@@ -144,7 +143,7 @@ void PhysicalLayerMonitor::OnOpenTimerExpiration()
 
 void PhysicalLayerMonitor::_OnOpenFailure()
 {
-	LOG_BLOCK(LEV_DEBUG, "_OnOpenFailure()");	
+	LOG_BLOCK(LEV_DEBUG, "_OnOpenFailure()");
 	mpState->OnOpenFailure(this);
 	this->OnPhysicalLayerOpenFailureCallback();
 }
@@ -158,7 +157,7 @@ void PhysicalLayerMonitor::_OnLowerLayerUp()
 
 void PhysicalLayerMonitor::_OnLowerLayerDown()
 {
-	LOG_BLOCK(LEV_DEBUG, "_OnLowerLayerDown");		
+	LOG_BLOCK(LEV_DEBUG, "_OnLowerLayerDown");
 	mpState->OnLayerClose(this);
 	this->OnPhysicalLayerCloseCallback();
 }

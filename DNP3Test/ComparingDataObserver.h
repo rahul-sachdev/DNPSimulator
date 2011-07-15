@@ -50,9 +50,9 @@ private:
 	bool mSameData;
 
 	bool IsSameData();
-	
+
 	SigLock mLock;
-	FlexibleDataObserver* mpObserver;	
+	FlexibleDataObserver* mpObserver;
 
 	typedef std::map<size_t, bool> CompareMap;
 
