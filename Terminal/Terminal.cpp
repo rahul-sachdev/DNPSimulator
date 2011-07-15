@@ -29,11 +29,12 @@ Terminal::Terminal(Logger* apLogger, IPhysicalLayerAsync* apPhysical, ITimerSour
 	mSendBuffer(1024),
 	mpPhysical(apPhysical),
 	mpTimerSrc(apTimerSrc),
-	mpInfiniteTimer(NULL),
+	mpInfiniteTimer(apTimerSrc->StartInfinite()),
 	mBanner(arBanner),
 	mIOMode(aIOMode)
 {
 	this->InitCmdHandlers();
+	this->Start();
 }
 
 void Terminal::InitCmdHandlers()
@@ -95,11 +96,6 @@ void Terminal::InitCmdHandlers()
 void Terminal::Post(const ExpirationHandler& arHandler)
 {
 	mpTimerSrc->Post(arHandler);
-}
-
-void Terminal::Null()
-{
-	throw InvalidStateException(LOCATION, "Function should be uncallable");
 }
 
 retcode Terminal::HandleHelp(std::vector<std::string>& arTokens)
@@ -313,7 +309,8 @@ retcode Terminal::HandleDefault(std::vector<std::string>&)
 }
 
 retcode Terminal::HandleQuit(std::vector<std::string>&)
-{
+{	
+	this->mpInfiniteTimer->Cancel();
 	this->Shutdown();
 	return SUCCESS;
 }

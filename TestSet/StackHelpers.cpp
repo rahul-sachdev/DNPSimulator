@@ -63,7 +63,7 @@ StackBase::StackBase(const APLXML_Base::PhysicalLayerList_t& arList, FilterLevel
 
 void StackBase::Run()
 {
-	trm.Init();
+	//trm.Init();
 	mTermThread.Run(); // blocking
 	mTermThread.Stop();
 }
