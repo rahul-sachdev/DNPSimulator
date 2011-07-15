@@ -2,16 +2,18 @@ Change Log
 ==============
 
 ### 0.9.5 ###
-- Added Virtual Terminal Object (VTO) support with standard implementation and experimental stream support
 - Migrated to Boost 1.47.0
+- Added Virtual Terminal Object (VTO) support with standard implementation and experimental stream support
 - Migrated all external numeric types to use boost type definitions for interoperability
 - Added autotools support thanks to Chris Verges - Rake may be replaced entirely with autotools in a future release
-- Added Astyle code formatter to project build system(s)
-- Master/Slave can now both notify of their current state using enumeration
+- Added Astyle code formatter to project build systems
+- Master/Slave can now both notify of their current state using an enumeration
 - TestSet includes address scanning feature to detect devices that don't support broadcast addressing
 - sub-Masters on same channel can now use same address if talking to different slaves
 - Log messages can now contain well known key-value pairs
-- Fixes bugs: 18, 15, 9, 7
+- Management class 'AsyncStackManager' now automatically runs when stacks are added, no Start() call
+- AsyncStackManger blocks when RemovePort() or RemoveStack() are called until the operation has completed
+- Fixed bugs: 18, 15, 9, 7
 
 ### 0.9.4 ###
 Rebased java namespace to org.totalgrid.reef.protocol.dnp3
