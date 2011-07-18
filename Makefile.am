@@ -181,11 +181,13 @@ nobase_pkginclude_HEADERS= \
 	APL/CRC.h \
 	APL/DataInterfaces.h \
 	APL/DataTypes.h \
+	APL/DeleteAny.h \
 	APL/EventLockBase.h \
 	APL/EventLock.h \
 	APL/EventSet.h \
 	APL/Exception.h \
 	APL/FlexibleDataObserver.h \
+	APL/GetKeys.h \
 	APL/IEventLock.h \
 	APL/IHandlerAsync.h \
 	APL/INotifier.h \
@@ -195,6 +197,8 @@ nobase_pkginclude_HEADERS= \
 	APL/IPhysicalLayerObserver.h \
 	APL/IPhysicalLayerSource.h \
 	APL/ISubject.h \
+	APL/ITimer.h \
+	APL/ITimerSource.h \
 	APL/ITimeSource.h \
 	APL/ITransactable.h \
 	APL/LockBase.h \
@@ -255,7 +259,6 @@ nobase_pkginclude_HEADERS= \
 	APL/TimeBoost.h \
 	APL/Timeout.h \
 	APL/TimerASIO.h \
-	APL/ITimerSource.h \
 	APL/TimerSourceASIO.h \
 	APL/TimeSource.h \
 	APL/TimeTypes.h \
