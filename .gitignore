@@ -34,6 +34,9 @@ TestSingle.tiny.xml
 *.gcno
 *.gcda
 
+dnp3test
+testset
+
 /config/autotools/m4/libtool.m4
 /config/autotools/m4/ltoptions.m4
 /config/autotools/m4/ltsugar.m4
