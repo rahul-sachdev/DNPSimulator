@@ -38,9 +38,9 @@ namespace apl
 {
 
 PhysicalLayerAsyncSerial::PhysicalLayerAsyncSerial(
-        Logger* apLogger,
-        boost::asio::io_service* apIOService,
-        const SerialSettings& arSettings) :
+    Logger* apLogger,
+    boost::asio::io_service* apIOService,
+    const SerialSettings& arSettings) :
 
 	PhysicalLayerAsyncASIO(apLogger, apIOService),
 	mSettings(arSettings),

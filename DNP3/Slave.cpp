@@ -76,10 +76,10 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	 * Slave::OnDataUpdate().
 	 */
 	mChangeBuffer.AddObserver(
-	        mNotifierSource.Get(
-	                boost::bind(&Slave::OnDataUpdate, this),
-	                mpTimerSrc
-	        )
+	    mNotifierSource.Get(
+	        boost::bind(&Slave::OnDataUpdate, this),
+	        mpTimerSrc
+	    )
 	);
 
 	/*
@@ -87,10 +87,10 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	 * Slave::OnVtoUpdate().
 	 */
 	mVtoWriter.AddObserver(
-	        mNotifierSource.Get(
-	                boost::bind(&Slave::OnVtoUpdate, this),
-	                mpTimerSrc
-	        )
+	    mNotifierSource.Get(
+	        boost::bind(&Slave::OnVtoUpdate, this),
+	        mpTimerSrc
+	    )
 	);
 
 	/* Cause the slave to go through the null-unsol startup sequence */

@@ -31,12 +31,12 @@ namespace dnp
 {
 
 TransportLoopbackTestObject::TransportLoopbackTestObject(
-        boost::asio::io_service* apService,
-        IPhysicalLayerAsync* apPhys,
-        LinkConfig aCfgA,
-        LinkConfig aCfgB,
-        FilterLevel aLevel,
-        bool aImmediate) :
+    boost::asio::io_service* apService,
+    IPhysicalLayerAsync* apPhys,
+    LinkConfig aCfgA,
+    LinkConfig aCfgB,
+    FilterLevel aLevel,
+    bool aImmediate) :
 
 	LogTester(aImmediate),
 	AsyncTestObjectASIO(apService),

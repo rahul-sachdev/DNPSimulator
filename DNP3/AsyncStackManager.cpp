@@ -102,7 +102,7 @@ void AsyncStackManager::AddSerial(const std::string& arName, PhysLayerSettings a
 }
 
 ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel, IDataObserver* apPublisher,
-                const MasterStackConfig& arCfg)
+        const MasterStackConfig& arCfg)
 {
 	this->ThrowIfAlreadyShutdown();
 	LinkChannel* pChannel = this->GetOrCreateChannel(arPortName);
@@ -123,7 +123,7 @@ ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, c
 }
 
 IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel, ICommandAcceptor* apCmdAcceptor,
-                const SlaveStackConfig& arCfg)
+        const SlaveStackConfig& arCfg)
 {
 	this->ThrowIfAlreadyShutdown();
 	LinkChannel* pChannel = this->GetOrCreateChannel(arPortName);
