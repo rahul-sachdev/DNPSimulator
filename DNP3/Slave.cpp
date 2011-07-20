@@ -383,9 +383,12 @@ void Slave::HandleWriteTimeDate(HeaderReadIterator& arHWI)
 
 	mIIN.SetNeedTime(false);
 
-	LogEntry le(LEV_EVENT, mpLogger->GetName(), LOCATION,
-			"Time synchronized with master", TIME_SYNC_UPDATED);
-	mpLogger->Log(le);
+	if(mpLogger->IsEnabled(LEV_EVENT)) {
+		LogEntry le(LEV_EVENT, mpLogger->GetName(), LOCATION,
+		            "Time synchronized with master", TIME_SYNC_UPDATED);
+		le.AddValue("MILLISEC_SINCE_EPOCH", val);
+		mpLogger->Log(le);
+	}
 }
 
 void Slave::HandleWrite(const APDU& arRequest)

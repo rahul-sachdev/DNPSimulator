@@ -73,7 +73,7 @@ private:
 	IPhysicalLayerAsync* mpPhysical;
 	ITimerSource* mpTimerSrc;
 
-	ITimer* mpInfiniteTimer;	
+	ITimer* mpInfiniteTimer;
 
 	std::string mBanner;
 	bool mIOMode;

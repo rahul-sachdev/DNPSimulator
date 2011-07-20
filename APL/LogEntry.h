@@ -61,9 +61,11 @@ public:
 
 	bool GetValue(const std::string& arKey, std::string& arValue) const;
 	bool GetValue(const std::string& arKey, int& arValue) const;
+	bool GetValue(const std::string& arKey, boost::int64_t& arValue) const;
 
-	void AddValue(const std::string& arKey, int aValue);
 	void AddValue(const std::string& arKey, const std::string& arValue);
+	void AddValue(const std::string& arKey, int aValue);
+	void AddValue(const std::string& arKey, boost::int64_t aValue);
 
 private:
 

@@ -50,6 +50,11 @@ void LogEntry :: AddValue(const std::string& arKey, int aValue)
 	this->AddAnyValue(arKey, aValue);
 }
 
+void LogEntry :: AddValue(const std::string& arKey, boost::int64_t aValue)
+{
+	this->AddAnyValue(arKey, aValue);
+}
+
 void LogEntry :: AddValue(const std::string& arKey, const std::string& arValue)
 {
 	this->AddKeyValue(arKey, arValue);
@@ -68,6 +73,11 @@ bool LogEntry :: GetValue(const std::string& arKey, std::string& arValue) const
 bool LogEntry :: GetValue(const std::string& arKey, int& arValue) const
 {
 	return GetAnyValue<int>(arKey, arValue);
+}
+
+bool LogEntry :: GetValue(const std::string& arKey, boost::int64_t& arValue) const
+{
+	return GetAnyValue<boost::int64_t>(arKey, arValue);
 }
 
 string LogEntry :: LogString(bool aUseLocation) const

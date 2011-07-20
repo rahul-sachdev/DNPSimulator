@@ -269,6 +269,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\MockLogSubscriber.h"
+					>
+				</File>
+				<File
 					RelativePath=".\MockNodeSaver.h"
 					>
 				</File>

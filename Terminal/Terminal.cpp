@@ -309,7 +309,7 @@ retcode Terminal::HandleDefault(std::vector<std::string>&)
 }
 
 retcode Terminal::HandleQuit(std::vector<std::string>&)
-{	
+{
 	this->mpInfiniteTimer->Cancel();
 	this->Shutdown();
 	return SUCCESS;
