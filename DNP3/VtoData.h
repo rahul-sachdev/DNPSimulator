@@ -29,9 +29,9 @@ namespace dnp
 {
 
 enum VtoDataType {
-    VTODT_REMOTE_CLOSED,
-    VTODT_REMOTE_OPENED,
-    VTODT_DATA
+	VTODT_REMOTE_CLOSED,
+	VTODT_REMOTE_OPENED,
+	VTODT_DATA
 };
 
 std::string ToString(VtoDataType aType);

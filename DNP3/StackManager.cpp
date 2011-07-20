@@ -61,7 +61,7 @@ void StackManager::AddSerial(const std::string& arName, PhysLayerSettings s, Ser
 }
 
 ICommandAcceptor* StackManager::AddMaster(const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel,
-        IDataObserver* apPublisher, const MasterStackConfig& arCfg)
+                IDataObserver* apPublisher, const MasterStackConfig& arCfg)
 {
 	return mpImpl->AddMaster(arPortName, arStackName, aLevel, apPublisher, arCfg);
 }

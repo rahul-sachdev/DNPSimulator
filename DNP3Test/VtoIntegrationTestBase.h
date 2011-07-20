@@ -49,11 +49,11 @@ class VtoIntegrationTestBase : public LogTester, protected Loggable
 {
 public:
 	VtoIntegrationTestBase(
-	    bool clientOnSlave = true,
-	    bool aImmediateOutput = false,
-	    bool aLogToFile = false,
-	    FilterLevel level = LEV_INFO,
-	    boost::uint16_t port = MACRO_PORT_VALUE);
+	        bool clientOnSlave = true,
+	        bool aImmediateOutput = false,
+	        bool aLogToFile = false,
+	        FilterLevel level = LEV_INFO,
+	        boost::uint16_t port = MACRO_PORT_VALUE);
 
 	Logger* mpMainLogger;
 	std::auto_ptr<LogToFile> mpLtf;

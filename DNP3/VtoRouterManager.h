@@ -73,9 +73,9 @@ public:
 	VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerSource* apPhysSrc);
 
 	VtoRouter* StartRouter(
-	    const std::string& arPortName,
-	    const VtoRouterSettings& arSettings,
-	    IVtoWriter* apWriter);
+	        const std::string& arPortName,
+	        const VtoRouterSettings& arSettings,
+	        IVtoWriter* apWriter);
 
 	void StopRouter(IVtoWriter* apWriter, boost::uint8_t aVtoChannelId);
 	void StopAllRoutersOnWriter(IVtoWriter* apWriter);
