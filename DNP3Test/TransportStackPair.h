@@ -43,12 +43,12 @@ class TransportStackPair
 {
 public:
 	TransportStackPair(
-	    LinkConfig aClientCfg,
-	    LinkConfig aServerCfg,
-	    Logger* apLogger,
-	    boost::asio::io_service* apService,
-	    ITimerSource* apTimerSrc,
-	    boost::uint16_t aPort);
+	        LinkConfig aClientCfg,
+	        LinkConfig aServerCfg,
+	        Logger* apLogger,
+	        boost::asio::io_service* apService,
+	        ITimerSource* apTimerSrc,
+	        boost::uint16_t aPort);
 
 	void Start();
 

@@ -31,11 +31,11 @@ class VtoLoopbackTestStack : public VtoIntegrationTestBase
 {
 public:
 	VtoLoopbackTestStack(
-	    bool clientOnSlave = true,
-	    bool aImmediateOutput = false,
-	    bool aLogToFile = false,
-	    FilterLevel level = LEV_INFO,
-	    boost::uint16_t port = MACRO_PORT_VALUE) :
+	        bool clientOnSlave = true,
+	        bool aImmediateOutput = false,
+	        bool aLogToFile = false,
+	        FilterLevel level = LEV_INFO,
+	        boost::uint16_t port = MACRO_PORT_VALUE) :
 
 		VtoIntegrationTestBase(clientOnSlave, aImmediateOutput, aLogToFile, level, port),
 		loopback(mLog.GetLogger(level, "loopback"), &server, &timerSource),

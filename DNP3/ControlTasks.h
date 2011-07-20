@@ -47,9 +47,9 @@ protected:
 
 	// This multi request task requires state
 	enum State {
-	    SELECT,
-	    OPERATE,
-	    INVALID
+		SELECT,
+		OPERATE,
+		INVALID
 	};
 
 	State mState;

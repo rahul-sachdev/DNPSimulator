@@ -54,11 +54,11 @@ void MasterSchedule::ResetStartupTasks()
 void MasterSchedule::Init(const MasterConfig& arCfg, Master* apMaster)
 {
 	AsyncTaskBase* pIntegrity = mTracking.Add(
-	                                arCfg.IntegrityRate,
-	                                arCfg.TaskRetryRate,
-	                                AMP_POLL,
-	                                bind(&Master::IntegrityPoll, apMaster, _1),
-	                                "Integrity Poll");
+	                                    arCfg.IntegrityRate,
+	                                    arCfg.TaskRetryRate,
+	                                    AMP_POLL,
+	                                    bind(&Master::IntegrityPoll, apMaster, _1),
+	                                    "Integrity Poll");
 
 	pIntegrity->SetFlags(ONLINE_ONLY_TASKS | START_UP_TASKS);
 
@@ -74,29 +74,29 @@ void MasterSchedule::Init(const MasterConfig& arCfg, Master* apMaster)
 		                           false,
 		                           PC_ALL_EVENTS);
 		AsyncTaskBase* pUnsolDisable = mTracking.Add(
-		                                   -1,
-		                                   arCfg.TaskRetryRate,
-		                                   AMP_UNSOL_CHANGE,
-		                                   handler,
-		                                   "Unsol Disable");
+		                                       -1,
+		                                       arCfg.TaskRetryRate,
+		                                       AMP_UNSOL_CHANGE,
+		                                       handler,
+		                                       "Unsol Disable");
 
 		pUnsolDisable->SetFlags(ONLINE_ONLY_TASKS | START_UP_TASKS);
 		pIntegrity->AddDependency(pUnsolDisable);
 
 		if (arCfg.EnableUnsol) {
 			TaskHandler handler = bind(
-			                          &Master::ChangeUnsol,
-			                          apMaster,
-			                          _1,
-			                          true,
-			                          arCfg.UnsolClassMask);
+			                              &Master::ChangeUnsol,
+			                              apMaster,
+			                              _1,
+			                              true,
+			                              arCfg.UnsolClassMask);
 
 			AsyncTaskBase* pUnsolEnable = mTracking.Add(
-			                                  -1,
-			                                  arCfg.TaskRetryRate,
-			                                  AMP_UNSOL_CHANGE,
-			                                  handler,
-			                                  "Unsol Enable");
+			                                      -1,
+			                                      arCfg.TaskRetryRate,
+			                                      AMP_UNSOL_CHANGE,
+			                                      handler,
+			                                      "Unsol Enable");
 
 			pUnsolEnable->SetFlags(ONLINE_ONLY_TASKS | START_UP_TASKS);
 			pUnsolEnable->AddDependency(pIntegrity);
@@ -109,11 +109,11 @@ void MasterSchedule::Init(const MasterConfig& arCfg, Master* apMaster)
 	 */
 	BOOST_FOREACH(ExceptionScan e, arCfg.mScans) {
 		AsyncTaskBase* pEventScan = mTracking.Add(
-		                                e.ScanRate,
-		                                arCfg.TaskRetryRate,
-		                                AMP_POLL,
-		                                bind(&Master::EventPoll, apMaster, _1, e.ClassMask),
-		                                "Event Scan");
+		                                    e.ScanRate,
+		                                    arCfg.TaskRetryRate,
+		                                    AMP_POLL,
+		                                    bind(&Master::EventPoll, apMaster, _1, e.ClassMask),
+		                                    "Event Scan");
 
 		pEventScan->SetFlags(ONLINE_ONLY_TASKS);
 		pEventScan->AddDependency(pIntegrity);
@@ -121,24 +121,24 @@ void MasterSchedule::Init(const MasterConfig& arCfg, Master* apMaster)
 
 	/* Tasks are executed when the master is is idle */
 	mpCommandTask = mTracking.AddContinuous(
-	                    AMP_COMMAND,
-	                    boost::bind(&Master::ProcessCommand, apMaster, _1),
-	                    "Command");
+	                        AMP_COMMAND,
+	                        boost::bind(&Master::ProcessCommand, apMaster, _1),
+	                        "Command");
 
 	mpTimeTask = mTracking.AddContinuous(
-	                 AMP_TIME_SYNC,
-	                 boost::bind(&Master::SyncTime, apMaster, _1),
-	                 "TimeSync");
+	                     AMP_TIME_SYNC,
+	                     boost::bind(&Master::SyncTime, apMaster, _1),
+	                     "TimeSync");
 
 	mpClearRestartTask = mTracking.AddContinuous(
-	                         AMP_CLEAR_RESTART,
-	                         boost::bind(&Master::WriteIIN, apMaster, _1),
-	                         "Clear IIN");
+	                             AMP_CLEAR_RESTART,
+	                             boost::bind(&Master::WriteIIN, apMaster, _1),
+	                             "Clear IIN");
 
 	mpVtoTransmitTask = mTracking.AddContinuous(
-	                        AMP_VTO_TRANSMIT,
-	                        boost::bind(&Master::TransmitVtoData, apMaster, _1),
-	                        "Buffer VTO Data");
+	                            AMP_VTO_TRANSMIT,
+	                            boost::bind(&Master::TransmitVtoData, apMaster, _1),
+	                            "Buffer VTO Data");
 
 	mpVtoTransmitTask->SetFlags(ONLINE_ONLY_TASKS);
 	mpTimeTask->SetFlags(ONLINE_ONLY_TASKS);

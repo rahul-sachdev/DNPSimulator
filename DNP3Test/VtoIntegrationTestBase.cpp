@@ -31,11 +31,11 @@ namespace dnp
 
 
 VtoIntegrationTestBase::VtoIntegrationTestBase(
-    bool clientOnSlave,
-    bool aImmediateOutput,
-    bool aLogToFile,
-    FilterLevel level,
-    boost::uint16_t port) :
+        bool clientOnSlave,
+        bool aImmediateOutput,
+        bool aLogToFile,
+        FilterLevel level,
+        boost::uint16_t port) :
 
 	LogTester(),
 	Loggable(mpTestLogger),

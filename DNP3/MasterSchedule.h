@@ -80,17 +80,17 @@ private:
 	TrackingTaskGroup mTracking;
 
 	enum MasterPriority {
-	    AMP_VTO_TRANSMIT,
-	    AMP_POLL,
-	    AMP_TIME_SYNC,
-	    AMP_CLEAR_RESTART,
-	    AMP_UNSOL_CHANGE,
-	    AMP_COMMAND
+		AMP_VTO_TRANSMIT,
+		AMP_POLL,
+		AMP_TIME_SYNC,
+		AMP_CLEAR_RESTART,
+		AMP_UNSOL_CHANGE,
+		AMP_COMMAND
 	};
 
 	enum TaskTypes {
-	    ONLINE_ONLY_TASKS = 1,
-	    START_UP_TASKS = 2
+		ONLINE_ONLY_TASKS = 1,
+		START_UP_TASKS = 2
 	};
 };
 

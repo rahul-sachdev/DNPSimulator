@@ -77,11 +77,11 @@ public:
 protected:
 
 	AsyncTaskBase(
-	    int aPriority,
-	    const TaskHandler& arCallback,
-	    AsyncTaskGroup* apGroup,
-	    const boost::posix_time::ptime& arInitialTime,
-	    const std::string& arName);
+	        int aPriority,
+	        const TaskHandler& arCallback,
+	        AsyncTaskGroup* apGroup,
+	        const boost::posix_time::ptime& arInitialTime,
+	        const std::string& arName);
 
 	// optional NVII function for special bookkeeping
 	virtual void _OnComplete(bool aSuccess) {}
