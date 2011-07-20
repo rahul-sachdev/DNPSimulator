@@ -65,6 +65,10 @@ public:
 		return mName;
 	}
 
+	void AddPhysicalLayerObserver(IPhysicalLayerObserver* apObserver) {
+		this->AddObserver(apObserver);
+	}
+
 	AsyncTaskGroup* GetGroup() {
 		return mpTaskGroup;
 	}

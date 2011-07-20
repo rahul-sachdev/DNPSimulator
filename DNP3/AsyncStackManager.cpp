@@ -279,17 +279,15 @@ LinkChannel* AsyncStackManager::CreateChannel(const std::string& arName)
 	pChannelLogger->SetVarName(arName);
 	AsyncTaskGroup* pGroup = mScheduler.CreateNewGroup();
 
-	//boost::shared_ptr<LinkChannel> pChannel(new LinkChannel(pChannelLogger, arName, &mTimerSrc, pPhys, pGroup, s.RetryTimeout));
 	LinkChannel* pChannel = new LinkChannel(pChannelLogger, arName, &mTimerSrc, pPhys, pGroup, s.RetryTimeout);
+	if(s.mpObserver) pChannel->AddPhysicalLayerObserver(s.mpObserver);
 	mChannelNameToChannel[arName] = pChannel;
-	//return pChannel.get();
 	return pChannel;
 }
 
 LinkChannel* AsyncStackManager::GetChannelMaybeNull(const std::string& arName)
 {
 	ChannelToChannelMap::iterator i = mChannelNameToChannel.find(arName);
-	//return (i == mChannelNameToChannel.end()) ? NULL : i->second.get();
 	return (i == mChannelNameToChannel.end()) ? NULL : i->second;
 }
 
