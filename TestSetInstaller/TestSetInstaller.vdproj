@@ -33,8 +33,20 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_502B381CF94E48B0BA25C3F768118D99"
+        "OwnerKey" = "8:_5EBFC55EE9B5462F9BB5D4F8BFEEB2C7"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_515D6B07AD824454B6DDFD3AD33D108E"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_5EBFC55EE9B5462F9BB5D4F8BFEEB2C7"
+        "OwnerKey" = "8:_6A312EAB7E9140DC81E3439C767051CA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -354,14 +366,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DNP3 Test Set"
-        "ProductCode" = "8:{680D0FB5-2E33-4078-BABE-C1DAC7A9C5E3}"
-        "PackageCode" = "8:{CED7715C-132E-44F9-A4AB-A986D14C17E2}"
+        "ProductCode" = "8:{5DC20A08-B5ED-4CF5-B664-CD344F416148}"
+        "PackageCode" = "8:{F799DFEF-B719-4E67-A395-B0BCB4C3CED3}"
         "UpgradeCode" = "8:{F07912E9-9BAF-4F92-ADE2-8C169AAFB16E}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.9.3"
+        "ProductVersion" = "8:1.0.0"
         "Manufacturer" = "8:http://code.google.com/p/dnp3/"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -965,12 +977,40 @@
         }
         "MergeModule"
         {
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_502B381CF94E48B0BA25C3F768118D99"
+            {
+            "UseDynamicProperties" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "SourcePath" = "8:policy_8_0_microsoft_vc80_debugcrt_x86.msm"
+                "Properties"
+                {
+                }
+            "LanguageId" = "3:0"
+            "Exclude" = "11:FALSE"
+            "Folder" = "8:"
+            "Feature" = "8:"
+            "IsolateTo" = "8:"
+            }
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_5EBFC55EE9B5462F9BB5D4F8BFEEB2C7"
+            {
+            "UseDynamicProperties" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "SourcePath" = "8:Microsoft_VC80_DebugCRT_x86.msm"
+                "Properties"
+                {
+                }
+            "LanguageId" = "3:0"
+            "Exclude" = "11:FALSE"
+            "Folder" = "8:"
+            "Feature" = "8:"
+            "IsolateTo" = "8:"
+            }
         }
         "ProjectOutput"
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_6A312EAB7E9140DC81E3439C767051CA"
             {
-            "SourcePath" = "8:..\\testset\\release\\TestSet.exe"
+            "SourcePath" = "8:..\\TestSet\\Debug\\TestSet.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_9C472356ABDA4F198CFB74D8416F04A0"
@@ -996,6 +1036,9 @@
                 {
                 }
             }
+        }
+        "VJSharpPlugin"
+        {
         }
     }
 }

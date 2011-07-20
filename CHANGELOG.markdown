@@ -1,7 +1,7 @@
 Change Log
 ==============
 
-### 0.9.5 ###
+### 1.0.0 ###
 - Migrated to Boost 1.47.0
 - Added Virtual Terminal Object (VTO) support with standard implementation and experimental stream support
 - Migrated all external numeric types to use boost type definitions for interoperability
