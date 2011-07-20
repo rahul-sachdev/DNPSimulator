@@ -125,10 +125,10 @@ enum DNPErrorCodes {
 	DLERR_PRI_IS_FLOODING,
 
 	// General Errors
-	ERR_INDEX_OUT_OF_BOUNDS
+	ERR_INDEX_OUT_OF_BOUNDS,
 
 	// Non-error Log Items
-	TIME_SYNC_OCCURRED
+	TIME_SYNC_UPDATED
 
 };
 

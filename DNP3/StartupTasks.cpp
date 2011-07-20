@@ -124,7 +124,6 @@ TaskResult TimeSync::_OnFinalResponse(const APDU& arAPDU)
 		return TR_CONTINUE;
 	}
 	else {
-
 		return TR_SUCCESS;
 	}
 }

@@ -382,6 +382,10 @@ void Slave::HandleWriteTimeDate(HeaderReadIterator& arHWI)
 	mpTime->SetTime(val);
 
 	mIIN.SetNeedTime(false);
+
+	LogEntry le(LEV_EVENT, mpLogger->GetName(), LOCATION,
+			"Time synchronized with master", TIME_SYNC_UPDATED);
+	mpLogger->Log(le);
 }
 
 void Slave::HandleWrite(const APDU& arRequest)
