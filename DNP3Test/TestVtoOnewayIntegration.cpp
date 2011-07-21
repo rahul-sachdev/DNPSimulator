@@ -30,11 +30,11 @@ class VtoOnewayTestStack : public VtoIntegrationTestBase
 {
 public:
 	VtoOnewayTestStack(
-	        bool clientOnSlave = true,
-	        bool aImmediateOutput = false,
-	        bool aLogToFile = false,
-	        FilterLevel level = LEV_INFO,
-	        boost::uint16_t port = MACRO_PORT_VALUE) :
+	    bool clientOnSlave = true,
+	    bool aImmediateOutput = false,
+	    bool aLogToFile = false,
+	    FilterLevel level = LEV_INFO,
+	    boost::uint16_t port = MACRO_PORT_VALUE) :
 
 		VtoIntegrationTestBase(clientOnSlave, aImmediateOutput, aLogToFile, level, port),
 		local(mLog.GetLogger(level, "local-mock-phys-monitor"), &client, &timerSource, 500),
