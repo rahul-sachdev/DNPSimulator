@@ -263,6 +263,7 @@ Requirements:
     * boost::system                 (required)
     * boost::thread                 (required)
     * Boost Unit Test Framework     (required)
+  - docbook v0.6.14 or later        (required if running 'make docs')
   - lcov                            (required if running 'make lcov')
   - libtool                         (required)
 
@@ -285,6 +286,17 @@ When ready, you can install the libraries, headers, and programs onto
 your system:
 
   make install
+
+If you want to generate the book "OpenDNP3 Library: The Definitive
+Guide," use one or more of the following make target after configuring
+the system:
+
+  make docs
+  make docs-html
+  make docs-pdf
+
+The resulting book will be placed in a subfolder inside of the 'docs'
+folder.
 
 If you want to build the doxygen code documentation, use the following
 make target after configuring the system:
