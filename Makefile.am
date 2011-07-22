@@ -470,14 +470,25 @@ dnp3test_SOURCES = \
 
 ASTYLE=astyle --options=config/astyle.cfg
 
+DOCBOOK2HTML=docbook2html
+DOCBOOK2PDF=docbook2pdf
+
 astyle:
 	${ASTYLE}   ${srcdir}/APL/*.cpp            ${srcdir}/APL/*.h
 	${ASTYLE}   ${srcdir}/APLTestTools/*.cpp   ${srcdir}/APLTestTools/*.h
 	${ASTYLE}   ${srcdir}/DNP3/*.cpp           ${srcdir}/DNP3/*.h
 	${ASTYLE}   ${srcdir}/DNP3Test/*.cpp       ${srcdir}/DNP3Test/*.h
 
+docs: docs-html docs-pdf
+
+docs-html:
+	${DOCBOOK2HTML} -o docs/html/ docs/main.xml
+
+docs-pdf:
+	${DOCBOOK2PDF} -o docs/pdf/ docs/main.xml
+
 include config/autotools/mk/doxygen.mak
 include config/autotools/mk/lcov.mak
 
-.PHONY : astyle lcov lcov-report lcov-reset doxygen-run doxygen-doc $(DX_PS_GOAL) $(DX_PDF_GOAL)
+.PHONY : astyle docs docs-html docs-pdf lcov lcov-report lcov-reset doxygen-run doxygen-doc $(DX_PS_GOAL) $(DX_PDF_GOAL)
 
