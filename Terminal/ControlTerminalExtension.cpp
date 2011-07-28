@@ -22,18 +22,17 @@ void ControlTerminalExtension::_BindToTerminal(ITerminal* apTerminal)
 	CommandNode cmd;
 
 	cmd.mName = "issue bo";
-	cmd.mUsage = "issue bo <index> <code> <on time> <off time> <count> \r\n";
-	cmd.mUsage += "code = <pon | lon | loff | pclose | ptrip>";
+	cmd.mUsage  = "issue bo <index> lon|loff\r\n";
+	cmd.mUsage += "       issue bo <index> pon|pclose|ptrip [<on time>] [<off time>] [<count>]";
 	cmd.mDesc = "Issues a binary output command. ";
 	cmd.mHandler = boost::bind(&ControlTerminalExtension::HandleIssueBO, this, _1);
 	apTerminal->BindCommand(cmd, "issue bo");
 
 	cmd.mName = "issue st";
-	cmd.mUsage = "issue st <index> <value>";
-	cmd.mDesc = "Issues a setpoint request. If value has a \'.\' it is treated as a double.";
+	cmd.mUsage = "issue st <index> <integer|double>";
+	cmd.mDesc = "Issues a setpoint request. If the value contains a \'.\', it is treated as a double.";
 	cmd.mHandler = boost::bind(&ControlTerminalExtension::HandleIssueST, this, _1);
 	apTerminal->BindCommand(cmd, "issue st");
-
 }
 
 void ControlTerminalExtension::WaitForResponse()
@@ -128,7 +127,6 @@ retcode ControlTerminalExtension::HandleIssueBO(std::vector<std::string>& arArgs
 	WaitForResponse();
 	return SUCCESS;
 }
-
 
 }
 
