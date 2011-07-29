@@ -949,6 +949,10 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Function"
+				>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

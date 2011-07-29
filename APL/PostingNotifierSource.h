@@ -35,7 +35,7 @@ class PostingNotifierSource
 public:
 	~PostingNotifierSource();
 
-	INotifier* Get(const ExpirationHandler&, ITimerSource*);
+	INotifier* Get(const FunctionVoidZero&, ITimerSource*);
 
 private:
 	std::vector< boost::shared_ptr<PostingNotifier> > mNotifiers;

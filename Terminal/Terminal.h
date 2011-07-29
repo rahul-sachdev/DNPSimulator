@@ -40,7 +40,7 @@ public:
 
 	retcode ProcessLine(const std::string& arLine);
 
-	void Post(const ExpirationHandler& arHandler);
+	void Post(const FunctionVoidZero& arHandler);
 
 	void SetRedirect(const RedirectFunc&);
 	void ClearRedirect();

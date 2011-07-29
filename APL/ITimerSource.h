@@ -22,15 +22,10 @@
 #include "Types.h"
 #include "TimeTypes.h"
 #include "ITimer.h"
-#include "DeleteAny.h"
-
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
+#include "Function.h"
 
 namespace apl
 {
-
-typedef boost::function<void ()> ExpirationHandler;
 
 /**
  * Interface for posting events to a queue.  Events can be posted for
@@ -54,30 +49,18 @@ public:
 	ITimer* StartInfinite();
 
 	/** Returns a new timer based on a relative time */
-	virtual ITimer* Start(millis_t, const ExpirationHandler&) = 0;
+	virtual ITimer* Start(millis_t, const FunctionVoidZero&) = 0;
 
 	/** Returns a new timer based on an absolute time */
-	virtual ITimer* Start(const boost::posix_time::ptime&, const ExpirationHandler&) = 0;
+	virtual ITimer* Start(const boost::posix_time::ptime&, const FunctionVoidZero&) = 0;
 
 	/** Thread-safe way to post an event to handled asynchronously */
-	virtual void Post(const ExpirationHandler&) = 0;
-
-	/** Delete any type via a Post */
-	template <class T>
-	void DeleteViaPost(T* apType);
-
+	virtual void Post(const FunctionVoidZero&) = 0;	
 
 private:
 	static void NullActionForInfiniteTimer();
 
 };
-
-/** Helper functions */
-template <class T>
-void ITimerSource::DeleteViaPost(T* apType)
-{
-	this->Post(boost::bind(&DeleteAny<T>, apType));
-}
 
 }
 

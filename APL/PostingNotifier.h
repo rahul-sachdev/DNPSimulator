@@ -29,7 +29,7 @@ class PostingNotifier : public INotifier
 {
 public:
 
-	PostingNotifier(ITimerSource* apTimerSrc, const ExpirationHandler& arHandler);
+	PostingNotifier(ITimerSource* apTimerSrc, const FunctionVoidZero& arHandler);
 
 	virtual ~PostingNotifier() {}
 
@@ -37,7 +37,7 @@ public:
 
 private:
 	ITimerSource* mpTimerSrc;
-	ExpirationHandler mHandler;
+	FunctionVoidZero mHandler;
 };
 
 }

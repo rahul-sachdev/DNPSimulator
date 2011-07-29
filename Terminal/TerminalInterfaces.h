@@ -111,7 +111,7 @@ public:
 	virtual void QueueSend(const std::string& arData, bool aLog = true) = 0;
 	virtual void SetRedirect(const RedirectFunc&) = 0;
 	virtual void ClearRedirect() = 0;
-	virtual void Post(const ExpirationHandler& arHandler) = 0;
+	virtual void Post(const FunctionVoidZero& arHandler) = 0;
 
 	const static char EOL[3];
 	const static char CLEAR_SRC[2];
@@ -131,7 +131,7 @@ public:
 		this->_BindToTerminal(apTerminal);
 	}
 
-	void Post(const ExpirationHandler& arHandler) {
+	void Post(const FunctionVoidZero& arHandler) {
 		mpTerminal->Post(arHandler);
 	}
 

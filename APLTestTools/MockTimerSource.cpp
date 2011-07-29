@@ -42,7 +42,7 @@ MockTimerSource::~MockTimerSource()
 bool MockTimerSource::DispatchOne()
 {
 	if(mPostQueue.size() > 0) {
-		ExpirationHandler callback = mPostQueue.front();
+		FunctionVoidZero callback = mPostQueue.front();
 		mPostQueue.pop_front();
 		callback();
 		return true;
@@ -74,19 +74,19 @@ size_t MockTimerSource::Dispatch(size_t aMaximum)
 	return num;
 }
 
-void MockTimerSource::Post(const ExpirationHandler& arHandler)
+void MockTimerSource::Post(const FunctionVoidZero& arHandler)
 {
 	if(mPostIsSynchronous) arHandler();
 	else mPostQueue.push_back(arHandler);
 }
 
-ITimer* MockTimerSource::Start(millis_t aDelay, const ExpirationHandler& arCallback)
+ITimer* MockTimerSource::Start(millis_t aDelay, const FunctionVoidZero& arCallback)
 {
 	ptime t =  microsec_clock::universal_time() + milliseconds(aDelay);
 	return Start(t, arCallback);
 }
 
-ITimer* MockTimerSource::Start(const boost::posix_time::ptime& arTime, const ExpirationHandler& arCallback)
+ITimer* MockTimerSource::Start(const boost::posix_time::ptime& arTime, const FunctionVoidZero& arCallback)
 {
 	MockTimer* pTimer;
 	if(mIdle.size() > 0) {
@@ -115,7 +115,7 @@ void MockTimerSource::Cancel(ITimer* apTimer)
 	}
 }
 
-MockTimer::MockTimer(MockTimerSource* apSource, const boost::posix_time::ptime& arTime, const ExpirationHandler& arCallback) :
+MockTimer::MockTimer(MockTimerSource* apSource, const boost::posix_time::ptime& arTime, const FunctionVoidZero& arCallback) :
 	mTime(arTime),
 	mpSource(apSource),
 	mCallback(arCallback)
