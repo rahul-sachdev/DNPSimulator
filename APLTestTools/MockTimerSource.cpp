@@ -80,6 +80,12 @@ void MockTimerSource::Post(const FunctionVoidZero& arHandler)
 	else mPostQueue.push_back(arHandler);
 }
 
+void MockTimerSource::PostSync(const FunctionVoidZero& arHandler)
+{
+	this->Dispatch();
+	arHandler();
+}
+
 ITimer* MockTimerSource::Start(millis_t aDelay, const FunctionVoidZero& arCallback)
 {
 	ptime t =  microsec_clock::universal_time() + milliseconds(aDelay);

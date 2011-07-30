@@ -20,6 +20,7 @@
 #include "TimerSourceASIO.h"
 
 #include "TimerASIO.h"
+#include "AsyncResult.h"
 
 #include <boost/asio.hpp>
 #include <boost/foreach.hpp>
@@ -58,6 +59,29 @@ ITimer* TimerSourceASIO::Start(const boost::posix_time::ptime& arTime, const Fun
 void TimerSourceASIO::Post(const FunctionVoidZero& arHandler)
 {
 	mpService->post(arHandler);
+}
+
+void TimerSourceASIO::PostSync(const FunctionVoidZero& arHandler)
+{
+	AsyncResult ar;
+	this->Post(boost::bind(&TimerSourceASIO::SafeExecute, arHandler, &ar));
+	ar.Wait();
+}
+
+void TimerSourceASIO::SafeExecute(const FunctionVoidZero& arFunc, AsyncResult* apResult)
+{
+	try {
+		arFunc();
+		apResult->Success();
+	}
+	catch(Exception ex) {
+		apResult->Failure(boost::bind(&TimerSourceASIO::Rethrow, ex));
+	}
+}
+
+void TimerSourceASIO::Rethrow(const Exception& arException)
+{
+	throw arException;
 }
 
 TimerASIO* TimerSourceASIO::GetTimer()

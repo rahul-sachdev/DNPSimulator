@@ -42,6 +42,7 @@ public:
 	ITimer* Start(millis_t, const FunctionVoidZero&);
 	ITimer* Start(const boost::posix_time::ptime&, const FunctionVoidZero&);
 	void Post(const FunctionVoidZero&);
+	void PostSync(const FunctionVoidZero&);
 
 	/** Turns the auto-post feature on/off. When Auto post is on, Post() is executed synchronously */
 	void SetAutoPost(bool aAutoPost) {
@@ -57,7 +58,7 @@ public:
 
 		@return the number of events dispatched
 	*/
-	size_t Dispatch(size_t aMaximum = 100);
+	size_t Dispatch(size_t aMaximum = std::numeric_limits<size_t>::max());
 
 	/** @returns The number of active, pending timers */
 	size_t NumActive() {

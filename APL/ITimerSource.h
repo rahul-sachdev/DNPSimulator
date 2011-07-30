@@ -46,7 +46,11 @@ class ITimerSource
 public:
 	virtual ~ITimerSource() {}
 
+	/** Returns a timer that will never expire */
 	ITimer* StartInfinite();
+
+	/** Block until all previous operations have been executed */
+	void Sync();
 
 	/** Returns a new timer based on a relative time */
 	virtual ITimer* Start(millis_t, const FunctionVoidZero&) = 0;
@@ -56,9 +60,12 @@ public:
 
 	/** Thread-safe way to post an event to handled asynchronously */
 	virtual void Post(const FunctionVoidZero&) = 0;	
+	
+	/** Thread safe way to execute a function synchronously */
+	virtual void PostSync(const FunctionVoidZero&) = 0;
 
 private:
-	static void NullActionForInfiniteTimer();
+	static void NullAction() {}
 
 };
 

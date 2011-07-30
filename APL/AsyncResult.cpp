@@ -16,22 +16,43 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "ITimerSource.h"
 
-#include <boost/bind.hpp>
+#include "AsyncResult.h"
 
 namespace apl
 {
 
-ITimer* ITimerSource::StartInfinite()
+AsyncResult::AsyncResult() : mIsComplete(false)
 {
-	boost::posix_time::ptime t(boost::date_time::max_date_time);
-	return this->Start(t, boost::bind(&ITimerSource::NullAction));
+			
 }
 
-void ITimerSource::Sync()
+void AsyncResult::Complete()
 {
-	this->PostSync(boost::bind(&ITimerSource::NullAction));
+	if(mIsComplete) throw InvalidStateException(LOCATION, "Async result is already complete");
+	mIsComplete = true;
+}
+
+void AsyncResult::Success()
+{
+	CriticalSection cs(&mLock);	
+	this->Complete();
+	cs.Broadcast();
+}
+
+void AsyncResult::Failure(const FunctionVoidZero& arFun)
+{
+	CriticalSection cs(&mLock);
+	this->Complete();
+	mRethrow = arFun;
+	cs.Broadcast();
+}
+
+void AsyncResult::Wait()
+{
+	CriticalSection cs(&mLock);
+	while(!mIsComplete) cs.Wait();
+	if(mRethrow) mRethrow();
 }
 
 }

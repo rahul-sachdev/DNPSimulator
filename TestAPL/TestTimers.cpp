@@ -24,6 +24,7 @@
 #include <APL/TimerSourceASIO.h>
 #include <APL/Threadable.h>
 #include <APL/Thread.h>
+#include <APL/Exception.h>
 
 #include <map>
 #include <boost/bind.hpp>
@@ -52,13 +53,22 @@ private:
 class MonotonicReceiver : private Threadable
 {
 public:
-	MonotonicReceiver(boost::asio::io_service* apSrv) :
+	MonotonicReceiver(boost::asio::io_service* apSrv, TimerSourceASIO* apTimerSrc) :
 		mLast(-1),
 		mNum(0),
 		mMonotonic(true),
 		mpSrv(apSrv),
+		mpTimerSrc(apTimerSrc),
+		mpInfinite(apTimerSrc->StartInfinite()),
 		mThread(this)
-	{}
+	{
+		mThread.Start();	
+	}
+
+	~MonotonicReceiver()
+	{
+		mpInfinite->Cancel();
+	}
 
 	void Receive(int aVal) {
 		if(aVal <= mLast) mMonotonic = false;
@@ -69,16 +79,10 @@ public:
 	bool IsMonotonic() {
 		return mMonotonic;
 	}
+
 	int Num() {
 		return mNum;
-	}
-
-	void Start() {
-		mThread.Start();
-	}
-	void Stop()  {
-		mThread.WaitForStop();
-	}
+	}	
 
 private:
 
@@ -87,8 +91,10 @@ private:
 	bool mMonotonic;
 
 	boost::asio::io_service* mpSrv;
+	TimerSourceASIO* mpTimerSrc;
+	ITimer* mpInfinite;
 
-	void Run()   {
+	void Run() {
 		mpSrv->run();
 	}
 
@@ -96,20 +102,35 @@ private:
 };
 
 BOOST_AUTO_TEST_SUITE(Timers)
+
+void ThrowInvalidStateException()
+{
+	throw InvalidStateException(LOCATION, "some bad state");
+}
+
+BOOST_AUTO_TEST_CASE(SyncRethrowsExceptions)
+{
+	boost::asio::io_service srv;
+	TimerSourceASIO ts(&srv);
+	MonotonicReceiver rcv(&srv, &ts);	
+
+	BOOST_REQUIRE_THROW(ts.PostSync(boost::bind(&ThrowInvalidStateException)), Exception);
+
+}
+
 BOOST_AUTO_TEST_CASE(TestOrderedDispatch)
 {
 	const int NUM = 10000;
 
 	boost::asio::io_service srv;
 	TimerSourceASIO ts(&srv);
-	MonotonicReceiver rcv(&srv);
+	MonotonicReceiver rcv(&srv, &ts);
 
 	for(int i = 0; i < NUM; ++i) {
 		ts.Post(boost::bind(&MonotonicReceiver::Receive, &rcv, i));
 	}
 
-	rcv.Start();
-	rcv.Stop();
+	ts.Sync();
 
 	BOOST_REQUIRE_EQUAL(NUM, rcv.Num());
 	BOOST_REQUIRE(rcv.IsMonotonic());
