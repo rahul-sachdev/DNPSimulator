@@ -20,6 +20,7 @@
 #include "TimerSourceASIO.h"
 
 #include "TimerASIO.h"
+#include "AsyncResult.h"
 
 #include <boost/asio.hpp>
 #include <boost/foreach.hpp>
@@ -39,7 +40,7 @@ TimerSourceASIO::~TimerSourceASIO()
 	}
 }
 
-ITimer* TimerSourceASIO::Start(millis_t aDelay, const ExpirationHandler& arCallback)
+ITimer* TimerSourceASIO::Start(millis_t aDelay, const FunctionVoidZero& arCallback)
 {
 	TimerASIO* pTimer = GetTimer();
 	pTimer->mTimer.expires_from_now(boost::posix_time::milliseconds(aDelay));
@@ -47,7 +48,7 @@ ITimer* TimerSourceASIO::Start(millis_t aDelay, const ExpirationHandler& arCallb
 	return pTimer;
 }
 
-ITimer* TimerSourceASIO::Start(const boost::posix_time::ptime& arTime, const ExpirationHandler& arCallback)
+ITimer* TimerSourceASIO::Start(const boost::posix_time::ptime& arTime, const FunctionVoidZero& arCallback)
 {
 	TimerASIO* pTimer = GetTimer();
 	pTimer->mTimer.expires_at(arTime);
@@ -55,9 +56,32 @@ ITimer* TimerSourceASIO::Start(const boost::posix_time::ptime& arTime, const Exp
 	return pTimer;
 }
 
-void TimerSourceASIO::Post(const ExpirationHandler& arHandler)
+void TimerSourceASIO::Post(const FunctionVoidZero& arHandler)
 {
 	mpService->post(arHandler);
+}
+
+void TimerSourceASIO::PostSync(const FunctionVoidZero& arHandler)
+{
+	AsyncResult ar;
+	this->Post(boost::bind(&TimerSourceASIO::SafeExecute, arHandler, &ar));
+	ar.Wait();
+}
+
+void TimerSourceASIO::SafeExecute(const FunctionVoidZero& arFunc, AsyncResult* apResult)
+{
+	try {
+		arFunc();
+		apResult->Success();
+	}
+	catch(Exception ex) {
+		apResult->Failure(boost::bind(&TimerSourceASIO::Rethrow, ex));
+	}
+}
+
+void TimerSourceASIO::Rethrow(const Exception& arException)
+{
+	throw arException;
 }
 
 TimerASIO* TimerSourceASIO::GetTimer()
@@ -76,12 +100,12 @@ TimerASIO* TimerSourceASIO::GetTimer()
 	return pTimer;
 }
 
-void TimerSourceASIO::StartTimer(TimerASIO* apTimer, const ExpirationHandler& arCallback)
+void TimerSourceASIO::StartTimer(TimerASIO* apTimer, const FunctionVoidZero& arCallback)
 {
 	apTimer->mTimer.async_wait(boost::bind(&TimerSourceASIO::OnTimerCallback, this, _1, apTimer, arCallback));
 }
 
-void TimerSourceASIO::OnTimerCallback(const boost::system::error_code& ec, TimerASIO* apTimer, ExpirationHandler aCallback)
+void TimerSourceASIO::OnTimerCallback(const boost::system::error_code& ec, TimerASIO* apTimer, FunctionVoidZero aCallback)
 {
 	mIdleTimers.push_back(apTimer);
 	if(! (ec || apTimer->mCanceled) ) aCallback();

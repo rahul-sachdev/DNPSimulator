@@ -20,6 +20,8 @@
 #define __TIMER_SOURCE_ASIO_H_
 
 #include "ITimerSource.h"
+#include "Lock.h"
+#include "Exception.h"
 
 #include <queue>
 
@@ -41,21 +43,27 @@ namespace apl
 {
 
 class TimerASIO;
+class AsyncResult;
 
 class TimerSourceASIO : public ITimerSource
 {
+
 public:
 	TimerSourceASIO(boost::asio::io_service*);
 	~TimerSourceASIO();
 
-	ITimer* Start(millis_t, const ExpirationHandler&);
-	ITimer* Start(const boost::posix_time::ptime&, const ExpirationHandler&);
-	void Post(const ExpirationHandler&);
+	ITimer* Start(millis_t, const FunctionVoidZero&);
+	ITimer* Start(const boost::posix_time::ptime&, const FunctionVoidZero&);
+	void Post(const FunctionVoidZero&);
+	void PostSync(const FunctionVoidZero&);
 
 private:
 
+	static void SafeExecute(const FunctionVoidZero&, AsyncResult* apResult);
+	static void Rethrow(const Exception& arException);
+
 	TimerASIO* GetTimer();
-	void StartTimer(TimerASIO*, const ExpirationHandler&);
+	void StartTimer(TimerASIO*, const FunctionVoidZero&);
 
 	boost::asio::io_service* mpService;
 
@@ -64,7 +72,7 @@ private:
 	TimerQueue mAllTimers;
 	TimerQueue mIdleTimers;
 
-	void OnTimerCallback(const boost::system::error_code&, TimerASIO*, ExpirationHandler);
+	void OnTimerCallback(const boost::system::error_code&, TimerASIO*, FunctionVoidZero);
 };
 }
 

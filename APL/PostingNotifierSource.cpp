@@ -29,7 +29,7 @@ PostingNotifierSource::~PostingNotifierSource()
 
 }
 
-INotifier* PostingNotifierSource::Get(const ExpirationHandler& arHandler, ITimerSource* apTimerSrc)
+INotifier* PostingNotifierSource::Get(const FunctionVoidZero& arHandler, ITimerSource* apTimerSrc)
 {
 	boost::shared_ptr<PostingNotifier> pRet(new PostingNotifier(apTimerSrc, arHandler));
 	mNotifiers.push_back(pRet);

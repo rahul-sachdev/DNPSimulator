@@ -16,22 +16,23 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "ITimerSource.h"
+#ifndef __FUNCTION_H_
+#define __FUNCTION_H_
 
-#include <boost/bind.hpp>
+#include <boost/function.hpp>
 
 namespace apl
 {
 
-ITimer* ITimerSource::StartInfinite()
+template <class T>
+class FunctionZero
 {
-	boost::posix_time::ptime t(boost::date_time::max_date_time);
-	return this->Start(t, boost::bind(&ITimerSource::NullAction));
-}
+public:
+	typedef boost::function<T ()> Fun;
+};
 
-void ITimerSource::Sync()
-{
-	this->PostSync(boost::bind(&ITimerSource::NullAction));
-}
+typedef FunctionZero<void>::Fun FunctionVoidZero;
 
 }
+
+#endif

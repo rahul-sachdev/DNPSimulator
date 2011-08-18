@@ -16,22 +16,36 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "ITimerSource.h"
+#ifndef __ASYNC_RESULT_H_
+#define __ASYNC_RESULT_H_
 
-#include <boost/bind.hpp>
+#include "Lock.h"
+#include "Exception.h"
+#include "Function.h"
 
 namespace apl
 {
 
-ITimer* ITimerSource::StartInfinite()
+class AsyncResult
 {
-	boost::posix_time::ptime t(boost::date_time::max_date_time);
-	return this->Start(t, boost::bind(&ITimerSource::NullAction));
+
+public:
+	AsyncResult();
+
+	void Success();
+	void Failure(const FunctionVoidZero& arFun);
+	void Wait();	
+
+private:
+	void Complete();
+
+	FunctionVoidZero mRethrow;
+	bool mIsComplete;
+	SigLock mLock;
+};
+
 }
 
-void ITimerSource::Sync()
-{
-	this->PostSync(boost::bind(&ITimerSource::NullAction));
-}
+#endif
 
-}
+

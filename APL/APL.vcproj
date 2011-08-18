@@ -741,6 +741,14 @@
 				Name="Timers"
 				>
 				<File
+					RelativePath=".\AsyncResult.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\AsyncResult.h"
+					>
+				</File>
+				<File
 					RelativePath=".\ITimer.h"
 					>
 				</File>
@@ -946,6 +954,14 @@
 				</File>
 				<File
 					RelativePath=".\QueueingFDO.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Function"
+				>
+				<File
+					RelativePath=".\Function.h"
 					>
 				</File>
 			</Filter>

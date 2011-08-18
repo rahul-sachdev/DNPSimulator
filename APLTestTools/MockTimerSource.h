@@ -39,9 +39,10 @@ public:
 	~MockTimerSource();
 
 	// Implement ITimerSource
-	ITimer* Start(millis_t, const ExpirationHandler&);
-	ITimer* Start(const boost::posix_time::ptime&, const ExpirationHandler&);
-	void Post(const ExpirationHandler&);
+	ITimer* Start(millis_t, const FunctionVoidZero&);
+	ITimer* Start(const boost::posix_time::ptime&, const FunctionVoidZero&);
+	void Post(const FunctionVoidZero&);
+	void PostSync(const FunctionVoidZero&);
 
 	/** Turns the auto-post feature on/off. When Auto post is on, Post() is executed synchronously */
 	void SetAutoPost(bool aAutoPost) {
@@ -57,7 +58,7 @@ public:
 
 		@return the number of events dispatched
 	*/
-	size_t Dispatch(size_t aMaximum = 100);
+	size_t Dispatch(size_t aMaximum = std::numeric_limits<size_t>::max());
 
 	/** @returns The number of active, pending timers */
 	size_t NumActive() {
@@ -68,7 +69,7 @@ private:
 
 	void Cancel(ITimer* apTimer);
 
-	typedef std::deque<ExpirationHandler> PostQueue;
+	typedef std::deque<FunctionVoidZero> PostQueue;
 	typedef std::multimap<boost::posix_time::ptime, MockTimer*> TimerMap;
 	typedef std::deque<MockTimer*> TimerQueue;
 
@@ -86,7 +87,7 @@ class MockTimer : public ITimer
 	friend class MockTimerSource;
 
 public:
-	MockTimer(MockTimerSource*, const boost::posix_time::ptime&, const ExpirationHandler&);
+	MockTimer(MockTimerSource*, const boost::posix_time::ptime&, const FunctionVoidZero&);
 
 	//implement ITimer
 	void Cancel();
@@ -95,7 +96,7 @@ public:
 private:
 	boost::posix_time::ptime mTime;
 	MockTimerSource* mpSource;
-	ExpirationHandler mCallback;
+	FunctionVoidZero mCallback;
 };
 
 }

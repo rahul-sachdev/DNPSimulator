@@ -93,7 +93,7 @@ void Terminal::InitCmdHandlers()
 
 }
 
-void Terminal::Post(const ExpirationHandler& arHandler)
+void Terminal::Post(const FunctionVoidZero& arHandler)
 {
 	mpTimerSrc->Post(arHandler);
 }

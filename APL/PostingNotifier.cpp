@@ -21,7 +21,7 @@
 namespace apl
 {
 
-PostingNotifier::PostingNotifier(ITimerSource* apTimerSrc, const ExpirationHandler& arHandler) :
+PostingNotifier::PostingNotifier(ITimerSource* apTimerSrc, const FunctionVoidZero& arHandler) :
 	mpTimerSrc(apTimerSrc),
 	mHandler(arHandler)
 {
