@@ -18,6 +18,8 @@
 #ifndef __RESPONSE_CONTEXT_H_
 #define __RESPONSE_CONTEXT_H_
 
+#if ENABLE_DNP3_SLAVE
+
 #include <boost/function.hpp>
 #include <queue>
 
@@ -390,5 +392,7 @@ size_t ResponseContext::IterateCTO(const StreamObject<T>* apObj, size_t aCount, 
 }
 
 /* vim: set ts=4 sw=4: */
+
+#endif
 
 #endif

@@ -30,11 +30,18 @@
 #include <DNP3/LinkConfig.h>
 #include <DNP3/AppConfig.h>
 #include <DNP3/VtoConfig.h>
+
+#if ENABLE_DNP3_MASTER
 #include <DNP3/MasterConfig.h>
-#include <DNP3/SlaveConfig.h>
-#include <DNP3/DeviceTemplate.h>
 #include <DNP3/MasterStackConfig.h>
+#endif
+
+#if ENABLE_DNP3_SLAVE
+#include <DNP3/SlaveConfig.h>
 #include <DNP3/SlaveStackConfig.h>
+#endif
+
+#include <DNP3/DeviceTemplate.h>
 #include <DNP3/AsyncStackManager.h>
 
 using namespace APLXML_Base;
@@ -66,6 +73,7 @@ bool XmlToConfig::Configure(const APLXML_Base::PhysicalLayerList_t& arList, Filt
 	return true;
 }
 
+#if ENABLE_DNP3_MASTER
 MasterStackConfig XmlToConfig::GetMasterConfig(const APLXML_DNP::Master_t& arCfg)
 {
 	MasterStackConfig cfg;
@@ -75,13 +83,17 @@ MasterStackConfig XmlToConfig::GetMasterConfig(const APLXML_DNP::Master_t& arCfg
 	cfg.vto = Convert(arCfg.VtoPorts);
 	return cfg;
 }
+#endif
 
+#if ENABLE_DNP3_SLAVE
 SlaveStackConfig XmlToConfig::GetSlaveConfig(const APLXML_DNP::Slave_t& arCfg, const APLXML_DNP::DeviceTemplate_t& arTmp, bool aStartOnline)
 {
 	DeviceTemplate tmp = Convert(arTmp, aStartOnline);
 	return GetSlaveConfig(arCfg, tmp);
 }
+#endif
 
+#if ENABLE_DNP3_SLAVE
 SlaveStackConfig XmlToConfig::GetSlaveConfig(const APLXML_DNP::Slave_t& arCfg, const DeviceTemplate& arTmp)
 {
 	SlaveStackConfig cfg;
@@ -92,6 +104,7 @@ SlaveStackConfig XmlToConfig::GetSlaveConfig(const APLXML_DNP::Slave_t& arCfg, c
 	cfg.device = arTmp;
 	return cfg;
 }
+#endif
 
 LinkConfig XmlToConfig::Convert(const APLXML_DNP::LinkLayer_t& arLink)
 {
@@ -114,6 +127,7 @@ AppConfig XmlToConfig::Convert(const APLXML_DNP::AppLayer_t& arCfg)
 	return cfg;
 }
 
+#if ENABLE_DNP3_MASTER
 MasterConfig XmlToConfig::Convert(const APLXML_DNP::Master_t& arCfg)
 {
 	MasterConfig cfg;
@@ -133,6 +147,7 @@ MasterConfig XmlToConfig::Convert(const APLXML_DNP::Master_t& arCfg)
 	}
 	return cfg;
 }
+#endif
 
 VtoConfig XmlToConfig::Convert(const APLXML_DNP::VtoPorts_t& arCfg)
 {
@@ -149,6 +164,7 @@ VtoConfig XmlToConfig::Convert(const APLXML_DNP::VtoPorts_t& arCfg)
 	return cfg;
 }
 
+#if ENABLE_DNP3_SLAVE
 SlaveConfig XmlToConfig::Convert(const APLXML_DNP::SlaveConfig_t& arCfg, const APLXML_DNP::AppLayer_t& arApp)
 {
 	SlaveConfig c;
@@ -178,12 +194,15 @@ SlaveConfig XmlToConfig::Convert(const APLXML_DNP::SlaveConfig_t& arCfg, const A
 
 	return c;
 }
+#endif
 
+#if ENABLE_DNP3_SLAVE
 GrpVar XmlToConfig::Convert(const APLXML_DNP::GrpVar_t& arCfg)
 {
 	GrpVar gp(arCfg.Grp, arCfg.Var);
 	return gp;
 }
+#endif
 
 DeviceTemplate XmlToConfig::Convert(const APLXML_DNP::DeviceTemplate_t& arCfg, bool aStartOnline)
 {

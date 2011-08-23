@@ -18,6 +18,7 @@
 #ifndef __RESPONSE_LOADER_H_
 #define __RESPONSE_LOADER_H_
 
+#if ENABLE_DNP3_MASTER
 
 #include <APL/Types.h>
 #include <APL/DataInterfaces.h>
@@ -192,5 +193,7 @@ void ResponseLoader::ReadBitfield(HeaderReadIterator& arIter)
 }
 
 /* vim: set ts=4 sw=4: */
+
+#endif
 
 #endif

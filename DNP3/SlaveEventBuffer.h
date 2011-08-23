@@ -18,6 +18,8 @@
 #ifndef __SLAVE_EVENT_BUFFER_H_
 #define __SLAVE_EVENT_BUFFER_H_
 
+#if ENABLE_DNP3_SLAVE
+
 #include <APL/DataTypes.h>
 
 #include "BufferTypes.h"
@@ -276,5 +278,7 @@ private:
 }
 
 /* vim: set ts=4 sw=4: */
+
+#endif
 
 #endif

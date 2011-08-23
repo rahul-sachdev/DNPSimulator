@@ -19,26 +19,34 @@
 #ifndef __XML_TO_CONFIG_H_
 #define __XML_TO_CONFIG_H_
 
+#include <set>
 #include <string>
-
+#include <vector>
 
 #include <DNP3/DeviceTemplate.h>
 #include <APL/PhysLayerSettings.h>
 #include <APLXML/XMLConversion.h>
 
-#include <vector>
-#include <set>
+#if ENABLE_DNP3_MASTER
+#include <DNP3/ClassMask.h>
+#endif
 
 namespace APLXML_DNP
 {
+#if ENABLE_DNP3_MASTER
 class Master_t;
+#endif
+
+#if ENABLE_DNP3_SLAVE
 class Slave_t;
+class SlaveConfig_t;
+class GrpVar_t;
+#endif
+
 class LinkLayer_t;
 class AppLayer_t;
-class SlaveConfig_t;
 class DeviceTemplate_t;
 class VtoPorts_t;
-class GrpVar_t;
 class Control_t;
 class Setpoint_t;
 }
@@ -55,12 +63,19 @@ namespace dnp
 
 struct LinkConfig;
 struct AppConfig;
+
+#if ENABLE_DNP3_MASTER
 struct MasterConfig;
-struct SlaveConfig;
-struct VtoConfig;
-struct GrpVar;
 struct MasterStackConfig;
+#endif
+
+#if ENABLE_DNP3_SLAVE
+struct SlaveConfig;
 struct SlaveStackConfig;
+struct GrpVar;
+#endif
+
+struct VtoConfig;
 class  AsyncStackManager;
 
 class FixedObject;
@@ -72,22 +87,28 @@ public:
 
 	static bool Configure(const APLXML_Base::PhysicalLayerList_t& arList, FilterLevel aLevel, AsyncStackManager& arMgr);
 
-
+#if ENABLE_DNP3_MASTER
 	static MasterStackConfig GetMasterConfig(const APLXML_DNP::Master_t& arCfg);
+	static MasterConfig Convert(const APLXML_DNP::Master_t& arCfg);
+#endif
+
+#if ENABLE_DNP3_SLAVE
 	static SlaveStackConfig GetSlaveConfig(const APLXML_DNP::Slave_t& arCfg, const APLXML_DNP::DeviceTemplate_t& arTmp, bool aStartOnline = false);
 	static SlaveStackConfig GetSlaveConfig(const APLXML_DNP::Slave_t& arCfg, const DeviceTemplate& arTmp);
+	static SlaveConfig Convert(const APLXML_DNP::SlaveConfig_t& arCfg, const APLXML_DNP::AppLayer_t& arApp);
+#endif
 
 	//individual helper functions
 	static LinkConfig Convert(const APLXML_DNP::LinkLayer_t& arCfg);
 	static AppConfig Convert(const APLXML_DNP::AppLayer_t& arCfg);
-	static MasterConfig Convert(const APLXML_DNP::Master_t& arCfg);
-	static SlaveConfig Convert(const APLXML_DNP::SlaveConfig_t& arCfg, const APLXML_DNP::AppLayer_t& arApp);
 	static VtoConfig Convert(const APLXML_DNP::VtoPorts_t& arCfg);
 	static DeviceTemplate Convert( const APLXML_DNP::DeviceTemplate_t& arCfg, bool aStartOnline = false);
 
 private:
 
+#if ENABLE_DNP3_SLAVE
 	static GrpVar Convert(const APLXML_DNP::GrpVar_t& arCfg);
+#endif
 
 	template <typename T>
 	static size_t CalcNumType(const std::vector<T*>& arIdxVec) {

@@ -318,10 +318,6 @@ private:
 	LinkChannel* CreateChannel(const std::string& arName);
 
 	StackRecord GetStackRecordByName(const std::string& arName);
-
-
-
-
 };
 
 }

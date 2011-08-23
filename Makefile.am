@@ -146,8 +146,12 @@ libopendnp3_dnp3_la_SOURCES += DNP3/Objects.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/ObjectWriteIterator.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/PointClass.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/PriLinkLayerStates.cpp
+if ENABLE_DNP3_SLAVE
 libopendnp3_dnp3_la_SOURCES += DNP3/ResponseContext.cpp
+endif
+if ENABLE_DNP3_MASTER
 libopendnp3_dnp3_la_SOURCES += DNP3/ResponseLoader.cpp
+endif
 libopendnp3_dnp3_la_SOURCES += DNP3/SecLinkLayerStates.cpp
 if ENABLE_DNP3_SLAVE
 libopendnp3_dnp3_la_SOURCES += DNP3/SlaveConfig.cpp
@@ -457,7 +461,9 @@ endif
 dnp3test_SOURCES += DNP3Test/MockAppLayer.cpp
 dnp3test_SOURCES += DNP3Test/MockAppUser.cpp
 dnp3test_SOURCES += DNP3Test/MockFrameSink.cpp
+if ENABLE_DNP3_MASTER
 dnp3test_SOURCES += DNP3Test/ResponseLoaderTestObject.cpp
+endif
 if ENABLE_DNP3_SLAVE
 dnp3test_SOURCES += DNP3Test/SlaveTestObject.cpp
 endif
@@ -486,7 +492,9 @@ if ENABLE_DNP3_MASTER
 dnp3test_SOURCES += DNP3Test/TestMaster.cpp
 endif
 dnp3test_SOURCES += DNP3Test/TestObjects.cpp
+if ENABLE_DNP3_MASTER
 dnp3test_SOURCES += DNP3Test/TestResponseLoader.cpp
+endif
 if ENABLE_DNP3_SLAVE
 dnp3test_SOURCES += DNP3Test/TestSlave.cpp
 dnp3test_SOURCES += DNP3Test/TestSlaveEventBuffer.cpp
