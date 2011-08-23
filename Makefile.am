@@ -22,7 +22,7 @@ AM_LDFLAGS = $(BOOST_LDFLAGS) $(BOOST_DATE_TIME_LIB) $(BOOST_THREAD_LIB) $(BOOST
 
 lib_LTLIBRARIES = libopendnp3_apl.la libopendnp3_dnp3.la libopendnp3_java.la
 
-libopendnp3_apl_la_LDFLAGS  = -version-info 0:0:0
+libopendnp3_apl_la_LDFLAGS  = -version-info 0:0:0 -Xlinker -Map=libopendnp3_apl.map
 libopendnp3_apl_la_SOURCES  = APL/ASIOSerialHelpers.cpp
 libopendnp3_apl_la_SOURCES += APL/AsyncLayerInterfaces.cpp
 libopendnp3_apl_la_SOURCES += APL/AsyncResult.cpp
@@ -95,7 +95,7 @@ libopendnp3_apl_la_SOURCES += APL/ToHex.cpp
 libopendnp3_apl_la_SOURCES += APL/TrackingTaskGroup.cpp
 libopendnp3_apl_la_SOURCES += APL/Util.cpp
 
-libopendnp3_dnp3_la_LDFLAGS = -version-info 0:0:0
+libopendnp3_dnp3_la_LDFLAGS = -version-info 0:0:0 -Xlinker -Map=libopendnp3_dnp3.map
 libopendnp3_dnp3_la_LIBADD  = libopendnp3_apl.la
 libopendnp3_dnp3_la_SOURCES = DNP3/AlwaysOpeningVtoRouter.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/APDUConstants.cpp
