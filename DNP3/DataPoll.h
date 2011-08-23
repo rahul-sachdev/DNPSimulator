@@ -19,6 +19,8 @@
 #ifndef __DATA_POLL_H_
 #define __DATA_POLL_H_
 
+#if ENABLE_DNP3_MASTER
+
 #include "MasterTaskBase.h"
 #include "VtoReader.h"
 
@@ -81,5 +83,7 @@ private:
 } //ens ns
 
 /* vim: set ts=4 sw=4: */
+
+#endif
 
 #endif

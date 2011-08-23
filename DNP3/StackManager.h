@@ -25,8 +25,13 @@
 #include <APL/LogBase.h>
 #include <APL/SerialTypes.h>
 
+#if ENABLE_DNP3_MASTER
 #include <DNP3/MasterStackConfig.h>
+#endif
+
+#if ENABLE_DNP3_SLAVE
 #include <DNP3/SlaveStackConfig.h>
+#endif
 
 #include <vector>
 
@@ -57,17 +62,21 @@ public:
 	void AddTCPServer(const std::string& arName, PhysLayerSettings  aPhys, const std::string& arEndpoint, boost::uint16_t aPort);
 	void AddSerial(const std::string& arName, PhysLayerSettings aPhys, SerialSettings aSerial);
 
+#if ENABLE_DNP3_MASTER
 	ICommandAcceptor* AddMaster(const std::string& arPortName,
 	                            const std::string& arStackName,
 	                            FilterLevel aLevel,
 	                            IDataObserver* apPublisher,
 	                            const MasterStackConfig& arCfg);
+#endif
 
+#if ENABLE_DNP3_SLAVE
 	IDataObserver* AddSlave(const std::string& arPortName,
 	                        const std::string& arStackName,
 	                        FilterLevel aLevel,
 	                        ICommandAcceptor* apCmdAcceptor,
 	                        const SlaveStackConfig& arCfg);
+#endif
 
 	void RemovePort(const std::string& arPortName);
 
@@ -78,7 +87,6 @@ public:
 	std::vector<std::string> GetStackNames();
 
 	std::vector<std::string> GetPortNames();
-
 
 	void Shutdown();
 

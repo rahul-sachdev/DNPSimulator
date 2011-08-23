@@ -60,18 +60,21 @@ void StackManager::AddSerial(const std::string& arName, PhysLayerSettings s, Ser
 	mpImpl->AddSerial(arName, s, aSerial);
 }
 
+#if ENABLE_DNP3_MASTER
 ICommandAcceptor* StackManager::AddMaster(const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel,
         IDataObserver* apPublisher, const MasterStackConfig& arCfg)
 {
 	return mpImpl->AddMaster(arPortName, arStackName, aLevel, apPublisher, arCfg);
 }
+#endif
 
+#if ENABLE_DNP3_SLAVE
 IDataObserver* StackManager::AddSlave(const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel,
                                       ICommandAcceptor* apCmdAcceptor, const SlaveStackConfig& arCfg)
 {
 	return mpImpl->AddSlave(arPortName, arStackName, aLevel, apCmdAcceptor, arCfg);
 }
-
+#endif
 
 void StackManager::Shutdown()
 {

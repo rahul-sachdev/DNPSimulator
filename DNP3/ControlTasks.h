@@ -19,6 +19,8 @@
 #ifndef __CONTROL_TASKS_H_
 #define __CONTROL_TASKS_H_
 
+#if ENABLE_DNP3_MASTER
+
 #include <boost/function.hpp>
 #include "MasterTaskBase.h"
 #include "ObjectInterfaces.h"
@@ -165,5 +167,7 @@ CommandStatus ControlTaskBase::ValidateCommandResponse(const APDU& arAPDU, Comma
 
 }
 } //ens ns
+
+#endif
 
 #endif

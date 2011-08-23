@@ -32,8 +32,14 @@
 #include <APL/AsyncTaskGroup.h>
 #include <APL/GetKeys.h>
 
+#if ENABLE_DNP3_MASTER
 #include <DNP3/MasterStack.h>
+#endif
+
+#if ENABLE_DNP3_SLAVE
 #include <DNP3/SlaveStack.h>
+#endif
+
 #include <DNP3/DeviceTemplate.h>
 #include <DNP3/VtoRouter.h>
 #include <DNP3/VtoConfig.h>
@@ -101,6 +107,7 @@ void AsyncStackManager::AddSerial(const std::string& arName, PhysLayerSettings a
 	mMgr.AddSerial(arName, aSettings, aSerial);
 }
 
+#if ENABLE_DNP3_MASTER
 ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel, IDataObserver* apPublisher,
         const MasterStackConfig& arCfg)
 {
@@ -121,7 +128,9 @@ ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, c
 
 	return pMaster->mMaster.GetCmdAcceptor();
 }
+#endif
 
+#if ENABLE_DNP3_SLAVE
 IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel, ICommandAcceptor* apCmdAcceptor,
         const SlaveStackConfig& arCfg)
 {
@@ -142,6 +151,7 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 
 	return pSlave->mSlave.GetDataObserver();
 }
+#endif
 
 void AsyncStackManager::AddVtoChannel(const std::string& arStackName,
                                       IVtoCallbacks* apCallbacks)

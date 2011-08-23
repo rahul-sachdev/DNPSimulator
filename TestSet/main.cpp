@@ -56,12 +56,11 @@ bool FileExists(const std::string& arFileName)
 bool GenerateConfig(bool aIsMaster, const std::string& arPath)
 {
 	try {
-		if(aIsMaster) {
+		if (ENABLE_DNP3_MASTER && aIsMaster) {
 			APLXML_MTS::MasterTestSet_t cfg;
 			XML_TestSet::Configure(cfg, false);
 			WriteXmlToFile(&cfg, arPath);
-		}
-		else {
+		} else if (ENABLE_DNP3_SLAVE) {
 			APLXML_STS::SlaveTestSet_t cfg;
 			XML_TestSet::Configure(cfg);
 			XML_DNP3::Configure(cfg.DeviceTemplate, 10, 10, 10, 2, 2, 2, 2);
@@ -150,10 +149,9 @@ int main(int argc, char* argv[])
 			Scan(xmlFilename, start, stop);
 		}
 		else {
-			if ( vm.count("slave") ) {
+			if (ENABLE_DNP3_SLAVE && vm.count("slave")) {
 				RunStack<SlaveXMLStack, APLXML_STS::SlaveTestSet_t>(xmlFilename);
-			}
-			else {
+			} else if (ENABLE_DNP3_MASTER) {
 				RunStack<MasterXMLStack, APLXML_MTS::MasterTestSet_t>(xmlFilename);
 			}
 		}

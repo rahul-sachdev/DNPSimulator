@@ -19,6 +19,8 @@
 #ifndef __MASTER_H_
 #define __MASTER_H_
 
+#if ENABLE_DNP3_MASTER
+
 #include <APL/Loggable.h>
 #include <APL/CommandTypes.h>
 #include <APL/CommandQueue.h>
@@ -200,5 +202,7 @@ private:
 }
 
 /* vim: set ts=4 sw=4: */
+
+#endif
 
 #endif

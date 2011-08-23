@@ -18,8 +18,14 @@
 //
 #include "StackHelpers.h"
 
+#if ENABLE_DNP3_SLAVE
 #include <DNP3/SlaveStackConfig.h>
+#endif
+
+#if ENABLE_DNP3_MASTER
 #include <DNP3/MasterStackConfig.h>
+#endif
+
 #include <APL/IPhysicalLayerAsync.h>
 #include <APL/PhysicalLayerFactory.h>
 
@@ -69,6 +75,7 @@ void StackBase::Run()
 }
 
 
+#if ENABLE_DNP3_SLAVE
 SlaveXMLStack::SlaveXMLStack(APLXML_STS::SlaveTestSet_t* pCfg, FilterLevel aLevel) :
 	StackBase(pCfg->PhysicalLayerList, aLevel, pCfg->LogFile, pCfg->Remote, pCfg->RemotePort),
 	pObs(mgr.AddSlave(pCfg->PhysicalLayer, "sts", aLevel, crte.GetCmdAcceptor(), XmlToConfig::GetSlaveConfig(pCfg->Slave, pCfg->DeviceTemplate, pCfg->StartOnline))),
@@ -84,8 +91,10 @@ SlaveXMLStack::SlaveXMLStack(APLXML_STS::SlaveTestSet_t* pCfg, FilterLevel aLeve
 	// data observer
 	XmlToConfig::Convert(pCfg->DeviceTemplate, pCfg->StartOnline).Publish(&fdo);
 }
+#endif
 
 
+#if ENABLE_DNP3_MASTER
 MasterXMLStack::MasterXMLStack(APLXML_MTS::MasterTestSet_t* pCfg, FilterLevel aLevel) :
 	StackBase(pCfg->PhysicalLayerList, aLevel, pCfg->LogFile),
 	accept(mgr.AddMaster(pCfg->PhysicalLayer, "mts", aLevel, &fdo, XmlToConfig::GetMasterConfig(pCfg->Master))),
@@ -93,7 +102,7 @@ MasterXMLStack::MasterXMLStack(APLXML_MTS::MasterTestSet_t* pCfg, FilterLevel aL
 {
 	trm.AddExtension(&cte);
 }
-
+#endif
 
 
 }

@@ -22,6 +22,16 @@ AX_BOOST_SYSTEM
 AX_BOOST_THREAD
 AX_BOOST_UNIT_TEST_FRAMEWORK
 
+AC_ARG_ENABLE(master,
+  AS_HELP_STRING([--disable-master], [Disable DNP3 master support]),
+    [ac_master_enabled=$enableval], [ac_master_enabled=yes])
+AM_CONDITIONAL(ENABLE_DNP3_MASTER, [test "$ac_master_enabled" = yes])
+
+AC_ARG_ENABLE(slave,
+  AS_HELP_STRING([--disable-slave], [Disable DNP3 slave support]),
+    [ac_slave_enabled=$enableval], [ac_slave_enabled=yes])
+AM_CONDITIONAL(ENABLE_DNP3_SLAVE, [test "$ac_slave_enabled" = yes])
+
 AC_ARG_ENABLE(lcov,
   AS_HELP_STRING([--enable-lcov], [Enable gcov/lcov support]),
     [ac_lcov_enabled=$enableval], [ac_lcov_enabled=no])
@@ -70,7 +80,7 @@ AC_CHECK_HEADERS([syslog.h]	,,AC_MSG_ERROR(missing header))
 AC_CHECK_HEADERS([unistd.h]	,,AC_MSG_ERROR(missing header))
 
 dnl Java Native Interface
-AC_CHECK_HEADERS([jni.h]	,,AC_MSG_ERROR(missing header))
+dnl AC_CHECK_HEADERS([jni.h]	,,AC_MSG_ERROR(missing header))
 
 AC_CHECK_LIB([c],	[atexit]		,,AC_MSG_ERROR(missing library))
 AC_CHECK_LIB([pthread],	[pthread_join]		,,AC_MSG_ERROR(missing library))
@@ -82,9 +92,9 @@ AC_PROG_INSTALL
 AC_PROG_MKDIR_P
 AC_PROG_SED
 
-AX_PKG_SWIG(1.3.17, [], [ AC_MSG_ERROR([SWIG is required to build.]) ])
-AX_SWIG_ENABLE_CXX
-AX_SWIG_MULTI_MODULE_SUPPORT
+dnl AX_PKG_SWIG(1.3.17, [], [ AC_MSG_ERROR([SWIG is required to build.]) ])
+dnl AX_SWIG_ENABLE_CXX
+dnl AX_SWIG_MULTI_MODULE_SUPPORT
 dnl AX_SWIG_PYTHON
 
 LT_INIT
@@ -126,6 +136,9 @@ CXX:                        ${CXX}
 CXXFLAGS:                   ${CXXFLAGS}
 LDFLAGS:                    ${LDFLAGS}
 LIBS:                       ${LIBS}
+
+master support:             ${ac_master_enabled}
+slave support:              ${ac_slave_enabled}
 
 lcov support:               ${ac_lcov_enabled}
 shared libraries:           ${enable_shared}

@@ -56,8 +56,13 @@ class LinkChannel;
 class Stack;
 struct VtoRouterSettings;
 
+#if ENABLE_DNP3_SLAVE
 struct SlaveStackConfig;
+#endif
+
+#if ENABLE_DNP3_MASTER
 struct MasterStackConfig;
+#endif
 
 /**
 	The interface for C++ projects for dnp3. Provides an interface for
@@ -85,6 +90,7 @@ public:
 	// Adds a Serial port, excepts if the port already exists
 	void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
 
+#if ENABLE_DNP3_MASTER
 	/**
 		Adds a master stack - Stack will automatically start running if
 		Start() has been called or aAutoRun is true.
@@ -110,7 +116,9 @@ public:
 	                            FilterLevel aLevel,
 	                            IDataObserver* apPublisher,
 	                            const MasterStackConfig& arCfg);
+#endif
 
+#if ENABLE_DNP3_SLAVE
 	/**
 		Adds a slave stack - Stack will automatically start running if
 		Start() has been called or aAutoRun is true.
@@ -137,6 +145,7 @@ public:
 	                        FilterLevel aLevel,
 	                        ICommandAcceptor* apCmdAcceptor,
 	                        const SlaveStackConfig&);
+#endif
 
 	/**
 		Adds a VTO channel to a prexisting stack (master or slave).

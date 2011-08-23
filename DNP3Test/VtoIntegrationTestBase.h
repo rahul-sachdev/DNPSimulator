@@ -17,6 +17,8 @@
 #ifndef __VTO_INTEGRATION_TEST_BASE_H_
 #define __VTO_INTEGRATION_TEST_BASE_H_
 
+#if ENABLE_DNP3_MASTER && ENABLE_DNP3_SLAVE
+
 #include <APLTestTools/LogTester.h>
 #include <APLTestTools/MockCommandAcceptor.h>
 #include <APLTestTools/AsyncTestObjectASIO.h>
@@ -73,5 +75,7 @@ public:
 }
 
 /* vim: set ts=4 sw=4: */
+
+#endif
 
 #endif

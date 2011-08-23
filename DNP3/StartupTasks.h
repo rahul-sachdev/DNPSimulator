@@ -19,9 +19,13 @@
 #ifndef __STARTUP_TASKS_H_
 #define __STARTUP_TASKS_H_
 
-#include <APL/Types.h>
-#include "MasterTaskBase.h"
+#if ENABLE_DNP3_MASTER
+
 #include <boost/date_time/posix_time/posix_time_types.hpp>
+
+#include <APL/Types.h>
+
+#include "MasterTaskBase.h"
 
 namespace apl
 {
@@ -90,5 +94,7 @@ private:
 
 }
 } //ens ns
+
+#endif
 
 #endif
