@@ -9,51 +9,51 @@ using namespace std;
 namespace APLXML_Base
 {
 enum BaudRateEnum {
-    BAUDRATE_1200,
-    BAUDRATE_1800,
-    BAUDRATE_2400,
-    BAUDRATE_4800,
-    BAUDRATE_9600,
-    BAUDRATE_19200,
-    BAUDRATE_38400,
-    BAUDRATE_57600,
-    BAUDRATE_115200,
-    BAUDRATE_230400,
+	BAUDRATE_1200,
+	BAUDRATE_1800,
+	BAUDRATE_2400,
+	BAUDRATE_4800,
+	BAUDRATE_9600,
+	BAUDRATE_19200,
+	BAUDRATE_38400,
+	BAUDRATE_57600,
+	BAUDRATE_115200,
+	BAUDRATE_230400,
 };
 BaudRateEnum FromString_BaudRateEnum(TiXmlNode* apParent, const char* aValue);
 string ToString_BaudRateEnum(BaudRateEnum aValue);
 
 enum DBitsEnum {
-    DATABITS_7,
-    DATABITS_8,
+	DATABITS_7,
+	DATABITS_8,
 };
 DBitsEnum FromString_DBitsEnum(TiXmlNode* apParent, const char* aValue);
 string ToString_DBitsEnum(DBitsEnum aValue);
 
 enum FlowControlEnum {
-    FLOW_NONE,
-    FLOW_HARDWARE,
-    FLOW_XONXOFF,
+	FLOW_NONE,
+	FLOW_HARDWARE,
+	FLOW_XONXOFF,
 };
 FlowControlEnum FromString_FlowControlEnum(TiXmlNode* apParent, const char* aValue);
 string ToString_FlowControlEnum(FlowControlEnum aValue);
 
 enum LogLevelEnum {
-    LOG_DEBUG,
-    LOG_COMM,
-    LOG_INTERPRET,
-    LOG_INFO,
-    LOG_WARNING,
-    LOG_ERROR,
-    LOG_EVENT,
+	LOG_DEBUG,
+	LOG_COMM,
+	LOG_INTERPRET,
+	LOG_INFO,
+	LOG_WARNING,
+	LOG_ERROR,
+	LOG_EVENT,
 };
 LogLevelEnum FromString_LogLevelEnum(TiXmlNode* apParent, const char* aValue);
 string ToString_LogLevelEnum(LogLevelEnum aValue);
 
 enum ParityEnum {
-    PARITY_NONE,
-    PARITY_EVEN,
-    PARITY_ODD,
+	PARITY_NONE,
+	PARITY_EVEN,
+	PARITY_ODD,
 };
 ParityEnum FromString_ParityEnum(TiXmlNode* apParent, const char* aValue);
 string ToString_ParityEnum(ParityEnum aValue);
@@ -67,9 +67,9 @@ public:
 	int OpenRetryMS;
 };
 enum StopBitsEnum {
-    STOPBITS_0,
-    STOPBITS_1,
-    STOPBITS_2,
+	STOPBITS_0,
+	STOPBITS_1,
+	STOPBITS_2,
 };
 StopBitsEnum FromString_StopBitsEnum(TiXmlNode* apParent, const char* aValue);
 string ToString_StopBitsEnum(StopBitsEnum aValue);

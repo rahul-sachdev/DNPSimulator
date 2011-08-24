@@ -70,7 +70,7 @@ public:
 	inline static std::string ToString_float(float aValue);
 
 	enum ErrorCode {
-	    ERR_XML_NO_FILE
+		ERR_XML_NO_FILE
 	};
 };
 

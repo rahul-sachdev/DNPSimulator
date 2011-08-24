@@ -489,10 +489,15 @@ DOCBOOK2PDF=docbook2pdf
 astyle:
 	${ASTYLE}   ${srcdir}/APL/*.cpp            ${srcdir}/APL/*.h
 	${ASTYLE}   ${srcdir}/APLTestTools/*.cpp   ${srcdir}/APLTestTools/*.h
+	${ASTYLE}   ${srcdir}/APLXML/*.cpp         ${srcdir}/APLXML/*.h
 	${ASTYLE}   ${srcdir}/DNP3/*.cpp           ${srcdir}/DNP3/*.h
 	${ASTYLE}   ${srcdir}/DNP3Test/*.cpp       ${srcdir}/DNP3Test/*.h
+	${ASTYLE}   ${srcdir}/DNP3XML/*.cpp        ${srcdir}/DNP3XML/*.h
 	${ASTYLE}   ${srcdir}/Terminal/*.cpp       ${srcdir}/Terminal/*.h
+	${ASTYLE}   ${srcdir}/TerminalTest/*.cpp
+	${ASTYLE}   ${srcdir}/TestAPL/*.cpp        ${srcdir}/TestAPL/*.h
 	${ASTYLE}   ${srcdir}/TestSet/*.cpp        ${srcdir}/TestSet/*.h
+	${ASTYLE}   ${srcdir}/XMLBindings/*.cpp    ${srcdir}/XMLBindings/*.h
 
 docs: docs-html docs-pdf
 

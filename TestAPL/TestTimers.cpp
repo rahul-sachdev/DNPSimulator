@@ -60,13 +60,11 @@ public:
 		mpSrv(apSrv),
 		mpTimerSrc(apTimerSrc),
 		mpInfinite(apTimerSrc->StartInfinite()),
-		mThread(this)
-	{
-		mThread.Start();	
+		mThread(this) {
+		mThread.Start();
 	}
 
-	~MonotonicReceiver()
-	{
+	~MonotonicReceiver() {
 		mpInfinite->Cancel();
 	}
 
@@ -82,7 +80,7 @@ public:
 
 	int Num() {
 		return mNum;
-	}	
+	}
 
 private:
 
@@ -112,7 +110,7 @@ BOOST_AUTO_TEST_CASE(SyncRethrowsExceptions)
 {
 	boost::asio::io_service srv;
 	TimerSourceASIO ts(&srv);
-	MonotonicReceiver rcv(&srv, &ts);	
+	MonotonicReceiver rcv(&srv, &ts);
 
 	BOOST_REQUIRE_THROW(ts.PostSync(boost::bind(&ThrowInvalidStateException)), Exception);
 
