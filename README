@@ -257,7 +257,7 @@ required if you choose to build those options.
 Requirements:
 
   - astyle v2.01 or later           (required if running 'make astyle')
-  - boost v1.42 or later            (required)
+  - boost v1.43 or later            (required)
     * boost::date_time              (required)
     * boost::program_options        (required)
     * boost::system                 (required)
