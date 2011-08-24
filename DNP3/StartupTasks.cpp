@@ -16,11 +16,14 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "StartupTasks.h"
 
+#if ENABLE_DNP3_MASTER
+
+#include "StartupTasks.h"
 #include "APDU.h"
 #include "ObjectReadIterator.h"
 #include "PointClass.h"
+
 #include <APL/ITimeSource.h>
 #include <APL/Logger.h>
 
@@ -131,4 +134,4 @@ TaskResult TimeSync::_OnFinalResponse(const APDU& arAPDU)
 }
 } //ens ns
 
-
+#endif // ENABLE_DNP3_MASTER

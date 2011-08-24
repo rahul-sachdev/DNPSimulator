@@ -16,6 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+
+#if ENABLE_DNP3_MASTER
+
 #include "MasterTestObject.h"
 
 #include <memory>
@@ -69,3 +72,6 @@ std::string MasterTestObject::Read()
 
 }
 } //end ns
+
+#endif // ENABLE_DNP3_MASTER
+

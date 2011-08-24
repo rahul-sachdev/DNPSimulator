@@ -17,6 +17,8 @@
 // under the License.
 //
 
+#if ENABLE_DNP3_MASTER
+
 #include <APL/ITimeSource.h>
 #include <APL/Exception.h>
 
@@ -85,8 +87,9 @@ void ClassPoll::ConfigureRequest(APDU& arAPDU)
 	if (mClassMask & PC_CLASS_3) arAPDU.DoPlaceholderWrite(Group60Var4::Inst());
 }
 
-
 }
 } //end ns
+
+#endif // ENABLE_DNP3_MASTER
 
 /* vim: set ts=4 sw=4: */

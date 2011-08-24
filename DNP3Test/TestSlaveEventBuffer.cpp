@@ -16,14 +16,19 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+
+#if ENABLE_DNP3_SLAVE
+
 #include <boost/test/unit_test.hpp>
+#include <limits>
+
 #include <APLTestTools/TestHelpers.h>
 
 #include <APL/Exception.h>
 #include <APL/RandomizedBuffer.h>
+
 #include <DNP3/SlaveEventBuffer.h>
 #include <DNP3/VtoWriter.h>
-#include <limits>
 
 using namespace std;
 using namespace apl;
@@ -144,4 +149,8 @@ BOOST_AUTO_TEST_CASE(SimpleNegativeTests)
 	BOOST_REQUIRE_THROW(b.Select(BT_INVALID, PC_CLASS_1, 1), ArgumentException);
 	BOOST_REQUIRE_THROW(b.IsFull(BT_INVALID), ArgumentException);
 }
+
 BOOST_AUTO_TEST_SUITE_END()
+
+#endif // ENABLE_DNP3_SLAVE
+

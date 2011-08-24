@@ -108,16 +108,16 @@ BOOST_AUTO_TEST_CASE(SendBadFuncCodeSlave)
 	// can't send a response until at least 1 request has been received
 	// to set the sequence number
 	BOOST_REQUIRE_THROW(
-	    t.SendResponse(FC_RESPONSE, true, true, false, false),
-	    apl::InvalidStateException);
+	        t.SendResponse(FC_RESPONSE, true, true, false, false),
+	        apl::InvalidStateException);
 
 	BOOST_REQUIRE_THROW(
-	    t.SendUnsolicited(FC_RESPONSE, true, true, false, false),
-	    apl::ArgumentException);
+	        t.SendUnsolicited(FC_RESPONSE, true, true, false, false),
+	        apl::ArgumentException);
 
 	BOOST_REQUIRE_THROW(
-	    t.SendRequest(FC_WRITE, true, true, false, false), // master only
-	    apl::Exception);
+	        t.SendRequest(FC_WRITE, true, true, false, false), // master only
+	        apl::Exception);
 }
 
 // Same test for the master
@@ -127,28 +127,28 @@ BOOST_AUTO_TEST_CASE(SendBadFuncCodeMaster)
 	t.lower.ThisLayerUp();
 
 	BOOST_REQUIRE_THROW(
-	    t.SendResponse(FC_RESPONSE, true, true, false, false), // slave only
-	    apl::Exception);
+	        t.SendResponse(FC_RESPONSE, true, true, false, false), // slave only
+	        apl::Exception);
 
 	BOOST_REQUIRE_THROW(
-	    t.SendUnsolicited(FC_UNSOLICITED_RESPONSE, true, true, false, false), // slave only
-	    apl::Exception);
+	        t.SendUnsolicited(FC_UNSOLICITED_RESPONSE, true, true, false, false), // slave only
+	        apl::Exception);
 
 	BOOST_REQUIRE_THROW(
-	    t.SendRequest(FC_RESPONSE, true, true, false, false), //bad code
-	    apl::ArgumentException);
+	        t.SendRequest(FC_RESPONSE, true, true, false, false), //bad code
+	        apl::ArgumentException);
 
 	BOOST_REQUIRE_THROW(
-	    t.SendRequest(FC_WRITE, true, true, true, false), // bad CON bit
-	    apl::ArgumentException);
+	        t.SendRequest(FC_WRITE, true, true, true, false), // bad CON bit
+	        apl::ArgumentException);
 
 	BOOST_REQUIRE_THROW(
-	    t.SendRequest(FC_WRITE, true, true, false, true), // bad UNS bit
-	    apl::ArgumentException);
+	        t.SendRequest(FC_WRITE, true, true, false, true), // bad UNS bit
+	        apl::ArgumentException);
 
 	BOOST_REQUIRE_THROW(
-	    t.SendRequest(FC_WRITE, false, true, false, false), // bad FIR
-	    apl::ArgumentException);
+	        t.SendRequest(FC_WRITE, false, true, false, false), // bad FIR
+	        apl::ArgumentException);
 }
 
 BOOST_AUTO_TEST_CASE(SendObjectUnknownResponse)
@@ -296,13 +296,13 @@ BOOST_AUTO_TEST_CASE(SendUnsolBadFormatting)
 	t.lower.ThisLayerUp();
 
 	BOOST_REQUIRE_THROW(
-	    t.SendUnsolicited(FC_UNSOLICITED_RESPONSE, true, false, true, true), //bad FIN
-	    apl::ArgumentException
+	        t.SendUnsolicited(FC_UNSOLICITED_RESPONSE, true, false, true, true), //bad FIN
+	        apl::ArgumentException
 	);
 
 	BOOST_REQUIRE_THROW(
-	    t.SendUnsolicited(FC_UNSOLICITED_RESPONSE, true, true, true, false), //bad UNS
-	    apl::ArgumentException
+	        t.SendUnsolicited(FC_UNSOLICITED_RESPONSE, true, true, true, false), //bad UNS
+	        apl::ArgumentException
 	);
 }
 

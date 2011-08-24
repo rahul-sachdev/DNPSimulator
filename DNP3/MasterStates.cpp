@@ -16,6 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+
+#if ENABLE_DNP3_MASTER
+
 #include "MasterStates.h"
 
 #include <APL/Configure.h>
@@ -169,4 +172,6 @@ void AMS_Waiting::OnFinalResponse(Master* c, const APDU& arAPDU)
 
 }
 } //ens ns
+
+#endif // ENABLE_DNP3_MASTER
 

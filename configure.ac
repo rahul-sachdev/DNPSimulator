@@ -32,6 +32,21 @@ AC_ARG_ENABLE(slave,
     [ac_slave_enabled=$enableval], [ac_slave_enabled=yes])
 AM_CONDITIONAL(ENABLE_DNP3_SLAVE, [test "$ac_slave_enabled" = yes])
 
+AC_ARG_ENABLE(serial,
+  AS_HELP_STRING([--disable-serial], [Disable serial physical layer support]),
+    [ac_serial_enabled=$enableval], [ac_serial_enabled=yes])
+AM_CONDITIONAL(ENABLE_SERIAL, [test "$ac_serial_enabled" = yes])
+
+AC_ARG_ENABLE(tcpclient,
+  AS_HELP_STRING([--disable-tcpclient], [Disable TCP client physical layer support]),
+    [ac_tcpclient_enabled=$enableval], [ac_tcpclient_enabled=yes])
+AM_CONDITIONAL(ENABLE_TCP_CLIENT, [test "$ac_tcpclient_enabled" = yes])
+
+AC_ARG_ENABLE(tcpserver,
+  AS_HELP_STRING([--disable-tcpserver], [Disable TCP server physical layer support]),
+    [ac_tcpserver_enabled=$enableval], [ac_tcpserver_enabled=yes])
+AM_CONDITIONAL(ENABLE_TCP_SERVER, [test "$ac_tcpserver_enabled" = yes])
+
 AC_ARG_ENABLE(lcov,
   AS_HELP_STRING([--enable-lcov], [Enable gcov/lcov support]),
     [ac_lcov_enabled=$enableval], [ac_lcov_enabled=no])

@@ -16,6 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+
+#if ENABLE_DNP3_MASTER
+
 #include "ResponseLoaderTestObject.h"
 
 #include <APLTestTools/BufferHelpers.h>
@@ -98,3 +101,6 @@ void ResponseLoaderTestObject::CheckSetpointStatii(const std::string& arAPDU)
 
 }
 }
+
+#endif // ENABLE_DNP3_MASTER
+

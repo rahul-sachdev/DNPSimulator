@@ -17,6 +17,8 @@
 // under the License.
 //
 
+#if ENABLE_DNP3_MASTER
+
 #include "ControlTasks.h"
 #include "APDU.h"
 
@@ -108,7 +110,8 @@ CommandObject<Setpoint>* SetpointTask::GetObject(const Setpoint& arSetpoint)
 	return GetOptimalEncoder(arSetpoint.GetOptimalEncodingType());
 }
 
-
-
 }
 } //ens ns
+
+#endif // ENABLE_DNP3_MASTER
+

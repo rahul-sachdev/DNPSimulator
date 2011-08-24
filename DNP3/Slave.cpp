@@ -15,9 +15,9 @@
 // under the License.
 //
 
+#if ENABLE_DNP3_SLAVE
+
 #include "Slave.h"
-
-
 #include "SlaveStates.h"
 #include "Database.h"
 #include "DNPExceptions.h"
@@ -76,10 +76,10 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	 * Slave::OnDataUpdate().
 	 */
 	mChangeBuffer.AddObserver(
-	    mNotifierSource.Get(
-	        boost::bind(&Slave::OnDataUpdate, this),
-	        mpTimerSrc
-	    )
+	        mNotifierSource.Get(
+	                boost::bind(&Slave::OnDataUpdate, this),
+	                mpTimerSrc
+	        )
 	);
 
 	/*
@@ -87,10 +87,10 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	 * Slave::OnVtoUpdate().
 	 */
 	mVtoWriter.AddObserver(
-	    mNotifierSource.Get(
-	        boost::bind(&Slave::OnVtoUpdate, this),
-	        mpTimerSrc
-	    )
+	        mNotifierSource.Get(
+	                boost::bind(&Slave::OnVtoUpdate, this),
+	                mpTimerSrc
+	        )
 	);
 
 	/* Cause the slave to go through the null-unsol startup sequence */
@@ -594,3 +594,5 @@ void Slave::ResetTimeIIN()
 } //end ns
 
 /* vim: set ts=4 sw=4: */
+
+#endif // ENABLE_DNP3_SLAVE

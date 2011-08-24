@@ -17,12 +17,14 @@
 // under the License.
 //
 
+#if ENABLE_DNP3_MASTER
+
+#include <boost/asio.hpp>
 #include <boost/test/unit_test.hpp>
+
 #include <APLTestTools/TestHelpers.h>
 
 #include "StartupTeardownTest.h"
-
-#include <boost/asio.hpp>
 
 using namespace std;
 using namespace apl;
@@ -65,6 +67,7 @@ BOOST_AUTO_TEST_CASE(AutoStartAndStopWithExplicitShutdown)
 	test.manager.Shutdown();
 }
 
-
 BOOST_AUTO_TEST_SUITE_END()
+
+#endif // ENABLE_DNP3_MASTER
 

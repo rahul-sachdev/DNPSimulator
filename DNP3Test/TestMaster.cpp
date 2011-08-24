@@ -16,10 +16,12 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+
+#if ENABLE_DNP3_MASTER
+
 #include <boost/test/unit_test.hpp>
+
 #include <APLTestTools/TestHelpers.h>
-
-
 #include <APL/Exception.h>
 #include <APL/CommandResponseQueue.h>
 
@@ -29,7 +31,6 @@
 using namespace apl;
 using namespace apl::dnp;
 using namespace boost;
-
 
 void TestForIntegrityPoll(MasterTestObject& t, bool aSucceed = true)
 {
@@ -702,3 +703,6 @@ BOOST_AUTO_TEST_CASE(EnhancedVtoForUnregisteredChannel)
 BOOST_AUTO_TEST_SUITE_END() //end suite
 
 /* vim: set ts=4 sw=4: */
+
+#endif // ENABLE_DNP3_MASTER
+

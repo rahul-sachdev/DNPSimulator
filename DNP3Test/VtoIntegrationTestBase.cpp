@@ -14,6 +14,9 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
+#if ENABLE_DNP3_MASTER && ENABLE_DNP3_SLAVE
+
 #include "VtoIntegrationTestBase.h"
 
 #include <APL/LogToStdio.h>
@@ -31,11 +34,11 @@ namespace dnp
 
 
 VtoIntegrationTestBase::VtoIntegrationTestBase(
-    bool clientOnSlave,
-    bool aImmediateOutput,
-    bool aLogToFile,
-    FilterLevel level,
-    boost::uint16_t port) :
+        bool clientOnSlave,
+        bool aImmediateOutput,
+        bool aLogToFile,
+        FilterLevel level,
+        boost::uint16_t port) :
 
 	LogTester(),
 	Loggable(mpTestLogger),
@@ -72,3 +75,6 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 }
 
 /* vim: set ts=4 sw=4: */
+
+#endif // ENABLE_DNP3_MASTER && ENABLE_DNP3_SLAVE
+

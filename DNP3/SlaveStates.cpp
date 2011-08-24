@@ -15,8 +15,9 @@
 // under the License.
 //
 
-#include "SlaveStates.h"
+#if ENABLE_DNP3_SLAVE
 
+#include "SlaveStates.h"
 #include "Slave.h"
 #include "DNPExceptions.h"
 
@@ -370,3 +371,5 @@ void AS_WaitForSolUnsolSuccess::OnUnsolSendSuccess(Slave* c)
 } //ens ns
 
 /* vim: set ts=4 sw=4: */
+
+#endif // ENABLE_DNP3_SLAVE

@@ -34,7 +34,7 @@ public:
 
 	void Success();
 	void Failure(const FunctionVoidZero& arFun);
-	void Wait();	
+	void Wait();
 
 private:
 	void Complete();

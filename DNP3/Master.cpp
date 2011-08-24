@@ -17,6 +17,8 @@
 // under the License.
 //
 
+#if ENABLE_DNP3_MASTER
+
 #include "Master.h"
 
 #include "MasterStates.h"
@@ -75,13 +77,13 @@ Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IData
 	 * wake up mpCommandTask to process the data.
 	 */
 	mCommandQueue.SetNotifier(
-	    mNotifierSource.Get(
-	        boost::bind(
-	            &AsyncTaskBase::Enable,
-	            mSchedule.mpCommandTask
-	        ),
-	        mpTimerSrc
-	    )
+	        mNotifierSource.Get(
+	                boost::bind(
+	                        &AsyncTaskBase::Enable,
+	                        mSchedule.mpCommandTask
+	                ),
+	                mpTimerSrc
+	        )
 	);
 
 	/*
@@ -90,13 +92,13 @@ Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IData
 	 * mVtoWriter, wake up the mSchedule.mpVtoTransmitTask.
 	 */
 	mVtoWriter.AddObserver(
-	    mNotifierSource.Get(
-	        boost::bind(
-	            &AsyncTaskBase::Enable,
-	            mSchedule.mpVtoTransmitTask
-	        ),
-	        mpTimerSrc
-	    )
+	        mNotifierSource.Get(
+	                boost::bind(
+	                        &AsyncTaskBase::Enable,
+	                        mSchedule.mpVtoTransmitTask
+	                ),
+	                mpTimerSrc
+	        )
 	);
 
 	/*
@@ -315,5 +317,7 @@ void Master::ProcessDataResponse(const APDU& arResponse)
 
 }
 } //end ns
+
+#endif // ENABLE_DNP3_MASTER
 
 /* vim: set ts=4 sw=4: */

@@ -17,6 +17,8 @@
 // under the License.
 //
 
+#if ENABLE_DNP3_MASTER && ENABLE_DNP3_SLAVE
+
 #include "IntegrationTest.h"
 
 #include <sstream>
@@ -196,4 +198,6 @@ void IntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 }
 
 /* vim: set ts=4 sw=4: */
+
+#endif // ENABLE_DNP3_MASTER && ENABLE_DNP3_SLAVE
 

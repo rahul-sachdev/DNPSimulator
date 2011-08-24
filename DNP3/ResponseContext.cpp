@@ -15,6 +15,8 @@
 // under the License.
 //
 
+#if ENABLE_DNP3_SLAVE
+
 #include <boost/bind.hpp>
 
 #include <APL/Logger.h>
@@ -327,9 +329,9 @@ size_t ResponseContext::IterateIndexed(VtoEventRequest& arRequest, VtoDataEventI
 {
 	for (size_t i = 0; i < arRequest.count; ++i) {
 		IndexedWriteIterator itr = arAPDU.WriteIndexed(
-		                               arRequest.pObj,
-		                               arIter->mValue.GetSize(),
-		                               arIter->mIndex
+		                                   arRequest.pObj,
+		                                   arIter->mValue.GetSize(),
+		                                   arIter->mIndex
 		                           );
 
 		/*
@@ -346,9 +348,9 @@ size_t ResponseContext::IterateIndexed(VtoEventRequest& arRequest, VtoDataEventI
 
 		/* Write the data to the APDU message */
 		arRequest.pObj->Write(
-		    *itr,
-		    arIter->mValue.GetSize(),
-		    arIter->mValue.mpData
+		        *itr,
+		        arIter->mValue.GetSize(),
+		        arIter->mValue.mpData
 		);
 
 		/* Mark the data segment as being written */
@@ -530,3 +532,6 @@ void ResponseContext::AddIntegrityPoll()
 }
 
 /* vim: set ts=4 sw=4: */
+
+#endif // ENABLE_DNP3_SLAVE
+

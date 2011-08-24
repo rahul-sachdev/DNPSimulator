@@ -16,6 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+
+#if ENABLE_DNP3_SLAVE
+
 #include <boost/test/unit_test.hpp>
 
 #include <APLTestTools/TestHelpers.h>
@@ -1408,8 +1411,7 @@ BOOST_AUTO_TEST_CASE(ReadGrp40Var4)
 	TestStaticSetpointStatus(4, -20.0, "C0 81 80 00 28 04 00 00 00 01 00 00 00 00 00 00 34 C0");
 }
 
-
-
-
 BOOST_AUTO_TEST_SUITE_END()
+
+#endif // ENABLE_DNP3_SLAVE
 

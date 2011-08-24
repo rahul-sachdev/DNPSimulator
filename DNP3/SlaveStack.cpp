@@ -16,6 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+
+#if ENABLE_DNP3_SLAVE
+
 #include "SlaveStack.h"
 
 namespace apl
@@ -46,3 +49,6 @@ IVtoReader* SlaveStack::GetVtoReader()
 
 }
 }
+
+#endif // ENABLE_DNP3_SLAVE
+

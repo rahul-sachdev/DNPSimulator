@@ -16,6 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+
+#if ENABLE_DNP3_MASTER
+
 #include "ResponseLoader.h"
 
 #include <APL/Util.h>
@@ -157,3 +160,6 @@ void ResponseLoader::ReadVto(HeaderReadIterator& arIter, SizeByVariationObject* 
 }
 
 /* vim: set ts=4 sw=4: */
+
+#endif // ENABLE_DNP3_MASTER
+

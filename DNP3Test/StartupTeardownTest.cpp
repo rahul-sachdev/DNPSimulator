@@ -17,6 +17,8 @@
 // under the License.
 //
 
+#if ENABLE_DNP3_MASTER
+
 #include "StartupTeardownTest.h"
 
 #include <DNP3/MasterStack.h>
@@ -49,4 +51,6 @@ void StartupTeardownTest::AddMaster(const std::string& arStackName, const std::s
 	cfg.link.LocalAddr = aLocalAddress;
 	manager.AddMaster(arPortName, arStackName, aLevel, &fdo, cfg);
 }
+
+#endif // ENABLE_DNP3_MASTER
 

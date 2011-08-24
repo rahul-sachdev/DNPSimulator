@@ -108,13 +108,9 @@ libopendnp3_dnp3_la_SOURCES += DNP3/AppLayer.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/AsyncStackManager.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/BufferTypes.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/ClassCounter.cpp
-if ENABLE_DNP3_MASTER
 libopendnp3_dnp3_la_SOURCES += DNP3/ControlTasks.cpp
-endif
 libopendnp3_dnp3_la_SOURCES += DNP3/Database.cpp
-if ENABLE_DNP3_MASTER
 libopendnp3_dnp3_la_SOURCES += DNP3/DataPoll.cpp
-endif
 libopendnp3_dnp3_la_SOURCES += DNP3/DeviceTemplate.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/DNPCommandMaster.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/DNPCrc.cpp
@@ -132,13 +128,11 @@ libopendnp3_dnp3_la_SOURCES += DNP3/LinkLayerReceiver.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/LinkLayerRouter.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/LinkReceiverStates.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/LinkRoute.cpp
-if ENABLE_DNP3_MASTER
 libopendnp3_dnp3_la_SOURCES += DNP3/Master.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/MasterSchedule.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/MasterStack.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/MasterStates.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/MasterTaskBase.cpp
-endif
 libopendnp3_dnp3_la_SOURCES += DNP3/ObjectHeader.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/ObjectInterfaces.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/ObjectReadIterator.cpp
@@ -146,27 +140,19 @@ libopendnp3_dnp3_la_SOURCES += DNP3/Objects.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/ObjectWriteIterator.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/PointClass.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/PriLinkLayerStates.cpp
-if ENABLE_DNP3_SLAVE
 libopendnp3_dnp3_la_SOURCES += DNP3/ResponseContext.cpp
-endif
-if ENABLE_DNP3_MASTER
 libopendnp3_dnp3_la_SOURCES += DNP3/ResponseLoader.cpp
-endif
 libopendnp3_dnp3_la_SOURCES += DNP3/SecLinkLayerStates.cpp
-if ENABLE_DNP3_SLAVE
 libopendnp3_dnp3_la_SOURCES += DNP3/SlaveConfig.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/Slave.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/SlaveEventBuffer.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/SlaveResponseTypes.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/SlaveStack.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/SlaveStates.cpp
-endif
 libopendnp3_dnp3_la_SOURCES += DNP3/SolicitedChannel.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/Stack.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/StackManager.cpp
-if ENABLE_DNP3_MASTER
 libopendnp3_dnp3_la_SOURCES += DNP3/StartupTasks.cpp
-endif
 libopendnp3_dnp3_la_SOURCES += DNP3/TLS_Base.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/TransportLayer.cpp
 libopendnp3_dnp3_la_SOURCES += DNP3/TransportRx.cpp
@@ -448,28 +434,16 @@ dnp3test_SOURCES += APLTestTools/MockUpperLayer.cpp
 dnp3test_SOURCES += DNP3Test/AppLayerTest.cpp
 dnp3test_SOURCES += DNP3Test/ComparingDataObserver.cpp
 dnp3test_SOURCES += DNP3Test/DNPHelpers.cpp
-if ENABLE_DNP3_MASTER
-if ENABLE_DNP3_SLAVE
 dnp3test_SOURCES += DNP3Test/IntegrationTest.cpp
-endif
-endif
 dnp3test_SOURCES += DNP3Test/LinkLayerRouterTest.cpp
 dnp3test_SOURCES += DNP3Test/LinkLayerTest.cpp
-if ENABLE_DNP3_MASTER
 dnp3test_SOURCES += DNP3Test/MasterTestObject.cpp
-endif
 dnp3test_SOURCES += DNP3Test/MockAppLayer.cpp
 dnp3test_SOURCES += DNP3Test/MockAppUser.cpp
 dnp3test_SOURCES += DNP3Test/MockFrameSink.cpp
-if ENABLE_DNP3_MASTER
 dnp3test_SOURCES += DNP3Test/ResponseLoaderTestObject.cpp
-endif
-if ENABLE_DNP3_SLAVE
 dnp3test_SOURCES += DNP3Test/SlaveTestObject.cpp
-endif
-if ENABLE_DNP3_MASTER
 dnp3test_SOURCES += DNP3Test/StartupTeardownTest.cpp
-endif
 dnp3test_SOURCES += DNP3Test/TestAPDU.cpp
 dnp3test_SOURCES += DNP3Test/TestAPDUWriting.cpp
 dnp3test_SOURCES += DNP3Test/TestAppLayer.cpp
@@ -478,41 +452,25 @@ dnp3test_SOURCES += DNP3Test/TestDatabase.cpp
 dnp3test_SOURCES += DNP3Test/TestEnhancedVtoRouter.cpp
 dnp3test_SOURCES += DNP3Test/TestEventBufferBase.cpp
 dnp3test_SOURCES += DNP3Test/TestEventBuffers.cpp
-if ENABLE_DNP3_MASTER
-if ENABLE_DNP3_SLAVE
 dnp3test_SOURCES += DNP3Test/TestIntegration.cpp
-endif
-endif
 dnp3test_SOURCES += DNP3Test/TestLinkFrameDNP.cpp
 dnp3test_SOURCES += DNP3Test/TestLinkLayer.cpp
 dnp3test_SOURCES += DNP3Test/TestLinkLayerRouter.cpp
 dnp3test_SOURCES += DNP3Test/TestLinkReceiver.cpp
 dnp3test_SOURCES += DNP3Test/TestLinkRoute.cpp
-if ENABLE_DNP3_MASTER
 dnp3test_SOURCES += DNP3Test/TestMaster.cpp
-endif
 dnp3test_SOURCES += DNP3Test/TestObjects.cpp
-if ENABLE_DNP3_MASTER
 dnp3test_SOURCES += DNP3Test/TestResponseLoader.cpp
-endif
-if ENABLE_DNP3_SLAVE
 dnp3test_SOURCES += DNP3Test/TestSlave.cpp
 dnp3test_SOURCES += DNP3Test/TestSlaveEventBuffer.cpp
-endif
 dnp3test_SOURCES += DNP3Test/TestStartBoostUTF.cpp
-if ENABLE_DNP3_MASTER
 dnp3test_SOURCES += DNP3Test/TestStartupTeardown.cpp
-endif
 dnp3test_SOURCES += DNP3Test/TestTransportLayer.cpp
 dnp3test_SOURCES += DNP3Test/TestTransportLoopback.cpp
 dnp3test_SOURCES += DNP3Test/TestTransportScalability.cpp
 dnp3test_SOURCES += DNP3Test/TestVtoInterface.cpp
-if ENABLE_DNP3_MASTER
-if ENABLE_DNP3_SLAVE
 dnp3test_SOURCES += DNP3Test/TestVtoLoopbackIntegration.cpp
 dnp3test_SOURCES += DNP3Test/TestVtoOnewayIntegration.cpp
-endif
-endif
 dnp3test_SOURCES += DNP3Test/TestVtoRouter.cpp
 dnp3test_SOURCES += DNP3Test/TestVtoRouterManager.cpp
 dnp3test_SOURCES += DNP3Test/TestVtoWriter.cpp
@@ -521,11 +479,7 @@ dnp3test_SOURCES += DNP3Test/TransportLoopbackTestObject.cpp
 dnp3test_SOURCES += DNP3Test/TransportScalabilityTestObject.cpp
 dnp3test_SOURCES += DNP3Test/TransportStackPair.cpp
 dnp3test_SOURCES += DNP3Test/TransportTestObject.cpp
-if ENABLE_DNP3_MASTER
-if ENABLE_DNP3_SLAVE
 dnp3test_SOURCES += DNP3Test/VtoIntegrationTestBase.cpp
-endif
-endif
 
 ASTYLE=astyle --options=config/astyle.cfg
 
@@ -537,6 +491,8 @@ astyle:
 	${ASTYLE}   ${srcdir}/APLTestTools/*.cpp   ${srcdir}/APLTestTools/*.h
 	${ASTYLE}   ${srcdir}/DNP3/*.cpp           ${srcdir}/DNP3/*.h
 	${ASTYLE}   ${srcdir}/DNP3Test/*.cpp       ${srcdir}/DNP3Test/*.h
+	${ASTYLE}   ${srcdir}/Terminal/*.cpp       ${srcdir}/Terminal/*.h
+	${ASTYLE}   ${srcdir}/TestSet/*.cpp        ${srcdir}/TestSet/*.h
 
 docs: docs-html docs-pdf
 

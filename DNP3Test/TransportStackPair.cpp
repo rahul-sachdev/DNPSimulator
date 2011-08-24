@@ -29,12 +29,12 @@ namespace dnp
 {
 
 TransportStackPair::TransportStackPair(
-    LinkConfig aClientCfg,
-    LinkConfig aServerCfg,
-    Logger* apLogger,
-    boost::asio::io_service* apService,
-    ITimerSource* apTimerSrc,
-    boost::uint16_t aPort) :
+        LinkConfig aClientCfg,
+        LinkConfig aServerCfg,
+        Logger* apLogger,
+        boost::asio::io_service* apService,
+        ITimerSource* apTimerSrc,
+        boost::uint16_t aPort) :
 
 	mClient(apLogger->GetSubLogger("TCPClient"), apService, "127.0.0.1", aPort),
 	mServer(apLogger->GetSubLogger("TCPServer"), apService, "127.0.0.1", aPort),

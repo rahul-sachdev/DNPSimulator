@@ -15,6 +15,8 @@
  * under the License.
  */
 
+#if ENABLE_DNP3_MASTER && ENABLE_DNP3_SLAVE
+
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
@@ -211,3 +213,6 @@ BOOST_AUTO_TEST_CASE(IntegrationTestConstructionDestruction)
 BOOST_AUTO_TEST_SUITE_END()
 
 /* vim: set ts=4 sw=4: */
+
+#endif // ENABLE_DNP3_MASTER && ENABLE_DNP3_SLAVE
+

@@ -16,8 +16,10 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "SlaveResponseTypes.h"
 
+#if ENABLE_DNP3_SLAVE
+
+#include "SlaveResponseTypes.h"
 #include "SlaveConfig.h"
 #include "Objects.h"
 
@@ -163,4 +165,6 @@ StreamObject<Counter>* SlaveResponseTypes::GetEventCounter(GrpVar gv)
 
 }
 }
+
+#endif // ENABLE_DNP3_SLAVE
 

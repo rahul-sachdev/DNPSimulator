@@ -16,6 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+
+#if ENABLE_DNP3_MASTER
+
 #include "MasterStack.h"
 
 #include <APL/Logger.h>
@@ -45,3 +48,6 @@ IVtoReader* MasterStack::GetVtoReader()
 
 }
 }
+
+#endif // ENABLE_DNP3_MASTER
+

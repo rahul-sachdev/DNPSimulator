@@ -17,6 +17,8 @@
 // under the License.
 //
 
+#if ENABLE_DNP3_SLAVE
+
 #include "DNPConstants.h"
 #include "SlaveConfig.h"
 
@@ -65,3 +67,6 @@ SlaveConfig::SlaveConfig() :
 }
 
 /* vim: set ts=4 sw=4: */
+
+#endif // ENABLE_DNP3_SLAVE
+

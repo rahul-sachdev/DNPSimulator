@@ -60,7 +60,8 @@ bool GenerateConfig(bool aIsMaster, const std::string& arPath)
 			APLXML_MTS::MasterTestSet_t cfg;
 			XML_TestSet::Configure(cfg, false);
 			WriteXmlToFile(&cfg, arPath);
-		} else if (ENABLE_DNP3_SLAVE) {
+		}
+		else if (ENABLE_DNP3_SLAVE) {
 			APLXML_STS::SlaveTestSet_t cfg;
 			XML_TestSet::Configure(cfg);
 			XML_DNP3::Configure(cfg.DeviceTemplate, 10, 10, 10, 2, 2, 2, 2);
@@ -151,7 +152,8 @@ int main(int argc, char* argv[])
 		else {
 			if (ENABLE_DNP3_SLAVE && vm.count("slave")) {
 				RunStack<SlaveXMLStack, APLXML_STS::SlaveTestSet_t>(xmlFilename);
-			} else if (ENABLE_DNP3_MASTER) {
+			}
+			else if (ENABLE_DNP3_MASTER) {
 				RunStack<MasterXMLStack, APLXML_MTS::MasterTestSet_t>(xmlFilename);
 			}
 		}

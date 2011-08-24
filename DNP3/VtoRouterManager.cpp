@@ -56,9 +56,9 @@ VtoRouterManager::VtoRouterManager(Logger* apLogger, ITimerSource* apTimerSrc, I
 }
 
 VtoRouter* VtoRouterManager::StartRouter(
-    const std::string& arPortName,
-    const VtoRouterSettings& arSettings,
-    IVtoWriter* apWriter)
+        const std::string& arPortName,
+        const VtoRouterSettings& arSettings,
+        IVtoWriter* apWriter)
 {
 	IPhysicalLayerAsync* pPhys = mpPhysSource->AcquireLayer(arPortName);
 	Logger* pLogger = this->GetSubLogger(arPortName, arSettings.CHANNEL_ID);

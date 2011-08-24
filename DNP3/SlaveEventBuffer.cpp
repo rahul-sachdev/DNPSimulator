@@ -15,6 +15,8 @@
 // under the License.
 //
 
+#if ENABLE_DNP3_SLAVE
+
 #include "SlaveEventBuffer.h"
 
 #include <APL/Exception.h>
@@ -202,3 +204,5 @@ bool SlaveEventBuffer::IsFull(BufferTypes aType)
 } //end NS
 
 /* vim: set ts=4 sw=4: */
+
+#endif // ENABLE_DNP3_SLAVE

@@ -38,11 +38,11 @@ private:
 	void HandleLogTimer();
 
 	enum LogColumns {
-	    COL_TIME,
-	    COL_FILTER,
-	    COL_DEVICE,
-	    COL_LOCATION,
-	    COL_MESSAGE
+		COL_TIME,
+		COL_FILTER,
+		COL_DEVICE,
+		COL_LOCATION,
+		COL_MESSAGE
 	};
 
 	void StopLoggingToFile();

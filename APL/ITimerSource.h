@@ -59,8 +59,8 @@ public:
 	virtual ITimer* Start(const boost::posix_time::ptime&, const FunctionVoidZero&) = 0;
 
 	/** Thread-safe way to post an event to handled asynchronously */
-	virtual void Post(const FunctionVoidZero&) = 0;	
-	
+	virtual void Post(const FunctionVoidZero&) = 0;
+
 	/** Thread safe way to execute a function synchronously */
 	virtual void PostSync(const FunctionVoidZero&) = 0;
 

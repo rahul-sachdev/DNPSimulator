@@ -15,8 +15,9 @@
  * under the License.
  */
 
-#include <boost/test/unit_test.hpp>
+#if ENABLE_DNP3_MASTER && ENABLE_DNP3_SLAVE
 
+#include <boost/test/unit_test.hpp>
 
 #include <APL/RandomizedBuffer.h>
 #include <APLTestTools/MockPhysicalLayerMonitor.h>
@@ -30,11 +31,11 @@ class VtoOnewayTestStack : public VtoIntegrationTestBase
 {
 public:
 	VtoOnewayTestStack(
-	    bool clientOnSlave = true,
-	    bool aImmediateOutput = false,
-	    bool aLogToFile = false,
-	    FilterLevel level = LEV_INFO,
-	    boost::uint16_t port = MACRO_PORT_VALUE) :
+	        bool clientOnSlave = true,
+	        bool aImmediateOutput = false,
+	        bool aLogToFile = false,
+	        FilterLevel level = LEV_INFO,
+	        boost::uint16_t port = MACRO_PORT_VALUE) :
 
 		VtoIntegrationTestBase(clientOnSlave, aImmediateOutput, aLogToFile, level, port),
 		local(mLog.GetLogger(level, "local-mock-phys-monitor"), &client, &timerSource, 500),
@@ -170,3 +171,6 @@ BOOST_AUTO_TEST_CASE(LargeDataTransferSlaveToMaster)
 BOOST_AUTO_TEST_SUITE_END()
 
 /* vim: set ts=4 sw=4: */
+
+#endif // ENABLE_DNP3_MASTER && ENABLE_DNP3_SLAVE
+

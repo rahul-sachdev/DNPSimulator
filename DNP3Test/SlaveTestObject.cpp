@@ -16,11 +16,13 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+
+#if ENABLE_DNP3_SLAVE
+
 #include "SlaveTestObject.h"
 
 #include <APLTestTools/BufferHelpers.h>
 #include <APL/ToHex.h>
-
 
 namespace apl
 {
@@ -58,4 +60,6 @@ std::string SlaveTestObject::Read()
 
 }
 }
+
+#endif // ENABLE_DNP3_SLAVE
 

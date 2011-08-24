@@ -109,7 +109,7 @@ void AsyncStackManager::AddSerial(const std::string& arName, PhysLayerSettings a
 
 #if ENABLE_DNP3_MASTER
 ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel, IDataObserver* apPublisher,
-        const MasterStackConfig& arCfg)
+                const MasterStackConfig& arCfg)
 {
 	this->ThrowIfAlreadyShutdown();
 	LinkChannel* pChannel = this->GetOrCreateChannel(arPortName);
@@ -132,7 +132,7 @@ ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, c
 
 #if ENABLE_DNP3_SLAVE
 IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel, ICommandAcceptor* apCmdAcceptor,
-        const SlaveStackConfig& arCfg)
+                const SlaveStackConfig& arCfg)
 {
 	this->ThrowIfAlreadyShutdown();
 	LinkChannel* pChannel = this->GetOrCreateChannel(arPortName);

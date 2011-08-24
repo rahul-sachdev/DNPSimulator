@@ -17,6 +17,8 @@
 // under the License.
 //
 
+#if ENABLE_DNP3_MASTER
+
 #include "MasterTaskBase.h"
 #include "APDU.h"
 #include <APL/Logger.h>
@@ -71,3 +73,6 @@ TaskResult SimpleRspBase::_OnFinalResponse(const APDU& arAPDU)
 
 }
 } //ens ns
+
+#endif // ENABLE_DNP3_MASTER
+

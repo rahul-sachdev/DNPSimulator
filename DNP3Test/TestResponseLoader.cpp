@@ -16,11 +16,14 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+
+#if ENABLE_DNP3_MASTER
+
 #include <boost/test/unit_test.hpp>
+
 #include <APLTestTools/TestHelpers.h>
 
 #include "ResponseLoaderTestObject.h"
-
 
 using namespace apl;
 using namespace apl::dnp;
@@ -134,4 +137,6 @@ BOOST_AUTO_TEST_CASE(Group40Var2)
 }
 
 BOOST_AUTO_TEST_SUITE_END() //end suite
+
+#endif // ENABLE_DNP3_MASTER
 
