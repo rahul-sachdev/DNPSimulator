@@ -38,6 +38,8 @@ TestSingle.tiny.xml
 
 dnp3test
 testset
+libopendnp3_apl.map
+libopendnp3_dnp3.map
 
 /config/autotools/m4/libtool.m4
 /config/autotools/m4/ltoptions.m4
