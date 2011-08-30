@@ -16,6 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+
+#include "config.h"
 #include "XmlToConfig.h"
 
 #include <XMLBindings/APLXML_DNP.h>
@@ -53,22 +55,29 @@ namespace dnp
 
 bool XmlToConfig::Configure(const APLXML_Base::PhysicalLayerList_t& arList, FilterLevel aLevel, AsyncStackManager& arMgr)
 {
-
+#if ENABLE_TCP_CLIENT
 	for (size_t i = 0; i < arList.TCPClientVector.size(); i++ ) {
 		TCPClient_t* pCfg = arList.TCPClientVector[i];
 		PhysLayerSettings s(aLevel, pCfg->OpenRetryMS);
 		arMgr.AddTCPClient(pCfg->Name, s, pCfg->Address, pCfg->Port);
 	}
+#endif
+
+#if ENABLE_TCP_SERVER
 	for (size_t i = 0; i < arList.TCPServerVector.size(); i++ ) {
 		TCPServer_t* pCfg = arList.TCPServerVector[i];
 		PhysLayerSettings s(aLevel, pCfg->OpenRetryMS);
 		arMgr.AddTCPServer(pCfg->Name, s, pCfg->Endpoint, pCfg->Port);
 	}
+#endif
+
+#if ENABLE_SERIAL
 	for (size_t i = 0; i < arList.SerialVector.size(); i++ ) {
 		Serial_t* pCfg = arList.SerialVector[i];
 		PhysLayerSettings s(aLevel, pCfg->OpenRetryMS);
 		arMgr.AddSerial(pCfg->Name, s, xml::GetSerialSettings(pCfg) );
 	}
+#endif
 
 	return true;
 }

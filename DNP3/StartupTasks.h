@@ -19,6 +19,8 @@
 #ifndef __STARTUP_TASKS_H_
 #define __STARTUP_TASKS_H_
 
+#include "config.h"
+
 #if ENABLE_DNP3_MASTER
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>

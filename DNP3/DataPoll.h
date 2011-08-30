@@ -19,6 +19,8 @@
 #ifndef __DATA_POLL_H_
 #define __DATA_POLL_H_
 
+#include "config.h"
+
 #if ENABLE_DNP3_MASTER
 
 #include "MasterTaskBase.h"

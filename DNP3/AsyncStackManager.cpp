@@ -17,6 +17,8 @@
 // under the License.
 //
 
+#include "config.h"
+
 #include "AsyncStackManager.h"
 #include "LinkChannel.h"
 
@@ -45,7 +47,6 @@
 #include <DNP3/VtoConfig.h>
 
 #include <iostream>
-
 
 using namespace std;
 
@@ -89,23 +90,29 @@ std::vector<std::string> AsyncStackManager::GetPortNames()
 	return GetKeys<ChannelToChannelMap, string>(mChannelNameToChannel);
 }
 
+#if ENABLE_TCP_CLIENT
 void AsyncStackManager::AddTCPClient(const std::string& arName, PhysLayerSettings aSettings, const std::string& arAddr, boost::uint16_t aPort)
 {
 	this->ThrowIfAlreadyShutdown();
 	mMgr.AddTCPClient(arName, aSettings, arAddr, aPort);
 }
+#endif
 
+#if ENABLE_TCP_SERVER
 void AsyncStackManager::AddTCPServer(const std::string& arName, PhysLayerSettings aSettings, const std::string& arEndpoint, boost::uint16_t aPort)
 {
 	this->ThrowIfAlreadyShutdown();
 	mMgr.AddTCPServer(arName, aSettings, arEndpoint, aPort);
 }
+#endif
 
+#if ENABLE_SERIAL
 void AsyncStackManager::AddSerial(const std::string& arName, PhysLayerSettings aSettings, SerialSettings aSerial)
 {
 	this->ThrowIfAlreadyShutdown();
 	mMgr.AddSerial(arName, aSettings, aSerial);
 }
+#endif
 
 #if ENABLE_DNP3_MASTER
 ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel, IDataObserver* apPublisher,

@@ -19,6 +19,8 @@
 #ifndef __XML_TO_CONFIG_H_
 #define __XML_TO_CONFIG_H_
 
+#include "config.h"
+
 #include <set>
 #include <string>
 #include <vector>

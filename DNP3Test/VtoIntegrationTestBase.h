@@ -17,6 +17,8 @@
 #ifndef __VTO_INTEGRATION_TEST_BASE_H_
 #define __VTO_INTEGRATION_TEST_BASE_H_
 
+#include "config.h"
+
 #if ENABLE_DNP3_MASTER && ENABLE_DNP3_SLAVE
 
 #include <APLTestTools/LogTester.h>

@@ -15,6 +15,8 @@
 // under the License.
 //
 
+#include "config.h"
+
 #if ENABLE_DNP3_SLAVE
 
 #include <boost/bind.hpp>

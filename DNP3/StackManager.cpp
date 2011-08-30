@@ -16,6 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+
+#include "config.h"
 #include "StackManager.h"
 
 #include <DNP3/AsyncStackManager.h>
@@ -44,21 +46,26 @@ StackManager::~StackManager()
 	delete mpLog;
 }
 
-//used for defining ports
+#if ENABLE_TCP_CLIENT
 void StackManager::AddTCPClient(const std::string& arName, PhysLayerSettings s, const std::string& arAddr, boost::uint16_t aPort)
 {
 	mpImpl->AddTCPClient(arName, s, arAddr, aPort);
 }
+#endif
 
+#if ENABLE_TCP_SERVER
 void StackManager::AddTCPServer(const std::string& arName, PhysLayerSettings s, const std::string& arEndpoint, boost::uint16_t aPort)
 {
 	mpImpl->AddTCPServer(arName, s, arEndpoint, aPort);
 }
+#endif
 
+#if ENABLE_SERIAL
 void StackManager::AddSerial(const std::string& arName, PhysLayerSettings s, SerialSettings aSerial)
 {
 	mpImpl->AddSerial(arName, s, aSerial);
 }
+#endif
 
 #if ENABLE_DNP3_MASTER
 ICommandAcceptor* StackManager::AddMaster(const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel,

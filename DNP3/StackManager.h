@@ -25,6 +25,8 @@
 #include <APL/LogBase.h>
 #include <APL/SerialTypes.h>
 
+#include "config.h"
+
 #if ENABLE_DNP3_MASTER
 #include <DNP3/MasterStackConfig.h>
 #endif
@@ -58,9 +60,17 @@ public:
 	StackManager();
 	~StackManager();
 
+#if ENABLE_TCP_CLIENT
 	void AddTCPClient(const std::string& arName, PhysLayerSettings aPhys, const std::string& arAddr, boost::uint16_t aPort);
+#endif
+
+#if ENABLE_TCP_SERVER
 	void AddTCPServer(const std::string& arName, PhysLayerSettings  aPhys, const std::string& arEndpoint, boost::uint16_t aPort);
+#endif
+
+#if ENABLE_SERIAL
 	void AddSerial(const std::string& arName, PhysLayerSettings aPhys, SerialSettings aSerial);
+#endif
 
 #if ENABLE_DNP3_MASTER
 	ICommandAcceptor* AddMaster(const std::string& arPortName,

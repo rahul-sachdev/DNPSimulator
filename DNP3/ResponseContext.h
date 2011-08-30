@@ -18,6 +18,8 @@
 #ifndef __RESPONSE_CONTEXT_H_
 #define __RESPONSE_CONTEXT_H_
 
+#include "config.h"
+
 #if ENABLE_DNP3_SLAVE
 
 #include <boost/function.hpp>

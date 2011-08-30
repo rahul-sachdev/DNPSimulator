@@ -16,8 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "PhysicalLayerManager.h"
 
+#include "config.h"
+#include "PhysicalLayerManager.h"
 #include "PhysicalLayerFactory.h"
 #include "PhysLayerSettings.h"
 #include "Logger.h"
@@ -30,13 +31,13 @@ using namespace std;
 
 namespace apl
 {
-PhysicalLayerManager :: PhysicalLayerManager(Logger* apBaseLogger, boost::asio::io_service* apService) :
+PhysicalLayerManager::PhysicalLayerManager(Logger* apBaseLogger, boost::asio::io_service* apService) :
 	PhysicalLayerMap(apBaseLogger, apService)
 {
 
 }
 
-PhysicalLayerManager :: ~PhysicalLayerManager()
+PhysicalLayerManager::~PhysicalLayerManager()
 {
 	for (NameToInstanceMap::iterator itr = this->mNameToInstanceMap.begin(); itr != mNameToInstanceMap.end(); itr++ ) {
 		itr->second.Release();
@@ -53,25 +54,31 @@ void PhysicalLayerManager::Remove(const std::string& arName)
 	mNameToSettingsMap.erase(arName);
 }
 
-void PhysicalLayerManager ::AddTCPClient(const std::string& arName, PhysLayerSettings s, const std::string& arAddr, boost::uint16_t aPort)
+#if ENABLE_TCP_CLIENT
+void PhysicalLayerManager::AddTCPClient(const std::string& arName, PhysLayerSettings s, const std::string& arAddr, boost::uint16_t aPort)
 {
 	IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetTCPClientAsync(arAddr, aPort);
 	PhysLayerInstance pli(fac);
 	this->AddLayer(arName, s, pli);
 }
+#endif
 
-void PhysicalLayerManager ::AddTCPServer(const std::string& arName, PhysLayerSettings s, const std::string& arEndpoint, boost::uint16_t aPort)
+#if ENABLE_TCP_SERVER
+void PhysicalLayerManager::AddTCPServer(const std::string& arName, PhysLayerSettings s, const std::string& arEndpoint, boost::uint16_t aPort)
 {
 	IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetTCPServerAsync(arEndpoint, aPort);
 	PhysLayerInstance pli(fac);
 	this->AddLayer(arName, s, pli);
 }
+#endif
 
-void PhysicalLayerManager ::AddSerial(const std::string& arName, PhysLayerSettings s, SerialSettings aSerial)
+#if ENABLE_SERIAL
+void PhysicalLayerManager::AddSerial(const std::string& arName, PhysLayerSettings s, SerialSettings aSerial)
 {
 	IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetSerialAsync(aSerial);
 	PhysLayerInstance pli(fac);
 	this->AddLayer(arName, s, pli);
 }
+#endif
 
 }

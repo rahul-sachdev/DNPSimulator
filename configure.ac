@@ -22,30 +22,41 @@ AX_BOOST_SYSTEM
 AX_BOOST_THREAD
 AX_BOOST_UNIT_TEST_FRAMEWORK
 
+AC_DEFUN([AX_DEFINE],
+[if test "$2" = yes; then result=1; else result=0; fi
+AH_TEMPLATE($1, [$3])
+AC_DEFINE_UNQUOTED([$1], $result)
+])
+
 AC_ARG_ENABLE(master,
   AS_HELP_STRING([--disable-master], [Disable DNP3 master support]),
     [ac_master_enabled=$enableval], [ac_master_enabled=yes])
-AM_CONDITIONAL(ENABLE_DNP3_MASTER, [test "$ac_master_enabled" = yes])
+AX_DEFINE([ENABLE_DNP3_MASTER], $ac_master_enabled,
+  [DNP3 master support])
 
 AC_ARG_ENABLE(slave,
   AS_HELP_STRING([--disable-slave], [Disable DNP3 slave support]),
     [ac_slave_enabled=$enableval], [ac_slave_enabled=yes])
-AM_CONDITIONAL(ENABLE_DNP3_SLAVE, [test "$ac_slave_enabled" = yes])
+AX_DEFINE([ENABLE_DNP3_SLAVE], $ac_slave_enabled,
+  [DNP3 slave support])
 
 AC_ARG_ENABLE(serial,
   AS_HELP_STRING([--disable-serial], [Disable serial physical layer support]),
     [ac_serial_enabled=$enableval], [ac_serial_enabled=yes])
-AM_CONDITIONAL(ENABLE_SERIAL, [test "$ac_serial_enabled" = yes])
+AX_DEFINE([ENABLE_SERIAL], $ac_serial_enabled,
+  [Serial support])
 
 AC_ARG_ENABLE(tcpclient,
   AS_HELP_STRING([--disable-tcpclient], [Disable TCP client physical layer support]),
     [ac_tcpclient_enabled=$enableval], [ac_tcpclient_enabled=yes])
-AM_CONDITIONAL(ENABLE_TCP_CLIENT, [test "$ac_tcpclient_enabled" = yes])
+AX_DEFINE([ENABLE_TCP_CLIENT], $ac_tcpclient_enabled,
+  [TCP client support])
 
 AC_ARG_ENABLE(tcpserver,
   AS_HELP_STRING([--disable-tcpserver], [Disable TCP server physical layer support]),
     [ac_tcpserver_enabled=$enableval], [ac_tcpserver_enabled=yes])
-AM_CONDITIONAL(ENABLE_TCP_SERVER, [test "$ac_tcpserver_enabled" = yes])
+AX_DEFINE([ENABLE_TCP_SERVER], $ac_tcpserver_enabled,
+  [TCP server support])
 
 AC_ARG_ENABLE(lcov,
   AS_HELP_STRING([--enable-lcov], [Enable gcov/lcov support]),
@@ -154,6 +165,10 @@ LIBS:                       ${LIBS}
 
 master support:             ${ac_master_enabled}
 slave support:              ${ac_slave_enabled}
+
+serial support:             ${ac_serial_enabled}
+tcp client support:         ${ac_tcpclient_enabled}
+tcp server support:         ${ac_tcpserver_enabled}
 
 lcov support:               ${ac_lcov_enabled}
 shared libraries:           ${enable_shared}

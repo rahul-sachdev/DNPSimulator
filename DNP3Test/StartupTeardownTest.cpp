@@ -17,6 +17,8 @@
 // under the License.
 //
 
+#include "config.h"
+
 #if ENABLE_DNP3_MASTER
 
 #include "StartupTeardownTest.h"

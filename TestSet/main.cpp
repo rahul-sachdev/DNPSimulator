@@ -17,6 +17,8 @@
 // under the License.
 //
 
+#include "config.h"
+
 #include <memory>
 #include <csignal>
 #include <sys/stat.h>

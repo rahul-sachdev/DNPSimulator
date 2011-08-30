@@ -16,6 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+
+#include "config.h"
 #include "StackHelpers.h"
 
 #if ENABLE_DNP3_SLAVE
@@ -44,8 +46,11 @@ namespace dnp
 
 IPhysicalLayerAsync* FGetTerminalPhys(Logger* apLogger, boost::asio::io_service* apSrv, bool aRemote, boost::uint16_t aRemotePort)
 {
-	if (aRemote) return PhysicalLayerFactory::FGetTCPServerAsync("0.0.0.0", aRemotePort, apSrv, apLogger);
-	else return new PhysicalLayerIOStreamAsync(apLogger, apSrv);
+	if (ENABLE_TCP_SERVER && aRemote) {
+		return PhysicalLayerFactory::FGetTCPServerAsync("0.0.0.0", aRemotePort, apSrv, apLogger);
+	} else {
+		return new PhysicalLayerIOStreamAsync(apLogger, apSrv);
+	}
 }
 
 StackBase::StackBase(const APLXML_Base::PhysicalLayerList_t& arList, FilterLevel aLevel, const std::string& arLogFile, bool aRemote, boost::uint16_t aRemotePort) :

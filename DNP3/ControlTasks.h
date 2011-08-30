@@ -19,6 +19,8 @@
 #ifndef __CONTROL_TASKS_H_
 #define __CONTROL_TASKS_H_
 
+#include "config.h"
+
 #if ENABLE_DNP3_MASTER
 
 #include <boost/function.hpp>

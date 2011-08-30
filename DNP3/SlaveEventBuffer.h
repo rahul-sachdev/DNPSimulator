@@ -18,6 +18,8 @@
 #ifndef __SLAVE_EVENT_BUFFER_H_
 #define __SLAVE_EVENT_BUFFER_H_
 
+#include "config.h"
+
 #if ENABLE_DNP3_SLAVE
 
 #include <APL/DataTypes.h>

@@ -19,6 +19,8 @@
 #ifndef __PHYSICAL_LAYER_XML_FACTORY_H_
 #define __PHYSICAL_LAYER_XML_FACTORY_H_
 
+#include "config.h"
+
 #include <XMLBindings/APLXML_Base.h>
 #include <APL/PhysicalLayerFunctors.h>
 #include <APL/SerialTypes.h>
@@ -36,15 +38,25 @@ public:
 	static IPhysicalLayerAsyncFactory GetFactoryAsync(const APLXML_Base::PhysicalLayerDescriptor_t* apCfg);
 
 	/* These factories should take the regular configuration types */
+#if ENABLE_SERIAL
 	static IPhysicalLayerAsyncFactory GetAsync(const APLXML_Base::Serial_t* apCfg);
+#endif
+
+#if ENABLE_TCP_CLIENT
 	static IPhysicalLayerAsyncFactory GetAsync(const APLXML_Base::TCPClient_t* apCfg);
+#endif
+
+#if ENABLE_TCP_SERVER
 	static IPhysicalLayerAsyncFactory GetAsync(const APLXML_Base::TCPServer_t* apCfg);
+#endif
 };
 
+#if ENABLE_SERIAL
 int BaudToInt(APLXML_Base::BaudRateEnum aBaud);
 ParityType EnumToParity(APLXML_Base::ParityEnum aParity);
 SerialSettings GetSerialSettings(const APLXML_Base::Serial_t* apCfg);
 FlowType EnumToFlow(APLXML_Base::FlowControlEnum);
+#endif
 
 }
 }

@@ -19,7 +19,7 @@
 #ifndef __PhysicalLayerManager_H_
 #define __PhysicalLayerManager_H_
 
-
+#include "config.h"
 #include "PhysicalLayerMap.h"
 #include "SerialTypes.h"
 
@@ -38,9 +38,17 @@ public:
 
 	//function for manually adding entires
 
+#if ENABLE_TCP_CLIENT
 	void AddTCPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort);
+#endif
+
+#if ENABLE_TCP_SERVER
 	void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
+#endif
+
+#if ENABLE_SERIAL
 	void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
+#endif
 
 	// Removes a physical layer and deletes it if the manager has ownership.
 	void Remove(const std::string& arName);

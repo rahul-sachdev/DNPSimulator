@@ -19,10 +19,14 @@
 #ifndef __PHYSICAL_LAYER_ASYNC_SERIAL_H_
 #define __PHYSICAL_LAYER_ASYNC_SERIAL_H_
 
+#include "config.h"
+
+#if ENABLE_SERIAL
+
 #include "PhysicalLayerAsyncASIO.h"
 #include "SerialTypes.h"
-#include <boost/asio/serial_port.hpp>
 
+#include <boost/asio/serial_port.hpp>
 #include <memory>
 
 namespace apl
@@ -50,5 +54,7 @@ protected:
 	boost::asio::serial_port mPort;
 };
 }
+
+#endif // ENABLE_SERIAL
 
 #endif

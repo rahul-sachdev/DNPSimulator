@@ -17,6 +17,10 @@
 // under the License.
 //
 
+#include "config.h"
+
+#if ENABLE_SERIAL
+
 #include "PhysicalLayerAsyncSerial.h"
 
 #include <boost/bind.hpp>
@@ -97,3 +101,6 @@ void PhysicalLayerAsyncSerial::DoAsyncWrite(const boost::uint8_t* apBuffer, size
 }
 
 /* vim: set ts=4 sw=4: */
+
+#endif // ENABLE_SERIAL
+

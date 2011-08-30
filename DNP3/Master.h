@@ -19,6 +19,8 @@
 #ifndef __MASTER_H_
 #define __MASTER_H_
 
+#include "config.h"
+
 #if ENABLE_DNP3_MASTER
 
 #include <APL/Loggable.h>

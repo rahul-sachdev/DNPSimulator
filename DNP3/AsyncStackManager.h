@@ -38,6 +38,7 @@
 #include "VtoDataInterface.h"
 #include "LinkRoute.h"
 #include "VtoRouterManager.h"
+#include "config.h"
 
 namespace apl
 {
@@ -81,14 +82,20 @@ public:
 
 	// All the io_service marshalling now occurs here. It's now safe to add/remove while the manager is running.
 
+#if ENABLE_TCP_CLIENT
 	// Adds a TCPClient port, excepts if the port already exists
 	void AddTCPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort);
+#endif
 
+#if ENABLE_TCP_SERVER
 	// Adds a TCPServer port, excepts if the port already exists
 	void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
+#endif
 
+#if ENABLE_SERIAL
 	// Adds a Serial port, excepts if the port already exists
 	void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
+#endif
 
 #if ENABLE_DNP3_MASTER
 	/**

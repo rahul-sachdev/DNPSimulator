@@ -18,6 +18,8 @@
 #ifndef __RESPONSE_LOADER_H_
 #define __RESPONSE_LOADER_H_
 
+#include "config.h"
+
 #if ENABLE_DNP3_MASTER
 
 #include <APL/Types.h>

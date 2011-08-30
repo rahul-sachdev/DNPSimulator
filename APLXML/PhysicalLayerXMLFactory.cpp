@@ -17,7 +17,7 @@
 // under the License.
 //
 
-
+#include "config.h"
 #include "PhysicalLayerXMLFactory.h"
 
 #include <APL/PhysicalLayerFactory.h>
@@ -30,36 +30,49 @@ namespace xml
 
 IPhysicalLayerAsyncFactory PhysicalLayerXMLFactory :: GetFactoryAsync(const APLXML_Base::PhysicalLayerDescriptor_t* apCfg)
 {
+#if ENABLE_SERIAL
 	const APLXML_Base::Serial_t* pSerial = dynamic_cast<const APLXML_Base::Serial_t*>(apCfg);
 	if(pSerial != NULL) return GetAsync(pSerial);
+#endif
 
+#if ENABLE_TCP_SERVER
 	const APLXML_Base::TCPServer_t* pServer = dynamic_cast<const APLXML_Base::TCPServer_t*>(apCfg);
 	if(pServer != NULL) return GetAsync(pServer);
+#endif
 
+#if ENABLE_TCP_CLIENT
 	const APLXML_Base::TCPClient_t* pClient = dynamic_cast<const APLXML_Base::TCPClient_t*>(apCfg);
 	if(pClient != NULL) return GetAsync(pClient);
+#endif
 
 	throw Exception(LOCATION, "Unknown PhysicalLayerDescriptor_t");
 }
 
+#if ENABLE_SERIAL
 IPhysicalLayerAsyncFactory PhysicalLayerXMLFactory :: GetAsync(const APLXML_Base::Serial_t* apCfg)
 {
 	SerialSettings s = GetSerialSettings(apCfg);
 	return PhysicalLayerFactory::GetSerialAsync(s);
 }
+#endif
 
+#if ENABLE_TCP_CLIENT
 IPhysicalLayerAsyncFactory PhysicalLayerXMLFactory :: GetAsync(const APLXML_Base::TCPClient_t* apCfg)
 {
 	boost::uint16_t port = boost::numeric::converter<boost::uint16_t, int>::convert(apCfg->Port);
 	return PhysicalLayerFactory::GetTCPClientAsync(apCfg->Address, port);
 }
+#endif
 
+#if ENABLE_TCP_SERVER
 IPhysicalLayerAsyncFactory PhysicalLayerXMLFactory :: GetAsync(const APLXML_Base::TCPServer_t* apCfg)
 {
 	boost::uint16_t port = boost::numeric::converter<boost::uint16_t, int>::convert(apCfg->Port);
 	return PhysicalLayerFactory::GetTCPServerAsync(apCfg->Endpoint, port);
 }
+#endif
 
+#if ENABLE_SERIAL
 SerialSettings GetSerialSettings(const APLXML_Base::Serial_t* apCfg)
 {
 	SerialSettings s;
@@ -111,6 +124,7 @@ FlowType EnumToFlow(APLXML_Base::FlowControlEnum aFlow)
 	assert(false);
 	return FLOW_NONE;
 }
+#endif
 
 }
 }

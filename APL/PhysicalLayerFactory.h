@@ -19,7 +19,6 @@
 #ifndef _PHYSICAL_LAYER_FACTORY_H_
 #define _PHYSICAL_LAYER_FACTORY_H_
 
-
 #include "SerialTypes.h"
 #include "Exception.h"
 #include "PhysicalLayerFunctors.h"
@@ -33,15 +32,20 @@ namespace apl
 class PhysicalLayerFactory
 {
 public:
-
+#if ENABLE_SERIAL
 	static IPhysicalLayerAsyncFactory GetSerialAsync(SerialSettings s);
-	static IPhysicalLayerAsyncFactory GetTCPClientAsync(std::string aAddress, boost::uint16_t aPort);
-	static IPhysicalLayerAsyncFactory GetTCPServerAsync(std::string aEndpoint, boost::uint16_t aPort);
-
-	//normal factory functions
 	static IPhysicalLayerAsync* FGetSerialAsync(SerialSettings s, boost::asio::io_service* apSrv, Logger* apLogger);
+#endif
+
+#if ENABLE_TCP_CLIENT
+	static IPhysicalLayerAsyncFactory GetTCPClientAsync(std::string aAddress, boost::uint16_t aPort);
 	static IPhysicalLayerAsync* FGetTCPClientAsync(std::string aAddress, boost::uint16_t aPort, boost::asio::io_service* apSrv, Logger* apLogger);
+#endif
+
+#if ENABLE_TCP_SERVER
+	static IPhysicalLayerAsyncFactory GetTCPServerAsync(std::string aEndpoint, boost::uint16_t aPort);
 	static IPhysicalLayerAsync* FGetTCPServerAsync(std::string aEndpoint, boost::uint16_t aPort, boost::asio::io_service* apSrv, Logger* apLogger);
+#endif
 };
 }
 
