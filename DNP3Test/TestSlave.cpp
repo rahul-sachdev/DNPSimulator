@@ -333,23 +333,28 @@ BOOST_AUTO_TEST_CASE(ReadClass1)
 	SlaveTestObject t(cfg);
 
 	t.db.Configure(DT_ANALOG, 100);
+	t.db.SetClass(DT_ANALOG, 0x10, PC_CLASS_1);
 	t.db.SetClass(DT_ANALOG, 0x17, PC_CLASS_1);
 	t.db.SetClass(DT_ANALOG, 0x05, PC_CLASS_1);
 	t.slave.OnLowerLayerUp();
 
 	{
 		Transaction tr(&t.db);
+		t.db.Update(Analog(0x0987, AQ_ONLINE), 0x10); // 0x87 09 00 00 in little endian
 		t.db.Update(Analog(0x1234, AQ_ONLINE), 0x17); // 0x39 30 00 00 in little endian
-		t.db.Update(Analog(0x0002, AQ_ONLINE), 0x05); // 0x02 00 00 00 in little endian
+		t.db.Update(Analog(0x2222, AQ_ONLINE), 0x05); // 0x22 22 00 00 in little endian
+		t.db.Update(Analog(0x3333, AQ_ONLINE), 0x05); // 0x33 33 00 00 in little endian
+		t.db.Update(Analog(0x4444, AQ_ONLINE), 0x05); // 0x44 44 00 00 in little endian
 	}
 
 	t.SendToSlave("C0 01 3C 02 06");
 
-	// TODO explain why changing from SingleEventBuffer to
-	// TimeOrderedEventBuffer causes the objects to swap
-	// CUR: E0 81 80 00 20 01 17 02 17 01 39 30 00 00 05 01 02 00 00 00
-	// NEW: E0 81 80 00 20 01 17 02 05 01 02 00 00 00 17 01 39 30 00 00
-	BOOST_REQUIRE_EQUAL(t.Read(), "E0 81 80 00 20 01 17 02 05 01 02 00 00 00 17 01 39 30 00 00");
+	/*
+	 * The indices should be in reverse-order from how they were
+	 * added, but the values for a given index should be in the same
+	 * order.
+	 */
+	BOOST_REQUIRE_EQUAL(t.Read(), "E0 81 80 00 20 01 17 05 10 01 87 09 00 00 17 01 34 12 00 00 05 01 22 22 00 00 05 01 33 33 00 00 05 01 44 44 00 00");
 
 	t.SendToSlave("C0 01 3C 02 06");			// Repeat read class 1
 	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00");	// Buffer should have been cleared
