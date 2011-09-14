@@ -23,6 +23,9 @@
 #include "PhysicalLayerAsyncTCPClient.h"
 #include "PhysicalLayerAsyncTCPServer.h"
 
+#include "PhysicalLayerAsyncUDPClient.h"
+#include "PhysicalLayerAsyncUDPServer.h"
+
 #include "Log.h"
 
 #include <boost/asio.hpp>

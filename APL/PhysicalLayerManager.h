@@ -40,6 +40,10 @@ public:
 
 	void AddTCPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort);
 	void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
+
+	void AddUDPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort, bool aBroadcast = false);
+	void AddUDPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort, bool aBroadcast = false);
+
 	void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
 
 	// Removes a physical layer and deletes it if the manager has ownership.

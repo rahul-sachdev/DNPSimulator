@@ -82,6 +82,12 @@ public:
 	// Adds a TCPServer port, excepts if the port already exists
 	void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
 
+	// Adds a UDPClient port, excepts if the port already exists
+	void AddUDPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort, bool aBroadcast = false);
+
+	// Adds a UDPServer port, excepts if the port already exists
+	void AddUDPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort, bool aBroadcast = false);
+
 	// Adds a Serial port, excepts if the port already exists
 	void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
 
@@ -309,9 +315,6 @@ private:
 	LinkChannel* CreateChannel(const std::string& arName);
 
 	StackRecord GetStackRecordByName(const std::string& arName);
-
-
-
 
 };
 

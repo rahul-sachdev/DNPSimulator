@@ -95,6 +95,16 @@ void AsyncStackManager::AddTCPServer(const std::string& arName, PhysLayerSetting
 	mMgr.AddTCPServer(arName, aSettings, arEndpoint, aPort);
 }
 
+void AsyncStackManager::AddUDPServer(const std::string& arName, PhysLayerSettings aSettings, const std::string& arEndpoint, boost::uint16_t aPort, bool aBroadcast)
+{
+	mMgr.AddUDPServer(arName, aSettings, arEndpoint, aPort, aBroadcast);
+}
+
+void AsyncStackManager::AddUDPClient(const std::string& arName, PhysLayerSettings aSettings, const std::string& arAddr, boost::uint16_t aPort, bool aBroadcast)
+{
+	mMgr.AddUDPClient(arName, aSettings, arAddr, aPort, aBroadcast);
+}
+
 void AsyncStackManager::AddSerial(const std::string& arName, PhysLayerSettings aSettings, SerialSettings aSerial)
 {
 	this->ThrowIfAlreadyShutdown();

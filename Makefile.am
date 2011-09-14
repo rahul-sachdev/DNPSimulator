@@ -52,9 +52,12 @@ libopendnp3_apl_la_SOURCES = \
 	APL/Parsing.cpp \
 	APL/PhysicalLayerAsyncBase.cpp \
 	APL/PhysicalLayerAsyncBaseTCP.cpp \
+	APL/PhysicalLayerAsyncBaseUDP.cpp \
 	APL/PhysicalLayerAsyncSerial.cpp \
 	APL/PhysicalLayerAsyncTCPClient.cpp \
 	APL/PhysicalLayerAsyncTCPServer.cpp \
+	APL/PhysicalLayerAsyncUDPClient.cpp \
+	APL/PhysicalLayerAsyncUDPServer.cpp \
 	APL/PhysicalLayerFactory.cpp \
 	APL/PhysicalLayerInstance.cpp \
 	APL/PhysicalLayerManager.cpp \
@@ -228,9 +231,12 @@ nobase_pkginclude_HEADERS= \
 	APL/PhysicalLayerAsyncASIO.h \
 	APL/PhysicalLayerAsyncBase.h \
 	APL/PhysicalLayerAsyncBaseTCP.h \
+	APL/PhysicalLayerAsyncBaseUDP.h \
 	APL/PhysicalLayerAsyncSerial.h \
 	APL/PhysicalLayerAsyncTCPClient.h \
 	APL/PhysicalLayerAsyncTCPServer.h \
+	APL/PhysicalLayerAsyncUDPClient.h \
+	APL/PhysicalLayerAsyncUDPServer.h \
 	APL/PhysicalLayerFactory.h \
 	APL/PhysicalLayerFunctors.h \
 	APL/PhysicalLayerInstance.h \
