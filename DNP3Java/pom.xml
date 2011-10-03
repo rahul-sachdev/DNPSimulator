@@ -4,7 +4,7 @@
   <groupId>org.totalgrid.reef.protocol.dnp3</groupId>    
   <artifactId>dnp3java</artifactId>
   <packaging>jar</packaging>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <distributionManagement>
     <repository>
       <id>gec-release</id>
