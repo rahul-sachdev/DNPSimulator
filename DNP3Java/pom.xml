@@ -4,18 +4,5 @@
   <groupId>org.totalgrid.reef.protocol.dnp3</groupId>    
   <artifactId>dnp3java</artifactId>
   <packaging>jar</packaging>
-  <version>1.1.0-SNAPSHOT</version>
-  <distributionManagement>
-    <repository>
-      <id>gec-release</id>
-      <name>gec releases</name>
-      <url>http://svn.plymouthsystems.com:8082/archiva/repository/internal</url>
-    </repository>
-    <snapshotRepository>
-      <uniqueVersion>true</uniqueVersion>
-      <id>gec-snapshot</id>
-      <name>gec snapshots</name>
-      <url>http://svn.plymouthsystems.com:8082/archiva/repository/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>  
+  <version>1.0.0</version>  
 </project>
