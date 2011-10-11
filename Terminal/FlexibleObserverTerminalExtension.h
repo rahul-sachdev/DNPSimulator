@@ -22,7 +22,7 @@ namespace dnp
 {
 
 struct ShowRange {
-	enum Type { ST_ALL, ST_BI, ST_AI, ST_C, ST_BOS, ST_SS };
+	enum Type { ST_ALL, ST_BI, ST_AI, ST_AD, ST_C, ST_BOS, ST_SS };
 	ShowRange() : type(ST_ALL), start(0), stop(0) {}
 	Type type;
 	bool allOfType;

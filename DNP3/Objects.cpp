@@ -48,7 +48,6 @@ MACRO_STATIC_INSTANCE(12, 1)
 MACRO_STATIC_INSTANCE(12, 2)
 MACRO_STATIC_INSTANCE(12, 3)
 
-
 MACRO_STATIC_INSTANCE(20, 0)
 MACRO_STATIC_INSTANCE(20, 1)
 MACRO_STATIC_INSTANCE(20, 2)
@@ -129,6 +128,10 @@ MACRO_STATIC_INSTANCE(33, 6)
 MACRO_STATIC_INSTANCE(33, 7)
 MACRO_STATIC_INSTANCE(33, 8)
 
+MACRO_STATIC_INSTANCE(34, 1)
+MACRO_STATIC_INSTANCE(34, 2)
+MACRO_STATIC_INSTANCE(34, 3)
+
 MACRO_STATIC_INSTANCE(40, 0)
 MACRO_STATIC_INSTANCE(40, 1)
 MACRO_STATIC_INSTANCE(40, 2)
@@ -151,7 +154,6 @@ MACRO_STATIC_INSTANCE(60, 1)
 MACRO_STATIC_INSTANCE(60, 2)
 MACRO_STATIC_INSTANCE(60, 3)
 MACRO_STATIC_INSTANCE(60, 4)
-
 
 MACRO_STATIC_INSTANCE(80, 1)
 
@@ -495,6 +497,35 @@ Analog Group32Var7::Read(const boost::uint8_t* apPos) const
 Analog Group32Var8::Read(const boost::uint8_t* apPos) const
 {
 	return DNPFromStream::ReadQVT(apPos, Group32Var8::Inst());
+}
+
+///////////////////////////////
+//	Analog Input Types
+///////////////////////////////
+void Group34Var1::Write(boost::uint8_t* p, const AnalogDeadband& v) const
+{
+	DNPToStream::WriteV(p, Group34Var1::Inst(), v);
+}
+void Group34Var2::Write(boost::uint8_t* p, const AnalogDeadband& v) const
+{
+	DNPToStream::WriteV(p, Group34Var2::Inst(), v);
+}
+void Group34Var3::Write(boost::uint8_t* p, const AnalogDeadband& v) const
+{
+	DNPToStream::WriteV(p, Group34Var3::Inst(), v);
+}
+
+AnalogDeadband Group34Var1::Read(const boost::uint8_t* apPos) const
+{
+	return DNPFromStream::ReadV(apPos, Group34Var1::Inst());
+}
+AnalogDeadband Group34Var2::Read(const boost::uint8_t* apPos) const
+{
+	return DNPFromStream::ReadV(apPos, Group34Var2::Inst());
+}
+AnalogDeadband Group34Var3::Read(const boost::uint8_t* apPos) const
+{
+	return DNPFromStream::ReadV(apPos, Group34Var3::Inst());
 }
 
 ///////////////////////////////

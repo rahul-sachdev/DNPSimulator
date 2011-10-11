@@ -43,6 +43,7 @@ public:
 	// a transaction has been initiated
 	void Update(const Binary&, size_t aIndex);			//!< push a change to the owner of the database, must have transaction started
 	void Update(const Analog&, size_t aIndex);			//!< push a change to the owner of the database, must have transaction started
+	void Update(const AnalogDeadband&, size_t aIndex);		//!< push a change to the owner of the database, must have transaction started
 	void Update(const Counter&, size_t aIndex);			//!< push a change to the owner of the database, must have transaction started
 	void Update(const ControlStatus&, size_t aIndex);	//!< push a change to the owner of the database, must have transaction started
 	void Update(const SetpointStatus&, size_t aIndex);	//!< push a change to the owner of the database, must have transaction started
@@ -52,6 +53,7 @@ protected:
 	//concrete class will implement these
 	virtual void _Update(const Binary& arPoint, size_t) = 0;
 	virtual void _Update(const Analog& arPoint, size_t) = 0;
+	virtual void _Update(const AnalogDeadband& arPoint, size_t) = 0;
 	virtual void _Update(const Counter& arPoint, size_t) = 0;
 	virtual void _Update(const ControlStatus& arPoint, size_t) = 0;
 	virtual void _Update(const SetpointStatus& arPoint, size_t) = 0;
@@ -66,6 +68,11 @@ inline void IDataObserver::Update(const Binary& arPoint, size_t aIndex)
 	this->_Update(arPoint, aIndex);
 }
 inline void IDataObserver::Update(const Analog& arPoint, size_t aIndex)
+{
+	assert(this->InProgress());
+	this->_Update(arPoint, aIndex);
+}
+inline void IDataObserver::Update(const AnalogDeadband& arPoint, size_t aIndex)
 {
 	assert(this->InProgress());
 	this->_Update(arPoint, aIndex);

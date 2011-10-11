@@ -49,6 +49,7 @@ public:
 	// allow direct access to the maps
 	PointMap<Binary>::Type mBinaryMap;
 	PointMap<Analog>::Type mAnalogMap;
+	PointMap<AnalogDeadband>::Type mAnalogDeadbandMap;
 	PointMap<Counter>::Type mCounterMap;
 	PointMap<ControlStatus>::Type mControlStatusMap;
 	PointMap<SetpointStatus>::Type mSetpointStatusMap;
@@ -142,6 +143,7 @@ public:
 	size_t GetTotalCount() {
 		return mBinaryMap.size() +
 		       mAnalogMap.size() +
+		       mAnalogDeadbandMap.size() +
 		       mCounterMap.size() +
 		       mControlStatusMap.size() +
 		       mSetpointStatusMap.size();
@@ -180,6 +182,9 @@ private:
 	}
 	virtual void _Update(const Analog& arPoint, size_t aIndex) {
 		Load(arPoint, mAnalogMap, aIndex);
+	}
+	virtual void _Update(const AnalogDeadband& arPoint, size_t aIndex) {
+		Load(arPoint, mAnalogDeadbandMap, aIndex);
 	}
 	virtual void _Update(const Counter& arPoint, size_t aIndex) {
 		Load(arPoint, mCounterMap, aIndex);

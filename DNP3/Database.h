@@ -69,7 +69,10 @@ public:
 
 	size_t NumType(apl::DataTypes aType);
 	size_t MaxIndex(DataTypes aType);
+
 	void SetDeadband(apl::DataTypes, size_t aIndex, double aDeadband);
+	double GetDeadband(apl::DataTypes, size_t aIndex);
+
 	void SetClass(apl::DataTypes aType, size_t aIndex, PointClass aClass);
 	void SetClass(apl::DataTypes aType, PointClass aClass); //set classes for all indices
 
@@ -93,7 +96,6 @@ public:
 		arIter = mSetpointStatusVec.begin();
 	}
 
-
 private:
 
 	// ITransactable  functions, no lock on this structure.
@@ -103,6 +105,7 @@ private:
 	// IDataObserver functions
 	void _Update(const apl::Binary& arPoint, size_t);
 	void _Update(const apl::Analog& arPoint, size_t);
+	void _Update(const apl::AnalogDeadband& arPoint, size_t);
 	void _Update(const apl::Counter& arPoint, size_t);
 	void _Update(const apl::ControlStatus& arPoint, size_t);
 	void _Update(const apl::SetpointStatus& arPoint, size_t);

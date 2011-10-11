@@ -38,6 +38,7 @@ class ChangeBuffer : public IDataObserver, public SubjectBase<NullLock>
 
 	typedef std::deque< Change<Binary> > BinaryQueue;
 	typedef std::deque< Change<Analog> > AnalogQueue;
+	typedef std::deque< Change<AnalogDeadband> > AnalogDeadbandQueue;
 	typedef std::deque< Change<Counter> > CounterQueue;
 	typedef std::deque< Change<ControlStatus> > ControlStatusQueue;
 	typedef std::deque< Change<SetpointStatus> > SetpointStatusQueue;
@@ -67,6 +68,9 @@ public:
 	void _Update(const Analog& arPoint, size_t aIndex) {
 		mAnalogQueue.push_back(Change<Analog>(arPoint, aIndex));
 	}
+	void _Update(const AnalogDeadband& arPoint, size_t aIndex) {
+		mAnalogDeadbandQueue.push_back(Change<AnalogDeadband>(arPoint, aIndex));
+	}
 	void _Update(const Counter& arPoint, size_t aIndex) {
 		mCounterQueue.push_back(Change<Counter>(arPoint, aIndex));
 	}
@@ -76,7 +80,6 @@ public:
 	void _Update(const SetpointStatus& arPoint, size_t aIndex) {
 		mSetpointStatusQueue.push_back(Change<SetpointStatus>(arPoint, aIndex));
 	}
-
 
 	size_t FlushUpdates(apl::IDataObserver* apObserver, bool aClear = true);
 
@@ -90,6 +93,7 @@ private:
 	void _Clear() {
 		mBinaryQueue.clear();
 		mAnalogQueue.clear();
+		mAnalogDeadbandQueue.clear();
 		mCounterQueue.clear();
 		mControlStatusQueue.clear();
 		mSetpointStatusQueue.clear();
@@ -98,6 +102,7 @@ private:
 	bool HasChanges() {
 		return mBinaryQueue.size() > 0 ||
 		       mAnalogQueue.size() > 0 ||
+		       mAnalogDeadbandQueue.size() > 0 ||
 		       mCounterQueue.size() > 0 ||
 		       mControlStatusQueue.size() > 0 ||
 		       mSetpointStatusQueue.size() > 0;
@@ -109,6 +114,7 @@ private:
 	bool mMidFlush;
 	BinaryQueue mBinaryQueue;
 	AnalogQueue mAnalogQueue;
+	AnalogDeadbandQueue mAnalogDeadbandQueue;
 	CounterQueue mCounterQueue;
 	ControlStatusQueue mControlStatusQueue;
 	SetpointStatusQueue mSetpointStatusQueue;
@@ -128,6 +134,7 @@ size_t ChangeBuffer<LockType>::FlushUpdates(apl::IDataObserver* apObserver, bool
 		mMidFlush = true;	// Will clear on transaction end if an observer call blows up
 		count += this->FlushUpdates(mBinaryQueue, apObserver);
 		count += this->FlushUpdates(mAnalogQueue, apObserver);
+		count += this->FlushUpdates(mAnalogDeadbandQueue, apObserver);
 		count += this->FlushUpdates(mCounterQueue, apObserver);
 		count += this->FlushUpdates(mControlStatusQueue, apObserver);
 		count += this->FlushUpdates(mSetpointStatusQueue, apObserver);

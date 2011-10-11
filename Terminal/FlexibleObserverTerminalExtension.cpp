@@ -81,7 +81,7 @@ void FlexibleObserverTerminalExtension::_BindToTerminal(ITerminal* apTerminal)
 	apTerminal->BindCommand(cmd, "show");
 
 	cmd.mName = "show set";
-	cmd.mUsage = "show set <all|bi|ai|c|cs|ss> <index|start> <stop>";
+	cmd.mUsage = "show set <all|bi|ai|ad|c|cs|ss> <index|start> <stop>";
 	cmd.mDesc = "Sets a range to displayed with the show command";
 	cmd.mHandler = boost::bind(&FlexibleObserverTerminalExtension::HandleSetShow, this, _1);
 	apTerminal->BindCommand(cmd, "show set");
@@ -147,6 +147,8 @@ retcode FlexibleObserverTerminalExtension::HandleShow(std::vector<std::string>& 
 			oss << "binary input";
 		if ( mRange.type == ShowRange::ST_AI )
 			oss << "analog input";
+		if ( mRange.type == ShowRange::ST_AD )
+			oss << "analog deadband";
 		if ( mRange.type == ShowRange::ST_C )
 			oss << "counter";
 		if ( mRange.type == ShowRange::ST_BOS )
@@ -167,6 +169,8 @@ retcode FlexibleObserverTerminalExtension::HandleShow(std::vector<std::string>& 
 		DisplayPoints<Binary>(oss, mpObserver->mBinaryMap, mBinaryNames, "--- Binary Input ---", mRange, mLongestName);
 	if ( mRange.type == ShowRange::ST_ALL || mRange.type == ShowRange::ST_AI )
 		DisplayPoints<Analog>(oss, mpObserver->mAnalogMap, mAnalogNames, "--- Analog Input ---", mRange, mLongestName);
+	if ( mRange.type == ShowRange::ST_ALL || mRange.type == ShowRange::ST_AD )
+		DisplayPoints<AnalogDeadband>(oss, mpObserver->mAnalogDeadbandMap, mAnalogNames, "--- Analog Deadband ---", mRange, mLongestName);
 	if ( mRange.type == ShowRange::ST_ALL || mRange.type == ShowRange::ST_C )
 		DisplayPoints<Counter>(oss, mpObserver->mCounterMap, mCounterNames, "--- Counter Input ---", mRange, mLongestName);
 	if ( mRange.type == ShowRange::ST_ALL || mRange.type == ShowRange::ST_BOS )
@@ -237,6 +241,9 @@ ShowRange::Type ParseShowType( const std::string& arString )
 	}
 	else if ( lower.compare("ai") == 0 ) {
 		return ShowRange::ST_AI;
+	}
+	else if ( lower.compare("ad") == 0 ) {
+		return ShowRange::ST_AD;
 	}
 	else if ( lower.compare("c") == 0 ) {
 		return ShowRange::ST_C;

@@ -56,6 +56,7 @@ private:
 
 	static StreamObject<Binary>* GetStaticBinary(GrpVar);
 	static StreamObject<Analog>* GetStaticAnalog(GrpVar);
+	static StreamObject<AnalogDeadband>* GetStaticAnalogDeadband(GrpVar gv);
 	static StreamObject<Counter>* GetStaticCounter(GrpVar);
 	static StreamObject<SetpointStatus>* GetStaticSetpointStatus(GrpVar);
 

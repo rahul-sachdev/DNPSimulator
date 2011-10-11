@@ -128,8 +128,8 @@ enum DNPErrorCodes {
 	ERR_INDEX_OUT_OF_BOUNDS,
 
 	// Non-error Log Items
-	TIME_SYNC_UPDATED // carries MILLISEC_SINCE_EPOCH<boost::int64_t>
-
+	TIME_SYNC_UPDATED,       // carries MILLISEC_SINCE_EPOCH<boost::int64_t>
+	ANALOG_DEADBAND_UPDATED  // carries DEADBAND<double>
 };
 
 }

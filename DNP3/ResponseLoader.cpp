@@ -94,6 +94,11 @@ void ResponseLoader::ProcessData(HeaderReadIterator& arIter, int aGrp, int aVar)
 	case (MACRO_DNP_RADIX(32, 7)): this->Read(arIter, Group32Var7::Inst()); break;
 	case (MACRO_DNP_RADIX(32, 8)): this->Read(arIter, Group32Var8::Inst()); break;
 
+		// Analog Deadbands
+	case (MACRO_DNP_RADIX(34, 1)): this->Read(arIter, Group34Var1::Inst()); break;
+	case (MACRO_DNP_RADIX(34, 2)): this->Read(arIter, Group34Var2::Inst()); break;
+	case (MACRO_DNP_RADIX(34, 3)): this->Read(arIter, Group34Var3::Inst()); break;
+
 		// Setpoint Status
 	case (MACRO_DNP_RADIX(40, 1)): this->Read(arIter, Group40Var1::Inst()); break;
 	case (MACRO_DNP_RADIX(40, 2)): this->Read(arIter, Group40Var2::Inst()); break;

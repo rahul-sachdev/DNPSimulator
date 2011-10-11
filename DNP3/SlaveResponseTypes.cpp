@@ -76,6 +76,21 @@ StreamObject<Analog>* SlaveResponseTypes::GetStaticAnalog(GrpVar gv)
 	throw ArgumentException(LOCATION, "Invalid static analog");
 }
 
+StreamObject<AnalogDeadband>* SlaveResponseTypes::GetStaticAnalogDeadband(GrpVar gv)
+{
+	switch(gv.Grp) {
+	case(34):
+		switch(gv.Var) {
+		case(1): return Group34Var1::Inst();
+		case(2): return Group34Var2::Inst();
+		case(3): return Group34Var3::Inst();
+		}
+		break;
+	}
+
+	throw ArgumentException(LOCATION, "Invalid static analog deadband");
+}
+
 StreamObject<Counter>* SlaveResponseTypes::GetStaticCounter(GrpVar gv)
 {
 	switch(gv.Grp) {

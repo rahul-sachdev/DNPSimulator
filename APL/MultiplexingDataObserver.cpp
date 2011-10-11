@@ -72,6 +72,10 @@ void MultiplexingDataObserver :: _Update(const Analog& arPoint, size_t aIndex)
 {
 	PassThrough<Analog>(arPoint, aIndex);
 }
+void MultiplexingDataObserver :: _Update(const AnalogDeadband& arPoint, size_t aIndex)
+{
+	PassThrough<AnalogDeadband>(arPoint, aIndex);
+}
 void MultiplexingDataObserver :: _Update(const Counter& arPoint, size_t aIndex)
 {
 	PassThrough<Counter>(arPoint, aIndex);

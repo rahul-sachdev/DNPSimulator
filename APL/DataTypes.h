@@ -90,7 +90,7 @@ public:
 };
 
 /**
-	Analogs are used for variable data points that usuually reflect a real world value.
+	Analogs are used for variable data points that usually reflect a real world value.
 	Good examples are current, voltage, sensor readouts, etc. Think of a speedometer gauge.
 */
 
@@ -122,6 +122,48 @@ public:
 	}
 
 
+};
+
+/**
+ * Analog deadbands are used to put event boundaries on Analog
+ * variables.  For an event to be generated, the new value of the Analog
+ * point must be outside of the bounded range defined by the deadband.
+ * So if the current value of the Analog point is 100 and the deadband
+ * is 25, only values less than 75 or greater than 125 would trigger an
+ * event.  Once an event trigers, the value that caused the event to
+ * trigger becomes the new "center" of the deadband.  To continue our
+ * example, if a value of 225 is pushed to the stack, the new deadband
+ * range becomes 200 to 250.
+ */
+
+class AnalogDeadband : public TypedDataPoint<double>
+{
+public:
+	AnalogDeadband() : TypedDataPoint<double>(AQ_RESTART, DT_ANALOG) {}
+
+	AnalogDeadband(double aVal, boost::uint8_t aQuality = AQ_RESTART)
+		: TypedDataPoint<double>(AQ_RESTART, DT_ANALOG)
+	{
+		SetValue(aVal);
+		SetQuality(aQuality);
+	}
+
+	typedef double ValueType;
+	typedef AnalogQuality QualityType;
+	typedef QualityConverter<AnalogQualInfo> QualConverter;
+
+	static const DataTypes MeasEnum = DT_ANALOG;
+
+	static const int ONLINE = AQ_ONLINE;
+
+	operator ValueType() const {
+		return this->GetValue();
+	}
+
+	ValueType operator=(ValueType aValue) {
+		this->SetValue(aValue);
+		return GetValue();
+	}
 };
 
 /**
@@ -187,3 +229,6 @@ public:
 }
 
 #endif
+
+/* vim: set ts=4 sw=4: */
+

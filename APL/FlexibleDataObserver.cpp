@@ -32,6 +32,7 @@ void FlexibleDataObserver::Clear()
 	Transaction t(this);
 	mBinaryMap.clear();
 	mAnalogMap.clear();
+	mAnalogDeadbandMap.clear();
 	mCounterMap.clear();
 	mControlStatusMap.clear();
 	mSetpointStatusMap.clear();
@@ -42,6 +43,7 @@ bool FlexibleDataObserver::StrictEquality(const FlexibleDataObserver& arLHS, con
 {
 	if(! StrictEquality(arLHS.mBinaryMap, arRHS.mBinaryMap) ) return false;
 	if(! StrictEquality(arLHS.mAnalogMap, arRHS.mAnalogMap) ) return false;
+	if(! StrictEquality(arLHS.mAnalogDeadbandMap, arRHS.mAnalogDeadbandMap) ) return false;
 	if(! StrictEquality(arLHS.mCounterMap, arRHS.mCounterMap) ) return false;
 	if(! StrictEquality(arLHS.mControlStatusMap, arRHS.mControlStatusMap) ) return false;
 	if(! StrictEquality(arLHS.mSetpointStatusMap, arRHS.mSetpointStatusMap) ) return false;
@@ -54,6 +56,7 @@ bool FlexibleDataObserver::IsSubsetOf(const FlexibleDataObserver& arLHS, const F
 {
 	if(! IsSubsetOf(arLHS.mBinaryMap, arRHS.mBinaryMap) ) return false;
 	if(! IsSubsetOf(arLHS.mAnalogMap, arRHS.mAnalogMap) ) return false;
+	if(! IsSubsetOf(arLHS.mAnalogDeadbandMap, arRHS.mAnalogDeadbandMap) ) return false;
 	if(! IsSubsetOf(arLHS.mCounterMap, arRHS.mCounterMap) ) return false;
 	if(! IsSubsetOf(arLHS.mControlStatusMap, arRHS.mControlStatusMap) ) return false;
 	if(! IsSubsetOf(arLHS.mSetpointStatusMap, arRHS.mSetpointStatusMap) ) return false;
@@ -70,6 +73,9 @@ void FlexibleDataObserver::Print()
 
 	std::cout << "--- Analog ---" << std::endl;
 	this->Print<Analog>(mAnalogMap);
+
+	std::cout << "--- Analog Deadband ---" << std::endl;
+	this->Print<AnalogDeadband>(mAnalogDeadbandMap);
 
 	std::cout << "--- Counter ---" << std::endl;
 	this->Print<Counter>(mCounterMap);

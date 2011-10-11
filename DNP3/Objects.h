@@ -59,16 +59,16 @@
 		Pack<packer,position> mTime; \
 		bool HasTime() const { return true; }
 
-
 #define MACRO_GROUP_VAR_FUNC(group, var)\
-int GetGroup() const { return group; }\
-int GetVariation() const { return var; }
+		int GetGroup() const { return group; } \
+		int GetVariation() const { return var; }
 
 namespace apl
 {
 class BinaryOutput;
 class Setpoint;
 class Analog;
+class AnalogDeadband;
 class Binary;
 class Counter;
 class Setpoint;
@@ -768,6 +768,33 @@ struct Group33Var8 : public FixedObject {
 	MACRO_DECLARE_TIME(UInt48LE, 9)
 };
 
+///////////////////////////////
+//	Analog Input Reporting Deadband Types
+///////////////////////////////
+
+struct Group34Var1 : public StreamObject<AnalogDeadband> {
+	/* Analog Input Reporting Deadband - 16-bit */
+	MACRO_NAME_SINGLETON_INSTANCE(Group34Var1)
+	MACRO_GROUP_VAR_SIZE_FUNC(34, 1, 2)
+	MACRO_DECLARE_VALUE(Int16LE, 0)
+	MACRO_DECLARE_STREAM_TYPE(AnalogDeadband)
+};
+
+struct Group34Var2 : public StreamObject<AnalogDeadband> {
+	/* Analog Input Reporting Deadband - 32-bit */
+	MACRO_NAME_SINGLETON_INSTANCE(Group34Var2)
+	MACRO_GROUP_VAR_SIZE_FUNC(34, 2, 4);
+	MACRO_DECLARE_VALUE(Int32LE, 0)
+	MACRO_DECLARE_STREAM_TYPE(AnalogDeadband)
+};
+
+struct Group34Var3 : public StreamObject<AnalogDeadband> {
+	/* Analog Input Reporting Deadband - Single Precision Floating Point */
+	MACRO_NAME_SINGLETON_INSTANCE(Group34Var3)
+	MACRO_GROUP_VAR_SIZE_FUNC(34, 3, 4);
+	MACRO_DECLARE_VALUE_OVERRANGE(SingleFloat, 1, AQ_OVERRANGE)
+	MACRO_DECLARE_STREAM_TYPE(AnalogDeadband)
+};
 
 
 ///////////////////////////////
@@ -949,3 +976,6 @@ struct Group113Var0 : public SizeByVariationObject {
 }
 
 #endif
+
+/* vim: set ts=4 sw=4: */
+

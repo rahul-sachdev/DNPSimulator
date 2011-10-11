@@ -37,6 +37,7 @@ void ComparingDataObserver::Reset()
 	CriticalSection cs(&mLock);
 	mBinaryMap.clear();
 	mAnalogMap.clear();
+	mAnalogDeadbandMap.clear();
 	mCounterMap.clear();
 	mControlStatusMap.clear();
 	mSetpointStatusMap.clear();
@@ -47,10 +48,12 @@ bool ComparingDataObserver::IsSameData()
 {
 	size_t required = mpObserver->mBinaryMap.size() +
 	                  mpObserver->mAnalogMap.size() +
+	                  mpObserver->mAnalogDeadbandMap.size() +
 	                  mpObserver->mCounterMap.size();
 
 	size_t actual = mBinaryMap.size() +
 	                mAnalogMap.size() +
+	                mAnalogDeadbandMap.size() +
 	                mCounterMap.size();
 
 	LOG_BLOCK(LEV_EVENT, actual << " of " << required);
@@ -70,6 +73,7 @@ void ComparingDataObserver::DescribeMissingData()
 {
 	this->DescribeAny<Binary>(mpObserver->mBinaryMap, mBinaryMap);
 	this->DescribeAny<Analog>(mpObserver->mAnalogMap, mAnalogMap);
+	this->DescribeAny<AnalogDeadband>(mpObserver->mAnalogDeadbandMap, mAnalogDeadbandMap);
 	this->DescribeAny<Counter>(mpObserver->mCounterMap, mCounterMap);
 }
 
@@ -96,6 +100,11 @@ void ComparingDataObserver::_Update(const Binary& arPoint, size_t aIndex)
 void ComparingDataObserver::_Update(const Analog& arPoint, size_t aIndex)
 {
 	this->UpdateAny<Analog>(arPoint, aIndex, mpObserver->mAnalogMap, mAnalogMap);
+}
+
+void ComparingDataObserver::_Update(const AnalogDeadband& arPoint, size_t aIndex)
+{
+	this->UpdateAny<AnalogDeadband>(arPoint, aIndex, mpObserver->mAnalogDeadbandMap, mAnalogDeadbandMap);
 }
 
 void ComparingDataObserver::_Update(const Counter& arPoint, size_t aIndex)

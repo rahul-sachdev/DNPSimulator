@@ -19,6 +19,7 @@
 #include "Database.h"
 
 #include <assert.h>
+#include <boost/lexical_cast.hpp>
 #include <iostream>
 
 #include <APL/Logger.h>
@@ -184,6 +185,18 @@ void Database::SetDeadband(apl::DataTypes aType, size_t aIndex, double aDeadband
 	}
 }
 
+double Database::GetDeadband(apl::DataTypes aType, size_t aIndex)
+{
+	switch(aType) {
+	case(DT_ANALOG):
+		if(aIndex >= mAnalogVec.size()) throw Exception(LOCATION, "", ERR_INDEX_OUT_OF_BOUNDS);
+		return mAnalogVec[aIndex].mDeadband;
+		break;
+	default:
+		throw ArgumentException(LOCATION, "Deadband is not assigned for this type");
+	}
+}
+
 void Database::SetEventBuffer(IEventBuffer* apEventBuffer)
 {
 	assert(apEventBuffer != NULL);
@@ -211,6 +224,25 @@ void Database::_Update(const apl::Analog& arPoint, size_t aIndex)
 		mAnalogVec[aIndex].mLastEventValue = mAnalogVec[aIndex].mValue.GetValue();
 		AnalogInfo& v = mAnalogVec[aIndex];
 		if(mpEventBuffer) mpEventBuffer->Update(v.mValue, v.mClass, aIndex);
+	}
+}
+
+void Database::_Update(const apl::AnalogDeadband& arPoint, size_t aIndex)
+{
+	if (aIndex >= mAnalogVec.size())
+		throw apl::IndexOutOfBoundsException(LOCATION);
+
+	PointInfo<apl::Analog>& analogObject = mAnalogVec[aIndex];
+	if (analogObject.mDeadband != arPoint.GetValue()) {
+		LOG_BLOCK(LEV_DEBUG, "Analog Deadband Change: " << arPoint.ToString() << " Index: " << aIndex);
+		analogObject.mDeadband = arPoint.GetValue();
+		if(mpLogger->IsEnabled(LEV_EVENT)) {
+			LogEntry le(LEV_EVENT, mpLogger->GetName(), LOCATION,
+			            "Analog deadband updated", ANALOG_DEADBAND_UPDATED);
+			le.AddValue("DEADBAND",
+			            boost::lexical_cast<std::string>(analogObject.mDeadband));
+			mpLogger->Log(le);
+		}
 	}
 }
 
