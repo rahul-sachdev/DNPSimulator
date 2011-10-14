@@ -217,5 +217,74 @@ SetpointEncodingType Setpoint::GetOptimalEncodingType() const
 	return mEncodingType;
 }
 
+AnalogDeadbandRequest::AnalogDeadbandRequest()
+	: CommandRequest(CT_ANALOG_DEADBAND)
+	, mEncodingType(ADET_UNSET)
+{}
+
+AnalogDeadbandRequest::AnalogDeadbandRequest(boost::uint16_t aValue)
+	: CommandRequest(CT_ANALOG_DEADBAND)
+	, mValue(aValue)
+	, mEncodingType(ADET_AUTO_INT)
+{}
+
+AnalogDeadbandRequest::AnalogDeadbandRequest(boost::uint32_t aValue)
+	: CommandRequest(CT_ANALOG_DEADBAND)
+	, mValue(aValue)
+	, mEncodingType(ADET_AUTO_INT)
+{}
+
+AnalogDeadbandRequest::AnalogDeadbandRequest(double aValue)
+	: CommandRequest(CT_ANALOG_DEADBAND)
+	, mValue(aValue)
+	, mEncodingType(ADET_AUTO_INT)
+{}
+
+std::string AnalogDeadbandRequest::ToString() const
+{
+	std::ostringstream oss;
+	oss << "AnalogDeadbandRequest - value: " << mValue;
+	return oss.str();
+}
+
+void AnalogDeadbandRequest::SetValue(double aValue)
+{
+	mValue = aValue;
+	if (mEncodingType == ADET_UNSET) {
+		mEncodingType = ADET_AUTO_DOUBLE;
+	}
+}
+
+void AnalogDeadbandRequest::SetValue(boost::uint32_t aValue)
+{
+	mValue = static_cast<double>(aValue);
+	if (mEncodingType == ADET_UNSET) {
+		mEncodingType = ADET_AUTO_INT;
+	}
+}
+
+double AnalogDeadbandRequest::GetValue() const
+{
+	assert(mEncodingType != ADET_UNSET);
+	return mValue;
+}
+
+AnalogDeadbandEncodingType AnalogDeadbandRequest::GetOptimalEncodingType() const
+{
+	assert(mEncodingType != ADET_UNSET);
+	if (mEncodingType == ADET_AUTO_INT) {
+		if (mValue <= Int16LE::Max && mValue >= Int16LE::Min)
+			return ADET_INT16;
+		return ADET_INT32;
+	}
+	if (mEncodingType == ADET_AUTO_DOUBLE) {
+		if (mValue <= SingleFloat::Max && mValue >= SingleFloat::Min)
+			return ADET_FLOAT;
+		return ADET_AUTO_DOUBLE;
+	}
+	// if its not one of the auto types that means its been explictly set
+	// so we should use that type.
+	return mEncodingType;
+}
 
 }

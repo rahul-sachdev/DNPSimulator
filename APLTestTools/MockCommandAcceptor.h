@@ -35,6 +35,11 @@ public:
 		this->AcceptCommand(aSequence, apRspAcceptor);
 	}
 
+	void AcceptCommand(const AnalogDeadbandRequest& aSt, size_t, int aSequence, IResponseAcceptor* apRspAcceptor) {
+		mAnalogDeadbands.push(aSt);
+		this->AcceptCommand(aSequence, apRspAcceptor);
+	}
+
 	void AcceptCommand(const Setpoint& aSt, size_t, int aSequence, IResponseAcceptor* apRspAcceptor) {
 		mSetpoints.push(aSt);
 		this->AcceptCommand(aSequence, apRspAcceptor);
@@ -50,6 +55,15 @@ public:
 		mSetpoints.pop();
 		return s;
 	}
+
+	AnalogDeadbandRequest NextAnalogDeadband() {
+		if (mAnalogDeadbands.size() == 0)
+			throw Exception(LOCATION, "no analog deadbands recieved");
+		AnalogDeadbandRequest s = mAnalogDeadbands.front();
+		mAnalogDeadbands.pop();
+		return s;
+	}
+
 	BinaryOutput NextBinaryOutput() {
 		if(mBinaryOutputs.size() == 0) throw Exception(LOCATION, "no binary outputs recieved");
 		BinaryOutput b = mBinaryOutputs.front();
@@ -71,6 +85,7 @@ private:
 
 	std::queue<CommandStatus> mResponses;
 	std::queue<Setpoint> mSetpoints;
+	std::queue<AnalogDeadbandRequest> mAnalogDeadbands;
 	std::queue<BinaryOutput> mBinaryOutputs;
 };
 

@@ -33,6 +33,12 @@ void ControlTerminalExtension::_BindToTerminal(ITerminal* apTerminal)
 	cmd.mDesc = "Issues a setpoint request. If the value contains a \'.\', it is treated as a double.";
 	cmd.mHandler = boost::bind(&ControlTerminalExtension::HandleIssueST, this, _1);
 	apTerminal->BindCommand(cmd, "issue st");
+
+	cmd.mName = "issue ad";
+	cmd.mUsage = "issue ad <index> <integer|double>";
+	cmd.mDesc = "Issues an analog deadband request. If the value contains a \'.\', it is treated as a double.";
+	cmd.mHandler = boost::bind(&ControlTerminalExtension::HandleIssueAD, this, _1);
+	apTerminal->BindCommand(cmd, "issue ad");
 }
 
 void ControlTerminalExtension::WaitForResponse()
@@ -50,7 +56,6 @@ void ControlTerminalExtension::WaitForResponse()
 		this->Send(oss.str());
 	}
 }
-
 
 retcode ControlTerminalExtension::HandleIssueST(std::vector<std::string>& arArgs)
 {
@@ -73,6 +78,34 @@ retcode ControlTerminalExtension::HandleIssueST(std::vector<std::string>& arArgs
 	}
 
 	mpCmdAcceptor->AcceptCommand(st, static_cast<size_t>(index), ++mSequence, &mRspQueue);
+	WaitForResponse();
+	return SUCCESS;
+}
+
+retcode ControlTerminalExtension::HandleIssueAD(std::vector<std::string>& arArgs)
+{
+	if (arArgs.size() < 2)
+		return BAD_ARGUMENTS;
+
+	AnalogDeadbandRequest ad;
+	int index;
+
+	if (!Parsing::GetPositive(arArgs[0], index))
+		return BAD_ARGUMENTS;
+
+	if (arArgs[1].find('.') == std::string::npos) {
+		int iValue;
+		if (!Parsing::Get(arArgs[1], iValue))
+			return BAD_ARGUMENTS;
+		ad.SetValue(static_cast<uint32_t>(iValue));
+	} else {
+		float dValue;
+		if (!Parsing::Get(arArgs[1], dValue))
+			return BAD_ARGUMENTS;
+		ad.SetValue(dValue);
+	}
+
+	mpCmdAcceptor->AcceptCommand(ad, static_cast<size_t>(index), ++mSequence, &mRspQueue);
 	WaitForResponse();
 	return SUCCESS;
 }

@@ -42,6 +42,7 @@ private:
 	void WaitForResponse();
 	retcode HandleIssueBO(std::vector<std::string>& arArgs);
 	retcode HandleIssueST(std::vector<std::string>& arArgs);
+	retcode HandleIssueAD(std::vector<std::string>& arArgs);
 
 	//implement from ITerminalExtension
 	void _BindToTerminal(ITerminal* apTerminal);

@@ -35,6 +35,7 @@ enum CommandModes {
 enum CommandTypes {
 	CT_BINARY_OUTPUT,
 	CT_SETPOINT,
+	CT_ANALOG_DEADBAND,
 	CT_NONE
 };
 
@@ -219,6 +220,89 @@ private:
 	double mValue;
 
 	SetpointEncodingType mEncodingType;
+
+};
+
+/**
+ * This encoding type describes exactly what the range and valid values for
+ * a setpoint are, all encodings are signed.
+ */
+enum AnalogDeadbandEncodingType {
+	ADET_INT16,			//!< 16bit floating point (dnp Object34var1)
+	ADET_INT32,			//!< 32bit signed integer (dnp Object34var2)
+	ADET_FLOAT,			//!< 32bit floating point (dnp Object34var3)
+	ADET_AUTO_INT,		//!< automatically choose smallest valid int type
+	ADET_AUTO_DOUBLE,	//!< automatically choose smallest valid double type
+	ADET_UNSET,			//!< means no type has been guessed or set yet
+};
+
+/**
+ * The object to represent an analog deadband request from the master.
+ * Think of this like turning a dial on the front of a machine to
+ * desired setting.
+ */
+class AnalogDeadbandRequest : public CommandRequest
+{
+public:
+
+	/**
+	 * Creates a new AnalogDeadbandRequest instance based on a 16-bit
+	 * integer value.  This constructor is necessary to stop the
+	 * compiler from having to guess which upcast to use.
+	 */
+	AnalogDeadbandRequest(boost::uint16_t aValue);
+
+	/**
+	 * Creates a new AnalogDeadbandRequest instance based on a 32-bit
+	 * integer value.  This constructor is necessary to stop the
+	 * compiler from having to guess which upcast to use.
+	 */
+	AnalogDeadbandRequest(boost::uint32_t aValue);
+
+	/**
+	 * Creates a new AnalogDeadbandRequest instance based on a double
+	 * value.  This constructor is necessary to stop the compiler from
+	 * having to guess which upcast to use.
+	 */
+	AnalogDeadbandRequest(double aValue);
+
+	/**
+	 * Creates a new AnalogDeadbandRequest instance with no initial
+	 * value.  Care must be used with objects created by this method, as
+	 * an exception will be thrown if someone tries to access the
+	 * encoding type or value if one hasn't been set yet.
+	 */
+	AnalogDeadbandRequest();
+
+	std::string ToString() const;
+
+	bool operator==(const AnalogDeadbandRequest& arRHS) const {
+		return fabs(mValue - arRHS.mValue) < 1E-6;
+	}
+
+	static const CommandTypes EnumType = CT_ANALOG_DEADBAND;
+
+	boost::uint32_t GetIntValue() const {
+		return static_cast<boost::uint32_t>(GetValue());
+	}
+	double GetValue() const;
+
+	void SetValue(double aValue);
+	void SetValue(boost::uint32_t aValue);
+
+	AnalogDeadbandEncodingType GetOptimalEncodingType() const;
+
+	AnalogDeadbandEncodingType GetEncodingType() const {
+		return mEncodingType;
+	}
+	void SetEncodingType(AnalogDeadbandEncodingType aEncodingType) {
+		mEncodingType = aEncodingType;
+	}
+
+private:
+	double mValue;
+
+	AnalogDeadbandEncodingType mEncodingType;
 
 };
 

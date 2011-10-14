@@ -32,6 +32,14 @@ void CommandResponder :: AcceptCommand(const Setpoint& ctrl, size_t i, int aSequ
 	apRspAcceptor->AcceptResponse(cr, aSequence);
 }
 
+void CommandResponder :: AcceptCommand(const AnalogDeadbandRequest& ctrl, size_t i, int aSequence, IResponseAcceptor* apRspAcceptor)
+{
+	CriticalSection c(&mLock);
+	CommandResponse cr;
+	cr.mResult = this->HandleControl(ctrl, i);
+	apRspAcceptor->AcceptResponse(cr, aSequence);
+}
+
 CommandStatus CommandResponder :: HandleControl(const BinaryOutput& aControl, size_t aIndex)
 {
 	CommandStatus cs = CS_TOO_MANY_OPS;
@@ -50,6 +58,28 @@ CommandStatus CommandResponder :: HandleControl(const BinaryOutput& aControl, si
 	}
 	else {
 		cs = GetResponseCode(true, aIndex);
+	}
+	LOG_BLOCK(LEV_INFO, "[" << aIndex << "] - " <<  aControl.ToString() << " returning " << ToString(cs));
+	return cs;
+}
+
+CommandStatus CommandResponder :: HandleControl(const AnalogDeadbandRequest& aControl, size_t aIndex)
+{
+	CommandStatus cs = CS_TOO_MANY_OPS;
+	if ( mLinkStatuses ) {
+		try {
+			Transaction t(mpObs);
+			//mpObs->Update(SetpointStatus(aControl.GetValue(), SetpointStatus::ONLINE), aIndex);
+			cs = CS_SUCCESS;
+			LOG_BLOCK(LEV_INFO, "Updated AnalogDeadband " << aIndex << " with " << aControl.GetValue() << "." );
+		}
+		catch (Exception& ex) {
+			LOG_BLOCK(LEV_WARNING, "Failure trying to update point in response to control. " << ex.GetErrorString());
+			cs = CS_FORMAT_ERROR;
+		}
+	}
+	else {
+		cs = GetResponseCode(false, aIndex);
 	}
 	LOG_BLOCK(LEV_INFO, "[" << aIndex << "] - " <<  aControl.ToString() << " returning " << ToString(cs));
 	return cs;

@@ -82,6 +82,12 @@ bool CommandQueue::ExecuteCommand(ICommandHandler* apHandler)
 			rsp.mResult = apHandler->HandleControl(sp, info.mIndex);
 			break;
 		}
+	case(apl::CT_ANALOG_DEADBAND): {
+			apl::AnalogDeadbandRequest ad;
+			Read(ad, info);
+			rsp.mResult = apHandler->HandleControl(ad, info.mIndex);
+			break;
+		}
 	default:
 		return false;
 
@@ -97,6 +103,10 @@ void CommandQueue::AcceptCommand(const apl::BinaryOutput& arType, size_t aIndex,
 void CommandQueue::AcceptCommand(const apl::Setpoint& arType, size_t aIndex, int aSequence, IResponseAcceptor* apRspAcceptor)
 {
 	AcceptCommand<apl::Setpoint>(arType, aIndex, mSetpointQueue, aSequence, apRspAcceptor);
+}
+void CommandQueue::AcceptCommand(const apl::AnalogDeadbandRequest& arType, size_t aIndex, int aSequence, IResponseAcceptor* apRspAcceptor)
+{
+	AcceptCommand<apl::AnalogDeadbandRequest>(arType, aIndex, mAnalogDeadbandQueue, aSequence, apRspAcceptor);
 }
 
 void CommandQueue::SetNotifier(INotifier* apNotifier)
@@ -119,6 +129,10 @@ void CommandQueue::Read(apl::BinaryOutput& arType, CommandData& arData)
 void CommandQueue::Read(apl::Setpoint& arType, CommandData& arData)
 {
 	return Read<apl::Setpoint>(arType, arData, mSetpointQueue);
+}
+void CommandQueue::Read(apl::AnalogDeadbandRequest& arType, CommandData& arData)
+{
+	return Read<apl::AnalogDeadbandRequest>(arType, arData, mAnalogDeadbandQueue);
 }
 
 }

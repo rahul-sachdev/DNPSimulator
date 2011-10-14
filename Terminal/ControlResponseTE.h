@@ -21,9 +21,11 @@ public:
 
 	void AcceptCommand(const BinaryOutput&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor);
 	void AcceptCommand(const Setpoint&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor);
+	void AcceptCommand(const AnalogDeadbandRequest&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor);
 
 	CommandStatus HandleControl(const BinaryOutput& aControl, size_t aIndex);
 	CommandStatus HandleControl(const Setpoint& aControl, size_t aIndex);
+	CommandStatus HandleControl(const AnalogDeadbandRequest& aControl, size_t aIndex);
 
 	void SetResponseCode(bool aType, size_t aIndex, CommandStatus aCode);
 
@@ -35,6 +37,7 @@ private:
 	typedef std::map<size_t, CommandStatus> CommandMap;
 	CommandMap mBinaryResponses;
 	CommandMap mSetpointResponses;
+	CommandMap mAnalogDeadbandResponses;
 
 	ICommandSource* mpSource;
 	IDataObserver* mpObs;

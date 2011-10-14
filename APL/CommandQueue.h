@@ -47,6 +47,7 @@ public:
 	//Implement the ICommandAcceptor interface
 	void AcceptCommand(const apl::BinaryOutput& arType, size_t aIndex, int aSequence, IResponseAcceptor* apRspAcceptor);
 	void AcceptCommand(const apl::Setpoint& arType, size_t aIndex, int aSequence, IResponseAcceptor* apRspAcceptor);
+	void AcceptCommand(const apl::AnalogDeadbandRequest& arType, size_t aIndex, int aSequence, IResponseAcceptor* apRspAcceptor);
 
 	void SetNotifier(INotifier* apNotifier);
 
@@ -56,6 +57,7 @@ public:
 
 	void Read(apl::BinaryOutput& arType, CommandData& arData);
 	void Read(apl::Setpoint& arType, CommandData& arData);
+	void Read(apl::AnalogDeadbandRequest& arType, CommandData& arData);
 
 	/** Synchronously executes a command, expecting an immediate response from a handler
 	*	@return true if there was a command to execute
@@ -73,6 +75,7 @@ protected:
 
 	std::queue< apl::BinaryOutput > mBinaryQueue;
 	std::queue< apl::Setpoint > mSetpointQueue;
+	std::queue< apl::AnalogDeadbandRequest > mAnalogDeadbandQueue;
 
 	std::queue< CommandData > mTypeQueue;
 

@@ -44,6 +44,7 @@ public:
 
 	virtual void AcceptCommand(const BinaryOutput&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor) = 0;
 	virtual void AcceptCommand(const Setpoint&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor) = 0;
+	virtual void AcceptCommand(const AnalogDeadbandRequest&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor) = 0;
 };
 
 
@@ -58,6 +59,7 @@ public:
 	virtual ~ICommandHandler() {}
 	virtual CommandStatus HandleControl(BinaryOutput& aControl, size_t aIndex) = 0;
 	virtual CommandStatus HandleControl(Setpoint& aControl, size_t aIndex) = 0;
+	virtual CommandStatus HandleControl(AnalogDeadbandRequest& aControl, size_t aIndex) = 0;
 };
 
 class FixedCommandHandler : public ICommandHandler
@@ -69,6 +71,9 @@ public:
 		return mStatus;
 	}
 	CommandStatus HandleControl(Setpoint&, size_t) {
+		return mStatus;
+	}
+	CommandStatus HandleControl(AnalogDeadbandRequest&, size_t) {
 		return mStatus;
 	}
 
