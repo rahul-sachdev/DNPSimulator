@@ -52,6 +52,7 @@ SlaveConfig::SlaveConfig() :
 	mEventMaxConfig(),
 	mStaticBinary(GrpVar(1, 2)),
 	mStaticAnalog(GrpVar(30, 1)),
+	mStaticAnalogDeadband(GrpVar(34, 2)),
 	mStaticCounter(GrpVar(20, 1)),
 	mStaticSetpointStatus(GrpVar(40, 1)),
 	mEventBinary(GrpVar(2, 1)),

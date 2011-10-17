@@ -112,6 +112,9 @@ struct SlaveConfig {
 	// The default group/variation to use for static analog responses
 	GrpVar mStaticAnalog;
 
+	// The default group/variation to use for static analog deadband responses
+	GrpVar mStaticAnalogDeadband;
+
 	// The default group/variation to use for static counter responses
 	GrpVar mStaticCounter;
 

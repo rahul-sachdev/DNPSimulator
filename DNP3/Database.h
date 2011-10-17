@@ -86,6 +86,9 @@ public:
 	void Begin(AnalogIterator& arIter)		{
 		arIter = mAnalogVec.begin();
 	}
+	void Begin(AnalogDeadbandIterator& arIter)	{
+		arIter = mAnalogDeadbandVec.begin();
+	}
 	void Begin(CounterIterator& arIter)		{
 		arIter = mCounterVec.begin();
 	}
@@ -128,6 +131,7 @@ private:
 
 	std::vector< PointInfo<apl::Binary> > mBinaryVec;
 	std::vector< PointInfo<apl::Analog> > mAnalogVec;
+	std::vector< PointInfo<apl::AnalogDeadband> > mAnalogDeadbandVec;
 	std::vector< PointInfo<apl::Counter> > mCounterVec;
 	std::vector< PointInfo<apl::ControlStatus> > mControlStatusVec;
 	std::vector< PointInfo<apl::SetpointStatus> > mSetpointStatusVec;

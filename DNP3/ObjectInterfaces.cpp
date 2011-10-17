@@ -166,6 +166,11 @@ ObjectBase* ObjectBase::Get(int aGroup, int aVariation)
 		MACRO_RADIX_CASE(33, 7);
 		MACRO_RADIX_CASE(33, 8);
 
+		// Analog Input Deadband Requests
+		MACRO_RADIX_CASE(34, 1);
+		MACRO_RADIX_CASE(34, 2);
+		MACRO_RADIX_CASE(34, 3);
+
 		// Analog Output
 		MACRO_RADIX_CASE(40, 0);
 		MACRO_RADIX_CASE(40, 1);

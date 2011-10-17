@@ -170,6 +170,7 @@ private:
 
 	typedef std::deque< IterRecord<BinaryInfo> >			BinaryIterQueue;
 	typedef std::deque< IterRecord<AnalogInfo> >			AnalogIterQueue;
+	typedef std::deque< IterRecord<AnalogDeadbandInfo> >	AnalogDeadbandIterQueue;
 	typedef std::deque< IterRecord<CounterInfo> >			CounterIterQueue;
 	typedef std::deque< IterRecord<ControlStatusInfo> >		ControlIterQueue;
 	typedef std::deque< IterRecord<SetpointStatusInfo> >	SetpointIterQueue;
@@ -183,6 +184,7 @@ private:
 	//these queues track what static point ranges were requested so that we can split the response over multiple fragments
 	BinaryIterQueue mStaticBinaries;
 	AnalogIterQueue mStaticAnalogs;
+	AnalogDeadbandIterQueue mStaticAnalogDeadbands;
 	CounterIterQueue mStaticCounters;
 	ControlIterQueue mStaticControls;
 	SetpointIterQueue mStaticSetpoints;
@@ -203,6 +205,7 @@ private:
 
 	bool LoadStaticBinaries(APDU&);
 	bool LoadStaticAnalogs(APDU&);
+	bool LoadStaticAnalogDeadbands(APDU&);
 	bool LoadStaticCounters(APDU&);
 	bool LoadStaticControlStatii(APDU&);
 	bool LoadStaticSetpointStatii(APDU&);
@@ -300,9 +303,13 @@ bool ResponseContext::LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> >& ar
 template <class T>
 bool ResponseContext::IterateContiguous(IterRecord<T>& arIters, APDU& arAPDU)
 {
+	std::cout << __func__ << ":" << __LINE__ << std::endl;
 	size_t start = arIters.first->mIndex;
+	std::cout << __func__ << ":" << __LINE__ << std::endl;
 	size_t stop = arIters.last->mIndex;
+	std::cout << __func__ << ":" << __LINE__ << std::endl;
 	StreamObject<typename T::MeasType>* pObj = arIters.pObject;
+	std::cout << __func__ << ":" << __LINE__ << std::endl;
 
 	ObjectWriteIterator owi = arAPDU.WriteContiguous(arIters.pObject, start, stop);
 

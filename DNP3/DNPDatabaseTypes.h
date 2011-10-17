@@ -89,13 +89,15 @@ struct StaticIter {
 
 typedef PointInfo<apl::Binary>					BinaryInfo;
 typedef PointInfo<apl::Analog>					AnalogInfo;
+typedef PointInfo<apl::AnalogDeadband>			AnalogDeadbandInfo;
 typedef PointInfo<apl::Counter>					CounterInfo;
 typedef PointInfo<apl::ControlStatus>			ControlStatusInfo;
 typedef PointInfo<apl::SetpointStatus>			SetpointStatusInfo;
-typedef PointInfoBase<apl::dnp::VtoData>			VtoDataInfo;
+typedef PointInfoBase<apl::dnp::VtoData>		VtoDataInfo;
 
 typedef StaticIter<BinaryInfo>::Type			BinaryIterator;
 typedef StaticIter<AnalogInfo>::Type			AnalogIterator;
+typedef StaticIter<AnalogDeadbandInfo>::Type	AnalogDeadbandIterator;
 typedef StaticIter<CounterInfo>::Type			CounterIterator;
 typedef StaticIter<ControlStatusInfo>::Type		ControlIterator;
 typedef StaticIter<SetpointStatusInfo>::Type	SetpointIterator;

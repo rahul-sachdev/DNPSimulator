@@ -1224,6 +1224,11 @@ BOOST_AUTO_TEST_CASE(ReadGrp30Var0)
 	TestStaticRead("C0 01 1E 00 06", "C0 81 80 00 1E 01 00 00 00 02 00 00 00 00"); // 1 byte start/stop, RESTART quality
 }
 
+BOOST_AUTO_TEST_CASE(ReadGrp34Var1)
+{
+	TestStaticRead("C0 01 22 01 06", "C0 81 80 00 22 01 00 00 00 02 00 00 00 00"); // 1 byte start/stop, RESTART quality
+}
+
 BOOST_AUTO_TEST_CASE(ReadGrp40Var0)
 {
 	TestStaticRead("C0 01 28 00 06", "C0 81 80 00 28 01 00 00 00 02 00 00 00 00"); // 1 byte start/stop, RESTART quality

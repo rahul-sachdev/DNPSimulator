@@ -61,6 +61,12 @@ void Database::Configure(DataTypes aType, size_t aNumPoints, bool aStartOnline)
 		if ( aStartOnline )
 			this->SetAllOnline(mAnalogVec);
 		break;
+	case(DT_ANALOG_DEADBAND):
+		this->mAnalogDeadbandVec.resize(aNumPoints);
+		this->AssignIndices(mAnalogDeadbandVec);
+		if ( aStartOnline )
+			this->SetAllOnline(mAnalogDeadbandVec);
+		break;
 	case(DT_COUNTER):
 		this->mCounterVec.resize(aNumPoints);
 		this->AssignIndices(mCounterVec);
@@ -93,6 +99,7 @@ void Database::Configure(const DeviceTemplate& arTmp)
 	//configure the database for these objects
 	this->Configure(DT_BINARY, numBinary, arTmp.mStartOnline);
 	this->Configure(DT_ANALOG, numAnalog, arTmp.mStartOnline);
+	this->Configure(DT_ANALOG_DEADBAND, numAnalog, arTmp.mStartOnline);
 	this->Configure(DT_COUNTER, numCounter, arTmp.mStartOnline);
 	this->Configure(DT_CONTROL_STATUS, numControlStatus, arTmp.mStartOnline);
 	this->Configure(DT_SETPOINT_STATUS, numSetpointStatus, arTmp.mStartOnline);

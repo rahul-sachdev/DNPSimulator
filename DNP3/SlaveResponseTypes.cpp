@@ -32,6 +32,7 @@ SlaveResponseTypes::SlaveResponseTypes(const SlaveConfig& arCfg)
 {
 	mpStaticBinary = GetStaticBinary(arCfg.mStaticBinary);
 	mpStaticAnalog = GetStaticAnalog(arCfg.mStaticAnalog);
+	mpStaticAnalogDeadband = GetStaticAnalogDeadband(arCfg.mStaticAnalogDeadband);
 	mpStaticCounter = GetStaticCounter(arCfg.mStaticCounter);
 	mpStaticControlStatus = Group10Var2::Inst();
 	mpStaticSetpointStatus = GetStaticSetpointStatus(arCfg.mStaticSetpointStatus);

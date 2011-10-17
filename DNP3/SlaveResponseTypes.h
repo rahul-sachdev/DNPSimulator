@@ -42,6 +42,7 @@ public:
 
 	StreamObject<Binary>* mpStaticBinary;
 	StreamObject<Analog>* mpStaticAnalog;
+	StreamObject<AnalogDeadband>* mpStaticAnalogDeadband;
 	StreamObject<Counter>* mpStaticCounter;
 	StreamObject<ControlStatus>* mpStaticControlStatus;
 	StreamObject<SetpointStatus>* mpStaticSetpointStatus;

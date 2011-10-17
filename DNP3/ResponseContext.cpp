@@ -60,6 +60,7 @@ void ResponseContext::Reset()
 
 	this->mStaticBinaries.clear();
 	this->mStaticAnalogs.clear();
+	this->mStaticAnalogDeadbands.clear();
 	this->mStaticCounters.clear();
 	this->mStaticControls.clear();
 	this->mStaticSetpoints.clear();
@@ -147,6 +148,11 @@ IINField ResponseContext::Configure(const APDU& arRequest)
 		case(MACRO_DNP_RADIX(30, 1)):	// Analog Input - 32-bit w/ flag
 		case(MACRO_DNP_RADIX(30, 3)):	// Analog Input - 32-bit w/o flag
 			this->AddIntegrity(mStaticAnalogs, mpRspTypes->mpStaticAnalog);
+			break;
+		case(MACRO_DNP_RADIX(34, 1)):	// Analog Input Deadband Request - 16-bit
+		case(MACRO_DNP_RADIX(34, 2)):	// Analog Input Deadband Request - 32-bit
+		case(MACRO_DNP_RADIX(34, 3)):	// Analog Input Deadband Request - float
+			this->AddIntegrity(mStaticAnalogDeadbands, mpRspTypes->mpStaticAnalogDeadband);
 			break;
 		case(MACRO_DNP_RADIX(40, 0)):
 			this->AddIntegrity(mStaticSetpoints, mpRspTypes->mpStaticSetpointStatus);
@@ -274,11 +280,12 @@ bool ResponseContext::LoadUnsol(APDU& arAPDU, const IINField& arIIN, ClassMask m
 
 bool ResponseContext::LoadStaticData(APDU& arAPDU)
 {
-	if(!this->LoadStaticBinaries(arAPDU)) return false;
-	if(!this->LoadStaticCounters(arAPDU)) return false;
-	if(!this->LoadStaticAnalogs(arAPDU)) return false;
-	if(!this->LoadStaticControlStatii(arAPDU)) return false;
-	if(!this->LoadStaticSetpointStatii(arAPDU)) return false;
+	if (!this->LoadStaticBinaries(arAPDU)) return false;
+	if (!this->LoadStaticCounters(arAPDU)) return false;
+	if (!this->LoadStaticAnalogs(arAPDU)) return false;
+	if (!this->LoadStaticAnalogDeadbands(arAPDU)) return false;
+	if (!this->LoadStaticControlStatii(arAPDU)) return false;
+	if (!this->LoadStaticSetpointStatii(arAPDU)) return false;
 
 	return true;
 }
@@ -374,9 +381,12 @@ bool ResponseContext::IsEmpty()
 
 bool ResponseContext::IsStaticEmpty()
 {
-	return this->mStaticBinaries.empty() && this->mStaticCounters.empty() &&
-	       this->mStaticAnalogs.empty() && this->mStaticControls.empty() &&
-	       this->mStaticSetpoints.empty();
+	return	this->mStaticBinaries.empty() &&
+			this->mStaticCounters.empty() &&
+			this->mStaticAnalogs.empty() &&
+			this->mStaticAnalogDeadbands.empty() &&
+			this->mStaticControls.empty() &&
+			this->mStaticSetpoints.empty();
 }
 
 bool ResponseContext::IsEventEmpty()
@@ -441,6 +451,27 @@ bool ResponseContext::LoadStaticAnalogs(APDU& arAPDU)
 		}
 
 		this->mStaticAnalogs.pop_front();
+	}
+
+	return true;
+}
+
+bool ResponseContext::LoadStaticAnalogDeadbands(APDU& arAPDU)
+{
+	while (!mStaticAnalogDeadbands.empty()) {
+		IterRecord<AnalogDeadbandInfo>& iter = this->mStaticAnalogDeadbands.front();
+		int grp = iter.pObject->GetGroup();
+		int var = iter.pObject->GetVariation();
+
+		switch(MACRO_DNP_RADIX(grp, var)) {
+			MACRO_CONTINUOUS_CASE(34, 1);
+			MACRO_CONTINUOUS_CASE(34, 2);
+			MACRO_CONTINUOUS_CASE(34, 3);
+			default:
+				break;
+		}
+
+		this->mStaticAnalogDeadbands.pop_front();
 	}
 
 	return true;
@@ -525,11 +556,12 @@ bool ResponseContext::LoadStaticSetpointStatii(APDU& arAPDU)
 
 void ResponseContext::AddIntegrityPoll()
 {
-	this->AddIntegrity(mStaticBinaries, mpRspTypes->mpStaticBinary);
-	this->AddIntegrity(mStaticAnalogs, mpRspTypes->mpStaticAnalog);
-	this->AddIntegrity(mStaticCounters, mpRspTypes->mpStaticCounter);
-	this->AddIntegrity(mStaticControls, mpRspTypes->mpStaticControlStatus);
-	this->AddIntegrity(mStaticSetpoints, mpRspTypes->mpStaticSetpointStatus);
+	this->AddIntegrity(mStaticBinaries,        mpRspTypes->mpStaticBinary);
+	this->AddIntegrity(mStaticAnalogs,         mpRspTypes->mpStaticAnalog);
+	this->AddIntegrity(mStaticAnalogDeadbands, mpRspTypes->mpStaticAnalogDeadband);
+	this->AddIntegrity(mStaticCounters,        mpRspTypes->mpStaticCounter);
+	this->AddIntegrity(mStaticControls,        mpRspTypes->mpStaticControlStatus);
+	this->AddIntegrity(mStaticSetpoints,       mpRspTypes->mpStaticSetpointStatus);
 }
 
 }
