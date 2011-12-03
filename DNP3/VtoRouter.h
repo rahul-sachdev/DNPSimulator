@@ -89,13 +89,13 @@ public:
 	 * and a VtoWriter using SetPhysicalLayer() and
 	 * SetVtoWriter(), respectively.
 	 *
-	 * @param arSettings			Settings for the router including the DNP3 Virtual Terminal port (channel id)
-	     * @param apLogger			the Logger that the instance should use for log messages
-	 * @param apWriter                      Interface that the router will use to write vto objects
-	     * @param apPhysLayer                   PhysicalLayer interface to which the router is bound
-	 * @param apTimerSrc                    Asynchronous ITimerSource interface router uses retry connections, etc
-	     *
-	 * @return				a new VtoRouter instance
+	 * @param arSettings    Settings for the router including the DNP3 Virtual Terminal port (channel id)
+	 * @param apLogger      the Logger that the instance should use for log messages
+	 * @param apWriter      Interface that the router will use to write vto objects
+	 * @param apPhysLayer   PhysicalLayer interface to which the router is bound
+	 * @param apTimerSrc    Asynchronous ITimerSource interface router uses retry connections, etc
+	 *
+	 * @return              a new VtoRouter instance
 	 */
 	VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVtoWriter* apWriter, IPhysicalLayerAsync* apPhysLayer, ITimerSource* apTimerSrc);
 

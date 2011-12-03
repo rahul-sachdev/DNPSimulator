@@ -84,14 +84,14 @@ void MockPhysicalLayerAsync::SignalSendSuccess()
 {
 	size_t num = mNumToWrite; mNumToWrite = 0;
 	error_code ec(errc::success, get_generic_category());
-	this->OnWriteCallback(ec, num);
+	this->OnWriteCallback(ec, NULL, num);
 }
 
 void MockPhysicalLayerAsync::SignalSendFailure()
 {
 	mNumToWrite = 0;
 	error_code ec(errc::permission_denied, get_generic_category());
-	this->OnWriteCallback(ec, 0);
+	this->OnWriteCallback(ec, NULL, 0);
 }
 
 void MockPhysicalLayerAsync::SignalReadFailure()

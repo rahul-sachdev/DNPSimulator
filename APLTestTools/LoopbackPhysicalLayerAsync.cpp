@@ -78,7 +78,7 @@ void LoopbackPhysicalLayerAsync::DoAsyncWrite(const boost::uint8_t* apData, size
 
 	//always write successfully
 	error_code ec(errc::success, get_generic_category());
-	mpService->post(bind(&LoopbackPhysicalLayerAsync::OnWriteCallback, this, ec, aNumBytes));
+	mpService->post(bind(&LoopbackPhysicalLayerAsync::OnWriteCallback, this, ec, apData, aNumBytes));
 
 	//now check to see if this write will dispatch a read
 	this->CheckForReadDispatch();

@@ -67,6 +67,7 @@ void PhysicalLayerAsyncBaseTCP::DoAsyncWrite(const boost::uint8_t* apBuffer, siz
 	            boost::bind(&PhysicalLayerAsyncBaseTCP::OnWriteCallback,
 	                        this,
 	                        boost::asio::placeholders::error,
+							apBuffer,
 	                        aNumBytes));
 }
 

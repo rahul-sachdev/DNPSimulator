@@ -143,8 +143,8 @@ protected:
 
 	//Internally produced events
 	void OnOpenCallback(const boost::system::error_code& arError);
-	void OnReadCallback(const boost::system::error_code& arError, boost::uint8_t*, size_t aSize);
-	void OnWriteCallback(const boost::system::error_code& arError, size_t aSize);
+	void OnReadCallback(const boost::system::error_code& arError, boost::uint8_t* apBuff, size_t aSize);
+	void OnWriteCallback(const boost::system::error_code& arError, const boost::uint8_t* apBuff, size_t aSize);
 
 	// "user" object that recieves the callbacks
 	IHandlerAsync* mpHandler;

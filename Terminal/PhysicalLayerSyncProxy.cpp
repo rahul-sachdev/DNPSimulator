@@ -79,7 +79,7 @@ void PhysicalLayerSyncProxy::DoAsyncWrite(const boost::uint8_t* apData, size_t a
 	const char* pBuff = reinterpret_cast<const char*>(apData);
 	string s(pBuff, aLength);
 	this->Write(s);
-	mpService->post(boost::bind(&PhysicalLayerSyncProxy::OnWriteCallback, this, mSuccessCode, aLength));
+	mpService->post(boost::bind(&PhysicalLayerSyncProxy::OnWriteCallback, this, mSuccessCode, apData, aLength));
 }
 
 void PhysicalLayerSyncProxy::Run()

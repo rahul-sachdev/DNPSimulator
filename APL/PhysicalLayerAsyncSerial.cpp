@@ -91,6 +91,7 @@ void PhysicalLayerAsyncSerial::DoAsyncWrite(const boost::uint8_t* apBuffer, size
 	            boost::bind(&PhysicalLayerAsyncSerial::OnWriteCallback,
 	                        this,
 	                        boost::asio::placeholders::error,
+							apBuffer,
 	                        aNumBytes));
 }
 

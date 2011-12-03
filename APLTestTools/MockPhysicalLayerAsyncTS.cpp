@@ -70,7 +70,8 @@ void MockPhysicalLayerAsyncTS::DoClose()
 	}
 
 	if(mState.mWriting) {
-		mpTimerSrc->Post(boost::bind(&MockPhysicalLayerAsyncTS::OnWriteCallback, this, mErrorCode, 0));
+		boost::uint8_t buf = 0;
+		mpTimerSrc->Post(boost::bind(&MockPhysicalLayerAsyncTS::OnWriteCallback, this, mErrorCode, &buf, 0));
 	}
 }
 
@@ -98,7 +99,7 @@ void MockPhysicalLayerAsyncTS::DoAsyncRead(boost::uint8_t* apBuff, size_t aNumBy
 void MockPhysicalLayerAsyncTS::DoAsyncWrite(const boost::uint8_t* apData, size_t aNumBytes)
 {
 	this->WriteToBuffer(apData, aNumBytes); //record to BufferTestObject
-	mpTimerSrc->Post(boost::bind(&MockPhysicalLayerAsyncTS::OnWriteCallback, this, mSuccessCode, aNumBytes));
+	mpTimerSrc->Post(boost::bind(&MockPhysicalLayerAsyncTS::OnWriteCallback, this, mSuccessCode, apData, aNumBytes));
 }
 
 void MockPhysicalLayerAsyncTS::CheckForRead()

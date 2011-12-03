@@ -22,6 +22,7 @@
 #include "Logger.h"
 #include "Exception.h"
 
+#include <fstream>
 #include <sstream>
 
 
@@ -207,6 +208,10 @@ void PhysicalLayerAsyncBase::OnOpenCallback(const boost::system::error_code& arE
 				if(mpHandler) mpHandler->OnOpenFailure();
 			}
 			else {
+#if 1
+				std::ofstream ofs("/tmp/dnp3_packet_dump.log", ios_base::out | ios_base::app);
+				ofs << std::endl << ">>> Physical layer up <<<" << std::endl;
+#endif
 				mState.mOpen = true;
 				this->DoOpenSuccess();
 				if(mpHandler) mpHandler->OnLowerLayerUp();
@@ -230,6 +235,10 @@ void PhysicalLayerAsyncBase::OnReadCallback(const boost::system::error_code& arE
 				LOG_BLOCK(LEV_DEBUG, "Ignoring received bytes since layer is closing: " << aSize);
 			}
 			else {
+#if 1
+				std::ofstream ofs("/tmp/dnp3_packet_dump.log", ios_base::out | ios_base::app);
+				ofs << "Read " << aSize << " bytes" << std::endl;
+#endif
 				this->DoReadCallback(apBuff, aSize);
 			}
 		}
@@ -239,7 +248,7 @@ void PhysicalLayerAsyncBase::OnReadCallback(const boost::system::error_code& arE
 	else throw InvalidStateException(LOCATION, "OnReadCallback: " + this->ConvertStateToString());
 }
 
-void PhysicalLayerAsyncBase::OnWriteCallback(const boost::system::error_code& arErr, size_t aNumBytes)
+void PhysicalLayerAsyncBase::OnWriteCallback(const boost::system::error_code& arErr, const boost::uint8_t* apBuff, size_t aNumBytes)
 {
 	if(mState.mWriting) {
 		mState.mWriting = false;
@@ -253,6 +262,10 @@ void PhysicalLayerAsyncBase::OnWriteCallback(const boost::system::error_code& ar
 				LOG_BLOCK(LEV_DEBUG, "Ignoring written bytes since layer is closing: " << aNumBytes);
 			}
 			else {
+#if 1
+				std::ofstream ofs("/tmp/dnp3_packet_dump.log", ios_base::out | ios_base::app);
+				ofs << "Wrote " << aNumBytes << " bytes" << std::endl;
+#endif
 				this->DoWriteSuccess();
 			}
 		}
