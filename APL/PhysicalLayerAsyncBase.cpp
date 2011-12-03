@@ -208,10 +208,6 @@ void PhysicalLayerAsyncBase::OnOpenCallback(const boost::system::error_code& arE
 				if(mpHandler) mpHandler->OnOpenFailure();
 			}
 			else {
-#if 1
-				std::ofstream ofs("/tmp/dnp3_packet_dump.log", ios_base::out | ios_base::app);
-				ofs << std::endl << ">>> Physical layer up <<<" << std::endl;
-#endif
 				mState.mOpen = true;
 				this->DoOpenSuccess();
 				if(mpHandler) mpHandler->OnLowerLayerUp();
@@ -235,10 +231,6 @@ void PhysicalLayerAsyncBase::OnReadCallback(const boost::system::error_code& arE
 				LOG_BLOCK(LEV_DEBUG, "Ignoring received bytes since layer is closing: " << aSize);
 			}
 			else {
-#if 1
-				std::ofstream ofs("/tmp/dnp3_packet_dump.log", ios_base::out | ios_base::app);
-				ofs << "Read " << aSize << " bytes" << std::endl;
-#endif
 				this->DoReadCallback(apBuff, aSize);
 			}
 		}
@@ -262,10 +254,6 @@ void PhysicalLayerAsyncBase::OnWriteCallback(const boost::system::error_code& ar
 				LOG_BLOCK(LEV_DEBUG, "Ignoring written bytes since layer is closing: " << aNumBytes);
 			}
 			else {
-#if 1
-				std::ofstream ofs("/tmp/dnp3_packet_dump.log", ios_base::out | ios_base::app);
-				ofs << "Wrote " << aNumBytes << " bytes" << std::endl;
-#endif
 				this->DoWriteSuccess();
 			}
 		}

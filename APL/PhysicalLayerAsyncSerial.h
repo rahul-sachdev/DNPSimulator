@@ -45,6 +45,11 @@ public:
 
 protected:
 
+	void CaptureLog(const std::string& prefix, const std::string& message);
+	void CaptureLog(const std::string& prefix, const boost::uint8_t* buf, size_t len);
+
+	void OnReadCallbackHelper(const boost::system::error_code& arError, boost::uint8_t* apBuff, size_t aSize);
+
 	SerialSettings mSettings;
 	boost::asio::io_service* mpService;
 	boost::asio::serial_port mPort;

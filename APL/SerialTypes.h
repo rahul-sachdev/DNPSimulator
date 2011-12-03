@@ -43,6 +43,9 @@ struct SerialSettings {
 	int mStopBits;
 	ParityType mParity;
 	FlowType mFlowType;
+
+	bool mCaptureEnabled;
+	std::string mCaptureFilename;
 };
 
 }
