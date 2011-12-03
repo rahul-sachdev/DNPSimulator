@@ -108,6 +108,8 @@ public:
 	DBitsEnum DBits;
 	StopBitsEnum StopBits;
 	FlowControlEnum FlowControl;
+	bool CaptureEnabled;
+	string CaptureFilename;
 };
 #ifdef SWIG
 }

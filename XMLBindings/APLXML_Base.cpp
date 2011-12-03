@@ -303,6 +303,9 @@ void Serial_t :: fromXml(TiXmlNode* pNode)
 	DBits = FromString_DBitsEnum(pEm, pEm->Attribute("DBits"));
 	StopBits = FromString_StopBitsEnum(pEm, pEm->Attribute("StopBits"));
 	FlowControl = FromString_FlowControlEnum(pEm, pEm->Attribute("FlowControl"));
+	CaptureEnabled = FromString_bool(pEm, pEm->Attribute("CaptureEnabled"));
+	if (CaptureEnabled)
+		CaptureFilename = FromString_string(pEm, pEm->Attribute("CaptureFilename"));
 	valid = true;
 };
 void Serial_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid)
@@ -323,6 +326,8 @@ void Serial_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid)
 	pEm->SetAttribute("DBits", ToString_DBitsEnum(DBits));
 	pEm->SetAttribute("StopBits", ToString_StopBitsEnum(StopBits));
 	pEm->SetAttribute("FlowControl", ToString_FlowControlEnum(FlowControl));
+	pEm->SetAttribute("CaptureEnabled", ToString_bool(CaptureEnabled));
+	pEm->SetAttribute("CaptureFilename", ToString_string(CaptureFilename));
 };
 
 PhysicalLayerList_t::PhysicalLayerList_t():

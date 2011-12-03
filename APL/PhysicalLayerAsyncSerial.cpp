@@ -61,10 +61,10 @@ void PhysicalLayerAsyncSerial::CaptureLog(const std::string& prefix, const boost
 	if (this->mSettings.mCaptureEnabled) {
 		std::ostringstream os;
 		os << setfill('0');
-		os << " [len=" << setw(4) << len << "]";
+		os << "[len=" << setw(4) << len << "]";
 		os << hex << uppercase;
 		for (size_t i = 0; i < len; ++i)
-			os << " " << setw(2) << buf[i];
+			os << " " << setw(2) << static_cast<int>(buf[i]);
 		this->CaptureLog(prefix, os.str());
 	}
 }

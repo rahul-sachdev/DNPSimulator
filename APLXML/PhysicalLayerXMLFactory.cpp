@@ -69,6 +69,8 @@ SerialSettings GetSerialSettings(const APLXML_Base::Serial_t* apCfg)
 	s.mFlowType = EnumToFlow(apCfg->FlowControl);
 	s.mParity = EnumToParity(apCfg->Parity);
 	s.mStopBits = ((apCfg->StopBits == APLXML_Base::STOPBITS_0) ? 0 : 1);
+	s.mCaptureEnabled = apCfg->CaptureEnabled;
+	s.mCaptureFilename = apCfg->CaptureFilename;
 	return s;
 }
 
