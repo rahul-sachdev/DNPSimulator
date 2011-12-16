@@ -64,8 +64,8 @@ public:
 	FlexibleDataObserver fdo;
 
 	TimerSourceASIO timerSource;
-	PhysicalLayerAsyncTCPClient client;
-	PhysicalLayerAsyncTCPServer server;
+	PhysicalLayerAsyncTCPClient vtoClient;
+	PhysicalLayerAsyncTCPServer vtoServer;
 };
 
 }
