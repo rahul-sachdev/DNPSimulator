@@ -53,6 +53,11 @@ void PhysicalLayerManager::Remove(const std::string& arName)
 	mNameToSettingsMap.erase(arName);
 }
 
+void PhysicalLayerManager ::AddPhysicalLayer(const std::string& arName, PhysLayerInstance pli, PhysLayerSettings s)
+{
+	this->AddLayer(arName, s, pli);
+}
+
 void PhysicalLayerManager ::AddTCPClient(const std::string& arName, PhysLayerSettings s, const std::string& arAddr, boost::uint16_t aPort)
 {
 	IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetTCPClientAsync(arAddr, aPort);
