@@ -29,41 +29,31 @@ namespace apl
 
 PhysLayerInstance::PhysLayerInstance(IPhysicalLayerAsyncFactory aFactory) :
 	mFactoryAsync(aFactory),
-	mpLayer(NULL),
-	mpLogger(NULL)
+	mpLayer(NULL)	
 {
 
 }
-
-PhysLayerInstance::PhysLayerInstance(IPhysicalLayerAsync* apPhys, Logger* apLogger) :
-	mpLayer(apPhys),
-	mpLogger(apLogger)
-{}
+/*
+PhysLayerInstance::PhysLayerInstance(IPhysicalLayerAsync* apPhys) :
+	mpLayer(apPhys)
+	//mpLogger(NULL)
+{
+	
+}
+*/
 
 void PhysLayerInstance::Release()
 {
-
 	delete mpLayer;
-	SetLayer(NULL, NULL);
-}
-
-bool PhysLayerInstance::IsCreated()
-{
-	return mpLayer != NULL;
+	mpLayer = NULL;
+	
 }
 
 IPhysicalLayerAsync*  PhysLayerInstance::GetLayer(Logger* apLogger, boost::asio::io_service* apService)
 {
-	if(mpLayer == NULL) this->SetLayer(mFactoryAsync(apLogger, apService), apLogger);
+	if(mpLayer == NULL) mpLayer = mFactoryAsync(apLogger, apService);
 	return mpLayer;
 }
-
-void PhysLayerInstance::SetLayer(IPhysicalLayerAsync* apLayer, Logger* apLogger)
-{
-	mpLayer = apLayer;
-	mpLogger = apLogger;
-}
-
 
 }
 

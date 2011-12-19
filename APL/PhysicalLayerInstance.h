@@ -33,25 +33,21 @@ class PhysLayerInstance
 {
 public:
 
-	PhysLayerInstance() : mpLayer(NULL), mpLogger(NULL) {}
+	PhysLayerInstance() : mpLayer(NULL) {}
 
 	PhysLayerInstance(IPhysicalLayerAsyncFactory);
-	PhysLayerInstance(IPhysicalLayerAsync* apPhys, Logger*);
+	//PhysLayerInstance(IPhysicalLayerAsync* apPhys);
 
 	IPhysicalLayerAsync* GetLayer(Logger*, boost::asio::io_service*);
 
-	void Release();
-
-	bool IsCreated();
+	void Release();	
 
 private:
 
 	IPhysicalLayerAsyncFactory mFactoryAsync;
 	IPhysicalLayerAsync* mpLayer;
 
-	Logger* mpLogger;
-
-	void SetLayer(IPhysicalLayerAsync* apLayer, Logger* apLogger);
+	void SetLayer(IPhysicalLayerAsync* apLayer);
 };
 
 }
