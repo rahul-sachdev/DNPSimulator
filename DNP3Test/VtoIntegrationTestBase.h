@@ -21,6 +21,7 @@
 #include <APLTestTools/MockCommandAcceptor.h>
 #include <APLTestTools/AsyncTestObjectASIO.h>
 #include <APLTestTools/PhysicalLayerWrapper.h>
+#include <APLTestTools/WrappedTcpPipe.h>
 
 #include <APL/FlexibleDataObserver.h>
 #include <APL/LogToFile.h>
@@ -61,16 +62,15 @@ public:
 	MockCommandAcceptor cmdAcceptor;
 
 	AsyncTestObjectASIO testObj;
-	AsyncStackManager manager;
+	
 	FlexibleDataObserver fdo;
 
 	TimerSourceASIO timerSource;
 	PhysicalLayerAsyncTCPClient vtoClient;
 	PhysicalLayerAsyncTCPServer vtoServer;
-	PhysicalLayerAsyncTCPClient dnpClient;
-	PhysicalLayerAsyncTCPServer dnpServer;
-	PhysicalLayerWrapper* pDnpClientWrapper;
-	PhysicalLayerWrapper* pDnpServerWrapper;
+	WrappedTcpPipe tcpPipe;
+
+	AsyncStackManager manager;
 };
 
 }

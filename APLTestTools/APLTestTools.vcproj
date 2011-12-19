@@ -252,6 +252,14 @@
 					RelativePath=".\PhysicalLayerWrapper.h"
 					>
 				</File>
+				<File
+					RelativePath=".\WrappedTcpPipe.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\WrappedTcpPipe.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Timers"

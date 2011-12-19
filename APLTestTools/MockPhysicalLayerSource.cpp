@@ -35,7 +35,7 @@ MockPhysicalLayerSource::MockPhysicalLayerSource(Logger* apLogger, ITimerSource*
 
 MockPhysicalLayerSource::~MockPhysicalLayerSource()
 {
-	for(InstanceMap::iterator i = mInstanceMap.begin(); i != mInstanceMap.end(); ++i) i->second.Release();
+	for(MockMap::iterator i = mMockMap.begin(); i != mMockMap.end(); ++i) delete i->second;
 }
 
 MockPhysicalLayerAsync* MockPhysicalLayerSource::GetMock(const std::string& arName)
@@ -46,25 +46,22 @@ MockPhysicalLayerAsync* MockPhysicalLayerSource::GetMock(const std::string& arNa
 
 IPhysicalLayerAsync* MockPhysicalLayerSource::AcquireLayer(const std::string& arName)
 {
-	InstanceMap::iterator i = mInstanceMap.find(arName);
-	if(i == this->mInstanceMap.end()) {
+	MockMap::iterator i = mMockMap.find(arName);
+	if(i == this->mMockMap.end()) {
 		Logger* pLogger = mpLogger->GetSubLogger(arName);
-		MockPhysicalLayerAsync* pLayer = new MockPhysicalLayerAsync(pLogger, mpTimerSrc);
-		PhysLayerInstance pli(pLayer, pLogger);
-		mInstanceMap.insert(InstanceMap::value_type(arName, pli));
+		MockPhysicalLayerAsync* pLayer = new MockPhysicalLayerAsync(pLogger, mpTimerSrc);				
 		mMockMap.insert(MockMap::value_type(arName, pLayer));
 		return pLayer;
 	}
-	else throw ArgumentException(LOCATION, "Layer already acquired: " + arName);
+	else throw ArgumentException(LOCATION, "Layer already exists: " + arName);
 }
 
 void MockPhysicalLayerSource::ReleaseLayer(const std::string& arName)
 {
-	InstanceMap::iterator i = mInstanceMap.find(arName);
-	if(i == this->mInstanceMap.end()) throw ArgumentException(LOCATION, "Layer not acquired: " + arName);
+	MockMap::iterator i = mMockMap.find(arName);
+	if(i == this->mMockMap.end()) throw ArgumentException(LOCATION, "Layer does not exist: " + arName);
 	else {
-		i->second.Release();
-		this->mInstanceMap.erase(i);
+		delete i->second;
 		this->mMockMap.erase(arName);
 	}
 }

@@ -41,30 +41,27 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 	Loggable(mpTestLogger),
 	mpMainLogger(mLog.GetLogger(level, "main")),
 	mpLtf(aLogToFile ? new LogToFile(&mLog, "integration.log", true) : NULL),
-	testObj(),
-	manager(mLog.GetLogger(level, "manager")),
+	testObj(),	
 	timerSource(testObj.GetService()),
 	vtoClient(mLog.GetLogger(level, "local-tcp-client"), testObj.GetService(), "127.0.0.1", port + 20),
 	vtoServer(mLog.GetLogger(level, "loopback-tcp-server"), testObj.GetService(), "0.0.0.0", port + 10),
-	dnpClient(mLog.GetLogger(level, "dnp-tcp-client"), testObj.GetService(), "127.0.0.1", port),
-	dnpServer(mLog.GetLogger(level, "dnp-tcp-server"), testObj.GetService(), "127.0.0.1", port),
-	pDnpClientWrapper(new PhysicalLayerWrapper(mLog.GetLogger(level, "dnp-client-wrapper"), &dnpClient)),
-	pDnpServerWrapper(new PhysicalLayerWrapper(mLog.GetLogger(level, "dnp-client-wrapper"), &dnpServer))
+	tcpPipe(mLog.GetLogger(level,  "pipe"), testObj.GetService(), port),
+	manager(mLog.GetLogger(level, "manager"))
 {
 
 	if(aImmediateOutput) mLog.AddLogSubscriber(LogToStdio::Inst());
 
 	{
-	PhysLayerInstance pli(pDnpServerWrapper, mLog.GetLogger(level, "server-wrapper"));
-	//manager.AddTCPServer("dnp-tcp-server", PhysLayerSettings(), "127.0.0.1", port);
-	manager.AddPhysicalLayer("dnp-tcp-server", PhysLayerSettings(), pli);
+	//PhysLayerInstance pli(pDnpServerWrapper, mLog.GetLogger(level, "server-wrapper"));
+	manager.AddTCPServer("dnp-tcp-server", PhysLayerSettings(), "127.0.0.1", port);
+	//manager.AddPhysicalLayer("dnp-tcp-server", PhysLayerSettings(), pli);
 	manager.AddSlave("dnp-tcp-server", "slave", level, &cmdAcceptor, SlaveStackConfig());
 	}
 
 	{
-	PhysLayerInstance pli(pDnpClientWrapper, mLog.GetLogger(level, "client-wrapper"));
-	//manager.AddTCPClient("dnp-tcp-client", PhysLayerSettings(), "127.0.0.1", port);
-	manager.AddPhysicalLayer("dnp-tcp-client", PhysLayerSettings(), pli);
+	//PhysLayerInstance pli(pDnpClientWrapper, mLog.GetLogger(level, "client-wrapper"));
+	manager.AddTCPClient("dnp-tcp-client", PhysLayerSettings(), "127.0.0.1", port);
+	//manager.AddPhysicalLayer("dnp-tcp-client", PhysLayerSettings(), pli);
 	manager.AddMaster("dnp-tcp-client", "master", level, &fdo, MasterStackConfig());
 	}
 
