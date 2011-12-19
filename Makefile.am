@@ -191,6 +191,7 @@ nobase_pkginclude_HEADERS= \
 	APL/EventSet.h \
 	APL/Exception.h \
 	APL/FlexibleDataObserver.h \
+	APL/Function.h \
 	APL/GetKeys.h \
 	APL/IEventLock.h \
 	APL/IHandlerAsync.h \

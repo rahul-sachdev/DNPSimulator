@@ -360,6 +360,53 @@ BOOST_AUTO_TEST_CASE(ReadClass1)
 	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00");	// Buffer should have been cleared
 }
 
+BOOST_AUTO_TEST_CASE(ReadClass1TimeOrdered)
+{
+	SlaveConfig cfg; cfg.mDisableUnsol = true;
+	SlaveTestObject t(cfg);
+
+	t.db.Configure(DT_ANALOG, 100);
+	t.db.SetClass(DT_ANALOG, 0x10, PC_CLASS_1);
+	t.slave.OnLowerLayerUp();
+
+	{
+		Transaction tr(&t.db);
+
+		Analog a0(0x2222, AQ_ONLINE);
+		a0.SetTime(TimeStamp_t(10));
+
+		Analog a1(0x4444, AQ_ONLINE);
+		a1.SetTime(TimeStamp_t(20));
+
+		Analog a2(0x1111, AQ_ONLINE);
+		a2.SetTime(TimeStamp_t(5));
+
+		Analog a3(0x3333, AQ_ONLINE);
+		a3.SetTime(TimeStamp_t(15));
+
+		/*
+		 * Expected order in packet should be:
+		 * a2 -> a0 -> a3 -> a1
+		 */
+		t.db.Update(a0, 0x10);
+		t.db.Update(a1, 0x10);
+		t.db.Update(a2, 0x10);
+		t.db.Update(a3, 0x10);
+	}
+
+	t.SendToSlave("C0 01 3C 02 06");
+
+	/*
+	 * The indices should be in reverse-order from how they were
+	 * added, but the values for a given index should be in the same
+	 * order.
+	 */
+	BOOST_REQUIRE_EQUAL(t.Read(), "E0 81 80 00 20 01 17 04 10 01 11 11 00 00 10 01 22 22 00 00 10 01 33 33 00 00 10 01 44 44 00 00");
+
+	t.SendToSlave("C0 01 3C 02 06");			// Repeat read class 1
+	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00");	// Buffer should have been cleared
+}
+
 BOOST_AUTO_TEST_CASE(NullUnsolOnStartup)
 {
 	SlaveConfig cfg;  cfg.mAllowTimeSync = true;

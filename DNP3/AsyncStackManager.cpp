@@ -101,6 +101,13 @@ void AsyncStackManager::AddSerial(const std::string& arName, PhysLayerSettings a
 	mMgr.AddSerial(arName, aSettings, aSerial);
 }
 
+// Adds a custom physical layer to the stack
+void AsyncStackManager::AddPhysicalLayer(const std::string& arName, PhysLayerSettings aSettings, PhysLayerInstance aInstance)
+{
+	this->ThrowIfAlreadyShutdown();
+	mMgr.AddPhysicalLayer(arName, aInstance, aSettings);
+}
+
 ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, const std::string& arStackName, FilterLevel aLevel, IDataObserver* apPublisher,
         const MasterStackConfig& arCfg)
 {

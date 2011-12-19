@@ -23,6 +23,8 @@
 #include <DNP3/ObjectHeader.h>
 #include <DNP3/ObjectWriteIterator.h>
 #include <DNP3/DNPConstants.h>
+
+#include <APL/DataTypes.h>
 #include <APL/QualityMasks.h>
 #include <APL/CommandTypes.h>
 #include <APL/ToHex.h>
@@ -207,6 +209,24 @@ BOOST_AUTO_TEST_CASE(Obj1Var1Write)
 
 	BOOST_REQUIRE_EQUAL(frag.Size(), hs.Size());
 	BOOST_REQUIRE(AreBuffersEqual(frag.GetBuffer(), hs, hs.Size()));
+}
+
+BOOST_AUTO_TEST_CASE(Obj32Var2Write)
+{
+	APDU frag;
+	frag.SetFunction(FC_RESPONSE);
+	IINField iin;
+	frag.SetIIN(iin);
+	frag.SetControl(true, true);
+
+	IndexedWriteIterator iter = frag.WriteIndexed(Group32Var2::Inst(), 1, QC_4B_CNT_4B_INDEX);
+	iter.SetIndex(2);
+	Analog a(3, AQ_RESTART);
+	Group32Var2::Inst()->Write(*iter, a);
+	
+	std::string expected("C0 81 00 00 20 02 39 01 00 00 00 02 00 00 00 02 03 00");
+	std::string actual = toHex(frag.GetBuffer(), frag.Size(), true);		
+	BOOST_REQUIRE_EQUAL(expected, actual);
 }
 
 BOOST_AUTO_TEST_CASE(SingleSetpoint)

@@ -58,10 +58,10 @@ private:
 	IndexedWriteIterator(boost::uint8_t* apPos, size_t aCount, QualifierCode aCode, size_t aObjectSize);
 
 	enum IndexMode {
-		IM_NONE,
-		IM_1B,
-		IM_2B,
-		IM_4B
+		IM_NONE = 0,
+		IM_1B = 1,
+		IM_2B = 2,
+		IM_4B = 4
 	};
 
 	static IndexMode GetIndexMode(QualifierCode aCode);

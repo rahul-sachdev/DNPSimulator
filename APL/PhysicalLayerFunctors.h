@@ -33,10 +33,8 @@ namespace apl
 {
 
 class Logger;
-class IPhysicalLayerSync;
 class IPhysicalLayerAsync;
 
-typedef boost::function<IPhysicalLayerSync * (Logger*)> IPhysicalLayerSyncFactory;
 typedef boost::function<IPhysicalLayerAsync * (Logger*, boost::asio::io_service*)> IPhysicalLayerAsyncFactory;
 }
 

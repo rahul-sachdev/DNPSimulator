@@ -20,6 +20,7 @@
 #include <APLTestTools/LogTester.h>
 #include <APLTestTools/MockCommandAcceptor.h>
 #include <APLTestTools/AsyncTestObjectASIO.h>
+#include <APLTestTools/PhysicalLayerWrapper.h>
 
 #include <APL/FlexibleDataObserver.h>
 #include <APL/LogToFile.h>
@@ -64,8 +65,12 @@ public:
 	FlexibleDataObserver fdo;
 
 	TimerSourceASIO timerSource;
-	PhysicalLayerAsyncTCPClient client;
-	PhysicalLayerAsyncTCPServer server;
+	PhysicalLayerAsyncTCPClient vtoClient;
+	PhysicalLayerAsyncTCPServer vtoServer;
+	PhysicalLayerAsyncTCPClient dnpClient;
+	PhysicalLayerAsyncTCPServer dnpServer;
+	PhysicalLayerWrapper* pDnpClientWrapper;
+	PhysicalLayerWrapper* pDnpServerWrapper;
 };
 
 }
