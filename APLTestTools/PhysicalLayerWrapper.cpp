@@ -35,7 +35,28 @@ PhysicalLayerWrapper::PhysicalLayerWrapper(Logger* apLogger, IPhysicalLayerAsync
 void PhysicalLayerWrapper::SetHandler(IHandlerAsync* apHandler)
 {
 	assert(apHandler != NULL);
+	assert(mpHandler == NULL);
 	mpHandler = apHandler;
+}
+
+void PhysicalLayerWrapper::AsyncOpen()
+{ 
+	return mpProxy->AsyncOpen(); 
+}
+
+void PhysicalLayerWrapper::AsyncClose()
+{
+	return mpProxy->AsyncClose();
+}
+
+void PhysicalLayerWrapper::AsyncWrite(const boost::uint8_t* apData, size_t apSize)
+{ 
+	return mpProxy->AsyncWrite(apData, apSize);
+}
+
+void PhysicalLayerWrapper::AsyncRead(boost::uint8_t* apData, size_t apSize)
+{ 
+	return mpProxy->AsyncRead(apData, apSize);
 }
 
 void PhysicalLayerWrapper::_OnLowerLayerUp() 

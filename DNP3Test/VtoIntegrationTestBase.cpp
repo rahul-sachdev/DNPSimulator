@@ -40,28 +40,26 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 	LogTester(),
 	Loggable(mpTestLogger),
 	mpMainLogger(mLog.GetLogger(level, "main")),
-	mpLtf(aLogToFile ? new LogToFile(&mLog, "integration.log", true) : NULL),
+	mpLtf(aLogToFile ? new LogToFile(&mLog, "integration.log", true) : NULL),	
 	testObj(),	
 	timerSource(testObj.GetService()),
 	vtoClient(mLog.GetLogger(level, "local-tcp-client"), testObj.GetService(), "127.0.0.1", port + 20),
 	vtoServer(mLog.GetLogger(level, "loopback-tcp-server"), testObj.GetService(), "0.0.0.0", port + 10),
-	tcpPipe(mLog.GetLogger(level,  "pipe"), testObj.GetService(), port),
-	manager(mLog.GetLogger(level, "manager"))
+	manager(mLog.GetLogger(level, "manager")),
+	tcpPipe(mLog.GetLogger(level,  "pipe"), manager.GetIOService(), port)
 {
 
 	if(aImmediateOutput) mLog.AddLogSubscriber(LogToStdio::Inst());
 
-	{
-	//PhysLayerInstance pli(pDnpServerWrapper, mLog.GetLogger(level, "server-wrapper"));
-	manager.AddTCPServer("dnp-tcp-server", PhysLayerSettings(), "127.0.0.1", port);
-	//manager.AddPhysicalLayer("dnp-tcp-server", PhysLayerSettings(), pli);
+	{	
+	//manager.AddTCPServer("dnp-tcp-server", PhysLayerSettings(), "127.0.0.1", port);
+	manager.AddPhysicalLayer("dnp-tcp-server", PhysLayerSettings(), &tcpPipe.server);
 	manager.AddSlave("dnp-tcp-server", "slave", level, &cmdAcceptor, SlaveStackConfig());
 	}
 
-	{
-	//PhysLayerInstance pli(pDnpClientWrapper, mLog.GetLogger(level, "client-wrapper"));
-	manager.AddTCPClient("dnp-tcp-client", PhysLayerSettings(), "127.0.0.1", port);
-	//manager.AddPhysicalLayer("dnp-tcp-client", PhysLayerSettings(), pli);
+	{	
+	//manager.AddTCPClient("dnp-tcp-client", PhysLayerSettings(), "127.0.0.1", port);
+	manager.AddPhysicalLayer("dnp-tcp-client", PhysLayerSettings(), &tcpPipe.client);
 	manager.AddMaster("dnp-tcp-client", "master", level, &fdo, MasterStackConfig());
 	}
 
@@ -74,6 +72,11 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 	manager.StartVtoRouter("vto-tcp-client", clientSideOfStack, VtoRouterSettings(88, false, false, 1000));
 	manager.AddTCPServer("vto-tcp-server", PhysLayerSettings(), "127.0.0.1", port + 20);
 	manager.StartVtoRouter("vto-tcp-server", serverSideOfStack, VtoRouterSettings(88, true, false, 1000));
+}
+
+VtoIntegrationTestBase::~VtoIntegrationTestBase()
+{
+	manager.Shutdown();
 }
 
 }

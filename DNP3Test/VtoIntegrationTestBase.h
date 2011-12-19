@@ -57,6 +57,8 @@ public:
 	        FilterLevel level = LEV_INFO,
 	        boost::uint16_t port = MACRO_PORT_VALUE);
 
+	virtual ~VtoIntegrationTestBase();
+
 	Logger* mpMainLogger;
 	std::auto_ptr<LogToFile> mpLtf;
 	MockCommandAcceptor cmdAcceptor;
@@ -68,9 +70,9 @@ public:
 	TimerSourceASIO timerSource;
 	PhysicalLayerAsyncTCPClient vtoClient;
 	PhysicalLayerAsyncTCPServer vtoServer;
-	WrappedTcpPipe tcpPipe;
-
+	
 	AsyncStackManager manager;
+	WrappedTcpPipe tcpPipe;
 };
 
 }

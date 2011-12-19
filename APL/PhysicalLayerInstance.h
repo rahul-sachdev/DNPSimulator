@@ -35,8 +35,15 @@ public:
 
 	PhysLayerInstance() : mpLayer(NULL) {}
 
+	/**
+	* Constructor whereby this class manages the lifecycle of the physical layer
+	*/
 	PhysLayerInstance(IPhysicalLayerAsyncFactory);
-	//PhysLayerInstance(IPhysicalLayerAsync* apPhys);
+	
+	/**
+	* Constructor whereby the lifecycle of the physical layer is managed externally
+	*/
+	PhysLayerInstance(IPhysicalLayerAsync* apPhys);
 
 	IPhysicalLayerAsync* GetLayer(Logger*, boost::asio::io_service*);
 
@@ -46,6 +53,7 @@ private:
 
 	IPhysicalLayerAsyncFactory mFactoryAsync;
 	IPhysicalLayerAsync* mpLayer;
+	bool mOwnsLayer;
 
 	void SetLayer(IPhysicalLayerAsync* apLayer);
 };

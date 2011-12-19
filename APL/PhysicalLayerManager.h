@@ -42,7 +42,7 @@ public:
 	void AddTCPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort);
 	void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
 	void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
-	void AddPhysicalLayer(const std::string& arName, PhysLayerInstance, PhysLayerSettings);
+	void AddPhysicalLayer(const std::string& arName, PhysLayerSettings, IPhysicalLayerAsync*);
 
 	// Removes a physical layer and deletes it if the manager has ownership.
 	void Remove(const std::string& arName);

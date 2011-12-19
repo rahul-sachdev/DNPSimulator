@@ -53,8 +53,9 @@ void PhysicalLayerManager::Remove(const std::string& arName)
 	mNameToSettingsMap.erase(arName);
 }
 
-void PhysicalLayerManager ::AddPhysicalLayer(const std::string& arName, PhysLayerInstance pli, PhysLayerSettings s)
+void PhysicalLayerManager ::AddPhysicalLayer(const std::string& arName, PhysLayerSettings s, IPhysicalLayerAsync* apPhys)
 {
+	PhysLayerInstance pli(apPhys);
 	this->AddLayer(arName, s, pli);
 }
 

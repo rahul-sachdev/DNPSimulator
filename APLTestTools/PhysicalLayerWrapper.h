@@ -48,10 +48,10 @@ public:
 
 	std::string ConvertStateToString() const { return mpProxy->ConvertStateToString(); }
 
-	void AsyncOpen() { return mpProxy->AsyncOpen(); }
-	void AsyncClose() { return mpProxy->AsyncClose(); }
-	void AsyncWrite(const boost::uint8_t* apData, size_t apSize) { return mpProxy->AsyncWrite(apData, apSize); }
-	void AsyncRead(boost::uint8_t* apData, size_t apSize) { return mpProxy->AsyncRead(apData, apSize); }
+	void AsyncOpen();
+	void AsyncClose();
+	void AsyncWrite(const boost::uint8_t* apData, size_t apSize);
+	void AsyncRead(boost::uint8_t* apData, size_t apSize);
 
 	void SetHandler(IHandlerAsync* apHandler);
 

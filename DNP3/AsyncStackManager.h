@@ -86,7 +86,7 @@ public:
 	void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
 
 	// Adds a custom physical layer to the stack
-	void AddPhysicalLayer(const std::string&, PhysLayerSettings, PhysLayerInstance);
+	void AddPhysicalLayer(const std::string&, PhysLayerSettings, IPhysicalLayerAsync* apPhys);
 
 	/**
 		Adds a master stack - Stack will automatically start running if

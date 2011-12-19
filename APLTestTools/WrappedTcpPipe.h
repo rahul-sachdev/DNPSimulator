@@ -22,7 +22,7 @@ class WrappedTcpPipe
 
 	private:	
 		PhysicalLayerAsyncTCPClient clientTcp;
-		PhysicalLayerAsyncTCPClient serverTcp;
+		PhysicalLayerAsyncTCPServer serverTcp;
 	
 	public:
 		PhysicalLayerWrapper client;
