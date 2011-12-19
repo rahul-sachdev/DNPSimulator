@@ -244,6 +244,14 @@
 					RelativePath=".\MockPhysicalLayerSource.h"
 					>
 				</File>
+				<File
+					RelativePath=".\PhysicalLayerWrapper.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PhysicalLayerWrapper.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Timers"

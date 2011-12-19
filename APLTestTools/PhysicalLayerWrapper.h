@@ -58,7 +58,7 @@ public:
 private:
 	void _OnLowerLayerUp();
 	void _OnLowerLayerDown();
-	void _OnReceive(const uint8_t*, size_t aSize);
+	void _OnReceive(const boost::uint8_t*, size_t aSize);
 	void _OnSendSuccess();
 	void _OnSendFailure();
 	void _OnOpenFailure();

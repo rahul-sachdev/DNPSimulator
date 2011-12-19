@@ -48,7 +48,7 @@ void PhysicalLayerWrapper::_OnLowerLayerDown()
 	if(mpHandler) mpHandler->OnLowerLayerDown();
 }
 
-void PhysicalLayerWrapper::_OnReceive(const uint8_t* apData, size_t aSize)
+void PhysicalLayerWrapper::_OnReceive(const boost::uint8_t* apData, size_t aSize)
 {
 	if(mpHandler) mpHandler->OnReceive(apData, aSize);
 }
