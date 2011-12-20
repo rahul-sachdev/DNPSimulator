@@ -67,7 +67,7 @@ Master::Master(Logger* apLogger, MasterConfig aCfg, IAppLayer* apAppLayer, IData
 	mTimeSync(apLogger, apTimeSrc),
 	mExecuteBO(apLogger),
 	mExecuteSP(apLogger),
-	mVtoTransmitTask(apLogger, aCfg.FragSize)
+	mVtoTransmitTask(apLogger, aCfg.FragSize, aCfg.UseNonStandardVtoFunction)
 {
 	/*
 	 * Establish a link between the mCommandQueue and the

@@ -391,8 +391,23 @@ void Slave::HandleWriteTimeDate(HeaderReadIterator& arHWI)
 	}
 }
 
-void Slave::HandleWrite(const APDU& arRequest)
+void Slave::HandleVtoTransfer(const APDU& arRequest)
 {
+	for(HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr) {
+		switch(hdr->GetGroup()) {
+			case 112:
+				this->HandleWriteVto(hdr);
+				break;
+			default:
+				mRspIIN.SetFuncNotSupported(true);
+				ERROR_BLOCK(LEV_WARNING, "Object/Function mismatch", SERR_OBJ_FUNC_MISMATCH);
+				break;
+		}
+	}
+}
+
+void Slave::HandleWrite(const APDU& arRequest)
+{	
 	for (HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr) {
 		switch (hdr->GetGroup()) {
 		case 112:

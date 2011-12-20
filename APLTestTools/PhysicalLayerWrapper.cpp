@@ -18,6 +18,8 @@
 //
 #include "PhysicalLayerWrapper.h"
 
+#include <APL/Logger.h>
+
 namespace apl
 {
 
@@ -25,9 +27,9 @@ namespace apl
 PhysicalLayerWrapper::PhysicalLayerWrapper(Logger* apLogger, IPhysicalLayerAsync* apProxy) :
 	Loggable(apLogger),
 	IHandlerAsync(apLogger),
+	mCorruptionProbability(-1.0),
 	mpProxy(apProxy),
 	mpHandler(NULL)
-
 {
 	mpProxy->SetHandler(this);
 }
@@ -71,6 +73,13 @@ void PhysicalLayerWrapper::_OnLowerLayerDown()
 
 void PhysicalLayerWrapper::_OnReceive(const boost::uint8_t* apData, size_t aSize)
 {
+	if(mCorruptionProbability > mRandom.Next())
+	{
+		LOG_BLOCK(LEV_INFO, "Corrupting data");
+		boost::uint8_t* pData = const_cast<boost::uint8_t*>(apData);
+		for(size_t i=0; i<aSize; ++i) pData[i] = 0;
+	}
+
 	if(mpHandler) mpHandler->OnReceive(apData, aSize);
 }
 
@@ -87,6 +96,11 @@ void PhysicalLayerWrapper::_OnSendFailure()
 void PhysicalLayerWrapper::_OnOpenFailure()
 {
 	if(mpHandler) mpHandler->OnOpenFailure();
+}
+
+void PhysicalLayerWrapper::SetCorruptionProbability(double aProbability)
+{
+	mCorruptionProbability = aProbability;
 }
 
 }

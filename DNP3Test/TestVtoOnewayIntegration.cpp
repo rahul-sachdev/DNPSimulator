@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 }
 
 void TestLargeDataOneWay(VtoOnewayTestStack& arTest, size_t aSizeInBytes)
-{
+{	
 	// start everything
 	arTest.local.Start();
 	arTest.remote.Start();
@@ -157,13 +157,15 @@ void TestLargeDataOneWay(VtoOnewayTestStack& arTest, size_t aSizeInBytes)
 
 BOOST_AUTO_TEST_CASE(LargeDataTransferMasterToSlave)
 {
-	VtoOnewayTestStack stack(true, true);
+	VtoOnewayTestStack stack(true, true, true);
+	stack.tcpPipe.client.SetCorruptionProbability(0.005);	
 	TestLargeDataOneWay(stack, MACRO_BUFFER_SIZE);
 }
 
 BOOST_AUTO_TEST_CASE(LargeDataTransferSlaveToMaster)
 {
-	VtoOnewayTestStack stack(false, false);
+	VtoOnewayTestStack stack(false, true, true);	
+	stack.tcpPipe.client.SetCorruptionProbability(0.005);
 	TestLargeDataOneWay(stack, MACRO_BUFFER_SIZE);
 }
 

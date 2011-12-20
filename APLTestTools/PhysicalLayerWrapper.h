@@ -23,6 +23,8 @@
 #include <APL/Loggable.h>
 #include <APL/IHandlerAsync.h>
 
+#include <APL/RandomDouble.h>
+
 namespace apl
 {
 
@@ -55,6 +57,9 @@ public:
 
 	void SetHandler(IHandlerAsync* apHandler);
 
+	// testing helpers
+	void SetCorruptionProbability(double aProbability);
+
 private:
 	void _OnLowerLayerUp();
 	void _OnLowerLayerDown();
@@ -62,6 +67,9 @@ private:
 	void _OnSendSuccess();
 	void _OnSendFailure();
 	void _OnOpenFailure();
+
+	double mCorruptionProbability;
+	RandomDouble mRandom;
 
 private:
 

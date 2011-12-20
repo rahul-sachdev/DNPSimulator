@@ -96,7 +96,12 @@ void AS_Base::SwitchOnFunction(Slave* c, AS_Base* apNext, const APDU& arRequest,
 		}
 	case (FC_WRITE):
 		ChangeState(c, apNext);
-		c->HandleWrite(arRequest);
+		if(aSeqInfo != SI_PREV) c->HandleWrite(arRequest);
+		c->ConfigureAndSendSimpleResponse();
+		break;
+	case (FC_PROPRIETARY_VTO_TRANSFER):
+		ChangeState(c, apNext);
+		if(aSeqInfo != SI_PREV) c->HandleVtoTransfer(arRequest);
 		c->ConfigureAndSendSimpleResponse();
 		break;
 	case (FC_SELECT):

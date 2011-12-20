@@ -34,7 +34,7 @@ void VtoTransmitTask::ConfigureRequest(APDU& arAPDU)
 	 *  Masters never request confirmed data. The response from the
 	 *  slave is all that's required for reliable delivery.
 	 */
-	arAPDU.Set(FC_WRITE);
+	arAPDU.Set(mUseNonStandardCode ? FC_PROPRIETARY_VTO_TRANSFER : FC_WRITE);
 
 	const size_t MAX_VTO_EVENTS = 7;
 	/* Get all of the data objects in the buffer. */

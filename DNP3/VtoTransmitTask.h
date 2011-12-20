@@ -49,9 +49,10 @@ public:
 	 *
 	 * @return			a new VtoTransmitTask instance
 	 */
-	VtoTransmitTask(Logger* log, size_t fragSize) :
+	VtoTransmitTask(Logger* log, size_t fragSize, bool aUseNonStandardCode) :
 		MasterTaskBase(log),
-		mBuffer(fragSize * 10)
+		mBuffer(fragSize * 10),
+		mUseNonStandardCode(aUseNonStandardCode)
 	{}
 
 	/**
@@ -98,6 +99,11 @@ public:
 	void OnFailure();
 
 protected:
+
+	/** FC_WRITE can't be retried so, another code is needed to 
+	* make a reliable stream in the MASTER -> SLAVE direction
+	*/
+	bool mUseNonStandardCode;
 
 
 	/**

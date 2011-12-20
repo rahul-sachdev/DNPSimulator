@@ -51,16 +51,21 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 
 	if(aImmediateOutput) mLog.AddLogSubscriber(LogToStdio::Inst());
 
-	{	
-	//manager.AddTCPServer("dnp-tcp-server", PhysLayerSettings(), "127.0.0.1", port);
+	{		
 	manager.AddPhysicalLayer("dnp-tcp-server", PhysLayerSettings(), &tcpPipe.server);
-	manager.AddSlave("dnp-tcp-server", "slave", level, &cmdAcceptor, SlaveStackConfig());
+	SlaveStackConfig config;
+	config.app.NumRetry = 3;
+	config.app.RspTimeout = 500;
+	manager.AddSlave("dnp-tcp-server", "slave", level, &cmdAcceptor, config);
 	}
 
-	{	
-	//manager.AddTCPClient("dnp-tcp-client", PhysLayerSettings(), "127.0.0.1", port);
+	{		
 	manager.AddPhysicalLayer("dnp-tcp-client", PhysLayerSettings(), &tcpPipe.client);
-	manager.AddMaster("dnp-tcp-client", "master", level, &fdo, MasterStackConfig());
+	MasterStackConfig config;
+	config.app.NumRetry = 3;
+	config.app.RspTimeout = 500;
+	config.master.UseNonStandardVtoFunction = true;
+	manager.AddMaster("dnp-tcp-client", "master", level, &fdo, config);
 	}
 
 	// switch if master or slave gets the loopback half of the server
