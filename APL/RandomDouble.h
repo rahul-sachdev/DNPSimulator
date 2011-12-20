@@ -16,48 +16,45 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __PHYSICAL_LAYER_INSTANCE_H_
-#define __PHYSICAL_LAYER_INSTANCE_H_
+#ifndef __RANDOM_DOUBLE_H_
+#define __RANDOM_DOUBLE_H_
 
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable:4244)
+#endif
 
-#include "PhysicalLayerFunctors.h"
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_real.hpp>
+#include <boost/random/variate_generator.hpp>
+
+#ifdef WIN32
+#pragma warning(pop)
+#endif
 
 namespace apl
 {
 
-class IPhysicalLayer;
-
-/** Manages the delayed creation of a physical layer.
-*/
-class PhysLayerInstance
+class RandomDouble
 {
+
 public:
+	RandomDouble() :
+		rng(),
+		dist(0.0, 1.0),
+		nextRand(rng, dist) {
 
-	PhysLayerInstance() : mpLayer(NULL) {}
+	}
 
-	/**
-	* Constructor whereby this class manages the lifecycle of the physical layer
-	*/
-	PhysLayerInstance(IPhysicalLayerAsyncFactory);
-	
-	/**
-	* Constructor whereby the lifecycle of the physical layer is managed externally
-	*/
-	PhysLayerInstance(IPhysicalLayerAsync* apPhys);
-
-	IPhysicalLayerAsync* GetLayer(Logger*, boost::asio::io_service*);
-
-	void Release();	
+	double Next() { return nextRand(); }
 
 private:
-
-	IPhysicalLayerAsyncFactory mFactoryAsync;
-	IPhysicalLayerAsync* mpLayer;
-	bool mOwnsLayer;
-
-	void SetLayer(IPhysicalLayerAsync* apLayer);
+	boost::mt19937 rng;
+	boost::uniform_real<double> dist;	
+	boost::variate_generator<boost::mt19937&, boost::uniform_real<double> > nextRand;
 };
 
 }
 
 #endif
+

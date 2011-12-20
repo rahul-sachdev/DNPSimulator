@@ -38,8 +38,8 @@ public:
 	    boost::uint16_t port = MACRO_PORT_VALUE) :
 
 		VtoIntegrationTestBase(clientOnSlave, aImmediateOutput, aLogToFile, level, port),
-		loopback(mLog.GetLogger(level, "loopback"), &server, &timerSource),
-		local(mLog.GetLogger(level, "mock-client-connection"), &client, &timerSource, 500) {
+		loopback(mLog.GetLogger(level, "loopback"), &vtoServer, &timerSource),
+		local(mLog.GetLogger(level, "mock-client-connection"), &vtoClient, &timerSource, 500) {
 	}
 
 	virtual ~VtoLoopbackTestStack() {
@@ -75,7 +75,7 @@ void TestLargeDataLoopback(VtoLoopbackTestStack& arTest, size_t aSizeInBytes)
 
 	arTest.local.ExpectData(data);
 	arTest.local.WriteData(data);
-	BOOST_REQUIRE(arTest.WaitForExpectedDataToBeReceived(30000));
+	BOOST_REQUIRE(arTest.WaitForExpectedDataToBeReceived(60000));
 
 	// this will cause an exception if we receive any more data beyond what we wrote
 	arTest.testObj.ProceedForTime(1000);
@@ -85,13 +85,17 @@ void TestLargeDataLoopback(VtoLoopbackTestStack& arTest, size_t aSizeInBytes)
 
 BOOST_AUTO_TEST_CASE(LargeDataLoopbackMasterWritesSlaveEchoes)
 {
-	VtoLoopbackTestStack stack(true, false);
+	VtoLoopbackTestStack stack(true, false);	
+	stack.tcpPipe.client.SetCorruptionProbability(0.005);
+	stack.tcpPipe.server.SetCorruptionProbability(0.005);
 	TestLargeDataLoopback(stack, MACRO_BUFFER_SIZE);
 }
 
 BOOST_AUTO_TEST_CASE(LargeDataLoopbackSlaveWritesMasterEchoes)
 {
 	VtoLoopbackTestStack stack(false, false);
+	stack.tcpPipe.client.SetCorruptionProbability(0.005);
+	stack.tcpPipe.server.SetCorruptionProbability(0.005);
 	TestLargeDataLoopback(stack, MACRO_BUFFER_SIZE);
 }
 

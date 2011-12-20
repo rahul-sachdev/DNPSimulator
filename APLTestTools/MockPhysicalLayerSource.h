@@ -30,6 +30,7 @@ namespace apl
 class MockPhysicalLayerAsync;
 class ITimerSource;
 
+
 class MockPhysicalLayerSource : public IPhysicalLayerSource
 {
 public:
@@ -48,13 +49,12 @@ private:
 	Logger* mpLogger;
 	ITimerSource* mpTimerSrc;
 
-	typedef std::map<std::string, PhysLayerInstance> InstanceMap;
 	typedef std::map<std::string, MockPhysicalLayerAsync*> MockMap;
 
-	InstanceMap mInstanceMap;
 	MockMap mMockMap;
-
 };
+
+
 }
 
 #endif

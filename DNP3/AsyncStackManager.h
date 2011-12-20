@@ -85,6 +85,9 @@ public:
 	// Adds a Serial port, excepts if the port already exists
 	void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
 
+	// Adds a custom physical layer to the stack
+	void AddPhysicalLayer(const std::string&, PhysLayerSettings, IPhysicalLayerAsync* apPhys);
+
 	/**
 		Adds a master stack - Stack will automatically start running if
 		Start() has been called or aAutoRun is true.

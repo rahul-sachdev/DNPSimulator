@@ -125,6 +125,7 @@ MasterConfig XmlToConfig::Convert(const APLXML_DNP::Master_t& arCfg)
 	cfg.TaskRetryRate = arCfg.MasterSettings.TaskRetryMS;
 	cfg.UnsolClassMask = ClassMask::GetMask(arCfg.Unsol.Class1, arCfg.Unsol.Class2, arCfg.Unsol.Class3);
 	cfg.IntegrityRate = arCfg.MasterSettings.IntegrityPeriodMS;
+	cfg.UseNonStandardVtoFunction = arCfg.MasterSettings.UseNonStandardVtoTransferCode;
 
 	std::vector<APLXML_DNP::ExceptionScan_t*>& vec = arCfg.ScanList.ExceptionScanVector;
 	for(size_t i = 0; i < vec.size(); ++i) {

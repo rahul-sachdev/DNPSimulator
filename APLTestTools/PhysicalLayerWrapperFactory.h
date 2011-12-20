@@ -16,48 +16,33 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __PHYSICAL_LAYER_INSTANCE_H_
-#define __PHYSICAL_LAYER_INSTANCE_H_
+#ifndef _PHYSICAL_LAYER_FACTORY_H_
+#define _PHYSICAL_LAYER_FACTORY_H_
 
 
+#include "SerialTypes.h"
+#include "Exception.h"
 #include "PhysicalLayerFunctors.h"
+#include <map>
+
+#include <boost/cstdint.hpp>
 
 namespace apl
 {
 
-class IPhysicalLayer;
-
-/** Manages the delayed creation of a physical layer.
-*/
-class PhysLayerInstance
+class PhysicalLayerWrapperFactory
 {
 public:
 
-	PhysLayerInstance() : mpLayer(NULL) {}
+	static IPhysicalLayerAsyncFactory GetSerialAsync(SerialSettings s);
+	static IPhysicalLayerAsyncFactory GetTCPClientAsync(std::string aAddress, boost::uint16_t aPort);
+	static IPhysicalLayerAsyncFactory GetTCPServerAsync(std::string aEndpoint, boost::uint16_t aPort);
 
-	/**
-	* Constructor whereby this class manages the lifecycle of the physical layer
-	*/
-	PhysLayerInstance(IPhysicalLayerAsyncFactory);
-	
-	/**
-	* Constructor whereby the lifecycle of the physical layer is managed externally
-	*/
-	PhysLayerInstance(IPhysicalLayerAsync* apPhys);
-
-	IPhysicalLayerAsync* GetLayer(Logger*, boost::asio::io_service*);
-
-	void Release();	
-
-private:
-
-	IPhysicalLayerAsyncFactory mFactoryAsync;
-	IPhysicalLayerAsync* mpLayer;
-	bool mOwnsLayer;
-
-	void SetLayer(IPhysicalLayerAsync* apLayer);
+	//normal factory functions
+	static IPhysicalLayerWrapper* FGetSerialAsync(SerialSettings s, boost::asio::io_service* apSrv, Logger* apLogger);
+	static IPhysicalLayerAsync* FGetTCPClientAsync(std::string aAddress, boost::uint16_t aPort, boost::asio::io_service* apSrv, Logger* apLogger);
+	static IPhysicalLayerAsync* FGetTCPServerAsync(std::string aEndpoint, boost::uint16_t aPort, boost::asio::io_service* apSrv, Logger* apLogger);
 };
-
 }
 
 #endif

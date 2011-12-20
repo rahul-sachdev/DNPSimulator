@@ -206,6 +206,7 @@ private:
 	void SendUnsolicited(APDU& arAPDU);
 
 	void HandleWrite(const APDU& arRequest);
+	void HandleVtoTransfer(const APDU& arRequest);
 	void HandleWriteIIN(HeaderReadIterator& arHdr);
 	void HandleWriteTimeDate(HeaderReadIterator& arHWI);
 	void HandleWriteVto(HeaderReadIterator& arHdr);

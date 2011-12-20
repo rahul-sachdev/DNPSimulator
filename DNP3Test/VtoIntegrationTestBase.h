@@ -20,6 +20,8 @@
 #include <APLTestTools/LogTester.h>
 #include <APLTestTools/MockCommandAcceptor.h>
 #include <APLTestTools/AsyncTestObjectASIO.h>
+#include <APLTestTools/PhysicalLayerWrapper.h>
+#include <APLTestTools/WrappedTcpPipe.h>
 
 #include <APL/FlexibleDataObserver.h>
 #include <APL/LogToFile.h>
@@ -55,17 +57,22 @@ public:
 	        FilterLevel level = LEV_INFO,
 	        boost::uint16_t port = MACRO_PORT_VALUE);
 
+	virtual ~VtoIntegrationTestBase();
+
 	Logger* mpMainLogger;
 	std::auto_ptr<LogToFile> mpLtf;
 	MockCommandAcceptor cmdAcceptor;
 
 	AsyncTestObjectASIO testObj;
-	AsyncStackManager manager;
+	
 	FlexibleDataObserver fdo;
 
 	TimerSourceASIO timerSource;
-	PhysicalLayerAsyncTCPClient client;
-	PhysicalLayerAsyncTCPServer server;
+	PhysicalLayerAsyncTCPClient vtoClient;
+	PhysicalLayerAsyncTCPServer vtoServer;
+	
+	AsyncStackManager manager;
+	WrappedTcpPipe tcpPipe;
 };
 
 }

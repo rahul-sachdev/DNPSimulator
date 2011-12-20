@@ -37,8 +37,8 @@ public:
 	    boost::uint16_t port = MACRO_PORT_VALUE) :
 
 		VtoIntegrationTestBase(clientOnSlave, aImmediateOutput, aLogToFile, level, port),
-		local(mLog.GetLogger(level, "local-mock-phys-monitor"), &client, &timerSource, 500),
-		remote(mLog.GetLogger(level, "remote-mock-phys-monitor"), &server, &timerSource, 500) {
+		local(mLog.GetLogger(level, "local-mock-phys-monitor"), &vtoClient, &timerSource, 500),
+		remote(mLog.GetLogger(level, "remote-mock-phys-monitor"), &vtoServer, &timerSource, 500) {
 
 	}
 
@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_CASE(SocketIsClosedIfRemoteDrops)
 }
 
 void TestLargeDataOneWay(VtoOnewayTestStack& arTest, size_t aSizeInBytes)
-{
+{	
 	// start everything
 	arTest.local.Start();
 	arTest.remote.Start();
@@ -147,7 +147,7 @@ void TestLargeDataOneWay(VtoOnewayTestStack& arTest, size_t aSizeInBytes)
 	RandomizedBuffer data(aSizeInBytes);
 	arTest.remote.ExpectData(data);
 	arTest.local.WriteData(data);
-	BOOST_REQUIRE(arTest.WaitForExpectedDataToBeReceived(30000));
+	BOOST_REQUIRE(arTest.WaitForExpectedDataToBeReceived(60000));
 
 	// this will cause an exception if we receive any more data beyond what we wrote
 	arTest.testObj.ProceedForTime(1000);
@@ -157,13 +157,17 @@ void TestLargeDataOneWay(VtoOnewayTestStack& arTest, size_t aSizeInBytes)
 
 BOOST_AUTO_TEST_CASE(LargeDataTransferMasterToSlave)
 {
-	VtoOnewayTestStack stack(true, false);
+	VtoOnewayTestStack stack(true, false, false);
+	stack.tcpPipe.client.SetCorruptionProbability(0.005);	
+	stack.tcpPipe.server.SetCorruptionProbability(0.005);
 	TestLargeDataOneWay(stack, MACRO_BUFFER_SIZE);
 }
 
 BOOST_AUTO_TEST_CASE(LargeDataTransferSlaveToMaster)
 {
-	VtoOnewayTestStack stack(false, false);
+	VtoOnewayTestStack stack(false, false, false);	
+	stack.tcpPipe.client.SetCorruptionProbability(0.005);
+	stack.tcpPipe.server.SetCorruptionProbability(0.005);
 	TestLargeDataOneWay(stack, MACRO_BUFFER_SIZE);
 }
 

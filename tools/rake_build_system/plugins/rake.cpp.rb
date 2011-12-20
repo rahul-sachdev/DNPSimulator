@@ -152,14 +152,14 @@ def add_cpp_based_target(name, options)
     end
 
     desc "Copy the target"
-    task :copytarget, :dest, :name, :sudo, :needs => target do |task, args|
+    task :copytarget, [:dest, :name, :sudo] => target do |task, args|
       cmd = "cp #{target} #{args[:dest]}/#{args[:name]}"      
       cmd = "sudo " + cmd if args[:sudo]
       sh "#{cmd}"      
     end
     
     desc "Run remote tests"
-    task :testremote, :host, :user, :passwd, :xml, :needs => target do |task, args|
+    task [:testremote, :host, :user, :passwd, :xml] => target do |task, args|
       #require here so that we don't blow up w/o net-ssh/openssl
       require File.join(File.dirname(__FILE__), 'rake.crosstest.rb')
       CrossTest::do_test_sequence(args[:host], args[:user], args[:passwd], target, args[:xml])
@@ -224,14 +224,14 @@ def add_executable(name, options)
     task :run => :build
 
     desc 'runs the executable with optional cmd line arguments'
-    task :run, :cmdline, :needs => target do |task, args|
+    task :run, [:cmdline] => target do |task, args|
       puts "#{target} #{args[:cmdline] ? args[:cmdline] : ''}"
       sh   "#{target} #{args[:cmdline] ? args[:cmdline] : ''}"
       run_coverage( name, options) if $RELEASE_TYPE == 'coverage'
     end
 
     desc 'blindly run the executable -- no build dependency'
-    task :runblind, :cmdline, :needs => target do |task, args|
+    task :runblind, [:cmdline] => target do |task, args|
       puts "#{target} #{args[:cmdline] ? args[:cmdline] : ''}"
       sh   "#{target} #{args[:cmdline] ? args[:cmdline] : ''}"
       run_coverage( name, options) if $RELEASE_TYPE == 'coverage'

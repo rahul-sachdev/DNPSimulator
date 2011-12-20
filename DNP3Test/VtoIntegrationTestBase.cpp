@@ -40,21 +40,33 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 	LogTester(),
 	Loggable(mpTestLogger),
 	mpMainLogger(mLog.GetLogger(level, "main")),
-	mpLtf(aLogToFile ? new LogToFile(&mLog, "integration.log", true) : NULL),
-	testObj(),
-	manager(mLog.GetLogger(level, "manager")),
+	mpLtf(aLogToFile ? new LogToFile(&mLog, "integration.log", true) : NULL),	
+	testObj(),	
 	timerSource(testObj.GetService()),
-	client(mLog.GetLogger(level, "local-tcp-client"), testObj.GetService(), "127.0.0.1", port + 20),
-	server(mLog.GetLogger(level, "loopback-tcp-server"), testObj.GetService(), "0.0.0.0", port + 10)
+	vtoClient(mLog.GetLogger(level, "local-tcp-client"), testObj.GetService(), "127.0.0.1", port + 20),
+	vtoServer(mLog.GetLogger(level, "loopback-tcp-server"), testObj.GetService(), "0.0.0.0", port + 10),
+	manager(mLog.GetLogger(level, "manager")),
+	tcpPipe(mLog.GetLogger(level,  "pipe"), manager.GetIOService(), port)
 {
 
 	if(aImmediateOutput) mLog.AddLogSubscriber(LogToStdio::Inst());
 
-	manager.AddTCPServer("dnp-tcp-server", PhysLayerSettings(), "127.0.0.1", port);
-	manager.AddSlave("dnp-tcp-server", "slave", level, &cmdAcceptor, SlaveStackConfig());
+	{		
+	manager.AddPhysicalLayer("dnp-tcp-server", PhysLayerSettings(), &tcpPipe.server);
+	SlaveStackConfig config;
+	config.app.NumRetry = 3;
+	config.app.RspTimeout = 500;
+	manager.AddSlave("dnp-tcp-server", "slave", level, &cmdAcceptor, config);
+	}
 
-	manager.AddTCPClient("dnp-tcp-client", PhysLayerSettings(), "127.0.0.1", port);
-	manager.AddMaster("dnp-tcp-client", "master", level, &fdo, MasterStackConfig());
+	{		
+	manager.AddPhysicalLayer("dnp-tcp-client", PhysLayerSettings(), &tcpPipe.client);
+	MasterStackConfig config;
+	config.app.NumRetry = 3;
+	config.app.RspTimeout = 500;
+	config.master.UseNonStandardVtoFunction = true;
+	manager.AddMaster("dnp-tcp-client", "master", level, &fdo, config);
+	}
 
 	// switch if master or slave gets the loopback half of the server
 
@@ -65,6 +77,11 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 	manager.StartVtoRouter("vto-tcp-client", clientSideOfStack, VtoRouterSettings(88, false, false, 1000));
 	manager.AddTCPServer("vto-tcp-server", PhysLayerSettings(), "127.0.0.1", port + 20);
 	manager.StartVtoRouter("vto-tcp-server", serverSideOfStack, VtoRouterSettings(88, true, false, 1000));
+}
+
+VtoIntegrationTestBase::~VtoIntegrationTestBase()
+{
+	manager.Shutdown();
 }
 
 }
