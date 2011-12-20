@@ -423,6 +423,8 @@ dnp3test_SOURCES = \
 	APLTestTools/MockResponseAcceptor.cpp \
 	APLTestTools/MockTimerSource.cpp \
 	APLTestTools/MockUpperLayer.cpp \
+	APLTestTools/PhysicalLayerWrapper.cpp \
+	APLTestTools/WrappedTcpPipe.cpp \
 	DNP3Test/AppLayerTest.cpp \
 	DNP3Test/ComparingDataObserver.cpp \
 	DNP3Test/DNPHelpers.cpp \
