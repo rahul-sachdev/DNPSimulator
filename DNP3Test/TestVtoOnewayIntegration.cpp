@@ -147,7 +147,7 @@ void TestLargeDataOneWay(VtoOnewayTestStack& arTest, size_t aSizeInBytes)
 	RandomizedBuffer data(aSizeInBytes);
 	arTest.remote.ExpectData(data);
 	arTest.local.WriteData(data);
-	BOOST_REQUIRE(arTest.WaitForExpectedDataToBeReceived(30000));
+	BOOST_REQUIRE(arTest.WaitForExpectedDataToBeReceived(60000));
 
 	// this will cause an exception if we receive any more data beyond what we wrote
 	arTest.testObj.ProceedForTime(1000);
