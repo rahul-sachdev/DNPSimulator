@@ -8,10 +8,8 @@
 #include <XMLBindings/APLXML_Base.h>
 #include <XMLBindings/APLXML_DNP.h>
 using namespace std;
-namespace APLXML_STS
-{
-class SlaveTestSet_t : public IXMLDataBound
-{
+namespace APLXML_STS {
+class SlaveTestSet_t : public IXMLDataBound {
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
@@ -22,19 +20,19 @@ public:
 	bool LinkCommandStatus;
 	bool StartOnline;
 #ifdef SWIG
-	% immutable Log;
+%immutable Log;
 #endif
 	APLXML_Base::Log_t Log;
 #ifdef SWIG
-	% immutable Slave;
+%immutable Slave;
 #endif
 	APLXML_DNP::Slave_t Slave;
 #ifdef SWIG
-	% immutable DeviceTemplate;
+%immutable DeviceTemplate;
 #endif
 	APLXML_DNP::DeviceTemplate_t DeviceTemplate;
 #ifdef SWIG
-	% immutable PhysicalLayerList;
+%immutable PhysicalLayerList;
 #endif
 	APLXML_Base::PhysicalLayerList_t PhysicalLayerList;
 };

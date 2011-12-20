@@ -49,6 +49,7 @@
             <xs:attribute name="AllowTimeSync" type="xs:boolean" use="required"/>
             <xs:attribute name="TaskRetryMS" type="xs:int" use="required"/>
             <xs:attribute name="IntegrityPeriodMS" type="xs:int" use="required"/>
+            <xs:attribute name="UseNonStandardVtoTransferCode" type="xs:boolean" use="required"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="ScanList">

@@ -36,6 +36,7 @@ namespace dnp
 void XML_DNP3::Configure(APLXML_DNP::Master_t& arMaster, bool aUnsol)
 {
 	arMaster.MasterSettings.TaskRetryMS = 5000;
+	arMaster.MasterSettings.UseNonStandardVtoTransferCode = false;
 
 	arMaster.Unsol.DoTask = aUnsol;
 	arMaster.Unsol.Enable = aUnsol;
