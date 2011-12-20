@@ -85,13 +85,17 @@ void TestLargeDataLoopback(VtoLoopbackTestStack& arTest, size_t aSizeInBytes)
 
 BOOST_AUTO_TEST_CASE(LargeDataLoopbackMasterWritesSlaveEchoes)
 {
-	VtoLoopbackTestStack stack(true, false);
+	VtoLoopbackTestStack stack(true, false);	
+	stack.tcpPipe.client.SetCorruptionProbability(0.005);
+	stack.tcpPipe.server.SetCorruptionProbability(0.005);
 	TestLargeDataLoopback(stack, MACRO_BUFFER_SIZE);
 }
 
 BOOST_AUTO_TEST_CASE(LargeDataLoopbackSlaveWritesMasterEchoes)
 {
 	VtoLoopbackTestStack stack(false, false);
+	stack.tcpPipe.client.SetCorruptionProbability(0.005);
+	stack.tcpPipe.server.SetCorruptionProbability(0.005);
 	TestLargeDataLoopback(stack, MACRO_BUFFER_SIZE);
 }
 
