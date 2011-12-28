@@ -1,3 +1,7 @@
+*.iml
+JavaDNP3.h
+JavaDNP3.cpp
+.idea
 /DNP3Java/target
 /DNP3Java/src
 /DNP.ncb
