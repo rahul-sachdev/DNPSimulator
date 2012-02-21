@@ -1204,30 +1204,57 @@ void TestStaticRead(const std::string& arRequest, const std::string& arResponse)
 	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 01 01 00 00 00 00 00"); // 1 byte start/stop, 2 bytes for bitfield with 9 members
 }*/
 
-BOOST_AUTO_TEST_CASE(ReadGrp1Var0)
+BOOST_AUTO_TEST_CASE(ReadGrp1Var0ViaIntegrity)
 {
 	TestStaticRead("C0 01 01 00 06", "C0 81 80 00 01 02 00 00 00 02"); // 1 byte start/stop, RESTART quality
 }
 
-BOOST_AUTO_TEST_CASE(ReadGrp10Var0)
+BOOST_AUTO_TEST_CASE(ReadGrp1Var2ViaIntegrity)
+{
+	TestStaticRead("C0 01 01 02 06", "C0 81 80 00 01 02 00 00 00 02"); // 1 byte start/stop, packed format
+}
+
+BOOST_AUTO_TEST_CASE(ReadGrp10Var0ViaIntegrity)
 {
 	TestStaticRead("C0 01 0A 00 06", "C0 81 80 00 0A 02 00 00 00 02"); // 1 byte start/stop, RESTART quality
 }
 
-BOOST_AUTO_TEST_CASE(ReadGrp20Var0)
+BOOST_AUTO_TEST_CASE(ReadGrp20Var0ViaIntegrity)
 {
 	TestStaticRead("C0 01 14 00 06", "C0 81 80 00 14 01 00 00 00 02 00 00 00 00"); // 1 byte start/stop, RESTART quality
 }
 
-BOOST_AUTO_TEST_CASE(ReadGrp30Var0)
+BOOST_AUTO_TEST_CASE(RreadGrp20Var1ViaIntegrity)
+{
+	TestStaticRead("C0 01 14 01 06", "C0 81 80 00 14 01 00 00 00 02 00 00 00 00"); // 1 byte start/stop, RESTART quality
+}
+
+BOOST_AUTO_TEST_CASE(RreadGrp20Var5ViaIntegrity)
+{
+	TestStaticRead("C0 01 14 05 06", "C0 81 80 00 14 05 00 00 00 00 00 00 00"); // 1 byte start/stop, RESTART quality
+}
+
+BOOST_AUTO_TEST_CASE(ReadGrp30Var0ViaIntegrity)
 {
 	TestStaticRead("C0 01 1E 00 06", "C0 81 80 00 1E 01 00 00 00 02 00 00 00 00"); // 1 byte start/stop, RESTART quality
 }
 
-BOOST_AUTO_TEST_CASE(ReadGrp40Var0)
+BOOST_AUTO_TEST_CASE(ReadGrp30Var1ViaIntegrity)
+{
+	TestStaticRead("C0 01 1E 01 06", "C0 81 80 00 1E 01 00 00 00 02 00 00 00 00"); // 1 byte start/stop, RESTART quality
+}
+
+BOOST_AUTO_TEST_CASE(ReadGrp30Var3ViaIntegrity)
+{
+	TestStaticRead("C0 01 1E 03 06", "C0 81 80 00 1E 03 00 00 00 00 00 00 00"); // 1 byte start/stop, RESTART quality
+}
+
+BOOST_AUTO_TEST_CASE(ReadGrp40Var0ViaIntegrity)
 {
 	TestStaticRead("C0 01 28 00 06", "C0 81 80 00 28 01 00 00 00 02 00 00 00 00"); // 1 byte start/stop, RESTART quality
 }
+
+
 
 // test that asking for a specific data type returns the requested type
 void TestEventRead(const std::string& arRequest, const std::string& arResponse)
