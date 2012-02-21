@@ -8,7 +8,7 @@ ACLOCAL_AMFLAGS = -I config/autotools/m4
 AM_CXXFLAGS = $(BOOST_CPPFLAGS) -DBOOST_TEST_DYN_LINK -DBOOST_ASIO_ENABLE_CANCELIO -DBOOST_REGEX_NO_LIB
 AM_LDFLAGS = $(BOOST_LDFLAGS)
 
-lib_LTLIBRARIES = libopendnp3_apl.la libopendnp3_dnp3.la libopendnp3_java.la
+lib_LTLIBRARIES = libopendnp3_apl.la libopendnp3_dnp3.la
 
 libopendnp3_apl_la_LDFLAGS = -version-info 0:0:0
 libopendnp3_apl_la_SOURCES = \
@@ -156,8 +156,21 @@ libopendnp3_dnp3_la_SOURCES = \
 	DNP3/VtoTransmitTask.cpp \
 	DNP3/VtoWriter.cpp
 
+if JAVA
+lib_LTLIBRARIES += libopendnp3_java.la
 libopendnp3_java_la_LDFLAGS = -version-info 0:0:0
-libopendnp3_java_la_SOURCES = DNP3Java/JavaDNP3.i
+libopendnp3_java_la_SOURCES = DNP3Java/JavaDNP3.cpp
+DNP3Java/JavaDNP3.cpp: DNP3Java/JavaDNP3.i
+	mkdir -p $(top_srcdir)/src/main/java/org/totalgrid/reef/protocol/dnp3
+	swig -c++ -java \
+		-package org.totalgrid.reef.protocol.dnp3 \
+		-I$(top_srcdir) -I$(top_srcdir)/APL -I$(top_srcdir)/DNP3 \
+		-outdir $(top_srcdir)/src/main/java/org/totalgrid/reef/protocol/dnp3 \
+		-o $@ $^
+endif
+
+clean::
+	rm -rf DNP3Java/JavaDNP3.cpp DNP3Java/JavaDNP3.h
 
 nobase_pkginclude_HEADERS= \
 	version.hpp \
