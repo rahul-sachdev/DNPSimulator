@@ -169,9 +169,6 @@ DNP3Java/JavaDNP3.cpp: DNP3Java/JavaDNP3.i
 		-o $@ $^
 endif
 
-clean::
-	rm -rf DNP3Java/JavaDNP3.cpp DNP3Java/JavaDNP3.h
-
 nobase_pkginclude_HEADERS= \
 	version.hpp \
 	APL/ASIOSerialHelpers.h \
@@ -508,6 +505,11 @@ docs-pdf:
 
 include config/autotools/mk/doxygen.mak
 include config/autotools/mk/lcov.mak
+
+clean-java:
+	-rm -rf DNP3Java/JavaDNP3.cpp DNP3Java/JavaDNP3.h $(top_srcdir)/src
+
+clean-local: clean-java clean-lcov
 
 .PHONY : astyle docs docs-html docs-pdf lcov lcov-report lcov-reset doxygen-run doxygen-doc $(DX_PS_GOAL) $(DX_PDF_GOAL)
 
