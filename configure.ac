@@ -152,7 +152,9 @@ CXXFLAGS:                   ${CXXFLAGS}
 LDFLAGS:                    ${LDFLAGS}
 LIBS:                       ${LIBS}
 
+java support:               ${want_java}
 lcov support:               ${ac_lcov_enabled}
+
 shared libraries:           ${enable_shared}
 static libraries:           ${enable_static}
 -----------------------------------------------------
