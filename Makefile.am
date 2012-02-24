@@ -5,13 +5,16 @@
 
 ACLOCAL_AMFLAGS = -I config/autotools/m4
 
+CORE_BOOST_LIBS  = $(BOOST_DATE_TIME_LIB) $(BOOST_THREAD_LIB) $(BOOST_PROGRAM_OPTIONS_LIB) $(BOOST_SYSTEM_LIB)
+TEST_BOOST_LIBS  = $(CORE_BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB)
+
 AM_CXXFLAGS = $(BOOST_CPPFLAGS) -DBOOST_TEST_DYN_LINK -DBOOST_ASIO_ENABLE_CANCELIO -DBOOST_REGEX_NO_LIB
-AM_LDFLAGS = $(BOOST_LDFLAGS)
+AM_LDFLAGS  = $(BOOST_LDFLAGS)
 
 lib_LTLIBRARIES = libopendnp3.la
 
 libopendnp3_la_LDFLAGS = -version-info 0:0:0
-libopendnp3_la_LIBADD = $(BOOST_LDFLAGS) -lboost_thread
+libopendnp3_la_LIBADD = $(BOOST_LDFLAGS) $(CORE_BOOST_LIBS)
 libopendnp3_la_SOURCES = \
 	APL/ASIOSerialHelpers.cpp \
 	APL/AsyncLayerInterfaces.cpp \
@@ -377,7 +380,7 @@ nobase_pkginclude_HEADERS= \
 
 bin_PROGRAMS = testset
 
-testset_LDADD = libopendnp3.la $(BOOST_DATE_TIME_LIB) $(BOOST_THREAD_LIB) $(BOOST_PROGRAM_OPTIONS_LIB) $(BOOST_SYSTEM_LIB) $(BOOST_UNIT_TEST_FRAMEWORK_LIB)
+testset_LDADD = libopendnp3.la $(TEST_BOOST_LIBS)
 testset_CFLAGS = -Itinyxml
 testset_SOURCES = \
 	APLXML/PhysicalLayerManagerXML.cpp \
@@ -411,7 +414,7 @@ testset_SOURCES = \
 
 noinst_PROGRAMS = dnp3test
 
-dnp3test_LDADD = libopendnp3.la $(BOOST_DATE_TIME_LIB) $(BOOST_THREAD_LIB) $(BOOST_PROGRAM_OPTIONS_LIB) $(BOOST_SYSTEM_LIB) $(BOOST_UNIT_TEST_FRAMEWORK_LIB)
+dnp3test_LDADD = libopendnp3.la $(CORE_BOOST_LIBS)
 dnp3test_SOURCES = \
 	APLTestTools/AsyncPhysTestObject.cpp \
 	APLTestTools/AsyncTestObjectASIO.cpp \
