@@ -11,6 +11,7 @@ AM_LDFLAGS = $(BOOST_LDFLAGS)
 lib_LTLIBRARIES = libopendnp3.la
 
 libopendnp3_la_LDFLAGS = -version-info 0:0:0
+libopendnp3_la_LIBADD = $(BOOST_LDFLAGS) -lboost_thread
 libopendnp3_la_SOURCES = \
 	APL/ASIOSerialHelpers.cpp \
 	APL/AsyncLayerInterfaces.cpp \
