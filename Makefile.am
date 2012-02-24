@@ -380,7 +380,7 @@ nobase_pkginclude_HEADERS= \
 
 bin_PROGRAMS = testset
 
-testset_LDADD = libopendnp3.la $(TEST_BOOST_LIBS)
+testset_LDADD = libopendnp3.la $(CORE_BOOST_LIBS)
 testset_CFLAGS = -Itinyxml
 testset_SOURCES = \
 	APLXML/PhysicalLayerManagerXML.cpp \
@@ -414,7 +414,7 @@ testset_SOURCES = \
 
 noinst_PROGRAMS = dnp3test
 
-dnp3test_LDADD = libopendnp3.la $(CORE_BOOST_LIBS)
+dnp3test_LDADD = libopendnp3.la $(TEST_BOOST_LIBS)
 dnp3test_SOURCES = \
 	APLTestTools/AsyncPhysTestObject.cpp \
 	APLTestTools/AsyncTestObjectASIO.cpp \
