@@ -157,7 +157,7 @@ libopendnp3_la_SOURCES = \
 	DNP3/VtoTransmitTask.cpp \
 	DNP3/VtoWriter.cpp
 
-if JAVA
+if WANT_JAVA
 libopendnp3_la_SOURCES += DNP3Java/JavaDNP3.cpp
 DNP3Java/JavaDNP3.cpp: DNP3Java/JavaDNP3.i
 	mkdir -p $(top_srcdir)/src/main/java/org/totalgrid/reef/protocol/dnp3
@@ -165,7 +165,22 @@ DNP3Java/JavaDNP3.cpp: DNP3Java/JavaDNP3.i
 		-package org.totalgrid.reef.protocol.dnp3 \
 		-I$(top_srcdir) -I$(top_srcdir)/APL -I$(top_srcdir)/DNP3 \
 		-outdir $(top_srcdir)/src/main/java/org/totalgrid/reef/protocol/dnp3 \
-		-o $@ $^
+		-o DNP3Java/JavaDNP3.cpp $^
+endif
+
+if WANT_PYTHON
+pkgpython_PYTHON = pyopendnp3.py
+pkgpyexec_LTLIBRARIES = _pyopendnp3.la
+_pyopendnp3_la_SOURCES = DNP3Java/PythonDNP3.cpp
+_pyopendnp3_la_CPPFLAGS = $(SWIG_PYTHON_CPPFLAGS)
+_pyopendnp3_la_LDFLAGS = -module
+_pyopendnp3_la_LIBADD = libopendnp3.la
+
+DNP3Java/PythonDNP3.cpp: DNP3Java/JavaDNP3.i
+	swig -c++ -python \
+		-module pyopendnp3 \
+		-I$(top_srcdir) -I$(top_srcdir)/APL -I$(top_srcdir)/DNP3 \
+		-o DNP3Java/PythonDNP3.cpp $^
 endif
 
 nobase_pkginclude_HEADERS= \
@@ -505,10 +520,10 @@ docs-pdf:
 include config/autotools/mk/doxygen.mak
 include config/autotools/mk/lcov.mak
 
-clean-java:
-	-rm -rf DNP3Java/JavaDNP3.cpp DNP3Java/JavaDNP3.h $(top_srcdir)/src
+clean-swig:
+	-rm -rf DNP3Java/JavaDNP3.cpp DNP3Java/JavaDNP3.h DNP3Java/PythonDNP3.cpp DNP3Java/PythonDNP3.h $(top_srcdir)/src
 
-clean-local: clean-java clean-lcov
+clean-local: clean-swig clean-lcov
 
 .PHONY : astyle docs docs-html docs-pdf lcov lcov-report lcov-reset doxygen-run doxygen-doc $(DX_PS_GOAL) $(DX_PDF_GOAL)
 
