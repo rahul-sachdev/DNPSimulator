@@ -128,13 +128,13 @@ AC_ARG_WITH([python],
     [want_python="no"])
 if test "$want_python" = yes; then
   want_swig="yes"
-  if test "x$ac_python_path" != "x"; then
-    CPPFLAGS="$CPPFLAGS -I$ac_python_path"
-  fi
   AM_PATH_PYTHON([2.6],,AC_MSG_ERROR(Python 2.6 or later not found))
   AC_CHECK_LIB([python$PYTHON_VERSION], [PyObject_Malloc]  ,,AC_MSG_ERROR(missing library))
   AC_CHECK_LIB([python$PYTHON_VERSION], [PyExc_ValueError] ,,AC_MSG_ERROR(missing library))
   AC_CHECK_LIB([python$PYTHON_VERSION], [_Py_NoneStruct]   ,,AC_MSG_ERROR(missing library))
+  if test "x$ac_python_path" != "x"; then
+    CPPFLAGS="$CPPFLAGS -I$ac_python_path"
+  fi
 fi
 AM_CONDITIONAL(WANT_PYTHON, [test "$want_python" = yes])
 

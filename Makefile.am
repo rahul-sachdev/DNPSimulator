@@ -172,8 +172,8 @@ if WANT_PYTHON
 pkgpython_PYTHON = pyopendnp3.py
 pkgpyexec_LTLIBRARIES = _pyopendnp3.la
 _pyopendnp3_la_SOURCES = DNP3Java/PythonDNP3.cpp
-_pyopendnp3_la_CPPFLAGS = $(SWIG_PYTHON_CPPFLAGS)
-_pyopendnp3_la_LDFLAGS = -module
+_pyopendnp3_la_CPPFLAGS = $(SWIG_PYTHON_CPPFLAGS) $(PYTHON_CPPFLAGS)
+_pyopendnp3_la_LDFLAGS = -module $(PYTHON_LDFLAGS)
 _pyopendnp3_la_LIBADD = libopendnp3.la
 
 DNP3Java/PythonDNP3.cpp: DNP3Java/JavaDNP3.i
