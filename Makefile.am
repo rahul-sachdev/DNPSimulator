@@ -180,6 +180,7 @@ DNP3Java/PythonDNP3.cpp: DNP3Java/JavaDNP3.i
 	swig -c++ -python \
 		-module pyopendnp3 \
 		-I$(top_srcdir) -I$(top_srcdir)/APL -I$(top_srcdir)/DNP3 \
+		-outdir $(top_srcdir) \
 		-o DNP3Java/PythonDNP3.cpp $^
 endif
 
@@ -521,7 +522,10 @@ include config/autotools/mk/doxygen.mak
 include config/autotools/mk/lcov.mak
 
 clean-swig:
-	-rm -rf DNP3Java/JavaDNP3.cpp DNP3Java/JavaDNP3.h DNP3Java/PythonDNP3.cpp DNP3Java/PythonDNP3.h $(top_srcdir)/src
+	-rm -rf DNP3Java/JavaDNP3.cpp DNP3Java/JavaDNP3.h
+	-rm -rf DNP3Java/PythonDNP3.cpp DNP3Java/PythonDNP3.h
+	-rm -rf pyopendnp3.py pyopendnp3.pyc
+	-rm -rf $(top_srcdir)/src
 
 clean-local: clean-swig clean-lcov
 
