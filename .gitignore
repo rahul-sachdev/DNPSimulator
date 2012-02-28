@@ -45,6 +45,8 @@ TestSingle.tiny.xml
 dnp3test
 testset
 
+__init__.py
+__init__.pyc
 pyopendnp3.py
 pyopendnp3.pyc
 

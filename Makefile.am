@@ -177,7 +177,7 @@ _pyopendnp3_la_LDFLAGS = -module $(PYTHON_LDFLAGS)
 _pyopendnp3_la_LIBADD = libopendnp3.la
 
 __init__.py:
-	touch $@
+	echo "from pyopendnp3 import *" > $@
 
 DNP3Java/PythonDNP3.cpp: DNP3Java/JavaDNP3.i
 	swig -c++ -python \
