@@ -71,3 +71,4 @@ config.h.in
 config.status
 libtool
 
+*target*
