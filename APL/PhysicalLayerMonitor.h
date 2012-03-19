@@ -24,7 +24,7 @@
 #include "ITimerSource.h"
 #include "IPhysicalLayerObserver.h"
 
-#include <APL/Lock.h>
+#include "Lock.h"
 
 #include <set>
 

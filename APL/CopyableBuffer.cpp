@@ -20,7 +20,7 @@
 
 #include <memory.h>
 
-#include <APL/ToHex.h>
+#include "ToHex.h"
 
 namespace apl
 {
