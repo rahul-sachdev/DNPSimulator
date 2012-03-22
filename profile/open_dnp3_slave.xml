@@ -129,11 +129,10 @@ DNP3DeviceProfileJan2010.xsd">
                 <serialParameters>
                     <capabilities>
                         <asynchronous/>
-                        <other>
-                            <explanation>Configurable for Parity Bits (NONE, EVEN, ODD) and for Stop Bits (1, 1.5 and
+                        <note>
+                        Configurable for Parity Bits (NONE, EVEN, ODD) and for Stop Bits (1, 1.5 and
                                 2). Actual support depends on deployed OS and HW
-                            </explanation>
-                        </other>
+                        </note>
                     </capabilities>
                     <currentValue>
                         <asynchronous/>
@@ -653,7 +652,7 @@ DNP3DeviceProfileJan2010.xsd">
                 <!-- 1.9.1) Number of Class 1 Events -->
                 <numberOfClassOneEvents>
                     <capabilities>
-                        <none/>
+                        <notSupported/>
                     </capabilities>
                     <currentValue>
                         <none/>
@@ -663,7 +662,7 @@ DNP3DeviceProfileJan2010.xsd">
                 <!-- 1.9.2) Number of Class 2 Events -->
                 <numberOfClassTwoEvents>
                     <capabilities>
-                        <none/>
+                        <notSupported/>
                     </capabilities>
                     <currentValue>
                         <none/>
@@ -673,7 +672,7 @@ DNP3DeviceProfileJan2010.xsd">
                 <!-- 1.9.3) Number of Class 3 Events -->
                 <numberOfClassThreeEvents>
                     <capabilities>
-                        <none/>
+                        <notSupported/>
                     </capabilities>
                     <currentValue>
                         <none/>
@@ -683,27 +682,27 @@ DNP3DeviceProfileJan2010.xsd">
                 <!-- 1.9.4) Total Number of Events from Any Class -->
                 <totalNumberOfClassEvents>
                     <capabilities>
-                        <none/>
+                        <notSupported/>
                     </capabilities>
                 </totalNumberOfClassEvents>
                 <!-- 1.9.5) Hold Time After Class 1 Event (ms) -->
                 <holdTimeAfterClassOneEvent>
                     <capabilities>
-                        <none/>
+                        <notSupported/>
                     </capabilities>
                     <methods/>
                 </holdTimeAfterClassOneEvent>
                 <!-- 1.9.6) Hold Time After Class 2 Event (ms) -->
                 <holdTimeAfterClassTwoEvent>
                     <capabilities>
-                        <none/>
+                        <notSupported/>
                     </capabilities>
                     <methods/>
                 </holdTimeAfterClassTwoEvent>
                 <!-- 1.9.7) Hold Time After Class 3 Event (ms) -->
                 <holdTimeAfterClassThreeEvent>
                     <capabilities>
-                        <none/>
+                        <notSupported/>
                     </capabilities>
                 </holdTimeAfterClassThreeEvent>
                 <!-- 1.9.8) Hold Time After Event Assigned to Any Class -->
@@ -729,7 +728,7 @@ DNP3DeviceProfileJan2010.xsd">
                 <!-- 1.10.1) Maximum Time Base Drift (milliseconds per minute) -->
                 <maxTimeBaseDrift>
                     <capabilities>
-                        <none/>    <!-- Depends on vendor hardware and RTC -->
+                        <note>VENDOR_SPECIFIC - Depends on vendor hardware and RTC</note>
                     </capabilities>
                 </maxTimeBaseDrift>
                 <!-- 1.10.2) When Does Outstation Set IIN 1.4? -->
@@ -745,55 +744,50 @@ DNP3DeviceProfileJan2010.xsd">
                 <!-- 1.10.3) Maximum Internal Time Reference Error When et Via DNP (ms) -->
                 <referenceErrorViaDNP>
                     <capabilities>
-                        <fixed>10</fixed>  <!-- Depends on vendor hardware -->
+                        <note>VENDOR_SPECIFIC - Depends on vendor hardware and RTC</note>
                     </capabilities>
                     <currentValue>
-                        <value>10</value>
+                        <none/>
                     </currentValue>
                 </referenceErrorViaDNP>
                 <!-- 1.10.4) Maximum Delay Measurement Error (ms) -->
                 <delayMeasurementError>
-                    <capabilities>        v
-                        <fixed>10</fixed> <!-- Depends on vendor hardware -->
+                    <capabilities>
+                        <note>VENDOR_SPECIFIC - Depends on vendor hardware and RTC</note>
                     </capabilities>
                     <currentValue>
-                        <value>10</value>
+                        <none/>
                     </currentValue>
                 </delayMeasurementError>
                 <!-- 1.10.5) Maximum Response Time (ms) -->
                 <responseTime>
                     <capabilities>
-                        <fixed>20</fixed>   <!-- Depends on vendor hardware -->
+                        <note>VENDOR_SPECIFIC - Depends on vendor hardware and RTC</note>
                     </capabilities>
                     <currentValue>
-                        <value>20</value>
+                        <none/>
                     </currentValue>
                 </responseTime>
                 <!-- 1.10.6) Maximum Time From Startup to IIN 1.4 Assertion (ms) -->
                 <startupToIIN14>
-                    <capabilities>
-                        <other>
-                            <explanation>Depends on vendor hardware
-                            </explanation>
-                        </other>
-                    </capabilities>
+                    <note>VENDOR_SPECIFIC - Depends on vendor hardware and RTC</note>
                 </startupToIIN14>
                 <!-- 1.10.7) Maximum Event Time-tag Error for Local Binary and Double Bit I/O (ms) -->
                 <binaryOrDoubleBitEventError>
                     <capabilities>
-                        <fixed>10</fixed> <!-- Depends on vendor hardware -->
+                        <note>VENDOR_SPECIFIC - Depends on vendor hardware and RTC</note>
                     </capabilities>
                     <currentValue>
-                        <value>10</value>
+                        <none/>
                     </currentValue>
                 </binaryOrDoubleBitEventError>
                 <!-- 1.10.8) Maximum Event Time-tag Error for Local I/O Other Than Binary and Double Bit Data Types (ms) -->
                 <nonBinaryOrDoubleBitEventError>
                     <capabilities>
-                        <fixed>10</fixed> <!-- Depends on vendor hardware -->
+                        <note>VENDOR_SPECIFIC - Depends on vendor hardware and RTC</note>
                     </capabilities>
                     <currentValue>
-                        <value>10</value>
+                        <none/>
                     </currentValue>
                 </nonBinaryOrDoubleBitEventError>
             </outstationPerformance>
