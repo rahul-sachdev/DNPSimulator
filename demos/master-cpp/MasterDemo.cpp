@@ -116,5 +116,11 @@ MasterDemoApp::MasterDemoApp(Logger* apLogger)
 	: MasterDemoBase(apLogger)
 {}
 
+void MasterDemoApp::OnStateChange(StackStates aState)
+{
+	LOG_BLOCK(LEV_INFO, "Communications link state change: "
+			<< ConvertStackStateToString(aState));
+}
+
 }} // end namespaces apl and apl::dnp
 

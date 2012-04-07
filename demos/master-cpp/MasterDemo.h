@@ -107,10 +107,12 @@ private:
 /**
  * Something, not sure what yet.
  */
-class MasterDemoApp : public MasterDemoBase
+class MasterDemoApp : public MasterDemoBase, public IStackObserver
 {
 public:
 	MasterDemoApp(Logger* apLogger);
+
+	void OnStateChange(StackStates aState);
 };
 
 }} // end namespaces apl and apl::dnp

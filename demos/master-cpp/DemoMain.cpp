@@ -80,6 +80,9 @@ int main(int argc, char* argv[])
 	stackConfig.link.LocalAddr = 100;
 	stackConfig.link.RemoteAddr = 1;
 
+	// Set the app instance as a callback for state change notices
+	stackConfig.master.mpObserver = &app;
+
 	// Create a new master on a previously declared port, with a
 	// name, log level, command acceptor, and config info This
 	// returns a thread-safe interface used for processing Master
