@@ -43,8 +43,39 @@ void Terminate(int sig)
 	if(gpDemo) gpDemo->Shutdown();
 }
 
+/*
+ * command line syntax:
+ *
+ *    ./demo-slave-cpp [tcp-server-port [local-dnp3-addr [remote-dnp3-addr]]]
+ *
+ * Examples:
+ *
+ *    ./demo-slave-cpp
+ *    ./demo-slave-cpp 5000
+ *    ./demo-slave-cpp 5001 1234
+ *    ./demo-slave-cpp 5002 1234 5678
+ */
 int main(int argc, char* argv[])
 {
+	unsigned port = 4999;
+	unsigned local_addr = 1;
+	unsigned remote_addr = 100;
+
+	if (argc >= 2) {
+		std::istringstream iss(argv[1]);
+		iss >> port;
+	}
+
+	if (argc >= 3) {
+		std::istringstream iss(argv[2]);
+		iss >> local_addr;
+	}
+
+	if (argc >= 4) {
+		std::istringstream iss(argv[3]);
+		iss >> remote_addr;
+	}
+
 	// Create a log object for the stack to use and configure it with a subscriber
 	// that print alls messages to the stdout
 	EventLog log;
@@ -62,22 +93,17 @@ int main(int argc, char* argv[])
 	// master/slave DNP stacks, as well as their physical layers
 	AsyncStackManager mgr(log.GetLogger(LOG_LEVEL, "dnp"));
 
-	// add a TCPServer to the manager on port 4999 with the name "tcpserver"
+	// add a TCPServer to the manager with the name "tcpserver"
 	// The server will wait 3000 ms in between failed bind calls
 	// The server will *only* respond to connections on the loopback
-	unsigned port = 4999;
-	if (argc >= 2) {
-		std::istringstream iss(argv[1]);
-		iss >> port;
-	}
-	mgr.AddTCPServer("tcpserver", PhysLayerSettings(LOG_LEVEL, 3000), "127.0.0.1", port);
+	mgr.AddTCPServer("tcpserver", PhysLayerSettings(LOG_LEVEL, 3000), "0.0.0.0", port);
 
 	// The master config object for a slave. The default are useable, but understaning the options are important
 	SlaveStackConfig stackConfig;
 
 	//override the default link addressing
-	stackConfig.link.LocalAddr = 1;
-	stackConfig.link.RemoteAddr = 100;
+	stackConfig.link.LocalAddr = local_addr;
+	stackConfig.link.RemoteAddr = remote_addr;
 
 	// The DeviceTemplate struct specifies the structure of the slave's database, as well as the index range of controls
 	// and setpoints it accepts.
