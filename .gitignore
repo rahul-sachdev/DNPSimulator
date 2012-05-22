@@ -10,7 +10,7 @@ JavaDNP3.cpp
 /*/Debug
 /*/Release
 *.user
-/*/pc_cygwin
+pc_cygwin
 /*/pc_linux_arm
 /tools/install_scripts/boost/*/temp
 /tools/boostlib
