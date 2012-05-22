@@ -1,4 +1,4 @@
-call "C:\Program Files\Microsoft Visual Studio 8\VC\vcvarsall.bat"
+#call "C:\Program Files\Microsoft Visual Studio 8\VC\vcvarsall.bat"
 cd temp\boost_1_47_0
 
 call ./bootstrap.bat

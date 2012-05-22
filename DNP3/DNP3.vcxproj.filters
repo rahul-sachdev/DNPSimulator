@@ -1,0 +1,544 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\DataLink">
+      <UniqueIdentifier>{91042256-4cd5-46a2-a7d1-cadf88c05036}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Slave">
+      <UniqueIdentifier>{112b3b38-e895-4ca2-b1bc-c4dfdd0caf91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Stack">
+      <UniqueIdentifier>{7bc20cf1-5c7c-44a0-ade4-5dfbd84ffb08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Master">
+      <UniqueIdentifier>{b0bbe391-a844-4f1f-9a56-518895ad23e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Master\Tasks">
+      <UniqueIdentifier>{c8fb69f2-73a0-4502-a21f-707097842ef1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Transport">
+      <UniqueIdentifier>{c3ebe0f5-66e8-48ed-8c6f-222e803381fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\User">
+      <UniqueIdentifier>{8c831d4d-32ab-4fc9-b4c2-f6de6602b5d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\User\VTO">
+      <UniqueIdentifier>{e146fbdd-36fa-4f22-b83b-8cb80cff40c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application">
+      <UniqueIdentifier>{597c2fdd-4e6e-4109-8549-a165e24289da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\APDU">
+      <UniqueIdentifier>{61248d12-f5ab-4e3f-b599-e825e4d42ae8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\APDU\Iterators">
+      <UniqueIdentifier>{7523e388-3277-4852-84ca-f262dcdf48a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\Channels">
+      <UniqueIdentifier>{87e1e548-733a-425a-952f-97f3f76c6ddd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DNPConstants.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DNPExceptions.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DNPFromStream.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DNPToStream.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DNPCrc.h">
+      <Filter>Source Files\DataLink</Filter>
+    </ClInclude>
+    <ClInclude Include="IFrameSink.h">
+      <Filter>Source Files\DataLink</Filter>
+    </ClInclude>
+    <ClInclude Include="ILinkContext.h">
+      <Filter>Source Files\DataLink</Filter>
+    </ClInclude>
+    <ClInclude Include="ILinkRouter.h">
+      <Filter>Source Files\DataLink</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkConfig.h">
+      <Filter>Source Files\DataLink</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkFrame.h">
+      <Filter>Source Files\DataLink</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkHeader.h">
+      <Filter>Source Files\DataLink</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkLayer.h">
+      <Filter>Source Files\DataLink</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkLayerConstants.h">
+      <Filter>Source Files\DataLink</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkLayerReceiver.h">
+      <Filter>Source Files\DataLink</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkLayerRouter.h">
+      <Filter>Source Files\DataLink</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkReceiverStates.h">
+      <Filter>Source Files\DataLink</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkRoute.h">
+      <Filter>Source Files\DataLink</Filter>
+    </ClInclude>
+    <ClInclude Include="PriLinkLayerStates.h">
+      <Filter>Source Files\DataLink</Filter>
+    </ClInclude>
+    <ClInclude Include="SecLinkLayerStates.h">
+      <Filter>Source Files\DataLink</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferSetTypes.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferTypes.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="ClassCounter.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="ClassMask.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="Database.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="DatabaseInterfaces.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceTemplate.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceTemplateTypes.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="DNPCommandMaster.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="DNPDatabaseTypes.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="EventBufferBase.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="EventBuffers.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="EventTypes.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="PointClass.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="ResponseContext.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="Slave.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="SlaveConfig.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="SlaveEventBuffer.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="SlaveResponseTypes.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="SlaveStates.h">
+      <Filter>Source Files\Slave</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterStack.h">
+      <Filter>Source Files\Stack</Filter>
+    </ClInclude>
+    <ClInclude Include="SlaveStack.h">
+      <Filter>Source Files\Stack</Filter>
+    </ClInclude>
+    <ClInclude Include="Stack.h">
+      <Filter>Source Files\Stack</Filter>
+    </ClInclude>
+    <ClInclude Include="CTOHistory.h">
+      <Filter>Source Files\Master</Filter>
+    </ClInclude>
+    <ClInclude Include="Master.h">
+      <Filter>Source Files\Master</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterConfig.h">
+      <Filter>Source Files\Master</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterConfigTypes.h">
+      <Filter>Source Files\Master</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterSchedule.h">
+      <Filter>Source Files\Master</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterStates.h">
+      <Filter>Source Files\Master</Filter>
+    </ClInclude>
+    <ClInclude Include="ResponseLoader.h">
+      <Filter>Source Files\Master</Filter>
+    </ClInclude>
+    <ClInclude Include="ControlTasks.h">
+      <Filter>Source Files\Master\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="DataPoll.h">
+      <Filter>Source Files\Master\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterTaskBase.h">
+      <Filter>Source Files\Master\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="StartupTasks.h">
+      <Filter>Source Files\Master\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="VtoTransmitTask.h">
+      <Filter>Source Files\Master\Tasks</Filter>
+    </ClInclude>
+    <ClInclude Include="TLS_Base.h">
+      <Filter>Source Files\Transport</Filter>
+    </ClInclude>
+    <ClInclude Include="TransportConstants.h">
+      <Filter>Source Files\Transport</Filter>
+    </ClInclude>
+    <ClInclude Include="TransportLayer.h">
+      <Filter>Source Files\Transport</Filter>
+    </ClInclude>
+    <ClInclude Include="TransportRx.h">
+      <Filter>Source Files\Transport</Filter>
+    </ClInclude>
+    <ClInclude Include="TransportStates.h">
+      <Filter>Source Files\Transport</Filter>
+    </ClInclude>
+    <ClInclude Include="TransportTx.h">
+      <Filter>Source Files\Transport</Filter>
+    </ClInclude>
+    <ClInclude Include="AsyncStackManager.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="IStackObserver.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkChannel.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterStackConfig.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="SlaveStackConfig.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="StackManager.h">
+      <Filter>Source Files\User</Filter>
+    </ClInclude>
+    <ClInclude Include="AlwaysOpeningVtoRouter.h">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClInclude>
+    <ClInclude Include="EnhancedVto.h">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClInclude>
+    <ClInclude Include="EnhancedVtoRouter.h">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClInclude>
+    <ClInclude Include="IVtoEventAcceptor.h">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClInclude>
+    <ClInclude Include="VtoConfig.h">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClInclude>
+    <ClInclude Include="VtoData.h">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClInclude>
+    <ClInclude Include="VtoDataInterface.h">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClInclude>
+    <ClInclude Include="VtoEventBufferAdapter.h">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClInclude>
+    <ClInclude Include="VtoReader.h">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClInclude>
+    <ClInclude Include="VtoRouter.h">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClInclude>
+    <ClInclude Include="VtoRouterManager.h">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClInclude>
+    <ClInclude Include="VtoRouterSettings.h">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClInclude>
+    <ClInclude Include="VtoWriter.h">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClInclude>
+    <ClInclude Include="AppConfig.h">
+      <Filter>Source Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="AppInterfaces.h">
+      <Filter>Source Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="AppLayer.h">
+      <Filter>Source Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="APDU.h">
+      <Filter>Source Files\Application\APDU</Filter>
+    </ClInclude>
+    <ClInclude Include="APDUConstants.h">
+      <Filter>Source Files\Application\APDU</Filter>
+    </ClInclude>
+    <ClInclude Include="AppHeader.h">
+      <Filter>Source Files\Application\APDU</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectHeader.h">
+      <Filter>Source Files\Application\APDU</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectInterfaces.h">
+      <Filter>Source Files\Application\APDU</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects.h">
+      <Filter>Source Files\Application\APDU</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderReadIterator.h">
+      <Filter>Source Files\Application\APDU\Iterators</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexedWriteIterator.h">
+      <Filter>Source Files\Application\APDU\Iterators</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectReadIterator.h">
+      <Filter>Source Files\Application\APDU\Iterators</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectWriteIterator.h">
+      <Filter>Source Files\Application\APDU\Iterators</Filter>
+    </ClInclude>
+    <ClInclude Include="AppChannelStates.h">
+      <Filter>Source Files\Application\Channels</Filter>
+    </ClInclude>
+    <ClInclude Include="AppLayerChannel.h">
+      <Filter>Source Files\Application\Channels</Filter>
+    </ClInclude>
+    <ClInclude Include="SolicitedChannel.h">
+      <Filter>Source Files\Application\Channels</Filter>
+    </ClInclude>
+    <ClInclude Include="UnsolicitedChannel.h">
+      <Filter>Source Files\Application\Channels</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DNPCrc.cpp">
+      <Filter>Source Files\DataLink</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkFrame.cpp">
+      <Filter>Source Files\DataLink</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkHeader.cpp">
+      <Filter>Source Files\DataLink</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkLayer.cpp">
+      <Filter>Source Files\DataLink</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkLayerConstants.cpp">
+      <Filter>Source Files\DataLink</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkLayerReceiver.cpp">
+      <Filter>Source Files\DataLink</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkLayerRouter.cpp">
+      <Filter>Source Files\DataLink</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkReceiverStates.cpp">
+      <Filter>Source Files\DataLink</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkRoute.cpp">
+      <Filter>Source Files\DataLink</Filter>
+    </ClCompile>
+    <ClCompile Include="PriLinkLayerStates.cpp">
+      <Filter>Source Files\DataLink</Filter>
+    </ClCompile>
+    <ClCompile Include="SecLinkLayerStates.cpp">
+      <Filter>Source Files\DataLink</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferTypes.cpp">
+      <Filter>Source Files\Slave</Filter>
+    </ClCompile>
+    <ClCompile Include="ClassCounter.cpp">
+      <Filter>Source Files\Slave</Filter>
+    </ClCompile>
+    <ClCompile Include="Database.cpp">
+      <Filter>Source Files\Slave</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceTemplate.cpp">
+      <Filter>Source Files\Slave</Filter>
+    </ClCompile>
+    <ClCompile Include="DNPCommandMaster.cpp">
+      <Filter>Source Files\Slave</Filter>
+    </ClCompile>
+    <ClCompile Include="PointClass.cpp">
+      <Filter>Source Files\Slave</Filter>
+    </ClCompile>
+    <ClCompile Include="ResponseContext.cpp">
+      <Filter>Source Files\Slave</Filter>
+    </ClCompile>
+    <ClCompile Include="Slave.cpp">
+      <Filter>Source Files\Slave</Filter>
+    </ClCompile>
+    <ClCompile Include="SlaveConfig.cpp">
+      <Filter>Source Files\Slave</Filter>
+    </ClCompile>
+    <ClCompile Include="SlaveEventBuffer.cpp">
+      <Filter>Source Files\Slave</Filter>
+    </ClCompile>
+    <ClCompile Include="SlaveResponseTypes.cpp">
+      <Filter>Source Files\Slave</Filter>
+    </ClCompile>
+    <ClCompile Include="SlaveStates.cpp">
+      <Filter>Source Files\Slave</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterStack.cpp">
+      <Filter>Source Files\Stack</Filter>
+    </ClCompile>
+    <ClCompile Include="SlaveStack.cpp">
+      <Filter>Source Files\Stack</Filter>
+    </ClCompile>
+    <ClCompile Include="Stack.cpp">
+      <Filter>Source Files\Stack</Filter>
+    </ClCompile>
+    <ClCompile Include="Master.cpp">
+      <Filter>Source Files\Master</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterSchedule.cpp">
+      <Filter>Source Files\Master</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterStates.cpp">
+      <Filter>Source Files\Master</Filter>
+    </ClCompile>
+    <ClCompile Include="ResponseLoader.cpp">
+      <Filter>Source Files\Master</Filter>
+    </ClCompile>
+    <ClCompile Include="ControlTasks.cpp">
+      <Filter>Source Files\Master\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="DataPoll.cpp">
+      <Filter>Source Files\Master\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterTaskBase.cpp">
+      <Filter>Source Files\Master\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="StartupTasks.cpp">
+      <Filter>Source Files\Master\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="VtoTransmitTask.cpp">
+      <Filter>Source Files\Master\Tasks</Filter>
+    </ClCompile>
+    <ClCompile Include="TLS_Base.cpp">
+      <Filter>Source Files\Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="TransportLayer.cpp">
+      <Filter>Source Files\Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="TransportRx.cpp">
+      <Filter>Source Files\Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="TransportStates.cpp">
+      <Filter>Source Files\Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="TransportTx.cpp">
+      <Filter>Source Files\Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="AsyncStackManager.cpp">
+      <Filter>Source Files\User</Filter>
+    </ClCompile>
+    <ClCompile Include="IStackObserver.cpp">
+      <Filter>Source Files\User</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkChannel.cpp">
+      <Filter>Source Files\User</Filter>
+    </ClCompile>
+    <ClCompile Include="StackManager.cpp">
+      <Filter>Source Files\User</Filter>
+    </ClCompile>
+    <ClCompile Include="AlwaysOpeningVtoRouter.cpp">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClCompile>
+    <ClCompile Include="EnhancedVto.cpp">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClCompile>
+    <ClCompile Include="EnhancedVtoRouter.cpp">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClCompile>
+    <ClCompile Include="VtoData.cpp">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClCompile>
+    <ClCompile Include="VtoReader.cpp">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClCompile>
+    <ClCompile Include="VtoRouter.cpp">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClCompile>
+    <ClCompile Include="VtoRouterManager.cpp">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClCompile>
+    <ClCompile Include="VtoRouterSettings.cpp">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClCompile>
+    <ClCompile Include="VtoWriter.cpp">
+      <Filter>Source Files\User\VTO</Filter>
+    </ClCompile>
+    <ClCompile Include="AppInterfaces.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="AppLayer.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="APDU.cpp">
+      <Filter>Source Files\Application\APDU</Filter>
+    </ClCompile>
+    <ClCompile Include="APDUConstants.cpp">
+      <Filter>Source Files\Application\APDU</Filter>
+    </ClCompile>
+    <ClCompile Include="AppHeader.cpp">
+      <Filter>Source Files\Application\APDU</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectHeader.cpp">
+      <Filter>Source Files\Application\APDU</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectInterfaces.cpp">
+      <Filter>Source Files\Application\APDU</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects.cpp">
+      <Filter>Source Files\Application\APDU</Filter>
+    </ClCompile>
+    <ClCompile Include="HeaderReadIterator.cpp">
+      <Filter>Source Files\Application\APDU\Iterators</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexedWriteIterator.cpp">
+      <Filter>Source Files\Application\APDU\Iterators</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectReadIterator.cpp">
+      <Filter>Source Files\Application\APDU\Iterators</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectWriteIterator.cpp">
+      <Filter>Source Files\Application\APDU\Iterators</Filter>
+    </ClCompile>
+    <ClCompile Include="AppChannelStates.cpp">
+      <Filter>Source Files\Application\Channels</Filter>
+    </ClCompile>
+    <ClCompile Include="AppLayerChannel.cpp">
+      <Filter>Source Files\Application\Channels</Filter>
+    </ClCompile>
+    <ClCompile Include="SolicitedChannel.cpp">
+      <Filter>Source Files\Application\Channels</Filter>
+    </ClCompile>
+    <ClCompile Include="UnsolicitedChannel.cpp">
+      <Filter>Source Files\Application\Channels</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

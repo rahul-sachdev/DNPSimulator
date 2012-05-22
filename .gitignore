@@ -43,6 +43,8 @@ TestSingle.tiny.xml
 *.gcda
 .*.swp
 *.map
+*.sdf
+*.opensdf
 
 demo-master-cpp
 demo-slave-cpp
@@ -76,3 +78,5 @@ config.status
 libtool
 
 *target*
+
+

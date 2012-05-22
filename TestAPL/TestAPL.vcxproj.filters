@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\TestPhysicalLayer">
+      <UniqueIdentifier>{5e7b77ac-e3e0-4885-9d10-63c6669f5114}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TestPhysicalLayer\Framework">
+      <UniqueIdentifier>{26e4fc32-5be0-421f-b2f6-ce2c158423a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TestTime">
+      <UniqueIdentifier>{ee29dfd6-9119-4844-a450-1dfac644d3e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TestMisc">
+      <UniqueIdentifier>{818c11e0-c895-4705-8237-d4d8ea6b2bb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TestThreading">
+      <UniqueIdentifier>{d16f601a-12ae-4e5c-83ad-75a42cf24abb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TestLog">
+      <UniqueIdentifier>{7452d8eb-972d-4a18-82d4-1102e0ed1727}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TestMeasFramework">
+      <UniqueIdentifier>{1b128d70-36d8-4182-8b67-acb1734ae7ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TestXml">
+      <UniqueIdentifier>{4aedbf7a-de6e-460f-a502-90d6bd724f58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TestUtil">
+      <UniqueIdentifier>{d340aab4-fcc2-43ed-8a5d-fe523ab8997c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TestProtocol">
+      <UniqueIdentifier>{d9309431-feda-4469-aea6-960b91558fff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TestTimers">
+      <UniqueIdentifier>{279b91f8-f0fe-4d4b-b02f-a241d8504487}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TestAsyncTask">
+      <UniqueIdentifier>{2fd7a966-d048-4092-b069-c8ded80c683a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="TestPhysicalLayerAsyncBase.cpp">
+      <Filter>Source Files\TestPhysicalLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPhysicalLayerAsyncSerial.cpp">
+      <Filter>Source Files\TestPhysicalLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPhysicalLayerAsyncTCP.cpp">
+      <Filter>Source Files\TestPhysicalLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPhysicalLayerLoopback.cpp">
+      <Filter>Source Files\TestPhysicalLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPhysicalLayerMonitor.cpp">
+      <Filter>Source Files\TestPhysicalLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="AsyncPhysBaseTest.cpp">
+      <Filter>Source Files\TestPhysicalLayer\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="AsyncSerialTestObject.cpp">
+      <Filter>Source Files\TestPhysicalLayer\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="TestTime.cpp">
+      <Filter>Source Files\TestTime</Filter>
+    </ClCompile>
+    <ClCompile Include="TestASIO.cpp">
+      <Filter>Source Files\TestMisc</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCastLongLongDouble.cpp">
+      <Filter>Source Files\TestMisc</Filter>
+    </ClCompile>
+    <ClCompile Include="TestMisc.cpp">
+      <Filter>Source Files\TestMisc</Filter>
+    </ClCompile>
+    <ClCompile Include="TestParsing.cpp">
+      <Filter>Source Files\TestMisc</Filter>
+    </ClCompile>
+    <ClCompile Include="TestTypes.cpp">
+      <Filter>Source Files\TestMisc</Filter>
+    </ClCompile>
+    <ClCompile Include="TestLocks.cpp">
+      <Filter>Source Files\TestThreading</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSyncVar.cpp">
+      <Filter>Source Files\TestThreading</Filter>
+    </ClCompile>
+    <ClCompile Include="TestThreading.cpp">
+      <Filter>Source Files\TestThreading</Filter>
+    </ClCompile>
+    <ClCompile Include="TestLog.cpp">
+      <Filter>Source Files\TestLog</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCommandQueue.cpp">
+      <Filter>Source Files\TestMeasFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCommandTypes.cpp">
+      <Filter>Source Files\TestMeasFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="TestQualityMasks.cpp">
+      <Filter>Source Files\TestMeasFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="TestXmlBinding.cpp">
+      <Filter>Source Files\TestXml</Filter>
+    </ClCompile>
+    <ClCompile Include="TestUtil.cpp">
+      <Filter>Source Files\TestUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPackingUnpacking.cpp">
+      <Filter>Source Files\TestProtocol</Filter>
+    </ClCompile>
+    <ClCompile Include="TestShiftableBuffer.cpp">
+      <Filter>Source Files\TestProtocol</Filter>
+    </ClCompile>
+    <ClCompile Include="TestTimers.cpp">
+      <Filter>Source Files\TestTimers</Filter>
+    </ClCompile>
+    <ClCompile Include="TestAsyncTask.cpp">
+      <Filter>Source Files\TestAsyncTask</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AsyncPhysBaseTest.h">
+      <Filter>Source Files\TestPhysicalLayer\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="AsyncSerialTestObject.h">
+      <Filter>Source Files\TestPhysicalLayer\Framework</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

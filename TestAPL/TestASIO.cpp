@@ -54,8 +54,8 @@ BOOST_AUTO_TEST_CASE(TimerCancel)
 	deadline_timer t1(io, posix_time::seconds(0));
 	deadline_timer t2(io, posix_time::seconds(1000));
 
-	t1.async_wait(bind(Cancel, &t2));
-	t2.async_wait(bind(AssertCanceled, &flag, _1));
+	t1.async_wait(boost::bind(Cancel, &t2));
+	t2.async_wait(boost::bind(AssertCanceled, &flag, _1));
 
 	io.run();
 

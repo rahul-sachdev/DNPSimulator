@@ -65,13 +65,13 @@ BOOST_AUTO_TEST_CASE(TestSimpleSend)
 
 	t.Start();
 
-	BOOST_REQUIRE(t.ProceedUntil(bind(&TransportScalabilityTestObject::AllLayersUp, &t)));
+	BOOST_REQUIRE(t.ProceedUntil(boost::bind(&TransportScalabilityTestObject::AllLayersUp, &t)));
 
 	ByteStr b(2048, 0);
 
 	t.SendToAll(b, b.Size());
 
-	BOOST_REQUIRE(t.ProceedUntil(bind(&TransportScalabilityTestObject::AllLayerReceived, &t, b.Size()), 120000));
+	BOOST_REQUIRE(t.ProceedUntil(boost::bind(&TransportScalabilityTestObject::AllLayerReceived, &t, b.Size()), 120000));
 	BOOST_REQUIRE(t.AllLayerEqual(b, b.Size()));
 }
 
