@@ -20,6 +20,7 @@
 #include "SlaveDemo.h"
 
 #include <signal.h>
+#include <string>
 
 #include <APL/Log.h>
 #include <APL/Lock.h>
@@ -65,7 +66,7 @@ int main(int argc, char* argv[])
 
 	// Parse the command line arguments using a "fall-through"
 	// switch statement.
-	if (argc > 1 && strcasecmp("help", argv[1]) == 0) {
+	if (argc > 1 && std::strcmp("help", argv[1]) == 0) {
 		cout << argv[0] << " [remote-dnp3] [local-dnp3] [local-ip] [local-port]" << endl;
 		return -1;
 	}

@@ -7,8 +7,9 @@ JavaDNP3.cpp
 /DNP3Java/src
 /DNP.ncb
 /DNP.suo
-/*/Debug
-/*/Release
+Debug
+Release
+ipch
 *.user
 pc_cygwin
 /*/pc_linux_arm
@@ -24,7 +25,7 @@ pc_cygwin
 /java
 /src
 *.log
-/*/Linux_i686
+Linux_i686
 TestAPL/TestSingle.tiny.xml
 TestSingle.tiny.xml
 /doc
