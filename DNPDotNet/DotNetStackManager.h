@@ -14,7 +14,7 @@ namespace DNPDotNet {
 			DotNetStackManager();
 
 			// TODO - add physical layer settings
-			void AddTCPClient(System::String^ name, System::String^ address, int port);
+			void AddTCPClient(System::String^ name, System::String^ address, System::UInt16^ port);
 
 			/* Physical layer functions			
 			void AddTCPServer(const std::string& arName, PhysLayerSettings  aPhys, const std::string& arEndpoint, boost::uint16_t aPort);

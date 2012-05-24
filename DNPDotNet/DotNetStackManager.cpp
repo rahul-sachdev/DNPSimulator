@@ -14,7 +14,7 @@ namespace DNPDotNet {
 		
 	}
 
-	void DotNetStackManager::AddTCPClient(System::String^ name, System::String^ address, int port)
+	void DotNetStackManager::AddTCPClient(System::String^ name, System::String^ address, System::UInt16^ port)
 	{
 		std::string stdName = Conversions::convert(name);
 		std::string stdAddress = Conversions::convert(address);
