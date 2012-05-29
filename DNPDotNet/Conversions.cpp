@@ -62,4 +62,44 @@ namespace DNPDotNet {
 		return apl::BinaryOutput(convertControlCode(bo->code), bo->count, bo->onTime, bo->offTime);
 	}
 
+
+	SetpointEncodingTypeDN convertSetpointEncoding(apl::SetpointEncodingType encoding)
+	{
+		switch(encoding) {
+			case (apl::SPET_INT16):
+				return SetpointEncodingTypeDN::SPET_INT16;
+			case (apl::SPET_INT32):
+				return SetpointEncodingTypeDN::SPET_INT32;
+			case (apl::SPET_FLOAT):
+				return SetpointEncodingTypeDN::SPET_FLOAT;
+			case (apl::SPET_DOUBLE):
+				return SetpointEncodingTypeDN::SPET_DOUBLE;
+			case (apl::SPET_AUTO_INT):
+				return SetpointEncodingTypeDN::SPET_AUTO_INT;
+			case (apl::SPET_AUTO_DOUBLE):
+				return SetpointEncodingTypeDN::SPET_AUTO_DOUBLE;
+			default:
+				return SetpointEncodingTypeDN::SPET_UNSET;
+		}
+	}
+
+	apl::SetpointEncodingType convertSetpointEncoding(SetpointEncodingTypeDN encoding)
+	{
+		switch(encoding) {
+			case (SetpointEncodingTypeDN::SPET_INT16):
+				return apl::SPET_INT16;
+			case (SetpointEncodingTypeDN::SPET_INT32):
+				return apl::SPET_INT32;
+			case (SetpointEncodingTypeDN::SPET_FLOAT):
+				return apl::SPET_FLOAT;
+			case (SetpointEncodingTypeDN::SPET_DOUBLE):
+				return apl::SPET_DOUBLE;
+			case (SetpointEncodingTypeDN::SPET_AUTO_INT):
+				return apl::SPET_AUTO_INT;
+			case (SetpointEncodingTypeDN::SPET_AUTO_DOUBLE):
+				return apl::SPET_AUTO_DOUBLE;
+			default:
+				return apl::SPET_UNSET;
+		}
+	}
 }

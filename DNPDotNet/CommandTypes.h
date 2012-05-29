@@ -71,8 +71,8 @@ public ref class BinaryOutputDN
 	initonly System::UInt16 offTime;
 };
 
-/*
-enum SetpointEncodingType {
+
+public enum class SetpointEncodingTypeDN {
 	SPET_INT16,			//!< 16bit floating point (dnp Object41var1)
 	SPET_INT32,			//!< 32bit signed integer (dnp Object41var2)
 	SPET_FLOAT,			//!< 32bit floating point (dnp Object41var3)
@@ -82,52 +82,24 @@ enum SetpointEncodingType {
 	SPET_UNSET,			//!< means no type has been guessed or set yet
 };
 
-class Setpoint : public CommandRequest
+
+public ref class SetpointDN
 {
-public:
+	public:
 	
-	Setpoint(boost::int16_t aValue);
+	SetpointDN(System::Int16 value);
 	
-	Setpoint(boost::int32_t aValue);
-
+	SetpointDN(System::Int32 value);
 	
-	Setpoint(double aValue);
+	SetpointDN(System::Double value);
 
-	
-	Setpoint();
+	SetpointDN(System::Single value);	
 
-	std::string ToString() const;
-
-	bool operator==(const Setpoint& arRHS) const {
-		return fabs(mValue - arRHS.mValue) < 1E-6;
-	}
-
-	static const CommandTypes EnumType = CT_SETPOINT;
-
-	boost::int32_t GetIntValue() const {
-		return static_cast<boost::int32_t>(GetValue());
-	}
-	double GetValue() const;
-
-	void SetValue(double aValue);
-	void SetValue(boost::int32_t aValue);
-
-	SetpointEncodingType GetOptimalEncodingType() const;
-
-	SetpointEncodingType GetEncodingType() const {
-		return mEncodingType;
-	}
-	void SetEncodingType(SetpointEncodingType aEncodingType) {
-		mEncodingType = aEncodingType;
-	}
-
-private:
-	double mValue;
-
-	SetpointEncodingType mEncodingType;
-
+	initonly double value;
+	initonly SetpointEncodingTypeDN encodingType;
 };
 
+/*
 class CommandResponse
 {
 public:
