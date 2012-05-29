@@ -63,9 +63,9 @@ public ref class BinaryOutputDN
 {
 	public:	
 
-	BinaryOutputDN(ControlCodeDN^ code, System::Byte count, System::UInt16 onTime, System::UInt16 offTime);	
+	BinaryOutputDN(ControlCodeDN code, System::Byte count, System::UInt16 onTime, System::UInt16 offTime);	
 
-	initonly ControlCodeDN^ code;
+	initonly ControlCodeDN code;
 	initonly System::Byte count;	
 	initonly System::UInt16 onTime;
 	initonly System::UInt16 offTime;

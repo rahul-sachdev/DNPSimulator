@@ -16,8 +16,8 @@ namespace DNPDotNet {
 
 	void DotNetStackManager::AddTCPClient(System::String^ name, System::String^ address, System::UInt16^ port)
 	{
-		std::string stdName = Conversions::convert(name);
-		std::string stdAddress = Conversions::convert(address);
+		std::string stdName = Conversions::convertString(name);
+		std::string stdAddress = Conversions::convertString(address);
 		boost::uint16_t stdPort = static_cast<boost::uint16_t>(port);
 
 		apl::PhysLayerSettings pls;
