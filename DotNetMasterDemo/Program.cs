@@ -11,7 +11,12 @@ namespace DotNetMasterDemo
     {
         static void Main(string[] args)
         {
-            BinaryOutputDN bo = new BinaryOutputDN(ControlCodeDN.CC_LATCH_ON, 1, 100, 100);
+            var dnsm = new DotNetStackManager();
+            dnsm.AddTCPClient("client", FilterLevelDN.LEV_INFO, 5000, "127.0.0.1", 20000);
+            dnsm.AddMaster("client", "master", FilterLevelDN.LEV_INFO);
+
+            Console.WriteLine("Press <Enter> to quit");
+            Console.ReadLine();
 
         }
     }

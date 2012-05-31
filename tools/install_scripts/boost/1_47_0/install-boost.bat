@@ -3,7 +3,7 @@ cd temp\boost_1_47_0
 
 call ./bootstrap.bat
 
-bjam.exe toolset=msvc --with-program_options --with-system --with-date_time --with-thread --with-filesystem --with-test stage
+bjam.exe toolset=msvc link=static,shared --with-program_options --with-system --with-date_time --with-thread --with-filesystem --with-test stage
 
 set libdir=%TOOLS_HOME%\boostlib\boost_1_47_0\windows
 

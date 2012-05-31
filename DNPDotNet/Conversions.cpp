@@ -10,6 +10,29 @@ namespace DNPDotNet {
 		return msclr::interop::marshal_as<std::string>(s);
 	}
 
+	apl::FilterLevel Conversions::convertFilterLevel(FilterLevelDN level)
+	{
+		switch(level)
+		{
+			case (FilterLevelDN::LEV_EVENT):
+				return apl::LEV_EVENT;
+			case (FilterLevelDN::LEV_ERROR):
+				return apl::LEV_ERROR;
+			case (FilterLevelDN::LEV_WARNING):
+				return apl::LEV_WARNING;
+			case (FilterLevelDN::LEV_INFO):
+				return apl::LEV_INFO;
+			case (FilterLevelDN::LEV_INTERPRET):
+				return apl::LEV_INTERPRET;
+			case (FilterLevelDN::LEV_COMM):
+				return apl::LEV_COMM;
+			case (FilterLevelDN::LEV_DEBUG):
+				return apl::LEV_DEBUG;
+			default:
+				return apl::LEV_DEBUG;
+		}
+	}
+
 	ControlCodeDN Conversions::convertControlCode(apl::ControlCode code)
 	{
 		switch(code)

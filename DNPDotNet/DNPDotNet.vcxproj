@@ -37,12 +37,14 @@
     <Import Project="..\config\local_dir.props" />
     <Import Project="..\config\boost_includes.props" />
     <Import Project="..\config\boost_lib.props" />
+    <Import Project="..\config\common_boost_defines.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\config\local_dir.props" />
     <Import Project="..\config\boost_includes.props" />
     <Import Project="..\config\boost_lib.props" />
+    <Import Project="..\config\common_boost_defines.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -55,7 +57,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions);BOOST_LIB_DIAGNOSTIC;BOOST_ALL_DYN_LINK;</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
@@ -70,7 +72,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions);BOOST_ALL_DYN_LINK;</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
@@ -89,6 +91,8 @@
     <ClInclude Include="Conversions.h" />
     <ClInclude Include="DotNetStackManager.h" />
     <ClInclude Include="ICommandAcceptorDN.h" />
+    <ClInclude Include="IDataObserverDN.h" />
+    <ClInclude Include="LogTypesDN.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Stdafx.h" />
   </ItemGroup>
@@ -97,6 +101,7 @@
     <ClCompile Include="CommandTypes.cpp" />
     <ClCompile Include="Conversions.cpp" />
     <ClCompile Include="DotNetStackManager.cpp" />
+    <ClCompile Include="IDataObserverDN.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

@@ -35,9 +35,6 @@
     <Filter Include="Source Files\Common">
       <UniqueIdentifier>{7e7b6df6-a12d-44ed-a021-50c476d32703}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Time">
-      <UniqueIdentifier>{fd80c12e-1fc7-4597-b148-f4ff134f1a08}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Protocol">
       <UniqueIdentifier>{6e44639d-2647-4205-87a7-b0dc79048a5e}</UniqueIdentifier>
     </Filter>
@@ -64,6 +61,9 @@
     </Filter>
     <Filter Include="Source Files\Function">
       <UniqueIdentifier>{634ac8ba-0f99-4f91-b47b-6f1782bb7f3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Timers\Time">
+      <UniqueIdentifier>{fd80c12e-1fc7-4597-b148-f4ff134f1a08}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -263,25 +263,25 @@
       <Filter>Source Files\Common</Filter>
     </ClInclude>
     <ClInclude Include="ITimeSource.h">
-      <Filter>Source Files\Time</Filter>
+      <Filter>Source Files\Timers\Time</Filter>
     </ClInclude>
     <ClInclude Include="TimeBase.h">
-      <Filter>Source Files\Time</Filter>
+      <Filter>Source Files\Timers\Time</Filter>
     </ClInclude>
     <ClInclude Include="TimeBoost.h">
-      <Filter>Source Files\Time</Filter>
+      <Filter>Source Files\Timers\Time</Filter>
     </ClInclude>
     <ClInclude Include="Timeout.h">
-      <Filter>Source Files\Time</Filter>
+      <Filter>Source Files\Timers\Time</Filter>
     </ClInclude>
     <ClInclude Include="TimeSource.h">
-      <Filter>Source Files\Time</Filter>
+      <Filter>Source Files\Timers\Time</Filter>
     </ClInclude>
     <ClInclude Include="TimeTypes.h">
-      <Filter>Source Files\Time</Filter>
+      <Filter>Source Files\Timers\Time</Filter>
     </ClInclude>
     <ClInclude Include="TimingTools.h">
-      <Filter>Source Files\Time</Filter>
+      <Filter>Source Files\Timers\Time</Filter>
     </ClInclude>
     <ClInclude Include="LowerLayerToPhysAdapter.h">
       <Filter>Source Files\Protocol</Filter>
@@ -514,19 +514,19 @@
       <Filter>Source Files\Common</Filter>
     </ClCompile>
     <ClCompile Include="TimeBase.cpp">
-      <Filter>Source Files\Time</Filter>
+      <Filter>Source Files\Timers\Time</Filter>
     </ClCompile>
     <ClCompile Include="TimeBoost.cpp">
-      <Filter>Source Files\Time</Filter>
+      <Filter>Source Files\Timers\Time</Filter>
     </ClCompile>
     <ClCompile Include="Timeout.cpp">
-      <Filter>Source Files\Time</Filter>
+      <Filter>Source Files\Timers\Time</Filter>
     </ClCompile>
     <ClCompile Include="TimeSource.cpp">
-      <Filter>Source Files\Time</Filter>
+      <Filter>Source Files\Timers\Time</Filter>
     </ClCompile>
     <ClCompile Include="TimingTools.cpp">
-      <Filter>Source Files\Time</Filter>
+      <Filter>Source Files\Timers\Time</Filter>
     </ClCompile>
     <ClCompile Include="LowerLayerToPhysAdapter.cpp">
       <Filter>Source Files\Protocol</Filter>

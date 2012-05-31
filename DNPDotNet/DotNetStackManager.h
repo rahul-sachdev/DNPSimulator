@@ -5,6 +5,8 @@
 using namespace System;
 #include <DNP3/StackManager.h>
 #include <memory>
+#include "LogTypesDN.h"
+#include "IDataObserverDN.h"
 
 namespace DNPDotNet {
 
@@ -13,21 +15,17 @@ namespace DNPDotNet {
 		public:
 			DotNetStackManager();
 
-			// TODO - add physical layer settings
-			void AddTCPClient(System::String^ name, System::String^ address, System::UInt16^ port);
+			
+			void AddTCPClient(System::String^ name, FilterLevelDN level, System::UInt64 retryMs, System::String^ address, System::UInt16 port);					
+			void AddTCPServer(System::String^ name, FilterLevelDN level, System::UInt64 retryMs, System::String^ endpoint, System::UInt16 port);
 
-			/* Physical layer functions			
-			void AddTCPServer(const std::string& arName, PhysLayerSettings  aPhys, const std::string& arEndpoint, boost::uint16_t aPort);
-			void AddSerial(const std::string& arName, PhysLayerSettings aPhys, SerialSettings aSerial);
-			*/
-
-			/*
-			ICommandAcceptor* AddMaster(const std::string& arPortName,
-	                            const std::string& arStackName,
-	                            FilterLevel aLevel,
-	                            IDataObserver* apPublisher,
-	                            const MasterStackConfig& arCfg);
-			*/
+			//void AddSerial(const std::string& arName, FilterLevelDN level, System::UInt64 retryMs, SerialSettings aSerial);
+						
+			void AddMaster(	System::String^ portName,
+							System::String^ stackName,	                            
+	                        FilterLevelDN level);/*,
+	                        IDataObserverDN^ publisher),
+	                        MasterStackConfigDN^ cfg);*/
 
 		private:
 			apl::dnp::StackManager* pMgr;
