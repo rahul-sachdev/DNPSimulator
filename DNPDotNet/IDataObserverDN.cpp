@@ -18,47 +18,46 @@
 //
 #include "Stdafx.h"
 #include "IDataObserverDN.h"
-
-#include <iostream>
+#include "Conversions.h"
 
 namespace DNPDotNet
 {
-		MasterDataObserverAdapter::MasterDataObserverAdapter()
+		MasterDataObserverAdapter::MasterDataObserverAdapter(IDataObserverDN^ proxy) : proxy(proxy)
 		{}		
 
 		void MasterDataObserverAdapter::_Start()
 		{
-			std::cout << "DataObserver Start()" << std::endl;
+			proxy->Start();
 		}
 
 		void MasterDataObserverAdapter::_Update(const apl::Binary& arPoint, size_t aIndex)
 		{
-			std::cout << arPoint.ToString() << std::endl;
+			proxy->Update(Conversions::convertMeas(arPoint), aIndex);
 		}
 
 		void MasterDataObserverAdapter::_Update(const apl::Analog& arPoint, size_t aIndex)
 		{
-			std::cout << arPoint.ToString() << std::endl;
+			proxy->Update(Conversions::convertMeas(arPoint), aIndex);
 		}
 
 		void MasterDataObserverAdapter::_Update(const apl::Counter& arPoint, size_t aIndex)
 		{
-			std::cout << arPoint.ToString() << std::endl;
+			proxy->Update(Conversions::convertMeas(arPoint), aIndex);
 		}
 
 		void MasterDataObserverAdapter::_Update(const apl::ControlStatus& arPoint, size_t aIndex)
 		{
-			std::cout << arPoint.ToString() << std::endl;
+			proxy->Update(Conversions::convertMeas(arPoint), aIndex);
 		}
 
 		void MasterDataObserverAdapter::_Update(const apl::SetpointStatus& arPoint, size_t aIndex)
 		{
-			std::cout << arPoint.ToString() << std::endl;
+			proxy->Update(Conversions::convertMeas(arPoint), aIndex);
 		}
 
 		void MasterDataObserverAdapter::_End()
 		{
-			std::cout << "DataObserver End()" << std::endl;
+			proxy->End();
 		}
 
 }

@@ -30,13 +30,19 @@
     <ClInclude Include="ICommandAcceptorDN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CommandTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="LogTypesDN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IDataObserverDN.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandTypesDN.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTypesDN.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigObjects.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,10 +59,16 @@
     <ClCompile Include="Conversions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CommandTypes.cpp">
+    <ClCompile Include="IDataObserverDN.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IDataObserverDN.cpp">
+    <ClCompile Include="CommandTypesDN.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DataTypesDN.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigObjects.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

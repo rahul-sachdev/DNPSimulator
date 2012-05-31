@@ -86,7 +86,7 @@ namespace DNPDotNet {
 	}
 
 
-	SetpointEncodingTypeDN convertSetpointEncoding(apl::SetpointEncodingType encoding)
+	SetpointEncodingTypeDN Conversions::convertSetpointEncoding(apl::SetpointEncodingType encoding)
 	{
 		switch(encoding) {
 			case (apl::SPET_INT16):
@@ -106,7 +106,7 @@ namespace DNPDotNet {
 		}
 	}
 
-	apl::SetpointEncodingType convertSetpointEncoding(SetpointEncodingTypeDN encoding)
+	apl::SetpointEncodingType Conversions::convertSetpointEncoding(SetpointEncodingTypeDN encoding)
 	{
 		switch(encoding) {
 			case (SetpointEncodingTypeDN::SPET_INT16):
@@ -124,5 +124,30 @@ namespace DNPDotNet {
 			default:
 				return apl::SPET_UNSET;
 		}
+	}
+
+	BinaryDN^ Conversions::convertMeas(apl::Binary meas)
+	{
+		return gcnew BinaryDN(meas.GetValue(), meas.GetQuality());
+	}
+
+	AnalogDN^ Conversions::convertMeas(apl::Analog meas)
+	{
+		return gcnew AnalogDN(meas.GetValue(), meas.GetQuality());
+	}
+
+	CounterDN^ Conversions::convertMeas(apl::Counter meas)
+	{
+		return gcnew CounterDN(meas.GetValue(), meas.GetQuality());
+	}
+
+	SetpointStatusDN^ Conversions::convertMeas(apl::SetpointStatus meas)
+	{
+		return gcnew SetpointStatusDN(meas.GetValue(), meas.GetQuality());
+	}
+
+	ControlStatusDN^ Conversions::convertMeas(apl::ControlStatus meas)
+	{
+		return gcnew ControlStatusDN(meas.GetValue(), meas.GetQuality());
 	}
 }

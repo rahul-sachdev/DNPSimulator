@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "CommandTypes.h"
+#include "CommandTypesDN.h"
 #include <boost\thread\thread.hpp>
 
 namespace DNPDotNet

@@ -39,15 +39,15 @@ namespace DNPDotNet {
 		
 	void DotNetStackManager::AddMaster(	System::String^ portName,
 										System::String^ stackName,	                            
-										FilterLevelDN level)/*,
-										IDataObserverDN^ publisher,
-										MasterStackConfigDN^ cfg)*/
+										FilterLevelDN level,
+										IDataObserverDN^ observer)
+	/*MasterStackConfigDN^ cfg)*/
 	{
 		std::string stdPortName = Conversions::convertString(portName);
 		std::string stdStackName = Conversions::convertString(stackName);
 		apl::FilterLevel stdLevel = Conversions::convertFilterLevel(level);
 
-		apl::IDataObserver* pObserver = new MasterDataObserverAdapter();
+		apl::IDataObserver* pObserver = new MasterDataObserverAdapter(observer);
 		apl::dnp::MasterStackConfig cfg; //defaults for now
 
 		pMgr->AddMaster(stdPortName, stdStackName, stdLevel, pObserver, cfg);

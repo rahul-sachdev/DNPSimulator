@@ -20,25 +20,33 @@
 #define __I_DATA_OBSERVER_DN_H_
 
 using namespace System::Collections::ObjectModel;
+
 #include <APL/DataInterfaces.h>
+#include "DataTypesDN.h"
+#include <vcclr.h>
 
 namespace DNPDotNet
-{
-	public interface class IDataUpdate
-	{
-		ReadOnlyCollection<System::Boolean> GetBinaryUpdates();
-	};
-
+{	
 	public interface class IDataObserverDN
 	{
-		void Update(IDataUpdate^ update);
+		void Start();
+		void Update(BinaryDN^ update, System::Int32 index);
+		void Update(AnalogDN^ update, System::Int32 index);
+		void Update(CounterDN^ update, System::Int32 index);
+		void Update(ControlStatusDN^ update, System::Int32 index);
+		void Update(SetpointStatusDN^ update, System::Int32 index);
+		void End();
 	};
 
-	class MasterDataObserverAdapter : public apl::IDataObserver
+	public class MasterDataObserverAdapter : public apl::IDataObserver
 	{
 		public:
 
-		MasterDataObserverAdapter();
+		MasterDataObserverAdapter(IDataObserverDN^ proxy);
+
+		private:
+
+		gcroot<IDataObserverDN^> proxy;
 
 		protected:
 

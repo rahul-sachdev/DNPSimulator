@@ -87,8 +87,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CommandTypes.h" />
+    <ClInclude Include="CommandTypesDN.h" />
+    <ClInclude Include="ConfigObjects.h" />
     <ClInclude Include="Conversions.h" />
+    <ClInclude Include="DataTypesDN.h" />
     <ClInclude Include="DotNetStackManager.h" />
     <ClInclude Include="ICommandAcceptorDN.h" />
     <ClInclude Include="IDataObserverDN.h" />
@@ -98,8 +100,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="CommandTypes.cpp" />
+    <ClCompile Include="CommandTypesDN.cpp" />
+    <ClCompile Include="ConfigObjects.cpp" />
     <ClCompile Include="Conversions.cpp" />
+    <ClCompile Include="DataTypesDN.cpp" />
     <ClCompile Include="DotNetStackManager.cpp" />
     <ClCompile Include="IDataObserverDN.cpp" />
     <ClCompile Include="Stdafx.cpp">

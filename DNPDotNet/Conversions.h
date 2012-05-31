@@ -3,11 +3,14 @@
 
 #include <string>
 
-#include "CommandTypes.h"
+#include "CommandTypesDN.h"
 #include <APL/CommandTypes.h>
 
 #include "LogTypesDN.h"
 #include <APL/LogTypes.h>
+
+#include "DataTypesDN.h"
+#include <APL/DataTypes.h>
 
 namespace DNPDotNet {
 
@@ -32,6 +35,13 @@ namespace DNPDotNet {
 
 		static SetpointEncodingTypeDN convertSetpointEncoding(apl::SetpointEncodingType encoding);
 		static apl::SetpointEncodingType convertSetpointEncoding(SetpointEncodingTypeDN encoding);
+
+		//functions for converting Measurement types
+		static BinaryDN^ convertMeas(apl::Binary meas);
+		static AnalogDN^ convertMeas(apl::Analog meas);
+		static CounterDN^ convertMeas(apl::Counter meas);
+		static SetpointStatusDN^ convertMeas(apl::SetpointStatus meas);
+		static ControlStatusDN^ convertMeas(apl::ControlStatus meas);
 	};
 
 }
