@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{41D4B22B-F06E-4230-9AA8-3BFF096CC710}</ProjectGuid>
+    <RootNamespace>PSITestTools</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\config\boost_includes.props" />
+    <Import Project="..\config\local_dir.props" />
+    <Import Project="..\config\output_dirs.props" />
+    <Import Project="..\config\common_boost_defines.props" />
+    <Import Project="..\config\disable_specific_warnings.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\config\boost_includes.props" />
+    <Import Project="..\config\local_dir.props" />
+    <Import Project="..\config\output_dirs.props" />
+    <Import Project="..\config\common_boost_defines.props" />
+    <Import Project="..\config\disable_specific_warnings.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_LIB;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="TestHelpers.h" />
+    <ClInclude Include="BufferHelpers.h" />
+    <ClInclude Include="BufferTestObject.h" />
+    <ClInclude Include="MockLowerLayer.h" />
+    <ClInclude Include="MockUpperLayer.h" />
+    <ClInclude Include="AsyncPhysTestObject.h" />
+    <ClInclude Include="AsyncTestObjectASIO.h" />
+    <ClInclude Include="LoopbackPhysicalLayerAsync.h" />
+    <ClInclude Include="MockPhysicalLayerAsync.h" />
+    <ClInclude Include="MockPhysicalLayerAsyncTS.h" />
+    <ClInclude Include="MockPhysicalLayerMonitor.h" />
+    <ClInclude Include="MockPhysicalLayerSource.h" />
+    <ClInclude Include="PhysicalLayerWrapper.h" />
+    <ClInclude Include="WrappedTcpPipe.h" />
+    <ClInclude Include="MockTimerSource.h" />
+    <ClInclude Include="LogTester.h" />
+    <ClInclude Include="MockLogSubscriber.h" />
+    <ClInclude Include="MockNodeSaver.h" />
+    <ClInclude Include="FanoutDataObserver.h" />
+    <ClInclude Include="MockCommandAcceptor.h" />
+    <ClInclude Include="MockCommandHandler.h" />
+    <ClInclude Include="MockResponseAcceptor.h" />
+    <ClInclude Include="AsyncTestObject.h" />
+    <ClInclude Include="MockNotifier.h" />
+    <ClInclude Include="TestTypedefs.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BufferHelpers.cpp" />
+    <ClCompile Include="BufferTestObject.cpp" />
+    <ClCompile Include="MockLowerLayer.cpp" />
+    <ClCompile Include="MockUpperLayer.cpp" />
+    <ClCompile Include="AsyncPhysTestObject.cpp" />
+    <ClCompile Include="AsyncTestObjectASIO.cpp" />
+    <ClCompile Include="LoopbackPhysicalLayerAsync.cpp" />
+    <ClCompile Include="MockPhysicalLayerAsync.cpp" />
+    <ClCompile Include="MockPhysicalLayerAsyncTS.cpp" />
+    <ClCompile Include="MockPhysicalLayerMonitor.cpp" />
+    <ClCompile Include="MockPhysicalLayerSource.cpp" />
+    <ClCompile Include="PhysicalLayerWrapper.cpp" />
+    <ClCompile Include="WrappedTcpPipe.cpp" />
+    <ClCompile Include="MockTimerSource.cpp" />
+    <ClCompile Include="LogTester.cpp" />
+    <ClCompile Include="MockResponseAcceptor.cpp" />
+    <ClCompile Include="AsyncTestObject.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

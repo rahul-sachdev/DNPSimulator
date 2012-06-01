@@ -45,15 +45,15 @@ void TestLoopback(TransportLoopbackTestObject* apTest, size_t aNumBytes)
 {
 	apTest->Start();
 
-	BOOST_REQUIRE(apTest->ProceedUntil(bind(&TransportLoopbackTestObject::LayersUp, apTest)));
+	BOOST_REQUIRE(apTest->ProceedUntil(boost::bind(&TransportLoopbackTestObject::LayersUp, apTest)));
 
 	ByteStr b(aNumBytes, 0);
 
 	apTest->mUpperA.SendDown(b, b.Size());
 	apTest->mUpperB.SendDown(b, b.Size());
 
-	BOOST_REQUIRE(apTest->ProceedUntil(bind(&MockUpperLayer::SizeEquals, &(apTest->mUpperA), b.Size())));
-	BOOST_REQUIRE(apTest->ProceedUntil(bind(&MockUpperLayer::SizeEquals, &(apTest->mUpperB), b.Size())));
+	BOOST_REQUIRE(apTest->ProceedUntil(boost::bind(&MockUpperLayer::SizeEquals, &(apTest->mUpperA), b.Size())));
+	BOOST_REQUIRE(apTest->ProceedUntil(boost::bind(&MockUpperLayer::SizeEquals, &(apTest->mUpperB), b.Size())));
 	BOOST_REQUIRE(apTest->mUpperA.BufferEquals(b, b.Size()));
 	BOOST_REQUIRE(apTest->mUpperB.BufferEquals(b, b.Size()));
 }

@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\PhysicalLayer">
+      <UniqueIdentifier>{5f62e6f5-60b6-4f57-9cf2-a5a444c5d6ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Extensions">
+      <UniqueIdentifier>{435004df-5f79-4c02-bd97-c45e74ec5d0a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="LineReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Terminal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TerminalInterfaces.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicalLayerIOStreamAsync.cpp">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicalLayerSyncProxy.cpp">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="ControlResponseTE.cpp">
+      <Filter>Source Files\Extensions</Filter>
+    </ClCompile>
+    <ClCompile Include="ControlTerminalExtension.cpp">
+      <Filter>Source Files\Extensions</Filter>
+    </ClCompile>
+    <ClCompile Include="DOTerminalExtension.cpp">
+      <Filter>Source Files\Extensions</Filter>
+    </ClCompile>
+    <ClCompile Include="FlexibleObserverTerminalExtension.cpp">
+      <Filter>Source Files\Extensions</Filter>
+    </ClCompile>
+    <ClCompile Include="LogTerminalExtension.cpp">
+      <Filter>Source Files\Extensions</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LineReader.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Terminal.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TerminalInterfaces.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TokenNode.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicalLayerIOStreamAsync.h">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicalLayerSyncProxy.h">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="ControlResponseTE.h">
+      <Filter>Source Files\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="ControlTerminalExtension.h">
+      <Filter>Source Files\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="DOTerminalExtension.h">
+      <Filter>Source Files\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="FlexibleObserverTerminalExtension.h">
+      <Filter>Source Files\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="LogTerminalExtension.h">
+      <Filter>Source Files\Extensions</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

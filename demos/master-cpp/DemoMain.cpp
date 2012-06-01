@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
 
 	// Parse the command line arguments using a "fall-through"
 	// switch statement.
-	if (argc > 1 && strcasecmp("help", argv[1]) == 0) {
+	if (argc > 1 && strcmp("help", argv[1]) == 0) {
 		cout << argv[0] << " [local-dnp3] [remote-dnp3] [remote-ip] [remote-port]" << endl;
 		return -1;
 	}

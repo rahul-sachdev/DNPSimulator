@@ -7,10 +7,11 @@ JavaDNP3.cpp
 /DNP3Java/src
 /DNP.ncb
 /DNP.suo
-/*/Debug
-/*/Release
+Debug
+Release
+ipch
 *.user
-/*/pc_cygwin
+pc_cygwin
 /*/pc_linux_arm
 /tools/install_scripts/boost/*/temp
 /tools/boostlib
@@ -24,7 +25,7 @@ JavaDNP3.cpp
 /java
 /src
 *.log
-/*/Linux_i686
+Linux_i686
 TestAPL/TestSingle.tiny.xml
 TestSingle.tiny.xml
 /doc
@@ -43,6 +44,8 @@ TestSingle.tiny.xml
 *.gcda
 .*.swp
 *.map
+*.sdf
+*.opensdf
 
 demo-master-cpp
 demo-slave-cpp
@@ -74,4 +77,7 @@ aclocal.m4
 config.h.in
 config.status
 libtool
+
+*target*
+
 

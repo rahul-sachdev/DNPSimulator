@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\AsyncProtocol">
+      <UniqueIdentifier>{8af896e6-3b4c-4b10-9123-dfbe903bf1ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PhysicalLayer">
+      <UniqueIdentifier>{2ccc446f-d159-4d21-b346-c0910374678b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Timers">
+      <UniqueIdentifier>{3ef8c9d5-079e-43d1-9297-97d24615c465}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\LogHelpers">
+      <UniqueIdentifier>{3fc737ee-071a-476c-bb89-b290e91cd15c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DataMocks">
+      <UniqueIdentifier>{6e8a69a8-5ce5-47d7-b2c4-a1a62495af1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GenericTestObjects">
+      <UniqueIdentifier>{6c1743f9-ef75-4b14-a287-f53871ddedf7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TestHelpers.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferHelpers.h">
+      <Filter>Source Files\AsyncProtocol</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferTestObject.h">
+      <Filter>Source Files\AsyncProtocol</Filter>
+    </ClInclude>
+    <ClInclude Include="MockLowerLayer.h">
+      <Filter>Source Files\AsyncProtocol</Filter>
+    </ClInclude>
+    <ClInclude Include="MockUpperLayer.h">
+      <Filter>Source Files\AsyncProtocol</Filter>
+    </ClInclude>
+    <ClInclude Include="AsyncPhysTestObject.h">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="AsyncTestObjectASIO.h">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="LoopbackPhysicalLayerAsync.h">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MockPhysicalLayerAsync.h">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MockPhysicalLayerAsyncTS.h">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MockPhysicalLayerMonitor.h">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MockPhysicalLayerSource.h">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicalLayerWrapper.h">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="WrappedTcpPipe.h">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="MockTimerSource.h">
+      <Filter>Source Files\Timers</Filter>
+    </ClInclude>
+    <ClInclude Include="LogTester.h">
+      <Filter>Source Files\LogHelpers</Filter>
+    </ClInclude>
+    <ClInclude Include="MockLogSubscriber.h">
+      <Filter>Source Files\LogHelpers</Filter>
+    </ClInclude>
+    <ClInclude Include="MockNodeSaver.h">
+      <Filter>Source Files\LogHelpers</Filter>
+    </ClInclude>
+    <ClInclude Include="FanoutDataObserver.h">
+      <Filter>Source Files\DataMocks</Filter>
+    </ClInclude>
+    <ClInclude Include="MockCommandAcceptor.h">
+      <Filter>Source Files\DataMocks</Filter>
+    </ClInclude>
+    <ClInclude Include="MockCommandHandler.h">
+      <Filter>Source Files\DataMocks</Filter>
+    </ClInclude>
+    <ClInclude Include="MockResponseAcceptor.h">
+      <Filter>Source Files\DataMocks</Filter>
+    </ClInclude>
+    <ClInclude Include="AsyncTestObject.h">
+      <Filter>Source Files\GenericTestObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MockNotifier.h">
+      <Filter>Source Files\GenericTestObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="TestTypedefs.h">
+      <Filter>Source Files\GenericTestObjects</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BufferHelpers.cpp">
+      <Filter>Source Files\AsyncProtocol</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferTestObject.cpp">
+      <Filter>Source Files\AsyncProtocol</Filter>
+    </ClCompile>
+    <ClCompile Include="MockLowerLayer.cpp">
+      <Filter>Source Files\AsyncProtocol</Filter>
+    </ClCompile>
+    <ClCompile Include="MockUpperLayer.cpp">
+      <Filter>Source Files\AsyncProtocol</Filter>
+    </ClCompile>
+    <ClCompile Include="AsyncPhysTestObject.cpp">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="AsyncTestObjectASIO.cpp">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="LoopbackPhysicalLayerAsync.cpp">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MockPhysicalLayerAsync.cpp">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MockPhysicalLayerAsyncTS.cpp">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MockPhysicalLayerMonitor.cpp">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MockPhysicalLayerSource.cpp">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicalLayerWrapper.cpp">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="WrappedTcpPipe.cpp">
+      <Filter>Source Files\PhysicalLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="MockTimerSource.cpp">
+      <Filter>Source Files\Timers</Filter>
+    </ClCompile>
+    <ClCompile Include="LogTester.cpp">
+      <Filter>Source Files\LogHelpers</Filter>
+    </ClCompile>
+    <ClCompile Include="MockResponseAcceptor.cpp">
+      <Filter>Source Files\DataMocks</Filter>
+    </ClCompile>
+    <ClCompile Include="AsyncTestObject.cpp">
+      <Filter>Source Files\GenericTestObjects</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

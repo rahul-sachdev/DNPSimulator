@@ -60,7 +60,7 @@ void PhysicalLayerAsyncSerial::DoOpen()
 	//use post to simulate an async open operation
 	if(!ec) asio_serial::Configure(mSettings, mPort, ec);
 
-	mpService->post(bind(&PhysicalLayerAsyncSerial::OnOpenCallback, this, ec));
+	mpService->post(boost::bind(&PhysicalLayerAsyncSerial::OnOpenCallback, this, ec));
 }
 
 void PhysicalLayerAsyncSerial::DoClose()

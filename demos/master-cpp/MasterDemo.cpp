@@ -75,8 +75,8 @@ void MasterDemoBase::OnDataUpdate()
 
 	if ( num_updates > 1 ) {
 		// Increment the values on the Setpoints (Analog Outputs)
-		typedef typename PointMap<SetpointStatus>::Type SetpointMap;
-		typedef typename SetpointMap::iterator SetpointMapIter;
+		typedef PointMap<SetpointStatus>::Type SetpointMap;
+		typedef SetpointMap::iterator SetpointMapIter;
 		int index = 0;
 		SetpointMapIter iter = mFDO.mSetpointStatusMap.begin();
 		for (; iter != mFDO.mSetpointStatusMap.end(); ++iter, ++index)

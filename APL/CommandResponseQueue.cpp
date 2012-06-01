@@ -20,7 +20,7 @@
 
 
 #include <assert.h>
-#include <APL/TimingTools.h>
+#include "TimingTools.h"
 
 namespace apl
 {
