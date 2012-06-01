@@ -91,5 +91,4 @@ using namespace apl::dnp;
 
 
 %include "DNP3/StackManager.h"
-%include "DNP3/AsyncStackManager.h"
 
