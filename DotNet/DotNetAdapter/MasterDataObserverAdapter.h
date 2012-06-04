@@ -16,8 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __I_DATA_OBSERVER_DN_H_
-#define __I_DATA_OBSERVER_DN_H_
+#ifndef __MASTER_DATA_OBSERVER_H_
+#define __MASTER_DATA_OBSERVER_H_
 
 using namespace System::Collections::ObjectModel;
 
@@ -27,27 +27,16 @@ using namespace System::Collections::ObjectModel;
 using namespace DNP3::Interface;
 
 namespace DNPDotNet
-{	
-	public interface class IDataObserverDN
-	{
-		void Start();
-		void Update(Binary^ update, System::Int32 index);
-		void Update(Analog^ update, System::Int32 index);
-		void Update(Counter^ update, System::Int32 index);
-		void Update(ControlStatus^ update, System::Int32 index);
-		void Update(SetpointStatus^ update, System::Int32 index);
-		void End();
-	};
-
+{		
 	public class MasterDataObserverAdapter : public apl::IDataObserver
 	{
 		public:
 
-		MasterDataObserverAdapter(IDataObserverDN^ proxy);
+		MasterDataObserverAdapter(DNP3::Interface::IDataObserver^ proxy);
 
 		private:
 
-		gcroot<IDataObserverDN^> proxy;
+		gcroot<DNP3::Interface::IDataObserver^> proxy;
 
 		protected:
 

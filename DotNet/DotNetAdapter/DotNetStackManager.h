@@ -8,6 +8,8 @@ using namespace System;
 #include "LogTypesDN.h"
 #include "IDataObserverDN.h"
 
+using namespace DNP3::Interface;
+
 namespace DNPDotNet {
 
 	public ref class DotNetStackManager
@@ -24,7 +26,7 @@ namespace DNPDotNet {
 			void AddMaster(	System::String^ portName,
 							System::String^ stackName,	                            
 	                        FilterLevelDN level,
-	                        IDataObserverDN^ publisher);
+	                        IDataObserver^ publisher);
 	                        //MasterStackConfigDN^ cfg)
 
 		private:

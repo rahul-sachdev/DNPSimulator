@@ -99,17 +99,6 @@ public ref class SetpointDN
 	initonly SetpointEncodingTypeDN encodingType;
 };
 
-/*
-class CommandResponse
-{
-public:
-	CommandResponse() {}
-	CommandResponse(CommandStatus aStatus) : mResult(aStatus) {}
-
-	CommandStatus mResult;
-};
-*/
-
 }
 
 /* vim: set ts=4 sw=4: */

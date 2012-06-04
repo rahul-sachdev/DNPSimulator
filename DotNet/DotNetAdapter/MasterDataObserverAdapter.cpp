@@ -22,7 +22,7 @@
 
 namespace DNPDotNet
 {
-		MasterDataObserverAdapter::MasterDataObserverAdapter(IDataObserverDN^ proxy) : proxy(proxy)
+		MasterDataObserverAdapter::MasterDataObserverAdapter(DNP3::Interface::IDataObserver^ proxy) : proxy(proxy)
 		{}		
 
 		void MasterDataObserverAdapter::_Start()

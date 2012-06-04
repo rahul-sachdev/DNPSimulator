@@ -33,13 +33,13 @@
     <ClInclude Include="LogTypesDN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IDataObserverDN.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CommandTypesDN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ConfigObjects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterDataObserverAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,13 +56,13 @@
     <ClCompile Include="Conversions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IDataObserverDN.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CommandTypesDN.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ConfigObjects.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterDataObserverAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

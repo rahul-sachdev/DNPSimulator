@@ -9,7 +9,7 @@ using DNP3.Interface;
 namespace DotNetMasterDemo
 {
 
-    class PrintingDataObserver : IDataObserverDN
+    class PrintingDataObserver : IDataObserver
     {
         public void End()
         {

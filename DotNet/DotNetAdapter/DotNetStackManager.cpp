@@ -40,7 +40,7 @@ namespace DNPDotNet {
 	void DotNetStackManager::AddMaster(	System::String^ portName,
 										System::String^ stackName,	                            
 										FilterLevelDN level,
-										IDataObserverDN^ observer)
+										DNP3::Interface::IDataObserver^ observer)
 	/*MasterStackConfigDN^ cfg)*/
 	{
 		std::string stdPortName = Conversions::convertString(portName);
