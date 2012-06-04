@@ -21,27 +21,27 @@ namespace DotNetMasterDemo
             Console.WriteLine("Start");
         }
 
-        public void Update(Binary update, int index)
+        public void Update(Binary update, System.UInt32 index)
         {
             Console.WriteLine(update.value);
         }
 
-        public void Update(Analog update, int index)
+        public void Update(Analog update, System.UInt32 index)
         {
             Console.WriteLine(update.value);
         }
 
-        public void Update(Counter update, int index)
+        public void Update(Counter update, System.UInt32 index)
         {
             Console.WriteLine(update.value);
         }
 
-        public void Update(ControlStatus update, int index)
+        public void Update(ControlStatus update, System.UInt32 index)
         {
             Console.WriteLine(update.value);
         }
 
-        public void Update(SetpointStatus update, int index)
+        public void Update(SetpointStatus update, System.UInt32 index)
         {
             Console.WriteLine(update.value);
         }
@@ -53,7 +53,7 @@ namespace DotNetMasterDemo
         {
             var dnsm = new DotNetStackManager();
             dnsm.AddTCPClient("client", FilterLevel.LEV_INFO, 5000, "127.0.0.1", 20000);
-            var commandAcceptor = dnsm.AddMaster("client", "master", FilterLevel.LEV_INFO, new PrintingDataObserver());
+            var commandAcceptor = dnsm.AddMaster("clint", "master", FilterLevel.LEV_INFO, new PrintingDataObserver());
 
             Console.WriteLine("Enter an index to send a command");
 

@@ -89,7 +89,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommandAcceptorAdapter.h" />
-    <ClInclude Include="ConfigObjects.h" />
     <ClInclude Include="Conversions.h" />
     <ClInclude Include="DotNetStackManager.h" />
     <ClInclude Include="MasterDataObserverAdapter.h" />
@@ -99,7 +98,6 @@
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="CommandAcceptorAdapter.cpp" />
-    <ClCompile Include="ConfigObjects.cpp" />
     <ClCompile Include="Conversions.cpp" />
     <ClCompile Include="DotNetStackManager.cpp" />
     <ClCompile Include="MasterDataObserverAdapter.cpp" />

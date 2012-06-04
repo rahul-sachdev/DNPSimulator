@@ -27,9 +27,6 @@
     <ClInclude Include="Conversions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ConfigObjects.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MasterDataObserverAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -48,9 +45,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Conversions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ConfigObjects.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MasterDataObserverAdapter.cpp">

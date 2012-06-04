@@ -8,11 +8,11 @@ namespace DNP3.Interface
     public interface IDataObserver
 	{
 		void Start();
-		void Update(Binary update, System.Int32 index);
-		void Update(Analog update, System.Int32 index);
-		void Update(Counter update, System.Int32 index);
-		void Update(ControlStatus update, System.Int32 index);
-		void Update(SetpointStatus update, System.Int32 index);
+		void Update(Binary update, System.UInt32 index);
+		void Update(Analog update, System.UInt32 index);
+		void Update(Counter update, System.UInt32 index);
+		void Update(ControlStatus update, System.UInt32 index);
+		void Update(SetpointStatus update, System.UInt32 index);
 		void End();
 	}
 }
