@@ -86,17 +86,17 @@ namespace DNP3.Interface
 		/// <summary>
 		/// The response/confirm timeout in millisec
 		/// </summary>
-		System.Int64 rspTimeout;
+		public System.Int64 rspTimeout;
 
 		/// <summary>
 		/// Number of retries performed for applicable frames
 		/// </summary>
-		System.Int32 numRetry;
+        public System.Int32 numRetry;
 
 		/// <summary>
 		/// The maximum size of received application layer fragments
 		/// </summary>
-		System.Int32 fragSize;
+        public System.Int32 fragSize;
 	}
 	
 	public class ExceptionScan {
@@ -107,8 +107,8 @@ namespace DNP3.Interface
             this.scanRateMs = scanRateMs;
 	    }
 
-		System.Int32 classMask;
-		System.Int64 scanRateMs;
+        public System.Int32 classMask;
+        public System.Int64 scanRateMs;
 
 	};
 	

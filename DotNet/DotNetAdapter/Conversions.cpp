@@ -193,4 +193,42 @@ namespace DNPDotNet {
 	{
 		return gcnew ControlStatus(meas.GetValue(), meas.GetQuality(), convertTime(meas.GetTime()));
 	}
+
+	apl::dnp::LinkConfig Conversions::convertConfig(LinkConfig^ config)
+	{
+		return apl::dnp::LinkConfig(config->isMaster, config->useConfirms, config->numRetry, config->localAddr, config->remoteAddr, config->timeout);
+	}
+
+	apl::dnp::AppConfig Conversions::convertConfig(AppConfig^ config)
+	{
+		return apl::dnp::AppConfig(config->rspTimeout, config->numRetry, config->fragSize);
+	}
+
+	apl::dnp::MasterConfig Conversions::convertConfig(MasterConfig^ config)
+	{
+		apl::dnp::MasterConfig mc;
+		mc.FragSize = config->fragSize;
+		mc.AllowTimeSync = config->allowTimeSync;
+		mc.DoUnsolOnStartup = config->doUnsolOnStartup;
+		mc.EnableUnsol = config->enableUnsol;
+		mc.UnsolClassMask = config->unsolClassMask;
+		mc.IntegrityRate = config->integrityRate;
+		mc.TaskRetryRate = config->taskRetryRate;
+
+		for each(ExceptionScan^ es in config->scans)
+		{
+			mc.AddExceptionScan(es->classMask, es->scanRateMs);
+		}
+
+		return mc;
+	}
+
+	apl::dnp::MasterStackConfig Conversions::convertConfig(MasterStackConfig^ config)
+	{
+		apl::dnp::MasterStackConfig cfg;
+		cfg.master = convertConfig(config->master);
+		cfg.app = convertConfig(config->app);
+		cfg.link = convertConfig(config->link);
+		return cfg;
+	}
 }

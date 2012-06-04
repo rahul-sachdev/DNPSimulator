@@ -7,6 +7,8 @@
 #include <APL/LogTypes.h>
 #include <APL/DataTypes.h>
 
+#include <DNP3/MasterStackConfig.h>
+
 using namespace DNP3::Interface;
 
 namespace DNPDotNet {
@@ -46,6 +48,12 @@ namespace DNPDotNet {
 		static Counter^ convertMeas(apl::Counter meas);
 		static SetpointStatus^ convertMeas(apl::SetpointStatus meas);
 		static ControlStatus^ convertMeas(apl::ControlStatus meas);
+
+		//Convert the configuration types
+		static apl::dnp::LinkConfig convertConfig(LinkConfig^ config);
+		static apl::dnp::AppConfig convertConfig(AppConfig^ config);
+		static apl::dnp::MasterConfig convertConfig(MasterConfig^ config);
+		static apl::dnp::MasterStackConfig convertConfig(MasterStackConfig^ config);
 	};
 
 }

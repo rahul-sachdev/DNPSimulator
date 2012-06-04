@@ -25,8 +25,8 @@ namespace DNPDotNet {
 			ICommandAcceptor^ AddMaster(	System::String^ portName,
 											System::String^ stackName,	                            
 											FilterLevel level,
-											IDataObserver^ publisher);
-	                        //MasterStackConfigDN^ cfg)
+											IDataObserver^ publisher,
+											DNP3::Interface::MasterStackConfig^ config);
 
 		private:
 			apl::dnp::StackManager* pMgr;

@@ -44,15 +44,15 @@ namespace DNPDotNet {
 	ICommandAcceptor^ DotNetStackManager::AddMaster(	System::String^ portName,
 														System::String^ stackName,	                            
 														FilterLevel level,
-														DNP3::Interface::IDataObserver^ observer)
-	/*MasterStackConfigDN^ cfg)*/
+														DNP3::Interface::IDataObserver^ observer,
+														DNP3::Interface::MasterStackConfig^ config)	
 	{
 		std::string stdPortName = Conversions::convertString(portName);
 		std::string stdStackName = Conversions::convertString(stackName);
 		apl::FilterLevel stdLevel = Conversions::convertFilterLevel(level);
 
 		apl::IDataObserver* pObserver = new MasterDataObserverAdapter(observer);
-		apl::dnp::MasterStackConfig cfg; //defaults for now
+		apl::dnp::MasterStackConfig cfg = Conversions::convertConfig(config);
 
 		apl::ICommandAcceptor* pCmdAcceptor = pMgr->AddMaster(stdPortName, stdStackName, stdLevel, pObserver, cfg);
 		ICommandAcceptor^ ca = gcnew CommandAcceptorAdapter(pCmdAcceptor);
