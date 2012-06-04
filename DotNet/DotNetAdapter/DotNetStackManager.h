@@ -1,14 +1,13 @@
-// DNPDotNet.h
 
-#pragma once
+#ifndef __DOT_NET_STACK_MANAGER_H_
+#define __DOT_NET_STACK_MANAGER_H_
 
 using namespace System;
-#include <DNP3/StackManager.h>
-#include <memory>
-#include "LogTypesDN.h"
-#include "IDataObserverDN.h"
-
 using namespace DNP3::Interface;
+
+namespace apl { namespace dnp {
+	class StackManager;
+}}
 
 namespace DNPDotNet {
 
@@ -18,20 +17,20 @@ namespace DNPDotNet {
 			DotNetStackManager();
 
 			
-			void AddTCPClient(System::String^ name, FilterLevelDN level, System::UInt64 retryMs, System::String^ address, System::UInt16 port);					
-			void AddTCPServer(System::String^ name, FilterLevelDN level, System::UInt64 retryMs, System::String^ endpoint, System::UInt16 port);
+			void AddTCPClient(System::String^ name, FilterLevel level, System::UInt64 retryMs, System::String^ address, System::UInt16 port);					
+			void AddTCPServer(System::String^ name, FilterLevel level, System::UInt64 retryMs, System::String^ endpoint, System::UInt16 port);
 
 			//void AddSerial(const std::string& arName, FilterLevelDN level, System::UInt64 retryMs, SerialSettings aSerial);
 						
-			void AddMaster(	System::String^ portName,
-							System::String^ stackName,	                            
-	                        FilterLevelDN level,
-	                        IDataObserver^ publisher);
+			ICommandAcceptor^ AddMaster(	System::String^ portName,
+											System::String^ stackName,	                            
+											FilterLevel level,
+											IDataObserver^ publisher);
 	                        //MasterStackConfigDN^ cfg)
 
 		private:
 			apl::dnp::StackManager* pMgr;
 	};
-
-
 }
+
+#endif

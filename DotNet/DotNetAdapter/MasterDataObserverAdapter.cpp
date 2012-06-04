@@ -17,7 +17,7 @@
 // under the License.
 //
 #include "Stdafx.h"
-#include "IDataObserverDN.h"
+#include "MasterDataObserverAdapter.h"
 #include "Conversions.h"
 
 namespace DNPDotNet

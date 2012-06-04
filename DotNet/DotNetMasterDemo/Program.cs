@@ -52,12 +52,17 @@ namespace DotNetMasterDemo
         static void Main(string[] args)
         {
             var dnsm = new DotNetStackManager();
-            dnsm.AddTCPClient("client", FilterLevelDN.LEV_INFO, 5000, "127.0.0.1", 20000);
-            dnsm.AddMaster("client", "master", FilterLevelDN.LEV_INFO, new PrintingDataObserver());
+            dnsm.AddTCPClient("client", FilterLevel.LEV_INFO, 5000, "127.0.0.1", 20000);
+            var commandAcceptor = dnsm.AddMaster("client", "master", FilterLevel.LEV_INFO, new PrintingDataObserver());
 
-            Console.WriteLine("Press <Enter> to quit");
-            Console.ReadLine();
+            Console.WriteLine("Enter an index to send a command");
 
+            while (true)
+            {
+                System.UInt32 index = System.UInt32.Parse(Console.ReadLine());
+                var future = commandAcceptor.AcceptCommand(new BinaryOutput(ControlCode.CC_PULSE, 1, 100, 100), index);
+                Console.WriteLine("Result: " + future.Await());
+            }
         }
     }
 }

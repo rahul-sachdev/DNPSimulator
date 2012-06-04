@@ -2,10 +2,14 @@
 
 #include "stdafx.h"
 
-#include "Conversions.h"
 #include "DotNetStackManager.h"
-#include <DNP3/MasterStackConfig.h>
 
+#include "Conversions.h"
+#include "MasterDataObserverAdapter.h"
+#include "CommandAcceptorAdapter.h"
+
+#include <DNP3/MasterStackConfig.h>
+#include <DNP3/StackManager.h>
 
 namespace DNPDotNet {
 
@@ -15,7 +19,7 @@ namespace DNPDotNet {
 		
 	}
 
-	void DotNetStackManager::AddTCPClient(System::String^ name, FilterLevelDN level, System::UInt64 retryMs, System::String^ address, System::UInt16 port)
+	void DotNetStackManager::AddTCPClient(System::String^ name, FilterLevel level, System::UInt64 retryMs, System::String^ address, System::UInt16 port)
 	{
 		std::string stdName = Conversions::convertString(name);
 		std::string stdAddress = Conversions::convertString(address);
@@ -26,7 +30,7 @@ namespace DNPDotNet {
 		pMgr->AddTCPClient(stdName, pls, stdAddress, stdPort);
 	}
 
-	void DotNetStackManager::AddTCPServer(System::String^ name, FilterLevelDN level, System::UInt64 retryMs, System::String^ endpoint, System::UInt16 port)
+	void DotNetStackManager::AddTCPServer(System::String^ name, FilterLevel level, System::UInt64 retryMs, System::String^ endpoint, System::UInt16 port)
 	{
 		std::string stdName = Conversions::convertString(name);
 		std::string stdEndpoint = Conversions::convertString(endpoint);		
@@ -37,10 +41,10 @@ namespace DNPDotNet {
 		pMgr->AddTCPServer(stdName, pls, stdEndpoint, stdPort);
 	}
 		
-	void DotNetStackManager::AddMaster(	System::String^ portName,
-										System::String^ stackName,	                            
-										FilterLevelDN level,
-										DNP3::Interface::IDataObserver^ observer)
+	ICommandAcceptor^ DotNetStackManager::AddMaster(	System::String^ portName,
+														System::String^ stackName,	                            
+														FilterLevel level,
+														DNP3::Interface::IDataObserver^ observer)
 	/*MasterStackConfigDN^ cfg)*/
 	{
 		std::string stdPortName = Conversions::convertString(portName);
@@ -50,6 +54,8 @@ namespace DNPDotNet {
 		apl::IDataObserver* pObserver = new MasterDataObserverAdapter(observer);
 		apl::dnp::MasterStackConfig cfg; //defaults for now
 
-		pMgr->AddMaster(stdPortName, stdStackName, stdLevel, pObserver, cfg);
+		apl::ICommandAcceptor* pCmdAcceptor = pMgr->AddMaster(stdPortName, stdStackName, stdLevel, pObserver, cfg);
+		ICommandAcceptor^ ca = gcnew CommandAcceptorAdapter(pCmdAcceptor);
+		return ca;
 	}
 }

@@ -3,12 +3,8 @@
 
 #include <string>
 
-#include "CommandTypesDN.h"
 #include <APL/CommandTypes.h>
-
-#include "LogTypesDN.h"
 #include <APL/LogTypes.h>
-
 #include <APL/DataTypes.h>
 
 using namespace DNP3::Interface;
@@ -23,19 +19,23 @@ namespace DNPDotNet {
 		static std::string convertString(System::String^ s);
 
 		// Convert the log filter enumeration
-		static apl::FilterLevel convertFilterLevel(FilterLevelDN level);
+		static apl::FilterLevel convertFilterLevel(FilterLevel level);
 
-		//functions for converting binary outputs
+		// Convert the command status enumeration
+		static CommandStatus convertCommandStatus(apl::CommandStatus status);
 
-		static ControlCodeDN convertControlCode(apl::ControlCode code);
-		static apl::ControlCode Conversions::convertControlCode(ControlCodeDN code);
-		static BinaryOutputDN^ convertBO(const apl::BinaryOutput& bo);
-		static apl::BinaryOutput convertBO(BinaryOutputDN^ bo);
+		//functions for converting binary outputs		
+
+		static ControlCode convertControlCode(apl::ControlCode code);
+		static apl::ControlCode Conversions::convertControlCode(ControlCode code);
+		static BinaryOutput^ convertBO(const apl::BinaryOutput& bo);
+		static apl::BinaryOutput convertBO(BinaryOutput^ bo);
 
 		//functions for converting setpoints
 
-		static SetpointEncodingTypeDN convertSetpointEncoding(apl::SetpointEncodingType encoding);
-		static apl::SetpointEncodingType convertSetpointEncoding(SetpointEncodingTypeDN encoding);
+		static SetpointEncodingType convertSetpointEncoding(apl::SetpointEncodingType encoding);
+		static apl::SetpointEncodingType convertSetpointEncoding(SetpointEncodingType encoding);
+		static apl::Setpoint convertSP(Setpoint^ sp);
 
 		//functions for converting Measurement types
 		static Binary^ convertMeas(apl::Binary meas);
