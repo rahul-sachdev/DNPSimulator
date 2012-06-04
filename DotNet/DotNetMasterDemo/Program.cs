@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using DNPDotNet;
+using DNP3.Interface;
 
 namespace DotNetMasterDemo
 {
@@ -20,27 +21,27 @@ namespace DotNetMasterDemo
             Console.WriteLine("Start");
         }
 
-        public void Update(BinaryDN update, int index)
+        public void Update(Binary update, int index)
         {
             Console.WriteLine(update.value);
         }
 
-        public void Update(AnalogDN update, int index)
+        public void Update(Analog update, int index)
         {
             Console.WriteLine(update.value);
         }
 
-        public void Update(CounterDN update, int index)
+        public void Update(Counter update, int index)
         {
             Console.WriteLine(update.value);
         }
 
-        public void Update(ControlStatusDN update, int index)
+        public void Update(ControlStatus update, int index)
         {
             Console.WriteLine(update.value);
         }
 
-        public void Update(SetpointStatusDN update, int index)
+        public void Update(SetpointStatus update, int index)
         {
             Console.WriteLine(update.value);
         }

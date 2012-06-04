@@ -91,7 +91,6 @@
     <ClInclude Include="CommandTypesDN.h" />
     <ClInclude Include="ConfigObjects.h" />
     <ClInclude Include="Conversions.h" />
-    <ClInclude Include="DataTypesDN.h" />
     <ClInclude Include="DotNetStackManager.h" />
     <ClInclude Include="ICommandAcceptorDN.h" />
     <ClInclude Include="IDataObserverDN.h" />
@@ -104,7 +103,6 @@
     <ClCompile Include="CommandTypesDN.cpp" />
     <ClCompile Include="ConfigObjects.cpp" />
     <ClCompile Include="Conversions.cpp" />
-    <ClCompile Include="DataTypesDN.cpp" />
     <ClCompile Include="DotNetStackManager.cpp" />
     <ClCompile Include="IDataObserverDN.cpp" />
     <ClCompile Include="Stdafx.cpp">
@@ -125,6 +123,9 @@
     </ProjectReference>
     <ProjectReference Include="..\..\DNP3\DNP3.vcxproj">
       <Project>{e053e7ed-f462-4de0-8d69-6d97045ffb25}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\DotNetInterface\DotNetInterface.csproj">
+      <Project>{c280f8aa-8461-4126-bf88-454891422fd8}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

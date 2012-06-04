@@ -22,19 +22,20 @@
 using namespace System::Collections::ObjectModel;
 
 #include <APL/DataInterfaces.h>
-#include "DataTypesDN.h"
 #include <vcclr.h>
+
+using namespace DNP3::Interface;
 
 namespace DNPDotNet
 {	
 	public interface class IDataObserverDN
 	{
 		void Start();
-		void Update(BinaryDN^ update, System::Int32 index);
-		void Update(AnalogDN^ update, System::Int32 index);
-		void Update(CounterDN^ update, System::Int32 index);
-		void Update(ControlStatusDN^ update, System::Int32 index);
-		void Update(SetpointStatusDN^ update, System::Int32 index);
+		void Update(Binary^ update, System::Int32 index);
+		void Update(Analog^ update, System::Int32 index);
+		void Update(Counter^ update, System::Int32 index);
+		void Update(ControlStatus^ update, System::Int32 index);
+		void Update(SetpointStatus^ update, System::Int32 index);
 		void End();
 	};
 

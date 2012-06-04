@@ -126,28 +126,28 @@ namespace DNPDotNet {
 		}
 	}
 
-	BinaryDN^ Conversions::convertMeas(apl::Binary meas)
+	Binary^ Conversions::convertMeas(apl::Binary meas)
 	{
-		return gcnew BinaryDN(meas.GetValue(), meas.GetQuality());
+		return gcnew Binary(meas.GetValue(), meas.GetQuality());
 	}
 
-	AnalogDN^ Conversions::convertMeas(apl::Analog meas)
+	Analog^ Conversions::convertMeas(apl::Analog meas)
 	{
-		return gcnew AnalogDN(meas.GetValue(), meas.GetQuality());
+		return gcnew Analog(meas.GetValue(), meas.GetQuality());
 	}
 
-	CounterDN^ Conversions::convertMeas(apl::Counter meas)
+	Counter^ Conversions::convertMeas(apl::Counter meas)
 	{
-		return gcnew CounterDN(meas.GetValue(), meas.GetQuality());
+		return gcnew Counter(meas.GetValue(), meas.GetQuality());
 	}
 
-	SetpointStatusDN^ Conversions::convertMeas(apl::SetpointStatus meas)
+	SetpointStatus^ Conversions::convertMeas(apl::SetpointStatus meas)
 	{
-		return gcnew SetpointStatusDN(meas.GetValue(), meas.GetQuality());
+		return gcnew SetpointStatus(meas.GetValue(), meas.GetQuality());
 	}
 
-	ControlStatusDN^ Conversions::convertMeas(apl::ControlStatus meas)
+	ControlStatus^ Conversions::convertMeas(apl::ControlStatus meas)
 	{
-		return gcnew ControlStatusDN(meas.GetValue(), meas.GetQuality());
+		return gcnew ControlStatus(meas.GetValue(), meas.GetQuality());
 	}
 }

@@ -9,8 +9,9 @@
 #include "LogTypesDN.h"
 #include <APL/LogTypes.h>
 
-#include "DataTypesDN.h"
 #include <APL/DataTypes.h>
+
+using namespace DNP3::Interface;
 
 namespace DNPDotNet {
 
@@ -37,11 +38,11 @@ namespace DNPDotNet {
 		static apl::SetpointEncodingType convertSetpointEncoding(SetpointEncodingTypeDN encoding);
 
 		//functions for converting Measurement types
-		static BinaryDN^ convertMeas(apl::Binary meas);
-		static AnalogDN^ convertMeas(apl::Analog meas);
-		static CounterDN^ convertMeas(apl::Counter meas);
-		static SetpointStatusDN^ convertMeas(apl::SetpointStatus meas);
-		static ControlStatusDN^ convertMeas(apl::ControlStatus meas);
+		static Binary^ convertMeas(apl::Binary meas);
+		static Analog^ convertMeas(apl::Analog meas);
+		static Counter^ convertMeas(apl::Counter meas);
+		static SetpointStatus^ convertMeas(apl::SetpointStatus meas);
+		static ControlStatus^ convertMeas(apl::ControlStatus meas);
 	};
 
 }
