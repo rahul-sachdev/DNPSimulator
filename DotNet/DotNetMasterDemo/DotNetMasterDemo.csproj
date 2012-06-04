@@ -47,9 +47,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DNPDotNet\DNPDotNet.vcxproj">
+    <ProjectReference Include="..\DotNetAdapter\DNPDotNet.vcxproj">
       <Project>{686B212F-3FE0-455A-B78B-0980D9F2F837}</Project>
-      <Name>DNPDotNet</Name>
+      <Name>DotNetAdapter</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
