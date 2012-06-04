@@ -14,6 +14,9 @@ namespace DNPDotNet {
 	class Conversions
 	{
 		public:
+
+		// Convert timestamps
+		static System::DateTime convertTime(apl::millis_t time);
 		
 		// Convert a .NET string to a C++ string
 		static std::string convertString(System::String^ s);

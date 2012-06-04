@@ -18,14 +18,16 @@ namespace DNP3.Interface
 
     public class Binary {
 		
-	    public Binary(bool value, byte quality)
+	    public Binary(bool value, byte quality, DateTime time)
 	    {
             this.value = value;
             this.quality = quality;
+            this.time = time;
         }
 
         public readonly bool value;
-        public readonly byte quality;	
+        public readonly byte quality;
+        public readonly DateTime time;
     }
 
 
@@ -44,16 +46,18 @@ public enum AnalogQuality {
 };
 
 public class Analog {
-	
-	
-	public Analog(double value, byte quality)
+
+
+    public Analog(double value, byte quality, DateTime time)
 	{
         this.value = value;
         this.quality = quality;
+        this.time = time;
     }
 
     public readonly double value;
-    public readonly byte quality;	
+    public readonly byte quality;
+    public readonly DateTime time;
 }
 
 /**
@@ -71,15 +75,17 @@ public enum CounterQuality {
 }
 
 public class Counter {
-		
-	public Counter(System.UInt32 value, byte quality)
+
+    public Counter(System.UInt32 value, byte quality, DateTime time)
 	{
         this.value = value;
         this.quality = quality;
+        this.time = time;
     }
 
     public readonly System.UInt32 value;
-    public readonly byte quality;	
+    public readonly byte quality;
+    public readonly DateTime time;
 }
 
 /**
@@ -97,15 +103,17 @@ public enum ControlQuality {
 }
 
 public class ControlStatus {
-		
-	public ControlStatus(bool value, byte quality)
+
+    public ControlStatus(bool value, byte quality, DateTime time)
 	{
         this.value = value;
         this.quality = quality;
+        this.time = time;
     }
 
     public readonly bool value;
-    public readonly byte quality;	
+    public readonly byte quality;
+    public readonly DateTime time;
 };
 
 /**
@@ -123,15 +131,17 @@ public enum SetpointQuality {
 }
 
 public class SetpointStatus {
-		
-	public SetpointStatus(double value, byte quality)
+
+    public SetpointStatus(double value, byte quality, DateTime time)
 	{
         this.value = value;
         this.quality = quality;
+        this.time = time;        
     }
 	
 	public readonly double value;
-    public readonly byte quality;	
+    public readonly byte quality;
+    public readonly DateTime time;
 }
 
 }

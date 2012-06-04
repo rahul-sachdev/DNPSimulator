@@ -5,6 +5,12 @@
 
 namespace DNPDotNet {
 
+	System::DateTime Conversions::convertTime(apl::millis_t time)
+	{
+		// each 'tick' represents 100 nanoseconds
+		return System::DateTime(10000*time);
+	}
+
 	std::string Conversions::convertString(System::String^ s)
 	{
 		return msclr::interop::marshal_as<std::string>(s);
@@ -165,26 +171,26 @@ namespace DNPDotNet {
 
 	Binary^ Conversions::convertMeas(apl::Binary meas)
 	{
-		return gcnew Binary(meas.GetValue(), meas.GetQuality());
+		return gcnew Binary(meas.GetValue(), meas.GetQuality(), convertTime(meas.GetTime()));
 	}
 
 	Analog^ Conversions::convertMeas(apl::Analog meas)
 	{
-		return gcnew Analog(meas.GetValue(), meas.GetQuality());
+		return gcnew Analog(meas.GetValue(), meas.GetQuality(), convertTime(meas.GetTime()));
 	}
 
 	Counter^ Conversions::convertMeas(apl::Counter meas)
 	{
-		return gcnew Counter(meas.GetValue(), meas.GetQuality());
+		return gcnew Counter(meas.GetValue(), meas.GetQuality(), convertTime(meas.GetTime()));
 	}
 
 	SetpointStatus^ Conversions::convertMeas(apl::SetpointStatus meas)
 	{
-		return gcnew SetpointStatus(meas.GetValue(), meas.GetQuality());
+		return gcnew SetpointStatus(meas.GetValue(), meas.GetQuality(), convertTime(meas.GetTime()));
 	}
 
 	ControlStatus^ Conversions::convertMeas(apl::ControlStatus meas)
 	{
-		return gcnew ControlStatus(meas.GetValue(), meas.GetQuality());
+		return gcnew ControlStatus(meas.GetValue(), meas.GetQuality(), convertTime(meas.GetTime()));
 	}
 }
