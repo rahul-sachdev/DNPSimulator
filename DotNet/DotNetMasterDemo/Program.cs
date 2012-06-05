@@ -64,9 +64,10 @@ namespace DotNetMasterDemo
                 System.UInt32 index = System.UInt32.Parse(Console.ReadLine());
                 DateTime start = DateTime.Now;
                 var future = commandAcceptor.AcceptCommand(new BinaryOutput(ControlCode.CC_PULSE, 1, 100, 100), index);
+                CommandStatus result = future.Await();
                 DateTime end = DateTime.Now;
                 TimeSpan duration = end - start;                
-                Console.WriteLine("Result: " + future.Await() + " and took " + duration.Ticks + " Ticks");
+                Console.WriteLine("Result: " + result + " and took " + duration.Ticks + " Ticks");
             }
         }
     }
