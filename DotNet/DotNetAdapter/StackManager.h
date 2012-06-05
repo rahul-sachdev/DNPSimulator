@@ -27,7 +27,7 @@ namespace DNPDotNet {
 											IDataObserver^ publisher,
 											DNP3::Interface::MasterStackConfig^ config);
 
-			void AddSlave(	System::String^ portName,
+			IDataObserver^	 AddSlave(	System::String^ portName,
 										System::String^ stackName,
 										FilterLevel level,
 										ICommandAcceptor^ cmdAcceptor );

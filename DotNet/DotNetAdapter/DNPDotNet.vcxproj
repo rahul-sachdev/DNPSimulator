@@ -91,6 +91,7 @@
     <ClInclude Include="CommandAcceptorAdapter.h" />
     <ClInclude Include="Conversions.h" />
     <ClInclude Include="SlaveCommandAcceptorAdapter.h" />
+    <ClInclude Include="SlaveDataObserverAdapter.h" />
     <ClInclude Include="StackManager.h" />
     <ClInclude Include="MasterDataObserverAdapter.h" />
     <ClInclude Include="resource.h" />
@@ -101,6 +102,7 @@
     <ClCompile Include="CommandAcceptorAdapter.cpp" />
     <ClCompile Include="Conversions.cpp" />
     <ClCompile Include="SlaveCommandAcceptorAdapter.cpp" />
+    <ClCompile Include="SlaveDataObserverAdapter.cpp" />
     <ClCompile Include="StackManager.cpp" />
     <ClCompile Include="MasterDataObserverAdapter.cpp" />
     <ClCompile Include="Stdafx.cpp">

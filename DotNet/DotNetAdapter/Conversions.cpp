@@ -11,6 +11,11 @@ namespace DNPDotNet {
 		return System::DateTime(10000*time);
 	}
 
+	apl::millis_t Conversions::convertTime(System::DateTime time)
+	{
+		return time.Ticks / 10000;
+	}
+
 	std::string Conversions::convertString(System::String^ s)
 	{
 		return msclr::interop::marshal_as<std::string>(s);
@@ -229,6 +234,41 @@ namespace DNPDotNet {
 	ControlStatus^ Conversions::convertMeas(apl::ControlStatus meas)
 	{
 		return gcnew ControlStatus(meas.GetValue(), meas.GetQuality(), convertTime(meas.GetTime()));
+	}
+
+	apl::Binary Conversions::convertMeas(Binary^ meas)
+	{
+		apl::Binary m(meas->value, meas->quality);
+		m.SetTime(convertTime(meas->time));
+		return m;
+	}
+	
+	apl::Analog Conversions::convertMeas(Analog^ meas)
+	{
+		apl::Analog m(meas->value, meas->quality);
+		m.SetTime(convertTime(meas->time));
+		return m;
+	}
+	
+	apl::Counter Conversions::convertMeas(Counter^ meas)
+	{
+		apl::Counter m(meas->value, meas->quality);
+		m.SetTime(convertTime(meas->time));
+		return m;
+	}
+	
+	apl::SetpointStatus Conversions::convertMeas(SetpointStatus^ meas)
+	{
+		apl::SetpointStatus m(meas->value, meas->quality);
+		m.SetTime(convertTime(meas->time));
+		return m;
+	}
+	
+	apl::ControlStatus Conversions::convertMeas(ControlStatus^ meas)
+	{
+		apl::ControlStatus m(meas->value, meas->quality);
+		m.SetTime(convertTime(meas->time));
+		return m;
 	}
 
 	apl::dnp::LinkConfig Conversions::convertConfig(LinkConfig^ config)

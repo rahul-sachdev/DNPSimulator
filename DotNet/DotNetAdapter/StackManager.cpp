@@ -8,7 +8,11 @@
 #include "MasterDataObserverAdapter.h"
 #include "CommandAcceptorAdapter.h"
 
+#include "SlaveCommandAcceptorAdapter.h"
+#include "SlaveDataObserverAdapter.h"
+
 #include <DNP3/MasterStackConfig.h>
+#include <DNP3/SlaveStackConfig.h>
 #include <DNP3/StackManager.h>
 
 namespace DNPDotNet {
@@ -60,16 +64,22 @@ namespace DNPDotNet {
 	}
 
 	
-	void StackManager::AddSlave(	System::String^ portName,
-											System::String^ stackName,
-											FilterLevel level,
-											ICommandAcceptor^ cmdAcceptor )
+	IDataObserver^	StackManager::AddSlave(	System::String^ portName,
+									System::String^ stackName,
+									FilterLevel level,
+									ICommandAcceptor^ cmdAcceptor )
 	{
 		std::string stdPortName = Conversions::convertString(portName);
 		std::string stdStackName = Conversions::convertString(stackName);
 		apl::FilterLevel stdLevel = Conversions::convertFilterLevel(level);
 
-		
+		SlaveCommandAcceptorAdapterWrapper^ wrapper = gcnew SlaveCommandAcceptorAdapterWrapper(cmdAcceptor);
+
+		apl::dnp::SlaveStackConfig cfg; //TODO -- replace defaults
+		cfg.device = apl::dnp::DeviceTemplate(10,10,10,10,10,10,10);
+
+		apl::IDataObserver* pDataObs = pMgr->AddSlave(stdPortName, stdStackName, stdLevel, wrapper->GetCommandAcceptor(), cfg);
+		return gcnew SlaveDataObserverAdapter(pDataObs);
 	}
 
 }

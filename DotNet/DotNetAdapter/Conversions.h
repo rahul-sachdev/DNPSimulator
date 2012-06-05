@@ -19,6 +19,7 @@ namespace DNPDotNet {
 
 		// Convert timestamps
 		static System::DateTime convertTime(apl::millis_t time);
+		static apl::millis_t convertTime(System::DateTime time);
 		
 		// Convert a .NET string to a C++ string
 		static std::string convertString(System::String^ s);
@@ -50,6 +51,12 @@ namespace DNPDotNet {
 		static Counter^ convertMeas(apl::Counter meas);
 		static SetpointStatus^ convertMeas(apl::SetpointStatus meas);
 		static ControlStatus^ convertMeas(apl::ControlStatus meas);
+
+		static apl::Binary convertMeas(Binary^ meas);
+		static apl::Analog convertMeas(Analog^ meas);
+		static apl::Counter convertMeas(Counter^ meas);
+		static apl::SetpointStatus convertMeas(SetpointStatus^ meas);
+		static apl::ControlStatus convertMeas(ControlStatus^ meas);
 
 		//Convert the configuration types
 		static apl::dnp::LinkConfig convertConfig(LinkConfig^ config);
