@@ -27,7 +27,7 @@ using namespace System::Collections::ObjectModel;
 using namespace DNP3::Interface;
 
 namespace DNPDotNet
-{		
+{			
 	public class MasterDataObserverAdapter : public apl::IDataObserver
 	{
 		public:
@@ -47,6 +47,22 @@ namespace DNPDotNet
 		void _Update(const apl::ControlStatus& arPoint, size_t aIndex);
 		void _Update(const apl::SetpointStatus& arPoint, size_t aIndex);
 		void _End();
+	};
+
+	public ref class MasterDataObserverAdapterWrapper
+	{
+		public:
+			MasterDataObserverAdapterWrapper(DNP3::Interface::IDataObserver^ proxy) : 
+			  pAdapter(new MasterDataObserverAdapter(proxy))
+			{}
+
+			~MasterDataObserverAdapterWrapper() 
+			{ delete pAdapter; }
+
+			apl::IDataObserver* GetDataObserver() { return pAdapter; }
+
+		private:
+			MasterDataObserverAdapter* pAdapter;
 	};
 }
 

@@ -11,11 +11,10 @@ namespace apl { namespace dnp {
 
 namespace DNPDotNet {
 
-	public ref class DotNetStackManager
+	public ref class StackManager
 	{
 		public:
-			DotNetStackManager();
-
+			StackManager();
 			
 			void AddTCPClient(System::String^ name, FilterLevel level, System::UInt64 retryMs, System::String^ address, System::UInt16 port);					
 			void AddTCPServer(System::String^ name, FilterLevel level, System::UInt64 retryMs, System::String^ endpoint, System::UInt16 port);
@@ -28,9 +27,15 @@ namespace DNPDotNet {
 											IDataObserver^ publisher,
 											DNP3::Interface::MasterStackConfig^ config);
 
+			void AddSlave(	System::String^ portName,
+										System::String^ stackName,
+										FilterLevel level,
+										ICommandAcceptor^ cmdAcceptor );
+										//const SlaveStackConfig& arCfg);
 		private:
 			apl::dnp::StackManager* pMgr;
 	};
+
 }
 
 #endif

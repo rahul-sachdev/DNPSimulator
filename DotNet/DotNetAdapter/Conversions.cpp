@@ -69,6 +69,36 @@ namespace DNPDotNet {
 		}
 	}
 
+	apl::CommandStatus Conversions::convertCommandStatus(CommandStatus status)
+	{
+		switch(status)
+		{
+			case(CommandStatus::CS_SUCCESS):
+				return apl::CS_SUCCESS;
+			case(CommandStatus::CS_TIMEOUT):
+				return apl::CS_TIMEOUT;
+			case(CommandStatus::CS_NO_SELECT):
+				return apl::CS_NO_SELECT;
+			case(CommandStatus::CS_FORMAT_ERROR):
+				return apl::CS_FORMAT_ERROR;
+			case(CommandStatus::CS_NOT_SUPPORTED):
+				return apl::CS_NOT_SUPPORTED;
+			case(CommandStatus::CS_ALREADY_ACTIVE):
+				return apl::CS_ALREADY_ACTIVE;
+			case(CommandStatus::CS_HARDWARE_ERROR):
+				return apl::CS_HARDWARE_ERROR;
+			case(CommandStatus::CS_LOCAL):
+				return apl::CS_LOCAL;
+			case(CommandStatus::CS_TOO_MANY_OPS):
+				return apl::CS_TOO_MANY_OPS;
+			case(CommandStatus::CS_NOT_AUTHORIZED):
+				return apl::CS_NOT_AUTHORIZED;
+
+			default:
+				return apl::CS_UNDEFINED;
+		}
+	}
+
 	ControlCode Conversions::convertControlCode(apl::ControlCode code)
 	{
 		switch(code)
@@ -166,6 +196,13 @@ namespace DNPDotNet {
 	{
 		apl::Setpoint ret(sp->value);
 		ret.SetEncodingType(convertSetpointEncoding(sp->encodingType));
+		return ret;
+	}
+
+	Setpoint^ Conversions::convertSP(const apl::Setpoint& sp)
+	{
+		Setpoint^ ret = gcnew Setpoint(sp.GetValue());
+		ret->encodingType = convertSetpointEncoding(sp.GetEncodingType());
 		return ret;
 	}
 

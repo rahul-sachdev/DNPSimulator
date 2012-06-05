@@ -28,6 +28,7 @@ namespace DNPDotNet {
 
 		// Convert the command status enumeration
 		static CommandStatus convertCommandStatus(apl::CommandStatus status);
+		static apl::CommandStatus convertCommandStatus(CommandStatus status);
 
 		//functions for converting binary outputs		
 
@@ -41,6 +42,7 @@ namespace DNPDotNet {
 		static SetpointEncodingType convertSetpointEncoding(apl::SetpointEncodingType encoding);
 		static apl::SetpointEncodingType convertSetpointEncoding(SetpointEncodingType encoding);
 		static apl::Setpoint convertSP(Setpoint^ sp);
+		static Setpoint^ convertSP(const apl::Setpoint& sp);
 
 		//functions for converting Measurement types
 		static Binary^ convertMeas(apl::Binary meas);

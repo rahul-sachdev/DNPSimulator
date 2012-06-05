@@ -2,7 +2,7 @@
 
 #include "stdafx.h"
 
-#include "DotNetStackManager.h"
+#include "StackManager.h"
 
 #include "Conversions.h"
 #include "MasterDataObserverAdapter.h"
@@ -13,13 +13,13 @@
 
 namespace DNPDotNet {
 
-	DotNetStackManager::DotNetStackManager() :
+	StackManager::StackManager() :
 		pMgr(new apl::dnp::StackManager())
 	{
 		
 	}
 
-	void DotNetStackManager::AddTCPClient(System::String^ name, FilterLevel level, System::UInt64 retryMs, System::String^ address, System::UInt16 port)
+	void StackManager::AddTCPClient(System::String^ name, FilterLevel level, System::UInt64 retryMs, System::String^ address, System::UInt16 port)
 	{
 		std::string stdName = Conversions::convertString(name);
 		std::string stdAddress = Conversions::convertString(address);
@@ -30,7 +30,7 @@ namespace DNPDotNet {
 		pMgr->AddTCPClient(stdName, pls, stdAddress, stdPort);
 	}
 
-	void DotNetStackManager::AddTCPServer(System::String^ name, FilterLevel level, System::UInt64 retryMs, System::String^ endpoint, System::UInt16 port)
+	void StackManager::AddTCPServer(System::String^ name, FilterLevel level, System::UInt64 retryMs, System::String^ endpoint, System::UInt16 port)
 	{
 		std::string stdName = Conversions::convertString(name);
 		std::string stdEndpoint = Conversions::convertString(endpoint);		
@@ -41,21 +41,35 @@ namespace DNPDotNet {
 		pMgr->AddTCPServer(stdName, pls, stdEndpoint, stdPort);
 	}
 		
-	ICommandAcceptor^ DotNetStackManager::AddMaster(	System::String^ portName,
-														System::String^ stackName,	                            
-														FilterLevel level,
-														DNP3::Interface::IDataObserver^ observer,
-														DNP3::Interface::MasterStackConfig^ config)	
+	ICommandAcceptor^ StackManager::AddMaster(	System::String^ portName,
+												System::String^ stackName,	                            
+												FilterLevel level,
+												DNP3::Interface::IDataObserver^ observer,
+												DNP3::Interface::MasterStackConfig^ config)	
 	{
 		std::string stdPortName = Conversions::convertString(portName);
 		std::string stdStackName = Conversions::convertString(stackName);
 		apl::FilterLevel stdLevel = Conversions::convertFilterLevel(level);
 
-		apl::IDataObserver* pObserver = new MasterDataObserverAdapter(observer);
+		MasterDataObserverAdapterWrapper^ wrapper = gcnew MasterDataObserverAdapterWrapper(observer);		
 		apl::dnp::MasterStackConfig cfg = Conversions::convertConfig(config);
 
-		apl::ICommandAcceptor* pCmdAcceptor = pMgr->AddMaster(stdPortName, stdStackName, stdLevel, pObserver, cfg);
+		apl::ICommandAcceptor* pCmdAcceptor = pMgr->AddMaster(stdPortName, stdStackName, stdLevel, wrapper->GetDataObserver(), cfg);
 		ICommandAcceptor^ ca = gcnew CommandAcceptorAdapter(pCmdAcceptor);
 		return ca;
 	}
+
+	
+	void StackManager::AddSlave(	System::String^ portName,
+											System::String^ stackName,
+											FilterLevel level,
+											ICommandAcceptor^ cmdAcceptor )
+	{
+		std::string stdPortName = Conversions::convertString(portName);
+		std::string stdStackName = Conversions::convertString(stackName);
+		apl::FilterLevel stdLevel = Conversions::convertFilterLevel(level);
+
+		
+	}
+
 }

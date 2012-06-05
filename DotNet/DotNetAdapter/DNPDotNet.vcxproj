@@ -90,7 +90,8 @@
   <ItemGroup>
     <ClInclude Include="CommandAcceptorAdapter.h" />
     <ClInclude Include="Conversions.h" />
-    <ClInclude Include="DotNetStackManager.h" />
+    <ClInclude Include="SlaveCommandAcceptorAdapter.h" />
+    <ClInclude Include="StackManager.h" />
     <ClInclude Include="MasterDataObserverAdapter.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Stdafx.h" />
@@ -99,7 +100,8 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="CommandAcceptorAdapter.cpp" />
     <ClCompile Include="Conversions.cpp" />
-    <ClCompile Include="DotNetStackManager.cpp" />
+    <ClCompile Include="SlaveCommandAcceptorAdapter.cpp" />
+    <ClCompile Include="StackManager.cpp" />
     <ClCompile Include="MasterDataObserverAdapter.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

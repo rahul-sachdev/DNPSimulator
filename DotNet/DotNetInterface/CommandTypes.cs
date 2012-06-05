@@ -97,7 +97,7 @@ namespace DNP3.Interface
         }
 
 	    public readonly double value;
-        public readonly SetpointEncodingType encodingType;
+        public SetpointEncodingType encodingType;
     }
 
 }

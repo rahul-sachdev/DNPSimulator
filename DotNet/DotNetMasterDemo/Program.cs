@@ -51,11 +51,11 @@ namespace DotNetMasterDemo
     {
         static void Main(string[] args)
         {
-            var dnsm = new DotNetStackManager();
-            dnsm.AddTCPClient("client", FilterLevel.LEV_INFO, 5000, "127.0.0.1", 20000);
+            var sm = new StackManager();
+            sm.AddTCPClient("client", FilterLevel.LEV_INFO, 5000, "127.0.0.1", 20000);
             var config = new MasterStackConfig();
             config.link.useConfirms = true; //setup your stack configuration here.
-            var commandAcceptor = dnsm.AddMaster("client", "master", FilterLevel.LEV_INFO, new PrintingDataObserver(), config);
+            var commandAcceptor = sm.AddMaster("client", "master", FilterLevel.LEV_INFO, new PrintingDataObserver(), config);
 
             Console.WriteLine("Enter an index to send a command");
 
