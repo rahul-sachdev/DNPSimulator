@@ -7,6 +7,7 @@
 #include <APL/LogTypes.h>
 #include <APL/DataTypes.h>
 
+#include <DNP3/SlaveStackConfig.h>
 #include <DNP3/MasterStackConfig.h>
 
 using namespace DNP3::Interface;
@@ -59,10 +60,16 @@ namespace DNPDotNet {
 		static apl::ControlStatus convertMeas(ControlStatus^ meas);
 
 		//Convert the configuration types
+		static apl::dnp::ClassMask convertClassMask(ClassMask^ cm);
+		static apl::dnp::EventMaxConfig convertEventMaxConfig(EventMaxConfig^ cm);
+		static apl::dnp::GrpVar convertGrpVar(GrpVar^ gv);
+
 		static apl::dnp::LinkConfig convertConfig(LinkConfig^ config);
 		static apl::dnp::AppConfig convertConfig(AppConfig^ config);
 		static apl::dnp::MasterConfig convertConfig(MasterConfig^ config);
+		static apl::dnp::SlaveConfig convertConfig(SlaveConfig^ config);
 		static apl::dnp::MasterStackConfig convertConfig(MasterStackConfig^ config);
+		static apl::dnp::SlaveStackConfig convertConfig(SlaveStackConfig^ config);
 	};
 
 }

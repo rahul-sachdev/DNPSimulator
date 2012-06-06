@@ -184,7 +184,243 @@ namespace DNP3.Interface
         /// vector that holds exception scans
 		/// </summary>
 		public readonly List<ExceptionScan> scans;
-	};
+	}
+
+    public struct ClassMask 
+    {
+	    public ClassMask(bool c1, bool c2, bool c3)
+        {
+            this.class1 = c1;
+            this.class2 = c2;
+            this.class3 = c3;
+	    }	    
+
+	    public bool class1;
+	    public bool class2;
+	    public bool class3;	   
+    }
+
+    // Group/Variation pair
+    public struct GrpVar {	    
+	    
+        public GrpVar(int grp, int var)
+        {
+            this.grp = grp;
+            this.var = var;
+        }
+
+	    public readonly int grp;
+        public readonly int var;
+    }
+
+    public class EventMaxConfig {
+
+        public EventMaxConfig(System.UInt32 maxBinaryEvents, System.UInt32 maxAnalogEvents, System.UInt32 maxCounterEvents)
+        {
+            this.maxBinaryEvents = maxBinaryEvents;
+            this.maxAnalogEvents = maxAnalogEvents;
+            this.maxCounterEvents = maxCounterEvents;
+        }
+
+        public EventMaxConfig()
+        {
+            this.maxBinaryEvents = 1000;
+            this.maxAnalogEvents = 1000;
+            this.maxCounterEvents = 1000;
+        }
+
+	    /// <summary>
+	    /// The number of binary events the slave will buffer before overflowing */
+	    /// </summary>
+	    public readonly System.UInt32 maxBinaryEvents;
+
+	    /// <summary>
+	    /// The number of analog events the slave will buffer before overflowing
+	    /// </summary>
+        public readonly System.UInt32 maxAnalogEvents;
+
+	    /// <summary>
+	    /// The number of counter events the slave will buffer before overflowing
+	    /// </summary>
+        public readonly System.UInt32 maxCounterEvents;	
+    }
+
+
+    /// <summary>
+    /// Configuration information for a dnp3 slave (outstation)
+    /// Used as both input describing the startup configuration of the slave, and as configuration state of mutable properties (i.e. unsolicited responses).
+    /// Major feature areas are unsolicited responses, time synchronization requests, event buffer limits, and the DNP3 object/variations to use by default
+    /// when the master requests class data or variation 0.
+    /// </summary>
+    public class SlaveConfig 
+    {
+        public SlaveConfig()
+        {
+            this.maxControls = 1;
+            this.disableUnsol = false;
+            this.unsolMask = new ClassMask(true, true, true);
+            this.allowTimeSync = false;
+            this.timeSyncPeriod = 10 * 60 * 1000; // every 10 min
+            this.unsolPackDelay = 200;
+            this.unsolRetryDelay = 2000;
+            this.maxFragSize = 2048;
+            this.eventMaxConfig = new EventMaxConfig();
+            this.staticBinary = new GrpVar(1, 2);
+            this.staticAnalog = new GrpVar(30, 1);
+            this.staticCounter = new GrpVar(20, 1);
+	        this.staticSetpointStatus = new GrpVar(40, 1);
+	        this.eventBinary = new GrpVar(2, 1);
+	        this.eventAnalog = new GrpVar(32, 1);
+	        this.eventCounter = new GrpVar(22, 1);
+        }
+
+	    /// <summary>
+        /// The maximum number of controls the slave will attempt to process from a single APDU
+	    /// </summary>
+	    public System.UInt32 maxControls;
+
+	    /// <summary>
+        /// if true, fully disables unsolicited mode as if the slave didn't support it
+	    /// </summary>
+        public bool disableUnsol;
+
+	    /// <summary>
+        /// controls what unsol classes are enabled
+	    /// </summary>
+        public ClassMask unsolMask;
+
+	    /// <summary>
+        /// if true, the slave will request time synchronization on an interval
+	    /// </summary>
+        public bool allowTimeSync;
+
+	    /// <summary>
+        /// The period of time sync interval in milliseconds
+	    /// </summary>
+        public System.Int64 timeSyncPeriod;
+
+	    /// <summary>
+        /// The amount of time the slave will wait before sending new unsolicited data ( <= 0 == immediate)
+	    /// </summary>
+        public System.Int64 unsolPackDelay;
+
+	    /// <summary>
+        /// How long the slave will wait before retrying an unsuccessful unsol response
+	    /// </summary>
+        public System.Int64 unsolRetryDelay;
+
+
+	    /// <summary>
+        /// The maximum fragment size the slave will use for data it sends
+	    /// </summary>
+        public System.UInt32 maxFragSize;	    
+
+	    /// <summary>
+        /// Structure that defines the maximum number of events to buffer
+	    /// </summary>
+        public EventMaxConfig eventMaxConfig;
+
+	    /// <summary>
+        /// The default group/variation to use for static binary responses
+	    /// </summary>	    
+	    public GrpVar staticBinary;
+
+	    /// <summary>
+        /// The default group/variation to use for static analog responses
+	    /// </summary>
+	    public GrpVar staticAnalog;
+
+	    /// <summary>
+        /// The default group/variation to use for static analog responses
+	    /// </summary>
+        public GrpVar staticCounter;
+
+	    /// <summary>
+        /// The default group/variation to use for static setpoint status responses
+	    /// </summary>
+        public GrpVar staticSetpointStatus;
+
+	    /// <summary>
+        /// The default group/variation to use for binary event responses
+	    /// </summary>
+        public GrpVar eventBinary;
+
+	    /// <summary>
+        /// The default group/variation to use for analog event responses
+	    /// </summary>
+        public GrpVar eventAnalog;
+
+	    /// <summary>
+        /// The default group/variation to use for counter event responses
+	    /// </summary>
+	    public GrpVar eventCounter;	   	    
+    }
+
+    public class PointRecord
+    {
+    
+    };
+
+    public class EventPointRecord : PointRecord
+    {
+        public EventPointRecord(PointClass pointClass) : base()
+        {            
+            this.pointClass = pointClass;
+        }
+
+        public PointClass pointClass;
+    };
+
+    public class DeadbandEventPointRecord : EventPointRecord
+    {
+        public DeadbandEventPointRecord(PointClass pointClass, double deadband) : base(pointClass)
+        {
+            this.deadband = deadband;
+        }
+
+        public double deadband;
+    };
+
+    public class ControlRecord : PointRecord
+    {
+        public ControlRecord(CommandModes mode, System.Int64 selectTimeoutMs) : base()
+        {
+            this.mode = mode;
+            this.selectTimeoutMs = selectTimeoutMs;
+        }
+
+        CommandModes mode;
+        System.Int64 selectTimeoutMs;
+    };
+
+    public class DeviceTemplate
+    {
+        public DeviceTemplate(  System.UInt32 numBinary,
+                                System.UInt32 numAnalog,
+                                System.UInt32 numCounter,
+                                System.UInt32 numControlStatus,
+                                System.UInt32 numSetpointStatus,
+                                System.UInt32 numControls,
+                                System.UInt32 numSetpoints)
+        {
+            binaries = Enumerable.Range(0, (int) numBinary).Select(i => new EventPointRecord(PointClass.PC_CLASS_0)).ToList();
+            counters = Enumerable.Range(0, (int) numCounter).Select(i => new EventPointRecord(PointClass.PC_CLASS_0)).ToList();
+            analogs = Enumerable.Range(0, (int) numAnalog).Select(i => new DeadbandEventPointRecord(PointClass.PC_CLASS_0, 0.0)).ToList();
+            controlStatii = Enumerable.Range(0, (int) numControlStatus).Select(i => new PointRecord()).ToList();
+            controlStatii = Enumerable.Range(0, (int) numSetpointStatus).Select(i => new PointRecord()).ToList();
+            controls = Enumerable.Range(0, (int) numControls).Select(i => new ControlRecord(CommandModes.CM_SBO_ONLY, 5000)).ToList();
+            setpoints = Enumerable.Range(0, (int )numSetpoints).Select(i => new ControlRecord(CommandModes.CM_SBO_ONLY, 5000)).ToList();
+        }
+
+        public readonly List<EventPointRecord> binaries;
+        public readonly List<EventPointRecord> counters;
+        public readonly List<DeadbandEventPointRecord> analogs;
+        public readonly List<PointRecord> controlStatii;
+        public readonly List<PointRecord> setpointStatii;
+
+        public readonly List<ControlRecord> controls;
+        public readonly List<ControlRecord> setpoints;
+    };
 
 	public class MasterStackConfig
     {	
@@ -198,5 +434,21 @@ namespace DNP3.Interface
         public readonly MasterConfig master;
         public readonly AppConfig app;
         public readonly LinkConfig link;
-	};
+	}
+
+    public class SlaveStackConfig
+	{
+        public SlaveStackConfig()
+        {
+            this.slave = new SlaveConfig();
+            this.link = new LinkConfig(false, false);
+            this.app = new AppConfig();
+            
+        }
+
+	    public SlaveConfig slave;		// Slave config
+	    //DeviceTemplate device;	// Device template that specifies database layout, control behavior
+        public AppConfig app;			// Application layer config
+        public LinkConfig link;		// Link layer config
+	}
 }

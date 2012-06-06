@@ -281,6 +281,44 @@ namespace DNPDotNet {
 		return apl::dnp::AppConfig(config->rspTimeout, config->numRetry, config->fragSize);
 	}
 
+	apl::dnp::ClassMask Conversions::convertClassMask(ClassMask^ cm)
+	{
+		return apl::dnp::ClassMask(cm->class1, cm->class2, cm->class3);
+	}
+
+	apl::dnp::EventMaxConfig Conversions::convertEventMaxConfig(EventMaxConfig^ cm)
+	{
+		return apl::dnp::EventMaxConfig(cm->maxBinaryEvents, cm->maxAnalogEvents, cm->maxCounterEvents, 0);
+	}
+
+	apl::dnp::GrpVar Conversions::convertGrpVar(GrpVar^ gv)
+	{
+		return apl::dnp::GrpVar(gv->grp, gv->var);
+	}
+
+	apl::dnp::SlaveConfig Conversions::convertConfig(SlaveConfig^ config)
+	{
+		apl::dnp::SlaveConfig sc;
+
+		sc.mMaxControls = config->maxControls;
+		sc.mUnsolMask = convertClassMask(config->unsolMask);		
+		sc.mAllowTimeSync = config->allowTimeSync;
+		sc.mTimeSyncPeriod = config->timeSyncPeriod;
+		sc.mUnsolPackDelay = config->unsolPackDelay;
+		sc.mUnsolRetryDelay = config->unsolRetryDelay;
+		sc.mMaxFragSize = config->maxFragSize;
+		sc.mEventMaxConfig = convertEventMaxConfig(config->eventMaxConfig);
+		sc.mStaticBinary = convertGrpVar(config->staticBinary);
+		sc.mStaticAnalog = convertGrpVar(config->staticAnalog);
+		sc.mStaticCounter = convertGrpVar(config->staticCounter);
+		sc.mStaticSetpointStatus = convertGrpVar(config->staticSetpointStatus);
+		sc.mEventBinary = convertGrpVar(config->eventBinary);
+		sc.mEventAnalog = convertGrpVar(config->eventAnalog);
+		sc.mEventCounter = convertGrpVar(config->eventCounter);
+		
+		return sc;
+	}
+
 	apl::dnp::MasterConfig Conversions::convertConfig(MasterConfig^ config)
 	{
 		apl::dnp::MasterConfig mc;
@@ -304,6 +342,15 @@ namespace DNPDotNet {
 	{
 		apl::dnp::MasterStackConfig cfg;
 		cfg.master = convertConfig(config->master);
+		cfg.app = convertConfig(config->app);
+		cfg.link = convertConfig(config->link);
+		return cfg;
+	}
+
+	apl::dnp::SlaveStackConfig Conversions::convertConfig(SlaveStackConfig^ config)
+	{
+		apl::dnp::SlaveStackConfig cfg;
+		cfg.slave = convertConfig(config->slave);
 		cfg.app = convertConfig(config->app);
 		cfg.link = convertConfig(config->link);
 		return cfg;

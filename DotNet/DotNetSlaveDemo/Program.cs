@@ -33,7 +33,7 @@ namespace DotNetSlaveDemo
         {
             var sm = new StackManager();
             sm.AddTCPServer("server", FilterLevel.LEV_INFO, 5000, "127.0.0.1", 20000);
-            IDataObserver observer = sm.AddSlave("server", "slave", FilterLevel.LEV_INFO, new RejectingCommandAcceptor());
+            var observer = sm.AddSlave("server", "slave", FilterLevel.LEV_INFO, new RejectingCommandAcceptor());
 
             Console.WriteLine("Press <Enter> to randomly change a value");
 
