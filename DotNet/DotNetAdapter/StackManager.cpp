@@ -11,6 +11,8 @@
 #include "SlaveCommandAcceptorAdapter.h"
 #include "SlaveDataObserverAdapter.h"
 
+#include "LogAdapter.h"
+
 #include <DNP3/MasterStackConfig.h>
 #include <DNP3/SlaveStackConfig.h>
 #include <DNP3/StackManager.h>
@@ -82,4 +84,9 @@ namespace DNPDotNet {
 		return gcnew SlaveDataObserverAdapter(pDataObs);
 	}
 
+	void StackManager::AddLogHandler(ILogHandler^ logHandler)
+	{
+		LogAdapterWrapper^ wrapper = gcnew LogAdapterWrapper(logHandler);
+		pMgr->AddLogHook(wrapper->GetLogAdapter());
+	}
 }

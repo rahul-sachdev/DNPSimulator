@@ -24,9 +24,11 @@ namespace DNPDotNet {
 		
 		// Convert a .NET string to a C++ string
 		static std::string convertString(System::String^ s);
+		static System::String^ convertString(const std::string& s);
 
 		// Convert the log filter enumeration
 		static apl::FilterLevel convertFilterLevel(FilterLevel level);
+		static FilterLevel convertFilterLevel(apl::FilterLevel level);
 
 		// Convert the command status enumeration
 		static CommandStatus convertCommandStatus(apl::CommandStatus status);

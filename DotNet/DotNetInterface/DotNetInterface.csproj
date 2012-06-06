@@ -46,6 +46,7 @@
     <Compile Include="ICommandAcceptor.cs" />
     <Compile Include="IDataObserver.cs" />
     <Compile Include="IFuture.cs" />
+    <Compile Include="ILogHandler.cs" />
     <Compile Include="LogTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

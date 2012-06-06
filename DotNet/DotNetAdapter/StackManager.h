@@ -32,6 +32,9 @@ namespace DNPDotNet {
 										FilterLevel level,
 										ICommandAcceptor^ cmdAcceptor );
 										//const SlaveStackConfig& arCfg);
+
+			void AddLogHandler(ILogHandler^ logHandler);
+
 		private:
 			apl::dnp::StackManager* pMgr;
 	};

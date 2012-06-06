@@ -21,6 +21,11 @@ namespace DNPDotNet {
 		return msclr::interop::marshal_as<std::string>(s);
 	}
 
+	System::String^ Conversions::convertString(const std::string& s)
+	{
+		return gcnew System::String(s.c_str());
+	}
+
 	apl::FilterLevel Conversions::convertFilterLevel(FilterLevel level)
 	{
 		switch(level)
@@ -41,6 +46,29 @@ namespace DNPDotNet {
 				return apl::LEV_DEBUG;
 			default:
 				return apl::LEV_DEBUG;
+		}
+	}
+
+	FilterLevel Conversions::convertFilterLevel(apl::FilterLevel level)
+	{
+		switch(level)
+		{
+			case (apl::LEV_EVENT):
+				return FilterLevel::LEV_EVENT;
+			case (apl::LEV_ERROR):
+				return FilterLevel::LEV_ERROR;
+			case (apl::LEV_WARNING):
+				return FilterLevel::LEV_WARNING;
+			case (apl::LEV_INFO):
+				return FilterLevel::LEV_INFO;
+			case (apl::LEV_INTERPRET):
+				return FilterLevel::LEV_INTERPRET;
+			case (apl::LEV_COMM):
+				return FilterLevel::LEV_COMM;
+			case (apl::LEV_DEBUG):
+				return FilterLevel::LEV_DEBUG;
+			default:
+				return FilterLevel::LEV_DEBUG;
 		}
 	}
 

@@ -47,11 +47,26 @@ namespace DotNetMasterDemo
         }
     }
 
+    public class PrintingLogAdapter : ILogHandler
+    {
+
+        public void Log(LogEntry entry)
+        {
+            Console.WriteLine(entry.message);
+        }
+
+        public void SetVar(string source, string varName, int value)
+        {
+            
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
             var sm = new StackManager();
+            sm.AddLogHandler(new PrintingLogAdapter()); //this is optional
             sm.AddTCPClient("client", FilterLevel.LEV_INFO, 5000, "127.0.0.1", 20000);
             var config = new MasterStackConfig();
             config.link.useConfirms = true; //setup your stack configuration here.
