@@ -40,7 +40,7 @@ class VtoData
 {
 public:
 
-	const static size_t MAX_SIZE = 255;
+	static const size_t MAX_SIZE = 255;
 
 	VtoData();
 

@@ -19,18 +19,45 @@ using namespace apl::dnp;
 %include <std_string.i>
 %include <std_vector.i>
 
-%template(VectorOfString) std::vector<std::string>;
-
 %feature("director"); //generate directors for all classes that have virtual methods
 
-%apply short { boost::uint8_t };
-%apply char { boost::int8_t };
-%apply int { boost::uint16_t };
-%apply short { boost::int16_t };
-%apply int { boost::int32_t };
+%apply short     { boost::uint8_t  };
+%apply char      { boost::int8_t   };
+%apply int       { boost::uint16_t };
+%apply short     { boost::int16_t  };
 %apply long long { boost::uint32_t };
-%apply long long { boost::int64_t };
+%apply int       { boost::int32_t  };
 %apply long long { boost::uint64_t };
+%apply long long { boost::int64_t  };
+
+%template(VectorOfString) std::vector<std::string>;
+
+namespace apl{
+%rename(equal) BinaryOutput::operator==(const BinaryOutput& arRHS) const;
+%rename(equal) Setpoint::operator==(const Setpoint& arRHS) const;
+
+%rename(equal) BoolDataPoint::operator==(const BoolDataPoint& rhs);
+%rename(equal) TypedDataPoint::operator==(const TypedDataPoint<T>& rhs);
+
+%rename(get) Binary::operator ValueType() const;
+%rename(set) Binary::operator=(ValueType aValue);
+
+%rename(get) ControlStatus::operator ValueType() const;
+%rename(set) ControlStatus::operator=(ValueType aValue);
+
+%rename(get) Analog::operator ValueType() const;
+%rename(set) Analog::operator=(ValueType aValue);
+
+%rename(get) Counter::operator ValueType() const;
+%rename(set) Counter::operator=(ValueType aValue);
+
+%rename(get) SetpointStatus::operator ValueType() const;
+%rename(set) SetpointStatus::operator=(ValueType aValue);
+
+%rename(ToString) operator<<(std::ostream& output, PhysicalLayerState aState);
+
+%ignore Transaction::Transaction(ITransactable* apTransactable);
+}
 
 %include "APL/Types.h"
 %include "APL/INotifier.h"
@@ -52,6 +79,12 @@ using namespace apl::dnp;
 %include "APL/ITransactable.h"
 %include "APL/DataInterfaces.h"
 %include "APL/CommandInterfaces.h"
+
+%include "DNP3/VtoRouterSettings.h"
+%include "DNP3/VtoConfig.h"
+%template(VectorOfVtoRouterConfig) std::vector<apl::dnp::VtoRouterConfig>;
+//%include "DNP3/VtoData.h"
+//%include "DNP3/VtoDataInterface.h"
 
 %include "DNP3/PointClass.h"
 %include "DNP3/LinkConfig.h"
