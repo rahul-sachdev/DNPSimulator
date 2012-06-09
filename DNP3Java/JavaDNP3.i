@@ -33,28 +33,28 @@ using namespace apl::dnp;
 %template(VectorOfString) std::vector<std::string>;
 
 namespace apl{
-%rename(equal) BinaryOutput::operator==(const BinaryOutput& arRHS) const;
-%rename(equal) Setpoint::operator==(const Setpoint& arRHS) const;
+%rename(boEqual) BinaryOutput::operator==(const BinaryOutput& arRHS) const;
+%rename(stEqual) Setpoint::operator==(const Setpoint& arRHS) const;
 
-%rename(equal) BoolDataPoint::operator==(const BoolDataPoint& rhs);
-%rename(equal) TypedDataPoint::operator==(const TypedDataPoint<T>& rhs);
+%rename(bdpEqual) BoolDataPoint::operator==(const BoolDataPoint& rhs);
+%rename(tdpEqual) TypedDataPoint::operator==(const TypedDataPoint<T>& rhs);
 
-%rename(get) Binary::operator ValueType() const;
-%rename(set) Binary::operator=(ValueType aValue);
+%rename(get_binary) Binary::operator ValueType() const;
+%rename(set_binary) Binary::operator=(ValueType aValue);
 
-%rename(get) ControlStatus::operator ValueType() const;
-%rename(set) ControlStatus::operator=(ValueType aValue);
+%rename(get_controlstatus) ControlStatus::operator ValueType() const;
+%rename(set_controlstatus) ControlStatus::operator=(ValueType aValue);
 
-%rename(get) Analog::operator ValueType() const;
-%rename(set) Analog::operator=(ValueType aValue);
+%rename(get_analog) Analog::operator ValueType() const;
+%rename(set_analog) Analog::operator=(ValueType aValue);
 
-%rename(get) Counter::operator ValueType() const;
-%rename(set) Counter::operator=(ValueType aValue);
+%rename(get_counter) Counter::operator ValueType() const;
+%rename(set_counter) Counter::operator=(ValueType aValue);
 
-%rename(get) SetpointStatus::operator ValueType() const;
-%rename(set) SetpointStatus::operator=(ValueType aValue);
+%rename(get_setpointstatus) SetpointStatus::operator ValueType() const;
+%rename(set_setpointstatus) SetpointStatus::operator=(ValueType aValue);
 
-%rename(ToString) operator<<(std::ostream& output, PhysicalLayerState aState);
+%rename(PhysLayerStateToString) operator<<(std::ostream& output, PhysicalLayerState aState);
 
 %ignore Transaction::Transaction(ITransactable* apTransactable);
 }

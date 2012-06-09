@@ -34,7 +34,7 @@ enum VtoDataType {
 	VTODT_DATA
 };
 
-std::string ToString(VtoDataType aType);
+std::string VtoDataTypeToString(VtoDataType aType);
 
 class VtoData
 {

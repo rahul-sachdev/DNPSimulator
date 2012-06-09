@@ -26,7 +26,7 @@ namespace apl
 namespace dnp
 {
 
-std::string ToString(VtoDataType aType)
+std::string VtoDataTypeToString(VtoDataType aType)
 {
 	switch(aType) {
 	case(VTODT_DATA): return "DATA";
