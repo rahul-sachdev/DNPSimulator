@@ -16,37 +16,27 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __I_DATA_OBSERVER_DN_H_
-#define __I_DATA_OBSERVER_DN_H_
+#ifndef __MASTER_DATA_OBSERVER_H_
+#define __MASTER_DATA_OBSERVER_H_
 
 using namespace System::Collections::ObjectModel;
 
 #include <APL/DataInterfaces.h>
-#include "DataTypesDN.h"
 #include <vcclr.h>
 
-namespace DNPDotNet
-{	
-	public interface class IDataObserverDN
-	{
-		void Start();
-		void Update(BinaryDN^ update, System::Int32 index);
-		void Update(AnalogDN^ update, System::Int32 index);
-		void Update(CounterDN^ update, System::Int32 index);
-		void Update(ControlStatusDN^ update, System::Int32 index);
-		void Update(SetpointStatusDN^ update, System::Int32 index);
-		void End();
-	};
+using namespace DNP3::Interface;
 
+namespace DNPDotNet
+{			
 	public class MasterDataObserverAdapter : public apl::IDataObserver
 	{
 		public:
 
-		MasterDataObserverAdapter(IDataObserverDN^ proxy);
+		MasterDataObserverAdapter(DNP3::Interface::IDataObserver^ proxy);
 
 		private:
 
-		gcroot<IDataObserverDN^> proxy;
+		gcroot<DNP3::Interface::IDataObserver^> proxy;
 
 		protected:
 
@@ -57,6 +47,22 @@ namespace DNPDotNet
 		void _Update(const apl::ControlStatus& arPoint, size_t aIndex);
 		void _Update(const apl::SetpointStatus& arPoint, size_t aIndex);
 		void _End();
+	};
+
+	public ref class MasterDataObserverAdapterWrapper
+	{
+		public:
+			MasterDataObserverAdapterWrapper(DNP3::Interface::IDataObserver^ proxy) : 
+			  pAdapter(new MasterDataObserverAdapter(proxy))
+			{}
+
+			~MasterDataObserverAdapterWrapper() 
+			{ delete pAdapter; }
+
+			apl::IDataObserver* GetDataObserver() { return pAdapter; }
+
+		private:
+			MasterDataObserverAdapter* pAdapter;
 	};
 }
 

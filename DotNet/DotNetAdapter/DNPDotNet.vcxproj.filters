@@ -21,28 +21,25 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DotNetStackManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Conversions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ICommandAcceptorDN.h">
+    <ClInclude Include="MasterDataObserverAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LogTypesDN.h">
+    <ClInclude Include="CommandAcceptorAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IDataObserverDN.h">
+    <ClInclude Include="StackManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CommandTypesDN.h">
+    <ClInclude Include="SlaveCommandAcceptorAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DataTypesDN.h">
+    <ClInclude Include="SlaveDataObserverAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ConfigObjects.h">
+    <ClInclude Include="LogAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,22 +50,25 @@
     <ClCompile Include="Stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DotNetStackManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Conversions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IDataObserverDN.cpp">
+    <ClCompile Include="MasterDataObserverAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CommandTypesDN.cpp">
+    <ClCompile Include="CommandAcceptorAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DataTypesDN.cpp">
+    <ClCompile Include="StackManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ConfigObjects.cpp">
+    <ClCompile Include="SlaveCommandAcceptorAdapter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SlaveDataObserverAdapter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LogAdapter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

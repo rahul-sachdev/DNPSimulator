@@ -16,8 +16,33 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+#ifndef __SLAVE_DATA_OBSERVER_ADAPTER_H_
+#define __SLAVE_DATA_OBSERVER_ADAPTER_H_
 
-#include "Stdafx.h"
-#include "ConfigObjects.h"
+#include <APL/DataInterfaces.h>
+using namespace DNP3::Interface;
 
+namespace DNPDotNet
+{			
+	public ref class SlaveDataObserverAdapter : DNP3::Interface::IDataObserver
+	{
+		public:
 
+		SlaveDataObserverAdapter(apl::IDataObserver* proxy);
+
+		virtual void Start();
+		virtual void Update(Binary^ meas, System::UInt32 index);
+		virtual void Update(Analog^ meas, System::UInt32 index);
+		virtual void Update(Counter^ meas, System::UInt32 index);
+		virtual void Update(ControlStatus^ meas, System::UInt32 index);
+		virtual void Update(SetpointStatus^ meas, System::UInt32 index);
+		virtual void End();
+
+		private:
+
+		apl::IDataObserver* proxy;		
+	};
+	
+}
+
+#endif

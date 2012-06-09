@@ -17,12 +17,12 @@
 // under the License.
 //
 #include "Stdafx.h"
-#include "IDataObserverDN.h"
+#include "MasterDataObserverAdapter.h"
 #include "Conversions.h"
 
 namespace DNPDotNet
 {
-		MasterDataObserverAdapter::MasterDataObserverAdapter(IDataObserverDN^ proxy) : proxy(proxy)
+		MasterDataObserverAdapter::MasterDataObserverAdapter(DNP3::Interface::IDataObserver^ proxy) : proxy(proxy)
 		{}		
 
 		void MasterDataObserverAdapter::_Start()

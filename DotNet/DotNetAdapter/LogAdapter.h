@@ -16,29 +16,48 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include <StdAfx.h>
+#ifndef __LOG_ADAPTER_H_
+#define __LOG_ADAPTER_H_
 
-#include "DataTypesDN.h"
+using namespace System::Collections::ObjectModel;
+
+#include <vcclr.h>
+#include <APL/LogBase.h>
+
+using namespace DNP3::Interface;
 
 namespace DNPDotNet
-{
+{		
+	class LogAdapter : public apl::ILogBase
+	{
+		public:
 
-BinaryDN::BinaryDN(System::Boolean value, System::Byte quality) : value(value), quality(quality)
-{}
+		LogAdapter(ILogHandler^ proxy);
 
-ControlStatusDN::ControlStatusDN(System::Boolean value, System::Byte quality) : value(value), quality(quality)
-{}
+		// logging error messages, etc
+		void Log( const apl::LogEntry& arEntry );
 
-AnalogDN::AnalogDN(System::Double value, System::Byte quality) : value(value), quality(quality)
-{}
+		// updating a variable/metric in the system
+		void SetVar(const std::string& aSource, const std::string& aVarName, int aValue);
 
-CounterDN::CounterDN(System::UInt32 value, System::Byte quality) : value(value), quality(quality)
-{}
-
-SetpointStatusDN::SetpointStatusDN(System::Double value, System::Byte quality) : value(value), quality(quality)
-{}
+		private:		
+		gcroot<ILogHandler^> proxy;
+	};
 	
+	public ref class LogAdapterWrapper
+	{
+		public:
+		LogAdapterWrapper(ILogHandler^ proxy) : mpAdapter(new LogAdapter(proxy))
+		{}
+
+		apl::ILogBase* GetLogAdapter() { return mpAdapter; }
+
+		~LogAdapterWrapper()
+		{ delete mpAdapter; }
+
+		private:
+		LogAdapter* mpAdapter;
+	};
 }
 
-/* vim: set ts=4 sw=4: */
-
+#endif

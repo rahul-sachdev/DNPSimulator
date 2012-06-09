@@ -15,6 +15,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>DNPDotNet</RootNamespace>
+    <ProjectName>DotNetAdapter</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -34,10 +35,10 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\config\local_dir.props" />
-    <Import Project="..\config\boost_includes.props" />
-    <Import Project="..\config\boost_lib.props" />
-    <Import Project="..\config\common_boost_defines.props" />
+    <Import Project="..\..\config\local_dir.props" />
+    <Import Project="..\..\config\boost_includes.props" />
+    <Import Project="..\..\config\boost_lib.props" />
+    <Import Project="..\..\config\common_boost_defines.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -87,25 +88,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CommandTypesDN.h" />
-    <ClInclude Include="ConfigObjects.h" />
+    <ClInclude Include="CommandAcceptorAdapter.h" />
     <ClInclude Include="Conversions.h" />
-    <ClInclude Include="DataTypesDN.h" />
-    <ClInclude Include="DotNetStackManager.h" />
-    <ClInclude Include="ICommandAcceptorDN.h" />
-    <ClInclude Include="IDataObserverDN.h" />
-    <ClInclude Include="LogTypesDN.h" />
+    <ClInclude Include="LogAdapter.h" />
+    <ClInclude Include="SlaveCommandAcceptorAdapter.h" />
+    <ClInclude Include="SlaveDataObserverAdapter.h" />
+    <ClInclude Include="StackManager.h" />
+    <ClInclude Include="MasterDataObserverAdapter.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="CommandTypesDN.cpp" />
-    <ClCompile Include="ConfigObjects.cpp" />
+    <ClCompile Include="CommandAcceptorAdapter.cpp" />
     <ClCompile Include="Conversions.cpp" />
-    <ClCompile Include="DataTypesDN.cpp" />
-    <ClCompile Include="DotNetStackManager.cpp" />
-    <ClCompile Include="IDataObserverDN.cpp" />
+    <ClCompile Include="LogAdapter.cpp" />
+    <ClCompile Include="SlaveCommandAcceptorAdapter.cpp" />
+    <ClCompile Include="SlaveDataObserverAdapter.cpp" />
+    <ClCompile Include="StackManager.cpp" />
+    <ClCompile Include="MasterDataObserverAdapter.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -119,11 +120,14 @@
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\APL\APL.vcxproj">
+    <ProjectReference Include="..\..\APL\APL.vcxproj">
       <Project>{761218b0-f2b7-42da-9c9b-413fa34886df}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\DNP3\DNP3.vcxproj">
+    <ProjectReference Include="..\..\DNP3\DNP3.vcxproj">
       <Project>{e053e7ed-f462-4de0-8d69-6d97045ffb25}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\DotNetInterface\DotNetInterface.csproj">
+      <Project>{c280f8aa-8461-4126-bf88-454891422fd8}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

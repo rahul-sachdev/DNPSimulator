@@ -47,10 +47,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DNPDotNet\DNPDotNet.vcxproj">
+    <ProjectReference Include="..\DotNetAdapter\DNPDotNet.vcxproj">
       <Project>{686B212F-3FE0-455A-B78B-0980D9F2F837}</Project>
-      <Name>DNPDotNet</Name>
+      <Name>DotNetAdapter</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DotNetInterface\DotNetInterface.csproj">
+      <Project>{C280F8AA-8461-4126-BF88-454891422FD8}</Project>
+      <Name>DotNetInterface</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

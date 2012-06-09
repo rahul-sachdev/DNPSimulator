@@ -54,6 +54,11 @@ public:
 	std::string			GetTimeString() const {
 		return TimeStamp::UTCTimeStampToString(mTime);
 	}
+
+	millis_t			GetTimeStamp() const {
+		return mTime;
+	}
+
 	int					GetErrorCode() const {
 		return mErrorCode;
 	}
