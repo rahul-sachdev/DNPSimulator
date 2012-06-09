@@ -30,7 +30,7 @@ namespace apl
 namespace dnp
 {
 
-void VtoReader::AddVtoChannel(IVtoDataHandler* apCallbacks)
+void VtoReader::AddVtoChannel(IVtoCallbacks* apCallbacks)
 {
 	/*
 	 * The whole function is thread-safe, from start to finish.
@@ -54,7 +54,7 @@ void VtoReader::AddVtoChannel(IVtoDataHandler* apCallbacks)
 	mChannelMap[id] = apCallbacks;
 }
 
-void VtoReader::RemoveVtoChannel(IVtoDataHandler* apCallbacks)
+void VtoReader::RemoveVtoChannel(IVtoCallbacks* apCallbacks)
 {
 	/*
 	 * The whole function is thread-safe, from start to finish.

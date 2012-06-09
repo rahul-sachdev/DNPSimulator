@@ -58,7 +58,6 @@ public:
 	}
 
 private:
-
 	/**
 	 * A hidden default constructor.
 	 *
@@ -72,17 +71,29 @@ private:
 	boost::uint8_t mChannelId;
 };
 
-/**
-*  Callback that notifies when space is available to write vto objects.
-*/
-class IVtoBufferHandler
+class IVtoCallbacks : public IVtoChannel
 {
 public:
+	/**
+	 * Creates a new IVtoCallbacks instance configured for Virtual
+	 * Terminal channel id matching aChannelId.
+	 *
+	 * @param aChannelId	the DNP3 Virtual Terminal port (channel
+	 *						id)
+	 *
+	 * @return				the new IVtoCallbacks instance
+	 */
+	IVtoCallbacks(boost::uint8_t aChannelId) : IVtoChannel(aChannelId) {}
 
 	/**
-	 * Called when an IVtoWriter has space available for writing
+	 * Called when an IVtoWriter has space available for writing.
 	 */
-	virtual void OnBufferAvailable() = 0;
+	virtual void OnBufferAvailable() {}
+
+	/**
+	 * Called when an IVtoReader has received some data.
+	 */
+	virtual void OnVtoDataReceived(const VtoData& arData) {}
 };
 
 /**
@@ -133,47 +144,13 @@ public:
 	* Registers an IVtoCallbacks to receive OnBufferAvailable() notifications
 	* @param apHandler The interface to invoke when space is made available
 	*/
-	virtual void AddVtoCallback(IVtoBufferHandler* apHandler) = 0;
+	virtual void AddVtoCallback(IVtoCallbacks* apHandler) = 0;
 
 	/**
 	* Stops an IVtoCallbacks from receiving OnBufferAvailable() notifications
 	* @param apHandler The interface to stop calling when space is available
 	*/
-	virtual void RemoveVtoCallback(IVtoBufferHandler* apHandler) = 0;
-};
-
-/**
- * Receives data from the stack for a particular channel and is notified
- * when buffer space becomes available.  Applications that wish to use
- * the AsyncStackManager::AddVtoChannel() hook must implement a concrete
- * subclass of this class and register an instance of that subclass
- * during the function call.
- */
-class IVtoDataHandler : public IVtoChannel
-{
-public:
-
-	/**
-	 * Creates a new IVtoCallbacks instance configured for Virtual
-	 * Terminal channel id matching aChannelId.
-	 *
-	 * @param aChannelId	the DNP3 Virtual Terminal port (channel
-	 *						id)
-	 *
-	 * @return				the new IVtoCallbacks instance
-	 */
-	IVtoDataHandler(boost::uint8_t aChannelId) : IVtoChannel(aChannelId) {}
-
-	/**
-	 * Called when data arrives from stack and needs to be handled.
-	 *
-	 * @param arData     The data received from the VTO stream, also includes
-	 *                   a VtoDataType flag that the router should look at to
-	 *                   decide if they should open/close the local half of the
-	 *                   connection.
-	 */
-	virtual void OnVtoDataReceived(const VtoData& arData) = 0;
-
+	virtual void RemoveVtoCallback(IVtoCallbacks* apHandler) = 0;
 };
 
 class IVtoReader
@@ -191,7 +168,7 @@ public:
 	 *registered
 	 *                          with this reader
 	 */
-	virtual void AddVtoChannel(IVtoDataHandler* apCallbacks) = 0;
+	virtual void AddVtoChannel(IVtoCallbacks* apCallbacks) = 0;
 
 	/**
 	 * Unregister an IVtoCallbacks instance with the VtoReader
@@ -202,27 +179,12 @@ public:
 	 * @throw ArgumentException	if the channel id is not registered
 	 *                          with this reader
 	 */
-	virtual void RemoveVtoChannel(IVtoDataHandler* apCallbacks) = 0;
-};
-
-class IVtoCallbacks : public IVtoDataHandler, public IVtoBufferHandler
-{
-public:
-	/**
-		 * Creates a new IVtoCallbacks instance configured for Virtual
-		 * Terminal channel id matching aChannelId.
-		 *
-		 * @param aChannelId	the DNP3 Virtual Terminal port (channel
-		 *						id)
-		 *
-		 * @return				the new IVtoCallbacks instance
-		 */
-	IVtoCallbacks(boost::uint8_t aChannelId) : IVtoDataHandler(aChannelId) {}
+	virtual void RemoveVtoChannel(IVtoCallbacks* apCallbacks) = 0;
 };
 
 }
 }
 
-/* vim: set ts=4 sw=4: */
+/* vim: set ts=4 sw=4 noexpandtab: */
 
 #endif

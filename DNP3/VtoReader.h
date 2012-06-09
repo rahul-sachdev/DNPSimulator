@@ -63,7 +63,7 @@ public:
 	 *registered
 	 *                          with this reader
 	 */
-	void AddVtoChannel(IVtoDataHandler* apCallbacks);
+	void AddVtoChannel(IVtoCallbacks* apCallbacks);
 
 	/**
 	 * Unregister an IVtoCallbacks instance with the VtoReader
@@ -74,7 +74,7 @@ public:
 	 * @throw ArgumentException	if the channel id is not registered
 	 *                          with this reader
 	 */
-	void RemoveVtoChannel(IVtoDataHandler* apCallbacks);
+	void RemoveVtoChannel(IVtoCallbacks* apCallbacks);
 
 	/**
 	 * Adds a VtoEvent object to be delivered back to user code.
@@ -115,7 +115,7 @@ private:
 	 */
 	void _End();
 
-	typedef std::map<boost::uint8_t, IVtoDataHandler*> ChannelMap;
+	typedef std::map<boost::uint8_t, IVtoCallbacks*> ChannelMap;
 
 	ChannelMap mChannelMap;
 };

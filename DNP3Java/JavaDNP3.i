@@ -84,7 +84,7 @@ namespace apl{
 %include "DNP3/VtoConfig.h"
 %template(VectorOfVtoRouterConfig) std::vector<apl::dnp::VtoRouterConfig>;
 %include "DNP3/VtoData.h"
-//%include "DNP3/VtoDataInterface.h"
+%include "DNP3/VtoDataInterface.h"
 
 %include "DNP3/PointClass.h"
 %include "DNP3/LinkConfig.h"

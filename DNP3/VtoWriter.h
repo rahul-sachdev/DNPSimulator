@@ -63,13 +63,13 @@ public:
 	* Registers an IVtoCallbacks to receive OnBufferAvailable() notifications
 	* @param apHandler The interface to invoke when space is made available
 	*/
-	void AddVtoCallback(IVtoBufferHandler* apHandler);
+	void AddVtoCallback(IVtoCallbacks* apHandler);
 
 	/**
 	* Stops an IVtoCallbacks from receiving OnBufferAvailable() notifications
 	* @param apHandler The interface to stop calling when space is available
 	*/
-	void RemoveVtoCallback(IVtoBufferHandler* apHandler);
+	void RemoveVtoCallback(IVtoCallbacks* apHandler);
 
 	/**
 	 * Implements IVtoWriter::Write().
@@ -145,7 +145,7 @@ private:
 
 	const size_t mMaxVtoChunks;
 
-	typedef std::set<IVtoBufferHandler*> CallbackSet;
+	typedef std::set<IVtoCallbacks*> CallbackSet;
 	CallbackSet mCallbacks;
 };
 }

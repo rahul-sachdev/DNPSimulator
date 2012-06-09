@@ -137,14 +137,14 @@ size_t VtoWriter::Flush(IVtoEventAcceptor* apAcceptor, size_t aMaxEvents)
 	return numUpdates;
 }
 
-void VtoWriter::AddVtoCallback(IVtoBufferHandler* apHandler)
+void VtoWriter::AddVtoCallback(IVtoCallbacks* apHandler)
 {
 	assert(apHandler != NULL);
 	CriticalSection cs(&mLock);
 	this->mCallbacks.insert(apHandler);
 }
 
-void VtoWriter::RemoveVtoCallback(IVtoBufferHandler* apHandler)
+void VtoWriter::RemoveVtoCallback(IVtoCallbacks* apHandler)
 {
 	assert(apHandler != NULL);
 	CriticalSection cs(&mLock);
