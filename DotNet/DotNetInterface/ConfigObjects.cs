@@ -117,7 +117,8 @@ namespace DNP3.Interface
 		PC_CLASS_1 = 0x02,
 		PC_CLASS_2 = 0x04,
 		PC_CLASS_3 = 0x08,
-		PC_ALL_EVENTS = PC_CLASS_1 | PC_CLASS_2 | PC_CLASS_3		
+		PC_ALL_EVENTS = PC_CLASS_1 | PC_CLASS_2 | PC_CLASS_3,
+        PC_INVALID = 0x10
 	}
 
 	/// Configuration information for the dnp3 master
@@ -389,8 +390,8 @@ namespace DNP3.Interface
             this.selectTimeoutMs = selectTimeoutMs;
         }
 
-        CommandModes mode;
-        System.Int64 selectTimeoutMs;
+        public CommandModes mode;
+        public System.Int64 selectTimeoutMs;
     };
 
     public class DeviceTemplate
@@ -441,14 +442,15 @@ namespace DNP3.Interface
         public SlaveStackConfig()
         {
             this.slave = new SlaveConfig();
+            this.device = new DeviceTemplate(10, 10, 10, 10, 10, 10, 10);
             this.link = new LinkConfig(false, false);
             this.app = new AppConfig();
             
         }
 
 	    public SlaveConfig slave;		// Slave config
-	    //DeviceTemplate device;	// Device template that specifies database layout, control behavior
+	    public DeviceTemplate device;	// Device template that specifies database layout, control behavior
         public AppConfig app;			// Application layer config
-        public LinkConfig link;		// Link layer config
+        public LinkConfig link;		    // Link layer config
 	}
 }
