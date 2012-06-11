@@ -30,8 +30,8 @@
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.logControl = new DotNetTestSet.LogControl();
             this.button1 = new System.Windows.Forms.Button();
+            this.logControl = new DotNetTestSet.LogControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -72,14 +72,6 @@
             this.splitContainer2.SplitterDistance = 227;
             this.splitContainer2.TabIndex = 0;
             // 
-            // logControl
-            // 
-            this.logControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.logControl.Location = new System.Drawing.Point(0, 0);
-            this.logControl.Name = "logControl";
-            this.logControl.Size = new System.Drawing.Size(1052, 156);
-            this.logControl.TabIndex = 0;
-            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(64, 70);
@@ -89,6 +81,15 @@
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // logControl
+            // 
+            this.logControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.logControl.Location = new System.Drawing.Point(0, 0);
+            this.logControl.Name = "logControl";
+            this.logControl.Padding = new System.Windows.Forms.Padding(3);
+            this.logControl.Size = new System.Drawing.Size(1052, 156);
+            this.logControl.TabIndex = 0;
             // 
             // TestSetForm
             // 
