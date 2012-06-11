@@ -44,9 +44,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="TestSetControlLibrary">
-      <HintPath>..\..\TestSetControlLibrary\bin\Debug\TestSetControlLibrary.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TestSetForm.cs">
@@ -87,6 +84,10 @@
     <ProjectReference Include="..\DotNetInterface\DotNetInterface.csproj">
       <Project>{C280F8AA-8461-4126-BF88-454891422FD8}</Project>
       <Name>DotNetInterface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestSetControlLibrary\TestSetControlLibrary.csproj">
+      <Project>{A37903BE-7E9B-4442-8D9A-1C33F58F661F}</Project>
+      <Name>TestSetControlLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

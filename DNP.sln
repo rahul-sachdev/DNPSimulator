@@ -48,7 +48,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetSlaveDemo", "DotNet\D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetTestSet", "DotNet\DotNetTestSet\DotNetTestSet.csproj", "{F1EBF237-ADE1-478F-B9A0-34B6B2996C94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSetControlLibrary", "TestSetControlLibrary\TestSetControlLibrary.csproj", "{A37903BE-7E9B-4442-8D9A-1C33F58F661F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSetControlLibrary", "DotNet\TestSetControlLibrary\TestSetControlLibrary.csproj", "{A37903BE-7E9B-4442-8D9A-1C33F58F661F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
