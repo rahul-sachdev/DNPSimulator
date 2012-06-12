@@ -30,14 +30,14 @@
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.button1 = new System.Windows.Forms.Button();
+            this.stackBrowser1 = new TestSetControlLibrary.StackBrowser();
             this.logControl = new DotNetTestSet.LogControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,22 +65,21 @@
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
             this.splitContainer2.Name = "splitContainer2";
             // 
-            // splitContainer2.Panel2
+            // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.button1);
+            this.splitContainer2.Panel1.Controls.Add(this.stackBrowser1);
             this.splitContainer2.Size = new System.Drawing.Size(1052, 386);
             this.splitContainer2.SplitterDistance = 227;
             this.splitContainer2.TabIndex = 0;
             // 
-            // button1
+            // stackBrowser1
             // 
-            this.button1.Location = new System.Drawing.Point(64, 70);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(134, 54);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.stackBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stackBrowser1.Location = new System.Drawing.Point(0, 0);
+            this.stackBrowser1.Name = "stackBrowser1";
+            this.stackBrowser1.Size = new System.Drawing.Size(227, 386);
+            this.stackBrowser1.TabIndex = 0;
+            this.stackBrowser1.OnTcpClientAdded += new TestSetControlLibrary.AddTcpClient(this.stackBrowser1_OnTcpClientAdded);
             // 
             // logControl
             // 
@@ -103,7 +102,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -115,7 +114,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private LogControl logControl;
-        private System.Windows.Forms.Button button1;
+        private TestSetControlLibrary.StackBrowser stackBrowser1;
     }
 }
 

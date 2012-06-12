@@ -20,20 +20,25 @@ namespace DotNetTestSet
         private LogControlAdapter lca;
 
         public TestSetForm()
-        {
-            
-
+        {           
             InitializeComponent();
 
             this.sm = new StackManager();
             this.lca = new LogControlAdapter(this.logControl);
             sm.AddLogHandler(lca);            
-        }
+        }        
 
-        private void button1_Click(object sender, EventArgs e)
-        {            
-            sm.AddTCPClient("client", FilterLevel.LEV_INFO, 5000, "127.0.0.1", 20000);
-            ICommandAcceptor cmd = sm.AddMaster("client", "master", FilterLevel.LEV_INTERPRET, new NullDataObserver(), new MasterStackConfig());
+        private void stackBrowser1_OnTcpClientAdded(string name, string address, ushort port, FilterLevel level, UInt64 timeout)
+        {
+            try
+            {
+                sm.AddTCPClient(name, level, timeout, address, port);
+                this.stackBrowser1.AddRecordTcpClient(name);
+            }
+            catch(Exception ex)
+            {
+                this.logControl.AddLogEntry(new LogEntry(FilterLevel.LEV_ERROR, "testset", "", "A port already exists named: " + name, DateTime.Now, -1));
+            }            
         }
     }
 
