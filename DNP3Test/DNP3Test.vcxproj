@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{893D4C53-0729-480D-8F40-75E7139224DF}</ProjectGuid>
+    <RootNamespace>DNP3Test</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\config\boost_includes.props" />
+    <Import Project="..\config\boost_lib.props" />
+    <Import Project="..\config\local_dir.props" />
+    <Import Project="..\config\output_dirs.props" />
+    <Import Project="..\config\common_boost_defines.props" />
+    <Import Project="..\config\disable_specific_warnings.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\config\boost_includes.props" />
+    <Import Project="..\config\boost_lib.props" />
+    <Import Project="..\config\local_dir.props" />
+    <Import Project="..\config\output_dirs.props" />
+    <Import Project="..\config\common_boost_defines.props" />
+    <Import Project="..\config\disable_specific_warnings.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\APLTestTools\APLTestTools.vcxproj">
+      <Project>{41d4b22b-f06e-4230-9aa8-3bff096cc710}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\DNP3\DNP3.vcxproj">
+      <Project>{e053e7ed-f462-4de0-8d69-6d97045ffb25}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\APL\APL.vcxproj">
+      <Project>{761218b0-f2b7-42da-9c9b-413fa34886df}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="TestStackManager.cpp" />
+    <ClCompile Include="TestStartBoostUTF.cpp" />
+    <ClCompile Include="TestAPDU.cpp" />
+    <ClCompile Include="TestAPDUWriting.cpp" />
+    <ClCompile Include="TestAppLayer.cpp" />
+    <ClCompile Include="TestObjects.cpp" />
+    <ClCompile Include="AppLayerTest.cpp" />
+    <ClCompile Include="MockAppUser.cpp" />
+    <ClCompile Include="TestCRC.cpp" />
+    <ClCompile Include="TestLinkFrameDNP.cpp" />
+    <ClCompile Include="TestLinkLayer.cpp" />
+    <ClCompile Include="TestLinkLayerRouter.cpp" />
+    <ClCompile Include="TestLinkReceiver.cpp" />
+    <ClCompile Include="TestLinkRoute.cpp" />
+    <ClCompile Include="DNPHelpers.cpp" />
+    <ClCompile Include="LinkLayerRouterTest.cpp" />
+    <ClCompile Include="LinkLayerTest.cpp" />
+    <ClCompile Include="MockFrameSink.cpp" />
+    <ClCompile Include="TestIntegration.cpp" />
+    <ClCompile Include="TestStartupTeardown.cpp" />
+    <ClCompile Include="ComparingDataObserver.cpp" />
+    <ClCompile Include="IntegrationTest.cpp" />
+    <ClCompile Include="StartupTeardownTest.cpp" />
+    <ClCompile Include="TestMaster.cpp" />
+    <ClCompile Include="TestResponseLoader.cpp" />
+    <ClCompile Include="MasterTestObject.cpp" />
+    <ClCompile Include="MockAppLayer.cpp" />
+    <ClCompile Include="ResponseLoaderTestObject.cpp" />
+    <ClCompile Include="TestDatabase.cpp" />
+    <ClCompile Include="TestEventBufferBase.cpp" />
+    <ClCompile Include="TestEventBuffers.cpp" />
+    <ClCompile Include="TestSlave.cpp" />
+    <ClCompile Include="TestSlaveEventBuffer.cpp" />
+    <ClCompile Include="SlaveTestObject.cpp" />
+    <ClCompile Include="TestTransportLayer.cpp" />
+    <ClCompile Include="TestTransportLoopback.cpp" />
+    <ClCompile Include="TestTransportScalability.cpp" />
+    <ClCompile Include="TransportTestObject.cpp" />
+    <ClCompile Include="TransportIntegrationStack.cpp" />
+    <ClCompile Include="TransportLoopbackTestObject.cpp" />
+    <ClCompile Include="TransportScalabilityTestObject.cpp" />
+    <ClCompile Include="TransportStackPair.cpp" />
+    <ClCompile Include="TestEnhancedVtoRouter.cpp" />
+    <ClCompile Include="TestVtoInterface.cpp" />
+    <ClCompile Include="TestVtoLoopbackIntegration.cpp" />
+    <ClCompile Include="TestVtoOnewayIntegration.cpp" />
+    <ClCompile Include="TestVtoRouter.cpp" />
+    <ClCompile Include="TestVtoRouterManager.cpp" />
+    <ClCompile Include="TestVtoWriter.cpp" />
+    <ClCompile Include="VtoIntegrationTestBase.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AppLayerTest.h" />
+    <ClInclude Include="MockAppUser.h" />
+    <ClInclude Include="DNPHelpers.h" />
+    <ClInclude Include="LinkLayerRouterTest.h" />
+    <ClInclude Include="LinkLayerTest.h" />
+    <ClInclude Include="LinkReceiverTest.h" />
+    <ClInclude Include="MockFrameSink.h" />
+    <ClInclude Include="ComparingDataObserver.h" />
+    <ClInclude Include="IntegrationTest.h" />
+    <ClInclude Include="StartupTeardownTest.h" />
+    <ClInclude Include="MasterTestObject.h" />
+    <ClInclude Include="MockAppLayer.h" />
+    <ClInclude Include="QueueingStackObserver.h" />
+    <ClInclude Include="ResponseLoaderTestObject.h" />
+    <ClInclude Include="DatabaseTestObject.h" />
+    <ClInclude Include="SlaveTestObject.h" />
+    <ClInclude Include="TransportTestObject.h" />
+    <ClInclude Include="TransportIntegrationStack.h" />
+    <ClInclude Include="TransportLoopbackTestObject.h" />
+    <ClInclude Include="TransportScalabilityTestObject.h" />
+    <ClInclude Include="TransportStackPair.h" />
+    <ClInclude Include="ReadableVtoWriter.h" />
+    <ClInclude Include="VtoIntegrationTestBase.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

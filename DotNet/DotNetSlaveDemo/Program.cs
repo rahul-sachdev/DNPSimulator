@@ -33,7 +33,8 @@ namespace DotNetSlaveDemo
         {
             var sm = new StackManager();
             sm.AddTCPServer("server", FilterLevel.LEV_INFO, 5000, "127.0.0.1", 20000);
-            var observer = sm.AddSlave("server", "slave", FilterLevel.LEV_INFO, new RejectingCommandAcceptor());
+            var config = new SlaveStackConfig();
+            var publisher = sm.AddSlave("server", "slave", FilterLevel.LEV_INFO, new RejectingCommandAcceptor(), config);
 
             Console.WriteLine("Press <Enter> to randomly change a value");
 
@@ -43,9 +44,9 @@ namespace DotNetSlaveDemo
                 Console.ReadLine();
                 int value = r.Next(UInt16.MaxValue);
                 System.Console.WriteLine("Change Analog 0 to: " + value);
-                observer.Start();
-                observer.Update(new Analog(value, 1, DateTime.Now), 0);
-                observer.End();
+                publisher.Start();
+                publisher.Update(new Analog(value, 1, DateTime.Now), 0);
+                publisher.End();
             }
         }
     }
