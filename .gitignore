@@ -49,8 +49,6 @@ TestSingle.tiny.xml
 
 demo-master-cpp
 demo-slave-cpp
-dnp3test
-testset
 
 __init__.py
 __init__.pyc

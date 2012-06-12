@@ -1,0 +1,280 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Application">
+      <UniqueIdentifier>{cc463cd1-6676-4e66-8b42-b092dc9f8068}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application\TestFramework">
+      <UniqueIdentifier>{8bbd76f6-9e1b-4227-8b03-f5630fbc1e58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DataLink">
+      <UniqueIdentifier>{f087ac01-24ae-4c14-b6a3-f0c5cf00b5c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DataLink\TestFramework">
+      <UniqueIdentifier>{cf991205-3bbe-4fb8-af26-b303b58f6199}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Integration">
+      <UniqueIdentifier>{135a6cbb-29b3-4ca0-b822-18ea2bb8b1cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Integration\Framework">
+      <UniqueIdentifier>{1ad9b290-ff43-4c76-aed4-c37a4293b4d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Master">
+      <UniqueIdentifier>{b1258bad-ed5f-42db-9a7f-54909a49a918}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Master\Framework">
+      <UniqueIdentifier>{21432f84-6d9e-4bfa-8d16-433df910a6bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Slave">
+      <UniqueIdentifier>{d9499270-9449-45a8-87b8-df5024a78d0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Slave\Framework">
+      <UniqueIdentifier>{d3c8d3da-1c71-4efa-a0c6-10f87b72a136}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Transport">
+      <UniqueIdentifier>{d73af2c3-e45a-4262-9054-b95c1c10ba4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Transport\TestObjects">
+      <UniqueIdentifier>{0f7bd857-48fb-4ce4-af0f-a0444f173f0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Transport\Integration">
+      <UniqueIdentifier>{04123a85-6449-4a29-aaf7-3219f6e9aa57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Vto">
+      <UniqueIdentifier>{4161a030-b789-4d73-8b42-a3605f4143be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Vto\Framework">
+      <UniqueIdentifier>{59db6f31-ea2b-4e35-b935-d081e1704079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\User">
+      <UniqueIdentifier>{503c9ecb-3cc9-449f-8744-583f04b25031}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="TestStartBoostUTF.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestAPDU.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="TestAPDUWriting.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="TestAppLayer.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="TestObjects.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="AppLayerTest.cpp">
+      <Filter>Source Files\Application\TestFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="MockAppUser.cpp">
+      <Filter>Source Files\Application\TestFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="TestCRC.cpp">
+      <Filter>Source Files\DataLink</Filter>
+    </ClCompile>
+    <ClCompile Include="TestLinkFrameDNP.cpp">
+      <Filter>Source Files\DataLink</Filter>
+    </ClCompile>
+    <ClCompile Include="TestLinkLayer.cpp">
+      <Filter>Source Files\DataLink</Filter>
+    </ClCompile>
+    <ClCompile Include="TestLinkLayerRouter.cpp">
+      <Filter>Source Files\DataLink</Filter>
+    </ClCompile>
+    <ClCompile Include="TestLinkReceiver.cpp">
+      <Filter>Source Files\DataLink</Filter>
+    </ClCompile>
+    <ClCompile Include="TestLinkRoute.cpp">
+      <Filter>Source Files\DataLink</Filter>
+    </ClCompile>
+    <ClCompile Include="DNPHelpers.cpp">
+      <Filter>Source Files\DataLink\TestFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkLayerRouterTest.cpp">
+      <Filter>Source Files\DataLink\TestFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkLayerTest.cpp">
+      <Filter>Source Files\DataLink\TestFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="MockFrameSink.cpp">
+      <Filter>Source Files\DataLink\TestFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="TestIntegration.cpp">
+      <Filter>Source Files\Integration</Filter>
+    </ClCompile>
+    <ClCompile Include="TestStartupTeardown.cpp">
+      <Filter>Source Files\Integration</Filter>
+    </ClCompile>
+    <ClCompile Include="ComparingDataObserver.cpp">
+      <Filter>Source Files\Integration\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="IntegrationTest.cpp">
+      <Filter>Source Files\Integration\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="StartupTeardownTest.cpp">
+      <Filter>Source Files\Integration\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="TestMaster.cpp">
+      <Filter>Source Files\Master</Filter>
+    </ClCompile>
+    <ClCompile Include="TestResponseLoader.cpp">
+      <Filter>Source Files\Master</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterTestObject.cpp">
+      <Filter>Source Files\Master\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="MockAppLayer.cpp">
+      <Filter>Source Files\Master\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="ResponseLoaderTestObject.cpp">
+      <Filter>Source Files\Master\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="TestDatabase.cpp">
+      <Filter>Source Files\Slave</Filter>
+    </ClCompile>
+    <ClCompile Include="TestEventBufferBase.cpp">
+      <Filter>Source Files\Slave</Filter>
+    </ClCompile>
+    <ClCompile Include="TestEventBuffers.cpp">
+      <Filter>Source Files\Slave</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSlave.cpp">
+      <Filter>Source Files\Slave</Filter>
+    </ClCompile>
+    <ClCompile Include="TestSlaveEventBuffer.cpp">
+      <Filter>Source Files\Slave</Filter>
+    </ClCompile>
+    <ClCompile Include="SlaveTestObject.cpp">
+      <Filter>Source Files\Slave\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="TestTransportLayer.cpp">
+      <Filter>Source Files\Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="TestTransportLoopback.cpp">
+      <Filter>Source Files\Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="TestTransportScalability.cpp">
+      <Filter>Source Files\Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="TransportTestObject.cpp">
+      <Filter>Source Files\Transport\TestObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="TransportIntegrationStack.cpp">
+      <Filter>Source Files\Transport\Integration</Filter>
+    </ClCompile>
+    <ClCompile Include="TransportLoopbackTestObject.cpp">
+      <Filter>Source Files\Transport\Integration</Filter>
+    </ClCompile>
+    <ClCompile Include="TransportScalabilityTestObject.cpp">
+      <Filter>Source Files\Transport\Integration</Filter>
+    </ClCompile>
+    <ClCompile Include="TransportStackPair.cpp">
+      <Filter>Source Files\Transport\Integration</Filter>
+    </ClCompile>
+    <ClCompile Include="TestEnhancedVtoRouter.cpp">
+      <Filter>Source Files\Vto</Filter>
+    </ClCompile>
+    <ClCompile Include="TestVtoInterface.cpp">
+      <Filter>Source Files\Vto</Filter>
+    </ClCompile>
+    <ClCompile Include="TestVtoLoopbackIntegration.cpp">
+      <Filter>Source Files\Vto</Filter>
+    </ClCompile>
+    <ClCompile Include="TestVtoOnewayIntegration.cpp">
+      <Filter>Source Files\Vto</Filter>
+    </ClCompile>
+    <ClCompile Include="TestVtoRouter.cpp">
+      <Filter>Source Files\Vto</Filter>
+    </ClCompile>
+    <ClCompile Include="TestVtoRouterManager.cpp">
+      <Filter>Source Files\Vto</Filter>
+    </ClCompile>
+    <ClCompile Include="TestVtoWriter.cpp">
+      <Filter>Source Files\Vto</Filter>
+    </ClCompile>
+    <ClCompile Include="VtoIntegrationTestBase.cpp">
+      <Filter>Source Files\Vto\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="TestStackManager.cpp">
+      <Filter>Source Files\User</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AppLayerTest.h">
+      <Filter>Source Files\Application\TestFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="MockAppUser.h">
+      <Filter>Source Files\Application\TestFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="DNPHelpers.h">
+      <Filter>Source Files\DataLink\TestFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkLayerRouterTest.h">
+      <Filter>Source Files\DataLink\TestFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkLayerTest.h">
+      <Filter>Source Files\DataLink\TestFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkReceiverTest.h">
+      <Filter>Source Files\DataLink\TestFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="MockFrameSink.h">
+      <Filter>Source Files\DataLink\TestFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="ComparingDataObserver.h">
+      <Filter>Source Files\Integration\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="IntegrationTest.h">
+      <Filter>Source Files\Integration\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="StartupTeardownTest.h">
+      <Filter>Source Files\Integration\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterTestObject.h">
+      <Filter>Source Files\Master\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="MockAppLayer.h">
+      <Filter>Source Files\Master\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="QueueingStackObserver.h">
+      <Filter>Source Files\Master\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="ResponseLoaderTestObject.h">
+      <Filter>Source Files\Master\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="DatabaseTestObject.h">
+      <Filter>Source Files\Slave\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="SlaveTestObject.h">
+      <Filter>Source Files\Slave\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="TransportTestObject.h">
+      <Filter>Source Files\Transport\TestObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="TransportIntegrationStack.h">
+      <Filter>Source Files\Transport\Integration</Filter>
+    </ClInclude>
+    <ClInclude Include="TransportLoopbackTestObject.h">
+      <Filter>Source Files\Transport\Integration</Filter>
+    </ClInclude>
+    <ClInclude Include="TransportScalabilityTestObject.h">
+      <Filter>Source Files\Transport\Integration</Filter>
+    </ClInclude>
+    <ClInclude Include="TransportStackPair.h">
+      <Filter>Source Files\Transport\Integration</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadableVtoWriter.h">
+      <Filter>Source Files\Vto\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="VtoIntegrationTestBase.h">
+      <Filter>Source Files\Vto\Framework</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

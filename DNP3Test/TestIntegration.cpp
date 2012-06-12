@@ -81,7 +81,6 @@ BOOST_AUTO_TEST_CASE(MasterToSlaveThroughput)
 		cout << "elapsed seconds: " << elapsed_sec << endl;
 		cout << "points/sec: " << points / elapsed_sec << endl;
 	}
-
 }
 
 // TODO - Factor this test into smaller tests
