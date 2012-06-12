@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DisplayAdapterDataObserver.cs" />
+    <Compile Include="LogControlAdapter.cs" />
     <Compile Include="TestSetForm.cs">
       <SubType>Form</SubType>
     </Compile>

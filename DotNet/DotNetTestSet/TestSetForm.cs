@@ -62,7 +62,7 @@ namespace DotNetTestSet
                 var adapter = new DisplayAdapterDataObserver(display);
                 display.Dock = DockStyle.Fill;
                 TabPage page = new TabPage(name);                
-                this.tabControlDisplay.TabPages.Add(page);
+                this.tabControlDisplay.TabPages.Add(page);                
                 page.Controls.Add(display);
                 sm.AddMaster(port, name, level, adapter, config);
             }
@@ -73,117 +73,6 @@ namespace DotNetTestSet
         }
     }
 
-    class LogControlAdapter : ILogHandler
-    {
-
-
-        public LogControlAdapter(LogControl ctrl)
-        {
-            this.logControl = ctrl;
-        }
-
-        private LogControl logControl;
-
-        #region ILogHandler Members
-
-        public void Log(LogEntry entry)
-        {
-            this.logControl.BeginInvoke(new Action(() => logControl.AddLogEntry(entry)));
-        }
-
-        public void SetVar(string source, string varName, int value)
-        {
-            
-        }
-
-        #endregion
-    }
-
-    class DisplayAdapterDataObserver : IDataObserver
-    {
-        private MasterDataDisplay display;
-
-        public DisplayAdapterDataObserver(MasterDataDisplay display)
-        {
-            this.display = display;
-        }
-
-        public void Start()
-        {
-           
-        }
-
-        public void Update(Binary update, uint index)
-        {
-            this.display.BeginInvoke(new Action(() => display.UpdateBinary(update, index)));           
-        }
-
-        public void Update(Analog update, uint index)
-        {
-           
-        }
-
-        public void Update(Counter update, uint index)
-        {
-           
-        }
-
-        public void Update(ControlStatus update, uint index)
-        {
-           
-        }
-
-        public void Update(SetpointStatus update, uint index)
-        {
-           
-        }
-
-        public void End()
-        {
-           
-        }
-    }
-
-    class NullDataObserver : IDataObserver
-    {
-
-        #region IDataObserver Members
-
-        public void Start()
-        {
-            Console.WriteLine("Start");
-        }
-
-        public void Update(Binary update, uint index)
-        {
-
-        }
-
-        public void Update(Analog update, uint index)
-        {
-
-        }
-
-        public void Update(Counter update, uint index)
-        {
-
-        }
-
-        public void Update(ControlStatus update, uint index)
-        {
-
-        }
-
-        public void Update(SetpointStatus update, uint index)
-        {
-
-        }
-
-        public void End()
-        {
-            Console.WriteLine("End");
-        }
-
-        #endregion
-    }
+    
+    
 }
