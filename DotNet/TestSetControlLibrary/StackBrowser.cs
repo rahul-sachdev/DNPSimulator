@@ -11,10 +11,14 @@ using DNP3.Interface;
 
 namespace TestSetControlLibrary
 {
+    public delegate void AddTcpClient(String name, String address, UInt16 port, FilterLevel level, UInt64 timeoutMs);
+    public delegate void RemovePort(String name);
+
     public partial class StackBrowser : UserControl
     {
         public event AddTcpClient OnTcpClientAdded;
-        private TreeNode root = new TreeNode("root");
+        public event RemovePort OnRemovePort;
+        private TreeNode root = new TreeNode("root");        
 
         public StackBrowser()
         {
@@ -35,11 +39,21 @@ namespace TestSetControlLibrary
             this.OnTcpClientAdded(name, address, port, level, timeout);                   
         }
 
+        private void removeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TreeNode selected = this.treeView.SelectedNode;
+            this.OnRemovePort(selected.Text);
+        }
+
         public void AddRecordTcpClient(string name)
         {
-            TreeNode comms = new TreeNode(name);
-            comms.ContextMenuStrip = this.contextMenuStripAddStack;
-            this.root.Nodes.Add(comms);
+            TreeNode comms = this.root.Nodes.Add(name, name);
+            comms.ContextMenuStrip = this.contextMenuStripAddStack;            
+        }
+
+        public void RemoveRecordPort(string name)
+        {
+            this.root.Nodes.RemoveByKey(name);
         }
 
       

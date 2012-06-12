@@ -30,8 +30,12 @@ namespace DNPDotNet {
 			IDataObserver^	 AddSlave(	System::String^ portName,
 										System::String^ stackName,
 										FilterLevel level,
-										ICommandAcceptor^ cmdAcceptor );
-										//const SlaveStackConfig& arCfg);
+										ICommandAcceptor^ cmdAcceptor, 
+										DNP3::Interface::SlaveStackConfig^ config);
+
+			void RemovePort(System::String^ portName);
+
+			void RemoveStack(System::String^ stackName);
 
 			void AddLogHandler(ILogHandler^ logHandler);
 

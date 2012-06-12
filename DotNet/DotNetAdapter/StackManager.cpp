@@ -69,19 +69,34 @@ namespace DNPDotNet {
 	IDataObserver^	StackManager::AddSlave(	System::String^ portName,
 									System::String^ stackName,
 									FilterLevel level,
-									ICommandAcceptor^ cmdAcceptor )
+									ICommandAcceptor^ cmdAcceptor,
+									DNP3::Interface::SlaveStackConfig^ config)
 	{
 		std::string stdPortName = Conversions::convertString(portName);
 		std::string stdStackName = Conversions::convertString(stackName);
 		apl::FilterLevel stdLevel = Conversions::convertFilterLevel(level);
 
-		SlaveCommandAcceptorAdapterWrapper^ wrapper = gcnew SlaveCommandAcceptorAdapterWrapper(cmdAcceptor);
+		SlaveCommandAcceptorAdapterWrapper^ wrapper = gcnew SlaveCommandAcceptorAdapterWrapper(cmdAcceptor);		
 
-		apl::dnp::SlaveStackConfig cfg; //TODO -- replace defaults
-		cfg.device = apl::dnp::DeviceTemplate(10,10,10,10,10,10,10);
-
-		apl::IDataObserver* pDataObs = pMgr->AddSlave(stdPortName, stdStackName, stdLevel, wrapper->GetCommandAcceptor(), cfg);
+		apl::IDataObserver* pDataObs = pMgr->AddSlave(stdPortName, stdStackName, stdLevel, wrapper->GetCommandAcceptor(), Conversions::convertConfig(config));
 		return gcnew SlaveDataObserverAdapter(pDataObs);
+	}
+
+	void StackManager::RemovePort(System::String^ portName)
+	{
+		std::string stdPortName = Conversions::convertString(portName);
+		 
+		std::vector<std::string> ports = pMgr->GetPortNames();
+		std::cout << ports.size() << std::endl;
+		for(size_t i=0; i<ports.size(); ++i) std::cout << ports[i] << std::endl;
+
+		pMgr->RemovePort(stdPortName);
+	}
+
+	void StackManager::RemoveStack(System::String^ stackName)
+	{
+		std::string stdStackName = Conversions::convertString(stackName);
+		pMgr->RemoveStack(stdStackName);
 	}
 
 	void StackManager::AddLogHandler(ILogHandler^ logHandler)

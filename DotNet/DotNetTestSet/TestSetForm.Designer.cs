@@ -80,6 +80,7 @@
             this.stackBrowser1.Size = new System.Drawing.Size(227, 386);
             this.stackBrowser1.TabIndex = 0;
             this.stackBrowser1.OnTcpClientAdded += new TestSetControlLibrary.AddTcpClient(this.stackBrowser1_OnTcpClientAdded);
+            this.stackBrowser1.OnRemovePort += new TestSetControlLibrary.RemovePort(this.stackBrowser1_OnRemovePort);
             // 
             // logControl
             // 

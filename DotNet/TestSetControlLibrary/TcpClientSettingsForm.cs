@@ -10,10 +10,7 @@ using System.Windows.Forms;
 using DNP3.Interface;
 
 namespace TestSetControlLibrary
-{
-    public delegate void AddTcpClient(String name, String address, UInt16 port, FilterLevel level, UInt64 timeoutMs);
-
-
+{    
     public partial class TcpClientSettingsForm : Form
     {
         public TcpClientSettingsForm()

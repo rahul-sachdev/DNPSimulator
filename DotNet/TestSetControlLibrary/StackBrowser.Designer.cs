@@ -37,6 +37,8 @@
             this.treeView = new System.Windows.Forms.TreeView();
             this.contextMenuStripAddStack = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripAddComms.SuspendLayout();
             this.contextMenuStripAddStack.SuspendLayout();
             this.SuspendLayout();
@@ -88,15 +90,29 @@
             // contextMenuStripAddStack
             // 
             this.contextMenuStripAddStack.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addToolStripMenuItem});
+            this.addToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.removeToolStripMenuItem});
             this.contextMenuStripAddStack.Name = "contextMenuStripAddStack";
-            this.contextMenuStripAddStack.Size = new System.Drawing.Size(141, 26);
+            this.contextMenuStripAddStack.Size = new System.Drawing.Size(153, 76);
             // 
             // addToolStripMenuItem
             // 
             this.addToolStripMenuItem.Name = "addToolStripMenuItem";
             this.addToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.addToolStripMenuItem.Text = "Add Master";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            // 
+            // removeToolStripMenuItem
+            // 
+            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.removeToolStripMenuItem.Text = "Remove";
+            this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
             // StackBrowser
             // 
@@ -121,5 +137,7 @@
         private System.Windows.Forms.ToolStripMenuItem clientToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem serverToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem serialToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
     }
 }

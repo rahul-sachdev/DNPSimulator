@@ -37,8 +37,21 @@ namespace DotNetTestSet
             }
             catch(Exception ex)
             {
-                this.logControl.AddLogEntry(new LogEntry(FilterLevel.LEV_ERROR, "testset", "", "A port already exists named: " + name, DateTime.Now, -1));
+                MessageBox.Show(ex.ToString());
             }            
+        }
+
+        private void stackBrowser1_OnRemovePort(string name)
+        {
+            try
+            {
+                sm.RemovePort(name);
+                this.stackBrowser1.RemoveRecordPort(name);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
     }
 
