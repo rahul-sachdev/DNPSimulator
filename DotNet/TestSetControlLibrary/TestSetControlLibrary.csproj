@@ -47,11 +47,26 @@
     <Compile Include="FilterLevelComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="FlickerFreeListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LinkLayerSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LinkLayerSettingsControl.Designer.cs">
+      <DependentUpon>LinkLayerSettingsControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="LogControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="LogControl.Designer.cs">
       <DependentUpon>LogControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MasterDataDisplay.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MasterDataDisplay.Designer.cs">
+      <DependentUpon>MasterDataDisplay.cs</DependentUpon>
     </Compile>
     <Compile Include="MasterSettingsForm.cs">
       <SubType>Form</SubType>
@@ -75,8 +90,14 @@
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="LinkLayerSettingsControl.resx">
+      <DependentUpon>LinkLayerSettingsControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LogControl.resx">
       <DependentUpon>LogControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MasterDataDisplay.resx">
+      <DependentUpon>MasterDataDisplay.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MasterSettingsForm.resx">
       <DependentUpon>MasterSettingsForm.cs</DependentUpon>

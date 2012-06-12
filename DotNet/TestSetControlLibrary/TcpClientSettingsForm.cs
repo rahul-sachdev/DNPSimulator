@@ -24,10 +24,11 @@ namespace TestSetControlLibrary
             if(DialogResult == DialogResult.OK && OnTcpClientAdded != null) 
             {
                 String name = this.textBoxName.Text;
+                String address = this.textBoxAddress.Text;
                 UInt16 port = Decimal.ToUInt16(this.numericUpDownPort.Value);
                 FilterLevel level = this.filterLevelComboBox1.SelectedLevel;
                 UInt64 timeout = Decimal.ToUInt64(this.numericUpDownTimeout.Value);
-                OnTcpClientAdded(name, name, port, level, timeout);            
+                OnTcpClientAdded(name, address, port, level, timeout);            
             }
         }
 

@@ -32,12 +32,14 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.stackBrowser1 = new TestSetControlLibrary.StackBrowser();
             this.logControl = new DotNetTestSet.LogControl();
+            this.tabControlDisplay = new System.Windows.Forms.TabControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,6 +70,10 @@
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this.stackBrowser1);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.tabControlDisplay);
             this.splitContainer2.Size = new System.Drawing.Size(1052, 386);
             this.splitContainer2.SplitterDistance = 227;
             this.splitContainer2.TabIndex = 0;
@@ -81,6 +87,7 @@
             this.stackBrowser1.TabIndex = 0;
             this.stackBrowser1.OnTcpClientAdded += new TestSetControlLibrary.AddTcpClient(this.stackBrowser1_OnTcpClientAdded);
             this.stackBrowser1.OnRemovePort += new TestSetControlLibrary.RemovePort(this.stackBrowser1_OnRemovePort);
+            this.stackBrowser1.OnAddMaster += new TestSetControlLibrary.StackBrowser.AddMaster(this.stackBrowser1_OnAddMaster);
             // 
             // logControl
             // 
@@ -90,6 +97,15 @@
             this.logControl.Padding = new System.Windows.Forms.Padding(3);
             this.logControl.Size = new System.Drawing.Size(1052, 156);
             this.logControl.TabIndex = 0;
+            // 
+            // tabControlDisplay
+            // 
+            this.tabControlDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlDisplay.Location = new System.Drawing.Point(0, 0);
+            this.tabControlDisplay.Name = "tabControlDisplay";
+            this.tabControlDisplay.SelectedIndex = 0;
+            this.tabControlDisplay.Size = new System.Drawing.Size(821, 386);
+            this.tabControlDisplay.TabIndex = 0;
             // 
             // TestSetForm
             // 
@@ -104,6 +120,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -116,6 +133,7 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private LogControl logControl;
         private TestSetControlLibrary.StackBrowser stackBrowser1;
+        private System.Windows.Forms.TabControl tabControlDisplay;
     }
 }
 

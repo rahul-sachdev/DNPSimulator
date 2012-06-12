@@ -432,9 +432,9 @@ namespace DNP3.Interface
             this.app = new AppConfig();
 		}
 
-        public readonly MasterConfig master;
-        public readonly AppConfig app;
-        public readonly LinkConfig link;
+        public MasterConfig master;
+        public AppConfig app;
+        public LinkConfig link;
 	}
 
     public class SlaveStackConfig

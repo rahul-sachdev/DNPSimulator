@@ -31,10 +31,10 @@
             this.tabControlLog = new System.Windows.Forms.TabControl();
             this.tabPageView = new System.Windows.Forms.TabPage();
             this.tabPageOptions = new System.Windows.Forms.TabPage();
-            this.listViewMessages = new System.Windows.Forms.ListView();
-            this.columnHeaderSeverity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderMessage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.flickerFreeListView1 = new TestSetControlLibrary.FlickerFreeListView();
+            this.columnHeaderLevel = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderMessage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabControlLog.SuspendLayout();
             this.tabPageView.SuspendLayout();
             this.SuspendLayout();
@@ -52,7 +52,7 @@
             // 
             // tabPageView
             // 
-            this.tabPageView.Controls.Add(this.listViewMessages);
+            this.tabPageView.Controls.Add(this.flickerFreeListView1);
             this.tabPageView.Location = new System.Drawing.Point(4, 22);
             this.tabPageView.Name = "tabPageView";
             this.tabPageView.Padding = new System.Windows.Forms.Padding(3);
@@ -71,34 +71,32 @@
             this.tabPageOptions.Text = "Options";
             this.tabPageOptions.UseVisualStyleBackColor = true;
             // 
-            // listViewMessages
+            // flickerFreeListView1
             // 
-            this.listViewMessages.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderSeverity,
+            this.flickerFreeListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderLevel,
             this.columnHeaderTime,
             this.columnHeaderMessage});
-            this.listViewMessages.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewMessages.Location = new System.Drawing.Point(3, 3);
-            this.listViewMessages.Name = "listViewMessages";
-            this.listViewMessages.Size = new System.Drawing.Size(761, 214);
-            this.listViewMessages.TabIndex = 0;
-            this.listViewMessages.UseCompatibleStateImageBehavior = false;
-            this.listViewMessages.View = System.Windows.Forms.View.Details;
+            this.flickerFreeListView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flickerFreeListView1.Location = new System.Drawing.Point(3, 3);
+            this.flickerFreeListView1.Name = "flickerFreeListView1";
+            this.flickerFreeListView1.Size = new System.Drawing.Size(761, 214);
+            this.flickerFreeListView1.TabIndex = 0;
+            this.flickerFreeListView1.UseCompatibleStateImageBehavior = false;
+            this.flickerFreeListView1.View = System.Windows.Forms.View.Details;
             // 
-            // columnHeaderSeverity
+            // columnHeaderLevel
             // 
-            this.columnHeaderSeverity.Text = "Severity";
-            this.columnHeaderSeverity.Width = 81;
-            // 
-            // columnHeaderMessage
-            // 
-            this.columnHeaderMessage.Text = "Message";
-            this.columnHeaderMessage.Width = 601;
+            this.columnHeaderLevel.Text = "Level";
             // 
             // columnHeaderTime
             // 
             this.columnHeaderTime.Text = "Time";
-            this.columnHeaderTime.Width = 92;
+            // 
+            // columnHeaderMessage
+            // 
+            this.columnHeaderMessage.Text = "Message";
+            this.columnHeaderMessage.Width = 644;
             // 
             // LogControl
             // 
@@ -118,8 +116,8 @@
         private System.Windows.Forms.TabControl tabControlLog;
         private System.Windows.Forms.TabPage tabPageView;
         private System.Windows.Forms.TabPage tabPageOptions;
-        private System.Windows.Forms.ListView listViewMessages;
-        private System.Windows.Forms.ColumnHeader columnHeaderSeverity;
+        private TestSetControlLibrary.FlickerFreeListView flickerFreeListView1;
+        private System.Windows.Forms.ColumnHeader columnHeaderLevel;
         private System.Windows.Forms.ColumnHeader columnHeaderTime;
         private System.Windows.Forms.ColumnHeader columnHeaderMessage;
     }

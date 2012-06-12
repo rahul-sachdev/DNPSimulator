@@ -20,7 +20,8 @@ namespace DotNetTestSet
 
         public void AddLogEntry(LogEntry le)
         {
-            this.listViewMessages.Items.Add(new ListViewItem(new String[] { le.filterLevel.ToString(), le.time.ToShortTimeString(), le.message }));            
+            var items = new String[] { le.filterLevel.ToString(), le.time.ToLongTimeString(), le.message };
+            this.flickerFreeListView1.Items.Insert(0, new ListViewItem(items));            
         }
     }
 }
