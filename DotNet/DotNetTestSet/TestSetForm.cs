@@ -27,49 +27,31 @@ namespace DotNetTestSet
             sm.AddLogHandler(lca);            
         }        
 
-        private void stackBrowser1_OnTcpClientAdded(string name, string address, ushort port, FilterLevel level, UInt64 timeout)
+        private void stackBrowser1_OnTcpClientAdded(TcpClientSettings s)
         {
-            try
-            {
-                sm.AddTCPClient(name, level, timeout, address, port);
-                this.stackBrowser1.AddRecordTcpClient(name);
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }            
+            sm.AddTCPClient(s.name, s.level, s.timeout, s.address, s.port);                            
+        }      
+
+        private void stackBrowser1_OnAddMaster(string name, string port, FilterLevel level, MasterStackConfig config)
+        {
+            //create the new form
+            var display = new MasterDataDisplay();
+            var adapter = new DisplayAdapterDataObserver(display);
+            display.Dock = DockStyle.Fill;
+            TabPage page = new TabPage(name);
+            this.tabControlDisplay.TabPages.Add(page);
+            page.Controls.Add(display);            
+            display.CommandAcceptor = sm.AddMaster(port, name, level, adapter, config);                            
         }
 
         private void stackBrowser1_OnRemovePort(string name)
         {
-            try
-            {
-                sm.RemovePort(name);
-                this.stackBrowser1.RemoveRecordPort(name);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
+            sm.RemovePort(name);
         }
 
-        private void stackBrowser1_OnAddMaster(string name, string port, FilterLevel level, MasterStackConfig config)
+        private void stackBrowser1_OnRemoveStack(string name)
         {
-            try
-            {
-                //create the new form
-                var display = new MasterDataDisplay();
-                var adapter = new DisplayAdapterDataObserver(display);
-                display.Dock = DockStyle.Fill;
-                TabPage page = new TabPage(name);                
-                this.tabControlDisplay.TabPages.Add(page);                
-                page.Controls.Add(display);
-                sm.AddMaster(port, name, level, adapter, config);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
+            sm.RemoveStack(name);
         }
     }
 

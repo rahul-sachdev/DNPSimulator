@@ -30,9 +30,9 @@
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.tabControlDisplay = new System.Windows.Forms.TabControl();
             this.stackBrowser1 = new TestSetControlLibrary.StackBrowser();
             this.logControl = new DotNetTestSet.LogControl();
-            this.tabControlDisplay = new System.Windows.Forms.TabControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -78,6 +78,15 @@
             this.splitContainer2.SplitterDistance = 227;
             this.splitContainer2.TabIndex = 0;
             // 
+            // tabControlDisplay
+            // 
+            this.tabControlDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlDisplay.Location = new System.Drawing.Point(0, 0);
+            this.tabControlDisplay.Name = "tabControlDisplay";
+            this.tabControlDisplay.SelectedIndex = 0;
+            this.tabControlDisplay.Size = new System.Drawing.Size(821, 386);
+            this.tabControlDisplay.TabIndex = 0;
+            // 
             // stackBrowser1
             // 
             this.stackBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -85,9 +94,10 @@
             this.stackBrowser1.Name = "stackBrowser1";
             this.stackBrowser1.Size = new System.Drawing.Size(227, 386);
             this.stackBrowser1.TabIndex = 0;
-            this.stackBrowser1.OnTcpClientAdded += new TestSetControlLibrary.AddTcpClient(this.stackBrowser1_OnTcpClientAdded);
-            this.stackBrowser1.OnRemovePort += new TestSetControlLibrary.RemovePort(this.stackBrowser1_OnRemovePort);
+            this.stackBrowser1.OnTcpClientAdded += new TestSetControlLibrary.StackBrowser.AddTcpClient(this.stackBrowser1_OnTcpClientAdded);
+            this.stackBrowser1.OnRemovePort += new TestSetControlLibrary.StackBrowser.RemovePort(this.stackBrowser1_OnRemovePort);
             this.stackBrowser1.OnAddMaster += new TestSetControlLibrary.StackBrowser.AddMaster(this.stackBrowser1_OnAddMaster);
+            this.stackBrowser1.OnRemoveStack += new TestSetControlLibrary.StackBrowser.RemoveStack(this.stackBrowser1_OnRemoveStack);
             // 
             // logControl
             // 
@@ -97,15 +107,6 @@
             this.logControl.Padding = new System.Windows.Forms.Padding(3);
             this.logControl.Size = new System.Drawing.Size(1052, 156);
             this.logControl.TabIndex = 0;
-            // 
-            // tabControlDisplay
-            // 
-            this.tabControlDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlDisplay.Location = new System.Drawing.Point(0, 0);
-            this.tabControlDisplay.Name = "tabControlDisplay";
-            this.tabControlDisplay.SelectedIndex = 0;
-            this.tabControlDisplay.Size = new System.Drawing.Size(821, 386);
-            this.tabControlDisplay.TabIndex = 0;
             // 
             // TestSetForm
             // 

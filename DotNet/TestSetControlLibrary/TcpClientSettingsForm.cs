@@ -12,10 +12,13 @@ using DNP3.Interface;
 namespace TestSetControlLibrary
 {    
     public partial class TcpClientSettingsForm : Form
-    {
+    {       
+        public delegate void AddTcpClient(TcpClientSettings settings);
+        public event AddTcpClient OnTcpClientAdded;               
+
         public TcpClientSettingsForm()
         {
-            InitializeComponent();
+            InitializeComponent();            
             this.FormClosed += new FormClosedEventHandler(TcpClientSettingsForm_FormClosed);
         }
 
@@ -28,7 +31,7 @@ namespace TestSetControlLibrary
                 UInt16 port = Decimal.ToUInt16(this.numericUpDownPort.Value);
                 FilterLevel level = this.filterLevelComboBox1.SelectedLevel;
                 UInt64 timeout = Decimal.ToUInt64(this.numericUpDownTimeout.Value);
-                OnTcpClientAdded(name, address, port, level, timeout);            
+                OnTcpClientAdded(new TcpClientSettings(name, address, port, level, timeout));            
             }
         }
 
@@ -38,6 +41,6 @@ namespace TestSetControlLibrary
             this.Close();
         }
 
-        public event AddTcpClient OnTcpClientAdded;
+        
     }
 }
