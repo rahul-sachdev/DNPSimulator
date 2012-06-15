@@ -46,6 +46,15 @@ namespace DNPDotNet {
 
 		pMgr->AddTCPServer(stdName, pls, stdEndpoint, stdPort);
 	}
+
+	void StackManager::AddSerial(System::String^ name, FilterLevel level, System::UInt64 retryMs, SerialSettings^ settings)
+	{
+		std::string stdName = Conversions::convertString(name);
+		apl::PhysLayerSettings pls(Conversions::convertFilterLevel(level), retryMs);
+		apl::SerialSettings s = Conversions::convertSerialSettings(settings);
+
+		pMgr->AddSerial(stdName, pls, s);
+	}
 		
 	ICommandAcceptor^ StackManager::AddMaster(	System::String^ portName,
 												System::String^ stackName,	                            

@@ -299,6 +299,18 @@ namespace DNPDotNet {
 		return m;
 	}
 
+	apl::SerialSettings Conversions::convertSerialSettings(SerialSettings^ settings)
+	{
+		apl::SerialSettings s;
+		s.mDevice = convertString(settings->port);
+		s.mBaud = settings->baud;
+		s.mDataBits = settings->dataBits;
+		s.mStopBits = settings->stopBits;
+		s.mParity = (apl::ParityType) settings->parity;
+		s.mFlowType = (apl::FlowType) settings->flowControl;
+		return s;
+	}
+
 	apl::dnp::LinkConfig Conversions::convertConfig(LinkConfig^ config)
 	{
 		return apl::dnp::LinkConfig(config->isMaster, config->useConfirms, config->numRetry, config->localAddr, config->remoteAddr, config->timeout);
