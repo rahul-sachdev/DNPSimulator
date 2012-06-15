@@ -16,7 +16,7 @@ namespace TestSetControlLibrary
 
     public partial class StackBrowser : UserControl
     {
-        public delegate void AddTcpClient(TcpClientSettings settings);
+        public delegate void AddTcpClient(TcpSettings settings);
         public delegate void RemovePort(String name);
         public delegate void AddMaster(String name, String port, FilterLevel level, MasterStackConfig config);
         public delegate void RemoveStack(String name);
@@ -98,12 +98,12 @@ namespace TestSetControlLibrary
         // The 
         private void clientToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            TcpClientSettingsForm form = new TcpClientSettingsForm();            
-            form.OnTcpClientAdded += new TcpClientSettingsForm.AddTcpClient(form_OnTcpClientAdded);
+            TcpSettingsForm form = new TcpSettingsForm("Add TCP Client");            
+            form.OnTcpAdded += new TcpSettingsForm.AddTcp(form_OnTcpClientAdded);
             form.Show();
         }
 
-        void form_OnTcpClientAdded(TcpClientSettings settings)
+        void form_OnTcpClientAdded(TcpSettings settings)
         {
             if (this.OnTcpClientAdded != null)
             {

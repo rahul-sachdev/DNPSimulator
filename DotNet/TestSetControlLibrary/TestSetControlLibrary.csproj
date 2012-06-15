@@ -88,11 +88,11 @@
       <DependentUpon>StackBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="TcpClientSettings.cs" />
-    <Compile Include="TcpClientSettingsForm.cs">
+    <Compile Include="TcpSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TcpClientSettingsForm.Designer.cs">
-      <DependentUpon>TcpClientSettingsForm.cs</DependentUpon>
+    <Compile Include="TcpSettingsForm.Designer.cs">
+      <DependentUpon>TcpSettingsForm.cs</DependentUpon>
     </Compile>
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
@@ -115,8 +115,8 @@
     <EmbeddedResource Include="StackBrowser.resx">
       <DependentUpon>StackBrowser.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TcpClientSettingsForm.resx">
-      <DependentUpon>TcpClientSettingsForm.cs</DependentUpon>
+    <EmbeddedResource Include="TcpSettingsForm.resx">
+      <DependentUpon>TcpSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

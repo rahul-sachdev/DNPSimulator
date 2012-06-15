@@ -27,7 +27,7 @@ namespace DotNetTestSet
             sm.AddLogHandler(lca);            
         }        
 
-        private void stackBrowser1_OnTcpClientAdded(TcpClientSettings s)
+        private void stackBrowser1_OnTcpClientAdded(TcpSettings s)
         {
             sm.AddTCPClient(s.name, s.level, s.timeout, s.address, s.port);                            
         }      
