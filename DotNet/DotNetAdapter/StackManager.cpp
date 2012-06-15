@@ -69,7 +69,8 @@ namespace DNPDotNet {
 	IDataObserver^	StackManager::AddSlave(	System::String^ portName,
 									System::String^ stackName,
 									FilterLevel level,
-									ICommandAcceptor^ cmdAcceptor )
+									ICommandAcceptor^ cmdAcceptor,
+									SlaveStackConfig^ config)
 	{
 		std::string stdPortName = Conversions::convertString(portName);
 		std::string stdStackName = Conversions::convertString(stackName);
@@ -77,8 +78,7 @@ namespace DNPDotNet {
 
 		SlaveCommandAcceptorAdapterWrapper^ wrapper = gcnew SlaveCommandAcceptorAdapterWrapper(cmdAcceptor);
 
-		apl::dnp::SlaveStackConfig cfg; //TODO -- replace defaults
-		cfg.device = apl::dnp::DeviceTemplate(10,10,10,10,10,10,10);
+		apl::dnp::SlaveStackConfig cfg = Conversions::convertConfig(config);
 
 		apl::IDataObserver* pDataObs = pMgr->AddSlave(stdPortName, stdStackName, stdLevel, wrapper->GetCommandAcceptor(), cfg);
 		return gcnew SlaveDataObserverAdapter(pDataObs);

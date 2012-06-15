@@ -202,22 +202,25 @@ IVtoWriter* AsyncStackManager::GetVtoWriter(const std::string& arStackName)
 void AsyncStackManager::RemovePort(const std::string& arPortName)
 {
 	this->ThrowIfAlreadyShutdown();
-	std::auto_ptr<LinkChannel> pChannel(this->GetChannelOrExcept(arPortName)); //will delete at end of function
-	mChannelNameToChannel.erase(arPortName);
+	LinkChannel* pChannel = this->GetChannelMaybeNull(arPortName);
+	if(pChannel != NULL) { // the channel is in use
+		std::auto_ptr<LinkChannel> autoDeleteChannel(pChannel); //will delete at end of function
+		mChannelNameToChannel.erase(arPortName);
 
-	{
-		// Tell the channel to shut down permanently
-		Transaction tr(&mSuspendTimerSource);
-		pChannel->GetGroup()->Shutdown(); // no more task callbacks
-		pChannel->BeginShutdown();
-	}
-	pChannel->WaitUntilShutdown();
+		{
+			// Tell the channel to shut down permanently
+			Transaction tr(&mSuspendTimerSource);
+			pChannel->GetGroup()->Shutdown(); // no more task callbacks
+			pChannel->BeginShutdown();
+		}
+		pChannel->WaitUntilShutdown();
 
-	vector<string> stacks = pChannel->StacksOnChannel();
-	BOOST_FOREACH(string s, stacks) {
-		this->RemoveStack(s);
+		vector<string> stacks = pChannel->StacksOnChannel();
+		BOOST_FOREACH(string s, stacks) {
+			this->RemoveStack(s);
+		}
+		this->mScheduler.ReleaseGroup(pChannel->GetGroup());
 	}
-	this->mScheduler.ReleaseGroup(pChannel->GetGroup());
 
 	// remove the physical layer from the list
 	mMgr.Remove(arPortName);

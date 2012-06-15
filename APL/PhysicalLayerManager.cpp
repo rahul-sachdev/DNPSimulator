@@ -45,12 +45,13 @@ PhysicalLayerManager :: ~PhysicalLayerManager()
 }
 
 void PhysicalLayerManager::Remove(const std::string& arName)
-{
+{	
 	NameToInstanceMap::iterator i = mNameToInstanceMap.find(arName);
 	if(i == mNameToInstanceMap.end()) throw ArgumentException(LOCATION, "Unknown layer");
 	i->second.Release();
+	this->ReleaseLayer(arName);
 	mNameToInstanceMap.erase(i);
-	mNameToSettingsMap.erase(arName);
+	mNameToSettingsMap.erase(arName);	
 }
 
 void PhysicalLayerManager ::AddPhysicalLayer(const std::string& arName, PhysLayerSettings s, IPhysicalLayerAsync* apPhys)

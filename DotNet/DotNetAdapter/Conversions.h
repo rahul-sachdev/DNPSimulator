@@ -66,10 +66,16 @@ namespace DNPDotNet {
 		static apl::dnp::EventMaxConfig convertEventMaxConfig(EventMaxConfig^ cm);
 		static apl::dnp::GrpVar convertGrpVar(GrpVar^ gv);
 
+		static apl::dnp::PointRecord convertRecord(PointRecord^ epr);
+		static apl::dnp::ControlRecord convertRecord(ControlRecord^ epr);
+		static apl::dnp::EventPointRecord convertRecord(EventPointRecord^ epr);
+		static apl::dnp::DeadbandPointRecord convertRecord(DeadbandEventPointRecord^ epr);
+
 		static apl::dnp::LinkConfig convertConfig(LinkConfig^ config);
 		static apl::dnp::AppConfig convertConfig(AppConfig^ config);
 		static apl::dnp::MasterConfig convertConfig(MasterConfig^ config);
 		static apl::dnp::SlaveConfig convertConfig(SlaveConfig^ config);
+		static apl::dnp::DeviceTemplate convertConfig(DeviceTemplate^ config);
 		static apl::dnp::MasterStackConfig convertConfig(MasterStackConfig^ config);
 		static apl::dnp::SlaveStackConfig convertConfig(SlaveStackConfig^ config);
 	};
