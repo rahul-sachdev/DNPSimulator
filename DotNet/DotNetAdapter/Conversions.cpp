@@ -5,6 +5,11 @@
 
 namespace DNPDotNet {
 
+	System::Exception^ Conversions::convertException(const apl::Exception& ex)
+	{		
+		return gcnew System::Exception(convertString(ex.GetErrorString()));
+	}
+
 	System::DateTime Conversions::convertTime(apl::millis_t time)
 	{
 		// each 'tick' represents 100 nanoseconds

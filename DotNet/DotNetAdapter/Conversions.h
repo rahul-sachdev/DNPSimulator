@@ -19,6 +19,8 @@ namespace DNPDotNet {
 	{
 		public:
 
+		static System::Exception^ convertException(const apl::Exception& ex);
+
 		// Convert timestamps
 		static System::DateTime convertTime(apl::millis_t time);
 		static apl::millis_t convertTime(System::DateTime time);
