@@ -50,6 +50,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetTestSet", "DotNet\Dot
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSetControlLibrary", "DotNet\TestSetControlLibrary\TestSetControlLibrary.csproj", "{A37903BE-7E9B-4442-8D9A-1C33F58F661F}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "DotNetTestSetInstaller", "DotNet\DotNetTestSetInstaller\DotNetTestSetInstaller.vdproj", "{1CC669D2-F7BC-4A6B-A516-89E108E36BA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -352,6 +354,14 @@ Global
 		{A37903BE-7E9B-4442-8D9A-1C33F58F661F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A37903BE-7E9B-4442-8D9A-1C33F58F661F}.Release|Win32.ActiveCfg = Release|Any CPU
 		{A37903BE-7E9B-4442-8D9A-1C33F58F661F}.Release|x86.ActiveCfg = Release|Any CPU
+		{1CC669D2-F7BC-4A6B-A516-89E108E36BA8}.Debug|Any CPU.ActiveCfg = Debug
+		{1CC669D2-F7BC-4A6B-A516-89E108E36BA8}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{1CC669D2-F7BC-4A6B-A516-89E108E36BA8}.Debug|Win32.ActiveCfg = Debug
+		{1CC669D2-F7BC-4A6B-A516-89E108E36BA8}.Debug|x86.ActiveCfg = Debug
+		{1CC669D2-F7BC-4A6B-A516-89E108E36BA8}.Release|Any CPU.ActiveCfg = Release
+		{1CC669D2-F7BC-4A6B-A516-89E108E36BA8}.Release|Mixed Platforms.ActiveCfg = Release
+		{1CC669D2-F7BC-4A6B-A516-89E108E36BA8}.Release|Win32.ActiveCfg = Release
+		{1CC669D2-F7BC-4A6B-A516-89E108E36BA8}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -365,5 +375,6 @@ Global
 		{96F33EA8-6CE5-4D70-82AD-9C9DA664A688} = {9A7489FE-BBB2-41B1-A4F8-BCC01DE1C89B}
 		{F1EBF237-ADE1-478F-B9A0-34B6B2996C94} = {9A7489FE-BBB2-41B1-A4F8-BCC01DE1C89B}
 		{A37903BE-7E9B-4442-8D9A-1C33F58F661F} = {9A7489FE-BBB2-41B1-A4F8-BCC01DE1C89B}
+		{1CC669D2-F7BC-4A6B-A516-89E108E36BA8} = {9A7489FE-BBB2-41B1-A4F8-BCC01DE1C89B}
 	EndGlobalSection
 EndGlobal
