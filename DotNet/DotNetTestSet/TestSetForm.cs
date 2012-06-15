@@ -35,13 +35,15 @@ namespace DotNetTestSet
         private void stackBrowser1_OnAddMaster(string name, string port, FilterLevel level, MasterStackConfig config)
         {
             //create the new form
-            var display = new MasterDataDisplay();
-            var adapter = new DisplayAdapterDataObserver(display);
+            var observer = new EventedDataObserver(this);
+            var display = new MasterDataDisplay(observer.MeasurementSource); //synchronize all updates on this form
+
+
             display.Dock = DockStyle.Fill;
             TabPage page = new TabPage(name);
             this.tabControlDisplay.TabPages.Add(page);
             page.Controls.Add(display);            
-            display.CommandAcceptor = sm.AddMaster(port, name, level, adapter, config);                            
+            display.CommandAcceptor = sm.AddMaster(port, name, level, observer, config);                            
         }
 
         private void stackBrowser1_OnRemovePort(string name)
@@ -52,6 +54,12 @@ namespace DotNetTestSet
         private void stackBrowser1_OnRemoveStack(string name)
         {
             sm.RemoveStack(name);
+        }
+
+        private void addNewChartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var chart = new TimeSeriesChartForm();
+            chart.Show();
         }
     }
 

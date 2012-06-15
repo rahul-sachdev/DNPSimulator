@@ -30,9 +30,12 @@
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.tabControlDisplay = new System.Windows.Forms.TabControl();
             this.stackBrowser1 = new TestSetControlLibrary.StackBrowser();
+            this.tabControlDisplay = new System.Windows.Forms.TabControl();
             this.logControl = new DotNetTestSet.LogControl();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.chartsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addNewChartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -41,12 +44,13 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 24);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -57,8 +61,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.logControl);
-            this.splitContainer1.Size = new System.Drawing.Size(1052, 546);
-            this.splitContainer1.SplitterDistance = 386;
+            this.splitContainer1.Size = new System.Drawing.Size(1052, 522);
+            this.splitContainer1.SplitterDistance = 369;
             this.splitContainer1.TabIndex = 0;
             // 
             // splitContainer2
@@ -74,9 +78,21 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.tabControlDisplay);
-            this.splitContainer2.Size = new System.Drawing.Size(1052, 386);
+            this.splitContainer2.Size = new System.Drawing.Size(1052, 369);
             this.splitContainer2.SplitterDistance = 227;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // stackBrowser1
+            // 
+            this.stackBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stackBrowser1.Location = new System.Drawing.Point(0, 0);
+            this.stackBrowser1.Name = "stackBrowser1";
+            this.stackBrowser1.Size = new System.Drawing.Size(227, 369);
+            this.stackBrowser1.TabIndex = 0;
+            this.stackBrowser1.OnTcpClientAdded += new TestSetControlLibrary.StackBrowser.AddTcpClient(this.stackBrowser1_OnTcpClientAdded);
+            this.stackBrowser1.OnRemovePort += new TestSetControlLibrary.StackBrowser.RemovePort(this.stackBrowser1_OnRemovePort);
+            this.stackBrowser1.OnAddMaster += new TestSetControlLibrary.StackBrowser.AddMaster(this.stackBrowser1_OnAddMaster);
+            this.stackBrowser1.OnRemoveStack += new TestSetControlLibrary.StackBrowser.RemoveStack(this.stackBrowser1_OnRemoveStack);
             // 
             // tabControlDisplay
             // 
@@ -84,20 +100,8 @@
             this.tabControlDisplay.Location = new System.Drawing.Point(0, 0);
             this.tabControlDisplay.Name = "tabControlDisplay";
             this.tabControlDisplay.SelectedIndex = 0;
-            this.tabControlDisplay.Size = new System.Drawing.Size(821, 386);
+            this.tabControlDisplay.Size = new System.Drawing.Size(821, 369);
             this.tabControlDisplay.TabIndex = 0;
-            // 
-            // stackBrowser1
-            // 
-            this.stackBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stackBrowser1.Location = new System.Drawing.Point(0, 0);
-            this.stackBrowser1.Name = "stackBrowser1";
-            this.stackBrowser1.Size = new System.Drawing.Size(227, 386);
-            this.stackBrowser1.TabIndex = 0;
-            this.stackBrowser1.OnTcpClientAdded += new TestSetControlLibrary.StackBrowser.AddTcpClient(this.stackBrowser1_OnTcpClientAdded);
-            this.stackBrowser1.OnRemovePort += new TestSetControlLibrary.StackBrowser.RemovePort(this.stackBrowser1_OnRemovePort);
-            this.stackBrowser1.OnAddMaster += new TestSetControlLibrary.StackBrowser.AddMaster(this.stackBrowser1_OnAddMaster);
-            this.stackBrowser1.OnRemoveStack += new TestSetControlLibrary.StackBrowser.RemoveStack(this.stackBrowser1_OnRemoveStack);
             // 
             // logControl
             // 
@@ -105,8 +109,33 @@
             this.logControl.Location = new System.Drawing.Point(0, 0);
             this.logControl.Name = "logControl";
             this.logControl.Padding = new System.Windows.Forms.Padding(3);
-            this.logControl.Size = new System.Drawing.Size(1052, 156);
+            this.logControl.Size = new System.Drawing.Size(1052, 149);
             this.logControl.TabIndex = 0;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.chartsToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1052, 24);
+            this.menuStrip1.TabIndex = 1;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // chartsToolStripMenuItem
+            // 
+            this.chartsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addNewChartToolStripMenuItem});
+            this.chartsToolStripMenuItem.Name = "chartsToolStripMenuItem";
+            this.chartsToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
+            this.chartsToolStripMenuItem.Text = "Charts";
+            // 
+            // addNewChartToolStripMenuItem
+            // 
+            this.addNewChartToolStripMenuItem.Name = "addNewChartToolStripMenuItem";
+            this.addNewChartToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.addNewChartToolStripMenuItem.Text = "Add New Chart";
+            this.addNewChartToolStripMenuItem.Click += new System.EventHandler(this.addNewChartToolStripMenuItem_Click);
             // 
             // TestSetForm
             // 
@@ -114,6 +143,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1052, 546);
             this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "TestSetForm";
             this.Text = "TestSet";
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -124,7 +155,10 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -135,6 +169,9 @@
         private LogControl logControl;
         private TestSetControlLibrary.StackBrowser stackBrowser1;
         private System.Windows.Forms.TabControl tabControlDisplay;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem chartsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addNewChartToolStripMenuItem;
     }
 }
 

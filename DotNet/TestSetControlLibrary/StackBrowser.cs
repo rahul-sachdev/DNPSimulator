@@ -10,10 +10,7 @@ using System.Windows.Forms;
 using DNP3.Interface;
 
 namespace TestSetControlLibrary
-{
-   
-    
-
+{       
     public partial class StackBrowser : UserControl
     {
         public delegate void AddTcpClient(TcpSettings settings);
