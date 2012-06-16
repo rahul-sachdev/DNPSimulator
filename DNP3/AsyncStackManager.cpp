@@ -200,7 +200,7 @@ IVtoWriter* AsyncStackManager::GetVtoWriter(const std::string& arStackName)
 
 // Remove a port and all associated stacks
 void AsyncStackManager::RemovePort(const std::string& arPortName)
-{
+{	
 	this->ThrowIfAlreadyShutdown();
 	LinkChannel* pChannel = this->GetChannelMaybeNull(arPortName);
 	if(pChannel != NULL) { // the channel is in use
@@ -220,7 +220,7 @@ void AsyncStackManager::RemovePort(const std::string& arPortName)
 			this->RemoveStack(s);
 		}
 		this->mScheduler.ReleaseGroup(pChannel->GetGroup());
-	}
+	}	
 
 	// remove the physical layer from the list
 	mMgr.Remove(arPortName);

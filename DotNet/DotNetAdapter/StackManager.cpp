@@ -27,13 +27,18 @@ namespace DNPDotNet {
 
 	void StackManager::AddTCPClient(System::String^ name, FilterLevel level, System::UInt64 retryMs, System::String^ address, System::UInt16 port)
 	{
+		
 		std::string stdName = Conversions::convertString(name);
 		std::string stdAddress = Conversions::convertString(address);
 		boost::uint16_t stdPort = port;
-
 		apl::PhysLayerSettings pls(Conversions::convertFilterLevel(level), retryMs);
 
-		pMgr->AddTCPClient(stdName, pls, stdAddress, stdPort);
+		try {
+			pMgr->AddTCPClient(stdName, pls, stdAddress, stdPort);
+		} 
+		catch(apl::Exception ex){
+			throw Conversions::convertException(ex);
+		}
 	}
 
 	void StackManager::AddTCPServer(System::String^ name, FilterLevel level, System::UInt64 retryMs, System::String^ endpoint, System::UInt16 port)
@@ -43,8 +48,22 @@ namespace DNPDotNet {
 		boost::uint16_t stdPort = port;
 
 		apl::PhysLayerSettings pls(Conversions::convertFilterLevel(level), retryMs);
+		
+		try {
+			pMgr->AddTCPServer(stdName, pls, stdEndpoint, stdPort);
+		} 
+		catch(apl::Exception ex){
+			throw Conversions::convertException(ex);
+		}
+	}
 
-		pMgr->AddTCPServer(stdName, pls, stdEndpoint, stdPort);
+	void StackManager::AddSerial(System::String^ name, FilterLevel level, System::UInt64 retryMs, SerialSettings^ settings)
+	{
+		std::string stdName = Conversions::convertString(name);
+		apl::PhysLayerSettings pls(Conversions::convertFilterLevel(level), retryMs);
+		apl::SerialSettings s = Conversions::convertSerialSettings(settings);
+
+		pMgr->AddSerial(stdName, pls, s);
 	}
 		
 	ICommandAcceptor^ StackManager::AddMaster(	System::String^ portName,
@@ -60,9 +79,14 @@ namespace DNPDotNet {
 		MasterDataObserverAdapterWrapper^ wrapper = gcnew MasterDataObserverAdapterWrapper(observer);		
 		apl::dnp::MasterStackConfig cfg = Conversions::convertConfig(config);
 
-		apl::ICommandAcceptor* pCmdAcceptor = pMgr->AddMaster(stdPortName, stdStackName, stdLevel, wrapper->GetDataObserver(), cfg);
-		ICommandAcceptor^ ca = gcnew CommandAcceptorAdapter(pCmdAcceptor);
-		return ca;
+		try {
+			apl::ICommandAcceptor* pCmdAcceptor = pMgr->AddMaster(stdPortName, stdStackName, stdLevel, wrapper->GetDataObserver(), cfg);
+			ICommandAcceptor^ ca = gcnew CommandAcceptorAdapter(pCmdAcceptor);
+			return ca;
+		} 
+		catch(apl::Exception ex){
+			throw Conversions::convertException(ex);
+		}
 	}
 
 	
@@ -77,16 +101,49 @@ namespace DNPDotNet {
 		apl::FilterLevel stdLevel = Conversions::convertFilterLevel(level);
 
 		SlaveCommandAcceptorAdapterWrapper^ wrapper = gcnew SlaveCommandAcceptorAdapterWrapper(cmdAcceptor);
-
 		apl::dnp::SlaveStackConfig cfg = Conversions::convertConfig(config);
 
-		apl::IDataObserver* pDataObs = pMgr->AddSlave(stdPortName, stdStackName, stdLevel, wrapper->GetCommandAcceptor(), cfg);
-		return gcnew SlaveDataObserverAdapter(pDataObs);
+		try {
+			apl::IDataObserver* pDataObs = pMgr->AddSlave(stdPortName, stdStackName, stdLevel, wrapper->GetCommandAcceptor(), Conversions::convertConfig(config));
+			return gcnew SlaveDataObserverAdapter(pDataObs);
+		} 
+		catch(apl::Exception ex){
+			throw Conversions::convertException(ex);
+		}
+	}
+
+
+
+	void StackManager::RemovePort(System::String^ portName)
+	{
+		try {
+			std::string stdPortName = Conversions::convertString(portName);		 		
+			pMgr->RemovePort(stdPortName);
+		} 
+		catch(apl::Exception ex){
+			throw Conversions::convertException(ex);
+		}
+	}
+
+	void StackManager::RemoveStack(System::String^ stackName)
+	{
+		try {
+			std::string stdStackName = Conversions::convertString(stackName);
+			pMgr->RemoveStack(stdStackName);
+		} 
+		catch(apl::Exception ex){
+			throw Conversions::convertException(ex);
+		}
 	}
 
 	void StackManager::AddLogHandler(ILogHandler^ logHandler)
 	{
-		LogAdapterWrapper^ wrapper = gcnew LogAdapterWrapper(logHandler);
-		pMgr->AddLogHook(wrapper->GetLogAdapter());
+		try {
+			LogAdapterWrapper^ wrapper = gcnew LogAdapterWrapper(logHandler);
+			pMgr->AddLogHook(wrapper->GetLogAdapter());
+		} 
+		catch(apl::Exception ex){
+			throw Conversions::convertException(ex);
+		}
 	}
 }

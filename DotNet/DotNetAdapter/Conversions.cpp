@@ -5,6 +5,11 @@
 
 namespace DNPDotNet {
 
+	System::Exception^ Conversions::convertException(const apl::Exception& ex)
+	{		
+		return gcnew System::Exception(convertString(ex.GetErrorString()));
+	}
+
 	System::DateTime Conversions::convertTime(apl::millis_t time)
 	{
 		// each 'tick' represents 100 nanoseconds
@@ -297,6 +302,18 @@ namespace DNPDotNet {
 		apl::ControlStatus m(meas->value, meas->quality);
 		m.SetTime(convertTime(meas->time));
 		return m;
+	}
+
+	apl::SerialSettings Conversions::convertSerialSettings(SerialSettings^ settings)
+	{
+		apl::SerialSettings s;
+		s.mDevice = convertString(settings->port);
+		s.mBaud = settings->baud;
+		s.mDataBits = settings->dataBits;
+		s.mStopBits = settings->stopBits;
+		s.mParity = (apl::ParityType) settings->parity;
+		s.mFlowType = (apl::FlowType) settings->flowControl;
+		return s;
 	}
 
 	apl::dnp::LinkConfig Conversions::convertConfig(LinkConfig^ config)

@@ -6,6 +6,7 @@
 #include <APL/CommandTypes.h>
 #include <APL/LogTypes.h>
 #include <APL/DataTypes.h>
+#include <APL/SerialTypes.h>
 
 #include <DNP3/SlaveStackConfig.h>
 #include <DNP3/MasterStackConfig.h>
@@ -17,6 +18,8 @@ namespace DNPDotNet {
 	class Conversions
 	{
 		public:
+
+		static System::Exception^ convertException(const apl::Exception& ex);
 
 		// Convert timestamps
 		static System::DateTime convertTime(apl::millis_t time);
@@ -62,6 +65,7 @@ namespace DNPDotNet {
 		static apl::ControlStatus convertMeas(ControlStatus^ meas);
 
 		//Convert the configuration types
+		static apl::SerialSettings convertSerialSettings(SerialSettings^ settings);
 		static apl::dnp::ClassMask convertClassMask(ClassMask^ cm);
 		static apl::dnp::EventMaxConfig convertEventMaxConfig(EventMaxConfig^ cm);
 		static apl::dnp::GrpVar convertGrpVar(GrpVar^ gv);
