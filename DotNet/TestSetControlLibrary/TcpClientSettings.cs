@@ -23,5 +23,18 @@ namespace TestSetControlLibrary
         public readonly UInt16 port;
         public readonly FilterLevel level;
         public readonly UInt64 timeout;
+
+        public override string ToString()
+        {
+            var lines = new String[] 
+                {"name: " + name, 
+                  "address: " + address, 
+                  "port: " + port, 
+                  "level: " + level, 
+                  "timeout: " + timeout
+                };
+
+            return String.Join(Environment.NewLine, lines);
+        }
     }
 }

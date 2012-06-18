@@ -89,7 +89,9 @@
             this.stackBrowser1.Name = "stackBrowser1";
             this.stackBrowser1.Size = new System.Drawing.Size(227, 369);
             this.stackBrowser1.TabIndex = 0;
-            this.stackBrowser1.OnTcpClientAdded += new TestSetControlLibrary.StackBrowser.AddTcpClient(this.stackBrowser1_OnTcpClientAdded);
+            this.stackBrowser1.OnTcpClientAdded += new TestSetControlLibrary.StackBrowser.AddTcpLayer(this.stackBrowser1_OnTcpClientAdded);
+            this.stackBrowser1.OnTcpServerAdded += new TestSetControlLibrary.StackBrowser.AddTcpLayer(this.stackBrowser1_OnTcpServerAdded);
+            this.stackBrowser1.OnSerialPortAdded += new TestSetControlLibrary.StackBrowser.AddSerialPort(this.stackBrowser1_OnSerialPortAdded);
             this.stackBrowser1.OnRemovePort += new TestSetControlLibrary.StackBrowser.RemovePort(this.stackBrowser1_OnRemovePort);
             this.stackBrowser1.OnAddMaster += new TestSetControlLibrary.StackBrowser.AddMaster(this.stackBrowser1_OnAddMaster);
             this.stackBrowser1.OnRemoveStack += new TestSetControlLibrary.StackBrowser.RemoveStack(this.stackBrowser1_OnRemoveStack);

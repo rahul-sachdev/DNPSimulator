@@ -20,11 +20,11 @@ namespace TestSetControlLibrary
         {
             InitializeComponent();        
             this.source = source;
-            source.BinaryUpdate += new OnUpdateBinary(this.UpdateBinary);
-            source.AnalogUpdate += new OnUpdateAnalog(this.UpdateAnalog);
-            source.CounterUpdate +=new OnUpdateCounter(this.UpdateCounter);
-            source.ControlStatusUpdate += new OnUpdateControlStatus(this.UpdateBOStatus);
-            source.SetpointStatusUpdate +=new OnUpdateSetpointStatus(this.UpdateAOStatus);
+            source.AllBinaryUpdate += new OnUpdateBinary(this.UpdateBinary);
+            source.AllAnalogUpdate += new OnUpdateAnalog(this.UpdateAnalog);
+            source.AllCounterUpdate += new OnUpdateCounter(this.UpdateCounter);
+            source.AllControlStatusUpdate += new OnUpdateControlStatus(this.UpdateBOStatus);
+            source.AllSetpointStatusUpdate += new OnUpdateSetpointStatus(this.UpdateAOStatus);
         }
 
         public ICommandAcceptor CommandAcceptor

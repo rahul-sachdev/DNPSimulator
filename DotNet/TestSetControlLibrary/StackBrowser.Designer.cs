@@ -65,14 +65,16 @@
             // serverToolStripMenuItem1
             // 
             this.serverToolStripMenuItem1.Name = "serverToolStripMenuItem1";
-            this.serverToolStripMenuItem1.Size = new System.Drawing.Size(117, 22);
+            this.serverToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.serverToolStripMenuItem1.Text = "Server";
+            this.serverToolStripMenuItem1.Click += new System.EventHandler(this.serverToolStripMenuItem1_Click);
             // 
             // serialToolStripMenuItem1
             // 
             this.serialToolStripMenuItem1.Name = "serialToolStripMenuItem1";
             this.serialToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.serialToolStripMenuItem1.Text = "Serial";
+            this.serialToolStripMenuItem1.Click += new System.EventHandler(this.serialToolStripMenuItem1_Click);
             // 
             // treeView
             // 

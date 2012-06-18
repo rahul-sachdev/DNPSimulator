@@ -30,7 +30,17 @@ namespace DotNetTestSet
         private void stackBrowser1_OnTcpClientAdded(TcpSettings s)
         {
             sm.AddTCPClient(s.name, s.level, s.timeout, s.address, s.port);                            
-        }      
+        }
+
+        private void stackBrowser1_OnTcpServerAdded(TcpSettings s)
+        {
+            sm.AddTCPServer(s.name, s.level, s.timeout, s.address, s.port);
+        }
+
+        private void stackBrowser1_OnSerialPortAdded(SerialSettings settings)
+        {
+            sm.AddSerial(settings.port, FilterLevel.LEV_WARNING, 5000, settings);
+        }
 
         private void stackBrowser1_OnAddMaster(string name, string port, FilterLevel level, MasterStackConfig config)
         {
@@ -61,6 +71,10 @@ namespace DotNetTestSet
             var chart = new TimeSeriesChartForm();
             chart.Show();
         }
+
+        
+
+        
     }
 
     

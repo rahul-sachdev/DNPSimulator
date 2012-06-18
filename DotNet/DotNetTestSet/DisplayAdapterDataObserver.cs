@@ -21,45 +21,48 @@ namespace DotNetTestSet
 
         public void Update(Binary meas, UInt32 index, String id)
         {
-            if (this.BinaryUpdate != null) sync.BeginInvoke(new Action(() => BinaryUpdate(meas, index, id)), null);
+            if (this.AllBinaryUpdate != null) sync.BeginInvoke(new Action(() => AllBinaryUpdate(meas, index, id)), null);
         }
 
         public void Update(Analog meas, UInt32 index, String id)
         {
-            if (this.AnalogUpdate != null) sync.BeginInvoke(new Action(() => AnalogUpdate(meas, index, id)), null);
+            if (this.AllAnalogUpdate != null) sync.BeginInvoke(new Action(() => AllAnalogUpdate(meas, index, id)), null);
         }
 
         public void Update(Counter meas, UInt32 index, String id)
         {
-            if (this.CounterUpdate != null) sync.BeginInvoke(new Action(() => CounterUpdate(meas, index, id)), null);
+            if (this.AllCounterUpdate != null) sync.BeginInvoke(new Action(() => AllCounterUpdate(meas, index, id)), null);
         }
 
         public void Update(ControlStatus meas, UInt32 index, String id)
         {
-            if (this.ControlStatusUpdate != null) sync.BeginInvoke(new Action(() => ControlStatusUpdate(meas, index, id)), null);
+            if (this.AllControlStatusUpdate != null) sync.BeginInvoke(new Action(() => AllControlStatusUpdate(meas, index, id)), null);
         }
 
         public void Update(SetpointStatus meas, UInt32 index, String id)
         {
-            if (this.SetpointStatusUpdate != null) sync.BeginInvoke(new Action(() => SetpointStatusUpdate(meas, index, id)), null);
+            if (this.AllSetpointStatusUpdate != null) sync.BeginInvoke(new Action(() => AllSetpointStatusUpdate(meas, index, id)), null);
         }
 
 
         #region IMeasurementSource Members
 
-        public event OnUpdateBinary BinaryUpdate;
+        public event OnUpdateBinary AllBinaryUpdate;
 
-        public event OnUpdateAnalog AnalogUpdate;
+        public event OnUpdateAnalog AllAnalogUpdate;
 
-        public event OnUpdateCounter CounterUpdate;
+        public event OnUpdateCounter AllCounterUpdate;
 
-        public event OnUpdateControlStatus ControlStatusUpdate;
+        public event OnUpdateControlStatus AllControlStatusUpdate;
 
-        public event OnUpdateSetpointStatus SetpointStatusUpdate;
+        public event OnUpdateSetpointStatus AllSetpointStatusUpdate;
 
         #endregion
     }
 
+    /// <summary>
+    /// Adapts IDataObserver to a event type interface
+    /// </summary>
     class EventedDataObserver : IDataObserver
     {
         private readonly SynchronizingMeasurementSource source;

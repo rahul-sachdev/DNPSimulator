@@ -15,10 +15,10 @@ namespace TestSetControlLibrary
 
     public interface IMeasurementSource
     {        
-        event OnUpdateBinary BinaryUpdate;
-        event OnUpdateAnalog AnalogUpdate;
-        event OnUpdateCounter CounterUpdate;
-        event OnUpdateControlStatus ControlStatusUpdate;
-        event OnUpdateSetpointStatus SetpointStatusUpdate;
+        event OnUpdateBinary AllBinaryUpdate;
+        event OnUpdateAnalog AllAnalogUpdate;
+        event OnUpdateCounter AllCounterUpdate;
+        event OnUpdateControlStatus AllControlStatusUpdate;
+        event OnUpdateSetpointStatus AllSetpointStatusUpdate;
     }
 }

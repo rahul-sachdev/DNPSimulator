@@ -16,10 +16,11 @@ namespace TestSetControlLibrary
         public delegate void AddTcp(TcpSettings settings);
         public event AddTcp OnTcpAdded;               
 
-        public TcpSettingsForm(String banner)
+        public TcpSettingsForm(String banner, String defaultPortName)
         {
             InitializeComponent();
             this.Text = banner;
+            this.textBoxName.Text = defaultPortName;
             this.FormClosed += new FormClosedEventHandler(TcpSettingsForm_FormClosed);
         }
 

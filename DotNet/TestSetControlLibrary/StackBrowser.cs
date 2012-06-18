@@ -10,20 +10,23 @@ using System.Windows.Forms;
 using DNP3.Interface;
 
 namespace TestSetControlLibrary
-{       
+{
     public partial class StackBrowser : UserControl
     {
-        public delegate void AddTcpClient(TcpSettings settings);
+        public delegate void AddTcpLayer(TcpSettings settings);
         public delegate void RemovePort(String name);
         public delegate void AddMaster(String name, String port, FilterLevel level, MasterStackConfig config);
         public delegate void RemoveStack(String name);
+        public delegate void AddSerialPort(SerialSettings settings);
 
-        public event AddTcpClient OnTcpClientAdded;
+        public event AddTcpLayer OnTcpClientAdded;
+        public event AddTcpLayer OnTcpServerAdded;
+        public event AddSerialPort OnSerialPortAdded;
         public event RemovePort OnRemovePort;
         public event AddMaster OnAddMaster;
         public event RemoveStack OnRemoveStack;
 
-        private TreeNode root = new TreeNode("root");        
+        private TreeNode root = new TreeNode("root");
 
         private ContextMenuStrip WireNewPortMenuStrip(EventHandler onAddMasterClick, EventHandler onRemoveClick)
         {
@@ -39,7 +42,7 @@ namespace TestSetControlLibrary
 
         private ContextMenuStrip WireNewMasterMenuStrip(EventHandler onRemoveClick)
         {
-            ContextMenuStrip menu = new ContextMenuStrip(this.components);                        
+            ContextMenuStrip menu = new ContextMenuStrip(this.components);
             var sep = new ToolStripSeparator();
             var remove = new ToolStripMenuItem("Remove");
             remove.Click += onRemoveClick;
@@ -53,13 +56,14 @@ namespace TestSetControlLibrary
             InitializeComponent();
             root.ContextMenuStrip = this.contextMenuStripAddComms;
             this.treeView.Nodes.Add(root);
+            this.treeView.ShowNodeToolTips = true;
         }
-                
+
         private void RemovePortClick(TreeNode node)
-        {            
+        {
             if (this.OnRemovePort != null) this.OnRemovePort(node.Text);
             root.Nodes.Remove(node);
-        }                       
+        }
 
         private void AddMasterClick(TreeNode portNode)
         {
@@ -88,16 +92,69 @@ namespace TestSetControlLibrary
                     TreeNode master = portNode.Nodes.Add(name, name);
                     EventHandler removeStackAction = (obj, e) => this.RemoveStackClick(portNode, master);
                     master.ContextMenuStrip = this.WireNewMasterMenuStrip(removeStackAction);
-                }                
+                }
+            }
+        }
+        
+        private void clientToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var form = new TcpSettingsForm("Add TCP Client", "TCP Client 1");
+            form.OnTcpAdded += new TcpSettingsForm.AddTcp(form_OnTcpClientAdded);
+            form.Show();
+        }
+
+        private void serverToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var form = new TcpSettingsForm("Add TCP Server", "TCP Server 1");
+            form.OnTcpAdded += new TcpSettingsForm.AddTcp(form_OnTcpServerAdded);
+            form.Show();
+        }
+
+        private void serialToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var form = new SerialSettingsForm();
+            form.SerialPortAdded += new SerialSettingsForm.OnSerialPortAdded(form_SerialPortAdded);
+            form.Show();
+        }
+
+        void form_SerialPortAdded(SerialSettings settings)
+        {
+            if (this.OnSerialPortAdded != null)
+            {
+                if (root.Nodes.ContainsKey(settings.port)) //port names cannot be duplicates
+                {
+                    MessageBox.Show("A port with that name already exists: " + settings.port);
+                }
+                else
+                {
+                    this.OnSerialPortAdded(settings);
+                    TreeNode node = this.root.Nodes.Add(settings.port, settings.port);
+                    EventHandler addMasterAction = (obj, e) => this.AddMasterClick(node);
+                    EventHandler removePortAction = (obj, e) => this.RemovePortClick(node);
+                    node.ContextMenuStrip = this.WireNewPortMenuStrip(addMasterAction, removePortAction);
+                    node.ToolTipText = settings.ToString();
+                }
             }
         }
 
-        // The 
-        private void clientToolStripMenuItem1_Click(object sender, EventArgs e)
+        void form_OnTcpServerAdded(TcpSettings settings)
         {
-            TcpSettingsForm form = new TcpSettingsForm("Add TCP Client");            
-            form.OnTcpAdded += new TcpSettingsForm.AddTcp(form_OnTcpClientAdded);
-            form.Show();
+            if (this.OnTcpServerAdded != null)
+            {
+                if (root.Nodes.ContainsKey(settings.name)) //port names cannot be duplicates
+                {
+                    MessageBox.Show("A port with that name already exists: " + settings.name);
+                }
+                else
+                {
+                    this.OnTcpServerAdded(settings);
+                    TreeNode node = this.root.Nodes.Add(settings.name, settings.name);
+                    EventHandler addMasterAction = (obj, e) => this.AddMasterClick(node);
+                    EventHandler removePortAction = (obj, e) => this.RemovePortClick(node);
+                    node.ContextMenuStrip = this.WireNewPortMenuStrip(addMasterAction, removePortAction);
+                    node.ToolTipText = settings.ToString();
+                }
+            }
         }
 
         void form_OnTcpClientAdded(TcpSettings settings)
@@ -111,15 +168,20 @@ namespace TestSetControlLibrary
                 else
                 {
                     this.OnTcpClientAdded(settings);
-                    TreeNode node = this.root.Nodes.Add(settings.name, settings.name);                    
+                    TreeNode node = this.root.Nodes.Add(settings.name, settings.name);
                     EventHandler addMasterAction = (obj, e) => this.AddMasterClick(node);
                     EventHandler removePortAction = (obj, e) => this.RemovePortClick(node);
-                    node.ContextMenuStrip = this.WireNewPortMenuStrip(addMasterAction, removePortAction);                    
-                }                
+                    node.ContextMenuStrip = this.WireNewPortMenuStrip(addMasterAction, removePortAction);
+                    node.ToolTipText = settings.ToString();                                       
+                }
             }
+
+
+
         }
 
-      
+        
+
         
     }
 }
