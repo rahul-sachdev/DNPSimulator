@@ -95,6 +95,12 @@
     <Compile Include="StackBrowser.Designer.cs">
       <DependentUpon>StackBrowser.cs</DependentUpon>
     </Compile>
+    <Compile Include="StackDisplayControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="StackDisplayControl.Designer.cs">
+      <DependentUpon>StackDisplayControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="TcpClientSettings.cs" />
     <Compile Include="TcpSettingsForm.cs">
       <SubType>Form</SubType>
@@ -131,6 +137,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="StackBrowser.resx">
       <DependentUpon>StackBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StackDisplayControl.resx">
+      <DependentUpon>StackDisplayControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TcpSettingsForm.resx">
       <DependentUpon>TcpSettingsForm.cs</DependentUpon>

@@ -30,12 +30,12 @@
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.stackBrowser1 = new TestSetControlLibrary.StackBrowser();
-            this.tabControlDisplay = new System.Windows.Forms.TabControl();
-            this.logControl = new DotNetTestSet.LogControl();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.chartsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addNewChartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stackBrowser1 = new TestSetControlLibrary.StackBrowser();
+            this.logControl = new DotNetTestSet.LogControl();
+            this.stackDisplayControl = new TestSetControlLibrary.StackDisplayControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -77,42 +77,10 @@
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.tabControlDisplay);
+            this.splitContainer2.Panel2.Controls.Add(this.stackDisplayControl);
             this.splitContainer2.Size = new System.Drawing.Size(1052, 369);
             this.splitContainer2.SplitterDistance = 227;
             this.splitContainer2.TabIndex = 0;
-            // 
-            // stackBrowser1
-            // 
-            this.stackBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.stackBrowser1.Location = new System.Drawing.Point(0, 0);
-            this.stackBrowser1.Name = "stackBrowser1";
-            this.stackBrowser1.Size = new System.Drawing.Size(227, 369);
-            this.stackBrowser1.TabIndex = 0;
-            this.stackBrowser1.OnTcpClientAdded += new TestSetControlLibrary.StackBrowser.AddTcpLayer(this.stackBrowser1_OnTcpClientAdded);
-            this.stackBrowser1.OnTcpServerAdded += new TestSetControlLibrary.StackBrowser.AddTcpLayer(this.stackBrowser1_OnTcpServerAdded);
-            this.stackBrowser1.OnSerialPortAdded += new TestSetControlLibrary.StackBrowser.AddSerialPort(this.stackBrowser1_OnSerialPortAdded);
-            this.stackBrowser1.OnRemovePort += new TestSetControlLibrary.StackBrowser.RemovePort(this.stackBrowser1_OnRemovePort);
-            this.stackBrowser1.OnAddMaster += new TestSetControlLibrary.StackBrowser.AddMaster(this.stackBrowser1_OnAddMaster);
-            this.stackBrowser1.OnRemoveStack += new TestSetControlLibrary.StackBrowser.RemoveStack(this.stackBrowser1_OnRemoveStack);
-            // 
-            // tabControlDisplay
-            // 
-            this.tabControlDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlDisplay.Location = new System.Drawing.Point(0, 0);
-            this.tabControlDisplay.Name = "tabControlDisplay";
-            this.tabControlDisplay.SelectedIndex = 0;
-            this.tabControlDisplay.Size = new System.Drawing.Size(821, 369);
-            this.tabControlDisplay.TabIndex = 0;
-            // 
-            // logControl
-            // 
-            this.logControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.logControl.Location = new System.Drawing.Point(0, 0);
-            this.logControl.Name = "logControl";
-            this.logControl.Padding = new System.Windows.Forms.Padding(3);
-            this.logControl.Size = new System.Drawing.Size(1052, 149);
-            this.logControl.TabIndex = 0;
             // 
             // menuStrip1
             // 
@@ -138,6 +106,37 @@
             this.addNewChartToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.addNewChartToolStripMenuItem.Text = "Add New Chart";
             this.addNewChartToolStripMenuItem.Click += new System.EventHandler(this.addNewChartToolStripMenuItem_Click);
+            // 
+            // stackBrowser1
+            // 
+            this.stackBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stackBrowser1.Location = new System.Drawing.Point(0, 0);
+            this.stackBrowser1.Name = "stackBrowser1";
+            this.stackBrowser1.Size = new System.Drawing.Size(227, 369);
+            this.stackBrowser1.TabIndex = 0;
+            this.stackBrowser1.OnTcpClientAdded += new TestSetControlLibrary.StackBrowser.AddTcpLayer(this.stackBrowser1_OnTcpClientAdded);
+            this.stackBrowser1.OnTcpServerAdded += new TestSetControlLibrary.StackBrowser.AddTcpLayer(this.stackBrowser1_OnTcpServerAdded);
+            this.stackBrowser1.OnSerialPortAdded += new TestSetControlLibrary.StackBrowser.AddSerialPort(this.stackBrowser1_OnSerialPortAdded);
+            this.stackBrowser1.OnRemovePort += new TestSetControlLibrary.StackBrowser.RemovePort(this.stackBrowser1_OnRemovePort);
+            this.stackBrowser1.OnAddMaster += new TestSetControlLibrary.StackBrowser.AddMaster(this.stackBrowser1_OnAddMaster);
+            this.stackBrowser1.OnRemoveStack += new TestSetControlLibrary.StackBrowser.RemoveStack(this.stackBrowser1_OnRemoveStack);
+            // 
+            // logControl
+            // 
+            this.logControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.logControl.Location = new System.Drawing.Point(0, 0);
+            this.logControl.Name = "logControl";
+            this.logControl.Padding = new System.Windows.Forms.Padding(3);
+            this.logControl.Size = new System.Drawing.Size(1052, 149);
+            this.logControl.TabIndex = 0;
+            // 
+            // stackDisplayControl
+            // 
+            this.stackDisplayControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stackDisplayControl.Location = new System.Drawing.Point(0, 0);
+            this.stackDisplayControl.Name = "stackDisplayControl";
+            this.stackDisplayControl.Size = new System.Drawing.Size(821, 369);
+            this.stackDisplayControl.TabIndex = 0;
             // 
             // TestSetForm
             // 
@@ -170,10 +169,10 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private LogControl logControl;
         private TestSetControlLibrary.StackBrowser stackBrowser1;
-        private System.Windows.Forms.TabControl tabControlDisplay;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem chartsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addNewChartToolStripMenuItem;
+        private TestSetControlLibrary.StackDisplayControl stackDisplayControl;
     }
 }
 

@@ -43,17 +43,10 @@ namespace DotNetTestSet
         }
 
         private void stackBrowser1_OnAddMaster(string name, string port, FilterLevel level, MasterStackConfig config)
-        {
-            //create the new form
+        {            
             var observer = new EventedDataObserver(this);
-            var display = new MasterDataDisplay(observer.MeasurementSource); //synchronize all updates on this form
-
-
-            display.Dock = DockStyle.Fill;
-            TabPage page = new TabPage(name);
-            this.tabControlDisplay.TabPages.Add(page);
-            page.Controls.Add(display);            
-            display.CommandAcceptor = sm.AddMaster(port, name, level, observer, config);                            
+            var control = this.stackDisplayControl.AddMaster(name, observer.MeasurementSource);             
+            control.CommandAcceptor = sm.AddMaster(port, name, level, observer, config);                            
         }
 
         private void stackBrowser1_OnRemovePort(string name)

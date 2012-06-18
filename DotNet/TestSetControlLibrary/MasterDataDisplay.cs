@@ -11,7 +11,7 @@ using DNP3.Interface;
 
 namespace TestSetControlLibrary
 {
-    public partial class MasterDataDisplay : UserControl
+    public partial class MasterDataDisplay : UserControl, IMasterControl
     {
         private ICommandAcceptor cmdAcceptor = null;
         private IMeasurementSource source;
