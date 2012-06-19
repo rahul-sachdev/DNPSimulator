@@ -3,7 +3,10 @@
 #include <msclr\marshal_cppstd.h>
 #include "Conversions.h"
 
-namespace DNPDotNet {
+namespace DNP3
+{	
+namespace Adapter
+{
 
 	System::Exception^ Conversions::convertException(const apl::Exception& ex)
 	{		
@@ -443,4 +446,4 @@ namespace DNPDotNet {
 		cfg.link = convertConfig(config->link);
 		return cfg;
 	}
-}
+}}

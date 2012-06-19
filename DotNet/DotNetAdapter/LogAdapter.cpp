@@ -21,7 +21,9 @@
 
 #include "Conversions.h"
 
-namespace DNPDotNet
+namespace DNP3
+{	
+namespace Adapter
 {		
 	
 
@@ -46,5 +48,5 @@ void LogAdapter::SetVar(const std::string& aSource, const std::string& aVarName,
 {}
 
 		
-}
+}}
 

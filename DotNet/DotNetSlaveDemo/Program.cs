@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using DNPDotNet;
+using DNP3.Adapter;
 using DNP3.Interface;
 
 namespace DotNetSlaveDemo

@@ -22,8 +22,10 @@
 
 #include <APL/CommandInterfaces.h>
 
-namespace DNPDotNet
+namespace DNP3
 {	
+namespace Adapter
+{
 
 ResponseRouter::ResponseRouter() : mSequence(0)
 {
@@ -84,6 +86,6 @@ IFuture<CommandStatus>^ CommandAcceptorAdapter::AcceptCommand(Setpoint^ command,
 
 
 
-}
+}}
 
 

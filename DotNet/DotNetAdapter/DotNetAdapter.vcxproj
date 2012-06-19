@@ -11,11 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{686B212F-3FE0-455A-B78B-0980D9F2F837}</ProjectGuid>
+    <ProjectGuid>{83D36075-5D61-4D88-9EBF-1BD87359A47A}</ProjectGuid>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
-    <RootNamespace>DNPDotNet</RootNamespace>
-    <ProjectName>DotNetAdapter</ProjectName>
+    <RootNamespace>DotNetAdapter</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -42,10 +41,10 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\config\local_dir.props" />
-    <Import Project="..\config\boost_includes.props" />
-    <Import Project="..\config\boost_lib.props" />
-    <Import Project="..\config\common_boost_defines.props" />
+    <Import Project="..\..\config\local_dir.props" />
+    <Import Project="..\..\config\boost_includes.props" />
+    <Import Project="..\..\config\boost_lib.props" />
+    <Import Project="..\..\config\common_boost_defines.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -58,7 +57,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions);BOOST_LIB_DIAGNOSTIC;BOOST_ALL_DYN_LINK;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
@@ -66,14 +65,11 @@
       <AdditionalDependencies>
       </AdditionalDependencies>
     </Link>
-    <ProjectReference>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
-    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions);BOOST_ALL_DYN_LINK;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
@@ -91,11 +87,11 @@
     <ClInclude Include="CommandAcceptorAdapter.h" />
     <ClInclude Include="Conversions.h" />
     <ClInclude Include="LogAdapter.h" />
+    <ClInclude Include="MasterDataObserverAdapter.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SlaveCommandAcceptorAdapter.h" />
     <ClInclude Include="SlaveDataObserverAdapter.h" />
     <ClInclude Include="StackManager.h" />
-    <ClInclude Include="MasterDataObserverAdapter.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="Stdafx.h" />
   </ItemGroup>
   <ItemGroup>
@@ -103,10 +99,10 @@
     <ClCompile Include="CommandAcceptorAdapter.cpp" />
     <ClCompile Include="Conversions.cpp" />
     <ClCompile Include="LogAdapter.cpp" />
+    <ClCompile Include="MasterDataObserverAdapter.cpp" />
     <ClCompile Include="SlaveCommandAcceptorAdapter.cpp" />
     <ClCompile Include="SlaveDataObserverAdapter.cpp" />
     <ClCompile Include="StackManager.cpp" />
-    <ClCompile Include="MasterDataObserverAdapter.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

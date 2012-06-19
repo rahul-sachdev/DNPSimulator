@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-using DNPDotNet;
+using DNP3.Adapter;
 using DNP3.Interface;
 using TestSetControlLibrary;
 

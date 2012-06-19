@@ -17,7 +17,10 @@
 #include <DNP3/SlaveStackConfig.h>
 #include <DNP3/StackManager.h>
 
-namespace DNPDotNet {
+namespace DNP3
+{	
+namespace Adapter
+{
 
 	StackManager::StackManager() :
 		pMgr(new apl::dnp::StackManager())
@@ -146,4 +149,4 @@ namespace DNPDotNet {
 			throw Conversions::convertException(ex);
 		}
 	}
-}
+}}

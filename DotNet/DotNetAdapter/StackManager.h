@@ -9,8 +9,10 @@ namespace apl { namespace dnp {
 	class StackManager;
 }}
 
-namespace DNPDotNet {
-
+namespace DNP3
+{	
+namespace Adapter
+{
 	public ref class StackManager
 	{
 		public:
@@ -42,6 +44,6 @@ namespace DNPDotNet {
 			apl::dnp::StackManager* pMgr;
 	};
 
-}
+}}
 
 #endif

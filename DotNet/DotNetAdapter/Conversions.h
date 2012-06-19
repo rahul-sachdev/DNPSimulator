@@ -13,7 +13,10 @@
 
 using namespace DNP3::Interface;
 
-namespace DNPDotNet {
+namespace DNP3
+{	
+namespace Adapter
+{
 
 	class Conversions
 	{
@@ -84,6 +87,6 @@ namespace DNPDotNet {
 		static apl::dnp::SlaveStackConfig convertConfig(SlaveStackConfig^ config);
 	};
 
-}
+}}
 
 #endif

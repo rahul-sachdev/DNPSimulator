@@ -27,7 +27,9 @@ using namespace System::Collections::ObjectModel;
 
 using namespace DNP3::Interface;
 
-namespace DNPDotNet
+namespace DNP3
+{	
+namespace Adapter
 {				
 	//this object goes into the stack
 	class SlaveCommandAcceptorAdapter : public apl::ICommandAcceptor
@@ -68,6 +70,6 @@ namespace DNPDotNet
 			int mSequence;			
 	};
 	
-}
+}}
 
 #endif
