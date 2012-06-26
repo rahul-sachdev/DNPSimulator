@@ -1,6 +1,6 @@
 ﻿namespace TestSetControlLibrary
 {
-    partial class TcpClientSettingsForm
+    partial class TcpSettingsForm
     {
         /// <summary>
         /// Required designer variable.

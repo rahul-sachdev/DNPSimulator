@@ -9,8 +9,6 @@ namespace DotNetTestSet
 {
     class LogControlAdapter : ILogHandler
     {
-
-
         public LogControlAdapter(LogControl ctrl)
         {
             this.logControl = ctrl;

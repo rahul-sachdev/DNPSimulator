@@ -14,10 +14,17 @@ namespace TestSetControlLibrary
     public partial class MasterDataDisplay : UserControl
     {
         private ICommandAcceptor cmdAcceptor = null;
+        private IMeasurementSource source;
 
-        public MasterDataDisplay()
+        public MasterDataDisplay(IMeasurementSource source)
         {
-            InitializeComponent();            
+            InitializeComponent();        
+            this.source = source;
+            source.AllBinaryUpdate += new OnUpdateBinary(this.UpdateBinary);
+            source.AllAnalogUpdate += new OnUpdateAnalog(this.UpdateAnalog);
+            source.AllCounterUpdate += new OnUpdateCounter(this.UpdateCounter);
+            source.AllControlStatusUpdate += new OnUpdateControlStatus(this.UpdateBOStatus);
+            source.AllSetpointStatusUpdate += new OnUpdateSetpointStatus(this.UpdateAOStatus);
         }
 
         public ICommandAcceptor CommandAcceptor
@@ -29,58 +36,58 @@ namespace TestSetControlLibrary
 
         }
 
-        private ListViewItem RenderBinary(Binary meas, UInt32 index)
+        private ListViewItem RenderBinary(Binary meas, UInt32 index, String id)
         {
             return new ListViewItem(new String[] { index.ToString(), meas.value.ToString() });
         }
 
-        private ListViewItem RenderAnalog(Analog meas, UInt32 index)
+        private ListViewItem RenderAnalog(Analog meas, UInt32 index, String id)
         {
             return new ListViewItem(new String[] { index.ToString(), meas.value.ToString() });
         }
 
-        private ListViewItem RenderCounter(Counter meas, UInt32 index)
+        private ListViewItem RenderCounter(Counter meas, UInt32 index, String id)
         {
             return new ListViewItem(new String[] { index.ToString(), meas.value.ToString() });
         }
 
-        private ListViewItem RenderBOStatus(ControlStatus meas, UInt32 index)
+        private ListViewItem RenderBOStatus(ControlStatus meas, UInt32 index, String id)
         {
             return new ListViewItem(new String[] { index.ToString(), meas.value.ToString() });
         }
 
-        private ListViewItem RenderAOStatus(SetpointStatus meas, UInt32 index)
+        private ListViewItem RenderAOStatus(SetpointStatus meas, UInt32 index, String id)
         {
             return new ListViewItem(new String[] { index.ToString(), meas.value.ToString() });
         }        
 
-        public void UpdateBinary(Binary meas, UInt32 value)
+        private void UpdateBinary(Binary meas, UInt32 value, String id)
         {
-            Update(meas, value, flickerFreeListViewBinary, RenderBinary);
+            Update(meas, value, id, flickerFreeListViewBinary, RenderBinary);
         }
 
-        public void UpdateAnalog(Analog meas, UInt32 value)
-        { 
-            Update(meas, value, flickerFreeListViewAnalog, RenderAnalog);
+        private void UpdateAnalog(Analog meas, UInt32 value, String id)
+        {
+            Update(meas, value, id, flickerFreeListViewAnalog, RenderAnalog);
         }
 
-        public void UpdateCounter(Counter meas, UInt32 value)
+        private void UpdateCounter(Counter meas, UInt32 value, String id)
         {
-            Update(meas, value, flickerFreeListViewCounter, RenderCounter);
+            Update(meas, value, id, flickerFreeListViewCounter, RenderCounter);
         }
 
-        public void UpdateBOStatus(ControlStatus meas, UInt32 value)
+        private void UpdateBOStatus(ControlStatus meas, UInt32 value, String id)
         {
-            Update(meas, value, flickerFreeListViewBOStatus, RenderBOStatus);
+            Update(meas, value, id, flickerFreeListViewBOStatus, RenderBOStatus);
         }
 
-        public void UpdateAOStatus(SetpointStatus meas, UInt32 value)
+        private void UpdateAOStatus(SetpointStatus meas, UInt32 value, String id)
         {
-            Update(meas, value, flickerFreeListViewAOStatus, RenderAOStatus);
+            Update(meas, value, id, flickerFreeListViewAOStatus, RenderAOStatus);
         }
-        
-        private static void Update<T>(T meas, UInt32 index, FlickerFreeListView view, Func<T, UInt32, ListViewItem> render)
-        {
+
+        private static void Update<T>(T meas, UInt32 index, String id, FlickerFreeListView view, Func<T, UInt32, String, ListViewItem> render)
+        {                    
             int idx = (int) index;
 
             if (idx >= view.Items.Count) //add items to the view
@@ -91,7 +98,7 @@ namespace TestSetControlLibrary
                 }
             }
             
-            view.Items[idx] = render(meas, index);  
+            view.Items[idx] = render(meas, index, id);  
         }
 
         private void analogOutputToolStripMenuItem_Click(object sender, EventArgs e)
