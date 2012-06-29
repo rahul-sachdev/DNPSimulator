@@ -26,8 +26,10 @@ using namespace System::Collections::ObjectModel;
 
 using namespace DNP3::Interface;
 
-namespace DNPDotNet
-{			
+namespace DNP3
+{	
+namespace Adapter
+{		
 	public class MasterDataObserverAdapter : public apl::IDataObserver
 	{
 		public:
@@ -64,6 +66,6 @@ namespace DNPDotNet
 		private:
 			MasterDataObserverAdapter* pAdapter;
 	};
-}
+}}
 
 #endif

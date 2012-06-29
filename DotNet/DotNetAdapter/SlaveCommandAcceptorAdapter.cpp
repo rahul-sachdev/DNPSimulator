@@ -20,7 +20,9 @@
 #include "SlaveCommandAcceptorAdapter.h"
 #include "Conversions.h"
 
-namespace DNPDotNet
+namespace DNP3
+{	
+namespace Adapter
 {
 
 SlaveCommandAcceptorAdapterWrapper::SlaveCommandAcceptorAdapterWrapper(ICommandAcceptor^ proxy) : 
@@ -72,5 +74,5 @@ void ResponseDelegateAdapter::OnResult(CommandStatus status)
 	mpRspAcceptor->AcceptResponse(cr, mSequence);
 }
 	
-}
+}}
 

@@ -20,7 +20,9 @@
 #include "MasterDataObserverAdapter.h"
 #include "Conversions.h"
 
-namespace DNPDotNet
+namespace DNP3
+{	
+namespace Adapter
 {
 		MasterDataObserverAdapter::MasterDataObserverAdapter(DNP3::Interface::IDataObserver^ proxy) : proxy(proxy)
 		{}		
@@ -60,6 +62,6 @@ namespace DNPDotNet
 			proxy->End();
 		}
 
-}
+}}
 
 

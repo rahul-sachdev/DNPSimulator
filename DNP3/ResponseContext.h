@@ -19,6 +19,7 @@
 #define __RESPONSE_CONTEXT_H_
 
 #include <boost/function.hpp>
+#include <boost/bind.hpp>
 #include <queue>
 
 #include <APL/Loggable.h>
@@ -39,10 +40,6 @@ class SlaveEventBuffer;
 class ObjectBase;
 class SlaveResponseTypes;
 
-template <class T>
-struct WriteFunc {
-	typedef boost::function<void (boost::uint8_t*, const T& arValue, size_t aIndex)> Type;
-};
 
 /**
  * Builds and tracks the state of responses. Interprets FC_READ requests or
@@ -57,6 +54,33 @@ class ResponseContext : public Loggable
 		SOLICITED,
 		UNSOLICITED
 	};
+
+	enum RequestType {
+		RT_STATIC = 0,
+		RT_EVENT = 1
+	};
+
+	//used as a key that decides in what order response headers are packed into APDUs
+	struct ResponseKey {
+
+		ResponseKey();		
+
+		ResponseKey(RequestType aType, size_t aOrder);
+
+		RequestType mType;
+		size_t mOrder;
+
+		// custom less than function used by STL
+		bool operator()(const ResponseKey& a, const ResponseKey& b) const;
+	};
+	
+
+	/**
+	* This function takes an APDU, writes some data to it, and modifies the current state of the
+	* ResponseContext class. It returns true if all of the data was written before the APDU was full, 
+	* and false otherwise.
+	*/		
+	typedef boost::function<bool (APDU&)> WriteFunction;
 
 public:
 	ResponseContext(Logger*, Database*, SlaveResponseTypes* apRspTypes, const EventMaxConfig& arEventMaxConfig);
@@ -125,11 +149,7 @@ private:
 	bool IsEmpty();
 
 	bool IsStaticEmpty();
-	bool IsEventEmpty();
-
-	void AddIntegrityPoll();
-
-	//bool WriteCTO(const TimeStamp_t& arTime, APDU& arAPDU);
+	bool IsEventEmpty();	
 
 	Database* mpDB;				// Pointer to the database for static data
 	bool mFIR;
@@ -137,16 +157,7 @@ private:
 	SlaveResponseTypes* mpRspTypes;
 
 	IINField mTempIIN;
-
-	template <class T>
-	struct IterRecord {
-		IterRecord() : pObject(NULL) {}
-
-		typename StaticIter<T>::Type first;				// Begining of iteration
-		typename StaticIter<T>::Type last;				// Last element of iteration
-		StreamObject<typename T::MeasType>* pObject;	// Type to use to write
-	};
-
+	
 	template<class T>
 	struct EventRequest {
 		EventRequest(const StreamObject<T>* apObj, size_t aCount = std::numeric_limits<size_t>::max()) :
@@ -166,13 +177,9 @@ private:
 
 		const SizeByVariationObject* pObj;	// Type to use to write
 		size_t count;						// Number of events to read
-	};
+	};	
 
-	typedef std::deque< IterRecord<BinaryInfo> >			BinaryIterQueue;
-	typedef std::deque< IterRecord<AnalogInfo> >			AnalogIterQueue;
-	typedef std::deque< IterRecord<CounterInfo> >			CounterIterQueue;
-	typedef std::deque< IterRecord<ControlStatusInfo> >		ControlIterQueue;
-	typedef std::deque< IterRecord<SetpointStatusInfo> >	SetpointIterQueue;
+	typedef std::map <ResponseKey, WriteFunction, ResponseKey >	WriteMap;
 
 	typedef std::deque< EventRequest<Binary> >				BinaryEventQueue;
 	typedef std::deque< EventRequest<Analog> >				AnalogEventQueue;
@@ -180,32 +187,19 @@ private:
 
 	typedef std::deque<VtoEventRequest>						VtoEventQueue;
 
-	//these queues track what static point ranges were requested so that we can split the response over multiple fragments
-	BinaryIterQueue mStaticBinaries;
-	AnalogIterQueue mStaticAnalogs;
-	CounterIterQueue mStaticCounters;
-	ControlIterQueue mStaticControls;
-	SetpointIterQueue mStaticSetpoints;
+	// the queue that tracks the pending static write operations
+	WriteMap mWriteMap;
 
 	//these queues track what events have been requested
 	BinaryEventQueue mBinaryEvents;
 	AnalogEventQueue mAnalogEvents;
 	CounterEventQueue mCounterEvents;
-	VtoEventQueue mVtoEvents;
-
-	template <class T>
-	void AddIntegrity(std::deque< IterRecord<T> >& arQueue, StreamObject<typename T::MeasType>* apObject);
+	VtoEventQueue mVtoEvents;	
 
 	template <class T>
 	bool LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> >& arQueue, bool& arEventsLoaded);
 
-	bool LoadVtoEvents(APDU& arAPDU, bool& arEventsLoaded);
-
-	bool LoadStaticBinaries(APDU&);
-	bool LoadStaticAnalogs(APDU&);
-	bool LoadStaticCounters(APDU&);
-	bool LoadStaticControlStatii(APDU&);
-	bool LoadStaticSetpointStatii(APDU&);
+	bool LoadVtoEvents(APDU& arAPDU, bool& arEventsLoaded);	
 
 	//wrappers that select the event buffer and add to the event queues
 	void SelectEvents(PointClass aClass, size_t aNum = std::numeric_limits<size_t>::max());
@@ -215,12 +209,6 @@ private:
 
 	size_t SelectVtoEvents(PointClass aClass, const SizeByVariationObject* apObj, size_t aNum);
 
-	// templated function for writing APDUs
-	/*template <class T>
-	bool IterateContiguous(IterRecord<T>& arIters, APDU& arAPDU, typename WriteFunc<typename T::MeasType>::Type& arWriter);
-	*/
-	template <class T>
-	bool IterateContiguous(IterRecord<T>& arIters, APDU& arAPDU);
 
 	// T is the event type
 	template <class T>
@@ -233,6 +221,18 @@ private:
 	size_t CalcPossibleCTO(typename EvtItr< EventInfo<T> >::Type aIter, size_t aMax);
 
 	size_t IterateIndexed(VtoEventRequest& arRequest, VtoDataEventIter& arIter, APDU& arAPDU);
+
+
+	// New functions
+
+	template <class T>
+	void RecordStaticObjects(StreamObject<typename T::MeasType>* apObject, const HeaderReadIterator& arIter);
+
+	template <class T>
+	void RecordStaticObjectsByRange(StreamObject<typename T::MeasType>* apObject, size_t aStart, size_t aStop);
+
+	template <class T>
+	bool WriteStaticObjects(StreamObject<typename T::MeasType>* apObject, typename StaticIter<T>::Type& arStart, typename StaticIter<T>::Type& arStop, const ResponseKey& arKey, APDU& arAPDU);
 };
 
 template <class T>
@@ -249,15 +249,89 @@ size_t ResponseContext::SelectEvents(PointClass aClass, const StreamObject<T>* a
 }
 
 template <class T>
-void ResponseContext::AddIntegrity(std::deque< IterRecord<T> >& arQueue, StreamObject<typename T::MeasType>* apObject)
+void ResponseContext::RecordStaticObjects(StreamObject<typename T::MeasType>* apObject, const HeaderReadIterator& arIter)
+{	
+	size_t num = mpDB->NumType(T::MeasType::MeasEnum);	
+	
+	//figure out what type of read request this is
+	switch(arIter->GetHeaderType())
+	{
+		case(OHT_ALL_OBJECTS):
+			{				
+				if(num > 0) this->RecordStaticObjectsByRange<T>(apObject, 0, num - 1);
+			}
+			break;
+		
+		case(OHT_RANGED_2_OCTET):			
+		case(OHT_RANGED_4_OCTET):			
+		case(OHT_RANGED_8_OCTET):
+			{
+				if(num > 0) {
+					size_t max = num - 1;
+					RangeInfo ri;
+					const IRangeHeader* pHeader = reinterpret_cast<const IRangeHeader*>(arIter->GetHeader());
+					pHeader->GetRange(*arIter, ri);			
+
+					if(ri.Start > max || ri.Stop > max || ri.Start > ri.Stop) this->mTempIIN.SetParameterError(true);
+					else this->RecordStaticObjectsByRange<T>(apObject, ri.Start, ri.Stop);
+				}
+				else this->mTempIIN.SetParameterError(true);
+			}
+			break;
+
+		case(OHT_COUNT_1_OCTET):
+		case(OHT_COUNT_2_OCTET):
+		case(OHT_COUNT_4_OCTET):
+			{
+				if(num > 0) {
+					size_t max = num - 1;
+					size_t count = reinterpret_cast<const ICountHeader*>(arIter->GetHeader())->GetCount(*arIter);
+					if(count > 0) {
+						size_t start = 0;
+						size_t stop = count - 1;
+						
+						if(start > max || stop > max || start > stop) this->mTempIIN.SetParameterError(true);
+						else this->RecordStaticObjectsByRange<T>(apObject, start, stop);
+					}
+					else this->mTempIIN.SetParameterError(true);
+				}
+				else this->mTempIIN.SetParameterError(true);
+			}
+			break;
+	}		
+}
+
+template <class T>
+void ResponseContext::RecordStaticObjectsByRange(StreamObject<typename T::MeasType>* apObject, size_t aStart, size_t aStop)
 {
-	size_t num = mpDB->NumType(T::MeasType::MeasEnum);
-	if(num > 0) {
-		IterRecord<T> record;
-		mpDB->Begin(record.first); record.last = record.first + (num - 1);
-		record.pObject = apObject;
-		arQueue.push_back(record);
+	typename StaticIter<T>::Type first;
+	typename StaticIter<T>::Type last;
+	mpDB->Begin(first);
+	last = first + aStop;
+	first = first + aStart;	
+	ResponseKey key(RT_STATIC, this->mWriteMap.size());
+	WriteFunction func = boost::bind(&ResponseContext::WriteStaticObjects<T>, this, apObject, first, last, key, _1);		
+	this->mWriteMap[key] = func;
+}
+
+template <class T>
+bool ResponseContext::WriteStaticObjects(StreamObject<typename T::MeasType>* apObject, typename StaticIter<T>::Type& arStart, typename StaticIter<T>::Type& arStop, const ResponseKey& arKey, APDU& arAPDU)
+{
+	size_t start = arStart->mIndex;
+	size_t stop = arStop->mIndex;	
+	ObjectWriteIterator owi = arAPDU.WriteContiguous(apObject, start, stop);
+
+	for(size_t i = start; i <= stop; ++i) {
+		if(owi.IsEnd()) { // out of space in the fragment
+			this->mWriteMap[arKey] = boost::bind(&ResponseContext::WriteStaticObjects<T>, this, apObject, arStart, arStop, arKey, _1);
+			return false; 
+		}
+		apObject->Write(*owi, arStart->mValue);
+		++arStart; //increment the iterators
+		++owi;
 	}
+
+	return true;	
 }
 
 template <class T>
@@ -295,25 +369,6 @@ bool ResponseContext::LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> >& ar
 	}
 
 	return true;	// the queue has been exhausted on this iteration
-}
-
-template <class T>
-bool ResponseContext::IterateContiguous(IterRecord<T>& arIters, APDU& arAPDU)
-{
-	size_t start = arIters.first->mIndex;
-	size_t stop = arIters.last->mIndex;
-	StreamObject<typename T::MeasType>* pObj = arIters.pObject;
-
-	ObjectWriteIterator owi = arAPDU.WriteContiguous(arIters.pObject, start, stop);
-
-	for(size_t i = start; i <= stop; ++i) {
-		if(owi.IsEnd()) return false; // out of space in the fragment
-		pObj->Write(*owi, arIters.first->mValue);
-		++arIters.first; //increment the iterators
-		++owi;
-	}
-
-	return true;
 }
 
 

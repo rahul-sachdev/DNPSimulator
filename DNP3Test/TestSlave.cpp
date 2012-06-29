@@ -1362,6 +1362,24 @@ BOOST_AUTO_TEST_CASE(ComplexReadSequence)
 	BOOST_REQUIRE_EQUAL(t.Read(), rsp);
 }
 
+BOOST_AUTO_TEST_CASE(ReadByRangeHeader)
+{
+	SlaveConfig cfg;
+	cfg.mDisableUnsol = true;
+	SlaveTestObject t(cfg);
+	t.db.Configure(DT_ANALOG, 10);
+	t.slave.OnLowerLayerUp();
+
+	{
+		Transaction tr(&t.db);
+		t.db.Update(Analog(42, AQ_ONLINE), 5);		
+		t.db.Update(Analog(41, AQ_ONLINE), 6);
+	}
+
+	t.SendToSlave("C0 01 1E 02 00 05 06"); // read 30 var 2, [05 : 06]
+	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 1E 02 00 05 06 01 2A 00 01 29 00"); 
+}
+
 template <class PointType, class T>
 void TestStaticType(apl::dnp::SlaveConfig& aCfg, apl::dnp::GrpVar& aGrpVar, int aGroup, int aVar, T aVal, const std::string& aRsp)
 {

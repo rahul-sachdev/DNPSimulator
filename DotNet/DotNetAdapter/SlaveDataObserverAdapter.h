@@ -22,7 +22,9 @@
 #include <APL/DataInterfaces.h>
 using namespace DNP3::Interface;
 
-namespace DNPDotNet
+namespace DNP3
+{	
+namespace Adapter
 {			
 	public ref class SlaveDataObserverAdapter : DNP3::Interface::IDataObserver
 	{
@@ -43,6 +45,6 @@ namespace DNPDotNet
 		apl::IDataObserver* proxy;		
 	};
 	
-}
+}}
 
 #endif

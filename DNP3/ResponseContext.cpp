@@ -27,20 +27,26 @@
 
 using namespace boost;
 
-#define MACRO_CONTINUOUS_CASE(obj,var) \
-		case MACRO_DNP_RADIX(obj,var): { \
-			/* WriteFunc<datatype>::Type func = bind(DataToDNP::WriteGroup##obj##Var##var, _1, _2); */ \
-			if (!this->IterateContiguous(iter, arAPDU)) \
-			{ \
-				return false; \
-			} \
-			break; \
-		}
-
 namespace apl
 {
 namespace dnp
 {
+
+ResponseContext::ResponseKey::ResponseKey() : mType(RT_STATIC), mOrder(0)
+{}
+
+ResponseContext::ResponseKey::ResponseKey(ResponseContext::RequestType aType, size_t aOrder) : mType(aType), mOrder(aOrder)
+{}
+
+// custom less than function used by STL
+bool ResponseContext::ResponseKey::operator()(const ResponseContext::ResponseKey& a, const ResponseContext::ResponseKey& b) const {
+	if(a.mType < b.mType) return true;
+	else if(a.mType > b.mType) return false;
+	else { 
+		return a.mOrder < b.mOrder;
+	}
+}
+
 
 ResponseContext::ResponseContext(Logger* apLogger, Database* apDB, SlaveResponseTypes* apRspTypes, const EventMaxConfig& arEventMaxConfig) :
 	Loggable(apLogger),
@@ -58,11 +64,7 @@ void ResponseContext::Reset()
 	mMode = UNDEFINED;
 	mTempIIN.Zero();
 
-	this->mStaticBinaries.clear();
-	this->mStaticAnalogs.clear();
-	this->mStaticCounters.clear();
-	this->mStaticControls.clear();
-	this->mStaticSetpoints.clear();
+	this->mWriteMap.clear();
 
 	this->mBinaryEvents.clear();
 	this->mAnalogEvents.clear();
@@ -78,7 +80,7 @@ void ResponseContext::ClearWritten()
 
 	size_t deselected = mBuffer.Deselect();
 
-	LOG_BLOCK(LEV_INTERPRET, "Clearing written events: " << written << " deselected: " << deselected);
+	LOG_BLOCK(LEV_DEBUG, "Clearing written events: " << written << " deselected: " << deselected);
 }
 
 void ResponseContext::ClearAndReset()
@@ -129,78 +131,126 @@ IINField ResponseContext::Configure(const APDU& arRequest)
 
 		/* Handle all of the objects that have a Group/Variation tuple */
 		switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation())) {
-			// static objects, all variations
-		case(MACRO_DNP_RADIX(1, 0)):	// Binary Input - unknown
-			this->AddIntegrity(mStaticBinaries, mpRspTypes->mpStaticBinary);
-			break;
-//		case(MACRO_DNP_RADIX(1, 1)):	// Binary Input - packed format
-		case(MACRO_DNP_RADIX(1, 2)):	// Binary Input - with flags
-			this->AddIntegrity(mStaticBinaries, mpRspTypes->mpStaticBinary);
-			break;
-		case(MACRO_DNP_RADIX(10, 0)):
-			this->AddIntegrity(mStaticControls, mpRspTypes->mpStaticControlStatus);
-			break;
-		case(MACRO_DNP_RADIX(20, 0)):	// Counter Input - unknown
-			this->AddIntegrity(mStaticCounters, mpRspTypes->mpStaticCounter);
-			break;
-		case(MACRO_DNP_RADIX(20, 1)):	// Counter Input - 32-bit w/ flag
-			this->AddIntegrity(mStaticCounters, Group20Var1::Inst());
-			break;
-		case(MACRO_DNP_RADIX(20, 5)):	// Counter Input - 32-bit w/o flag
-			this->AddIntegrity(mStaticCounters, Group20Var5::Inst());
-			break;
-		case(MACRO_DNP_RADIX(30, 0)):	// Analog Input - unknown
-			this->AddIntegrity(mStaticAnalogs, mpRspTypes->mpStaticAnalog);
-			break;
-		case(MACRO_DNP_RADIX(30, 1)):	// Analog Input - 32-bit w/ flag
-			this->AddIntegrity(mStaticAnalogs, Group30Var1::Inst());
-			break;
-		case(MACRO_DNP_RADIX(30, 3)):	// Analog Input - 32-bit w/o flag
-			this->AddIntegrity(mStaticAnalogs, Group30Var3::Inst());
-			break;
-		case(MACRO_DNP_RADIX(40, 0)):
-			this->AddIntegrity(mStaticSetpoints, mpRspTypes->mpStaticSetpointStatus);
-			break;
+			
+			case(MACRO_DNP_RADIX(1, 0)):
+				this->RecordStaticObjects<BinaryInfo>(mpRspTypes->mpStaticBinary, hdr);
+				break;
+			case(MACRO_DNP_RADIX(1, 2)):
+				this->RecordStaticObjects<BinaryInfo>(Group1Var2::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(10, 0)):
+				this->RecordStaticObjects<ControlStatusInfo>(mpRspTypes->mpStaticControlStatus, hdr);
+				break;
+			case(MACRO_DNP_RADIX(10, 2)):
+				this->RecordStaticObjects<ControlStatusInfo>(Group10Var2::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(20, 0)):
+				this->RecordStaticObjects<CounterInfo>(mpRspTypes->mpStaticCounter, hdr);
+				break;
+			case(MACRO_DNP_RADIX(20, 1)):
+				this->RecordStaticObjects<CounterInfo>(Group20Var1::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(20, 2)):
+				this->RecordStaticObjects<CounterInfo>(Group20Var2::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(20, 3)):
+				this->RecordStaticObjects<CounterInfo>(Group20Var3::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(20, 4)):
+				this->RecordStaticObjects<CounterInfo>(Group20Var4::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(20, 5)):
+				this->RecordStaticObjects<CounterInfo>(Group20Var5::Inst(), hdr);
+				break;		
+			case(MACRO_DNP_RADIX(20, 6)):
+				this->RecordStaticObjects<CounterInfo>(Group20Var6::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(20, 7)):
+				this->RecordStaticObjects<CounterInfo>(Group20Var7::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(20, 8)):
+				this->RecordStaticObjects<CounterInfo>(Group20Var8::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(30, 0)):
+				this->RecordStaticObjects<AnalogInfo>(mpRspTypes->mpStaticAnalog, hdr);
+				break;
+			case(MACRO_DNP_RADIX(30, 1)):
+				this->RecordStaticObjects<AnalogInfo>(Group30Var1::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(30, 2)):
+				this->RecordStaticObjects<AnalogInfo>(Group30Var2::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(30, 3)):
+				this->RecordStaticObjects<AnalogInfo>(Group30Var3::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(30, 4)):
+				this->RecordStaticObjects<AnalogInfo>(Group30Var4::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(30, 5)):
+				this->RecordStaticObjects<AnalogInfo>(Group30Var5::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(30, 6)):
+				this->RecordStaticObjects<AnalogInfo>(Group30Var6::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(40, 0)):
+				this->RecordStaticObjects<SetpointStatusInfo>(mpRspTypes->mpStaticSetpointStatus, hdr);
+				break;
+			case(MACRO_DNP_RADIX(40, 1)):
+				this->RecordStaticObjects<SetpointStatusInfo>(Group40Var1::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(40, 2)):
+				this->RecordStaticObjects<SetpointStatusInfo>(Group40Var2::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(40, 3)):
+				this->RecordStaticObjects<SetpointStatusInfo>(Group40Var3::Inst(), hdr);
+				break;
+			case(MACRO_DNP_RADIX(40, 4)):
+				this->RecordStaticObjects<SetpointStatusInfo>(Group40Var4::Inst(), hdr);
+				break;
 
-			// event objects
-		case(MACRO_DNP_RADIX(2, 0)):
-			this->SelectEvents(PC_ALL_EVENTS, mpRspTypes->mpEventBinary, mBinaryEvents, GetEventCount(hdr.info()));
-			break;
-		case(MACRO_DNP_RADIX(22, 0)):
-			this->SelectEvents(PC_ALL_EVENTS, mpRspTypes->mpEventCounter, mCounterEvents, GetEventCount(hdr.info()));
-			break;
-		case(MACRO_DNP_RADIX(32, 0)):
-			this->SelectEvents(PC_ALL_EVENTS, mpRspTypes->mpEventAnalog, mAnalogEvents, GetEventCount(hdr.info()));
-			break;
+				// event objects
+			case(MACRO_DNP_RADIX(2, 0)):
+				this->SelectEvents(PC_ALL_EVENTS, mpRspTypes->mpEventBinary, mBinaryEvents, GetEventCount(hdr.info()));
+				break;
+			case(MACRO_DNP_RADIX(22, 0)):
+				this->SelectEvents(PC_ALL_EVENTS, mpRspTypes->mpEventCounter, mCounterEvents, GetEventCount(hdr.info()));
+				break;
+			case(MACRO_DNP_RADIX(32, 0)):
+				this->SelectEvents(PC_ALL_EVENTS, mpRspTypes->mpEventAnalog, mAnalogEvents, GetEventCount(hdr.info()));
+				break;
 
-			//specific objects
-		case(MACRO_DNP_RADIX(2, 1)):
-			this->SelectEvents(PC_ALL_EVENTS, Group2Var1::Inst(), mBinaryEvents, GetEventCount(hdr.info()));
-			break;
-		case(MACRO_DNP_RADIX(2, 2)):
-			this->SelectEvents(PC_ALL_EVENTS, Group2Var2::Inst(), mBinaryEvents, GetEventCount(hdr.info()));
-			break;
-		case(MACRO_DNP_RADIX(2, 3)):
-			this->SelectEvents(PC_ALL_EVENTS, Group2Var3::Inst(), mBinaryEvents, GetEventCount(hdr.info()));
-			break;
+				//specific objects
+			case(MACRO_DNP_RADIX(2, 1)):
+				this->SelectEvents(PC_ALL_EVENTS, Group2Var1::Inst(), mBinaryEvents, GetEventCount(hdr.info()));
+				break;
+			case(MACRO_DNP_RADIX(2, 2)):
+				this->SelectEvents(PC_ALL_EVENTS, Group2Var2::Inst(), mBinaryEvents, GetEventCount(hdr.info()));
+				break;
+			case(MACRO_DNP_RADIX(2, 3)):
+				this->SelectEvents(PC_ALL_EVENTS, Group2Var3::Inst(), mBinaryEvents, GetEventCount(hdr.info()));
+				break;
 
-			// Class Objects
-		case(MACRO_DNP_RADIX(60, 1)):
-			this->AddIntegrityPoll();
-			break;
-		case(MACRO_DNP_RADIX(60, 2)):
-			this->SelectEvents(PC_CLASS_1, GetEventCount(hdr.info()));
-			break;
-		case(MACRO_DNP_RADIX(60, 3)):
-			this->SelectEvents(PC_CLASS_2, GetEventCount(hdr.info()));
-			break;
-		case(MACRO_DNP_RADIX(60, 4)):
-			this->SelectEvents(PC_CLASS_3, GetEventCount(hdr.info()));
-			break;
-		default:
-			LOG_BLOCK(LEV_WARNING, "READ for obj " << hdr->GetGroup() << " var " << hdr->GetVariation() << " not supported.");
-			this->mTempIIN.SetFuncNotSupported(true);
-			break;
+				// Class Objects
+			case(MACRO_DNP_RADIX(60, 1)):
+					this->RecordStaticObjects<BinaryInfo>(mpRspTypes->mpStaticBinary, hdr);
+					this->RecordStaticObjects<AnalogInfo>(mpRspTypes->mpStaticAnalog, hdr);
+					this->RecordStaticObjects<CounterInfo>(mpRspTypes->mpStaticCounter, hdr);
+					this->RecordStaticObjects<ControlStatusInfo>(mpRspTypes->mpStaticControlStatus, hdr);
+					this->RecordStaticObjects<SetpointStatusInfo>(mpRspTypes->mpStaticSetpointStatus, hdr);
+				break;
+			case(MACRO_DNP_RADIX(60, 2)):
+				this->SelectEvents(PC_CLASS_1, GetEventCount(hdr.info()));
+				break;
+			case(MACRO_DNP_RADIX(60, 3)):
+				this->SelectEvents(PC_CLASS_2, GetEventCount(hdr.info()));
+				break;
+			case(MACRO_DNP_RADIX(60, 4)):
+				this->SelectEvents(PC_CLASS_3, GetEventCount(hdr.info()));
+				break;
+			default:
+				LOG_BLOCK(LEV_WARNING, "READ for obj " << hdr->GetGroup() << " var " << hdr->GetVariation() << " not supported.");
+				this->mTempIIN.SetFuncNotSupported(true);
+				break;
 		}
 	}
 
@@ -280,17 +330,6 @@ bool ResponseContext::LoadUnsol(APDU& arAPDU, const IINField& arIIN, ClassMask m
 	bool events = false;
 	this->LoadEventData(arAPDU, events);
 	return events;
-}
-
-bool ResponseContext::LoadStaticData(APDU& arAPDU)
-{
-	if(!this->LoadStaticBinaries(arAPDU)) return false;
-	if(!this->LoadStaticCounters(arAPDU)) return false;
-	if(!this->LoadStaticAnalogs(arAPDU)) return false;
-	if(!this->LoadStaticControlStatii(arAPDU)) return false;
-	if(!this->LoadStaticSetpointStatii(arAPDU)) return false;
-
-	return true;
 }
 
 bool ResponseContext::LoadEventData(APDU& arAPDU, bool& arEventsLoaded)
@@ -384,9 +423,7 @@ bool ResponseContext::IsEmpty()
 
 bool ResponseContext::IsStaticEmpty()
 {
-	return this->mStaticBinaries.empty() && this->mStaticCounters.empty() &&
-	       this->mStaticAnalogs.empty() && this->mStaticControls.empty() &&
-	       this->mStaticSetpoints.empty();
+	return this->mWriteMap.empty();
 }
 
 bool ResponseContext::IsEventEmpty()
@@ -403,143 +440,20 @@ void ResponseContext::FinalizeResponse(APDU& arAPDU, bool aHasEventData, bool aF
 	mFIR = false;
 }
 
-bool ResponseContext::LoadStaticBinaries(APDU& arAPDU)
+bool ResponseContext::LoadStaticData(APDU& arAPDU)
 {
-	while(!mStaticBinaries.empty()) {
-		IterRecord<BinaryInfo>& iter = this->mStaticBinaries.front();
-		int grp = iter.pObject->GetGroup();
-		int var = iter.pObject->GetVariation();
+	while(!this->mWriteMap.empty()) {
 
-		switch(MACRO_DNP_RADIX(grp, var)) {
-			//special case for the bitfield
-			/*case(MACRO_DNP_RADIX(1,1)):
-			{
-				WriteFunc<Binary>::Type func = bind(&Group1Var1::Write, Group1Var1::Inst(), _1, iter.first->mIndex, _3, _2);
-				if(!this->IterateContiguous(iter, arAPDU, func)) return false;
-				break;
-			}*/
+		WriteMap::iterator i = this->mWriteMap.begin();
 
-			MACRO_CONTINUOUS_CASE(1, 2);
-
-		default:
-			break;
+		if(i->second(arAPDU))
+		{
+			this->mWriteMap.erase(i);
 		}
-
-		this->mStaticBinaries.pop_front();
+		else return false;
 	}
 
 	return true;
-}
-
-bool ResponseContext::LoadStaticAnalogs(APDU& arAPDU)
-{
-	while(!mStaticAnalogs.empty()) {
-		IterRecord<AnalogInfo>& iter = this->mStaticAnalogs.front();
-		int grp = iter.pObject->GetGroup();
-		int var = iter.pObject->GetVariation();
-
-		switch(MACRO_DNP_RADIX(grp, var)) {
-			MACRO_CONTINUOUS_CASE(30, 1);
-			MACRO_CONTINUOUS_CASE(30, 2);
-			MACRO_CONTINUOUS_CASE(30, 3);
-			MACRO_CONTINUOUS_CASE(30, 4);
-			MACRO_CONTINUOUS_CASE(30, 5);
-			MACRO_CONTINUOUS_CASE(30, 6);
-
-		default:
-			break;
-		}
-
-		this->mStaticAnalogs.pop_front();
-	}
-
-	return true;
-}
-
-bool ResponseContext::LoadStaticCounters(APDU& arAPDU)
-{
-	while(!mStaticCounters.empty()) {
-		IterRecord<CounterInfo>& iter = this->mStaticCounters.front();
-		int grp = iter.pObject->GetGroup();
-		int var = iter.pObject->GetVariation();
-
-		// Delta counters omitted
-		switch(MACRO_DNP_RADIX(grp, var)) {
-			MACRO_CONTINUOUS_CASE(20, 1);
-			MACRO_CONTINUOUS_CASE(20, 2);
-			MACRO_CONTINUOUS_CASE(20, 5);
-			MACRO_CONTINUOUS_CASE(20, 6);
-
-		default:
-			break;
-		}
-
-		this->mStaticCounters.pop_front();
-	}
-
-	return true;
-}
-
-bool ResponseContext::LoadStaticControlStatii(APDU& arAPDU)
-{
-	while(!mStaticControls.empty()) {
-		IterRecord<ControlStatusInfo>& iter = this->mStaticControls.front();
-		int grp = iter.pObject->GetGroup();
-		int var = iter.pObject->GetVariation();
-
-		switch(MACRO_DNP_RADIX(grp, var)) {
-			MACRO_CONTINUOUS_CASE(10, 2);
-
-		default:
-			break;
-		}
-
-		this->mStaticControls.pop_front();
-	}
-
-	return true;
-}
-
-/*
-bool ResponseContext::WriteCTO(const TimeStamp_t& arTime, APDU& arAPDU)
-{
-	Group51Var1* pObj = Group51Var1::Inst();
-	ObjectWriteIterator owi = arAPDU.WriteContiguous(pObj, 0, 0);
-	if(owi.IsEnd()) return false;
-	pObj->mTime.Set(*owi, arTime);
-	return true;
-}*/
-
-bool ResponseContext::LoadStaticSetpointStatii(APDU& arAPDU)
-{
-	while(!mStaticSetpoints.empty()) {
-		IterRecord<SetpointStatusInfo>& iter = this->mStaticSetpoints.front();
-		int grp = iter.pObject->GetGroup();
-		int var = iter.pObject->GetVariation();
-
-		switch(MACRO_DNP_RADIX(grp, var)) {
-			MACRO_CONTINUOUS_CASE(40, 1);
-			MACRO_CONTINUOUS_CASE(40, 2);
-			MACRO_CONTINUOUS_CASE(40, 3);
-			MACRO_CONTINUOUS_CASE(40, 4);
-
-		default:
-			break;
-		}
-
-		this->mStaticSetpoints.pop_front();
-	}
-
-	return true;
-}
-
-void ResponseContext::AddIntegrityPoll()
-{
-	this->AddIntegrity(mStaticBinaries, mpRspTypes->mpStaticBinary);
-	this->AddIntegrity(mStaticAnalogs, mpRspTypes->mpStaticAnalog);
-	this->AddIntegrity(mStaticCounters, mpRspTypes->mpStaticCounter);
-	this->AddIntegrity(mStaticControls, mpRspTypes->mpStaticControlStatus);
-	this->AddIntegrity(mStaticSetpoints, mpRspTypes->mpStaticSetpointStatus);
 }
 
 }

@@ -3,23 +3,17 @@
 #include <msclr\marshal_cppstd.h>
 #include "Conversions.h"
 
-namespace DNPDotNet {
+using namespace DNP3::Interface;
+
+namespace DNP3
+{	
+namespace Adapter
+{
 
 	System::Exception^ Conversions::convertException(const apl::Exception& ex)
 	{		
 		return gcnew System::Exception(convertString(ex.GetErrorString()));
-	}
-
-	System::DateTime Conversions::convertTime(apl::millis_t time)
-	{
-		// each 'tick' represents 100 nanoseconds
-		return System::DateTime(10000*time);
-	}
-
-	apl::millis_t Conversions::convertTime(System::DateTime time)
-	{
-		return time.Ticks / 10000;
-	}
+	}	
 
 	std::string Conversions::convertString(System::String^ s)
 	{
@@ -246,61 +240,61 @@ namespace DNPDotNet {
 
 	Binary^ Conversions::convertMeas(apl::Binary meas)
 	{
-		return gcnew Binary(meas.GetValue(), meas.GetQuality(), convertTime(meas.GetTime()));
+		return gcnew Binary(meas.GetValue(), meas.GetQuality(), TimeStamp::Convert(meas.GetTime()));
 	}
 
 	Analog^ Conversions::convertMeas(apl::Analog meas)
 	{
-		return gcnew Analog(meas.GetValue(), meas.GetQuality(), convertTime(meas.GetTime()));
+		return gcnew Analog(meas.GetValue(), meas.GetQuality(), TimeStamp::Convert(meas.GetTime()));
 	}
 
 	Counter^ Conversions::convertMeas(apl::Counter meas)
 	{
-		return gcnew Counter(meas.GetValue(), meas.GetQuality(), convertTime(meas.GetTime()));
+		return gcnew Counter(meas.GetValue(), meas.GetQuality(), TimeStamp::Convert(meas.GetTime()));
 	}
 
 	SetpointStatus^ Conversions::convertMeas(apl::SetpointStatus meas)
 	{
-		return gcnew SetpointStatus(meas.GetValue(), meas.GetQuality(), convertTime(meas.GetTime()));
+		return gcnew SetpointStatus(meas.GetValue(), meas.GetQuality(), TimeStamp::Convert(meas.GetTime()));
 	}
 
 	ControlStatus^ Conversions::convertMeas(apl::ControlStatus meas)
 	{
-		return gcnew ControlStatus(meas.GetValue(), meas.GetQuality(), convertTime(meas.GetTime()));
+		return gcnew ControlStatus(meas.GetValue(), meas.GetQuality(), TimeStamp::Convert(meas.GetTime()));
 	}
 
 	apl::Binary Conversions::convertMeas(Binary^ meas)
 	{
 		apl::Binary m(meas->value, meas->quality);
-		m.SetTime(convertTime(meas->time));
+		m.SetTime(TimeStamp::Convert(meas->time));
 		return m;
 	}
 	
 	apl::Analog Conversions::convertMeas(Analog^ meas)
 	{
 		apl::Analog m(meas->value, meas->quality);
-		m.SetTime(convertTime(meas->time));
+		m.SetTime(TimeStamp::Convert(meas->time));
 		return m;
 	}
 	
 	apl::Counter Conversions::convertMeas(Counter^ meas)
 	{
 		apl::Counter m(meas->value, meas->quality);
-		m.SetTime(convertTime(meas->time));
+		m.SetTime(TimeStamp::Convert(meas->time));
 		return m;
 	}
 	
 	apl::SetpointStatus Conversions::convertMeas(SetpointStatus^ meas)
 	{
 		apl::SetpointStatus m(meas->value, meas->quality);
-		m.SetTime(convertTime(meas->time));
+		m.SetTime(TimeStamp::Convert(meas->time));
 		return m;
 	}
 	
 	apl::ControlStatus Conversions::convertMeas(ControlStatus^ meas)
 	{
 		apl::ControlStatus m(meas->value, meas->quality);
-		m.SetTime(convertTime(meas->time));
+		m.SetTime(TimeStamp::Convert(meas->time));
 		return m;
 	}
 
@@ -443,4 +437,4 @@ namespace DNPDotNet {
 		cfg.link = convertConfig(config->link);
 		return cfg;
 	}
-}
+}}

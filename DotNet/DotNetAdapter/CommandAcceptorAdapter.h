@@ -29,8 +29,11 @@ using namespace System::Collections::ObjectModel;
 
 using namespace DNP3::Interface;
 
-namespace DNPDotNet
+namespace DNP3
 {		
+namespace Adapter
+{
+
 	class ResponseRouter : public apl::IResponseAcceptor
 	{
 		public:
@@ -64,6 +67,6 @@ namespace DNPDotNet
 		ResponseRouter* mpRouter;
 	};
 	
-}
+}}
 
 #endif

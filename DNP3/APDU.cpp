@@ -637,8 +637,8 @@ std::string APDU::ToString() const
 		for ( ; !itr.IsEnd(); ++itr) {
 			oss << " Header: (Grp: " << itr->GetGroup();
 			oss << ", Var: " << itr->GetVariation();
-			oss << ", Qual: " << itr->GetQualifier();
-			oss << ", Count: " << itr->GetCount();
+			oss << ", Qual: " << itr->GetQualifier() << ", ";			
+			oss << itr->GetHeader()->ToString(*itr);			
 			oss << ")";
 		}
 	}

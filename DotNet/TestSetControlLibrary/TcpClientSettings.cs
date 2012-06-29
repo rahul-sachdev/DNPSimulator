@@ -7,9 +7,9 @@ using DNP3.Interface;
 
 namespace TestSetControlLibrary
 {
-    public class TcpClientSettings
+    public class TcpSettings
     {
-        public TcpClientSettings(String name, String address, UInt16 port, FilterLevel level, UInt64 timeout)
+        public TcpSettings(String name, String address, UInt16 port, FilterLevel level, UInt64 timeout)
         {
             this.name = name;
             this.address = address;
@@ -23,5 +23,18 @@ namespace TestSetControlLibrary
         public readonly UInt16 port;
         public readonly FilterLevel level;
         public readonly UInt64 timeout;
+
+        public override string ToString()
+        {
+            var lines = new String[] 
+                {"name: " + name, 
+                  "address: " + address, 
+                  "port: " + port, 
+                  "level: " + level, 
+                  "timeout: " + timeout
+                };
+
+            return String.Join(Environment.NewLine, lines);
+        }
     }
 }

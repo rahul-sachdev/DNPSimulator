@@ -26,8 +26,10 @@ using namespace System::Collections::ObjectModel;
 
 using namespace DNP3::Interface;
 
-namespace DNPDotNet
-{		
+namespace DNP3
+{	
+namespace Adapter
+{
 	class LogAdapter : public apl::ILogBase
 	{
 		public:
@@ -58,6 +60,6 @@ namespace DNPDotNet
 		private:
 		LogAdapter* mpAdapter;
 	};
-}
+}}
 
 #endif

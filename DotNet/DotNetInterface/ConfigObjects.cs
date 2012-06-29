@@ -23,7 +23,6 @@ namespace DNP3.Interface
             this.timeout = timeout;
         }
 
-
 		public LinkConfig(bool isMaster, bool useConfirms)
         {
 			this.isMaster = isMaster;
@@ -34,6 +33,11 @@ namespace DNP3.Interface
 			this.timeout = 1000;
 		}
 
+
+        public LinkConfig(): this(true, false)
+        {
+            
+        }
 
 		/// <summary>
 		/// The master/slave bit set on all messages
@@ -106,6 +110,12 @@ namespace DNP3.Interface
 		    this.classMask = classMask;
             this.scanRateMs = scanRateMs;
 	    }
+
+        public ExceptionScan() 
+        {
+            this.classMask = (Int32) PointClass.PC_CLASS_0;
+            this.scanRateMs = 5000;
+        }
 
         public System.Int32 classMask;
         public System.Int64 scanRateMs;
@@ -184,7 +194,7 @@ namespace DNP3.Interface
 		/// <summary>
         /// vector that holds exception scans
 		/// </summary>
-		public readonly List<ExceptionScan> scans;
+		public List<ExceptionScan> scans;
 	}
 
     public struct ClassMask 
@@ -194,7 +204,7 @@ namespace DNP3.Interface
             this.class1 = c1;
             this.class2 = c2;
             this.class3 = c3;
-	    }	    
+	    }        
 
 	    public bool class1;
 	    public bool class2;
@@ -208,10 +218,10 @@ namespace DNP3.Interface
         {
             this.grp = grp;
             this.var = var;
-        }
+        }        
 
-	    public readonly int grp;
-        public readonly int var;
+	    public int grp;
+        public int var;
     }
 
     public class EventMaxConfig {
@@ -233,17 +243,17 @@ namespace DNP3.Interface
 	    /// <summary>
 	    /// The number of binary events the slave will buffer before overflowing */
 	    /// </summary>
-	    public readonly System.UInt32 maxBinaryEvents;
+	    public System.UInt32 maxBinaryEvents;
 
 	    /// <summary>
 	    /// The number of analog events the slave will buffer before overflowing
 	    /// </summary>
-        public readonly System.UInt32 maxAnalogEvents;
+        public System.UInt32 maxAnalogEvents;
 
 	    /// <summary>
 	    /// The number of counter events the slave will buffer before overflowing
 	    /// </summary>
-        public readonly System.UInt32 maxCounterEvents;	
+        public System.UInt32 maxCounterEvents;	
     }
 
 
@@ -369,6 +379,12 @@ namespace DNP3.Interface
             this.pointClass = pointClass;
         }
 
+        public EventPointRecord()
+            : this(PointClass.PC_CLASS_0)
+        { 
+        
+        }
+
         public PointClass pointClass;
     };
 
@@ -378,6 +394,10 @@ namespace DNP3.Interface
         {
             this.deadband = deadband;
         }
+
+        public DeadbandEventPointRecord()
+            : this(PointClass.PC_CLASS_0, 0.1)
+        { }
 
         public double deadband;
     };
@@ -389,6 +409,10 @@ namespace DNP3.Interface
             this.mode = mode;
             this.selectTimeoutMs = selectTimeoutMs;
         }
+
+        public ControlRecord()
+            : this(CommandModes.CM_SBO_ONLY, 5000)
+        { }
 
         public CommandModes mode;
         public System.Int64 selectTimeoutMs;
@@ -413,14 +437,18 @@ namespace DNP3.Interface
             setpoints = Enumerable.Range(0, (int )numSetpoints).Select(i => new ControlRecord(CommandModes.CM_SBO_ONLY, 5000)).ToList();
         }
 
-        public readonly List<EventPointRecord> binaries;
-        public readonly List<EventPointRecord> counters;
-        public readonly List<DeadbandEventPointRecord> analogs;
-        public readonly List<PointRecord> controlStatii;
-        public readonly List<PointRecord> setpointStatii;
+        public DeviceTemplate()
+            : this(10, 10, 10, 10, 10, 10, 10)
+        { }
 
-        public readonly List<ControlRecord> controls;
-        public readonly List<ControlRecord> setpoints;
+        public List<EventPointRecord> binaries;
+        public List<EventPointRecord> counters;
+        public List<DeadbandEventPointRecord> analogs;
+        public List<PointRecord> controlStatii;
+        public List<PointRecord> setpointStatii;
+
+        public List<ControlRecord> controls;
+        public List<ControlRecord> setpoints;
     };
 
 	public class MasterStackConfig
@@ -430,7 +458,7 @@ namespace DNP3.Interface
             this.link = new LinkConfig(true, false);
             this.master = new MasterConfig();
             this.app = new AppConfig();
-		}
+		}        
 
         public MasterConfig master;
         public AppConfig app;

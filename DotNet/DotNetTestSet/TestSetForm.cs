@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-using DNPDotNet;
+using DNP3.Adapter;
 using DNP3.Interface;
 using TestSetControlLibrary;
 
@@ -27,21 +27,26 @@ namespace DotNetTestSet
             sm.AddLogHandler(lca);            
         }        
 
-        private void stackBrowser1_OnTcpClientAdded(TcpClientSettings s)
+        private void stackBrowser1_OnTcpClientAdded(TcpSettings s)
         {
             sm.AddTCPClient(s.name, s.level, s.timeout, s.address, s.port);                            
-        }      
+        }
+
+        private void stackBrowser1_OnTcpServerAdded(TcpSettings s)
+        {
+            sm.AddTCPServer(s.name, s.level, s.timeout, s.address, s.port);
+        }
+
+        private void stackBrowser1_OnSerialPortAdded(SerialSettings settings)
+        {
+            sm.AddSerial(settings.port, FilterLevel.LEV_WARNING, 5000, settings);
+        }
 
         private void stackBrowser1_OnAddMaster(string name, string port, FilterLevel level, MasterStackConfig config)
-        {
-            //create the new form
-            var display = new MasterDataDisplay();
-            var adapter = new DisplayAdapterDataObserver(display);
-            display.Dock = DockStyle.Fill;
-            TabPage page = new TabPage(name);
-            this.tabControlDisplay.TabPages.Add(page);
-            page.Controls.Add(display);            
-            display.CommandAcceptor = sm.AddMaster(port, name, level, adapter, config);                            
+        {            
+            var observer = new EventedDataObserver(this);
+            var control = this.stackDisplayControl.AddMaster(name, observer.MeasurementSource);             
+            control.CommandAcceptor = sm.AddMaster(port, name, level, observer, config);                            
         }
 
         private void stackBrowser1_OnRemovePort(string name)
@@ -53,6 +58,16 @@ namespace DotNetTestSet
         {
             sm.RemoveStack(name);
         }
+
+        private void addNewChartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var chart = new TimeSeriesChartForm();
+            chart.Show();
+        }
+
+        
+
+        
     }
 
     

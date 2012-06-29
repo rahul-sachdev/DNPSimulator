@@ -18,7 +18,7 @@ namespace DNP3.Interface
     }    
 
     public class SerialSettings {
-        SerialSettings(String port, int baud, int dataBits, int stopBits, Parity parity, FlowControl flowControl)
+        public SerialSettings(String port, int baud, int dataBits, int stopBits, Parity parity, FlowControl flowControl)
         {
             this.port = port;
             this.baud = baud;
@@ -34,5 +34,20 @@ namespace DNP3.Interface
         public readonly int stopBits;
         public readonly Parity parity;
         public readonly FlowControl flowControl;
+
+        public override string ToString()
+        {
+            var lines = new String[] 
+            {
+                "port: " + port, 
+                "baud: " + baud, 
+                "dataBits: " + dataBits, 
+                "stopBits: " + stopBits, 
+                "parity: " + parity,
+                "flow control: " + flowControl
+            };
+
+            return String.Join(Environment.NewLine, lines);
+        }
     }
 }

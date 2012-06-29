@@ -21,20 +21,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_3C6FFAF7E1234F79920CE7578A45C1D2"
-        "OwnerKey" = "8:_E0F71378689B418FBDB93B11F8B88A96"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_3C97C7F52EF2475793849299456C903C"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4A7F932173142367CF9D2CEAFB6E2C7B"
-        "OwnerKey" = "8:_E0F71378689B418FBDB93B11F8B88A96"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -57,12 +45,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E0F71378689B418FBDB93B11F8B88A96"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_F081529C94554082B7299990E670FB04"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -70,19 +52,7 @@
         "Entry"
         {
         "MsmKey" = "8:_F4AE81062D2F0FE1D3F581D4E238D367"
-        "OwnerKey" = "8:_E0F71378689B418FBDB93B11F8B88A96"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F4AE81062D2F0FE1D3F581D4E238D367"
-        "OwnerKey" = "8:_3C97C7F52EF2475793849299456C903C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F4AE81062D2F0FE1D3F581D4E238D367"
-        "OwnerKey" = "8:_CFA0123F195ED0C4264F4160A5CE51CF"
+        "OwnerKey" = "8:_6D72A2EB1E49F9FBF044ECC99FBCA67D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -94,7 +64,13 @@
         "Entry"
         {
         "MsmKey" = "8:_F4AE81062D2F0FE1D3F581D4E238D367"
-        "OwnerKey" = "8:_6D72A2EB1E49F9FBF044ECC99FBCA67D"
+        "OwnerKey" = "8:_CFA0123F195ED0C4264F4160A5CE51CF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F4AE81062D2F0FE1D3F581D4E238D367"
+        "OwnerKey" = "8:_3C97C7F52EF2475793849299456C903C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -106,19 +82,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3C97C7F52EF2475793849299456C903C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F081529C94554082B7299990E670FB04"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CFA0123F195ED0C4264F4160A5CE51CF"
+        "OwnerKey" = "8:_128484563B0E45FF9235BC1DE6D19C5F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -130,13 +94,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_128484563B0E45FF9235BC1DE6D19C5F"
+        "OwnerKey" = "8:_CFA0123F195ED0C4264F4160A5CE51CF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E0F71378689B418FBDB93B11F8B88A96"
+        "OwnerKey" = "8:_F081529C94554082B7299990E670FB04"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_3C97C7F52EF2475793849299456C903C"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -157,6 +127,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -173,6 +151,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -202,26 +188,6 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4A7F932173142367CF9D2CEAFB6E2C7B"
-            {
-            "SourcePath" = "8:MSWSOCK.dll"
-            "TargetName" = "8:MSWSOCK.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_43251787E7DD47F3B1ECEE904EDB57EB"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6D72A2EB1E49F9FBF044ECC99FBCA67D"
             {
             "AssemblyRegister" = "3:1"
@@ -229,11 +195,6 @@
             "AssemblyAsmDisplayName" = "8:DotNetAdapter, Version=1.0.4548.31430, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_6D72A2EB1E49F9FBF044ECC99FBCA67D"
-                    {
-                    "Name" = "8:DotNetAdapter.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:DotNetAdapter.dll"
             "TargetName" = "8:"
@@ -260,11 +221,6 @@
             "AssemblyAsmDisplayName" = "8:TestSetControlLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_CFA0123F195ED0C4264F4160A5CE51CF"
-                    {
-                    "Name" = "8:TestSetControlLibrary.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:TestSetControlLibrary.dll"
             "TargetName" = "8:"
@@ -291,11 +247,6 @@
             "AssemblyAsmDisplayName" = "8:DotNetInterface, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_F4AE81062D2F0FE1D3F581D4E238D367"
-                    {
-                    "Name" = "8:DotNetInterface.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:DotNetInterface.dll"
             "TargetName" = "8:"
@@ -888,26 +839,12 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_3C6FFAF7E1234F79920CE7578A45C1D2"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:Microsoft_VC100_DebugCRT_x86.msm"
-                "Properties"
-                {
-                }
-            "LanguageId" = "3:0"
-            "Exclude" = "11:FALSE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
         }
         "ProjectOutput"
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_128484563B0E45FF9235BC1DE6D19C5F"
             {
-            "SourcePath" = "8:..\\DotNetInterface\\obj\\Debug\\DotNetInterface.dll"
+            "SourcePath" = "8:..\\DotNetInterface\\obj\\Release\\DotNetInterface.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_43251787E7DD47F3B1ECEE904EDB57EB"
@@ -935,7 +872,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3C97C7F52EF2475793849299456C903C"
             {
-            "SourcePath" = "8:..\\TestSetControlLibrary\\obj\\Debug\\TestSetControlLibrary.dll"
+            "SourcePath" = "8:..\\TestSetControlLibrary\\obj\\Release\\TestSetControlLibrary.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_43251787E7DD47F3B1ECEE904EDB57EB"
@@ -961,37 +898,9 @@
                 {
                 }
             }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_E0F71378689B418FBDB93B11F8B88A96"
-            {
-            "SourcePath" = "8:..\\..\\Debug\\DotNetAdapter.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_43251787E7DD47F3B1ECEE904EDB57EB"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
-            "OutputProjectGuid" = "8:{686B212F-3FE0-455A-B78B-0980D9F2F837}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_F081529C94554082B7299990E670FB04"
             {
-            "SourcePath" = "8:..\\DotNetTestSet\\obj\\x86\\Debug\\DotNetTestSet.exe"
+            "SourcePath" = "8:..\\DotNetTestSet\\obj\\x86\\Release\\DotNetTestSet.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_43251787E7DD47F3B1ECEE904EDB57EB"

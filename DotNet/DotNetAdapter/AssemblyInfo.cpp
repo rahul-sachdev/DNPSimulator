@@ -11,11 +11,11 @@ using namespace System::Security::Permissions;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly:AssemblyTitleAttribute("DNPDotNet")];
+[assembly:AssemblyTitleAttribute("DotNetAdapter")];
 [assembly:AssemblyDescriptionAttribute("")];
 [assembly:AssemblyConfigurationAttribute("")];
 [assembly:AssemblyCompanyAttribute("Green Energy Corp")];
-[assembly:AssemblyProductAttribute("DNPDotNet")];
+[assembly:AssemblyProductAttribute("DotNetAdapter")];
 [assembly:AssemblyCopyrightAttribute("Copyright (c) Green Energy Corp 2012")];
 [assembly:AssemblyTrademarkAttribute("")];
 [assembly:AssemblyCultureAttribute("")];

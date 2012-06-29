@@ -20,8 +20,10 @@
 #include "SlaveDataObserverAdapter.h"
 #include "Conversions.h"
 
-namespace DNPDotNet
-{			
+namespace DNP3
+{	
+namespace Adapter
+{		
 
 
 SlaveDataObserverAdapter::SlaveDataObserverAdapter(apl::IDataObserver* proxy) : 
@@ -64,5 +66,5 @@ void SlaveDataObserverAdapter::End()
 }
 
 
-}
+}}
 

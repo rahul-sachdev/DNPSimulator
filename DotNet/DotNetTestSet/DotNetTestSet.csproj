@@ -79,8 +79,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DotNetAdapter\DNPDotNet.vcxproj">
-      <Project>{686B212F-3FE0-455A-B78B-0980D9F2F837}</Project>
+    <ProjectReference Include="..\DotNetAdapter\DotNetAdapter.vcxproj">
+      <Project>{83D36075-5D61-4D88-9EBF-1BD87359A47A}</Project>
       <Name>DotNetAdapter</Name>
     </ProjectReference>
     <ProjectReference Include="..\DotNetInterface\DotNetInterface.csproj">
