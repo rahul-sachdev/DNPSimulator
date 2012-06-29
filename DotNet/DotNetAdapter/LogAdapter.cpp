@@ -37,7 +37,7 @@ void LogAdapter::Log( const apl::LogEntry& arEntry )
 	System::String^ loggerName = Conversions::convertString(arEntry.GetDeviceName());
 	System::String^ location = Conversions::convertString(arEntry.GetLocation());
 	System::String^ message = Conversions::convertString(arEntry.GetMessage());
-	System::DateTime time = Conversions::convertTime(arEntry.GetTimeStamp());
+	System::DateTime time = TimeStamp::Convert(arEntry.GetTimeStamp());
 	LogEntry^ le = gcnew LogEntry(level, loggerName, location, message, time, arEntry.GetErrorCode());
 	
 	proxy->Log(le);

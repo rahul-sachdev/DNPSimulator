@@ -41,6 +41,9 @@
     <Filter Include="Source Files\Application\Channels">
       <UniqueIdentifier>{87e1e548-733a-425a-952f-97f3f76c6ddd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Interface">
+      <UniqueIdentifier>{afdce815-20cf-48d3-a1f8-a3a34dc53f57}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DNPConstants.h">
