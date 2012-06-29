@@ -55,6 +55,24 @@ class ResponseContext : public Loggable
 		UNSOLICITED
 	};
 
+	enum RequestType {
+		RT_STATIC = 0,
+		RT_EVENT = 1
+	};
+
+	//used as a key that decides in what order response headers are packed into APDUs
+	struct ResponseKey {
+
+		ResponseKey(RequestType aType, size_t aOrder);
+
+		RequestType mType;
+		size_t mOrder;
+
+		// custom less than function used by STL
+		bool operator()(const ResponseKey& a, const ResponseKey& b) const;
+	};
+	
+
 	/**
 	* This function takes an APDU, writes some data to it, and modifies the current state of the
 	* ResponseContext class. It returns true if all of the data was written before the APDU was full, 
@@ -141,16 +159,7 @@ private:
 	SlaveResponseTypes* mpRspTypes;
 
 	IINField mTempIIN;
-
-	template <class T>
-	struct IterRecord {
-		IterRecord() : pObject(NULL) {}
-
-		typename StaticIter<T>::Type first;				// Begining of iteration
-		typename StaticIter<T>::Type last;				// Last element of iteration
-		StreamObject<typename T::MeasType>* pObject;	// Type to use to write
-	};
-
+	
 	template<class T>
 	struct EventRequest {
 		EventRequest(const StreamObject<T>* apObj, size_t aCount = std::numeric_limits<size_t>::max()) :
@@ -187,10 +196,7 @@ private:
 	BinaryEventQueue mBinaryEvents;
 	AnalogEventQueue mAnalogEvents;
 	CounterEventQueue mCounterEvents;
-	VtoEventQueue mVtoEvents;
-
-	template <class T>
-	void AddIntegrity(std::deque< IterRecord<T> >& arQueue, StreamObject<typename T::MeasType>* apObject);	
+	VtoEventQueue mVtoEvents;	
 
 	template <class T>
 	bool LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> >& arQueue, bool& arEventsLoaded);
@@ -225,7 +231,7 @@ private:
 	void RecordAllStaticObjects(StreamObject<typename T::MeasType>* apObject);
 
 	template <class T>
-	bool WriteAllStaticObjects(StreamObject<typename T::MeasType>* apObject, IterRecord<T>& arRecord, APDU& arAPDU);
+	bool WriteAllStaticObjects(StreamObject<typename T::MeasType>* apObject, typename StaticIter<T>::Type& arStart, typename StaticIter<T>::Type& arStop, APDU& arAPDU);
 };
 
 template <class T>
@@ -246,44 +252,32 @@ void ResponseContext::RecordAllStaticObjects(StreamObject<typename T::MeasType>*
 {
 	size_t num = mpDB->NumType(T::MeasType::MeasEnum);
 	if(num > 0) {
-		IterRecord<T> record;
-		mpDB->Begin(record.first); record.last = record.first + (num - 1);
-		record.pObject = apObject;
-		WriteFunction func = boost::bind(&ResponseContext::WriteAllStaticObjects<T>, this, apObject, record, _1);
+		typename StaticIter<T>::Type first;
+		mpDB->Begin(first); 
+		typename StaticIter<T>::Type last = first + (num - 1);		
+		WriteFunction func = boost::bind(&ResponseContext::WriteAllStaticObjects<T>, this, apObject, first, last, _1);
 		this->mStaticWriteQueue.push_back(func);
 	}
 }
 
 template <class T>
-bool ResponseContext::WriteAllStaticObjects(StreamObject<typename T::MeasType>* apObject, IterRecord<T>& arRecord, APDU& arAPDU)
+bool ResponseContext::WriteAllStaticObjects(StreamObject<typename T::MeasType>* apObject, typename StaticIter<T>::Type& arStart, typename StaticIter<T>::Type& arStop, APDU& arAPDU)
 {
-	size_t start = arRecord.first->mIndex;
-	size_t stop = arRecord.last->mIndex;	
+	size_t start = arStart->mIndex;
+	size_t stop = arStop->mIndex;	
 	ObjectWriteIterator owi = arAPDU.WriteContiguous(apObject, start, stop);
 
 	for(size_t i = start; i <= stop; ++i) {
 		if(owi.IsEnd()) { // out of space in the fragment
-			this->mStaticWriteQueue.front() = boost::bind(&ResponseContext::WriteAllStaticObjects<T>, this, apObject, arRecord, _1);
+			this->mStaticWriteQueue.front() = boost::bind(&ResponseContext::WriteAllStaticObjects<T>, this, apObject, arStart, arStop, _1);
 			return false; 
 		}
-		apObject->Write(*owi, arRecord.first->mValue);
-		++arRecord.first; //increment the iterators
+		apObject->Write(*owi, arStart->mValue);
+		++arStart; //increment the iterators
 		++owi;
 	}
 
 	return true;	
-}
-
-template <class T>
-void ResponseContext::AddIntegrity(std::deque< IterRecord<T> >& arQueue, StreamObject<typename T::MeasType>* apObject)
-{
-	size_t num = mpDB->NumType(T::MeasType::MeasEnum);
-	if(num > 0) {
-		IterRecord<T> record;
-		mpDB->Begin(record.first); record.last = record.first + (num - 1);
-		record.pObject = apObject;
-		arQueue.push_back(record);
-	}
 }
 
 template <class T>

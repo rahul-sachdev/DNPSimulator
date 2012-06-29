@@ -27,22 +27,23 @@
 
 using namespace boost;
 
-/*
-#define MACRO_CONTINUOUS_CASE(obj,var) \
-		case MACRO_DNP_RADIX(obj,var): { \
-			
-			if (!this->IterateContiguous(iter, arAPDU)) \
-			{ \
-				return false; \
-			} \
-			break; \
-		}
-*/
-
 namespace apl
 {
 namespace dnp
 {
+
+ResponseContext::ResponseKey::ResponseKey(ResponseContext::RequestType aType, size_t aOrder) : mType(aType), mOrder(aOrder)
+{}
+
+// custom less than function used by STL
+bool ResponseContext::ResponseKey::operator()(const ResponseContext::ResponseKey& a, const ResponseContext::ResponseKey& b) const {
+	if(a.mType < b.mType) return true;
+	else if(a.mType > b.mType) return false;
+	else { 
+		return a.mOrder < b.mOrder;
+	}
+}
+
 
 ResponseContext::ResponseContext(Logger* apLogger, Database* apDB, SlaveResponseTypes* apRspTypes, const EventMaxConfig& arEventMaxConfig) :
 	Loggable(apLogger),
@@ -60,15 +61,7 @@ void ResponseContext::Reset()
 	mMode = UNDEFINED;
 	mTempIIN.Zero();
 
-/*
-	this->mStaticBinaries.clear();
-	this->mStaticAnalogs.clear();
-	this->mStaticCounters.clear();
-	this->mStaticControls.clear();
-	this->mStaticSetpoints.clear();
-*/
 	this->mStaticWriteQueue.clear();
-
 
 	this->mBinaryEvents.clear();
 	this->mAnalogEvents.clear();
@@ -84,7 +77,7 @@ void ResponseContext::ClearWritten()
 
 	size_t deselected = mBuffer.Deselect();
 
-	LOG_BLOCK(LEV_INTERPRET, "Clearing written events: " << written << " deselected: " << deselected);
+	LOG_BLOCK(LEV_DEBUG, "Clearing written events: " << written << " deselected: " << deselected);
 }
 
 void ResponseContext::ClearAndReset()
