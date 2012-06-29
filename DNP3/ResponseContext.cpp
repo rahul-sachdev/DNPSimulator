@@ -32,6 +32,9 @@ namespace apl
 namespace dnp
 {
 
+ResponseContext::ResponseKey::ResponseKey() : mType(RT_STATIC), mOrder(0)
+{}
+
 ResponseContext::ResponseKey::ResponseKey(ResponseContext::RequestType aType, size_t aOrder) : mType(aType), mOrder(aOrder)
 {}
 
@@ -61,7 +64,7 @@ void ResponseContext::Reset()
 	mMode = UNDEFINED;
 	mTempIIN.Zero();
 
-	this->mStaticWriteQueue.clear();
+	this->mWriteMap.clear();
 
 	this->mBinaryEvents.clear();
 	this->mAnalogEvents.clear();
@@ -372,7 +375,7 @@ bool ResponseContext::IsEmpty()
 
 bool ResponseContext::IsStaticEmpty()
 {
-	return this->mStaticWriteQueue.empty();
+	return this->mWriteMap.empty();
 }
 
 bool ResponseContext::IsEventEmpty()
@@ -391,11 +394,13 @@ void ResponseContext::FinalizeResponse(APDU& arAPDU, bool aHasEventData, bool aF
 
 bool ResponseContext::LoadStaticData(APDU& arAPDU)
 {
-	while(!this->mStaticWriteQueue.empty()) {
+	while(!this->mWriteMap.empty()) {
 
-		if(this->mStaticWriteQueue.front()(arAPDU))
+		WriteMap::iterator i = this->mWriteMap.begin();
+
+		if(i->second(arAPDU))
 		{
-			this->mStaticWriteQueue.pop_front();
+			this->mWriteMap.erase(i);
 		}
 		else return false;
 	}

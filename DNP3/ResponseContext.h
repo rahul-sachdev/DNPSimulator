@@ -63,6 +63,8 @@ class ResponseContext : public Loggable
 	//used as a key that decides in what order response headers are packed into APDUs
 	struct ResponseKey {
 
+		ResponseKey();		
+
 		ResponseKey(RequestType aType, size_t aOrder);
 
 		RequestType mType;
@@ -149,9 +151,7 @@ private:
 	bool IsStaticEmpty();
 	bool IsEventEmpty();
 
-	void AddIntegrityPoll();
-
-	//bool WriteCTO(const TimeStamp_t& arTime, APDU& arAPDU);
+	void AddIntegrityPoll();	
 
 	Database* mpDB;				// Pointer to the database for static data
 	bool mFIR;
@@ -181,7 +181,7 @@ private:
 		size_t count;						// Number of events to read
 	};	
 
-	typedef std::deque < WriteFunction >					StaticWriteQueue;
+	typedef std::map <ResponseKey, WriteFunction, ResponseKey >	WriteMap;
 
 	typedef std::deque< EventRequest<Binary> >				BinaryEventQueue;
 	typedef std::deque< EventRequest<Analog> >				AnalogEventQueue;
@@ -190,7 +190,7 @@ private:
 	typedef std::deque<VtoEventRequest>						VtoEventQueue;
 
 	// the queue that tracks the pending static write operations
-	StaticWriteQueue mStaticWriteQueue;	
+	WriteMap mWriteMap;
 
 	//these queues track what events have been requested
 	BinaryEventQueue mBinaryEvents;
@@ -231,7 +231,7 @@ private:
 	void RecordAllStaticObjects(StreamObject<typename T::MeasType>* apObject);
 
 	template <class T>
-	bool WriteAllStaticObjects(StreamObject<typename T::MeasType>* apObject, typename StaticIter<T>::Type& arStart, typename StaticIter<T>::Type& arStop, APDU& arAPDU);
+	bool WriteAllStaticObjects(StreamObject<typename T::MeasType>* apObject, typename StaticIter<T>::Type& arStart, typename StaticIter<T>::Type& arStop, const ResponseKey& arKey, APDU& arAPDU);
 };
 
 template <class T>
@@ -255,13 +255,14 @@ void ResponseContext::RecordAllStaticObjects(StreamObject<typename T::MeasType>*
 		typename StaticIter<T>::Type first;
 		mpDB->Begin(first); 
 		typename StaticIter<T>::Type last = first + (num - 1);		
-		WriteFunction func = boost::bind(&ResponseContext::WriteAllStaticObjects<T>, this, apObject, first, last, _1);
-		this->mStaticWriteQueue.push_back(func);
+		ResponseKey key(RT_STATIC, this->mWriteMap.size());
+		WriteFunction func = boost::bind(&ResponseContext::WriteAllStaticObjects<T>, this, apObject, first, last, key, _1);		
+		this->mWriteMap[key] = func;
 	}
 }
 
 template <class T>
-bool ResponseContext::WriteAllStaticObjects(StreamObject<typename T::MeasType>* apObject, typename StaticIter<T>::Type& arStart, typename StaticIter<T>::Type& arStop, APDU& arAPDU)
+bool ResponseContext::WriteAllStaticObjects(StreamObject<typename T::MeasType>* apObject, typename StaticIter<T>::Type& arStart, typename StaticIter<T>::Type& arStop, const ResponseKey& arKey, APDU& arAPDU)
 {
 	size_t start = arStart->mIndex;
 	size_t stop = arStop->mIndex;	
@@ -269,7 +270,7 @@ bool ResponseContext::WriteAllStaticObjects(StreamObject<typename T::MeasType>* 
 
 	for(size_t i = start; i <= stop; ++i) {
 		if(owi.IsEnd()) { // out of space in the fragment
-			this->mStaticWriteQueue.front() = boost::bind(&ResponseContext::WriteAllStaticObjects<T>, this, apObject, arStart, arStop, _1);
+			this->mWriteMap[arKey] = boost::bind(&ResponseContext::WriteAllStaticObjects<T>, this, apObject, arStart, arStop, arKey, _1);
 			return false; 
 		}
 		apObject->Write(*owi, arStart->mValue);
