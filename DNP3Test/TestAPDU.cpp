@@ -106,7 +106,7 @@ BOOST_AUTO_TEST_CASE(APDUToString)
 	frag.Write(hs, hs.Size());
 	frag.Interpret();
 
-	std::string interpreted = "FIR: 1, FIN: 1, CON: 0, UNS: 0, SEQ: 3, Func: Read HdrCount: 4, Header: (Grp: 60, Var: 2, Qual: 6, Count: 0) Header: (Grp: 60, Var: 3, Qual: 6, Count: 0) Header: (Grp: 60, Var: 4, Qual: 6, Count: 0) Header: (Grp: 60, Var: 1, Qual: 6, Count: 0), Size: 14";
+	std::string interpreted = "FIR: 1, FIN: 1, CON: 0, UNS: 0, SEQ: 3, Func: Read HdrCount: 4, Header: (Grp: 60, Var: 2, Qual: 6, All Objects) Header: (Grp: 60, Var: 3, Qual: 6, All Objects) Header: (Grp: 60, Var: 4, Qual: 6, All Objects) Header: (Grp: 60, Var: 1, Qual: 6, All Objects), Size: 14";
 
 	BOOST_REQUIRE_EQUAL(interpreted, frag.ToString());
 }

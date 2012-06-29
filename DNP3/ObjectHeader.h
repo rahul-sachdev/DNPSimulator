@@ -25,6 +25,7 @@
 #include <APL/Singleton.h>
 #include <APL/Exception.h>
 #include <limits>
+#include <sstream>
 
 #include <assert.h>
 
@@ -79,6 +80,8 @@ public:
 	void Get(const boost::uint8_t* apStart, ObjectHeaderField& arData) const;
 	void Set(boost::uint8_t* apStart, boost::uint8_t aGrp, boost::uint8_t aVar, QualifierCode aQual) const;
 
+	virtual std::string ToString(const boost::uint8_t* apStart) const = 0;
+
 	static QualifierCode ByteToQualifierCode(boost::uint8_t aCode);
 };
 
@@ -111,6 +114,11 @@ class AllObjectsHeader : public IObjectHeader
 	ObjectHeaderTypes GetType() const {
 		return OHT_ALL_OBJECTS;
 	}
+
+	virtual std::string ToString(const boost::uint8_t* apStart) const
+	{
+		return "All Objects";
+	}
 };
 
 template <class T, ObjectHeaderTypes U>
@@ -136,6 +144,15 @@ class RangedHeader : public IRangeHeader
 
 		T::Write(apStart + 3, static_cast<typename T::Type>(arInfo.Start));
 		T::Write(apStart + 3 + T::Size, static_cast<typename T::Type>(arInfo.Stop));
+	}
+
+	virtual std::string ToString(const boost::uint8_t* apStart) const
+	{
+		std::ostringstream oss;
+		RangeInfo ri;
+		this->GetRange(apStart, ri);
+		oss << "Start: " << ri.Start << " Stop: " << ri.Stop;
+		return oss.str();
 	}
 
 	static size_t MaxRange() {
@@ -171,6 +188,13 @@ class CountHeader : public ICountHeader
 
 	static size_t MaxCount() {
 		return T::Max;
+	}
+
+	virtual std::string ToString(const boost::uint8_t* apStart) const
+	{
+		std::ostringstream oss;		
+		oss << "Count: " << this->GetCount(apStart);
+		return oss.str();
 	}
 
 	const static size_t Size = 3 + T::Size;

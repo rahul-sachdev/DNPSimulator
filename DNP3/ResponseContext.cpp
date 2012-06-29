@@ -27,15 +27,17 @@
 
 using namespace boost;
 
+/*
 #define MACRO_CONTINUOUS_CASE(obj,var) \
 		case MACRO_DNP_RADIX(obj,var): { \
-			/* WriteFunc<datatype>::Type func = bind(DataToDNP::WriteGroup##obj##Var##var, _1, _2); */ \
+			
 			if (!this->IterateContiguous(iter, arAPDU)) \
 			{ \
 				return false; \
 			} \
 			break; \
 		}
+*/
 
 namespace apl
 {
@@ -138,7 +140,7 @@ IINField ResponseContext::Configure(const APDU& arRequest)
 			this->RecordAllStaticObjects<BinaryInfo>(mpRspTypes->mpStaticBinary);
 			break;
 //		case(MACRO_DNP_RADIX(1, 1)):	// Binary Input - packed format
-		case(MACRO_DNP_RADIX(1, 2)):	// Binary Input - with flags
+		case(MACRO_DNP_RADIX(1, 2)):
 			this->RecordAllStaticObjects<BinaryInfo>(Group1Var2::Inst());
 			break;
 		case(MACRO_DNP_RADIX(10, 0)):
@@ -147,19 +149,19 @@ IINField ResponseContext::Configure(const APDU& arRequest)
 		case(MACRO_DNP_RADIX(20, 0)):	// Counter Input - unknown
 			this->RecordAllStaticObjects<CounterInfo>(mpRspTypes->mpStaticCounter);
 			break;
-		case(MACRO_DNP_RADIX(20, 1)):	// Counter Input - 32-bit w/ flag
+		case(MACRO_DNP_RADIX(20, 1)):
 			this->RecordAllStaticObjects<CounterInfo>(Group20Var1::Inst());
 			break;
-		case(MACRO_DNP_RADIX(20, 5)):	// Counter Input - 32-bit w/o flag
+		case(MACRO_DNP_RADIX(20, 5)):
 			this->RecordAllStaticObjects<CounterInfo>(Group20Var5::Inst());
 			break;
 		case(MACRO_DNP_RADIX(30, 0)):	// Analog Input - unknown
 			this->RecordAllStaticObjects<AnalogInfo>(mpRspTypes->mpStaticAnalog);
 			break;
-		case(MACRO_DNP_RADIX(30, 1)):	// Analog Input - 32-bit w/ flag
+		case(MACRO_DNP_RADIX(30, 1)):
 			this->RecordAllStaticObjects<AnalogInfo>(Group30Var1::Inst());
 			break;
-		case(MACRO_DNP_RADIX(30, 3)):	// Analog Input - 32-bit w/o flag
+		case(MACRO_DNP_RADIX(30, 3)):
 			this->RecordAllStaticObjects<AnalogInfo>(Group30Var3::Inst());
 			break;
 		case(MACRO_DNP_RADIX(40, 0)):
