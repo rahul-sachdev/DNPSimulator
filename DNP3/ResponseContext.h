@@ -149,9 +149,7 @@ private:
 	bool IsEmpty();
 
 	bool IsStaticEmpty();
-	bool IsEventEmpty();
-
-	void AddIntegrityPoll();	
+	bool IsEventEmpty();	
 
 	Database* mpDB;				// Pointer to the database for static data
 	bool mFIR;
@@ -228,10 +226,13 @@ private:
 	// New functions
 
 	template <class T>
-	void RecordAllStaticObjects(StreamObject<typename T::MeasType>* apObject);
+	void RecordStaticObjects(StreamObject<typename T::MeasType>* apObject, const HeaderReadIterator& arIter);
 
 	template <class T>
-	bool WriteAllStaticObjects(StreamObject<typename T::MeasType>* apObject, typename StaticIter<T>::Type& arStart, typename StaticIter<T>::Type& arStop, const ResponseKey& arKey, APDU& arAPDU);
+	void RecordStaticObjectsByRange(StreamObject<typename T::MeasType>* apObject, size_t aStart, size_t aStop);
+
+	template <class T>
+	bool WriteStaticObjects(StreamObject<typename T::MeasType>* apObject, typename StaticIter<T>::Type& arStart, typename StaticIter<T>::Type& arStop, const ResponseKey& arKey, APDU& arAPDU);
 };
 
 template <class T>
@@ -248,21 +249,73 @@ size_t ResponseContext::SelectEvents(PointClass aClass, const StreamObject<T>* a
 }
 
 template <class T>
-void ResponseContext::RecordAllStaticObjects(StreamObject<typename T::MeasType>* apObject)
-{
-	size_t num = mpDB->NumType(T::MeasType::MeasEnum);
-	if(num > 0) {
-		typename StaticIter<T>::Type first;
-		mpDB->Begin(first); 
-		typename StaticIter<T>::Type last = first + (num - 1);		
-		ResponseKey key(RT_STATIC, this->mWriteMap.size());
-		WriteFunction func = boost::bind(&ResponseContext::WriteAllStaticObjects<T>, this, apObject, first, last, key, _1);		
-		this->mWriteMap[key] = func;
-	}
+void ResponseContext::RecordStaticObjects(StreamObject<typename T::MeasType>* apObject, const HeaderReadIterator& arIter)
+{	
+	size_t num = mpDB->NumType(T::MeasType::MeasEnum);	
+	
+	//figure out what type of read request this is
+	switch(arIter->GetHeaderType())
+	{
+		case(OHT_ALL_OBJECTS):
+			{				
+				if(num > 0) this->RecordStaticObjectsByRange<T>(apObject, 0, num - 1);
+			}
+			break;
+		
+		case(OHT_RANGED_2_OCTET):			
+		case(OHT_RANGED_4_OCTET):			
+		case(OHT_RANGED_8_OCTET):
+			{
+				if(num > 0) {
+					size_t max = num - 1;
+					RangeInfo ri;
+					const IRangeHeader* pHeader = reinterpret_cast<const IRangeHeader*>(arIter->GetHeader());
+					pHeader->GetRange(*arIter, ri);			
+
+					if(ri.Start > max || ri.Stop > max || ri.Start > ri.Stop) this->mTempIIN.SetParameterError(true);
+					else this->RecordStaticObjectsByRange<T>(apObject, ri.Start, ri.Stop);
+				}
+				else this->mTempIIN.SetParameterError(true);
+			}
+			break;
+
+		case(OHT_COUNT_1_OCTET):
+		case(OHT_COUNT_2_OCTET):
+		case(OHT_COUNT_4_OCTET):
+			{
+				if(num > 0) {
+					size_t max = num - 1;
+					size_t count = reinterpret_cast<const ICountHeader*>(arIter->GetHeader())->GetCount(*arIter);
+					if(count > 0) {
+						size_t start = 0;
+						size_t stop = count - 1;
+						
+						if(start > max || stop > max || start > stop) this->mTempIIN.SetParameterError(true);
+						else this->RecordStaticObjectsByRange<T>(apObject, start, stop);
+					}
+					else this->mTempIIN.SetParameterError(true);
+				}
+				else this->mTempIIN.SetParameterError(true);
+			}
+			break;
+	}		
 }
 
 template <class T>
-bool ResponseContext::WriteAllStaticObjects(StreamObject<typename T::MeasType>* apObject, typename StaticIter<T>::Type& arStart, typename StaticIter<T>::Type& arStop, const ResponseKey& arKey, APDU& arAPDU)
+void ResponseContext::RecordStaticObjectsByRange(StreamObject<typename T::MeasType>* apObject, size_t aStart, size_t aStop)
+{
+	typename StaticIter<T>::Type first;
+	typename StaticIter<T>::Type last;
+	mpDB->Begin(first);
+	last = first + aStop;
+	first = first + aStart;	
+	ResponseKey key(RT_STATIC, this->mWriteMap.size());
+	WriteFunction func = boost::bind(&ResponseContext::WriteStaticObjects<T>, this, apObject, first, last, key, _1);		
+	this->mWriteMap[key] = func;
+}
+
+template <class T>
+bool ResponseContext::WriteStaticObjects(StreamObject<typename T::MeasType>* apObject, typename StaticIter<T>::Type& arStart, typename StaticIter<T>::Type& arStop, const ResponseKey& arKey, APDU& arAPDU)
 {
 	size_t start = arStart->mIndex;
 	size_t stop = arStop->mIndex;	
@@ -270,7 +323,7 @@ bool ResponseContext::WriteAllStaticObjects(StreamObject<typename T::MeasType>* 
 
 	for(size_t i = start; i <= stop; ++i) {
 		if(owi.IsEnd()) { // out of space in the fragment
-			this->mWriteMap[arKey] = boost::bind(&ResponseContext::WriteAllStaticObjects<T>, this, apObject, arStart, arStop, arKey, _1);
+			this->mWriteMap[arKey] = boost::bind(&ResponseContext::WriteStaticObjects<T>, this, apObject, arStart, arStop, arKey, _1);
 			return false; 
 		}
 		apObject->Write(*owi, arStart->mValue);
