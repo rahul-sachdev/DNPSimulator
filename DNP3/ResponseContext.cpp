@@ -55,12 +55,14 @@ ResponseContext::ResponseContext(Logger* apLogger, Database* apDB, SlaveResponse
 	mpDB(apDB),
 	mFIR(true),
 	mFIN(false),
-	mpRspTypes(apRspTypes)
+	mpRspTypes(apRspTypes),
+	mLoadedEventData(false)
 {}
 
 void ResponseContext::Reset()
 {
 	mFIR = true;
+	mLoadedEventData = false;
 	mMode = UNDEFINED;
 	mTempIIN.Zero();
 
@@ -293,15 +295,13 @@ size_t ResponseContext::SelectVtoEvents(PointClass aClass, const SizeByVariation
 void ResponseContext::LoadResponse(APDU& arAPDU)
 {
 	//delay the setting of FIR/FIN until we know if it will be multifragmented or not
-	arAPDU.Set(FC_RESPONSE);
+	arAPDU.Set(FC_RESPONSE);	
 
-	bool events = false;
-
-	bool wrote_all = this->LoadEventData(arAPDU, events);
+	bool wrote_all = this->LoadEventData(arAPDU);
 
 	if(wrote_all) wrote_all = LoadStaticData(arAPDU);
 
-	FinalizeResponse(arAPDU, events, wrote_all);
+	FinalizeResponse(arAPDU, wrote_all);
 }
 
 bool ResponseContext::SelectUnsol(ClassMask m)
@@ -322,27 +322,25 @@ bool ResponseContext::HasEvents(ClassMask m)
 	return false;
 }
 
-bool ResponseContext::LoadUnsol(APDU& arAPDU, const IINField& arIIN, ClassMask m)
+void ResponseContext::LoadUnsol(APDU& arAPDU, const IINField& arIIN, ClassMask m)
 {
 	this->SelectUnsol(m);
 
-	arAPDU.Set(FC_UNSOLICITED_RESPONSE, true, true, true, true);
-	bool events = false;
-	this->LoadEventData(arAPDU, events);
-	return events;
+	arAPDU.Set(FC_UNSOLICITED_RESPONSE, true, true, true, true);	
+	this->LoadEventData(arAPDU);	
 }
 
-bool ResponseContext::LoadEventData(APDU& arAPDU, bool& arEventsLoaded)
+bool ResponseContext::LoadEventData(APDU& arAPDU)
 {
-	if (!this->LoadEvents<Binary>(arAPDU, mBinaryEvents, arEventsLoaded)) return false;
-	if (!this->LoadEvents<Analog>(arAPDU, mAnalogEvents, arEventsLoaded)) return false;
-	if (!this->LoadEvents<Counter>(arAPDU, mCounterEvents, arEventsLoaded)) return false;
-	if (!this->LoadVtoEvents(arAPDU, arEventsLoaded)) return false;
+	if (!this->LoadEvents<Binary>(arAPDU, mBinaryEvents)) return false;
+	if (!this->LoadEvents<Analog>(arAPDU, mAnalogEvents)) return false;
+	if (!this->LoadEvents<Counter>(arAPDU, mCounterEvents)) return false;
+	if (!this->LoadVtoEvents(arAPDU)) return false;
 
 	return true;
 }
 
-bool ResponseContext::LoadVtoEvents(APDU& arAPDU, bool& arEventsLoaded)
+bool ResponseContext::LoadVtoEvents(APDU& arAPDU)
 {
 	VtoDataEventIter itr;
 	mBuffer.Begin(itr);
@@ -361,7 +359,7 @@ bool ResponseContext::LoadVtoEvents(APDU& arAPDU, bool& arEventsLoaded)
 
 		if (written > 0) {
 			/* At least one event was loaded */
-			arEventsLoaded = true;
+			this->mLoadedEventData = true;
 		}
 
 		if (written == r.count) {
@@ -432,12 +430,13 @@ bool ResponseContext::IsEventEmpty()
 	return mBuffer.NumSelected() == 0;
 }
 
-void ResponseContext::FinalizeResponse(APDU& arAPDU, bool aHasEventData, bool aFIN)
+void ResponseContext::FinalizeResponse(APDU& arAPDU, bool aFIN)
 {
 	mFIN = aFIN;
-	bool confirm = !aFIN || aHasEventData;
+	bool confirm = !aFIN || this->mLoadedEventData;
 	arAPDU.SetControl(mFIR, mFIN, confirm);
 	mFIR = false;
+	this->mLoadedEventData = false;
 }
 
 bool ResponseContext::LoadStaticData(APDU& arAPDU)

@@ -104,7 +104,7 @@ public:
 	/** Configure the APDU with a FIR/FIN unsol packet based on
 		current state of the event buffer
 	*/
-	bool LoadUnsol(APDU&, const IINField& arIIN, ClassMask aMask);
+	void LoadUnsol(APDU&, const IINField& arIIN, ClassMask aMask);
 
 	// @return TRUE is all of the response data has already been written
 	bool IsComplete() {
@@ -137,15 +137,13 @@ private:
 	 *
 	 * @param arAPDU			the APDU fragment that should be used to store
 	 * 							the events
-	 * @param arEventsLoaded	set to 'true' if some events were written to
-	 * 							arAPDU
 	 *
 	 * @return					'true' if all of the events were written, or
 	 * 							'false' if more events remain
 	 */
-	bool LoadEventData(APDU& arAPDU, bool& arEventsLoaded);
+	bool LoadEventData(APDU& arAPDU);
 
-	void FinalizeResponse(APDU&, bool aHasEventData, bool aFIN);
+	void FinalizeResponse(APDU&, bool aFIN);
 	bool IsEmpty();
 
 	bool IsStaticEmpty();
@@ -157,6 +155,7 @@ private:
 	SlaveResponseTypes* mpRspTypes;
 
 	IINField mTempIIN;
+	bool mLoadedEventData;
 	
 	template<class T>
 	struct EventRequest {
@@ -197,9 +196,9 @@ private:
 	VtoEventQueue mVtoEvents;	
 
 	template <class T>
-	bool LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> >& arQueue, bool& arEventsLoaded);
+	bool LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> >& arQueue);
 
-	bool LoadVtoEvents(APDU& arAPDU, bool& arEventsLoaded);	
+	bool LoadVtoEvents(APDU& arAPDU);	
 
 	//wrappers that select the event buffer and add to the event queues
 	void SelectEvents(PointClass aClass, size_t aNum = std::numeric_limits<size_t>::max());
@@ -335,7 +334,7 @@ bool ResponseContext::WriteStaticObjects(StreamObject<typename T::MeasType>* apO
 }
 
 template <class T>
-bool ResponseContext::LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> >& arQueue, bool& arEventsLoaded)
+bool ResponseContext::LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> >& arQueue)
 {
 	typename EvtItr< EventInfo<T> >::Type itr;
 	mBuffer.Begin(itr);
@@ -354,7 +353,7 @@ bool ResponseContext::LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> >& ar
 
 		if (written > 0) {
 			/* At least one event was loaded */
-			arEventsLoaded = true;
+			this->mLoadedEventData = true;
 		}
 
 		if (written == r.count) {
