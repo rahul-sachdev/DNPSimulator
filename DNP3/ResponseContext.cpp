@@ -66,7 +66,7 @@ void ResponseContext::Reset()
 	mMode = UNDEFINED;
 	mTempIIN.Zero();
 
-	this->mWriteMap.clear();
+	this->mStaticWriteMap.clear();
 
 	this->mBinaryEvents.clear();
 	this->mAnalogEvents.clear();
@@ -421,7 +421,7 @@ bool ResponseContext::IsEmpty()
 
 bool ResponseContext::IsStaticEmpty()
 {
-	return this->mWriteMap.empty();
+	return this->mStaticWriteMap.empty();
 }
 
 bool ResponseContext::IsEventEmpty()
@@ -441,13 +441,13 @@ void ResponseContext::FinalizeResponse(APDU& arAPDU, bool aFIN)
 
 bool ResponseContext::LoadStaticData(APDU& arAPDU)
 {
-	while(!this->mWriteMap.empty()) {
+	while(!this->mStaticWriteMap.empty()) {
 
-		WriteMap::iterator i = this->mWriteMap.begin();
+		WriteMap::iterator i = this->mStaticWriteMap.begin();
 
 		if(i->second(arAPDU))
 		{
-			this->mWriteMap.erase(i);
+			this->mStaticWriteMap.erase(i);
 		}
 		else return false;
 	}

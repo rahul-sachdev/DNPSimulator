@@ -180,14 +180,13 @@ private:
 
 	typedef std::map <ResponseKey, WriteFunction, ResponseKey >	WriteMap;
 
+	// the queue that tracks the pending static write operations
+	WriteMap mStaticWriteMap;
+
 	typedef std::deque< EventRequest<Binary> >				BinaryEventQueue;
 	typedef std::deque< EventRequest<Analog> >				AnalogEventQueue;
 	typedef std::deque< EventRequest<Counter> >				CounterEventQueue;
-
 	typedef std::deque<VtoEventRequest>						VtoEventQueue;
-
-	// the queue that tracks the pending static write operations
-	WriteMap mWriteMap;
 
 	//these queues track what events have been requested
 	BinaryEventQueue mBinaryEvents;
@@ -222,7 +221,7 @@ private:
 	size_t IterateIndexed(VtoEventRequest& arRequest, VtoDataEventIter& arIter, APDU& arAPDU);
 
 
-	// New functions
+	// Static write functions
 
 	template <class T>
 	void RecordStaticObjects(StreamObject<typename T::MeasType>* apObject, const HeaderReadIterator& arIter);
@@ -308,9 +307,9 @@ void ResponseContext::RecordStaticObjectsByRange(StreamObject<typename T::MeasTy
 	mpDB->Begin(first);
 	last = first + aStop;
 	first = first + aStart;	
-	ResponseKey key(RT_STATIC, this->mWriteMap.size());
+	ResponseKey key(RT_STATIC, this->mStaticWriteMap.size());
 	WriteFunction func = boost::bind(&ResponseContext::WriteStaticObjects<T>, this, apObject, first, last, key, _1);		
-	this->mWriteMap[key] = func;
+	this->mStaticWriteMap[key] = func;
 }
 
 template <class T>
@@ -322,7 +321,7 @@ bool ResponseContext::WriteStaticObjects(StreamObject<typename T::MeasType>* apO
 
 	for(size_t i = start; i <= stop; ++i) {
 		if(owi.IsEnd()) { // out of space in the fragment
-			this->mWriteMap[arKey] = boost::bind(&ResponseContext::WriteStaticObjects<T>, this, apObject, arStart, arStop, arKey, _1);
+			this->mStaticWriteMap[arKey] = boost::bind(&ResponseContext::WriteStaticObjects<T>, this, apObject, arStart, arStop, arKey, _1);
 			return false; 
 		}
 		apObject->Write(*owi, arStart->mValue);
