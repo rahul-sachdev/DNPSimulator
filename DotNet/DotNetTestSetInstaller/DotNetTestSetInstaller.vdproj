@@ -15,32 +15,56 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_128484563B0E45FF9235BC1DE6D19C5F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3C97C7F52EF2475793849299456C903C"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6D72A2EB1E49F9FBF044ECC99FBCA67D"
+        "MsmKey" = "8:_2691CDC219B734FAA269CCC2B9EA8BA9"
         "OwnerKey" = "8:_F081529C94554082B7299990E670FB04"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_CFA0123F195ED0C4264F4160A5CE51CF"
+        "MsmKey" = "8:_2691CDC219B734FAA269CCC2B9EA8BA9"
+        "OwnerKey" = "8:_276E8CCFE7528AA136606BB4DEB4B65C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_276E8CCFE7528AA136606BB4DEB4B65C"
         "OwnerKey" = "8:_F081529C94554082B7299990E670FB04"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_CFA0123F195ED0C4264F4160A5CE51CF"
-        "OwnerKey" = "8:_3C97C7F52EF2475793849299456C903C"
+        "MsmKey" = "8:_276E8CCFE7528AA136606BB4DEB4B65C"
+        "OwnerKey" = "8:_37E1D24BF596BDA51420DACA606C84E3"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_276E8CCFE7528AA136606BB4DEB4B65C"
+        "OwnerKey" = "8:_CFB384D8020A1FACB54586C6EC3E8FC8"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_37E1D24BF596BDA51420DACA606C84E3"
+        "OwnerKey" = "8:_F081529C94554082B7299990E670FB04"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_8C316F601F624C9E8688B8F1A185C335"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A84A6114D6F64C6A8CA46B0B3F8A87C2"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CFB384D8020A1FACB54586C6EC3E8FC8"
+        "OwnerKey" = "8:_F081529C94554082B7299990E670FB04"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -51,50 +75,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F4AE81062D2F0FE1D3F581D4E238D367"
-        "OwnerKey" = "8:_6D72A2EB1E49F9FBF044ECC99FBCA67D"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F4AE81062D2F0FE1D3F581D4E238D367"
-        "OwnerKey" = "8:_F081529C94554082B7299990E670FB04"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F4AE81062D2F0FE1D3F581D4E238D367"
-        "OwnerKey" = "8:_CFA0123F195ED0C4264F4160A5CE51CF"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F4AE81062D2F0FE1D3F581D4E238D367"
-        "OwnerKey" = "8:_3C97C7F52EF2475793849299456C903C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F4AE81062D2F0FE1D3F581D4E238D367"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_128484563B0E45FF9235BC1DE6D19C5F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6D72A2EB1E49F9FBF044ECC99FBCA67D"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CFA0123F195ED0C4264F4160A5CE51CF"
+        "MsmKey" = "8:_F366CF06E881463C95412D57AF385BDA"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -106,7 +88,25 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3C97C7F52EF2475793849299456C903C"
+        "OwnerKey" = "8:_37E1D24BF596BDA51420DACA606C84E3"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_CFB384D8020A1FACB54586C6EC3E8FC8"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_276E8CCFE7528AA136606BB4DEB4B65C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_2691CDC219B734FAA269CCC2B9EA8BA9"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -134,6 +134,19 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
             }
         }
         "Release"
@@ -158,6 +171,19 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
             }
         }
     }
@@ -188,13 +214,80 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6D72A2EB1E49F9FBF044ECC99FBCA67D"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2691CDC219B734FAA269CCC2B9EA8BA9"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:DotNetAdapter, Version=1.0.4548.31430, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:nunit.framework, Version=2.2.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77"
                 "ScatterAssemblies"
                 {
+                    "_2691CDC219B734FAA269CCC2B9EA8BA9"
+                    {
+                    "Name" = "8:nunit.framework.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:nunit.framework.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_43251787E7DD47F3B1ECEE904EDB57EB"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_276E8CCFE7528AA136606BB4DEB4B65C"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:DotNetInterface, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_276E8CCFE7528AA136606BB4DEB4B65C"
+                    {
+                    "Name" = "8:DotNetInterface.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:DotNetInterface.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_43251787E7DD47F3B1ECEE904EDB57EB"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_37E1D24BF596BDA51420DACA606C84E3"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:DotNetAdapter, Version=1.0.4567.17529, Culture=neutral, processorArchitecture=x86"
+                "ScatterAssemblies"
+                {
+                    "_37E1D24BF596BDA51420DACA606C84E3"
+                    {
+                    "Name" = "8:DotNetAdapter.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:DotNetAdapter.dll"
             "TargetName" = "8:"
@@ -214,13 +307,58 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CFA0123F195ED0C4264F4160A5CE51CF"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8C316F601F624C9E8688B8F1A185C335"
+            {
+            "SourcePath" = "8:..\\BoostLibs\\x86\\boost_system-vc100-mt-1_47.dll"
+            "TargetName" = "8:boost_system-vc100-mt-1_47.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_43251787E7DD47F3B1ECEE904EDB57EB"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A84A6114D6F64C6A8CA46B0B3F8A87C2"
+            {
+            "SourcePath" = "8:..\\BoostLibs\\x86\\boost_date_time-vc100-mt-1_47.dll"
+            "TargetName" = "8:boost_date_time-vc100-mt-1_47.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_43251787E7DD47F3B1ECEE904EDB57EB"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CFB384D8020A1FACB54586C6EC3E8FC8"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:TestSetControlLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_CFB384D8020A1FACB54586C6EC3E8FC8"
+                    {
+                    "Name" = "8:TestSetControlLibrary.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:TestSetControlLibrary.dll"
             "TargetName" = "8:"
@@ -240,16 +378,10 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F4AE81062D2F0FE1D3F581D4E238D367"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F366CF06E881463C95412D57AF385BDA"
             {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:DotNetInterface, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                }
-            "SourcePath" = "8:DotNetInterface.dll"
-            "TargetName" = "8:"
+            "SourcePath" = "8:..\\BoostLibs\\x86\\boost_thread-vc100-mt-1_47.dll"
+            "TargetName" = "8:boost_thread-vc100-mt-1_47.dll"
             "Tag" = "8:"
             "Folder" = "8:_43251787E7DD47F3B1ECEE904EDB57EB"
             "Condition" = "8:"
@@ -263,7 +395,7 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
         }
@@ -293,6 +425,17 @@
             "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_4B0838ECA0F045AABC734FA7AE236F92"
+                    {
+                    "Name" = "8:DNP3"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_BD0F25F6A5364D76B6F8D276C0CA3D1D"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_B9477E9867794A47A7B0F055C1A1F77A"
@@ -321,9 +464,9 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:DotNetTestSetInstaller"
+        "ProductName" = "8:OpenDNP3 TestSet"
         "ProductCode" = "8:{DE513F3C-CDE7-42BB-8A69-E2EB0FD2782F}"
-        "PackageCode" = "8:{D3CA7A76-F19A-447A-BB65-819ADF04C783}"
+        "PackageCode" = "8:{0149AF34-956A-432E-9B4D-4B3B1E83980F}"
         "UpgradeCode" = "8:{B9162D0A-3D92-43AD-8C37-43143AAC3FDF}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -331,15 +474,15 @@
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:Default Company Name"
+        "Manufacturer" = "8:totalgrid.org"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:DotNetTestSetInstaller"
+        "Title" = "8:OpenDNP3 TestSet"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:Default Company Name"
+        "ARPCONTACT" = "8:J Adam Crain"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
-        "ARPURLINFOABOUT" = "8:"
+        "ARPURLINFOABOUT" = "8:www.totalgrid.org"
         "ARPPRODUCTICON" = "8:"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
@@ -443,6 +586,20 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_A064C83948D64C81B85F2EF5103E3FFA"
+            {
+            "Name" = "8:GUI TestSet"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_F081529C94554082B7299990E670FB04"
+            "Folder" = "8:_4B0838ECA0F045AABC734FA7AE236F92"
+            "WorkingFolder" = "8:_43251787E7DD47F3B1ECEE904EDB57EB"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
         }
         "UserInterface"
         {
@@ -842,62 +999,6 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_128484563B0E45FF9235BC1DE6D19C5F"
-            {
-            "SourcePath" = "8:..\\DotNetInterface\\obj\\Release\\DotNetInterface.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_43251787E7DD47F3B1ECEE904EDB57EB"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
-            "OutputProjectGuid" = "8:{C280F8AA-8461-4126-BF88-454891422FD8}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3C97C7F52EF2475793849299456C903C"
-            {
-            "SourcePath" = "8:..\\TestSetControlLibrary\\obj\\Release\\TestSetControlLibrary.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_43251787E7DD47F3B1ECEE904EDB57EB"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
-            "OutputProjectGuid" = "8:{A37903BE-7E9B-4442-8D9A-1C33F58F661F}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_F081529C94554082B7299990E670FB04"
             {
             "SourcePath" = "8:..\\DotNetTestSet\\obj\\x86\\Release\\DotNetTestSet.exe"
