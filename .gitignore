@@ -7,28 +7,27 @@ testset
 *.gcda
 *.gcno
 *.iml
-opendnp3.jar
-JavaDNP3.h
-JavaDNP3.cpp
-.idea
-/DNP3Java/target
-/DNP3Java/src
-/DNP.ncb
-/DNP.suo
-.DS_Store
-Debug
-Release
-ipch
+*.la
+*.lo
+*.o
 *.user
 *~
 .*.swp
+.DS_Store
 .deps
 .dirstamp
 .idea
 .libs
-*.o
-*.lo
-*.la
+Debug
+Release
+ipch
+
+/DNP3Java/.java-built
+/DNP3Java/JavaDNP3.cpp
+/DNP3Java/JavaDNP3.h
+/DNP3Java/src
+/DNP3Java/target
+opendnp3.jar
 
 /*/pc_linux_arm
 /CSToCppXMLBinder/bin
@@ -51,14 +50,11 @@ ipch
 /tools/boostlib
 /tools/install_scripts/boost/*/temp
 Debug
-JavaDNP3.cpp
-JavaDNP3.h
 Linux_i686
 Release
 TestAPL/TestSingle.tiny.xml
 TestSingle.tiny.xml
 ipch
-opendnp3.jar
 pc_cygwin
 
 demo-master-cpp
@@ -80,15 +76,15 @@ pyopendnp3.pyc
 Makefile
 Makefile.in
 aclocal.m4
+compile.log
 config.h
 config.h.in
+config.log
 config.status
 configure
 configure.in
 libtool
 stamp-h1
-config.log
-compile.log
 
 *target*
 

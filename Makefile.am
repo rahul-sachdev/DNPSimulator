@@ -18,6 +18,7 @@ lib_LTLIBRARIES = libopendnp3.la
 
 libopendnp3_la_LDFLAGS = -version-info 0:0:0
 libopendnp3_la_LIBADD = $(BOOST_LDFLAGS) $(CORE_BOOST_LIBS)
+libopendnp3_la_DEPENDENCIES =
 libopendnp3_la_SOURCES = \
 	APL/ASIOSerialHelpers.cpp \
 	APL/AsyncLayerInterfaces.cpp \
@@ -161,20 +162,10 @@ libopendnp3_la_SOURCES = \
 	DNP3/VtoWriter.cpp
 
 if WANT_JAVA
-libopendnp3_la_SOURCES += DNP3Java/JavaDNP3.cpp
-
 JAVA_DIR=$(top_srcdir)/java
 JAVA_PACKAGE_DIR=org/totalgrid/reef/protocol/dnp3
 JAVA_SOURCE_DIR=$(JAVA_DIR)/src
 JAVA_CLASS_DIR=$(JAVA_DIR)/bin
-
-DNP3Java/JavaDNP3.cpp: DNP3Java/JavaDNP3.i
-	-@mkdir -p $(JAVA_SOURCE_DIR)/$(JAVA_PACKAGE_DIR)
-	swig -c++ -java \
-		-package org.totalgrid.reef.protocol.dnp3 \
-		-I$(top_srcdir) -I$(top_srcdir)/APL -I$(top_srcdir)/DNP3 \
-		-outdir $(JAVA_SOURCE_DIR)/$(JAVA_PACKAGE_DIR) \
-		-o DNP3Java/JavaDNP3.cpp $^
 
 JAVA_SRC_FILES =
 JAVA_SRC_FILES += $(JAVA_SOURCE_DIR)/$(JAVA_PACKAGE_DIR)/Analog.java
@@ -262,16 +253,30 @@ JAVA_SRC_FILES += $(JAVA_SOURCE_DIR)/$(JAVA_PACKAGE_DIR)/javadnp3.java
 JAVA_SRC_FILES += $(JAVA_SOURCE_DIR)/$(JAVA_PACKAGE_DIR)/javadnp3Constants.java
 JAVA_SRC_FILES += $(JAVA_SOURCE_DIR)/$(JAVA_PACKAGE_DIR)/javadnp3JNI.java
 
-opendnp3.jar: DNP3Java/JavaDNP3.cpp $(JAVA_SRC_FILES)
+DNP3Java/.java-built: DNP3Java/JavaDNP3.i
+	-@mkdir -p $(JAVA_SOURCE_DIR)/$(JAVA_PACKAGE_DIR)
+	swig -c++ -java \
+		-package org.totalgrid.reef.protocol.dnp3 \
+		-I$(top_srcdir) -I$(top_srcdir)/APL -I$(top_srcdir)/DNP3 \
+		-outdir $(JAVA_SOURCE_DIR)/$(JAVA_PACKAGE_DIR) \
+		-o DNP3Java/JavaDNP3.cpp $^
+	touch $@
+
+DNP3Java/JavaDNP3.cpp: DNP3Java/.java-built
+$(JAVA_SRC_FILES): DNP3Java/.java-built
+
+opendnp3.jar: DNP3Java/.java-built
 	-@mkdir -p $(JAVA_CLASS_DIR)/$(JAVA_PACKAGE_DIR)
 	cd $(JAVA_SOURCE_DIR) && javac -d $(JAVA_CLASS_DIR) -cp . $(JAVA_SRC_FILES)
 	cd $(JAVA_CLASS_DIR) && jar cvf $@ org
 	mv $(JAVA_CLASS_DIR)/$@ $@
 
-BUILT_SOURCES += DNP3Java/JavaDNP3.cpp opendnp3.jar $(JAVA_SRC_FILES)
-
 opendnp3_jardir = $(datadir)/java
 opendnp3_jar_DATA = opendnp3.jar
+
+BUILT_SOURCES += DNP3Java/.java-built DNP3Java/JavaDNP3.cpp opendnp3.jar $(JAVA_SRC_FILES)
+libopendnp3_la_DEPENDENCIES += DNP3Java/JavaDNP3.cpp
+libopendnp3_la_SOURCES += DNP3Java/JavaDNP3.cpp
 endif
 
 if WANT_PYTHON
@@ -643,7 +648,7 @@ include config/autotools/mk/doxygen.mak
 include config/autotools/mk/lcov.mak
 
 clean-swig:
-	-rm -rf DNP3Java/JavaDNP3.cpp DNP3Java/JavaDNP3.h
+	-rm -rf DNP3Java/JavaDNP3.cpp DNP3Java/JavaDNP3.h DNP3Java/.java-built
 	-rm -rf DNP3Java/PythonDNP3.cpp DNP3Java/PythonDNP3.h
 	-rm -rf pyopendnp3.py pyopendnp3.pyc __init__.py
 	-rm -rf $(top_srcdir)/java
