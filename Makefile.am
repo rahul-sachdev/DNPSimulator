@@ -645,7 +645,7 @@ include config/autotools/mk/lcov.mak
 clean-swig:
 	-rm -rf DNP3Java/JavaDNP3.cpp DNP3Java/JavaDNP3.h
 	-rm -rf DNP3Java/PythonDNP3.cpp DNP3Java/PythonDNP3.h
-	-rm -rf pyopendnp3.py pyopendnp3.pyc
+	-rm -rf pyopendnp3.py pyopendnp3.pyc __init__.py
 	-rm -rf $(top_srcdir)/java
 	-rm -rf opendnp3.jar
 
