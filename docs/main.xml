@@ -81,7 +81,7 @@ The intended audience of this book are software developers who are (1)
 using the OpenDNP3 library with their proprietary applications or (2)
 modifying the OpenDNP3 library itself to add additional features or fix
 bugs.  As such, a basic level of knowledge is presumed about the
-following topics: C++, DNP3, and UML class and sequence diagrams.
+following topics: C++ and UML class and sequence diagrams.
 </para>
 </section>
 
@@ -224,7 +224,7 @@ button.</entry>
 is the heart of the system.</quote></entry>
 </row>
 <row>
-<entry>See <xref linkend="chap_01" /></entry><entry>link to related subject 
+<entry>See <xref linkend="ChapterTheoryOfOperation" /></entry><entry>link to related subject 
 within this guide.</entry>
 </row>
 <row>
