@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN" "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd" [
 
+<!ENTITY ChapterAboutDNP3 SYSTEM "ChapterAboutDNP3.xml">
 <!ENTITY ChapterTheoryOfOperation SYSTEM "ChapterTheoryOfOperation.xml">
 <!ENTITY ChapterAPIs SYSTEM "ChapterAPIs.xml">
 <!ENTITY ChapterUserApplications SYSTEM "ChapterUserApplications.xml">
@@ -258,6 +259,7 @@ within this guide.</entry>
 
 <toc></toc>
 
+&ChapterAboutDNP3;
 &ChapterTheoryOfOperation;
 &ChapterAPIs;
 &ChapterUserApplications;
