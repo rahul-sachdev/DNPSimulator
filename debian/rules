@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+
+DEB_CONFIGURE_EXTRA_FLAGS = --with-java=/usr/lib/jvm/default-java/include
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/autotools.mk
+
+# Add here any variable or target overrides you need.
+
