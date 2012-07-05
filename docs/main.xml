@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN" "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd" [
 
-<!ENTITY chap1 SYSTEM "chap1.xml">
-<!ENTITY chap2 SYSTEM "chap2.xml">
-<!ENTITY chap3 SYSTEM "chap3.xml">
-<!ENTITY chap4 SYSTEM "chap4.xml">
+<!ENTITY ChapterTheoryOfOperation SYSTEM "ChapterTheoryOfOperation.xml">
+<!ENTITY ChapterAPIs SYSTEM "ChapterAPIs.xml">
+<!ENTITY ChapterUserApplications SYSTEM "ChapterUserApplications.xml">
+<!ENTITY ChapterExamples SYSTEM "ChapterExamples.xml">
 <!ENTITY app1 SYSTEM "app1.xml">
 <!ENTITY fdl SYSTEM "fdl.xml">
 <!ENTITY gloss SYSTEM "glossary.xml">
@@ -258,10 +258,10 @@ within this guide.</entry>
 
 <toc></toc>
 
-&chap1;
-&chap2;
-&chap3;
-&chap4;
+&ChapterTheoryOfOperation;
+&ChapterAPIs;
+&ChapterUserApplications;
+&ChapterExamples;
 &app1;
 &fdl;
 &gloss;
