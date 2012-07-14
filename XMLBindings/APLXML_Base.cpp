@@ -169,9 +169,9 @@ string ToString_StopBitsEnum(StopBitsEnum aValue) {
 
 void TCPv4Client_t :: fromXml(TiXmlNode* pNode){
 	if(pNode == NULL)return;
-	XML_CHECK("TCPv4Client",pNode->Type() == TiXmlNode::ELEMENT);
+	XML_CHECK("TCPClient",pNode->Type() == TiXmlNode::ELEMENT);
 	TiXmlElement* pEm = pNode->ToElement();
-	XML_CHECK("TCPv4Client",pEm != 0);
+	XML_CHECK("TCPClient",pEm != 0);
 	this->APLXML_Base::PhysicalLayerDescriptor_t::fromXml(pNode);
 	Address = FromString_string(pEm, pEm->Attribute("Address"));
 	Port = FromString_int(pEm, pEm->Attribute("Port"));
@@ -181,7 +181,7 @@ void TCPv4Client_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreVa
 	if(!aIgnoreValid && !valid) return;
 	TiXmlElement * pEm;
 	if(aCreateNode){
-		pEm = new TiXmlElement("TCPv4Client");
+		pEm = new TiXmlElement("TCPClient");
 		pParent->LinkEndChild(pEm);
 	}else{
 		pEm = pParent->ToElement();
@@ -193,9 +193,9 @@ void TCPv4Client_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreVa
 
 void TCPv4Server_t :: fromXml(TiXmlNode* pNode){
 	if(pNode == NULL)return;
-	XML_CHECK("TCPv4Server",pNode->Type() == TiXmlNode::ELEMENT);
+	XML_CHECK("TCPServer",pNode->Type() == TiXmlNode::ELEMENT);
 	TiXmlElement* pEm = pNode->ToElement();
-	XML_CHECK("TCPv4Server",pEm != 0);
+	XML_CHECK("TCPServer",pEm != 0);
 	this->APLXML_Base::PhysicalLayerDescriptor_t::fromXml(pNode);
 	Endpoint = FromString_string(pEm, pEm->Attribute("Endpoint"));
 	Port = FromString_int(pEm, pEm->Attribute("Port"));
@@ -205,7 +205,7 @@ void TCPv4Server_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreVa
 	if(!aIgnoreValid && !valid) return;
 	TiXmlElement * pEm;
 	if(aCreateNode){
-		pEm = new TiXmlElement("TCPv4Server");
+		pEm = new TiXmlElement("TCPServer");
 		pParent->LinkEndChild(pEm);
 	}else{
 		pEm = pParent->ToElement();
@@ -316,8 +316,8 @@ void Serial_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid){
 };
 
 PhysicalLayerList_t::PhysicalLayerList_t():
-		TCPv4Server("TCPv4Server"), TCPv4ServerVector(TCPv4Server.collection),
-		TCPv4Client("TCPv4Client"), TCPv4ClientVector(TCPv4Client.collection),
+		TCPv4Server("TCPServer"), TCPv4ServerVector(TCPv4Server.collection),
+		TCPv4Client("TCPClient"), TCPv4ClientVector(TCPv4Client.collection),
 		TCPv6Server("TCPv6Server"), TCPv6ServerVector(TCPv6Server.collection),
 		TCPv6Client("TCPv6Client"), TCPv6ClientVector(TCPv6Client.collection),
 		Serial("Serial"), SerialVector(Serial.collection){};
