@@ -110,9 +110,9 @@ int main(int argc, char* argv[])
 	// stacks, as well as their physical layers
 	AsyncStackManager mgr(log.GetLogger(LOG_LEVEL, "dnp"));
 
-	// Add a TCPServer to the manager with the name "tcpserver".
+	// Add a TCPv4Server to the manager with the name "tcpserver".
 	// The server will wait 3000 ms in between failed bind calls.
-	mgr.AddTCPServer(
+	mgr.AddTCPv4Server(
 		"tcpserver",
 		PhysLayerSettings(LOG_LEVEL, 3000),
 		local_ip,

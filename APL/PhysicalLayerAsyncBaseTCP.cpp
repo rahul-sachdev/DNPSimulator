@@ -94,13 +94,23 @@ void PhysicalLayerAsyncBaseTCP::ShutdownSocket()
 
 boost::asio::ip::address PhysicalLayerAsyncBaseTCP::ResolveAddress(const std::string& arEndpoint)
 {
+	LOG_BLOCK(LEV_DEBUG, "converting address '" << arEndpoint << "' to an IP address object");
 	try {
 		boost::system::error_code ec;
 		boost::asio::ip::address addr = boost::asio::ip::address::from_string(arEndpoint, ec);
-		if (ec)
+		if (ec) {
+			LOG_BLOCK(LEV_DEBUG, "unable to convert address to object");
 			throw ArgumentException(LOCATION, "endpoint: " + arEndpoint + " is invalid");
+		}
+		LOG_BLOCK(LEV_DEBUG, "address converted to object: " << addr.to_string());
+		if (addr.is_v6()) {
+			boost::asio::ip::address_v6 addrv6(addr.to_v6());
+			if (addrv6.is_link_local())
+				LOG_BLOCK(LEV_DEBUG, "IPv6 link local address found");
+		}
 		return addr;
 	} catch (...) {
+		LOG_BLOCK(LEV_DEBUG, "attempting to resolve address '" << arEndpoint << "'");
 		boost::asio::io_service                  io_service;
 		boost::asio::ip::tcp::resolver           resolver(io_service);
 		boost::asio::ip::tcp::resolver::query    query(arEndpoint, "");
@@ -109,8 +119,15 @@ boost::asio::ip::address PhysicalLayerAsyncBaseTCP::ResolveAddress(const std::st
 		while (iter != end)
 		{
 			boost::asio::ip::tcp::endpoint ep = *iter++;
+			LOG_BLOCK(LEV_DEBUG, "address '" << arEndpoint << "' resolved to " << ep.address().to_string());
+			if (ep.address().is_v6()) {
+				boost::asio::ip::address_v6 addrv6(ep.address().to_v6());
+				if (addrv6.is_link_local())
+					LOG_BLOCK(LEV_DEBUG, "IPv6 link local address found");
+			}
 			return ep.address();
 		}
+		LOG_BLOCK(LEV_DEBUG, "unable to resolve address '" << arEndpoint << "'")
 		throw ArgumentException(LOCATION, "endpoint: " + arEndpoint + " is invalid");
 	}
 }

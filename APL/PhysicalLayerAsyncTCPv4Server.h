@@ -15,36 +15,33 @@
 // implied.  See the License for the specific language governing
 // permissions and limitations under the License.
 //
-#ifndef __PHYSICAL_LAYER_ASYNC_TCP_SERVER_H_
-#define __PHYSICAL_LAYER_ASYNC_TCP_SERVER_H_
+#ifndef __PHYSICAL_LAYER_ASYNC_TCP_V4_SERVER_H_
+#define __PHYSICAL_LAYER_ASYNC_TCP_V4_SERVER_H_
 
 #include <boost/asio/ip/tcp.hpp>
 
-#include "PhysicalLayerAsyncBaseTCP.h"
+#include "PhysicalLayerAsyncTCPServer.h"
 
 namespace apl
 {
 
-class PhysicalLayerAsyncTCPServer : public PhysicalLayerAsyncBaseTCP
+class PhysicalLayerAsyncTCPv4Server : public PhysicalLayerAsyncTCPServer
 {
 public:
-	PhysicalLayerAsyncTCPServer(Logger*, boost::asio::io_service* apIOService, const boost::asio::ip::tcp::endpoint& arEndpoint, const std::string& arAddress);
-
-	/* Implement the remainging actions */
-	void DoOpen();
-	void DoOpeningClose(); //override this to cancel the acceptor instead of the socket
-	void DoOpenSuccess();
-	void DoOpenCallback();
-
-private:
-	void CloseAcceptor();
-
-	boost::asio::ip::tcp::endpoint mLocalEndpoint;
-	boost::asio::ip::tcp::endpoint mRemoteEndpoint;
-
-	boost::asio::ip::tcp::acceptor mAcceptor;
+	PhysicalLayerAsyncTCPv4Server(Logger* apLogger, boost::asio::io_service* apIOService, const std::string& arAddress, boost::uint16_t aPort)
+		: PhysicalLayerAsyncTCPServer(
+			apLogger,
+			apIOService,
+			boost::asio::ip::tcp::endpoint(
+				boost::asio::ip::tcp::v4(),
+				aPort
+			),
+			arAddress
+		)
+	{}
 };
 
 }
 
 #endif
+

@@ -42,14 +42,24 @@ StackManager::~StackManager()
 }
 
 //used for defining ports
-void StackManager::AddTCPClient(const std::string& arName, PhysLayerSettings s, const std::string& arAddr, boost::uint16_t aPort)
+void StackManager::AddTCPv4Client(const std::string& arName, PhysLayerSettings s, const std::string& arAddr, boost::uint16_t aPort)
 {
-	mpImpl->AddTCPClient(arName, s, arAddr, aPort);
+	mpImpl->AddTCPv4Client(arName, s, arAddr, aPort);
 }
 
-void StackManager::AddTCPServer(const std::string& arName, PhysLayerSettings s, const std::string& arEndpoint, boost::uint16_t aPort)
+void StackManager::AddTCPv4Server(const std::string& arName, PhysLayerSettings s, const std::string& arEndpoint, boost::uint16_t aPort)
 {
-	mpImpl->AddTCPServer(arName, s, arEndpoint, aPort);
+	mpImpl->AddTCPv4Server(arName, s, arEndpoint, aPort);
+}
+
+void StackManager::AddTCPv6Client(const std::string& arName, PhysLayerSettings s, const std::string& arAddr, boost::uint16_t aPort)
+{
+	mpImpl->AddTCPv6Client(arName, s, arAddr, aPort);
+}
+
+void StackManager::AddTCPv6Server(const std::string& arName, PhysLayerSettings s, const std::string& arEndpoint, boost::uint16_t aPort)
+{
+	mpImpl->AddTCPv6Server(arName, s, arEndpoint, aPort);
 }
 
 void StackManager::AddSerial(const std::string& arName, PhysLayerSettings s, SerialSettings aSerial)

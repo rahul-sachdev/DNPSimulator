@@ -83,7 +83,7 @@ def main():
 	phys_layer_settings = opendnp3.PhysLayerSettings()
 
 	stack_manager = opendnp3.StackManager()
-	stack_manager.AddTCPClient('tcpclient', phys_layer_settings, '127.0.0.1', 4999)
+	stack_manager.AddTCPv4Client('tcpclient', phys_layer_settings, '127.0.0.1', 4999)
 
 	master_stack_config = opendnp3.MasterStackConfig()
 #	master_stack_config.master.DoUnsolOnStartup = True

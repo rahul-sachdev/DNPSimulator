@@ -22,8 +22,8 @@
 #include <APLTestTools/AsyncTestObjectASIO.h>
 
 #include <APLTestTools/LogTester.h>
-#include <APL/PhysicalLayerAsyncTCPClient.h>
-#include <APL/PhysicalLayerAsyncTCPServer.h>
+#include <APL/PhysicalLayerAsyncTCPv4Client.h>
+#include <APL/PhysicalLayerAsyncTCPv4Server.h>
 #include <APL/LowerLayerToPhysAdapter.h>
 #include <APLTestTools/MockUpperLayer.h>
 
@@ -39,8 +39,8 @@ private:
 	Logger* mpLogger;
 
 public:
-	PhysicalLayerAsyncTCPClient mTCPClient;
-	PhysicalLayerAsyncTCPServer mTCPServer;
+	PhysicalLayerAsyncTCPv4Client mTCPClient;
+	PhysicalLayerAsyncTCPv4Server mTCPServer;
 
 	LowerLayerToPhysAdapter mClientAdapter;
 	LowerLayerToPhysAdapter mServerAdapter;
