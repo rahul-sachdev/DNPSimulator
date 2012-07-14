@@ -35,32 +35,34 @@ namespace apl
 
 void XML_TestSet::Configure(APLXML_MTS::MasterTestSet_t& arMasterTest, bool aUseUnsol)
 {
-	arMasterTest.PhysicalLayer = "tcpclient";
+	arMasterTest.PhysicalLayer = "tcpv4client";
 	arMasterTest.LogFile = "master_testset.log";
 	arMasterTest.Log.Filter = APLXML_Base::LOG_WARNING;
 	XML_DNP3::Configure(arMasterTest.Master, aUseUnsol);
 
 	xml::XML_APL::AddSerial(arMasterTest.PhysicalLayerList, "serial", "COM1");
-	xml::XML_APL::AddTCPClient(arMasterTest.PhysicalLayerList, "tcpclient", "127.0.0.1", 20000);
+	xml::XML_APL::AddTCPv4Client(arMasterTest.PhysicalLayerList, "tcpv4client", "127.0.0.1", 20000);
+	xml::XML_APL::AddTCPv4Server(arMasterTest.PhysicalLayerList, "vtov4tunnel", "0.0.0.0", 20001);
+	xml::XML_APL::AddTCPv6Client(arMasterTest.PhysicalLayerList, "tcpv6client", "::1", 20000);
+	xml::XML_APL::AddTCPv6Server(arMasterTest.PhysicalLayerList, "vtov6tunnel", "::", 20001);
 
-	xml::XML_APL::AddTCPServer(arMasterTest.PhysicalLayerList, "vtotunnel", "0.0.0.0", 20001);
-
-	XML_DNP3::AddVtoPort(arMasterTest.Master.VtoPorts, "vtotunnel", 0, true);
+	XML_DNP3::AddVtoPort(arMasterTest.Master.VtoPorts, "vtov4tunnel", 0, true);
 }
 
 void XML_TestSet::Configure(APLXML_STS::SlaveTestSet_t& arSlaveTest)
 {
-	arSlaveTest.PhysicalLayer = "tcpserver";
+	arSlaveTest.PhysicalLayer = "tcpv4server";
 	arSlaveTest.LogFile = "slave_testset.log";
 	arSlaveTest.Log.Filter = APLXML_Base::LOG_WARNING;
 	XML_DNP3::Configure(arSlaveTest.Slave);
 
 	xml::XML_APL::AddSerial(arSlaveTest.PhysicalLayerList, "serial", "COM1");
-	xml::XML_APL::AddTCPServer(arSlaveTest.PhysicalLayerList, "tcpserver", "0.0.0.0", 20000);
+	xml::XML_APL::AddTCPv4Server(arSlaveTest.PhysicalLayerList, "tcpv4server", "0.0.0.0", 20000);
+	xml::XML_APL::AddTCPv4Client(arSlaveTest.PhysicalLayerList, "vtov4tunnel", "127.0.0.1", 22);
+	xml::XML_APL::AddTCPv6Server(arSlaveTest.PhysicalLayerList, "tcpv6server", "::", 20000);
+	xml::XML_APL::AddTCPv6Client(arSlaveTest.PhysicalLayerList, "vtov6tunnel", "::1", 22);
 
-	xml::XML_APL::AddTCPClient(arSlaveTest.PhysicalLayerList, "vtotunnel", "127.0.0.1", 22);
-
-	XML_DNP3::AddVtoPort(arSlaveTest.Slave.VtoPorts, "vtotunnel", 0, false);
+	XML_DNP3::AddVtoPort(arSlaveTest.Slave.VtoPorts, "vtov4tunnel", 0, false);
 
 	arSlaveTest.Remote = false;
 	arSlaveTest.RemotePort = 4999;
@@ -68,5 +70,5 @@ void XML_TestSet::Configure(APLXML_STS::SlaveTestSet_t& arSlaveTest)
 	arSlaveTest.StartOnline = false;
 }
 
-
 }
+

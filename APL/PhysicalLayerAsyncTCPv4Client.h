@@ -16,55 +16,32 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __TRANSPORT_STACK_PAIR_H_
-#define __TRANSPORT_STACK_PAIR_H_
+#ifndef __PHYSICAL_LAYER_ASYNC_TCP_V4_CLIENT_H_
+#define __PHYSICAL_LAYER_ASYNC_TCP_V4_CLIENT_H_
 
-namespace boost
-{
-namespace asio
-{
-class io_service;
-}
-}
+#include <boost/asio/ip/tcp.hpp>
 
-
-#include <APL/PhysicalLayerAsyncTCPv4Client.h>
-#include <APL/PhysicalLayerAsyncTCPv4Server.h>
-#include <APL/ITimerSource.h>
-
-#include "TransportIntegrationStack.h"
+#include "PhysicalLayerAsyncTCPClient.h"
 
 namespace apl
 {
-namespace dnp
-{
 
-class TransportStackPair
+class PhysicalLayerAsyncTCPv4Client : public PhysicalLayerAsyncTCPClient
 {
 public:
-	TransportStackPair(
-	        LinkConfig aClientCfg,
-	        LinkConfig aServerCfg,
-	        Logger* apLogger,
-	        boost::asio::io_service* apService,
-	        ITimerSource* apTimerSrc,
-	        boost::uint16_t aPort);
-
-	void Start();
-
-	//test helper functions
-	bool BothLayersUp();
-
-public:
-	PhysicalLayerAsyncTCPv4Client mClient;
-	PhysicalLayerAsyncTCPv4Server mServer;
-
-	TransportIntegrationStack mClientStack;
-	TransportIntegrationStack mServerStack;
-
+	PhysicalLayerAsyncTCPv4Client(Logger* apLogger, boost::asio::io_service* apIOService, const std::string& arAddress, boost::uint16_t aPort)
+		: PhysicalLayerAsyncTCPClient(
+			apLogger,
+			apIOService,
+			boost::asio::ip::tcp::endpoint(
+				boost::asio::ip::tcp::v4(),
+				aPort
+			),
+			arAddress
+		)
+	{}
 };
 
-}
 }
 
 #endif

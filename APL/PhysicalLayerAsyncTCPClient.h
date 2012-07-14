@@ -19,9 +19,9 @@
 #ifndef __PHYSICAL_LAYER_ASYNC_TCP_CLIENT_H_
 #define __PHYSICAL_LAYER_ASYNC_TCP_CLIENT_H_
 
-#include "PhysicalLayerAsyncBaseTCP.h"
-
 #include <boost/asio/ip/tcp.hpp>
+
+#include "PhysicalLayerAsyncBaseTCP.h"
 
 namespace apl
 {
@@ -29,7 +29,7 @@ namespace apl
 class PhysicalLayerAsyncTCPClient : public PhysicalLayerAsyncBaseTCP
 {
 public:
-	PhysicalLayerAsyncTCPClient(Logger* apLogger, boost::asio::io_service* apIOService, const std::string& arAddress, boost::uint16_t aPort);
+	PhysicalLayerAsyncTCPClient(Logger* apLogger, boost::asio::io_service* apIOService, const boost::asio::ip::tcp::endpoint& arEndpoint, const std::string& arAddress);
 
 	/* Implement the remaining actions */
 	void DoOpen();
@@ -38,7 +38,6 @@ public:
 
 private:
 	boost::asio::ip::tcp::endpoint mRemoteEndpoint;
-
 };
 
 }

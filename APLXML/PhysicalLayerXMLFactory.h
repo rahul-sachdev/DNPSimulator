@@ -37,8 +37,10 @@ public:
 
 	/* These factories should take the regular configuration types */
 	static IPhysicalLayerAsyncFactory GetAsync(const APLXML_Base::Serial_t* apCfg);
-	static IPhysicalLayerAsyncFactory GetAsync(const APLXML_Base::TCPClient_t* apCfg);
-	static IPhysicalLayerAsyncFactory GetAsync(const APLXML_Base::TCPServer_t* apCfg);
+	static IPhysicalLayerAsyncFactory GetAsync(const APLXML_Base::TCPv4Client_t* apCfg);
+	static IPhysicalLayerAsyncFactory GetAsync(const APLXML_Base::TCPv4Server_t* apCfg);
+	static IPhysicalLayerAsyncFactory GetAsync(const APLXML_Base::TCPv6Client_t* apCfg);
+	static IPhysicalLayerAsyncFactory GetAsync(const APLXML_Base::TCPv6Server_t* apCfg);
 };
 
 int BaudToInt(APLXML_Base::BaudRateEnum aBaud);

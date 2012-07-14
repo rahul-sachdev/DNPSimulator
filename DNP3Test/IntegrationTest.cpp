@@ -160,8 +160,8 @@ void IntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 	mMasterObservers.push_back(pMasterFDO);
 
 	PhysLayerSettings s(aLevel, 1000);
-	this->mManager.AddTCPClient(client, s, "127.0.0.1", port);
-	this->mManager.AddTCPServer(server, s, "127.0.0.1", port);
+	this->mManager.AddTCPv4Client(client, s, "127.0.0.1", port);
+	this->mManager.AddTCPv4Server(server, s, "127.0.0.1", port);
 
 	/*
 	 * Add a Master instance.  The code is wrapped in braces so that we can

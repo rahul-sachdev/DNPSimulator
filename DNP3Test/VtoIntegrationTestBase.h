@@ -26,8 +26,8 @@
 #include <APL/FlexibleDataObserver.h>
 #include <APL/LogToFile.h>
 #include <APL/Loggable.h>
-#include <APL/PhysicalLayerAsyncTCPClient.h>
-#include <APL/PhysicalLayerAsyncTCPServer.h>
+#include <APL/PhysicalLayerAsyncTCPv4Client.h>
+#include <APL/PhysicalLayerAsyncTCPv4Server.h>
 
 #include <DNP3/AsyncStackManager.h>
 
@@ -64,13 +64,13 @@ public:
 	MockCommandAcceptor cmdAcceptor;
 
 	AsyncTestObjectASIO testObj;
-	
+
 	FlexibleDataObserver fdo;
 
 	TimerSourceASIO timerSource;
-	PhysicalLayerAsyncTCPClient vtoClient;
-	PhysicalLayerAsyncTCPServer vtoServer;
-	
+	PhysicalLayerAsyncTCPv4Client vtoClient;
+	PhysicalLayerAsyncTCPv4Server vtoServer;
+
 	AsyncStackManager manager;
 	WrappedTcpPipe tcpPipe;
 };

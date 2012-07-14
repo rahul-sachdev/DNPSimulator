@@ -83,16 +83,28 @@ std::vector<std::string> AsyncStackManager::GetPortNames()
 	return GetKeys<ChannelToChannelMap, string>(mChannelNameToChannel);
 }
 
-void AsyncStackManager::AddTCPClient(const std::string& arName, PhysLayerSettings aSettings, const std::string& arAddr, boost::uint16_t aPort)
+void AsyncStackManager::AddTCPv4Client(const std::string& arName, PhysLayerSettings aSettings, const std::string& arAddr, boost::uint16_t aPort)
 {
 	this->ThrowIfAlreadyShutdown();
-	mMgr.AddTCPClient(arName, aSettings, arAddr, aPort);
+	mMgr.AddTCPv4Client(arName, aSettings, arAddr, aPort);
 }
 
-void AsyncStackManager::AddTCPServer(const std::string& arName, PhysLayerSettings aSettings, const std::string& arEndpoint, boost::uint16_t aPort)
+void AsyncStackManager::AddTCPv4Server(const std::string& arName, PhysLayerSettings aSettings, const std::string& arEndpoint, boost::uint16_t aPort)
 {
 	this->ThrowIfAlreadyShutdown();
-	mMgr.AddTCPServer(arName, aSettings, arEndpoint, aPort);
+	mMgr.AddTCPv4Server(arName, aSettings, arEndpoint, aPort);
+}
+
+void AsyncStackManager::AddTCPv6Client(const std::string& arName, PhysLayerSettings aSettings, const std::string& arAddr, boost::uint16_t aPort)
+{
+	this->ThrowIfAlreadyShutdown();
+	mMgr.AddTCPv6Client(arName, aSettings, arAddr, aPort);
+}
+
+void AsyncStackManager::AddTCPv6Server(const std::string& arName, PhysLayerSettings aSettings, const std::string& arEndpoint, boost::uint16_t aPort)
+{
+	this->ThrowIfAlreadyShutdown();
+	mMgr.AddTCPv6Server(arName, aSettings, arEndpoint, aPort);
 }
 
 void AsyncStackManager::AddSerial(const std::string& arName, PhysLayerSettings aSettings, SerialSettings aSerial)
@@ -200,7 +212,7 @@ IVtoWriter* AsyncStackManager::GetVtoWriter(const std::string& arStackName)
 
 // Remove a port and all associated stacks
 void AsyncStackManager::RemovePort(const std::string& arPortName)
-{	
+{
 	this->ThrowIfAlreadyShutdown();
 	LinkChannel* pChannel = this->GetChannelMaybeNull(arPortName);
 	if(pChannel != NULL) { // the channel is in use
@@ -220,7 +232,7 @@ void AsyncStackManager::RemovePort(const std::string& arPortName)
 			this->RemoveStack(s);
 		}
 		this->mScheduler.ReleaseGroup(pChannel->GetGroup());
-	}	
+	}
 
 	// remove the physical layer from the list
 	mMgr.Remove(arPortName);

@@ -29,17 +29,17 @@ BOOST_AUTO_TEST_SUITE(StackManagerTestSuite)
 BOOST_AUTO_TEST_CASE(RemovePortWorksAfterAdd)
 {
 	StackManager sm;
-	sm.AddTCPClient("client",PhysLayerSettings(), "127.0.0.1", 20000);
+	sm.AddTCPv4Client("client",PhysLayerSettings(), "127.0.0.1", 20000);
 	sm.RemovePort("client");
 }
 
 BOOST_AUTO_TEST_CASE(AddRemoveMultipleTimes)
 {
 	StackManager sm;
-	sm.AddTCPClient("client", PhysLayerSettings(), "127.0.0.1", 20000);
+	sm.AddTCPv4Client("client", PhysLayerSettings(), "127.0.0.1", 20000);
 	sm.AddMaster("client", "master", apl::LEV_WARNING, NULL, MasterStackConfig());
 	sm.RemovePort("client");
-	sm.AddTCPClient("client", PhysLayerSettings(), "127.0.0.1", 20000);
+	sm.AddTCPv4Client("client", PhysLayerSettings(), "127.0.0.1", 20000);
 	sm.AddMaster("client", "master", apl::LEV_WARNING, NULL, MasterStackConfig());
 }
 

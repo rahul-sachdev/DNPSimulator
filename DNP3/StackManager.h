@@ -55,15 +55,25 @@ public:
 	StackManager();
 	~StackManager();
 
-	void AddTCPClient(const std::string& arName,
-	                  PhysLayerSettings aPhys,
-	                  const std::string& arAddr,
-	                  boost::uint16_t aPort);
+	void AddTCPv4Client(const std::string& arName,
+	                    PhysLayerSettings aPhys,
+	                    const std::string& arAddr,
+	                    boost::uint16_t aPort);
 
-	void AddTCPServer(const std::string& arName,
-	                  PhysLayerSettings aPhys,
-	                  const std::string& arEndpoint,
-	                  boost::uint16_t aPort);
+	void AddTCPv4Server(const std::string& arName,
+	                    PhysLayerSettings aPhys,
+	                    const std::string& arEndpoint,
+	                    boost::uint16_t aPort);
+
+	void AddTCPv6Client(const std::string& arName,
+	                    PhysLayerSettings aPhys,
+	                    const std::string& arAddr,
+	                    boost::uint16_t aPort);
+
+	void AddTCPv6Server(const std::string& arName,
+	                    PhysLayerSettings aPhys,
+	                    const std::string& arEndpoint,
+	                    boost::uint16_t aPort);
 
 	void AddSerial(const std::string& arName,
 	               PhysLayerSettings aPhys,
