@@ -372,6 +372,8 @@ nobase_pkginclude_HEADERS= \
 	APL/PhysicalLayerAsyncSerial.h \
 	APL/PhysicalLayerAsyncTCPClient.h \
 	APL/PhysicalLayerAsyncTCPServer.h \
+	APL/PhysicalLayerAsyncTCPv6Client.h \
+	APL/PhysicalLayerAsyncTCPv6Server.h \
 	APL/PhysicalLayerFactory.h \
 	APL/PhysicalLayerFunctors.h \
 	APL/PhysicalLayerInstance.h \
