@@ -63,10 +63,6 @@ libopendnp3_la_SOURCES = \
 	APL/PhysicalLayerAsyncSerial.cpp \
 	APL/PhysicalLayerAsyncTCPClient.cpp \
 	APL/PhysicalLayerAsyncTCPServer.cpp \
-	APL/PhysicalLayerAsyncTCPv4Client.cpp \
-	APL/PhysicalLayerAsyncTCPv4Server.cpp \
-	APL/PhysicalLayerAsyncTCPv6Client.cpp \
-	APL/PhysicalLayerAsyncTCPv6Server.cpp \
 	APL/PhysicalLayerFactory.cpp \
 	APL/PhysicalLayerInstance.cpp \
 	APL/PhysicalLayerManager.cpp \
