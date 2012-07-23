@@ -394,6 +394,7 @@ nobase_pkginclude_HEADERS= \
 	APL/QualityMasks.h \
 	APL/QueueingFDO.h \
 	APL/Random.h \
+	APL/RandomDouble.h \
 	APL/RandomizedBuffer.h \
 	APL/SerialTypes.h \
 	APL/ShiftableBuffer.h \
