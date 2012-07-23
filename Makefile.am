@@ -304,6 +304,7 @@ nobase_pkginclude_HEADERS= \
 	version.hpp \
 	APL/ASIOSerialHelpers.h \
 	APL/AsyncLayerInterfaces.h \
+	APL/AsyncResult.h \
 	APL/AsyncTaskBase.h \
 	APL/AsyncTaskContinuous.h \
 	APL/AsyncTaskGroup.h \
