@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<chapter id="chap_03">
+<chapter>
 <title>User Applications</title>
 
-<sect1 id="sect_03_01">
+<sect1>
 <title>testset</title>
 
 <para>The testset application allows the user to emulate a DNP3 master
 or outstation with custom properties set via an XML configuration file.
 </para>
 
-<sect2 id="sect_03_01_01">
+<sect2>
 <title>Usage</title>
 
 <screen>
@@ -27,7 +27,7 @@ Allowed options:
 
 </sect2>
 
-<sect2 id="sect_03_01_02">
+<sect2>
 <title>Configuration Files</title>
 
 <para>Testset generates sample XML configuration files for both a DNP3
@@ -44,7 +44,7 @@ generated dnp3_slave_default.xml
 <para>Optionally, you can use the <varname>--configfile</varname>
 parameter to set the name of the generated file.</para>
 
-<sect3 id="sect_03_01_02_01">
+<sect3>
 <title>Master Schema</title>
 
 <para>A DNP3 master is defined by the <varname>MasterTestSet</varname>
@@ -272,7 +272,7 @@ flag enabled.</para>
 </glosslist>
 </sect3>
 
-<sect3 id="sect_03_01_02_02">
+<sect3>
 <title>Outstation Schema</title>
 
 <para>A DNP3 outstation is defined by the
