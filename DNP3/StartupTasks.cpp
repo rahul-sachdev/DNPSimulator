@@ -59,7 +59,7 @@ void ConfigureUnsol::Set(bool aIsEnable, int aClassMask)
 
 void ConfigureUnsol::ConfigureRequest(APDU& arAPDU)
 {
-	arAPDU.Set(mIsEnable ? FC_ENABLE_UNSOLICITED : FC_DISABLE_UNSOLICITED);
+	arAPDU.Set((mIsEnable && mClassMask != 0) ? FC_ENABLE_UNSOLICITED : FC_DISABLE_UNSOLICITED);
 	if(mClassMask & PC_CLASS_1) arAPDU.DoPlaceholderWrite(Group60Var2::Inst());
 	if(mClassMask & PC_CLASS_2) arAPDU.DoPlaceholderWrite(Group60Var3::Inst());
 	if(mClassMask & PC_CLASS_3) arAPDU.DoPlaceholderWrite(Group60Var4::Inst());
