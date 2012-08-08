@@ -25,25 +25,50 @@
 namespace apl
 {
 
-/** Interface that defines how reponses are reported to an object.
+/** Interface that defines how reponses to command requests are reported to client code. Master client codes
+*   provides an instance of this class when calling ICommandAcceptor::AcceptCommand.
 */
 class IResponseAcceptor
 {
 public:
 	virtual ~IResponseAcceptor() {};
 
-	virtual void AcceptResponse(const CommandResponse&, int aSequence) = 0;
+	/**
+	* This function is called when the command request succeeds or fails. 
+	* @param arResponse Contains a description of whether the command succeeded/failed.
+	* @param aSequence ID that is echoed for correlation purposes
+	*
+	*/
+	virtual void AcceptResponse(const CommandResponse& arResponse, int aSequence) = 0;
 };
 
-/** Defines the interface an object must implement to handle requests.
+/** Defines the interface an object must implement to handle requests. Typically this interface is used by a client of a DNP3 master to issue control
+	requests and by a slave to handle them as they are received from a master.
 */
 class ICommandAcceptor
 {
 public:
 	virtual ~ICommandAcceptor() {};
 
-	virtual void AcceptCommand(const BinaryOutput&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor) = 0;
-	virtual void AcceptCommand(const Setpoint&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor) = 0;
+	/** Asynchronous request that a BinaryOutput be executed by the stack. The stack will call back with the supplied IResponseAcceptor.
+	*
+	*	@param arCommand The BinaryOuput (CROB) to execute
+	*   @param aIndex The index of the command
+	*   @param aSequence An ID used to correlate the request with the response. User supplied.
+	*   @param apRspAcceptor The interface used to make the callback
+	*
+	*/
+	virtual void AcceptCommand(const BinaryOutput& arCommand, size_t aIndex, int aSequence, IResponseAcceptor* apRspAcceptor) = 0;
+
+	/** Asynchronous request that a Setpoint be executed by the stack. The stack will call back with the supplied IResponseAcceptor.
+	*
+	*	@param arCommand The Setpoint (AnalogOutput in dnp3) to execute
+	*   @param aIndex The index of the command
+	*   @param aSequence An ID used to correlate the request with the response. User supplied.
+	*   @param apRspAcceptor The interface used to make the callback
+	*
+	*/
+	virtual void AcceptCommand(const Setpoint& arCommand, size_t aIndex, int aSequence, IResponseAcceptor* apRspAcceptor) = 0;
 };
 
 

@@ -51,7 +51,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_81D00EDA021FC53443A8A4E552FBC39E"
+        "MsmKey" = "8:_7272153F1249E52FEFD1540010E8B9BF"
         "OwnerKey" = "8:_6A312EAB7E9140DC81E3439C767051CA"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -63,13 +63,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_98ED25A715E24A3C89FEF2A88FB73043"
-        "OwnerKey" = "8:_DD1A8C8FE78B4C948FFDF1F5429ED9AE"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_DD1A8C8FE78B4C948FFDF1F5429ED9AE"
+        "MsmKey" = "8:_D40E08B7B8C94C2BACBB419758A66C3A"
         "OwnerKey" = "8:_6A312EAB7E9140DC81E3439C767051CA"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -260,7 +254,7 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_81D00EDA021FC53443A8A4E552FBC39E"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7272153F1249E52FEFD1540010E8B9BF"
             {
             "SourcePath" = "8:MSWSOCK.dll"
             "TargetName" = "8:MSWSOCK.dll"
@@ -361,6 +355,7 @@
         "MsiBootstrapper"
         {
         "LangId" = "3:1033"
+        "RequiresElevation" = "11:FALSE"
         }
         "Product"
         {
@@ -369,6 +364,7 @@
         "ProductCode" = "8:{B30F3CDA-FAAF-4815-B954-F3B0FCD98FA2}"
         "PackageCode" = "8:{BD2477D6-CBA9-4CDB-879A-07490CF8F0D9}"
         "UpgradeCode" = "8:{F07912E9-9BAF-4F92-ADE2-8C169AAFB16E}"
+        "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
@@ -977,25 +973,11 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_98ED25A715E24A3C89FEF2A88FB73043"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_D40E08B7B8C94C2BACBB419758A66C3A"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:policy_8_0_microsoft_vc80_crt_x86.msm"
-                "Properties"
-                {
-                }
-            "LanguageId" = "3:0"
-            "Exclude" = "11:FALSE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_DD1A8C8FE78B4C948FFDF1F5429ED9AE"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:Microsoft_VC80_CRT_x86.msm"
+            "SourcePath" = "8:Microsoft_VC100_DebugCRT_x86.msm"
                 "Properties"
                 {
                 }
@@ -1036,9 +1018,6 @@
                 {
                 }
             }
-        }
-        "VJSharpPlugin"
-        {
         }
     }
 }

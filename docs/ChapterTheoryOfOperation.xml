@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<chapter id="chap_01">
+<chapter id="ChapterTheoryOfOperation">
 <title>Theory of Operation</title>
 
-<sect1 id="sect_01_01">
+<sect1>
 <title>Conformance to DNP3 Standard</title>
 
 <para>
@@ -11,25 +11,25 @@ columns.
 </para>
 </sect1>
 
-<sect1 id="sect_01_02"> 
+<sect1> 
 <title>Standard Application Architecture</title>
 
 <para>TBD</para>
 </sect1>
 
-<sect1 id="sect_01_03">
+<sect1>
 <title>Ports, Masters, and Outstations</title>
 
 <para>TBD</para>
 </sect1>
 
-<sect1 id="sect_01_04">
+<sect1>
 <title>Point Maps</title>
 
 <para>TBD</para>
 </sect1>
 
-<sect1 id="sect_01_05">
+<sect1>
 <title>Virtual Terminal Objects</title>
 
 <para>TBD</para>

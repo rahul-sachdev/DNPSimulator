@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
 	const FilterLevel LOG_LEVEL = LEV_INFO;
 
 	// Create our demo application that handles commands and
-	// demonstrates how to publish data give it a loffer with a
+	// demonstrates how to publish data give it a logger with a
 	// unique name and log level.
 	MasterDemoApp app(log.GetLogger(LOG_LEVEL, "demoapp"));
 
