@@ -22,9 +22,9 @@
 #include <APLTestTools/AsyncTestObjectASIO.h>
 
 #include <APLTestTools/LogTester.h>
-#include <APL/PhysicalLayerAsyncTCPv4Client.h>
-#include <APL/PhysicalLayerAsyncTCPv4Server.h>
-#include <APL/LowerLayerToPhysAdapter.h>
+#include <opendnp3/APL/PhysicalLayerAsyncTCPv4Client.h>
+#include <opendnp3/APL/PhysicalLayerAsyncTCPv4Server.h>
+#include <opendnp3/APL/LowerLayerToPhysAdapter.h>
 #include <APLTestTools/MockUpperLayer.h>
 
 namespace apl

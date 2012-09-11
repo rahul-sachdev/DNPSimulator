@@ -23,13 +23,13 @@
 #include <APLTestTools/PhysicalLayerWrapper.h>
 #include <APLTestTools/WrappedTcpPipe.h>
 
-#include <APL/FlexibleDataObserver.h>
-#include <APL/LogToFile.h>
-#include <APL/Loggable.h>
-#include <APL/PhysicalLayerAsyncTCPv4Client.h>
-#include <APL/PhysicalLayerAsyncTCPv4Server.h>
+#include <opendnp3/APL/FlexibleDataObserver.h>
+#include <opendnp3/APL/LogToFile.h>
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/APL/PhysicalLayerAsyncTCPv4Client.h>
+#include <opendnp3/APL/PhysicalLayerAsyncTCPv4Server.h>
 
-#include <DNP3/AsyncStackManager.h>
+#include <opendnp3/DNP3/AsyncStackManager.h>
 
 
 /** Platforms have different reserved port ranges */

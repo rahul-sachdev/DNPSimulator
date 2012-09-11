@@ -20,8 +20,8 @@
 #define __PHYSICAL_LAYER_XML_FACTORY_H_
 
 #include <XMLBindings/APLXML_Base.h>
-#include <APL/PhysicalLayerFunctors.h>
-#include <APL/SerialTypes.h>
+#include <opendnp3/APL/PhysicalLayerFunctors.h>
+#include <opendnp3/APL/SerialTypes.h>
 
 namespace apl
 {

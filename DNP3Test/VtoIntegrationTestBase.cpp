@@ -16,11 +16,11 @@
  */
 #include "VtoIntegrationTestBase.h"
 
-#include <APL/LogToStdio.h>
+#include <opendnp3/APL/LogToStdio.h>
 
-#include <DNP3/SlaveStackConfig.h>
-#include <DNP3/MasterStackConfig.h>
-#include <DNP3/VtoRouterSettings.h>
+#include <opendnp3/DNP3/SlaveStackConfig.h>
+#include <opendnp3/DNP3/MasterStackConfig.h>
+#include <opendnp3/DNP3/VtoRouterSettings.h>
 
 /** Platforms have different reserved port ranges */
 

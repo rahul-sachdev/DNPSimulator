@@ -19,9 +19,9 @@
 
 #include "StartupTeardownTest.h"
 
-#include <DNP3/MasterStack.h>
-#include <APL/PhysicalLayerAsyncTCPv4Client.h>
-#include <APL/LogToStdio.h>
+#include <opendnp3/DNP3/MasterStack.h>
+#include <opendnp3/APL/PhysicalLayerAsyncTCPv4Client.h>
+#include <opendnp3/APL/LogToStdio.h>
 
 #include <boost/asio.hpp>
 #include <boost/foreach.hpp>

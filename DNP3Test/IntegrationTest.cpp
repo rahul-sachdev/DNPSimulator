@@ -21,16 +21,16 @@
 
 #include <sstream>
 
-#include <APL/PhysicalLayerFactory.h>
-#include <APL/IPhysicalLayerAsync.h>
+#include <opendnp3/APL/PhysicalLayerFactory.h>
+#include <opendnp3/APL/IPhysicalLayerAsync.h>
 
 #include <APLTestTools/AsyncTestObjectASIO.h>
 
-#include <DNP3/MasterStackConfig.h>
-#include <DNP3/SlaveStackConfig.h>
+#include <opendnp3/DNP3/MasterStackConfig.h>
+#include <opendnp3/DNP3/SlaveStackConfig.h>
 
-#include <DNP3/MasterStack.h>
-#include <DNP3/SlaveStack.h>
+#include <opendnp3/DNP3/MasterStack.h>
+#include <opendnp3/DNP3/SlaveStack.h>
 
 #include <boost/asio.hpp>
 #include <boost/foreach.hpp>
