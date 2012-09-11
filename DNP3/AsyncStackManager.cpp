@@ -83,10 +83,20 @@ std::vector<std::string> AsyncStackManager::GetPortNames()
 	return GetKeys<ChannelToChannelMap, string>(mChannelNameToChannel);
 }
 
+void AsyncStackManager::AddTCPClient(const std::string& arName, PhysLayerSettings aSettings, const std::string& arAddr, boost::uint16_t aPort)
+{
+	AddTCPv4Client(arName, aSettings, arAddr, aPort);
+}
+
 void AsyncStackManager::AddTCPv4Client(const std::string& arName, PhysLayerSettings aSettings, const std::string& arAddr, boost::uint16_t aPort)
 {
 	this->ThrowIfAlreadyShutdown();
 	mMgr.AddTCPv4Client(arName, aSettings, arAddr, aPort);
+}
+
+void AsyncStackManager::AddTCPServer(const std::string& arName, PhysLayerSettings aSettings, const std::string& arEndpoint, boost::uint16_t aPort)
+{
+	AddTCPv4Server(arName, aSettings, arEndpoint, aPort);
 }
 
 void AsyncStackManager::AddTCPv4Server(const std::string& arName, PhysLayerSettings aSettings, const std::string& arEndpoint, boost::uint16_t aPort)

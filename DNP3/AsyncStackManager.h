@@ -77,9 +77,11 @@ public:
 	// All the io_service marshalling now occurs here. It's now safe to add/remove while the manager is running.
 
 	// Adds a TCPv4Client port, excepts if the port already exists
+	void AddTCPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort);
 	void AddTCPv4Client(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort);
 
 	// Adds a TCPv4Server port, excepts if the port already exists
+	void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
 	void AddTCPv4Server(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
 
 	// Adds a TCPv6Client port, excepts if the port already exists

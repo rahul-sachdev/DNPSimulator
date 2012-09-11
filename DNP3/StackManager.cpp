@@ -42,9 +42,19 @@ StackManager::~StackManager()
 }
 
 //used for defining ports
+void StackManager::AddTCPClient(const std::string& arName, PhysLayerSettings s, const std::string& arAddr, boost::uint16_t aPort)
+{
+	AddTCPv4Client(arName, s, arAddr, aPort);
+}
+
 void StackManager::AddTCPv4Client(const std::string& arName, PhysLayerSettings s, const std::string& arAddr, boost::uint16_t aPort)
 {
 	mpImpl->AddTCPv4Client(arName, s, arAddr, aPort);
+}
+
+void StackManager::AddTCPServer(const std::string& arName, PhysLayerSettings s, const std::string& arEndpoint, boost::uint16_t aPort)
+{
+	AddTCPv4Server(arName, s, arEndpoint, aPort);
 }
 
 void StackManager::AddTCPv4Server(const std::string& arName, PhysLayerSettings s, const std::string& arEndpoint, boost::uint16_t aPort)
