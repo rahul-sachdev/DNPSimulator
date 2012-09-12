@@ -18,7 +18,7 @@
 //
 #include "MockPhysicalLayerAsyncTS.h"
 
-#include <opendnp3/APLTestTools/MockTimerSource.h>
+#include <APLTestTools/MockTimerSource.h>
 #include <boost/bind.hpp>
 #include <opendnp3/APL/Logger.h>
 

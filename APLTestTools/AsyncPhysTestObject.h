@@ -19,13 +19,13 @@
 #ifndef __ASYNC_PHYS_TEST_OBJECT_H_
 #define __ASYNC_PHYS_TEST_OBJECT_H_
 
-#include <opendnp3/APLTestTools/AsyncTestObjectASIO.h>
+#include <APLTestTools/AsyncTestObjectASIO.h>
 
-#include <opendnp3/APLTestTools/LogTester.h>
+#include <APLTestTools/LogTester.h>
 #include <opendnp3/APL/PhysicalLayerAsyncTCPv4Client.h>
 #include <opendnp3/APL/PhysicalLayerAsyncTCPv4Server.h>
 #include <opendnp3/APL/LowerLayerToPhysAdapter.h>
-#include <opendnp3/APLTestTools/MockUpperLayer.h>
+#include <APLTestTools/MockUpperLayer.h>
 
 namespace apl
 {
