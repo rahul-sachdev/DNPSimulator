@@ -18,10 +18,10 @@
 //
 #include "StackHelpers.h"
 
-#include <DNP3/SlaveStackConfig.h>
-#include <DNP3/MasterStackConfig.h>
-#include <APL/IPhysicalLayerAsync.h>
-#include <APL/PhysicalLayerFactory.h>
+#include <opendnp3/DNP3/SlaveStackConfig.h>
+#include <opendnp3/DNP3/MasterStackConfig.h>
+#include <opendnp3/APL/IPhysicalLayerAsync.h>
+#include <opendnp3/APL/PhysicalLayerFactory.h>
 
 #include <APLXML/PhysicalLayerXMLFactory.h>
 #include <DNP3XML/XmlToConfig.h>
