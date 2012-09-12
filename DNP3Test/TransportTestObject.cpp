@@ -18,8 +18,8 @@
 //
 #include "TransportTestObject.h"
 
-#include <APLTestTools/BufferHelpers.h>
-#include <APL/ToHex.h>
+#include <opendnp3/APLTestTools/BufferHelpers.h>
+#include <opendnp3/APL/ToHex.h>
 #include <memory>
 #include <sstream>
 

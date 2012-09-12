@@ -20,10 +20,10 @@
 #define __TRANSPORT_SCALABILITY_TEST_OBJECT_H_
 
 #include "TransportStackPair.h"
-#include <APLTestTools/AsyncTestObjectASIO.h>
+#include <opendnp3/APLTestTools/AsyncTestObjectASIO.h>
 
-#include <APL/TimerSourceASIO.h>
-#include <APLTestTools/LogTester.h>
+#include <opendnp3/APL/TimerSourceASIO.h>
+#include <opendnp3/APLTestTools/LogTester.h>
 
 namespace apl
 {

@@ -17,19 +17,19 @@
 #ifndef __VTO_INTEGRATION_TEST_BASE_H_
 #define __VTO_INTEGRATION_TEST_BASE_H_
 
-#include <APLTestTools/LogTester.h>
-#include <APLTestTools/MockCommandAcceptor.h>
-#include <APLTestTools/AsyncTestObjectASIO.h>
-#include <APLTestTools/PhysicalLayerWrapper.h>
-#include <APLTestTools/WrappedTcpPipe.h>
+#include <opendnp3/APLTestTools/LogTester.h>
+#include <opendnp3/APLTestTools/MockCommandAcceptor.h>
+#include <opendnp3/APLTestTools/AsyncTestObjectASIO.h>
+#include <opendnp3/APLTestTools/PhysicalLayerWrapper.h>
+#include <opendnp3/APLTestTools/WrappedTcpPipe.h>
 
-#include <APL/FlexibleDataObserver.h>
-#include <APL/LogToFile.h>
-#include <APL/Loggable.h>
-#include <APL/PhysicalLayerAsyncTCPv4Client.h>
-#include <APL/PhysicalLayerAsyncTCPv4Server.h>
+#include <opendnp3/APL/FlexibleDataObserver.h>
+#include <opendnp3/APL/LogToFile.h>
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/APL/PhysicalLayerAsyncTCPv4Client.h>
+#include <opendnp3/APL/PhysicalLayerAsyncTCPv4Server.h>
 
-#include <DNP3/AsyncStackManager.h>
+#include <opendnp3/DNP3/AsyncStackManager.h>
 
 
 /** Platforms have different reserved port ranges */

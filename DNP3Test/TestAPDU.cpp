@@ -17,15 +17,15 @@
 // under the License.
 //
 #include <boost/test/unit_test.hpp>
-#include <APLTestTools/TestHelpers.h>
+#include <opendnp3/APLTestTools/TestHelpers.h>
 
-#include <DNP3/APDU.h>
-#include <DNP3/ObjectHeader.h>
-#include <DNP3/ObjectReadIterator.h>
+#include <opendnp3/DNP3/APDU.h>
+#include <opendnp3/DNP3/ObjectHeader.h>
+#include <opendnp3/DNP3/ObjectReadIterator.h>
 
-#include <DNP3/DNPConstants.h>
-#include <APL/DataTypes.h>
-#include <APLTestTools/BufferHelpers.h>
+#include <opendnp3/DNP3/DNPConstants.h>
+#include <opendnp3/APL/DataTypes.h>
+#include <opendnp3/APLTestTools/BufferHelpers.h>
 
 #include <queue>
 #include <set>

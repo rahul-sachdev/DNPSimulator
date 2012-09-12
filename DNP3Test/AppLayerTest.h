@@ -20,10 +20,10 @@
 #ifndef __APP_LAYER_TEST_H_
 #define __APP_LAYER_TEST_H_
 
-#include <APLTestTools/LogTester.h>
-#include <DNP3/AppLayer.h>
-#include <APLTestTools/MockLowerLayer.h>
-#include <APLTestTools/MockTimerSource.h>
+#include <opendnp3/APLTestTools/LogTester.h>
+#include <opendnp3/DNP3/AppLayer.h>
+#include <opendnp3/APLTestTools/MockLowerLayer.h>
+#include <opendnp3/APLTestTools/MockTimerSource.h>
 
 #include "MockAppUser.h"
 

@@ -18,15 +18,15 @@
 //
 #include <boost/test/unit_test.hpp>
 
-#include <APLTestTools/TestHelpers.h>
-#include <APLTestTools/MockLogSubscriber.h>
+#include <opendnp3/APLTestTools/TestHelpers.h>
+#include <opendnp3/APLTestTools/MockLogSubscriber.h>
 
 #include "SlaveTestObject.h"
 
-#include <DNP3/APDU.h>
-#include <DNP3/ObjectReadIterator.h>
-#include <APL/TimingTools.h>
-#include <APL/Util.h>
+#include <opendnp3/DNP3/APDU.h>
+#include <opendnp3/DNP3/ObjectReadIterator.h>
+#include <opendnp3/APL/TimingTools.h>
+#include <opendnp3/APL/Util.h>
 
 using namespace std;
 using namespace apl;

@@ -28,9 +28,9 @@ class io_service;
 }
 
 
-#include <APL/PhysicalLayerAsyncTCPv4Client.h>
-#include <APL/PhysicalLayerAsyncTCPv4Server.h>
-#include <APL/ITimerSource.h>
+#include <opendnp3/APL/PhysicalLayerAsyncTCPv4Client.h>
+#include <opendnp3/APL/PhysicalLayerAsyncTCPv4Server.h>
+#include <opendnp3/APL/ITimerSource.h>
 
 #include "TransportIntegrationStack.h"
 

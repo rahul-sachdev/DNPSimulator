@@ -19,9 +19,9 @@
 #ifndef __MOCK_FRAME_SINK_H_
 #define __MOCK_FRAME_SINK_H_
 
-#include <DNP3/ILinkContext.h>
-#include <DNP3/LinkLayerConstants.h>
-#include <APLTestTools/BufferTestObject.h>
+#include <opendnp3/DNP3/ILinkContext.h>
+#include <opendnp3/DNP3/LinkLayerConstants.h>
+#include <opendnp3/APLTestTools/BufferTestObject.h>
 #include <boost/function.hpp>
 #include <queue>
 

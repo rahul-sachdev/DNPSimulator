@@ -17,9 +17,9 @@
 // under the License.
 //
 #include <boost/test/unit_test.hpp>
-#include <APLTestTools/TestHelpers.h>
+#include <opendnp3/APLTestTools/TestHelpers.h>
 
-#include <DNP3/Objects.h>
+#include <opendnp3/DNP3/Objects.h>
 
 using namespace apl;
 using namespace std;

@@ -19,15 +19,15 @@
 #ifndef __TRANSPORT_LOOPBACK_TEST_OBJECT_H_
 #define __TRANSPORT_LOOPBACK_TEST_OBJECT_H_
 
-#include <APLTestTools/AsyncTestObjectASIO.h>
+#include <opendnp3/APLTestTools/AsyncTestObjectASIO.h>
 
-#include <APL/TimerSourceASIO.h>
-#include <APLTestTools/LogTester.h>
-#include <APLTestTools/MockUpperLayer.h>
+#include <opendnp3/APL/TimerSourceASIO.h>
+#include <opendnp3/APLTestTools/LogTester.h>
+#include <opendnp3/APLTestTools/MockUpperLayer.h>
 
-#include <DNP3/LinkLayerRouter.h>
-#include <DNP3/LinkLayer.h>
-#include <DNP3/TransportLayer.h>
+#include <opendnp3/DNP3/LinkLayerRouter.h>
+#include <opendnp3/DNP3/LinkLayer.h>
+#include <opendnp3/DNP3/TransportLayer.h>
 
 namespace apl
 {
