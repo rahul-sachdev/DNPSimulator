@@ -19,11 +19,9 @@
 #ifndef __THREAD_H_
 #define __THREAD_H_
 
-
-#include "Threadable.h"
-#include "ThreadBase.h"
-
-#include "ThreadBoost.h"
+#include <opendnp3/APL/ThreadBase.h>
+#include <opendnp3/APL/ThreadBoost.h>
+#include <opendnp3/APL/Threadable.h>
 
 namespace apl
 {

@@ -17,7 +17,7 @@
 // under the License.
 //
 
-#include "MultiplexingDataObserver.h"
+#include <opendnp3/APL/MultiplexingDataObserver.h>
 
 namespace apl
 {

@@ -20,8 +20,8 @@
 #ifndef __SUSPEND_TIMER_SOURCE_H_
 #define __SUSPEND_TIMER_SOURCE_H_
 
-#include "Lock.h"
-#include "ITransactable.h"
+#include <opendnp3/APL/ITransactable.h>
+#include <opendnp3/APL/Lock.h>
 
 namespace apl
 {

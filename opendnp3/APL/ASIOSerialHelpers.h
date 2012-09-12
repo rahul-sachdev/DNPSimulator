@@ -19,9 +19,9 @@
 #ifndef _ASIO_SERIAL_HELPERS_H_
 #define _ASIO_SERIAL_HELPERS_H_
 
-#include <boost/asio.hpp>
+#include <opendnp3/APL/SerialTypes.h>
 
-#include "SerialTypes.h"
+#include <boost/asio.hpp>
 
 namespace boost
 {

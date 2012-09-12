@@ -19,10 +19,8 @@
 #ifndef __PhysicalLayerManager_H_
 #define __PhysicalLayerManager_H_
 
-
-#include "PhysicalLayerMap.h"
-#include "SerialTypes.h"
-//#include "PhysicalLayerInstance.h"
+#include <opendnp3/APL/PhysicalLayerMap.h>
+#include <opendnp3/APL/SerialTypes.h>
 
 namespace apl
 {

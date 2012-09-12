@@ -16,9 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "EventLock.h"
-
-
+#include <opendnp3/APL/EventLock.h>
 
 namespace apl
 {

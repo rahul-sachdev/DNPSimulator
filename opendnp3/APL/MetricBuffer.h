@@ -19,13 +19,13 @@
 #ifndef __METRIC_BUFFER_H_
 #define __METRIC_BUFFER_H_
 
-#include "LogBase.h"
-#include "SubjectBase.h"
-#include "Uncopyable.h"
-#include "Lock.h"
+#include <opendnp3/APL/Lock.h>
+#include <opendnp3/APL/LogBase.h>
+#include <opendnp3/APL/SubjectBase.h>
+#include <opendnp3/APL/Uncopyable.h>
 
-#include <set>
 #include <vector>
+#include <set>
 
 namespace apl
 {

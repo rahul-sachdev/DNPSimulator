@@ -19,8 +19,8 @@
 #ifndef __PHYS_LAYER_SETTINGS_H_
 #define __PHYS_LAYER_SETTINGS_H_
 
-#include "Types.h"
-#include "LogTypes.h"
+#include <opendnp3/APL/LogTypes.h>
+#include <opendnp3/APL/Types.h>
 
 namespace apl
 {

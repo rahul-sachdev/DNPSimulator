@@ -18,7 +18,7 @@
 #ifndef _I_PHYSICAL_LAYER_ASYNC_H_
 #define _I_PHYSICAL_LAYER_ASYNC_H_
 
-#include "AsyncLayerInterfaces.h"
+#include <opendnp3/APL/AsyncLayerInterfaces.h>
 
 namespace apl
 {

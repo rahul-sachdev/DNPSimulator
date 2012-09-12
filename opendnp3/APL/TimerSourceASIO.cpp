@@ -17,14 +17,13 @@
 // under the License.
 //
 
-#include "TimerSourceASIO.h"
-
-#include "TimerASIO.h"
-#include "AsyncResult.h"
+#include <opendnp3/APL/AsyncResult.h>
+#include <opendnp3/APL/TimerASIO.h>
+#include <opendnp3/APL/TimerSourceASIO.h>
 
 #include <boost/asio.hpp>
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
+#include <boost/foreach.hpp>
 
 namespace apl
 {

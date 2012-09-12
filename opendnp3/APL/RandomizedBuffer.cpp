@@ -17,7 +17,7 @@
 // under the License.
 //
 
-#include "RandomizedBuffer.h"
+#include <opendnp3/APL/RandomizedBuffer.h>
 
 namespace apl
 {

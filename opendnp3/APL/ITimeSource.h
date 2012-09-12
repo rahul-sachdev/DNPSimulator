@@ -19,7 +19,7 @@
 #ifndef __I_TIME_SOURCE_H_
 #define __I_TIME_SOURCE_H_
 
-#include "Types.h"
+#include <opendnp3/APL/Types.h>
 
 namespace boost
 {

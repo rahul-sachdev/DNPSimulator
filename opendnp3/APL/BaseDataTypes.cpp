@@ -16,11 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "BaseDataTypes.h"
-
-#include "TimingTools.h"
-
-
+#include <opendnp3/APL/BaseDataTypes.h>
+#include <opendnp3/APL/TimingTools.h>
 
 using namespace std;
 

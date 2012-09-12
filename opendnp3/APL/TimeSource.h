@@ -19,9 +19,9 @@
 #ifndef __TIME_SOURCE_H_
 #define __TIME_SOURCE_H_
 
-#include "ITimeSource.h"
-#include "Singleton.h"
-#include "Types.h"
+#include <opendnp3/APL/ITimeSource.h>
+#include <opendnp3/APL/Singleton.h>
+#include <opendnp3/APL/Types.h>
 
 #include <boost/date_time/posix_time/ptime.hpp>
 

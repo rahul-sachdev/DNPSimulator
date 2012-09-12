@@ -19,10 +19,11 @@
 #ifndef __COPYABLE_BUFFER_H_
 #define __COPYABLE_BUFFER_H_
 
-#include "Types.h"
-#include <stddef.h>
+#include <opendnp3/APL/Types.h>
+
 #include <memory>
 #include <sstream>
+#include <stddef.h>
 
 namespace apl
 {

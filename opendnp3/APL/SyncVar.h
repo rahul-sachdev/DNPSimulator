@@ -19,10 +19,9 @@
 #ifndef __SYNC_VAR_H_
 #define __SYNC_VAR_H_
 
-
-#include "SubjectBase.h"
-#include "Timeout.h"
-#include "Lock.h"
+#include <opendnp3/APL/Lock.h>
+#include <opendnp3/APL/SubjectBase.h>
+#include <opendnp3/APL/Timeout.h>
 
 namespace apl
 {

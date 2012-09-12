@@ -19,8 +19,7 @@
 #ifndef __THREAD_BASE_H_
 #define __THREAD_BASE_H_
 
-
-#include "Threadable.h"
+#include <opendnp3/APL/Threadable.h>
 
 namespace apl
 {

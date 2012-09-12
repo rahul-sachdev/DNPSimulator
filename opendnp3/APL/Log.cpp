@@ -17,12 +17,13 @@
 // under the License.
 //
 
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/Log.h>
+#include <opendnp3/APL/Thread.h>
+
+#include <exception>
 #include <iostream>
 #include <sstream>
-#include <exception>
-#include "Log.h"
-#include "Thread.h"
-#include "Exception.h"
 
 using namespace std;
 

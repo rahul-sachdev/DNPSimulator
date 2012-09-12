@@ -19,11 +19,11 @@
 #ifndef __PACKING_UNPACKING_H_
 #define __PACKING_UNPACKING_H_
 
+#include <opendnp3/APL/Types.h>
 
-#include "Types.h"
-#include <stddef.h>
-#include <limits>
 #include <iostream>
+#include <limits>
+#include <stddef.h>
 
 #ifdef max
 #undef max

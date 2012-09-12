@@ -19,9 +19,9 @@
 #ifndef __IO_SERVICE_THREAD_H_
 #define __IO_SERVICE_THREAD_H_
 
-#include "Thread.h"
-#include "TimerSourceASIO.h"
-#include "Loggable.h"
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/APL/Thread.h>
+#include <opendnp3/APL/TimerSourceASIO.h>
 
 namespace boost
 {

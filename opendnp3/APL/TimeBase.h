@@ -19,11 +19,10 @@
 #ifndef __TIME_BASE_H_
 #define __TIME_BASE_H_
 
+#include <opendnp3/APL/Types.h>
 
-#include <string>
 #include <stddef.h>
-
-#include "Types.h"
+#include <string>
 
 namespace apl
 {

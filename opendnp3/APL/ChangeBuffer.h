@@ -19,11 +19,11 @@
 #ifndef __CHANGE_BUFFER_H_
 #define __CHANGE_BUFFER_H_
 
-#include "DataTypes.h"
-#include "DataInterfaces.h"
-#include "TimingTools.h"
-#include "INotifier.h"
-#include "SubjectBase.h"
+#include <opendnp3/APL/DataInterfaces.h>
+#include <opendnp3/APL/DataTypes.h>
+#include <opendnp3/APL/INotifier.h>
+#include <opendnp3/APL/SubjectBase.h>
+#include <opendnp3/APL/TimingTools.h>
 
 #include <queue>
 

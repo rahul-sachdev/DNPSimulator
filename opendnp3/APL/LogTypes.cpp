@@ -17,8 +17,8 @@
 // under the License.
 //
 
-#include "LogTypes.h"
-#include "Util.h"
+#include <opendnp3/APL/LogTypes.h>
+#include <opendnp3/APL/Util.h>
 
 #include <sstream>
 

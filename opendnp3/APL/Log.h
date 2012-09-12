@@ -20,16 +20,16 @@
 #define __EVENT_LOG_H_
 
 
+#include <opendnp3/APL/EventLock.h>
+#include <opendnp3/APL/LogBase.h>
+#include <opendnp3/APL/LogEntryCircularBuffer.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/APL/TimeTypes.h>
+#include <opendnp3/APL/Uncopyable.h>
+
 #include <assert.h>
 #include <map>
 #include <vector>
-
-#include "LogBase.h"
-#include "TimeTypes.h"
-#include "Logger.h"
-#include "EventLock.h"
-#include "Uncopyable.h"
-#include "LogEntryCircularBuffer.h"
 
 namespace apl
 {

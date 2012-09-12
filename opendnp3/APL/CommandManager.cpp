@@ -16,10 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "CommandManager.h"
-
-#include "Exception.h"
-#include "Configure.h"
+#include <opendnp3/APL/CommandManager.h>
+#include <opendnp3/APL/Configure.h>
+#include <opendnp3/APL/Exception.h>
 
 #include <assert.h>
 

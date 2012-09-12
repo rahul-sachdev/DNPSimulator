@@ -19,13 +19,11 @@
 #ifndef __I_LOCK_BASE_H_
 #define __I_LOCK_BASE_H_
 
+#include <opendnp3/APL/Types.h>
+#include <opendnp3/APL/Uncopyable.h>
 
-
-//includes size_t
-#include <stddef.h>
 #include <assert.h>
-#include "Types.h"
-#include "Uncopyable.h"
+#include <stddef.h>
 
 namespace apl
 {

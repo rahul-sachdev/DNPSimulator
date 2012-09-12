@@ -19,11 +19,11 @@
 #ifndef __EXCEPTION_H_
 #define __EXCEPTION_H_
 
+#include <opendnp3/APL/Configure.h>
 
 #include <exception>
-#include <string>
 #include <sstream>
-#include "Configure.h"
+#include <string>
 
 namespace apl
 {

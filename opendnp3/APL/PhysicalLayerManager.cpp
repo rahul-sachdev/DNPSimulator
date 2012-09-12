@@ -16,13 +16,12 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "PhysicalLayerManager.h"
-
-#include "PhysicalLayerFactory.h"
-#include "PhysLayerSettings.h"
-#include "Logger.h"
-#include "Log.h"
-#include "Util.h"
+#include <opendnp3/APL/Log.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/APL/PhysLayerSettings.h>
+#include <opendnp3/APL/PhysicalLayerFactory.h>
+#include <opendnp3/APL/PhysicalLayerManager.h>
+#include <opendnp3/APL/Util.h>
 
 #include <boost/bind.hpp>
 

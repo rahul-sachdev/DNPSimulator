@@ -16,9 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "ToHex.h"
-
-
+#include <opendnp3/APL/ToHex.h>
 
 namespace apl
 {

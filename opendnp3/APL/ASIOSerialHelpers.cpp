@@ -17,12 +17,11 @@
 // under the License.
 //
 
-#include "ASIOSerialHelpers.h"
-
-#include <sstream>
-#include "Exception.h"
+#include <opendnp3/APL/ASIOSerialHelpers.h>
+#include <opendnp3/APL/Exception.h>
 
 #include <boost/asio.hpp>
+#include <sstream>
 
 using namespace boost::asio;
 using namespace boost::system;

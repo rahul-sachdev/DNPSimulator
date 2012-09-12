@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "Exception.h"
+#include <opendnp3/APL/Exception.h>
 
 #include <sstream>
 

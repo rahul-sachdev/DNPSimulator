@@ -17,12 +17,11 @@
 // under the License.
 //
 
-
 #ifdef max
 #undef max
 #endif
 
-#include "TimingTools.h"
+#include <opendnp3/APL/TimingTools.h>
 
 namespace apl
 {

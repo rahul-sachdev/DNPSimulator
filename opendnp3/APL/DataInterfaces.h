@@ -19,9 +19,8 @@
 #ifndef __DATA_INTERFACES_H_
 #define	__DATA_INTERFACES_H_
 
-#include "DataTypes.h"
-#include "ITransactable.h"
-
+#include <opendnp3/APL/DataTypes.h>
+#include <opendnp3/APL/ITransactable.h>
 
 namespace apl
 {

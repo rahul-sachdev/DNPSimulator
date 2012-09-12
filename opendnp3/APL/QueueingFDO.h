@@ -19,18 +19,17 @@
 #ifndef __QUEUEING_FDO_H_
 #define __QUEUEING_FDO_H_
 
-
-#include "DataInterfaces.h"
-#include "Lock.h"
-#include "SubjectBase.h"
-#include "Util.h"
-#include <APL/FlexibleDataObserver.h>
+#include <opendnp3/APL/DataInterfaces.h>
+#include <opendnp3/APL/FlexibleDataObserver.h>
+#include <opendnp3/APL/Lock.h>
+#include <opendnp3/APL/SubjectBase.h>
+#include <opendnp3/APL/Util.h>
 
 #include <iostream>
 #include <map>
 #include <queue>
-#include <string>
 #include <sstream>
+#include <string>
 
 namespace apl
 {

@@ -19,10 +19,8 @@
 #ifndef __ASYNC_LAYER_INTERFACES_H_
 #define __ASYNC_LAYER_INTERFACES_H_
 
-
-
-#include "Types.h"
-#include "Loggable.h"
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/APL/Types.h>
 
 /*
 Reusable asynchronous interfaces for protocol stacks.

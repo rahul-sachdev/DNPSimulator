@@ -19,9 +19,9 @@
 #ifndef __TIMER_ASIO_H_
 #define __TIMER_ASIO_H_
 
+#include <opendnp3/APL/ITimerSource.h>
 
 #include <boost/asio.hpp>
-#include "ITimerSource.h"
 
 namespace apl
 {

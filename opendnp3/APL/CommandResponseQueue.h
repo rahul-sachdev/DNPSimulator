@@ -19,10 +19,10 @@
 #ifndef __COMMAND_RESPONSE_QUEUE_H_
 #define __COMMAND_RESPONSE_QUEUE_H_
 
-#include "CommandInterfaces.h"
-#include "INotifier.h"
-#include "Lock.h"
-#include "SubjectBase.h"
+#include <opendnp3/APL/CommandInterfaces.h>
+#include <opendnp3/APL/INotifier.h>
+#include <opendnp3/APL/Lock.h>
+#include <opendnp3/APL/SubjectBase.h>
 
 #include <queue>
 

@@ -19,8 +19,8 @@
 #ifndef __POSTING_NOTIFIER_H_
 #define __POSTING_NOTIFIER_H_
 
-#include "INotifier.h"
-#include "ITimerSource.h"
+#include <opendnp3/APL/INotifier.h>
+#include <opendnp3/APL/ITimerSource.h>
 
 namespace apl
 {

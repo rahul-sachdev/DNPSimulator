@@ -19,10 +19,10 @@
 #ifndef __FLEXIBLE_DATA_OBSERVER_H_
 #define __FLEXIBLE_DATA_OBSERVER_H_
 
-#include "DataInterfaces.h"
-#include "Lock.h"
-#include "SubjectBase.h"
-#include "Util.h"
+#include <opendnp3/APL/DataInterfaces.h>
+#include <opendnp3/APL/Lock.h>
+#include <opendnp3/APL/SubjectBase.h>
+#include <opendnp3/APL/Util.h>
 
 #include <iostream>
 #include <map>

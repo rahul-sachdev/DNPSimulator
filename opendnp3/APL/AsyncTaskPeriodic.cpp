@@ -16,9 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "AsyncTaskPeriodic.h"
-
-#include "AsyncTaskGroup.h"
+#include <opendnp3/APL/AsyncTaskGroup.h>
+#include <opendnp3/APL/AsyncTaskPeriodic.h>
 
 using namespace boost::posix_time;
 

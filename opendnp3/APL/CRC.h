@@ -19,7 +19,8 @@
 #ifndef __CRC_H_
 #define __CRC_H_
 
-#include "Types.h"
+#include <opendnp3/APL/Types.h>
+
 #include <stddef.h>
 
 namespace apl

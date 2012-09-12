@@ -19,7 +19,7 @@
 #ifndef __TIME_TYPES_H_
 #define __TIME_TYPES_H_
 
-#include "TimeBoost.h"
+#include <opendnp3/APL/TimeBoost.h>
 
 namespace apl
 {

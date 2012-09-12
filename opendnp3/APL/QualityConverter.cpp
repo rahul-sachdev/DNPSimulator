@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "QualityConverter.h"
+#include <opendnp3/APL/QualityConverter.h>
 
 namespace apl
 {

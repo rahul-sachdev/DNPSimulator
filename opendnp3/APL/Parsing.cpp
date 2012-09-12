@@ -16,10 +16,10 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "Parsing.h"
+#include <opendnp3/APL/Parsing.h>
 
-#include <sstream>
 #include <boost/numeric/conversion/converter.hpp>
+#include <sstream>
 
 namespace apl
 {

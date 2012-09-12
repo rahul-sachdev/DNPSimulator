@@ -19,9 +19,10 @@
 #ifndef __CONTROL_TYPES_H_
 #define __CONTROL_TYPES_H_
 
-#include "Types.h"
-#include <string>
+#include <opendnp3/APL/Types.h>
+
 #include <math.h>
+#include <string>
 
 namespace apl
 {

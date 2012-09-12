@@ -16,12 +16,11 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "LogEntry.h"
-
+#include <opendnp3/APL/LogEntry.h>
+#include <opendnp3/APL/Parsing.h>
+#include <opendnp3/APL/Util.h>
 
 #include <sstream>
-#include "Util.h"
-#include "Parsing.h"
 
 using namespace std;
 

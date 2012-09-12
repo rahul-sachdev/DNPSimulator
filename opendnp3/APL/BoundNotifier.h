@@ -19,7 +19,8 @@
 #ifndef __BOUND_NOTIFIER_H_
 #define __BOUND_NOTIFIER_H_
 
-#include "INotifier.h"
+#include <opendnp3/APL/INotifier.h>
+
 #include <boost/function.hpp>
 
 namespace apl

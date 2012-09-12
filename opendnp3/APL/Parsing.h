@@ -19,10 +19,9 @@
 #ifndef __PARSING_H_
 #define __PARSING_H_
 
-#include <string>
-#include <sstream>
-
 #include <boost/cstdint.hpp>
+#include <sstream>
+#include <string>
 
 namespace apl
 {

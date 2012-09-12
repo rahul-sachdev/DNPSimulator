@@ -16,7 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "LogEntryCircularBuffer.h"
+#include <opendnp3/APL/LogEntryCircularBuffer.h>
+
 #include <iostream>
 
 namespace apl

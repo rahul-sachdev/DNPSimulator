@@ -17,9 +17,8 @@
 // under the License.
 //
 
-#include "SuspendTimerSource.h"
-
-#include "ITimerSource.h"
+#include <opendnp3/APL/ITimerSource.h>
+#include <opendnp3/APL/SuspendTimerSource.h>
 
 #include <boost/bind.hpp>
 

@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "IHandlerAsync.h"
+#include <opendnp3/APL/IHandlerAsync.h>
 
 namespace apl
 {

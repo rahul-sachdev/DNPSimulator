@@ -16,10 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "TrackingTaskGroup.h"
-
-#include "AsyncTaskGroup.h"
-#include "AsyncTaskContinuous.h"
+#include <opendnp3/APL/AsyncTaskContinuous.h>
+#include <opendnp3/APL/AsyncTaskGroup.h>
+#include <opendnp3/APL/TrackingTaskGroup.h>
 
 namespace apl
 {

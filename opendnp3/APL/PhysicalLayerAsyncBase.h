@@ -19,10 +19,10 @@
 #ifndef __PHYSICAL_LAYER_ASYNC_BASE_H_
 #define __PHYSICAL_LAYER_ASYNC_BASE_H_
 
+#include <opendnp3/APL/IPhysicalLayerAsync.h>
+#include <opendnp3/APL/Loggable.h>
 
 #include <boost/system/error_code.hpp>
-#include "IPhysicalLayerAsync.h"
-#include "Loggable.h"
 
 namespace apl
 {

@@ -16,8 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "ThreadBoost.h"
-#include "TimingTools.h"
+#include <opendnp3/APL/ThreadBoost.h>
+#include <opendnp3/APL/TimingTools.h>
 
 namespace apl
 {

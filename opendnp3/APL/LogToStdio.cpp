@@ -16,9 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "LogToStdio.h"
+#include <opendnp3/APL/LogEntry.h>
+#include <opendnp3/APL/LogToStdio.h>
 
-#include "LogEntry.h"
 #include <iostream>
 
 namespace apl

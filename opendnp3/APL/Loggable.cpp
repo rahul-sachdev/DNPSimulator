@@ -16,12 +16,11 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "Loggable.h"
-
+#include <opendnp3/APL/Log.h>
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/APL/Logger.h>
 
 #include <assert.h>
-#include "Log.h"
-#include "Logger.h"
 
 namespace apl
 {

@@ -16,9 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "ShiftableBuffer.h"
-
-#include "Exception.h"
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/ShiftableBuffer.h>
 
 #include <memory.h>
 

@@ -19,11 +19,11 @@
 #ifndef __PHYSICAL_LAYER_MAP_H_
 #define __PHYSICAL_LAYER_MAP_H_
 
-#include "IPhysicalLayerSource.h"
-#include "PhysicalLayerInstance.h"
-#include "PhysLayerSettings.h"
-#include "Lock.h"
-#include "Loggable.h"
+#include <opendnp3/APL/IPhysicalLayerSource.h>
+#include <opendnp3/APL/Lock.h>
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/APL/PhysLayerSettings.h>
+#include <opendnp3/APL/PhysicalLayerInstance.h>
 
 #include <map>
 
@@ -56,11 +56,11 @@ protected:
 	typedef std::map<std::string, PhysLayerSettings> NameToSettingsMap;
 	typedef std::map<std::string, PhysLayerInstance> NameToInstanceMap;
 	typedef std::map<std::string, bool> AcquiredMap;
-	
+
 	NameToSettingsMap mNameToSettingsMap;
 	NameToInstanceMap mNameToInstanceMap;
 	AcquiredMap mAcquiredMap;
-	
+
 	boost::asio::io_service* mpService;
 	Logger* mpBaseLogger;
 };

@@ -17,7 +17,8 @@
 // under the License.
 //
 
-#include "IOService.h"
+#include <opendnp3/APL/IOService.h>
+
 #include <boost/asio.hpp>
 
 namespace apl

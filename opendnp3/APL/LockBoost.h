@@ -17,13 +17,12 @@
 // under the License.
 //
 
-
 #ifndef _LOCK_BOOST_H_
 #define _LOCK_BOOST_H_
 
-#include "LockBase.h"
-#include "Uncopyable.h"
-#include "Configure.h"
+#include <opendnp3/APL/Configure.h>
+#include <opendnp3/APL/LockBase.h>
+#include <opendnp3/APL/Uncopyable.h>
 
 #ifdef APL_PLATFORM_WIN
 #pragma warning( disable : 4996 )

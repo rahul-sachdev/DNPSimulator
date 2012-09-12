@@ -19,13 +19,12 @@
 #ifndef _PHYSICAL_LAYER_FACTORY_H_
 #define _PHYSICAL_LAYER_FACTORY_H_
 
-
-#include "SerialTypes.h"
-#include "Exception.h"
-#include "PhysicalLayerFunctors.h"
-#include <map>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/PhysicalLayerFunctors.h>
+#include <opendnp3/APL/SerialTypes.h>
 
 #include <boost/cstdint.hpp>
+#include <map>
 
 namespace apl
 {

@@ -19,14 +19,14 @@
 #ifndef _UTIL_H_
 #define _UTIL_H_
 
-#include <string>
-#include <sstream>
-#include <assert.h>
-#include <stdlib.h>
-#include <memory.h>
+#include <opendnp3/APL/Configure.h>
+#include <opendnp3/APL/Types.h>
 
-#include "Types.h"
-#include "Configure.h"
+#include <assert.h>
+#include <memory.h>
+#include <sstream>
+#include <stdlib.h>
+#include <string>
 
 namespace boost
 {

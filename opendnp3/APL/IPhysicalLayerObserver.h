@@ -19,9 +19,9 @@
 #ifndef __I_PHYSICAL_LAYER_OBSERVER_H_
 #define __I_PHYSICAL_LAYER_OBSERVER_H_
 
-#include <string>
+#include <opendnp3/APL/PhysicalLayerStates.h>
 
-#include "PhysicalLayerStates.h"
+#include <string>
 
 namespace apl
 {

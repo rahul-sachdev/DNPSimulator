@@ -17,10 +17,9 @@
 // under the License.
 //
 
-#include "PhysLoopback.h"
-
-#include "IPhysicalLayerAsync.h"
-#include "Logger.h"
+#include <opendnp3/APL/IPhysicalLayerAsync.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/APL/PhysLoopback.h>
 
 namespace apl
 {

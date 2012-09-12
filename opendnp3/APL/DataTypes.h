@@ -19,7 +19,7 @@
 #ifndef __DATA_TYPES_H_
 #define __DATA_TYPES_H_
 
-#include "BaseDataTypes.h"
+#include <opendnp3/APL/BaseDataTypes.h>
 
 namespace apl
 {

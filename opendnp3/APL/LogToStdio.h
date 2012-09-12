@@ -19,8 +19,8 @@
 #ifndef __LOG_TO_STDIO_H_
 #define __LOG_TO_STDIO_H_
 
-#include "Lock.h"
-#include "LogBase.h"
+#include <opendnp3/APL/Lock.h>
+#include <opendnp3/APL/LogBase.h>
 
 namespace apl
 {

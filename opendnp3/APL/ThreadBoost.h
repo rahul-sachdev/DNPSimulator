@@ -19,8 +19,9 @@
 #ifndef __THREAD_BOOST_H_
 #define __THREAD_BOOST_H_
 
-#include "ThreadBase.h"
-#include "Types.h"
+#include <opendnp3/APL/ThreadBase.h>
+#include <opendnp3/APL/Types.h>
+
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 

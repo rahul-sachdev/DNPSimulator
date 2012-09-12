@@ -16,11 +16,10 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "CommandResponseQueue.h"
-
+#include <opendnp3/APL/CommandResponseQueue.h>
+#include <opendnp3/APL/TimingTools.h>
 
 #include <assert.h>
-#include "TimingTools.h"
 
 namespace apl
 {

@@ -19,8 +19,8 @@
 #ifndef __TIMEOUT_H_
 #define __TIMEOUT_H_
 
-#include "TimeTypes.h"
-#include "Types.h"
+#include <opendnp3/APL/TimeTypes.h>
+#include <opendnp3/APL/Types.h>
 
 namespace apl
 {

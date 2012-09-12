@@ -19,10 +19,10 @@
 #ifndef __POSTING_NOTIFIER_SOURCE_H_
 #define __POSTING_NOTIFIER_SOURCE_H_
 
-#include "ITimerSource.h"
+#include <opendnp3/APL/ITimerSource.h>
 
-#include <vector>
 #include <boost/shared_ptr.hpp>
+#include <vector>
 
 namespace apl
 {

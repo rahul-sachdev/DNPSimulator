@@ -16,10 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "LowerLayerToPhysAdapter.h"
-
-
-#include "IPhysicalLayerAsync.h"
+#include <opendnp3/APL/IPhysicalLayerAsync.h>
+#include <opendnp3/APL/LowerLayerToPhysAdapter.h>
 
 namespace apl
 {

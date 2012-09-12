@@ -19,9 +19,9 @@
 #ifndef __PHYSICAL_LAYER_ASYNC_TCP_V4_CLIENT_H_
 #define __PHYSICAL_LAYER_ASYNC_TCP_V4_CLIENT_H_
 
-#include <boost/asio/ip/tcp.hpp>
+#include <opendnp3/APL/PhysicalLayerAsyncTCPClient.h>
 
-#include "PhysicalLayerAsyncTCPClient.h"
+#include <boost/asio/ip/tcp.hpp>
 
 namespace apl
 {

@@ -19,11 +19,11 @@
 #ifndef __CachedLogVariable_H_
 #define __CachedLogVariable_H_
 
+#include <opendnp3/APL/Logger.h>
+
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
-#include "Logger.h"
-
 
 namespace apl
 {

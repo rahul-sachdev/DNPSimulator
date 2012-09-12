@@ -19,8 +19,8 @@
 #ifndef __EVENT_SET_H_
 #define __EVENT_SET_H_
 
+#include <opendnp3/APL/Types.h>
 
-#include "Types.h"
 #include <queue>
 
 namespace apl

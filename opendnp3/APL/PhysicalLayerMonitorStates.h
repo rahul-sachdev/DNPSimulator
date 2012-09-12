@@ -20,9 +20,9 @@
 #ifndef __PHYS_LAYER_MONITOR_STATES_H_
 #define __PHYS_LAYER_MONITOR_STATES_H_
 
-#include "IPhysicalLayerObserver.h"
-#include "Singleton.h"
-#include "PhysicalLayerMonitor.h"
+#include <opendnp3/APL/IPhysicalLayerObserver.h>
+#include <opendnp3/APL/PhysicalLayerMonitor.h>
+#include <opendnp3/APL/Singleton.h>
 
 #define MACRO_MONITOR_SINGLETON(type, state, shuttingDown) \
 	MACRO_NAME_SINGLETON_INSTANCE(type) \

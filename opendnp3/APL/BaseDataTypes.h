@@ -19,15 +19,14 @@
 #ifndef __BASE_DATA_TYPES_H_
 #define __BASE_DATA_TYPES_H_
 
+#include <opendnp3/APL/QualityConverter.h>
+#include <opendnp3/APL/QualityMasks.h>
+#include <opendnp3/APL/Types.h>
 
-#include "Types.h"
-#include "QualityMasks.h"
-#include "QualityConverter.h"
-
-#include <sstream>
-#include <ostream>
 #include <limits>
 #include <math.h>
+#include <ostream>
+#include <sstream>
 #include <string.h>
 
 #ifdef max

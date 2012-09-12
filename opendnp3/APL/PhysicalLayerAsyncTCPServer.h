@@ -18,9 +18,9 @@
 #ifndef __PHYSICAL_LAYER_ASYNC_TCP_SERVER_H_
 #define __PHYSICAL_LAYER_ASYNC_TCP_SERVER_H_
 
-#include <boost/asio/ip/tcp.hpp>
+#include <opendnp3/APL/PhysicalLayerAsyncBaseTCP.h>
 
-#include "PhysicalLayerAsyncBaseTCP.h"
+#include <boost/asio/ip/tcp.hpp>
 
 namespace apl
 {

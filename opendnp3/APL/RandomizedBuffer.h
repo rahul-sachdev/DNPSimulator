@@ -19,8 +19,8 @@
 #ifndef __RANDOMIZED_BUFFER_H_
 #define __RANDOMIZED_BUFFER_H_
 
-#include "CopyableBuffer.h"
-#include "Random.h"
+#include <opendnp3/APL/CopyableBuffer.h>
+#include <opendnp3/APL/Random.h>
 
 namespace apl
 {

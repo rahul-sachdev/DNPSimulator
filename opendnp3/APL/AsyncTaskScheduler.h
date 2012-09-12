@@ -19,12 +19,11 @@
 #ifndef __ASYNC_TASK_SCHEDULER_H_
 #define __ASYNC_TASK_SCHEDULER_H_
 
+#include <opendnp3/APL/Lock.h>
+#include <opendnp3/APL/TimeSource.h>
 
-#include <set>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
-
-#include "TimeSource.h"
-#include "Lock.h"
+#include <set>
 
 namespace apl
 {

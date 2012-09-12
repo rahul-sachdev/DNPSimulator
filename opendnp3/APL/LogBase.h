@@ -19,7 +19,7 @@
 #ifndef __LOG_BASE_H_
 #define __LOG_BASE_H_
 
-#include "LogEntry.h"
+#include <opendnp3/APL/LogEntry.h>
 
 namespace apl
 {

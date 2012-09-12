@@ -16,11 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "AsyncTaskBase.h"
-
-
-#include "Exception.h"
-#include "AsyncTaskGroup.h"
+#include <opendnp3/APL/AsyncTaskBase.h>
+#include <opendnp3/APL/AsyncTaskGroup.h>
+#include <opendnp3/APL/Exception.h>
 
 #include <boost/foreach.hpp>
 

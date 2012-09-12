@@ -16,15 +16,14 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "PhysicalLayerMonitor.h"
+#include <opendnp3/APL/IPhysicalLayerAsync.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/APL/PhysicalLayerMonitor.h>
+#include <opendnp3/APL/PhysicalLayerMonitorStates.h>
 
-#include "IPhysicalLayerAsync.h"
-#include "PhysicalLayerMonitorStates.h"
-
+#include <assert.h>
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
-#include <assert.h>
-#include "Logger.h"
 
 namespace apl
 {

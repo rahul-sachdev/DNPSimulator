@@ -17,14 +17,11 @@
 // under the License.
 //
 
-
-#include "LogToFile.h"
-#include "Util.h"
+#include <opendnp3/APL/LogToFile.h>
+#include <opendnp3/APL/Util.h>
 
 namespace apl
 {
-
-
 
 LogToFile :: LogToFile(EventLog* apLog, const std::string aFileName, const bool aOverwriteFile)
 	: LogEntryCircularBuffer(1000), mpThread(NULL), mpLog(apLog), mFileName(aFileName), mOverwriteFile(aOverwriteFile)

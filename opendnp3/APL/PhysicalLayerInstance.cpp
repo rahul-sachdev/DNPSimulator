@@ -16,13 +16,12 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "PhysicalLayerInstance.h"
+#include <opendnp3/APL/IPhysicalLayerAsync.h>
+#include <opendnp3/APL/PhysicalLayerFactory.h>
+#include <opendnp3/APL/PhysicalLayerInstance.h>
 
 #include <map>
 #include <string>
-
-#include "PhysicalLayerFactory.h"
-#include "IPhysicalLayerAsync.h"
 
 namespace apl
 {
@@ -47,7 +46,7 @@ void PhysLayerInstance::Release()
 	if(mOwnsLayer) {
 		delete mpLayer;
 		mpLayer = NULL;
-	}	
+	}
 }
 
 IPhysicalLayerAsync*  PhysLayerInstance::GetLayer(Logger* apLogger, boost::asio::io_service* apService)

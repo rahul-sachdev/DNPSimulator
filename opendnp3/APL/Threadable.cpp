@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "Threadable.h"
+#include <opendnp3/APL/Threadable.h>
 
 #include <assert.h>
 

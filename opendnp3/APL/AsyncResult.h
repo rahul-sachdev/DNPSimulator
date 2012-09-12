@@ -19,9 +19,9 @@
 #ifndef __ASYNC_RESULT_H_
 #define __ASYNC_RESULT_H_
 
-#include "Lock.h"
-#include "Exception.h"
-#include "Function.h"
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/Function.h>
+#include <opendnp3/APL/Lock.h>
 
 namespace apl
 {
@@ -34,7 +34,7 @@ public:
 
 	void Success();
 	void Failure(const FunctionVoidZero& arFun);
-	void Wait();	
+	void Wait();
 
 private:
 	void Complete();

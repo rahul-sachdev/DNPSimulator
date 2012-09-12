@@ -16,15 +16,14 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-
 #ifndef _TIME_BOOST_H_
 #define _TIME_BOOST_H_
 
-#include "Configure.h"
-#include "Types.h"
+#include <opendnp3/APL/Configure.h>
+#include <opendnp3/APL/Types.h>
 
-#include <string>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <string>
 
 //undef some of the evil macros brought in by windows
 #undef GetMessage
@@ -34,7 +33,6 @@
 using namespace boost::posix_time;
 namespace apl
 {
-
 
 class TimeBoost
 {

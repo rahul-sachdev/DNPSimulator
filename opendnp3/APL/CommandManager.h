@@ -19,12 +19,11 @@
 #ifndef __COMMAND_MANAGER_H_
 #define __COMMAND_MANAGER_H_
 
+#include <opendnp3/APL/CommandInterfaces.h>
+#include <opendnp3/APL/Uncopyable.h>
 
-#include "CommandInterfaces.h"
-#include "Uncopyable.h"
-
-#include <string>
 #include <map>
+#include <string>
 
 namespace apl
 {

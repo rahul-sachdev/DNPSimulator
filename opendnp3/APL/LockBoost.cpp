@@ -17,8 +17,8 @@
 // under the License.
 //
 
+#include <opendnp3/APL/LockBoost.h>
 
-#include "LockBoost.h"
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 namespace apl

@@ -16,14 +16,12 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-
-
 #ifndef _TIMINGTOOLS_H__
 #define _TIMINGTOOLS_H__
 
-#include "TimeTypes.h"
-#include "Types.h"
-#include "Timeout.h"
+#include <opendnp3/APL/TimeTypes.h>
+#include <opendnp3/APL/Timeout.h>
+#include <opendnp3/APL/Types.h>
 
 namespace apl
 {

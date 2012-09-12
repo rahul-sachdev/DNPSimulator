@@ -19,10 +19,11 @@
 #ifndef __COMMAND_QUEUE_H_
 #define __COMMAND_QUEUE_H_
 
-#include "CommandTypes.h"
-#include "INotifier.h"
-#include "CommandInterfaces.h"
-#include "Lock.h"
+#include <opendnp3/APL/CommandInterfaces.h>
+#include <opendnp3/APL/CommandTypes.h>
+#include <opendnp3/APL/INotifier.h>
+#include <opendnp3/APL/Lock.h>
+
 #include <queue>
 
 namespace apl

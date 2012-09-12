@@ -19,9 +19,9 @@
 #ifndef __TIMER_SOURCE_ASIO_H_
 #define __TIMER_SOURCE_ASIO_H_
 
-#include "ITimerSource.h"
-#include "Lock.h"
-#include "Exception.h"
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/ITimerSource.h>
+#include <opendnp3/APL/Lock.h>
 
 #include <queue>
 

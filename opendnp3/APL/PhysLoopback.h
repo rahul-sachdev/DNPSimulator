@@ -19,8 +19,8 @@
 #ifndef __PHYS_LOOPBACK_H_
 #define __PHYS_LOOPBACK_H_
 
-#include "PhysicalLayerMonitor.h"
-#include "CopyableBuffer.h"
+#include <opendnp3/APL/CopyableBuffer.h>
+#include <opendnp3/APL/PhysicalLayerMonitor.h>
 
 namespace apl
 {

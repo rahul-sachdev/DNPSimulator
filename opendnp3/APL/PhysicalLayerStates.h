@@ -19,9 +19,8 @@
 #ifndef __PHYSICAL_LAYER_STATES_H_
 #define __PHYSICAL_LAYER_STATES_H_
 
-#include <string>
-
 #include <sstream>
+#include <string>
 
 namespace apl
 {

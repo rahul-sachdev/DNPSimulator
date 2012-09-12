@@ -19,10 +19,10 @@
 #ifndef __I_TIMER_SOURCE_H_
 #define __I_TIMER_SOURCE_H_
 
-#include "Types.h"
-#include "TimeTypes.h"
-#include "ITimer.h"
-#include "Function.h"
+#include <opendnp3/APL/Function.h>
+#include <opendnp3/APL/ITimer.h>
+#include <opendnp3/APL/TimeTypes.h>
+#include <opendnp3/APL/Types.h>
 
 namespace apl
 {
@@ -59,8 +59,8 @@ public:
 	virtual ITimer* Start(const boost::posix_time::ptime&, const FunctionVoidZero&) = 0;
 
 	/** Thread-safe way to post an event to handled asynchronously */
-	virtual void Post(const FunctionVoidZero&) = 0;	
-	
+	virtual void Post(const FunctionVoidZero&) = 0;
+
 	/** Thread safe way to execute a function synchronously */
 	virtual void PostSync(const FunctionVoidZero&) = 0;
 

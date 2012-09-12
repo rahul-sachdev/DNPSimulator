@@ -19,8 +19,8 @@
 #ifndef __PACKING_TEMPLATES_H_
 #define __PACKING_TEMPLATES_H_
 
+#include <opendnp3/APL/Types.h>
 
-#include "Types.h"
 #include <assert.h>
 
 namespace apl

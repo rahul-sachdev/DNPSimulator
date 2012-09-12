@@ -20,15 +20,14 @@
 #ifndef __LOG_ENTRY_CIRCULAR_BUFFER_H_
 #define __LOG_ENTRY_CIRCULAR_BUFFER_H_
 
+#include <opendnp3/APL/EventLock.h>
+#include <opendnp3/APL/LogBase.h>
+#include <opendnp3/APL/LogEntry.h>
+#include <opendnp3/APL/SubjectBase.h>
+#include <opendnp3/APL/Uncopyable.h>
 
 #include <assert.h>
 #include <deque>
-
-#include "LogEntry.h"
-#include "EventLock.h"
-#include "Uncopyable.h"
-#include "SubjectBase.h"
-#include "LogBase.h"
 
 namespace apl
 {

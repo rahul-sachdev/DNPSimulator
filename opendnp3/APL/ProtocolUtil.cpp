@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "ProtocolUtil.h"
+#include <opendnp3/APL/ProtocolUtil.h>
 
 namespace apl
 {

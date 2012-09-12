@@ -19,13 +19,12 @@
 #ifndef __ASYNC_TASK_BASE_H_
 #define __ASYNC_TASK_BASE_H_
 
+#include <opendnp3/APL/AsyncTaskInterfaces.h>
+#include <opendnp3/APL/Types.h>
+#include <opendnp3/APL/Uncopyable.h>
 
-#include "AsyncTaskInterfaces.h"
-#include "Types.h"
-#include "Uncopyable.h"
-
-#include <vector>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <vector>
 
 namespace apl
 {

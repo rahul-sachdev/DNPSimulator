@@ -16,30 +16,28 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include <string>
-#include <stdio.h>
-#include <stddef.h>
-#include <cctype>
 #include <algorithm>
 #include <assert.h>
-#include <vector>
-#include <boost/date_time/posix_time/ptime.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <boost/date_time/posix_time/ptime.hpp>
+#include <cctype>
+#include <iomanip>
+#include <iostream>
+#include <stddef.h>
+#include <stdio.h>
+#include <string>
+#include <vector>
 
-#include "Util.h"
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/TimingTools.h>
+#include <opendnp3/APL/Util.h>
 
 #ifdef WIN32
 #define sscanf sscanf_s
 #endif
 
-#include "TimingTools.h"
-#include "Exception.h"
-
 using namespace std;
 using namespace boost::posix_time;
-
-#include <iostream>
-#include <iomanip>
 
 #ifdef APL_PLATFORM_WIN
 #define CLEAR_CMD		"cls"

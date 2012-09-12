@@ -16,9 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "CommandTypes.h"
-#include "PackingUnpacking.h"
-#include "Exception.h"
+#include <opendnp3/APL/CommandTypes.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/PackingUnpacking.h>
 
 #include <assert.h>
 #include <sstream>

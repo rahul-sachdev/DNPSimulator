@@ -19,14 +19,14 @@
 #ifndef __LOGGER_H_
 #define __LOGGER_H_
 
+#include <opendnp3/APL/Lock.h>
+#include <opendnp3/APL/LogBase.h>
+#include <opendnp3/APL/LogEntry.h>
+#include <opendnp3/APL/LogVar.h>
+
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
-#include "Lock.h"
-#include "LogEntry.h"
-#include "LogBase.h"
-#include "LogVar.h"
-
 
 namespace apl
 {

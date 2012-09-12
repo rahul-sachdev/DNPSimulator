@@ -16,8 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "ThreadBase.h"
-
+#include <opendnp3/APL/ThreadBase.h>
 
 namespace apl
 {

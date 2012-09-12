@@ -16,10 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "AsyncTaskContinuous.h"
-
-#include "AsyncTaskGroup.h"
-#include "Exception.h"
+#include <opendnp3/APL/AsyncTaskContinuous.h>
+#include <opendnp3/APL/AsyncTaskGroup.h>
+#include <opendnp3/APL/Exception.h>
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 

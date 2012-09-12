@@ -19,10 +19,10 @@
 #ifndef __SUBJECT_BASE_H_
 #define __SUBJECT_BASE_H_
 
+#include <opendnp3/APL/INotifier.h>
+#include <opendnp3/APL/ISubject.h>
+#include <opendnp3/APL/LockBase.h>
 
-#include "ISubject.h"
-#include "INotifier.h"
-#include "LockBase.h"
 #include <set>
 
 namespace apl

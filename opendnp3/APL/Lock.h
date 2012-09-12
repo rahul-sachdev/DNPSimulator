@@ -19,7 +19,7 @@
 #ifndef __LOCK_H_
 #define __LOCK_H_
 
-#include "LockBoost.h"
+#include <opendnp3/APL/LockBoost.h>
 
 namespace apl
 {

@@ -19,10 +19,8 @@
 #ifndef __EVENT_LOCK_H_
 #define __EVENT_LOCK_H_
 
-
-
-#include "Types.h"
-#include "EventLockBase.h"
+#include <opendnp3/APL/EventLockBase.h>
+#include <opendnp3/APL/Types.h>
 
 namespace apl
 {

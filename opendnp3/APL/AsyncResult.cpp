@@ -17,14 +17,14 @@
 // under the License.
 //
 
-#include "AsyncResult.h"
+#include <opendnp3/APL/AsyncResult.h>
 
 namespace apl
 {
 
 AsyncResult::AsyncResult() : mIsComplete(false)
 {
-			
+
 }
 
 void AsyncResult::Complete()
@@ -35,7 +35,7 @@ void AsyncResult::Complete()
 
 void AsyncResult::Success()
 {
-	CriticalSection cs(&mLock);	
+	CriticalSection cs(&mLock);
 	this->Complete();
 	cs.Broadcast();
 }

@@ -19,8 +19,8 @@
 #ifndef __ASYNC_TASK_CONTINUOUS_H_
 #define __ASYNC_TASK_CONTINUOUS_H_
 
-#include "AsyncTaskInterfaces.h"
-#include "AsyncTaskBase.h"
+#include <opendnp3/APL/AsyncTaskBase.h>
+#include <opendnp3/APL/AsyncTaskInterfaces.h>
 
 namespace apl
 {

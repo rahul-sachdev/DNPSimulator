@@ -16,11 +16,10 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "PhysicalLayerMap.h"
-
-#include "PhysLayerSettings.h"
-#include "Logger.h"
-#include "Exception.h"
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/APL/PhysLayerSettings.h>
+#include <opendnp3/APL/PhysicalLayerMap.h>
 
 namespace apl
 {
@@ -51,7 +50,7 @@ IPhysicalLayerAsync* PhysicalLayerMap::AcquireLayer(const std::string& arName)
 	PhysLayerSettings s = this->_GetSettings(arName);
 	PhysLayerInstance* pInstance = this->_GetInstance(arName);
 	AcquiredMap::iterator i = mAcquiredMap.find(arName);
-	if(i != mAcquiredMap.end()) throw ArgumentException("Layer with name has already been acquired: " + arName);	
+	if(i != mAcquiredMap.end()) throw ArgumentException("Layer with name has already been acquired: " + arName);
 	else {
 		mAcquiredMap[arName] = true;
 		IPhysicalLayerAsync* pLayer = pInstance->GetLayer(this->MakeLogger(arName, s.LogLevel), mpService);

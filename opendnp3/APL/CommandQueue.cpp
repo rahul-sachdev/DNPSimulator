@@ -17,11 +17,10 @@
 // under the License.
 //
 
-#include "CommandQueue.h"
+#include <opendnp3/APL/CommandQueue.h>
 
 namespace apl
 {
-
 
 apl::CommandTypes CommandQueue::Next()
 {

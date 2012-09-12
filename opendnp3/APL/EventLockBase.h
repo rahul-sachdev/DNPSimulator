@@ -19,11 +19,11 @@
 #ifndef __EVENT_LOCK_BASE_H_
 #define __EVENT_LOCK_BASE_H_
 
-#include <vector>
+#include <opendnp3/APL/IEventLock.h>
+#include <opendnp3/APL/Lock.h>
+#include <opendnp3/APL/Notifier.h>
 
-#include "Notifier.h"
-#include "Lock.h"
-#include "IEventLock.h"
+#include <vector>
 
 namespace apl
 {

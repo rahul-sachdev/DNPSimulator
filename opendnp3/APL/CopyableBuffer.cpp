@@ -16,11 +16,10 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "CopyableBuffer.h"
+#include <opendnp3/APL/CopyableBuffer.h>
+#include <opendnp3/APL/ToHex.h>
 
 #include <memory.h>
-
-#include "ToHex.h"
 
 namespace apl
 {

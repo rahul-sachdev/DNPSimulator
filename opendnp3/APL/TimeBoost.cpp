@@ -17,9 +17,8 @@
 // under the License.
 //
 
-
-#include "TimeBoost.h"
-#include "Util.h"
+#include <opendnp3/APL/TimeBoost.h>
+#include <opendnp3/APL/Util.h>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 

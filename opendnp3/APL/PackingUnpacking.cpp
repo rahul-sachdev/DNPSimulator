@@ -16,8 +16,10 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "PackingUnpacking.h"
+#include <opendnp3/APL/PackingUnpacking.h>
+#include <opendnp3/APL/Util.h>
 
+#include <memory>
 
 #ifdef max
 #undef max
@@ -26,9 +28,6 @@
 #ifdef min
 #undef min
 #endif
-
-#include "Util.h"
-#include <memory>
 
 namespace apl
 {

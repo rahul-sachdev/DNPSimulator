@@ -19,7 +19,7 @@
 #ifndef __PHYSICAL_LAYER_ASYNC_ASIO_H_
 #define __PHYSICAL_LAYER_ASYNC_ASIO_H_
 
-#include "PhysicalLayerAsyncBase.h"
+#include <opendnp3/APL/PhysicalLayerAsyncBase.h>
 
 namespace boost
 {

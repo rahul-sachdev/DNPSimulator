@@ -19,9 +19,8 @@
 #ifndef __LOWER_LAYER_TO_PHYS_ADAPTER_H_
 #define __LOWER_LAYER_TO_PHYS_ADAPTER_H_
 
-
-#include "IHandlerAsync.h"
-#include "AsyncLayerInterfaces.h"
+#include <opendnp3/APL/AsyncLayerInterfaces.h>
+#include <opendnp3/APL/IHandlerAsync.h>
 
 namespace apl
 {

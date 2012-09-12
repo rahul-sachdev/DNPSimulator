@@ -19,8 +19,8 @@
 #ifndef __NOTIFIER_H_
 #define __NOTIFIER_H_
 
-#include "IEventLock.h"
-#include "INotifier.h"
+#include <opendnp3/APL/IEventLock.h>
+#include <opendnp3/APL/INotifier.h>
 
 namespace apl
 {

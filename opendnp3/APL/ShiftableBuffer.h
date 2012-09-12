@@ -19,8 +19,8 @@
 #ifndef __SHIFTABLE_BUFFER_H_
 #define __SHIFTABLE_BUFFER_H_
 
+#include <opendnp3/APL/Types.h>
 
-#include "Types.h"
 #include <stddef.h>
 
 namespace apl

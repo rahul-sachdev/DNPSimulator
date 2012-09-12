@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "ITimerSource.h"
+#include <opendnp3/APL/ITimerSource.h>
 
 #include <boost/bind.hpp>
 

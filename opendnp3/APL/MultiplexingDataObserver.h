@@ -19,9 +19,9 @@
 #ifndef __MULTIPLEXING_DATA_OBSERVER_H_
 #define __MULTIPLEXING_DATA_OBSERVER_H_
 
+#include <opendnp3/APL/DataInterfaces.h>
+#include <opendnp3/APL/Lock.h>
 
-#include "DataInterfaces.h"
-#include "Lock.h"
 #include <vector>
 
 namespace apl

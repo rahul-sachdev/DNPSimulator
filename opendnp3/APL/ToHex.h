@@ -19,9 +19,10 @@
 #ifndef __TO_HEX_H_
 #define __TO_HEX_H_
 
-#include "Types.h"
-#include <string>
+#include <opendnp3/APL/Types.h>
+
 #include <sstream>
+#include <string>
 
 namespace apl
 {

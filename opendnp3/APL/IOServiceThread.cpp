@@ -17,10 +17,9 @@
 // under the License.
 //
 
-#include "IOServiceThread.h"
-
-#include "Exception.h"
-#include "Logger.h"
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/IOServiceThread.h>
+#include <opendnp3/APL/Logger.h>
 
 #include <boost/asio.hpp>
 #include <iostream>

@@ -19,12 +19,10 @@
 #ifndef __PHYSICAL_LAYER_MONITOR_H_
 #define __PHYSICAL_LAYER_MONITOR_H_
 
-
-#include "IHandlerAsync.h"
-#include "ITimerSource.h"
-#include "IPhysicalLayerObserver.h"
-
-#include "Lock.h"
+#include <opendnp3/APL/IHandlerAsync.h>
+#include <opendnp3/APL/IPhysicalLayerObserver.h>
+#include <opendnp3/APL/ITimerSource.h>
+#include <opendnp3/APL/Lock.h>
 
 #include <set>
 

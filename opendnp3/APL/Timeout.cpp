@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "Timeout.h"
+#include <opendnp3/APL/Timeout.h>
 
 namespace apl
 {

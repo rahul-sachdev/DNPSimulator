@@ -16,20 +16,18 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-
-
 #ifndef _LOG_TO_FILE_H_
 #define _LOG_TO_FILE_H_
 
+#include <opendnp3/APL/Log.h>
+#include <opendnp3/APL/LogEntryCircularBuffer.h>
+#include <opendnp3/APL/Thread.h>
+
 #include <assert.h>
 #include <deque>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <string>
-
-#include "Log.h"
-#include "LogEntryCircularBuffer.h"
-#include "Thread.h"
 
 namespace apl
 {

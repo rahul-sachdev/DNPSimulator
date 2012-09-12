@@ -50,7 +50,7 @@ public:
 
 private:
 	boost::mt19937 rng;
-	boost::uniform_real<double> dist;	
+	boost::uniform_real<double> dist;
 	boost::variate_generator<boost::mt19937&, boost::uniform_real<double> > nextRand;
 };
 

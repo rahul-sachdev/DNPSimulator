@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "PostingNotifier.h"
+#include <opendnp3/APL/PostingNotifier.h>
 
 namespace apl
 {

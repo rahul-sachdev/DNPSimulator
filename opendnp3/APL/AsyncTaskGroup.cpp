@@ -16,19 +16,17 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "AsyncTaskGroup.h"
+#include <opendnp3/APL/AsyncTaskBase.h>
+#include <opendnp3/APL/AsyncTaskContinuous.h>
+#include <opendnp3/APL/AsyncTaskGroup.h>
+#include <opendnp3/APL/AsyncTaskNonPeriodic.h>
+#include <opendnp3/APL/AsyncTaskPeriodic.h>
+#include <opendnp3/APL/AsyncTaskScheduler.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/ITimerSource.h>
 
-#include "AsyncTaskBase.h"
-#include "AsyncTaskPeriodic.h"
-#include "AsyncTaskNonPeriodic.h"
-#include "AsyncTaskContinuous.h"
-#include "AsyncTaskScheduler.h"
-#include "Exception.h"
-
-#include "ITimerSource.h"
-
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
+#include <boost/foreach.hpp>
 
 using namespace boost::posix_time;
 

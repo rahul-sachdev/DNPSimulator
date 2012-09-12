@@ -19,10 +19,10 @@
 #ifndef __LOG_ENTRY_H_
 #define __LOG_ENTRY_H_
 
-#include "LogTypes.h"
-#include "Parsing.h"
-#include "Types.h"
-#include "TimingTools.h"
+#include <opendnp3/APL/LogTypes.h>
+#include <opendnp3/APL/Parsing.h>
+#include <opendnp3/APL/TimingTools.h>
+#include <opendnp3/APL/Types.h>
 
 #include <map>
 

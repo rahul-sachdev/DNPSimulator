@@ -16,9 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "PostingNotifierSource.h"
+#include <opendnp3/APL/PostingNotifier.h>
+#include <opendnp3/APL/PostingNotifierSource.h>
 
-#include "PostingNotifier.h"
 #include <boost/foreach.hpp>
 
 namespace apl

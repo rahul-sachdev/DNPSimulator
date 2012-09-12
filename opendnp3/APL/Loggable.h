@@ -19,9 +19,8 @@
 #ifndef __LOGGABLE_H_
 #define __LOGGABLE_H_
 
-#include "Configure.h"
-#include "LogBase.h"
-
+#include <opendnp3/APL/Configure.h>
+#include <opendnp3/APL/LogBase.h>
 
 namespace apl
 {

@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "LockBase.h"
+#include <opendnp3/APL/LockBase.h>
 
 namespace apl
 {

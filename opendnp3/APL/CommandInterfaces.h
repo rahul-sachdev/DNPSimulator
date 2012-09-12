@@ -19,8 +19,8 @@
 #ifndef __COMMAND_INTERFACES_H_
 #define __COMMAND_INTERFACES_H_
 
-#include "CommandTypes.h"
-#include "INotifier.h"
+#include <opendnp3/APL/CommandTypes.h>
+#include <opendnp3/APL/INotifier.h>
 
 namespace apl
 {
@@ -34,7 +34,7 @@ public:
 	virtual ~IResponseAcceptor() {};
 
 	/**
-	* This function is called when the command request succeeds or fails. 
+	* This function is called when the command request succeeds or fails.
 	* @param arResponse Contains a description of whether the command succeeded/failed.
 	* @param aSequence ID that is echoed for correlation purposes
 	*

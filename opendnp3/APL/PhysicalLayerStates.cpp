@@ -17,11 +17,10 @@
 // under the License.
 //
 
-#include "PhysicalLayerStates.h"
+#include <opendnp3/APL/PhysicalLayerStates.h>
 
 namespace apl
 {
-
 
 std::string ConvertPhysicalLayerStateToString(PhysicalLayerState aState)
 {

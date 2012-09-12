@@ -19,7 +19,8 @@
 #ifndef __PHYSICAL_LAYER_ASYNC_BASE_TCP_H_
 #define __PHYSICAL_LAYER_ASYNC_BASE_TCP_H_
 
-#include "PhysicalLayerAsyncASIO.h"
+#include <opendnp3/APL/PhysicalLayerAsyncASIO.h>
+
 #include <boost/asio.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <memory>

@@ -20,11 +20,11 @@
 #ifndef __QUALITY_CONVERTER_H_
 #define __QUALITY_CONVERTER_H_
 
-#include "QualityMasks.h"
-#include "Types.h"
+#include <opendnp3/APL/Types.h>
+#include <opendnp3/APL/QualityMasks.h>
 
-#include <string>
 #include <sstream>
+#include <string>
 
 namespace apl
 {

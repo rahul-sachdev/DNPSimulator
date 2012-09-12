@@ -19,10 +19,10 @@
 #ifndef __PHYSICAL_LAYER_ASYNC_SERIAL_H_
 #define __PHYSICAL_LAYER_ASYNC_SERIAL_H_
 
-#include "PhysicalLayerAsyncASIO.h"
-#include "SerialTypes.h"
-#include <boost/asio/serial_port.hpp>
+#include <opendnp3/APL/PhysicalLayerAsyncASIO.h>
+#include <opendnp3/APL/SerialTypes.h>
 
+#include <boost/asio/serial_port.hpp>
 #include <memory>
 
 namespace apl

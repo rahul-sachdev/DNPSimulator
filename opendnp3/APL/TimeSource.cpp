@@ -16,9 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "TimeSource.h"
-
-#include "TimingTools.h"
+#include <opendnp3/APL/TimeSource.h>
+#include <opendnp3/APL/TimingTools.h>
 
 using namespace boost::posix_time;
 
