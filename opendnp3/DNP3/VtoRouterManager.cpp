@@ -15,20 +15,17 @@
  * under the License.
  */
 
-#include "VtoRouterManager.h"
-
-#include "AlwaysOpeningVtoRouter.h"
-#include "EnhancedVtoRouter.h"
-#include "VtoRouterSettings.h"
-
-#include <APL/Exception.h>
-#include <APL/IPhysicalLayerSource.h>
-#include <APL/IPhysicalLayerAsync.h>
-#include <APL/Logger.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/IPhysicalLayerAsync.h>
+#include <opendnp3/APL/IPhysicalLayerSource.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/AlwaysOpeningVtoRouter.h>
+#include <opendnp3/DNP3/EnhancedVtoRouter.h>
+#include <opendnp3/DNP3/VtoRouterManager.h>
+#include <opendnp3/DNP3/VtoRouterSettings.h>
 
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
-#include <boost/bind.hpp>
 #include <sstream>
 
 namespace apl

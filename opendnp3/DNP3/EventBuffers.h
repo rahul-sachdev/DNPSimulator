@@ -19,15 +19,14 @@
 #ifndef __EVENT_BUFFERS_H_
 #define __EVENT_BUFFERS_H_
 
+#include <opendnp3/DNP3/BufferSetTypes.h>
+#include <opendnp3/DNP3/EventBufferBase.h>
 
-#include "BufferSetTypes.h"
-#include "EventBufferBase.h"
-
+#include <iostream>
+#include <limits>
 #include <map>
 #include <set>
 #include <vector>
-#include <iostream>
-#include <limits>
 
 namespace apl
 {

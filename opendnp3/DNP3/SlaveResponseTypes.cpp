@@ -16,12 +16,10 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "SlaveResponseTypes.h"
-
-#include "SlaveConfig.h"
-#include "Objects.h"
-
-#include <APL/Exception.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/DNP3/Objects.h>
+#include <opendnp3/DNP3/SlaveConfig.h>
+#include <opendnp3/DNP3/SlaveResponseTypes.h>
 
 namespace apl
 {

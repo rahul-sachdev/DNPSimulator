@@ -19,9 +19,8 @@
 #ifndef __TRANSPORT_STATES_H_
 #define __TRANSPORT_STATES_H_
 
-
-#include "TLS_Base.h"
-#include <APL/Singleton.h>
+#include <opendnp3/APL/Singleton.h>
+#include <opendnp3/DNP3/TLS_Base.h>
 
 namespace apl
 {

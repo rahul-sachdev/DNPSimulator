@@ -16,8 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "ObjectHeader.h"
-
+#include <opendnp3/DNP3/ObjectHeader.h>
 
 #include <stddef.h>
 

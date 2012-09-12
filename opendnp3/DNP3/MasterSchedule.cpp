@@ -15,12 +15,11 @@
  * under the License.
  */
 
-#include "MasterSchedule.h"
-#include "Master.h"
-
-#include <APL/AsyncTaskBase.h>
-#include <APL/AsyncTaskContinuous.h>
-#include <APL/AsyncTaskGroup.h>
+#include <opendnp3/APL/AsyncTaskBase.h>
+#include <opendnp3/APL/AsyncTaskContinuous.h>
+#include <opendnp3/APL/AsyncTaskGroup.h>
+#include <opendnp3/DNP3/Master.h>
+#include <opendnp3/DNP3/MasterSchedule.h>
 
 #include <boost/foreach.hpp>
 

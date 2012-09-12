@@ -16,8 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "ClassCounter.h"
-
+#include <opendnp3/DNP3/ClassCounter.h>
 
 #include <assert.h>
 

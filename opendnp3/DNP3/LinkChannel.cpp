@@ -16,16 +16,15 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "LinkChannel.h"
+#include <opendnp3/APL/AsyncTaskGroup.h>
+#include <opendnp3/APL/GetKeys.h>
+#include <opendnp3/APL/IPhysicalLayerAsync.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/LinkChannel.h>
+#include <opendnp3/DNP3/Stack.h>
 
-#include "Stack.h"
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
-
-#include <APL/Logger.h>
-#include <APL/IPhysicalLayerAsync.h>
-#include <APL/AsyncTaskGroup.h>
-#include <APL/GetKeys.h>
+#include <boost/foreach.hpp>
 
 namespace apl
 {

@@ -17,29 +17,25 @@
 // under the License.
 //
 
-#include "AsyncStackManager.h"
-#include "LinkChannel.h"
+#include <opendnp3/APL/AsyncTaskGroup.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/GetKeys.h>
+#include <opendnp3/APL/IPhysicalLayerAsync.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/APL/SuspendTimerSource.h>
+#include <opendnp3/APL/TimerSourceASIO.h>
+#include <opendnp3/DNP3/AsyncStackManager.h>
+#include <opendnp3/DNP3/DeviceTemplate.h>
+#include <opendnp3/DNP3/LinkChannel.h>
+#include <opendnp3/DNP3/MasterStack.h>
+#include <opendnp3/DNP3/SlaveStack.h>
+#include <opendnp3/DNP3/VtoConfig.h>
+#include <opendnp3/DNP3/VtoRouter.h>
 
 #include <boost/asio.hpp>
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
-
-#include <APL/TimerSourceASIO.h>
-#include <APL/Exception.h>
-#include <APL/Logger.h>
-#include <APL/IPhysicalLayerAsync.h>
-#include <APL/SuspendTimerSource.h>
-#include <APL/AsyncTaskGroup.h>
-#include <APL/GetKeys.h>
-
-#include <DNP3/MasterStack.h>
-#include <DNP3/SlaveStack.h>
-#include <DNP3/DeviceTemplate.h>
-#include <DNP3/VtoRouter.h>
-#include <DNP3/VtoConfig.h>
-
+#include <boost/foreach.hpp>
 #include <iostream>
-
 
 using namespace std;
 

@@ -16,14 +16,12 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "Objects.h"
-
-#include <APL/DataTypes.h>
-#include <APL/CommandTypes.h>
-#include <APL/CopyableBuffer.h>
-
-#include "DNPToStream.h"
-#include "DNPFromStream.h"
+#include <opendnp3/APL/CommandTypes.h>
+#include <opendnp3/APL/CopyableBuffer.h>
+#include <opendnp3/APL/DataTypes.h>
+#include <opendnp3/DNP3/DNPFromStream.h>
+#include <opendnp3/DNP3/DNPToStream.h>
+#include <opendnp3/DNP3/Objects.h>
 
 #define MACRO_STATIC_INSTANCE(group, var) Group##group##Var##var Group##group##Var##var::mInstance;
 

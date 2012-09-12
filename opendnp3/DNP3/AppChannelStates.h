@@ -19,11 +19,11 @@
 #ifndef __APP_CHANNEL_STATES_H_
 #define __APP_CHANNEL_STATES_H_
 
-#include <APL/Singleton.h>
-#include <string>
+#include <opendnp3/APL/Singleton.h>
+#include <opendnp3/DNP3/APDUConstants.h>
+#include <opendnp3/DNP3/AppLayerChannel.h>
 
-#include "APDUConstants.h"
-#include "AppLayerChannel.h"
+#include <string>
 
 namespace apl
 {

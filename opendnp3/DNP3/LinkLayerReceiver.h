@@ -19,13 +19,12 @@
 #ifndef __LINK_LAYER_RECEIVER_H_
 #define __LINK_LAYER_RECEIVER_H_
 
-#include <APL/Loggable.h>
-#include <APL/Logger.h>
-#include <APL/ShiftableBuffer.h>
-
-#include "LinkFrame.h"
-#include "DNPConstants.h"
-#include "LinkHeader.h"
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/APL/ShiftableBuffer.h>
+#include <opendnp3/DNP3/DNPConstants.h>
+#include <opendnp3/DNP3/LinkFrame.h>
+#include <opendnp3/DNP3/LinkHeader.h>
 
 namespace apl
 {

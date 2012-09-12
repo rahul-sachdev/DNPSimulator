@@ -18,16 +18,14 @@
 #ifndef __RESPONSE_LOADER_H_
 #define __RESPONSE_LOADER_H_
 
-
-#include <APL/Types.h>
-#include <APL/DataInterfaces.h>
-#include <APL/Loggable.h>
-#include <APL/Logger.h>
-
-#include "CTOHistory.h"
-#include "ObjectInterfaces.h"
-#include "ObjectReadIterator.h"
-#include "VtoReader.h"
+#include <opendnp3/APL/DataInterfaces.h>
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/APL/Types.h>
+#include <opendnp3/DNP3/CTOHistory.h>
+#include <opendnp3/DNP3/ObjectInterfaces.h>
+#include <opendnp3/DNP3/ObjectReadIterator.h>
+#include <opendnp3/DNP3/VtoReader.h>
 
 namespace apl
 {

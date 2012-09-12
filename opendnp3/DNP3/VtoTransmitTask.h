@@ -18,10 +18,10 @@
 #ifndef __VTO_WRITER_TO_BUFFER_TASK_H_
 #define __VTO_WRITER_TO_BUFFER_TASK_H_
 
-#include <boost/function.hpp>
+#include <opendnp3/DNP3/EventBuffers.h>
+#include <opendnp3/DNP3/MasterTaskBase.h>
 
-#include "EventBuffers.h"
-#include "MasterTaskBase.h"
+#include <boost/function.hpp>
 
 using namespace apl;
 
@@ -100,7 +100,7 @@ public:
 
 protected:
 
-	/** FC_WRITE can't be retried so, another code is needed to 
+	/** FC_WRITE can't be retried so, another code is needed to
 	* make a reliable stream in the MASTER -> SLAVE direction
 	*/
 	bool mUseNonStandardCode;

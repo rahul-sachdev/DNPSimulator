@@ -19,16 +19,14 @@
 #ifndef __LINK_LAYER_ROUTER_H_
 #define __LINK_LAYER_ROUTER_H_
 
+#include <opendnp3/APL/PhysicalLayerMonitor.h>
+#include <opendnp3/DNP3/IFrameSink.h>
+#include <opendnp3/DNP3/ILinkRouter.h>
+#include <opendnp3/DNP3/LinkLayerReceiver.h>
+#include <opendnp3/DNP3/LinkRoute.h>
 
 #include <map>
 #include <queue>
-
-#include <APL/PhysicalLayerMonitor.h>
-
-#include "LinkLayerReceiver.h"
-#include "IFrameSink.h"
-#include "ILinkRouter.h"
-#include "LinkRoute.h"
 
 namespace apl
 {

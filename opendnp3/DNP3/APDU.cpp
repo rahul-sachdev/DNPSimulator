@@ -16,22 +16,17 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "APDU.h"
-
-#include <APL/Exception.h>
-#include <APL/Util.h>
-
-
-#include "DNPConstants.h"
-#include "ObjectWriteIterator.h"
-#include "APDUConstants.h"
+#include <<opendnp3/DNP3/APDU.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/Util.h>
+#include <opendnp3/DNP3/APDUConstants.h>
+#include <opendnp3/DNP3/DNPConstants.h>
+#include <opendnp3/DNP3/ObjectWriteIterator.h>
 
 #include <assert.h>
-#include <sstream>
-#include <limits>
 #include <boost/numeric/conversion/converter.hpp>
-
-
+#include <limits>
+#include <sstream>
 
 using namespace std;
 
@@ -637,8 +632,8 @@ std::string APDU::ToString() const
 		for ( ; !itr.IsEnd(); ++itr) {
 			oss << " Header: (Grp: " << itr->GetGroup();
 			oss << ", Var: " << itr->GetVariation();
-			oss << ", Qual: " << itr->GetQualifier() << ", ";			
-			oss << itr->GetHeader()->ToString(*itr);			
+			oss << ", Qual: " << itr->GetQualifier() << ", ";
+			oss << itr->GetHeader()->ToString(*itr);
 			oss << ")";
 		}
 	}

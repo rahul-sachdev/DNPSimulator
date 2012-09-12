@@ -16,12 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "TLS_Base.h"
-
-
-
-#include "TransportLayer.h"
-#include <APL/Exception.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/DNP3/TLS_Base.h>
+#include <opendnp3/DNP3/TransportLayer.h>
 
 namespace apl
 {

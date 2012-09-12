@@ -15,15 +15,14 @@
 // under the License.
 //
 
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/APL/Util.h>
+#include <opendnp3/DNP3/DNPConstants.h>
+#include <opendnp3/DNP3/Objects.h>
+#include <opendnp3/DNP3/ResponseContext.h>
+#include <opendnp3/DNP3/SlaveResponseTypes.h>
+
 #include <boost/bind.hpp>
-
-#include <APL/Logger.h>
-#include <APL/Util.h>
-
-#include "DNPConstants.h"
-#include "Objects.h"
-#include "ResponseContext.h"
-#include "SlaveResponseTypes.h"
 
 using namespace boost;
 
@@ -42,7 +41,7 @@ ResponseContext::ResponseKey::ResponseKey(ResponseContext::RequestType aType, si
 bool ResponseContext::ResponseKey::operator()(const ResponseContext::ResponseKey& a, const ResponseContext::ResponseKey& b) const {
 	if(a.mType < b.mType) return true;
 	else if(a.mType > b.mType) return false;
-	else { 
+	else {
 		return a.mOrder < b.mOrder;
 	}
 }
@@ -133,7 +132,7 @@ IINField ResponseContext::Configure(const APDU& arRequest)
 
 		/* Handle all of the objects that have a Group/Variation tuple */
 		switch (MACRO_DNP_RADIX(hdr->GetGroup(), hdr->GetVariation())) {
-			
+
 			case(MACRO_DNP_RADIX(1, 0)):
 				this->RecordStaticObjects<BinaryInfo>(mpRspTypes->mpStaticBinary, hdr);
 				break;
@@ -163,7 +162,7 @@ IINField ResponseContext::Configure(const APDU& arRequest)
 				break;
 			case(MACRO_DNP_RADIX(20, 5)):
 				this->RecordStaticObjects<CounterInfo>(Group20Var5::Inst(), hdr);
-				break;		
+				break;
 			case(MACRO_DNP_RADIX(20, 6)):
 				this->RecordStaticObjects<CounterInfo>(Group20Var6::Inst(), hdr);
 				break;
@@ -295,7 +294,7 @@ size_t ResponseContext::SelectVtoEvents(PointClass aClass, const SizeByVariation
 void ResponseContext::LoadResponse(APDU& arAPDU)
 {
 	//delay the setting of FIR/FIN until we know if it will be multifragmented or not
-	arAPDU.Set(FC_RESPONSE);	
+	arAPDU.Set(FC_RESPONSE);
 
 	bool wrote_all = this->LoadEventData(arAPDU);
 
@@ -326,8 +325,8 @@ void ResponseContext::LoadUnsol(APDU& arAPDU, const IINField& arIIN, ClassMask m
 {
 	this->SelectUnsol(m);
 
-	arAPDU.Set(FC_UNSOLICITED_RESPONSE, true, true, true, true);	
-	this->LoadEventData(arAPDU);	
+	arAPDU.Set(FC_UNSOLICITED_RESPONSE, true, true, true, true);
+	this->LoadEventData(arAPDU);
 }
 
 bool ResponseContext::LoadEventData(APDU& arAPDU)

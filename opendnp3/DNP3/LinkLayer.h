@@ -19,14 +19,13 @@
 #ifndef __LINK_LAYER_H_
 #define __LINK_LAYER_H_
 
+#include <opendnp3/APL/AsyncLayerInterfaces.h>
+#include <opendnp3/APL/ITimerSource.h>
+#include <opendnp3/DNP3/ILinkContext.h>
+#include <opendnp3/DNP3/LinkConfig.h>
+#include <opendnp3/DNP3/LinkFrame.h>
 
 #include <queue>
-#include <APL/AsyncLayerInterfaces.h>
-#include <APL/ITimerSource.h>
-
-#include "ILinkContext.h"
-#include "LinkFrame.h"
-#include "LinkConfig.h"
 
 namespace apl
 {

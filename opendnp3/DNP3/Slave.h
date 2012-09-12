@@ -18,27 +18,26 @@
 #ifndef __SLAVE_H_
 #define __SLAVE_H_
 
-#include <APL/CachedLogVariable.h>
-#include <APL/ChangeBuffer.h>
-#include <APL/CommandResponseQueue.h>
-#include <APL/Lock.h>
-#include <APL/Loggable.h>
-#include <APL/Logger.h>
-#include <APL/PostingNotifierSource.h>
-#include <APL/TimeSource.h>
-
-#include "APDU.h"
-#include "AppInterfaces.h"
-#include "DNPCommandMaster.h"
-#include "EventBuffers.h"
-#include "ObjectReadIterator.h"
-#include "ResponseContext.h"
-#include "SlaveConfig.h"
-#include "SlaveEventBuffer.h"
-#include "SlaveResponseTypes.h"
-#include "VtoReader.h"
-#include "VtoWriter.h"
-#include "IStackObserver.h"
+#include <opendnp3/APL/CachedLogVariable.h>
+#include <opendnp3/APL/ChangeBuffer.h>
+#include <opendnp3/APL/CommandResponseQueue.h>
+#include <opendnp3/APL/Lock.h>
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/APL/PostingNotifierSource.h>
+#include <opendnp3/APL/TimeSource.h>
+#include <opendnp3/DNP3/APDU.h>
+#include <opendnp3/DNP3/AppInterfaces.h>
+#include <opendnp3/DNP3/DNPCommandMaster.h>
+#include <opendnp3/DNP3/EventBuffers.h>
+#include <opendnp3/DNP3/IStackObserver.h>
+#include <opendnp3/DNP3/ObjectReadIterator.h>
+#include <opendnp3/DNP3/ResponseContext.h>
+#include <opendnp3/DNP3/SlaveConfig.h>
+#include <opendnp3/DNP3/SlaveEventBuffer.h>
+#include <opendnp3/DNP3/SlaveResponseTypes.h>
+#include <opendnp3/DNP3/VtoReader.h>
+#include <opendnp3/DNP3/VtoWriter.h>
 
 namespace apl
 {

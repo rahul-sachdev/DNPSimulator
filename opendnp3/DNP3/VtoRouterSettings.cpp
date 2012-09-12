@@ -15,7 +15,7 @@
  * under the License.
  */
 
-#include "VtoRouterSettings.h"
+#include <opendnp3/DNP3/VtoRouterSettings.h>
 
 namespace apl
 {

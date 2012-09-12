@@ -19,11 +19,11 @@
 #ifndef __SLAVE_STACK_CONFIG_H_
 #define __SLAVE_STACK_CONFIG_H_
 
-#include "SlaveConfig.h"
-#include "DeviceTemplate.h"
-#include "AppConfig.h"
-#include "LinkConfig.h"
-#include "VtoConfig.h"
+#include <opendnp3/DNP3/AppConfig.h>
+#include <opendnp3/DNP3/DeviceTemplate.h>
+#include <opendnp3/DNP3/LinkConfig.h>
+#include <opendnp3/DNP3/SlaveConfig.h>
+#include <opendnp3/DNP3/VtoConfig.h>
 
 namespace apl
 {

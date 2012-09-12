@@ -15,10 +15,9 @@
  * under the License.
  */
 
-#include "EnhancedVtoRouter.h"
-
-#include <APL/Exception.h>
-#include <APL/Logger.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/EnhancedVtoRouter.h>
 
 namespace apl
 {

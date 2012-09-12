@@ -16,18 +16,16 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "LinkLayer.h"
-
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/DNPConstants.h>
+#include <opendnp3/DNP3/ILinkRouter.h>
+#include <opendnp3/DNP3/LinkLayer.h>
+#include <opendnp3/DNP3/PriLinkLayerStates.h>
+#include <opendnp3/DNP3/SecLinkLayerStates.h>
 
 #include <assert.h>
 #include <boost/bind.hpp>
-#include <APL/Logger.h>
-#include <APL/Exception.h>
-
-#include "ILinkRouter.h"
-#include "PriLinkLayerStates.h"
-#include "SecLinkLayerStates.h"
-#include "DNPConstants.h"
 
 using namespace boost;
 

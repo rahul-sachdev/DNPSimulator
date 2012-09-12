@@ -16,14 +16,12 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "LinkReceiverStates.h"
-
-#include <APL/Exception.h>
-#include "LinkLayerReceiver.h"
-#include <APL/PackingUnpacking.h>
-#include "DNPCrc.h"
-#include <APL/Logger.h>
-
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/APL/PackingUnpacking.h>
+#include <opendnp3/DNP3/DNPCrc.h>
+#include <opendnp3/DNP3/LinkLayerReceiver.h>
+#include <opendnp3/DNP3/LinkReceiverStates.h>
 
 namespace apl
 {

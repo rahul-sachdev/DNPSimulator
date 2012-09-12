@@ -16,14 +16,10 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "ObjectWriteIterator.h"
-#include <APL/PackingUnpacking.h>
-
-
-
-#include "ObjectHeader.h"
-#include <APL/Exception.h>
-
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/PackingUnpacking.h>
+#include <opendnp3/DNP3/ObjectHeader.h>
+#include <opendnp3/DNP3/ObjectWriteIterator.h>
 
 namespace apl
 {

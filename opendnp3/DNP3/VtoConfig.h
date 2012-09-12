@@ -19,7 +19,7 @@
 #ifndef __VTO_CONFIG_H_
 #define __VTO_CONFIG_H_
 
-#include "VtoRouterSettings.h"
+#include <opendnp3/DNP3/VtoRouterSettings.h>
 
 namespace apl
 {

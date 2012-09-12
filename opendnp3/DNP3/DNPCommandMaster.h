@@ -19,12 +19,12 @@
 #ifndef __DNP_COMMAND_MASTER_H_
 #define __DNP_COMMAND_MASTER_H_
 
+#include <opendnp3/APL/CommandInterfaces.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/TimingTools.h>
+#include <opendnp3/DNP3/APDUConstants.h>
+#include <opendnp3/DNP3/AppInterfaces.h>
 
-#include <APL/CommandInterfaces.h>
-#include <APL/TimingTools.h>
-#include <APL/Exception.h>
-#include <DNP3/APDUConstants.h>
-#include <DNP3/AppInterfaces.h>
 #include <map>
 #include <assert.h>
 

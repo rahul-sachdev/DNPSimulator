@@ -19,8 +19,7 @@
 #ifndef __DNP_EXCEPTIONS_H_
 #define __DNP_EXCEPTIONS_H_
 
-#include <APL/Exception.h>
-
+#include <opendnp3/APL/Exception.h>
 
 namespace apl
 {

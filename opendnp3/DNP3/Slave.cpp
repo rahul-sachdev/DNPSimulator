@@ -15,18 +15,15 @@
 // under the License.
 //
 
-#include "Slave.h"
-
-
-#include "SlaveStates.h"
-#include "Database.h"
-#include "DNPExceptions.h"
-#include "ObjectReadIterator.h"
-
-#include <APL/Logger.h>
-#include <APL/TimingTools.h>
-#include <APL/AsyncTaskGroup.h>
-#include <APL/AsyncTaskBase.h>
+#include <opendnp3/APL/AsyncTaskBase.h>
+#include <opendnp3/APL/AsyncTaskGroup.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/APL/TimingTools.h>
+#include <opendnp3/DNP3/DNPExceptions.h>
+#include <opendnp3/DNP3/Database.h>
+#include <opendnp3/DNP3/ObjectReadIterator.h>
+#include <opendnp3/DNP3/Slave.h>
+#include <opendnp3/DNP3/SlaveStates.h>
 
 #include <boost/bind.hpp>
 
@@ -407,7 +404,7 @@ void Slave::HandleVtoTransfer(const APDU& arRequest)
 }
 
 void Slave::HandleWrite(const APDU& arRequest)
-{	
+{
 	for (HeaderReadIterator hdr = arRequest.BeginRead(); !hdr.IsEnd(); ++hdr) {
 		switch (hdr->GetGroup()) {
 		case 112:

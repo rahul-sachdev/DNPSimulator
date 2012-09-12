@@ -19,11 +19,11 @@
 #ifndef __DEVICE_TEMPLATE_H_
 #define __DEVICE_TEMPLATE_H_
 
+#include <opendnp3/APL/DataInterfaces.h>
+#include <opendnp3/DNP3/DeviceTemplateTypes.h>
+
 #include <vector>
 #include <sstream>
-
-#include <APL/DataInterfaces.h>
-#include "DeviceTemplateTypes.h"
 
 namespace apl
 {

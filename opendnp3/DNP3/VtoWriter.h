@@ -18,18 +18,17 @@
 #ifndef __VTO_WRITER_H_
 #define __VTO_WRITER_H_
 
+#include <opendnp3/APL/DataInterfaces.h>
+#include <opendnp3/APL/Lock.h>
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/APL/SubjectBase.h>
+#include <opendnp3/DNP3/EventTypes.h>
+#include <opendnp3/DNP3/IVtoEventAcceptor.h>
+#include <opendnp3/DNP3/VtoData.h>
+#include <opendnp3/DNP3/VtoDataInterface.h>
+
 #include <deque>
 #include <set>
-
-#include <APL/Lock.h>
-#include <APL/DataInterfaces.h>
-#include <APL/SubjectBase.h>
-#include <APL/Loggable.h>
-
-#include "EventTypes.h"
-#include "VtoDataInterface.h"
-#include "VtoData.h"
-#include "IVtoEventAcceptor.h"
 
 namespace apl
 {

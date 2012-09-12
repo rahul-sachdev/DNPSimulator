@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "SlaveStack.h"
+#include <opendnp3/DNP3/SlaveStack.h>
 
 namespace apl
 {

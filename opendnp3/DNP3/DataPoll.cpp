@@ -17,14 +17,13 @@
 // under the License.
 //
 
-#include <APL/ITimeSource.h>
-#include <APL/Exception.h>
-
-#include "DataPoll.h"
-#include "APDU.h"
-#include "ResponseLoader.h"
-#include "PointClass.h"
-#include "VtoReader.h"
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/ITimeSource.h>
+#include <opendnp3/DNP3/APDU.h>
+#include <opendnp3/DNP3/DataPoll.h>
+#include <opendnp3/DNP3/PointClass.h>
+#include <opendnp3/DNP3/ResponseLoader.h>
+#include <opendnp3/DNP3/VtoReader.h>
 
 namespace apl
 {

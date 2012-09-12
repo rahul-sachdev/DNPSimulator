@@ -19,11 +19,11 @@
 #ifndef __LINK_RECEIVER_STATES_H_
 #define __LINK_RECEIVER_STATES_H_
 
+#include <opendnp3/APL/Singleton.h>
+#include <opendnp3/APL/Uncopyable.h>
+#include <opendnp3/DNP3/LinkLayerReceiver.h>
 
 #include <string>
-#include <APL/Uncopyable.h>
-#include <APL/Singleton.h>
-#include "LinkLayerReceiver.h"
 
 namespace apl
 {

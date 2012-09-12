@@ -16,10 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "LinkHeader.h"
-
-#include <APL/PackingUnpacking.h>
-#include "DNPCrc.h"
+#include <opendnp3/APL/PackingUnpacking.h>
+#include <opendnp3/DNP3/DNPCrc.h>
+#include <opendnp3/DNP3/LinkHeader.h>
 
 #include <sstream>
 

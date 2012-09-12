@@ -18,13 +18,12 @@
 #ifndef __SLAVE_EVENT_BUFFER_H_
 #define __SLAVE_EVENT_BUFFER_H_
 
-#include <APL/DataTypes.h>
-
-#include "BufferTypes.h"
-#include "DatabaseInterfaces.h"
-#include "DNPDatabaseTypes.h"
-#include "EventBuffers.h"
-#include "SlaveConfig.h"
+#include <opendnp3/APL/DataTypes.h>
+#include <opendnp3/DNP3/BufferTypes.h>
+#include <opendnp3/DNP3/DNPDatabaseTypes.h>
+#include <opendnp3/DNP3/DatabaseInterfaces.h>
+#include <opendnp3/DNP3/EventBuffers.h>
+#include <opendnp3/DNP3/SlaveConfig.h>
 
 namespace apl
 {

@@ -19,10 +19,10 @@
 #ifndef __MASTER_STACK_CONFIG_H_
 #define __MASTER_STACK_CONFIG_H_
 
-#include "MasterConfig.h"
-#include "AppConfig.h"
-#include "LinkConfig.h"
-#include "VtoConfig.h"
+#include <opendnp3/DNP3/AppConfig.h>
+#include <opendnp3/DNP3/LinkConfig.h>
+#include <opendnp3/DNP3/MasterConfig.h>
+#include <opendnp3/DNP3/VtoConfig.h>
 
 namespace apl
 {

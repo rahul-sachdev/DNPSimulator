@@ -17,11 +17,9 @@
 // under the License.
 //
 
-#include "./AppLayer.h"
-
-
-#include <APL/Logger.h>
-#include <APL/ITimerSource.h>
+#include <opendnp3/APL/ITimerSource.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/AppLayer.h>
 
 using namespace std;
 

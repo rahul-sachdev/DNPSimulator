@@ -16,12 +16,10 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "DNPCommandMaster.h"
-
-#include <APL/Configure.h>
-#include <APL/Exception.h>
-
-#include "DeviceTemplate.h"
+#include <opendnp3/APL/Configure.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/DNP3/DNPCommandMaster.h>
+#include <opendnp3/DNP3/DeviceTemplate.h>
 
 #include <assert.h>
 

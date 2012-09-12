@@ -15,10 +15,9 @@
 // implied.  See the License for the specific language governing
 // permissions and limitations under the License.
 //
-#include "StackManager.h"
-
-#include <DNP3/AsyncStackManager.h>
-#include <APL/Log.h>
+#include <opendnp3/APL/Log.h>
+#include <opendnp3/DNP3/AsyncStackManager.h>
+#include <opendnp3/DNP3/StackManager.h>
 
 namespace apl
 {

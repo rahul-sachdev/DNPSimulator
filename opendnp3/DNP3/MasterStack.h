@@ -19,9 +19,9 @@
 #ifndef __MASTER_STACK_H_
 #define __MASTER_STACK_H_
 
-#include "Stack.h"
-#include "Master.h"
-#include "MasterStackConfig.h"
+#include <opendnp3/DNP3/Master.h>
+#include <opendnp3/DNP3/MasterStackConfig.h>
+#include <opendnp3/DNP3/Stack.h>
 
 namespace apl
 {

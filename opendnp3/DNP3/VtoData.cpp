@@ -15,7 +15,7 @@
 // under the License.
 //
 
-#include "VtoData.h"
+#include <opendnp3/DNP3/VtoData.h>
 
 #include <assert.h>
 #include <memory.h>

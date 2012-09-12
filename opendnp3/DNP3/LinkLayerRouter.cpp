@@ -16,17 +16,15 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "LinkLayerRouter.h"
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/IPhysicalLayerAsync.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/ILinkContext.h>
+#include <opendnp3/DNP3/LinkFrame.h>
+#include <opendnp3/DNP3/LinkLayerRouter.h>
 
-
-#include <APL/Exception.h>
-#include <APL/IPhysicalLayerAsync.h>
-#include <APL/Logger.h>
 #include <sstream>
 #include <boost/foreach.hpp>
-
-#include "ILinkContext.h"
-#include "LinkFrame.h"
 
 using namespace std;
 

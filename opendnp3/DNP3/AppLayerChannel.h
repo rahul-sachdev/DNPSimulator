@@ -19,8 +19,8 @@
 #ifndef __APP_LAYER_CHANNEL_H_
 #define __APP_LAYER_CHANNEL_H_
 
-#include <APL/Types.h>
-#include <APL/Loggable.h>
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/APL/Types.h>
 
 namespace apl
 {

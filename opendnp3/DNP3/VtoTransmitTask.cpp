@@ -15,10 +15,9 @@
  * under the License.
  */
 
-#include <APL/Logger.h>
-
-#include "APDU.h"
-#include "VtoTransmitTask.h"
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/APDU.h>
+#include <opendnp3/DNP3/VtoTransmitTask.h>
 
 using namespace apl;
 using namespace apl::dnp;

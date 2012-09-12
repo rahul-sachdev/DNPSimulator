@@ -19,11 +19,11 @@
 #ifndef __PRI_LINK_LAYER_STATES_H_
 #define __PRI_LINK_LAYER_STATES_H_
 
-#include <APL/Types.h>
-#include <APL/Singleton.h>
-#include <string>
+#include <opendnp3/APL/Singleton.h>
+#include <opendnp3/APL/Types.h>
+#include <opendnp3/DNP3/LinkLayer.h>
 
-#include "LinkLayer.h"
+#include <string>
 
 namespace apl
 {

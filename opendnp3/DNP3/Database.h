@@ -19,18 +19,16 @@
 #ifndef __DATABASE_H_
 #define __DATABASE_H_
 
+#include <opendnp3/APL/DataInterfaces.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/DNP3/DNPConstants.h>
+#include <opendnp3/DNP3/DatabaseInterfaces.h>
 
-#include "DatabaseInterfaces.h"
-#include "DNPConstants.h"
-
-#include <APL/DataInterfaces.h>
-#include <APL/Exception.h>
-#include <APL/Loggable.h>
-
+#include <iostream>
+#include <limits>
 #include <set>
 #include <vector>
-#include <limits>
-#include <iostream>
 
 #ifdef max
 #undef max

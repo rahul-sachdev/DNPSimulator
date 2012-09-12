@@ -16,13 +16,11 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "AppHeader.h"
-
+#include <opendnp3/APL/ToHex.h>
+#include <opendnp3/DNP3/AppHeader.h>
 
 #include <assert.h>
 #include <sstream>
-
-#include <APL/ToHex.h>
 
 using namespace std;
 

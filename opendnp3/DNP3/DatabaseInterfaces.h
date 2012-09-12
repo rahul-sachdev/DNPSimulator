@@ -19,10 +19,9 @@
 #ifndef __DATABASE_INTERFACES_H_
 #define __DATABASE_INTERFACES_H_
 
-
-#include "DNPDatabaseTypes.h"
-#include "VtoData.h"
-#include "IVtoEventAcceptor.h"
+#include <opendnp3/DNP3/DNPDatabaseTypes.h>
+#include <opendnp3/DNP3/IVtoEventAcceptor.h>
+#include <opendnp3/DNP3/VtoData.h>
 
 namespace apl
 {

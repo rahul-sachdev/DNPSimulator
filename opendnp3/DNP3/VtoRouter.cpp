@@ -15,17 +15,15 @@
  * under the License.
  */
 
-#include "VtoRouter.h"
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/IPhysicalLayerAsync.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/APL/Util.h>
+#include <opendnp3/DNP3/VtoReader.h>
+#include <opendnp3/DNP3/VtoRouter.h>
+#include <opendnp3/DNP3/VtoRouterSettings.h>
 
 #include <boost/bind.hpp>
-
-#include <APL/Exception.h>
-#include <APL/IPhysicalLayerAsync.h>
-#include <APL/Logger.h>
-#include <APL/Util.h>
-
-#include "VtoReader.h"
-#include "VtoRouterSettings.h"
 
 namespace apl
 {

@@ -16,9 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "TransportStates.h"
-
-#include "TransportLayer.h"
+#include <opendnp3/DNP3/TransportLayer.h>
+#include <opendnp3/DNP3/TransportStates.h>
 
 namespace apl
 {

@@ -17,10 +17,10 @@
 // under the License.
 //
 
-#include "MasterTaskBase.h"
-#include "APDU.h"
-#include <APL/Logger.h>
-#include <APL/AsyncTaskInterfaces.h>
+#include <opendnp3/APL/AsyncTaskInterfaces.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/APDU.h>
+#include <opendnp3/DNP3/MasterTaskBase.h>
 
 namespace apl
 {

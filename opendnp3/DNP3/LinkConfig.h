@@ -19,7 +19,7 @@
 #ifndef __LINK_CONFIG_H_
 #define __LINK_CONFIG_H_
 
-#include <APL/Types.h>
+#include <opendnp3/APL/Types.h>
 
 namespace apl
 {

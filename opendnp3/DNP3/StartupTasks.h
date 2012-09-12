@@ -19,8 +19,9 @@
 #ifndef __STARTUP_TASKS_H_
 #define __STARTUP_TASKS_H_
 
-#include <APL/Types.h>
-#include "MasterTaskBase.h"
+#include <opendnp3/APL/Types.h>
+#include <opendnp3/DNP3/MasterTaskBase.h>
+
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
 namespace apl

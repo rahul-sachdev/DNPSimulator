@@ -19,23 +19,22 @@
 #ifndef __HEADER_READ_ITERATOR_H_
 #define __HEADER_READ_ITERATOR_H_
 
-#include <APL/Types.h>
-#include <vector>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/Types.h>
+#include <opendnp3/DNP3/APDUConstants.h>
+#include <opendnp3/DNP3/DNPConstants.h>
+#include <opendnp3/DNP3/ObjectHeader.h>
+#include <opendnp3/DNP3/ObjectInterfaces.h>
+
 #include <assert.h>
-
-#include "APDUConstants.h"
-#include "ObjectHeader.h"
-#include "ObjectInterfaces.h"
-#include "DNPConstants.h"
-#include <APL/Exception.h>
-
-class IObjectHeader;
+#include <vector>
 
 namespace apl
 {
 namespace dnp
 {
 
+class IObjectHeader;
 class ObjectReadIterator;
 
 /**

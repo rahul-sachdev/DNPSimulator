@@ -19,8 +19,8 @@
 #ifndef __DNP_FROM_STREAM_H_
 #define __DNP_FROM_STREAM_H_
 
-
-#include <APL/Configure.h>
+#include <opendnp3/APL/CommandTypes.h>
+#include <opendnp3/APL/Configure.h>
 
 #include <iostream>
 
@@ -29,11 +29,6 @@
 #pragma warning ( push )
 #pragma warning ( disable : 4244 )
 #endif
-
-//#include <APL/DataTypes.h>
-#include <APL/CommandTypes.h>
-//#include "ObjectInterfaces.h"
-//#include "Objects.h"
 
 namespace apl
 {

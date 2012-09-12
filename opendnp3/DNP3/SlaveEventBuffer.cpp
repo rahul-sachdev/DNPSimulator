@@ -15,9 +15,8 @@
 // under the License.
 //
 
-#include "SlaveEventBuffer.h"
-
-#include <APL/Exception.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/DNP3/SlaveEventBuffer.h>
 
 namespace apl
 {

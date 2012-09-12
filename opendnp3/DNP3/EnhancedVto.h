@@ -18,7 +18,7 @@
 #ifndef __ENHANCED_VTO_H_
 #define __ENHANCED_VTO_H_
 
-#include <APL/Types.h>
+#include <opendnp3/APL/Types.h>
 
 namespace apl
 {

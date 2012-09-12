@@ -20,14 +20,11 @@
 #ifndef __OBJECTS_H_
 #define __OBJECTS_H_
 
-
-#include "ObjectInterfaces.h"
-
-#include <APL/Singleton.h>
-#include <APL/PackingUnpacking.h>
-#include <APL/PackingTemplates.h>
-#include <APL/QualityMasks.h>
-
+#include <opendnp3/APL/PackingTemplates.h>
+#include <opendnp3/APL/PackingUnpacking.h>
+#include <opendnp3/APL/QualityMasks.h>
+#include <opendnp3/APL/Singleton.h>
+#include <opendnp3/DNP3/ObjectInterfaces.h>
 
 #define MACRO_GROUP_VAR_SIZE_FUNC_WITHOUT_EVENTS(group, var, size)\
 		MACRO_GROUP_VAR_FUNC(group, var)\

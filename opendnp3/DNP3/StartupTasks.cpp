@@ -16,13 +16,12 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "StartupTasks.h"
-
-#include "APDU.h"
-#include "ObjectReadIterator.h"
-#include "PointClass.h"
-#include <APL/ITimeSource.h>
-#include <APL/Logger.h>
+#include <opendnp3/APL/ITimeSource.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/APDU.h>
+#include <opendnp3/DNP3/ObjectReadIterator.h>
+#include <opendnp3/DNP3/PointClass.h>
+#include <opendnp3/DNP3/StartupTasks.h>
 
 namespace apl
 {

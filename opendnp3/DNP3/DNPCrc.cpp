@@ -17,10 +17,9 @@
 // under the License.
 //
 
-#include "DNPCrc.h"
-#include <APL/CRC.h>
-
-#include <APL/PackingUnpacking.h>
+#include <opendnp3/APL/CRC.h>
+#include <opendnp3/APL/PackingUnpacking.h>
+#include <opendnp3/DNP3/DNPCrc.h>
 
 namespace apl
 {

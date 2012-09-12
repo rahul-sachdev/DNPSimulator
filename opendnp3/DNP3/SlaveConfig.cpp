@@ -17,8 +17,8 @@
 // under the License.
 //
 
-#include "DNPConstants.h"
-#include "SlaveConfig.h"
+#include <opendnp3/DNP3/DNPConstants.h>
+#include <opendnp3/DNP3/SlaveConfig.h>
 
 namespace apl
 {

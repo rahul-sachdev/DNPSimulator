@@ -15,11 +15,10 @@
  * under the License.
  */
 
-#include "VtoWriter.h"
-#include "EnhancedVto.h"
-
-#include <APL/Logger.h>
-#include <APL/Util.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/APL/Util.h>
+#include <opendnp3/DNP3/EnhancedVto.h>
+#include <opendnp3/DNP3/VtoWriter.h>
 
 namespace apl
 {

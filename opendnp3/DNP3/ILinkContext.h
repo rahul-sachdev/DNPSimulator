@@ -19,7 +19,7 @@
 #ifndef __I_LINK_CONTEXT_H_
 #define __I_LINK_CONTEXT_H_
 
-#include "IFrameSink.h"
+#include <opendnp3/DNP3/IFrameSink.h>
 
 namespace apl
 {

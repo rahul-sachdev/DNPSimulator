@@ -16,13 +16,13 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include <APL/PackingUnpacking.h>
-#include <APL/Logger.h>
-#include <assert.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/APL/PackingUnpacking.h>
+#include <opendnp3/DNP3/DNPCrc.h>
+#include <opendnp3/DNP3/IFrameSink.h>
+#include <opendnp3/DNP3/LinkReceiverStates.h>
 
-#include "DNPCrc.h"
-#include "LinkReceiverStates.h"
-#include "IFrameSink.h"
+#include <assert.h>
 
 namespace apl
 {

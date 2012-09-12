@@ -19,14 +19,10 @@
 #ifndef __TRANSPORT_LAYER_H_
 #define __TRANSPORT_LAYER_H_
 
-
-
-#include "TransportRx.h"
-#include "TransportTx.h"
-
-#include "DNPConstants.h"
-
-#include <APL/AsyncLayerInterfaces.h>
+#include <opendnp3/APL/AsyncLayerInterfaces.h>
+#include <opendnp3/DNP3/DNPConstants.h>
+#include <opendnp3/DNP3/TransportRx.h>
+#include <opendnp3/DNP3/TransportTx.h>
 
 namespace apl
 {

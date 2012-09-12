@@ -19,8 +19,8 @@
 #ifndef __EVENT_TYPES_H_
 #define __EVENT_TYPES_H_
 
-#include "DNPDatabaseTypes.h"
-#include "VtoData.h"
+#include <opendnp3/DNP3/DNPDatabaseTypes.h>
+#include <opendnp3/DNP3/VtoData.h>
 
 //using namespace dnp;
 namespace apl

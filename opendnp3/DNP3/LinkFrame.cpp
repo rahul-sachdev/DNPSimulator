@@ -16,13 +16,12 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "LinkFrame.h"
-
-#include "DNPCrc.h"
+#include <opendnp3/APL/Util.h>
+#include <opendnp3/DNP3/DNPCrc.h>
+#include <opendnp3/DNP3/LinkFrame.h>
 
 #include <assert.h>
 #include <sstream>
-#include <APL/Util.h>
 
 using namespace std;
 

@@ -16,11 +16,10 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "ObjectReadIterator.h"
-#include "ObjectHeader.h"
-#include <APL/Exception.h>
-#include "Objects.h"
-
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/DNP3/ObjectHeader.h>
+#include <opendnp3/DNP3/ObjectReadIterator.h>
+#include <opendnp3/DNP3/Objects.h>
 
 namespace apl
 {

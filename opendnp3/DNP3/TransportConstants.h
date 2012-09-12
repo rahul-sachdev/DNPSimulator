@@ -19,8 +19,7 @@
 #ifndef __TRANSPORT_CONSTANTS_H_
 #define __TRANSPORT_CONSTANTS_H_
 
-
-#include "DNPConstants.h"
+#include <opendnp3/DNP3/DNPConstants.h>
 
 namespace apl
 {

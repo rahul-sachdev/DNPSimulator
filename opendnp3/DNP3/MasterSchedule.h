@@ -20,9 +20,8 @@
 #ifndef __MASTER_SCHEDULE_H_
 #define __MASTER_SCHEDULE_H_
 
-#include "MasterConfig.h"
-
-#include <APL/TrackingTaskGroup.h>
+#include <opendnp3/APL/TrackingTaskGroup.h>
+#include <opendnp3/DNP3/MasterConfig.h>
 
 namespace apl
 {

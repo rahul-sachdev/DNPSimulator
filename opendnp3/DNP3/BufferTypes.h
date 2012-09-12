@@ -18,7 +18,7 @@
 #ifndef __BUFFER_TYPES_H_
 #define __BUFFER_TYPES_H_
 
-#include <APL/DataTypes.h>
+#include <opendnp3/APL/DataTypes.h>
 
 namespace apl
 {

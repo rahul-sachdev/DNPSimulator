@@ -19,13 +19,11 @@
 #ifndef __CLASS_COUNTER_H_
 #define __CLASS_COUNTER_H_
 
+#include <opendnp3/APL/Types.h>
+#include <opendnp3/DNP3/DNPDatabaseTypes.h>
 
-
-#include <stddef.h>
 #include <assert.h>
-
-#include "DNPDatabaseTypes.h"
-#include <APL/Types.h>
+#include <stddef.h>
 
 namespace apl
 {

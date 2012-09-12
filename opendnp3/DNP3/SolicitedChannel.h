@@ -19,7 +19,7 @@
 #ifndef __SOLICITED_CHANNEL_H_
 #define __SOLICITED_CHANNEL_H_
 
-#include "AppLayerChannel.h"
+#include <opendnp3/DNP3/AppLayerChannel.h>
 
 namespace apl
 {

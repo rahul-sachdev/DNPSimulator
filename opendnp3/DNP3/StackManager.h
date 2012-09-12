@@ -18,15 +18,14 @@
 #ifndef __STACK_MANAGER_H_
 #define __STACK_MANAGER_H_
 
-#include <APL/CommandInterfaces.h>
-#include <APL/DataInterfaces.h>
-#include <APL/LogBase.h>
-#include <APL/PhysLayerSettings.h>
-#include <APL/SerialTypes.h>
-
-#include <DNP3/MasterStackConfig.h>
-#include <DNP3/SlaveStackConfig.h>
-#include <DNP3/VtoDataInterface.h>
+#include <opendnp3/APL/CommandInterfaces.h>
+#include <opendnp3/APL/DataInterfaces.h>
+#include <opendnp3/APL/LogBase.h>
+#include <opendnp3/APL/PhysLayerSettings.h>
+#include <opendnp3/APL/SerialTypes.h>
+#include <opendnp3/DNP3/MasterStackConfig.h>
+#include <opendnp3/DNP3/SlaveStackConfig.h>
+#include <opendnp3/DNP3/VtoDataInterface.h>
 
 #include <vector>
 

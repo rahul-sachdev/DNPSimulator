@@ -17,23 +17,21 @@
 // under the License.
 //
 
-#include "Master.h"
-
-#include "MasterStates.h"
-#include "ObjectReadIterator.h"
-#include "ResponseLoader.h"
-#include "VtoEventBufferAdapter.h"
-
-#include <APL/DataInterfaces.h>
-#include <APL/AsyncTaskInterfaces.h>
-#include <APL/AsyncTaskGroup.h>
-#include <APL/AsyncTaskBase.h>
-#include <APL/AsyncTaskPeriodic.h>
-#include <APL/AsyncTaskNonPeriodic.h>
-#include <APL/Logger.h>
-#include <APL/ITimerSource.h>
-#include <APL/AsyncTaskContinuous.h>
-#include <APL/CopyableBuffer.h>
+#include <opendnp3/APL/AsyncTaskBase.h>
+#include <opendnp3/APL/AsyncTaskContinuous.h>
+#include <opendnp3/APL/AsyncTaskGroup.h>
+#include <opendnp3/APL/AsyncTaskInterfaces.h>
+#include <opendnp3/APL/AsyncTaskNonPeriodic.h>
+#include <opendnp3/APL/AsyncTaskPeriodic.h>
+#include <opendnp3/APL/CopyableBuffer.h>
+#include <opendnp3/APL/DataInterfaces.h>
+#include <opendnp3/APL/ITimerSource.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/Master.h>
+#include <opendnp3/DNP3/MasterStates.h>
+#include <opendnp3/DNP3/ObjectReadIterator.h>
+#include <opendnp3/DNP3/ResponseLoader.h>
+#include <opendnp3/DNP3/VtoEventBufferAdapter.h>
 
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>

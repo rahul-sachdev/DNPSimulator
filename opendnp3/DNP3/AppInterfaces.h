@@ -19,7 +19,6 @@
 #ifndef __APP_INTERFACES_H_
 #define __APP_INTERFACES_H_
 
-
 #include <stddef.h>
 
 namespace apl

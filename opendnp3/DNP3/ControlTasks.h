@@ -19,17 +19,16 @@
 #ifndef __CONTROL_TASKS_H_
 #define __CONTROL_TASKS_H_
 
-#include <boost/function.hpp>
-#include "MasterTaskBase.h"
-#include "ObjectInterfaces.h"
-#include "ObjectReadIterator.h"
-#include "APDU.h"
+#include <opendnp3/APL/CommandQueue.h>
+#include <opendnp3/APL/CommandTypes.h>
+#include <opendnp3/APL/CopyableBuffer.h>
+#include <opendnp3/DNP3/APDU.h>
+#include <opendnp3/DNP3/MasterTaskBase.h>
+#include <opendnp3/DNP3/ObjectInterfaces.h>
+#include <opendnp3/DNP3/ObjectReadIterator.h>
 
 #include <boost/bind.hpp>
-
-#include <APL/CopyableBuffer.h>
-#include <APL/CommandTypes.h>
-#include <APL/CommandQueue.h>
+#include <boost/function.hpp>
 
 namespace apl
 {

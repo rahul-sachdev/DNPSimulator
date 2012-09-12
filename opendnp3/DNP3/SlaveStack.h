@@ -19,12 +19,12 @@
 #ifndef __SLAVE_STACK_H_
 #define __SLAVE_STACK_H_
 
-#include "Stack.h"
-#include "Slave.h"
-#include "Database.h"
-#include "DNPCommandMaster.h"
-#include "SlaveStackConfig.h"
-#include <APL/TimeSource.h>
+#include <opendnp3/APL/TimeSource.h>
+#include <opendnp3/DNP3/DNPCommandMaster.h>
+#include <opendnp3/DNP3/Database.h>
+#include <opendnp3/DNP3/Slave.h>
+#include <opendnp3/DNP3/SlaveStackConfig.h>
+#include <opendnp3/DNP3/Stack.h>
 
 namespace apl
 {

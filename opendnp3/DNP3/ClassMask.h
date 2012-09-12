@@ -19,7 +19,7 @@
 #ifndef __CLASS_MASK_H_
 #define __CLASS_MASK_H_
 
-#include "PointClass.h"
+#include <opendnp3/DNP3/PointClass.h>
 
 namespace apl
 {

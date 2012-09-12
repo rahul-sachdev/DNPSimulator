@@ -19,7 +19,7 @@
 #ifndef __LINK_ROUTE_H_
 #define __LINK_ROUTE_H_
 
-#include <APL/Types.h>
+#include <opendnp3/APL/Types.h>
 
 #include <iostream>
 

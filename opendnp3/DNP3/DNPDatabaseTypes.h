@@ -19,13 +19,10 @@
 #ifndef __DNP_DATABASE_TYPES_H_
 #define __DNP_DATABASE_TYPES_H_
 
-
-
-#include <APL/Types.h>
-#include <APL/DataTypes.h>
-
-#include "PointClass.h"
-#include "VtoData.h"
+#include <opendnp3/APL/DataTypes.h>
+#include <opendnp3/APL/Types.h>
+#include <opendnp3/DNP3/PointClass.h>
+#include <opendnp3/DNP3/VtoData.h>
 
 #include <vector>
 

@@ -19,21 +19,18 @@
 #ifndef __OBJECT_HEADER_H_
 #define __OBJECT_HEADER_H_
 
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/PackingUnpacking.h>
+#include <opendnp3/APL/Singleton.h>
+#include <opendnp3/APL/Types.h>
+#include <opendnp3/DNP3/APDUConstants.h>
 
-#include <APL/Types.h>
-#include <APL/PackingUnpacking.h>
-#include <APL/Singleton.h>
-#include <APL/Exception.h>
+#include <assert.h>
 #include <limits>
 #include <sstream>
 
-#include <assert.h>
-
 //irratating windows macro interferes with the <limits> numeric_limits<T>::max()
 #undef max
-
-
-#include "APDUConstants.h"
 
 namespace apl
 {
@@ -192,7 +189,7 @@ class CountHeader : public ICountHeader
 
 	virtual std::string ToString(const boost::uint8_t* apStart) const
 	{
-		std::ostringstream oss;		
+		std::ostringstream oss;
 		oss << "Count: " << this->GetCount(apStart);
 		return oss.str();
 	}

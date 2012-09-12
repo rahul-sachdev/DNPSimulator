@@ -16,12 +16,10 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "ResponseLoader.h"
-
-#include <APL/Util.h>
-
-#include "HeaderReadIterator.h"
-#include "Objects.h"
+#include <opendnp3/APL/Util.h>
+#include <opendnp3/DNP3/HeaderReadIterator.h>
+#include <opendnp3/DNP3/Objects.h>
+#include <opendnp3/DNP3/ResponseLoader.h>
 
 namespace apl
 {

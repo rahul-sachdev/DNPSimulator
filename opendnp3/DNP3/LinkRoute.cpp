@@ -17,7 +17,7 @@
 // under the License.
 //
 
-#include "LinkRoute.h"
+#include <opendnp3/DNP3/LinkRoute.h>
 
 #include <sstream>
 

@@ -19,7 +19,7 @@
 #ifndef __I_VTO_EVENT_ACCEPTOR_H_
 #define __I_VTO_EVENT_ACCEPTOR_H_
 
-#include "VtoData.h"
+#include <opendnp3/DNP3/VtoData.h>
 
 namespace apl
 {

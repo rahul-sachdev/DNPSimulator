@@ -18,8 +18,8 @@
 #ifndef __VTO_EVENT_BUFFER_ADAPTER_H_
 #define __VTO_EVENT_BUFFER_ADAPTER_H_
 
-#include "EventBufferBase.h"
-#include "IVtoEventAcceptor.h"
+#include <opendnp3/DNP3/EventBufferBase.h>
+#include <opendnp3/DNP3/IVtoEventAcceptor.h>
 
 namespace apl
 {

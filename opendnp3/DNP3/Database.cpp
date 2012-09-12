@@ -16,16 +16,13 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "Database.h"
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/Database.h>
+#include <opendnp3/DNP3/DNPConstants.h>
+#include <opendnp3/DNP3/DeviceTemplate.h>
 
 #include <assert.h>
 #include <iostream>
-
-#include <APL/Logger.h>
-
-#include "DNPConstants.h"
-#include "DeviceTemplate.h"
-
 
 namespace apl
 {

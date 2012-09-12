@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "APDUConstants.h"
+#include <opendnp3/DNP3/APDUConstants.h>
 
 
 namespace apl

@@ -19,28 +19,25 @@
 #ifndef __MASTER_H_
 #define __MASTER_H_
 
-#include <APL/Loggable.h>
-#include <APL/CommandTypes.h>
-#include <APL/CommandQueue.h>
-#include <APL/TimeSource.h>
-#include <APL/PostingNotifierSource.h>
-#include <APL/CachedLogVariable.h>
-
-#include "APDU.h"
-#include "AppInterfaces.h"
-#include "ObjectReadIterator.h"
-#include "MasterConfig.h"
-#include "ObjectInterfaces.h"
-#include "MasterSchedule.h"
-#include "IStackObserver.h"
-#include "VtoReader.h"
-#include "VtoWriter.h"
-
-// includes for tasks
-#include "StartupTasks.h"
-#include "DataPoll.h"
-#include "ControlTasks.h"
-#include "VtoTransmitTask.h"
+#include <opendnp3/APL/CachedLogVariable.h>
+#include <opendnp3/APL/CommandQueue.h>
+#include <opendnp3/APL/CommandTypes.h>
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/APL/PostingNotifierSource.h>
+#include <opendnp3/APL/TimeSource.h>
+#include <opendnp3/DNP3/APDU.h>
+#include <opendnp3/DNP3/AppInterfaces.h>
+#include <opendnp3/DNP3/ControlTasks.h>
+#include <opendnp3/DNP3/DataPoll.h>
+#include <opendnp3/DNP3/IStackObserver.h>
+#include <opendnp3/DNP3/MasterConfig.h>
+#include <opendnp3/DNP3/MasterSchedule.h>
+#include <opendnp3/DNP3/ObjectInterfaces.h>
+#include <opendnp3/DNP3/ObjectReadIterator.h>
+#include <opendnp3/DNP3/StartupTasks.h>
+#include <opendnp3/DNP3/VtoReader.h>
+#include <opendnp3/DNP3/VtoTransmitTask.h>
+#include <opendnp3/DNP3/VtoWriter.h>
 
 namespace apl
 {

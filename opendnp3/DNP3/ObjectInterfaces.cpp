@@ -14,10 +14,9 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 //
-#include "ObjectInterfaces.h"
-
-#include "Objects.h"
-#include <APL/DataTypes.h>
+#include <opendnp3/APL/DataTypes.h>
+#include <opendnp3/DNP3/ObjectInterfaces.h>
+#include <opendnp3/DNP3/Objects.h>
 
 #include <memory>
 

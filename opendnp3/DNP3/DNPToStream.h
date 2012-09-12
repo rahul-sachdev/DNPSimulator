@@ -19,9 +19,9 @@
 #ifndef __DNP_TO_STREAM_H_
 #define __DNP_TO_STREAM_H_
 
-#include <APL/Configure.h>
-#include <APL/DataTypes.h>
-#include <APL/CommandTypes.h>
+#include <opendnp3/APL/Configure.h>
+#include <opendnp3/APL/DataTypes.h>
+#include <opendnp3/APL/CommandTypes.h>
 
 #ifdef APL_PLATFORM_WIN
 //disable the type converstion warnings

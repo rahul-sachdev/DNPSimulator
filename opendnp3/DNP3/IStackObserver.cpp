@@ -17,7 +17,7 @@
 // under the License.
 //
 
-#include "IStackObserver.h"
+#include <opendnp3/DNP3/IStackObserver.h>
 
 namespace apl
 {

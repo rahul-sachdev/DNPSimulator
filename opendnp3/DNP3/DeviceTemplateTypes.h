@@ -19,11 +19,11 @@
 #ifndef __DEVICE_TEMPLATE_TYPES_H_
 #define __DEVICE_TEMPLATE_TYPES_H_
 
-#include <vector>
+#include <opendnp3/APL/CommandTypes.h>
+#include <opendnp3/APL/Types.h>
+#include <opendnp3/DNP3/PointClass.h>
 
-#include <APL/Types.h>
-#include <APL/CommandTypes.h>
-#include "PointClass.h"
+#include <vector>
 
 namespace apl
 {

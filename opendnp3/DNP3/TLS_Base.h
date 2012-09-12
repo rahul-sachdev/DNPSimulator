@@ -19,9 +19,8 @@
 #ifndef __TLS_BASE_H_
 #define __TLS_BASE_H_
 
-
-#include <APL/Types.h>
-#include <APL/Uncopyable.h>
+#include <opendnp3/APL/Types.h>
+#include <opendnp3/APL/Uncopyable.h>
 
 #include <string>
 

@@ -19,14 +19,14 @@
 #ifndef __APP_LAYER_H_
 #define __APP_LAYER_H_
 
-#include <queue>
-#include <APL/AsyncLayerInterfaces.h>
+#include <opendnp3/APL/AsyncLayerInterfaces.h>
+#include <opendnp3/DNP3/APDU.h>
+#include <opendnp3/DNP3/AppConfig.h>
+#include <opendnp3/DNP3/AppInterfaces.h>
+#include <opendnp3/DNP3/SolicitedChannel.h>
+#include <opendnp3/DNP3/UnsolicitedChannel.h>
 
-#include "APDU.h"
-#include "AppInterfaces.h"
-#include "AppConfig.h"
-#include "SolicitedChannel.h"
-#include "UnsolicitedChannel.h"
+#include <queue>
 
 namespace apl
 {

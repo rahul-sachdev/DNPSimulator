@@ -16,8 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "LinkLayerConstants.h"
-
+#include <opendnp3/DNP3/LinkLayerConstants.h>
 
 namespace apl
 {

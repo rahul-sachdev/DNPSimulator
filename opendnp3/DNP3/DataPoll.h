@@ -19,8 +19,8 @@
 #ifndef __DATA_POLL_H_
 #define __DATA_POLL_H_
 
-#include "MasterTaskBase.h"
-#include "VtoReader.h"
+#include <opendnp3/DNP3/MasterTaskBase.h>
+#include <opendnp3/DNP3/VtoReader.h>
 
 namespace apl
 {

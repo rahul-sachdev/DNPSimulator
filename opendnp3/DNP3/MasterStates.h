@@ -19,12 +19,11 @@
 #ifndef __MASTER_STATES_H_
 #define __MASTER_STATES_H_
 
+#include <opendnp3/APL/CommandInterfaces.h>
+#include <opendnp3/APL/Singleton.h>
+#include <opendnp3/DNP3/ObjectInterfaces.h>
 
 #include <string>
-#include <APL/Singleton.h>
-#include <APL/CommandInterfaces.h>
-
-#include "ObjectInterfaces.h"
 
 namespace apl
 {

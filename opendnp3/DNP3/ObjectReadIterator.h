@@ -19,13 +19,12 @@
 #ifndef __OBJECT_READ_ITERATOR_H_
 #define __OBJECT_READ_ITERATOR_H_
 
+#include <opendnp3/APL/Types.h>
+#include <opendnp3/DNP3/HeaderReadIterator.h>
+#include <opendnp3/DNP3/ObjectHeader.h>
+#include <opendnp3/DNP3/ObjectInterfaces.h>
+
 #include <assert.h>
-
-#include <APL/Types.h>
-
-#include "HeaderReadIterator.h"
-#include "ObjectHeader.h"
-#include "ObjectInterfaces.h"
 
 class IObjectHeader;
 

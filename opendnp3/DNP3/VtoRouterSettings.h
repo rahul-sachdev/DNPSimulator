@@ -18,7 +18,7 @@
 #ifndef __VTO_ROUTER_SETTINGS_H_
 #define __VTO_ROUTER_SETTINGS_H_
 
-#include <APL/Types.h>
+#include <opendnp3/APL/Types.h>
 
 namespace apl
 {

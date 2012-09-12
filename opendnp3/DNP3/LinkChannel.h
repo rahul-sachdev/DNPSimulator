@@ -19,9 +19,8 @@
 #ifndef __LINK_CHANNEL_H_
 #define __LINK_CHANNEL_H_
 
-#include "LinkLayerRouter.h"
-
-#include <APL/Lock.h>
+#include <opendnp3/APL/Lock.h>
+#include <opendnp3/DNP3/LinkLayerRouter.h>
 
 #include <vector>
 

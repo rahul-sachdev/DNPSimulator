@@ -16,9 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "HeaderReadIterator.h"
-#include "ObjectReadIterator.h"
-
+#include <opendnp3/DNP3/HeaderReadIterator.h>
+#include <opendnp3/DNP3/ObjectReadIterator.h>
 
 namespace apl
 {
@@ -33,7 +32,6 @@ HeaderReadIterator::HeaderReadIterator(const std::vector<HeaderInfo>* apHeaders,
 {
 
 }
-
 
 ObjectReadIterator HeaderReadIterator::BeginRead()
 {

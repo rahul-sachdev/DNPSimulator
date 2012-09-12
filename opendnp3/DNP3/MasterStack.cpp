@@ -16,9 +16,8 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "MasterStack.h"
-
-#include <APL/Logger.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/MasterStack.h>
 
 namespace apl
 {

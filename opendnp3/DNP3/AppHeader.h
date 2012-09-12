@@ -20,11 +20,11 @@
 #define __APP_HEADER_H_
 
 
-#include <APL/Types.h>
-#include <APL/Singleton.h>
-#include <stddef.h>
+#include <opendnp3/APL/Singleton.h>
+#include <opendnp3/APL/Types.h>
+#include <opendnp3/DNP3/APDUConstants.h>
 
-#include "APDUConstants.h"
+#include <stddef.h>
 
 namespace apl
 {

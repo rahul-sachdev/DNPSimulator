@@ -19,8 +19,8 @@
 #ifndef __SLAVE_RESPONSE_TYPES_H_
 #define __SLAVE_RESPONSE_TYPES_H_
 
-#include "ObjectInterfaces.h"
-#include <APL/DataTypes.h>
+#include <opendnp3/APL/DataTypes.h>
+#include <opendnp3/DNP3/ObjectInterfaces.h>
 
 namespace apl
 {

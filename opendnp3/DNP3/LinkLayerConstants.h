@@ -19,7 +19,7 @@
 #ifndef __LINK_LAYER_CONSTANTS_
 #define __LINK_LAYER_CONSTANTS_
 
-#include <APL/Types.h>
+#include <opendnp3/APL/Types.h>
 
 #include <string>
 

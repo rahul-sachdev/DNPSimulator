@@ -18,14 +18,13 @@
 #ifndef __VTO_ROUTER_H_
 #define __VTO_ROUTER_H_
 
+#include <opendnp3/APL/CopyableBuffer.h>
+#include <opendnp3/APL/IHandlerAsync.h>
+#include <opendnp3/APL/PhysicalLayerMonitor.h>
+#include <opendnp3/DNP3/VtoDataInterface.h>
+
 #include <queue>
 #include <deque>
-
-#include <APL/IHandlerAsync.h>
-#include <APL/PhysicalLayerMonitor.h>
-#include <APL/CopyableBuffer.h>
-
-#include "VtoDataInterface.h"
 
 namespace apl
 {

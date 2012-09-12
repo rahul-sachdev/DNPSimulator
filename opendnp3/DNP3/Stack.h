@@ -19,11 +19,11 @@
 #ifndef __STACK_H_
 #define __STACK_H_
 
-#include "LinkLayer.h"
-#include "TransportLayer.h"
-#include "AppLayer.h"
-#include "VtoDataInterface.h"
-#include "VtoReader.h"
+#include <opendnp3/DNP3/AppLayer.h>
+#include <opendnp3/DNP3/LinkLayer.h>
+#include <opendnp3/DNP3/TransportLayer.h>
+#include <opendnp3/DNP3/VtoDataInterface.h>
+#include <opendnp3/DNP3/VtoReader.h>
 
 namespace apl
 {

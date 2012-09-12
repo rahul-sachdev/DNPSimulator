@@ -19,9 +19,8 @@
 #ifndef __EVENT_BUFFER_BASE_H_
 #define __EVENT_BUFFER_BASE_H_
 
-
-#include "ClassCounter.h"
-#include "EventTypes.h"
+#include <opendnp3/DNP3/ClassCounter.h>
+#include <opendnp3/DNP3/EventTypes.h>
 
 namespace apl
 {

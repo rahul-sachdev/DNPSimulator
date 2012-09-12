@@ -16,11 +16,10 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "SolicitedChannel.h"
-
-#include "AppLayer.h"
-#include "AppChannelStates.h"
-#include <APL/Logger.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/AppChannelStates.h>
+#include <opendnp3/DNP3/AppLayer.h>
+#include <opendnp3/DNP3/SolicitedChannel.h>
 
 namespace apl
 {

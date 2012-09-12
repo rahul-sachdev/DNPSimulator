@@ -16,14 +16,12 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "SecLinkLayerStates.h"
-
-#include <APL/Exception.h>
-#include <APL/Loggable.h>
-#include <APL/Logger.h>
-
-#include "DNPConstants.h"
-#include "LinkLayer.h"
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/DNPConstants.h>
+#include <opendnp3/DNP3/LinkLayer.h>
+#include <opendnp3/DNP3/SecLinkLayerStates.h>
 
 namespace apl
 {

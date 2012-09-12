@@ -18,7 +18,7 @@
 #ifndef __VTO_DATA_H_
 #define __VTO_DATA_H_
 
-#include <APL/Types.h>
+#include <opendnp3/APL/Types.h>
 
 #include <string>
 

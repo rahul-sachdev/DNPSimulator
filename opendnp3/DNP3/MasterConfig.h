@@ -19,10 +19,10 @@
 #ifndef __MASTER_CONFIG_H_
 #define __MASTER_CONFIG_H_
 
-#include "DNPConstants.h"
-#include "PointClass.h"
-#include "MasterConfigTypes.h"
-#include "IStackObserver.h"
+#include <opendnp3/DNP3/DNPConstants.h>
+#include <opendnp3/DNP3/IStackObserver.h>
+#include <opendnp3/DNP3/MasterConfigTypes.h>
+#include <opendnp3/DNP3/PointClass.h>
 
 #include <vector>
 

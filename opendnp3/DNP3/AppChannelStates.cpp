@@ -16,16 +16,15 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "AppChannelStates.h"
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/APL/Singleton.h>
+#include <opendnp3/DNP3/APDU.h>
+#include <opendnp3/DNP3/AppChannelStates.h>
+#include <opendnp3/DNP3/AppLayerChannel.h>
 
-#include <APL/Singleton.h>
-#include <APL/Exception.h>
-#include <APL/Logger.h>
 #include <string>
 #include <sstream>
-
-#include "AppLayerChannel.h"
-#include "APDU.h"
 
 namespace apl
 {

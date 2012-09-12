@@ -18,11 +18,11 @@
 #ifndef __OBJECT_INTERFACES_H_
 #define __OBJECT_INTERFACES_H_
 
-#include <APL/Types.h>
+#include <opendnp3/APL/Types.h>
 
 #include <assert.h>
-#include <stddef.h>
 #include <cstring>
+#include <stddef.h>
 #include <string>
 
 namespace apl

@@ -19,12 +19,10 @@
 #ifndef __TRANSPORT_RX_H_
 #define __TRANSPORT_RX_H_
 
-
-#include <APL/Types.h>
-#include <APL/Loggable.h>
-#include <APL/CopyableBuffer.h>
-
-#include "TransportConstants.h"
+#include <opendnp3/APL/CopyableBuffer.h>
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/APL/Types.h>
+#include <opendnp3/DNP3/TransportConstants.h>
 
 namespace apl
 {

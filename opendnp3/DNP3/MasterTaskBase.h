@@ -19,8 +19,9 @@
 #ifndef __MASTER_TASK_BASE_H_
 #define __MASTER_TASK_BASE_H_
 
+#include <opendnp3/APL/Loggable.h>
+
 #include <string>
-#include <APL/Loggable.h>
 
 namespace apl
 {

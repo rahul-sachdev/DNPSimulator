@@ -17,11 +17,11 @@
 // under the License.
 //
 
-#include "ControlTasks.h"
-#include "APDU.h"
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/APDU.h>
+#include <opendnp3/DNP3/ControlTasks.h>
 
 #include <boost/bind.hpp>
-#include <APL/Logger.h>
 
 namespace apl
 {

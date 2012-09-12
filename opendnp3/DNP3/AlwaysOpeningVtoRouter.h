@@ -18,7 +18,7 @@
 #ifndef __ALWAYS_OPENING_VTO_ROUTER_H_
 #define __ALWAYS_OPENING_VTO_ROUTER_H_
 
-#include "VtoRouter.h"
+#include <opendnp3/DNP3/VtoRouter.h>
 
 namespace apl
 {

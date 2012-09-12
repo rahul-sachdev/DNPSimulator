@@ -15,12 +15,10 @@
 // under the License.
 //
 
-#include "EnhancedVto.h"
-
-#include "VtoData.h"
-
-#include <APL/Configure.h>
-#include <APL/Exception.h>
+#include <opendnp3/APL/Configure.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/DNP3/EnhancedVto.h>
+#include <opendnp3/DNP3/VtoData.h>
 
 #include <memory.h>
 

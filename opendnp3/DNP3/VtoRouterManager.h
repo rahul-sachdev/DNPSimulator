@@ -18,13 +18,13 @@
 #ifndef __VTO_ROUTER_MANAGER_H_
 #define __VTO_ROUTER_MANAGER_H_
 
-#include <vector>
-#include <boost/shared_ptr.hpp>
+#include <opendnp3/APL/IPhysicalLayerObserver.h>
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/APL/SuspendTimerSource.h>
+#include <opendnp3/APL/Types.h>
 
-#include <APL/Types.h>
-#include <APL/Loggable.h>
-#include <APL/IPhysicalLayerObserver.h>
-#include <APL/SuspendTimerSource.h>
+#include <boost/shared_ptr.hpp>
+#include <vector>
 
 namespace apl
 {

@@ -18,15 +18,14 @@
 #ifndef __VTO_READER_H_
 #define __VTO_READER_H_
 
+#include <opendnp3/APL/DataInterfaces.h>
+#include <opendnp3/APL/Lock.h>
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/DNP3/IStackObserver.h>
+#include <opendnp3/DNP3/VtoData.h>
+#include <opendnp3/DNP3/VtoDataInterface.h>
+
 #include <map>
-
-#include <APL/Lock.h>
-#include <APL/Loggable.h>
-#include <APL/DataInterfaces.h>
-
-#include "VtoDataInterface.h"
-#include "VtoData.h"
-#include "IStackObserver.h"
 
 namespace apl
 {

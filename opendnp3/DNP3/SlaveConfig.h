@@ -19,12 +19,11 @@
 #ifndef __SLAVE_CONFIG_H_
 #define __SLAVE_CONFIG_H_
 
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/DNP3/ClassMask.h>
+#include <opendnp3/DNP3/ObjectInterfaces.h>
+
 #include <assert.h>
-
-#include <APL/Exception.h>
-
-#include "ClassMask.h"
-#include "ObjectInterfaces.h"
 
 namespace apl
 {

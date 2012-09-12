@@ -15,13 +15,11 @@
  * under the License.
  */
 
-#include "VtoReader.h"
-
-#include "DNPConstants.h"
-#include "EnhancedVto.h"
-
-#include <APL/Exception.h>
-#include <APL/Logger.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/DNPConstants.h>
+#include <opendnp3/DNP3/EnhancedVto.h>
+#include <opendnp3/DNP3/VtoReader.h>
 
 #include <boost/foreach.hpp>
 

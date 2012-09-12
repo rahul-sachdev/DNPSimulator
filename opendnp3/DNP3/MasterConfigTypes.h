@@ -16,10 +16,10 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __EXCEPTION_SCAN_H_
-#define __EXCEPTION_SCAN_H_
+#ifndef __MASTER_CONFIG_TYPES_H_
+#define __MASTER_CONFIG_TYPES_H_
 
-#include <APL/Types.h>
+#include <opendnp3/APL/Types.h>
 
 namespace apl
 {

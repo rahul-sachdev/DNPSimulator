@@ -19,17 +19,17 @@
 #ifndef __APDU_H_
 #define __APDU_H_
 
-#include <APL/Types.h>
-#include <APL/Exception.h>
-#include <APL/CopyableBuffer.h>
+#include <opendnp3/APL/Types.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/CopyableBuffer.h>
 
-#include "AppHeader.h"
-#include "ObjectHeader.h"
-#include "Objects.h"
-#include "APDUConstants.h"
-#include "HeaderReadIterator.h"
-#include "ObjectWriteIterator.h"
-#include "IndexedWriteIterator.h"
+#include <opendnp3/DNP3/AppHeader.h>
+#include <opendnp3/DNP3/ObjectHeader.h>
+#include <opendnp3/DNP3/Objects.h>
+#include <opendnp3/DNP3/APDUConstants.h>
+#include <opendnp3/DNP3/HeaderReadIterator.h>
+#include <opendnp3/DNP3/ObjectWriteIterator.h>
+#include <opendnp3/DNP3/IndexedWriteIterator.h>
 
 #include <vector>
 #include <string>

@@ -15,9 +15,8 @@
 // under the License.
 //
 
-#include <APL/Exception.h>
-
-#include "BufferTypes.h"
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/DNP3/BufferTypes.h>
 
 namespace apl
 {

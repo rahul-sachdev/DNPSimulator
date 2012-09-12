@@ -16,15 +16,14 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "MasterStates.h"
+#include <opendnp3/APL/AsyncTaskGroup.h>
+#include <opendnp3/APL/AsyncTaskInterfaces.h>
+#include <opendnp3/APL/Configure.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/Master.h>
+#include <opendnp3/DNP3/MasterStates.h>
 
-#include <APL/Configure.h>
-#include <APL/Exception.h>
-#include <APL/Logger.h>
-#include <APL/AsyncTaskInterfaces.h>
-#include <APL/AsyncTaskGroup.h>
-
-#include "Master.h"
 #include <boost/bind.hpp>
 
 

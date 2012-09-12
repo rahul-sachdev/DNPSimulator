@@ -16,10 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "AppInterfaces.h"
-
-#include <APL/Configure.h>
-#include <APL/Exception.h>
+#include <opendnp3/APL/Configure.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/DNP3/AppInterfaces.h>
 
 namespace apl
 {
@@ -45,7 +44,6 @@ void IAppUser::OnRequest(const APDU&, SequenceInfo)
 {
 	throw Exception(LOCATION, "Unhandled frame");
 }
-
 
 void IAppUser::OnUnknownObject()
 {

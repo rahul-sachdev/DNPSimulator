@@ -20,24 +20,23 @@
 #ifndef __ASYNC_STACK_MANAGER_H_
 #define __ASYNC_STACK_MANAGER_H_
 
+#include <opendnp3/APL/AsyncTaskScheduler.h>
+#include <opendnp3/APL/DataInterfaces.h>
+#include <opendnp3/APL/IOService.h>
+#include <opendnp3/APL/IPhysicalLayerObserver.h>
+#include <opendnp3/APL/Lock.h>
+#include <opendnp3/APL/Loggable.h>
+#include <opendnp3/APL/PhysicalLayerManager.h>
+#include <opendnp3/APL/SuspendTimerSource.h>
+#include <opendnp3/APL/Thread.h>
+#include <opendnp3/APL/Threadable.h>
+#include <opendnp3/APL/TimerSourceASIO.h>
+#include <opendnp3/DNP3/LinkRoute.h>
+#include <opendnp3/DNP3/VtoDataInterface.h>
+#include <opendnp3/DNP3/VtoRouterManager.h>
+
 #include <map>
 #include <vector>
-
-#include <APL/Loggable.h>
-#include <APL/TimerSourceASIO.h>
-#include <APL/Threadable.h>
-#include <APL/Thread.h>
-#include <APL/DataInterfaces.h>
-#include <APL/IPhysicalLayerObserver.h>
-#include <APL/PhysicalLayerManager.h>
-#include <APL/AsyncTaskScheduler.h>
-#include <APL/Lock.h>
-#include <APL/IOService.h>
-#include <APL/SuspendTimerSource.h>
-
-#include "VtoDataInterface.h"
-#include "LinkRoute.h"
-#include "VtoRouterManager.h"
 
 namespace apl
 {

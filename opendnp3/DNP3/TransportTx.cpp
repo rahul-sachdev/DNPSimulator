@@ -16,16 +16,14 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "TransportTx.h"
-
-
-#include "TransportLayer.h"
-#include <APL/Exception.h>
-#include <APL/Logger.h>
+#include <opendnp3/APL/Exception.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/TransportLayer.h>
+#include <opendnp3/DNP3/TransportTx.h>
 
 #include <assert.h>
-#include <sstream>
 #include <memory.h>
+#include <sstream>
 
 using namespace std;
 

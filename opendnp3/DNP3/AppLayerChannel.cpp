@@ -16,13 +16,11 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include "AppLayerChannel.h"
-
-#include <APL/Logger.h>
-#include <APL/ITimerSource.h>
-
-#include "AppLayer.h"
-#include "AppChannelStates.h"
+#include <opendnp3/APL/ITimerSource.h>
+#include <opendnp3/APL/Logger.h>
+#include <opendnp3/DNP3/AppChannelStates.h>
+#include <opendnp3/DNP3/AppLayer.h>
+#include <opendnp3/DNP3/AppLayerChannel.h>
 
 #include <boost/bind.hpp>
 
