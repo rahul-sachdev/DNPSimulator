@@ -18,9 +18,9 @@
 //
 #include "MockPhysicalLayerAsyncTS.h"
 
-#include <APLTestTools/MockTimerSource.h>
+#include <opendnp3/APLTestTools/MockTimerSource.h>
 #include <boost/bind.hpp>
-#include <APL/Logger.h>
+#include <opendnp3/APL/Logger.h>
 
 using namespace boost::system;
 

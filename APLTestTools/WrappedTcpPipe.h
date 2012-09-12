@@ -1,8 +1,8 @@
 #ifndef __WRAPPED_TCP_PIPE_H_
 #define __WRAPPED_TCP_PIPE_H_
 
-#include <APL/PhysicalLayerAsyncTCPv4Client.h>
-#include <APL/PhysicalLayerAsyncTCPv4Server.h>
+#include <opendnp3/APL/PhysicalLayerAsyncTCPv4Client.h>
+#include <opendnp3/APL/PhysicalLayerAsyncTCPv4Server.h>
 
 #include "PhysicalLayerWrapper.h"
 

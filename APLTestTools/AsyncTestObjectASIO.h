@@ -19,7 +19,7 @@
 #ifndef __ASYNC_TEST_OBJECT_ASIO_H_
 #define __ASYNC_TEST_OBJECT_ASIO_H_
 
-#include <APLTestTools/AsyncTestObject.h>
+#include <opendnp3/APLTestTools/AsyncTestObject.h>
 
 namespace boost
 {
