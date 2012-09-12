@@ -20,7 +20,7 @@
 
 #include "PhysicalLayerXMLFactory.h"
 
-#include <APL/PhysicalLayerFactory.h>
+#include <opendnp3/APL/PhysicalLayerFactory.h>
 #include <boost/numeric/conversion/converter.hpp>
 
 namespace apl

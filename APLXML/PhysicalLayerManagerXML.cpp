@@ -22,7 +22,7 @@
 #include "PhysicalLayerXMLFactory.h"
 #include "XMLConversion.h"
 
-#include <APL/Log.h>
+#include <opendnp3/APL/Log.h>
 
 namespace apl
 {
