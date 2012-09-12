@@ -22,8 +22,8 @@
 #include <signal.h>
 #include <string>
 
-#include <APL/Log.h>
-#include <APL/Lock.h>
+#include <opendnp3/APL/Log.h>
+#include <opendnp3/APL/Lock.h>
 
 using namespace std;
 using namespace apl;

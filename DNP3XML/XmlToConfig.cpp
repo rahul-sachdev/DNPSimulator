@@ -26,16 +26,16 @@
 
 #include <boost/numeric/conversion/converter.hpp>
 
-#include <DNP3/DNPConstants.h>
-#include <DNP3/LinkConfig.h>
-#include <DNP3/AppConfig.h>
-#include <DNP3/VtoConfig.h>
-#include <DNP3/MasterConfig.h>
-#include <DNP3/SlaveConfig.h>
-#include <DNP3/DeviceTemplate.h>
-#include <DNP3/MasterStackConfig.h>
-#include <DNP3/SlaveStackConfig.h>
-#include <DNP3/AsyncStackManager.h>
+#include <opendnp3/DNP3/AppConfig.h>
+#include <opendnp3/DNP3/AsyncStackManager.h>
+#include <opendnp3/DNP3/DNPConstants.h>
+#include <opendnp3/DNP3/DeviceTemplate.h>
+#include <opendnp3/DNP3/LinkConfig.h>
+#include <opendnp3/DNP3/MasterConfig.h>
+#include <opendnp3/DNP3/MasterStackConfig.h>
+#include <opendnp3/DNP3/SlaveConfig.h>
+#include <opendnp3/DNP3/SlaveStackConfig.h>
+#include <opendnp3/DNP3/VtoConfig.h>
 
 using namespace APLXML_Base;
 

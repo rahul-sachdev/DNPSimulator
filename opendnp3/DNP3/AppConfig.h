@@ -19,6 +19,7 @@
 #ifndef __APP_CONFIG_H_
 #define __APP_CONFIG_H_
 
+#include <opendnp3/APL/Types.h>
 #include <opendnp3/DNP3/DNPConstants.h>
 
 namespace apl

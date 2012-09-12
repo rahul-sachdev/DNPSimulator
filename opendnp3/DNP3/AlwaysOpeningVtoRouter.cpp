@@ -15,7 +15,7 @@
  * under the License.
  */
 
-#include <opendnp3/DNP3/AlwaysOpeningVtoRouter.h
+#include <opendnp3/DNP3/AlwaysOpeningVtoRouter.h>
 
 namespace apl
 {

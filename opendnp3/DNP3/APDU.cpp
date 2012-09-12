@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#include <<opendnp3/DNP3/APDU.h>
+#include <opendnp3/DNP3/APDU.h>
 #include <opendnp3/APL/Exception.h>
 #include <opendnp3/APL/Util.h>
 #include <opendnp3/DNP3/APDUConstants.h>
