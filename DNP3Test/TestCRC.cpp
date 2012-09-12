@@ -18,10 +18,10 @@
 //
 
 #include <boost/test/unit_test.hpp>
-#include <opendnp3/APLTestTools/TestHelpers.h>
+#include <APLTestTools/TestHelpers.h>
 
 #include <opendnp3/DNP3/DNPCrc.h>
-#include <opendnp3/APLTestTools/BufferHelpers.h>
+#include <APLTestTools/BufferHelpers.h>
 
 #include <iostream>
 #include <vector>

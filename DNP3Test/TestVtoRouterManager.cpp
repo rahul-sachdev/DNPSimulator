@@ -25,9 +25,9 @@
 #include <opendnp3/DNP3/VtoRouterSettings.h>
 #include <opendnp3/DNP3/VtoWriter.h>
 
-#include <opendnp3/APLTestTools/MockTimerSource.h>
-#include <opendnp3/APLTestTools/MockPhysicalLayerSource.h>
-#include <opendnp3/APLTestTools/MockPhysicalLayerAsync.h>
+#include <APLTestTools/MockTimerSource.h>
+#include <APLTestTools/MockPhysicalLayerSource.h>
+#include <APLTestTools/MockPhysicalLayerAsync.h>
 
 using namespace apl;
 using namespace apl::dnp;

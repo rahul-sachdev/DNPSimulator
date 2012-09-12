@@ -17,7 +17,7 @@
 // under the License.
 //
 #include <boost/test/unit_test.hpp>
-#include <opendnp3/APLTestTools/TestHelpers.h>
+#include <APLTestTools/TestHelpers.h>
 
 #include "TransportTestObject.h"
 #include <opendnp3/DNP3/TransportConstants.h>

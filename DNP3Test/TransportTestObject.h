@@ -24,10 +24,10 @@
 #include <vector>
 #include <string>
 
-#include <opendnp3/APLTestTools/MockLowerLayer.h>
-#include <opendnp3/APLTestTools/MockUpperLayer.h>
+#include <APLTestTools/MockLowerLayer.h>
+#include <APLTestTools/MockUpperLayer.h>
 #include <opendnp3/DNP3/TransportLayer.h>
-#include <opendnp3/APLTestTools/LogTester.h>
+#include <APLTestTools/LogTester.h>
 
 namespace apl
 {

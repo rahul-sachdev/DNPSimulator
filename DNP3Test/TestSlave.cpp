@@ -18,8 +18,8 @@
 //
 #include <boost/test/unit_test.hpp>
 
-#include <opendnp3/APLTestTools/TestHelpers.h>
-#include <opendnp3/APLTestTools/MockLogSubscriber.h>
+#include <APLTestTools/TestHelpers.h>
+#include <APLTestTools/MockLogSubscriber.h>
 
 #include "SlaveTestObject.h"
 

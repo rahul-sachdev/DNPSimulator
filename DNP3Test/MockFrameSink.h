@@ -21,7 +21,7 @@
 
 #include <opendnp3/DNP3/ILinkContext.h>
 #include <opendnp3/DNP3/LinkLayerConstants.h>
-#include <opendnp3/APLTestTools/BufferTestObject.h>
+#include <APLTestTools/BufferTestObject.h>
 #include <boost/function.hpp>
 #include <queue>
 

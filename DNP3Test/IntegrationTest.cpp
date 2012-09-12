@@ -24,7 +24,7 @@
 #include <opendnp3/APL/PhysicalLayerFactory.h>
 #include <opendnp3/APL/IPhysicalLayerAsync.h>
 
-#include <opendnp3/APLTestTools/AsyncTestObjectASIO.h>
+#include <APLTestTools/AsyncTestObjectASIO.h>
 
 #include <opendnp3/DNP3/MasterStackConfig.h>
 #include <opendnp3/DNP3/SlaveStackConfig.h>

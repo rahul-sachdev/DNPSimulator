@@ -17,11 +17,11 @@
 #ifndef __VTO_INTEGRATION_TEST_BASE_H_
 #define __VTO_INTEGRATION_TEST_BASE_H_
 
-#include <opendnp3/APLTestTools/LogTester.h>
-#include <opendnp3/APLTestTools/MockCommandAcceptor.h>
-#include <opendnp3/APLTestTools/AsyncTestObjectASIO.h>
-#include <opendnp3/APLTestTools/PhysicalLayerWrapper.h>
-#include <opendnp3/APLTestTools/WrappedTcpPipe.h>
+#include <APLTestTools/LogTester.h>
+#include <APLTestTools/MockCommandAcceptor.h>
+#include <APLTestTools/AsyncTestObjectASIO.h>
+#include <APLTestTools/PhysicalLayerWrapper.h>
+#include <APLTestTools/WrappedTcpPipe.h>
 
 #include <opendnp3/APL/FlexibleDataObserver.h>
 #include <opendnp3/APL/LogToFile.h>

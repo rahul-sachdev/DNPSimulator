@@ -23,7 +23,7 @@
 #include <opendnp3/DNP3/LinkLayer.h>
 #include <opendnp3/DNP3/TransportLayer.h>
 
-#include <opendnp3/APLTestTools/MockUpperLayer.h>
+#include <APLTestTools/MockUpperLayer.h>
 
 namespace apl
 {

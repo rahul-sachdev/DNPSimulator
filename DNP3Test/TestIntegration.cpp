@@ -16,7 +16,7 @@
  */
 
 #include <boost/test/unit_test.hpp>
-#include <opendnp3/APLTestTools/TestHelpers.h>
+#include <APLTestTools/TestHelpers.h>
 
 #include <opendnp3/APL/Log.h>
 #include <opendnp3/APL/LogToStdio.h>

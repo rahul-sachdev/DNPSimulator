@@ -19,10 +19,10 @@
 #ifndef __INTEGRATION_TEST_H_
 #define __INTEGRATION_TEST_H_
 
-#include <opendnp3/APLTestTools/AsyncTestObjectASIO.h>
-#include <opendnp3/APLTestTools/LogTester.h>
-#include <opendnp3/APLTestTools/MockCommandAcceptor.h>
-#include <opendnp3/APLTestTools/FanoutDataObserver.h>
+#include <APLTestTools/AsyncTestObjectASIO.h>
+#include <APLTestTools/LogTester.h>
+#include <APLTestTools/MockCommandAcceptor.h>
+#include <APLTestTools/FanoutDataObserver.h>
 #include <opendnp3/APL/Loggable.h>
 
 #include <opendnp3/APL/FlexibleDataObserver.h>

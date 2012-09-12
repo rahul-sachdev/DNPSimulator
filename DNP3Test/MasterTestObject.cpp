@@ -19,7 +19,7 @@
 #include "MasterTestObject.h"
 
 #include <memory>
-#include <opendnp3/APLTestTools/BufferHelpers.h>
+#include <APLTestTools/BufferHelpers.h>
 #include <opendnp3/APL/ToHex.h>
 
 using namespace std;

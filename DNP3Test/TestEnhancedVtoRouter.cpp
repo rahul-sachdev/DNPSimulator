@@ -22,11 +22,11 @@
 #include <opendnp3/APL/Log.h>
 #include <opendnp3/APL/ToHex.h>
 
-#include <opendnp3/APLTestTools/BufferHelpers.h>
-#include <opendnp3/APLTestTools/LogTester.h>
-#include <opendnp3/APLTestTools/MockPhysicalLayerAsync.h>
-#include <opendnp3/APLTestTools/MockTimerSource.h>
-#include <opendnp3/APLTestTools/TestHelpers.h>
+#include <APLTestTools/BufferHelpers.h>
+#include <APLTestTools/LogTester.h>
+#include <APLTestTools/MockPhysicalLayerAsync.h>
+#include <APLTestTools/MockTimerSource.h>
+#include <APLTestTools/TestHelpers.h>
 
 #include <opendnp3/DNP3/EnhancedVtoRouter.h>
 #include <opendnp3/DNP3/VtoRouterSettings.h>

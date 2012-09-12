@@ -19,10 +19,10 @@
 #ifndef __MASTER_TEST_OBJECT_H_
 #define __MASTER_TEST_OBJECT_H_
 
-#include <opendnp3/APLTestTools/MockTimerSource.h>
+#include <APLTestTools/MockTimerSource.h>
 #include <opendnp3/APL/AsyncTaskScheduler.h>
 #include <opendnp3/APL/FlexibleDataObserver.h>
-#include <opendnp3/APLTestTools/LogTester.h>
+#include <APLTestTools/LogTester.h>
 #include <opendnp3/DNP3/Master.h>
 
 #include "MockAppLayer.h"

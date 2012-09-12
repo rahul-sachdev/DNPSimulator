@@ -18,7 +18,7 @@
 //
 #include "ResponseLoaderTestObject.h"
 
-#include <opendnp3/APLTestTools/BufferHelpers.h>
+#include <APLTestTools/BufferHelpers.h>
 #include <opendnp3/DNP3/APDU.h>
 #include <opendnp3/DNP3/ResponseLoader.h>
 #include <boost/test/unit_test.hpp>

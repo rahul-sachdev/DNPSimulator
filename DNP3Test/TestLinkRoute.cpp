@@ -19,7 +19,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include <opendnp3/DNP3/LinkRoute.h>
-#include <opendnp3/APLTestTools/TestHelpers.h>
+#include <APLTestTools/TestHelpers.h>
 
 #include <map>
 

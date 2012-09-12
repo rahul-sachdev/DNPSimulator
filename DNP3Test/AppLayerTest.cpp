@@ -18,7 +18,7 @@
 //
 #include "AppLayerTest.h"
 
-#include <opendnp3/APLTestTools/BufferHelpers.h>
+#include <APLTestTools/BufferHelpers.h>
 
 namespace apl
 {

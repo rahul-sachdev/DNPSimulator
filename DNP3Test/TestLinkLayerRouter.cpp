@@ -18,7 +18,7 @@
 //
 #include <boost/test/unit_test.hpp>
 #include <boost/bind.hpp>
-#include <opendnp3/APLTestTools/TestHelpers.h>
+#include <APLTestTools/TestHelpers.h>
 
 #include <opendnp3/APL/Exception.h>
 #include <opendnp3/APL/ToHex.h>

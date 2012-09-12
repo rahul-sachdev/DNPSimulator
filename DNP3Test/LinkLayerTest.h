@@ -19,9 +19,9 @@
 #ifndef __LINK_LAYER_TEST_H_
 #define __LINK_LAYER_TEST_H_
 
-#include <opendnp3/APLTestTools/LogTester.h>
-#include <opendnp3/APLTestTools/MockUpperLayer.h>
-#include <opendnp3/APLTestTools/MockTimerSource.h>
+#include <APLTestTools/LogTester.h>
+#include <APLTestTools/MockUpperLayer.h>
+#include <APLTestTools/MockTimerSource.h>
 
 #include <opendnp3/DNP3/LinkLayer.h>
 #include <opendnp3/DNP3/ILinkRouter.h>

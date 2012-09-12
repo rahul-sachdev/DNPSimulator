@@ -19,7 +19,7 @@
 
 
 #include <opendnp3/APL/RandomizedBuffer.h>
-#include <opendnp3/APLTestTools/MockPhysicalLayerMonitor.h>
+#include <APLTestTools/MockPhysicalLayerMonitor.h>
 
 #include "VtoIntegrationTestBase.h"
 

@@ -21,9 +21,9 @@
 
 #include <boost/asio.hpp>
 #include <boost/test/unit_test.hpp>
-#include <opendnp3/APLTestTools/TestHelpers.h>
+#include <APLTestTools/TestHelpers.h>
 
-#include <opendnp3/APLTestTools/BufferHelpers.h>
+#include <APLTestTools/BufferHelpers.h>
 #include <opendnp3/APL/ProtocolUtil.h>
 #include <opendnp3/APL/Exception.h>
 

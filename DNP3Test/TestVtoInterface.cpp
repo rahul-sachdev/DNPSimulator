@@ -25,8 +25,8 @@
 #include <opendnp3/APL/Log.h>
 #include <opendnp3/APL/LogToStdio.h>
 
-#include <opendnp3/APLTestTools/BufferHelpers.h>
-#include <opendnp3/APLTestTools/TestHelpers.h>
+#include <APLTestTools/BufferHelpers.h>
+#include <APLTestTools/TestHelpers.h>
 
 #include <opendnp3/DNP3/DNPConstants.h>
 #include <opendnp3/DNP3/VtoData.h>
