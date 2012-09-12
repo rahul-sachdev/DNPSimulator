@@ -300,8 +300,12 @@ DNP3Java/PythonDNP3.cpp: DNP3Java/JavaDNP3.i
 BUILT_SOURCES += DNP3Java/PythonDNP3.cpp
 endif
 
-nobase_pkginclude_HEADERS= \
-	version.hpp \
+aplheadersdir = $(pkgincludedir)/APL
+dnpheadersdir = $(pkgincludedir)/DNP3
+
+pkginclude_HEADERS = opendnp3/version.hpp
+
+aplheaders_HEADERS = \
 	opendnp3/APL/ASIOSerialHelpers.h \
 	opendnp3/APL/AsyncLayerInterfaces.h \
 	opendnp3/APL/AsyncResult.h \
@@ -418,7 +422,9 @@ nobase_pkginclude_HEADERS= \
 	opendnp3/APL/TrackingTaskGroup.h \
 	opendnp3/APL/Types.h \
 	opendnp3/APL/Uncopyable.h \
-	opendnp3/APL/Util.h \
+	opendnp3/APL/Util.h
+
+dnpheaders_HEADERS = \
 	opendnp3/DNP3/AlwaysOpeningVtoRouter.h \
 	opendnp3/DNP3/APDUConstants.h \
 	opendnp3/DNP3/APDU.h \
