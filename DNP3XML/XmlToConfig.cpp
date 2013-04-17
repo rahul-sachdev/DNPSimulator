@@ -126,7 +126,7 @@ AppConfig XmlToConfig::Convert(const APLXML_DNP::AppLayer_t& arCfg)
 MasterConfig XmlToConfig::Convert(const APLXML_DNP::Master_t& arCfg)
 {
 	MasterConfig cfg;
-	cfg.AllowTimeSync = true;
+	cfg.AllowTimeSync = arCfg.MasterSettings.AllowTimeSync;
 	cfg.DoUnsolOnStartup = arCfg.Unsol.DoTask;
 	cfg.EnableUnsol = arCfg.Unsol.Enable;
 	cfg.FragSize = arCfg.Stack.AppLayer.MaxFragSize;
