@@ -78,6 +78,8 @@ public:
 
 	void SetLowerLayer(ILowerLayer*);
 
+	void DoCork();
+	void UnCork();
 
 protected:
 
@@ -107,6 +109,9 @@ public:
 	void Send(const boost::uint8_t*, size_t);
 
 	void SetUpperLayer(IUpperLayer*);
+
+	virtual void DoCork() {};
+	virtual void UnCork() {};
 
 protected:
 

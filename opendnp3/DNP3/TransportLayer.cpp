@@ -42,7 +42,7 @@ TransportLayer::TransportLayer(apl::Logger* apLogger, size_t aFragSize) :
 	mTransmitter(apLogger, this, aFragSize),
 	mThisLayerUp(false)
 {
-
+	LOG_BLOCK(LEV_DEBUG, "Transport layer fragment size is " << aFragSize << " bytes");
 }
 
 ///////////////////////////////////////
@@ -70,6 +70,7 @@ void TransportLayer::ChangeState(TLS_Base* apNewState)
 
 void TransportLayer::TransmitAPDU(const boost::uint8_t* apData, size_t aNumBytes)
 {
+	LOG_BLOCK(LEV_DEBUG, "Transmitting APDU (" << aNumBytes << " bytes)");
 	mTransmitter.Send(apData, aNumBytes);
 }
 

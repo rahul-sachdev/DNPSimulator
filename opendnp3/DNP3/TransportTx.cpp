@@ -51,6 +51,9 @@ void TransportTx::Send(const boost::uint8_t* apData, size_t aNumBytes)
 	mNumBytesToSend = aNumBytes;
 	mNumBytesSent = 0;
 
+	LOG_BLOCK(LEV_WARNING, "Sending " << aNumBytes << " bytes in the transport layer");
+
+	//mpContext->DoCork();
 	this->CheckForSend();
 }
 
@@ -73,6 +76,7 @@ bool TransportTx::CheckForSend()
 	}
 	else {
 		mNumBytesSent = mNumBytesToSend = 0;
+		//mpContext->UnCork();
 		return true;
 	}
 }

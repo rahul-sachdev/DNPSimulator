@@ -44,7 +44,8 @@ public:
 
 	void StartRead();
 
-
+	void DoCork();
+	void UnCork();
 
 private:
 

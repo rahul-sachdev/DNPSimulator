@@ -69,6 +69,8 @@ public:
 
 	// ILinkRouter interface
 	void Transmit(const LinkFrame&);
+	void DoCork();
+	void UnCork();
 
 private:
 

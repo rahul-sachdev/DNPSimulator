@@ -34,6 +34,9 @@ public:
 	virtual ~ILinkRouter() {}
 
 	virtual void Transmit(const LinkFrame&) = 0;
+
+	virtual void DoCork() {};
+	virtual void UnCork() {};
 };
 
 }

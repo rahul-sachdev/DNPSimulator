@@ -59,6 +59,16 @@ public:
 	/* Events - NVII delegates from ILayerUp/ILayerDown and Events produced internally */
 	static std::string ToString(boost::uint8_t aHeader);
 
+	void DoCork() {
+		if (mpLowerLayer != NULL)
+			mpLowerLayer->DoCork();
+	}
+	
+	void UnCork() {
+		if (mpLowerLayer != NULL)
+			mpLowerLayer->UnCork();
+	}
+
 private:
 
 	//delegated to the states

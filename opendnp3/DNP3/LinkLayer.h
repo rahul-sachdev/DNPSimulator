@@ -119,6 +119,9 @@ public:
 		return mRetryRemaining;
 	}
 
+	void DoCork();
+	void UnCork();
+
 	LinkFrame mPriFrame;
 	LinkFrame mSecFrame;
 	LinkFrame mDelayedPriFrame;

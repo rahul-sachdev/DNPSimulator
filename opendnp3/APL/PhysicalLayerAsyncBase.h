@@ -117,6 +117,8 @@ public:
 
 	/* Actions taken by the states - These must be implemented by the concrete
 	classes inherited from this class */
+	virtual void DoCork() {}
+	virtual void UnCork() {}
 	virtual void DoOpen() = 0;
 	virtual void DoClose() = 0;
 	virtual void DoOpeningClose() {

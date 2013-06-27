@@ -35,7 +35,7 @@ VtoRouter::VtoRouter(const VtoRouterSettings& arSettings, Logger* apLogger, IVto
 	PhysicalLayerMonitor(apLogger, apPhysLayer, apTimerSrc, arSettings.OPEN_RETRY_MS),
 	IVtoCallbacks(arSettings.CHANNEL_ID),
 	mpVtoWriter(apWriter),
-	mReadBuffer(1024),
+	mReadBuffer(2048), // (1024),
 	mWriteData(0)
 {
 	assert(apLogger != NULL);

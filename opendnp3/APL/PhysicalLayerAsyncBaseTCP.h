@@ -39,6 +39,8 @@ public:
 	virtual ~PhysicalLayerAsyncBaseTCP() {}
 
 	/* Implement the shared client/server actions */
+	void DoCork();
+	void UnCork();
 	void DoClose();
 	void DoAsyncRead(boost::uint8_t*, size_t);
 	void DoAsyncWrite(const boost::uint8_t*, size_t);
@@ -53,6 +55,9 @@ protected:
 private:
 	void ShutdownSocket();
 
+	void PutACorkInIt(const boost::system::error_code& ec);
+	boost::asio::deadline_timer mTimer;
+	int mTimerState;
 };
 }
 

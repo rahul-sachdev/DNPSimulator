@@ -120,6 +120,16 @@ void LinkLayer::Transmit(const LinkFrame& arFrame)
 	mpRouter->Transmit(arFrame);
 }
 
+void LinkLayer::DoCork()
+{
+	mpRouter->DoCork();
+}
+
+void LinkLayer::UnCork()
+{
+	mpRouter->UnCork();
+}
+
 void LinkLayer::SendAck()
 {
 	mSecFrame.FormatAck(mCONFIG.IsMaster, false, mCONFIG.RemoteAddr, mCONFIG.LocalAddr);

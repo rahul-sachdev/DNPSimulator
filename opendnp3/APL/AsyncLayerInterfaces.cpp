@@ -77,6 +77,18 @@ void IUpperLayer::OnSendFailure()
 	this->_OnSendFailure();
 }
 
+void IUpperLayer::DoCork()
+{
+	assert(mpLowerLayer != NULL);
+	mpLowerLayer->DoCork();
+}
+
+void IUpperLayer::UnCork()
+{
+	assert(mpLowerLayer != NULL);
+	mpLowerLayer->UnCork();
+}
+
 //////////////////////////////////
 // ILowerLayer
 //////////////////////////////////

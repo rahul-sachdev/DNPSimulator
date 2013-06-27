@@ -37,12 +37,46 @@ namespace apl
 
 PhysicalLayerAsyncBaseTCP::PhysicalLayerAsyncBaseTCP(Logger* apLogger, boost::asio::io_service* apIOService) :
 	PhysicalLayerAsyncASIO(apLogger, apIOService),
-	mSocket(*apIOService)
+	mSocket(*apIOService),
+	mTimer(*apIOService),
+	mTimerState(0)
 {
 	//mSocket.set_option(ip::tcp::no_delay(true));
+	boost::system::error_code ec;
+	PutACorkInIt(ec);
 }
 
 /* Implement the actions */
+
+void PhysicalLayerAsyncBaseTCP::DoCork()
+{
+	LOG_BLOCK(LEV_WARNING, "Corking the TCP socket");
+	int one = 1;
+	setsockopt(mSocket.native(), IPPROTO_TCP, TCP_CORK, &one, sizeof(one));
+}
+
+void PhysicalLayerAsyncBaseTCP::UnCork()
+{
+	LOG_BLOCK(LEV_WARNING, "Uncorking the TCP socket");
+	int zero = 0;
+	setsockopt(mSocket.native(), IPPROTO_TCP, TCP_CORK, &zero, sizeof(zero));
+}
+
+void PhysicalLayerAsyncBaseTCP::PutACorkInIt(const boost::system::error_code& ec)
+{
+	UnCork();
+	if (ec == boost::asio::error::operation_aborted)
+		return;
+	DoCork();
+	mTimer.expires_from_now(boost::posix_time::milliseconds(500));
+	mTimer.async_wait(
+		boost::bind(
+			&PhysicalLayerAsyncBaseTCP::PutACorkInIt,
+			this,
+			_1
+		)
+	);
+}
 
 void PhysicalLayerAsyncBaseTCP::DoClose()
 {
@@ -62,6 +96,7 @@ void PhysicalLayerAsyncBaseTCP::DoAsyncRead(boost::uint8_t* apBuffer, size_t aMa
 
 void PhysicalLayerAsyncBaseTCP::DoAsyncWrite(const boost::uint8_t* apBuffer, size_t aNumBytes)
 {
+	LOG_BLOCK(LEV_WARNING, "Writing " << aNumBytes << " over the TCP socket");
 	async_write(mSocket, buffer(apBuffer, aNumBytes),
 	            boost::bind(&PhysicalLayerAsyncBaseTCP::OnWriteCallback,
 	                        this,

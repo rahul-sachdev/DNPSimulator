@@ -90,4 +90,14 @@ void LowerLayerToPhysAdapter::_Send(const boost::uint8_t* apData, size_t aNumByt
 	mpPhys->AsyncWrite(apData, aNumBytes);
 }
 
+void LowerLayerToPhysAdapter::DoCork()
+{
+	mpPhys->DoCork();
+}
+
+void LowerLayerToPhysAdapter::UnCork()
+{
+	mpPhys->UnCork();
+}
+
 }//end namespace

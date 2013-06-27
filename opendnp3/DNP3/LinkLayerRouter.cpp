@@ -187,6 +187,16 @@ void LinkLayerRouter::Transmit(const LinkFrame& arFrame)
 	}
 }
 
+void LinkLayerRouter::DoCork()
+{
+	mpPhys->DoCork();
+}
+
+void LinkLayerRouter::UnCork()
+{
+	mpPhys->UnCork();
+}
+
 void LinkLayerRouter::_OnSendSuccess()
 {
 	assert(mTransmitQueue.size() > 0);

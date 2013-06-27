@@ -126,6 +126,9 @@ public:
 	 * 						callbacks
 	 */
 	virtual void SetHandler(IHandlerAsync* apHandler) = 0;
+
+	virtual void DoCork() {};
+	virtual void UnCork() {};
 };
 
 };
