@@ -54,12 +54,12 @@ void PriStateBase::OnTimeout(LinkLayer* apLL)
 	throw InvalidStateException(LOCATION, this->Name());
 }
 
-void PriStateBase::SendConfirmed(LinkLayer*, const boost::uint8_t*, size_t)
+void PriStateBase::SendConfirmed(LinkLayer*, std::deque<CopyableBuffer>&)
 {
 	throw InvalidStateException(LOCATION, this->Name());
 }
 
-void PriStateBase::SendUnconfirmed(LinkLayer*, const boost::uint8_t*, size_t)
+void PriStateBase::SendUnconfirmed(LinkLayer*, std::deque<CopyableBuffer>&)
 {
 	throw InvalidStateException(LOCATION, this->Name());
 }
@@ -70,14 +70,15 @@ void PriStateBase::SendUnconfirmed(LinkLayer*, const boost::uint8_t*, size_t)
 
 PLLS_SecNotReset PLLS_SecNotReset::mInstance;
 
-void PLLS_SecNotReset::SendUnconfirmed(LinkLayer* apLL, const boost::uint8_t* apData, size_t aLength)
+void PLLS_SecNotReset::SendUnconfirmed(LinkLayer* apLL, std::deque<CopyableBuffer>& queue)
 {
-	apLL->SendUnconfirmedUserData(apData, aLength);
-
+	apLL->SendUnconfirmedUserData(queue);
 }
 
-void PLLS_SecNotReset::SendConfirmed(LinkLayer* apLL, const boost::uint8_t* apData, size_t aLength)
+void PLLS_SecNotReset::SendConfirmed(LinkLayer* apLL, std::deque<CopyableBuffer>& queue)
 {
+	// TODO
+#if 0
 	apLL->ResetRetry();
 	apLL->StartTimer();
 	apLL->ChangeState(PLLS_ResetLinkWait::Inst());
@@ -85,6 +86,7 @@ void PLLS_SecNotReset::SendConfirmed(LinkLayer* apLL, const boost::uint8_t* apDa
 	// what we'll send if we successfully reset link state
 	apLL->mDelayedPriFrame.FormatConfirmedUserData(apLL->mCONFIG.IsMaster, true, apLL->mCONFIG.RemoteAddr, apLL->mCONFIG.LocalAddr, apData, aLength);
 	apLL->SendResetLinks();
+#endif
 }
 
 ////////////////////////////////////////////////////////
@@ -93,19 +95,22 @@ void PLLS_SecNotReset::SendConfirmed(LinkLayer* apLL, const boost::uint8_t* apDa
 
 PLLS_SecReset PLLS_SecReset::mInstance;
 
-void PLLS_SecReset::SendUnconfirmed(LinkLayer* apLL, const boost::uint8_t* apData, size_t aLength)
+void PLLS_SecReset::SendUnconfirmed(LinkLayer* apLL, std::deque<CopyableBuffer>& queue)
 {
-	apLL->SendUnconfirmedUserData(apData, aLength);
+	apLL->SendUnconfirmedUserData(queue);
 }
 
-void PLLS_SecReset::SendConfirmed(LinkLayer* apLL, const boost::uint8_t* apData, size_t aLength)
+void PLLS_SecReset::SendConfirmed(LinkLayer* apLL, std::deque<CopyableBuffer>& queue)
 {
+	// TODO
+#if 0
 	apLL->ResetRetry();
 	apLL->StartTimer();
 	apLL->ChangeState(PLLS_ConfDataWait::Inst());
 
 	apLL->mDelayedPriFrame.FormatConfirmedUserData(apLL->mCONFIG.IsMaster, apLL->NextWriteFCB(), apLL->mCONFIG.RemoteAddr, apLL->mCONFIG.LocalAddr, apData, aLength);
 	apLL->SendDelayedUserData(apLL->NextWriteFCB());
+#endif
 }
 
 ////////////////////////////////////////////////////////

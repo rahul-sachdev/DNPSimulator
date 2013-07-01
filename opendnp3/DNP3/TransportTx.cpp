@@ -35,53 +35,51 @@ namespace dnp
 TransportTx::TransportTx(Logger* apLogger, TransportLayer* apContext, size_t aFragSize) :
 	Loggable(apLogger),
 	mpContext(apContext),
-	mBufferAPDU(aFragSize),
-	mBufferTPDU(TL_MAX_TPDU_LENGTH),
-	mNumBytesSent(0),
-	mNumBytesToSend(0),
 	mSeq(0)
 {}
 
 void TransportTx::Send(const boost::uint8_t* apData, size_t aNumBytes)
 {
 	assert(aNumBytes > 0);
-	assert(aNumBytes <= mBufferAPDU.Size());
+	mTpduBuffer.clear();
 
-	memcpy(mBufferAPDU, apData, aNumBytes);
-	mNumBytesToSend = aNumBytes;
-	mNumBytesSent = 0;
+	size_t numBytesQueued = 0;
 
-	this->CheckForSend();
-}
+	while (numBytesQueued < aNumBytes) {
+		// Determine how much size this TPDU needs
+		const size_t headerSize = 1;
+		const size_t payloadSize = std::min(aNumBytes - numBytesQueued, TL_MAX_TPDU_PAYLOAD);
+		const size_t tpduSize = headerSize + payloadSize;
 
-bool TransportTx::CheckForSend()
-{
-	size_t remainder = this->BytesRemaining();
+		// Allocate a buffer just large enough
+		CopyableBuffer tpdu(tpduSize);
+		
+		// Copy the application data into the transport layer context
+		memcpy(tpdu + 1, apData + numBytesQueued, payloadSize);
 
-	if(remainder > 0) {
-		size_t num_to_send = remainder < TL_MAX_TPDU_PAYLOAD ? remainder : TL_MAX_TPDU_PAYLOAD;
-		memcpy(mBufferTPDU + 1, mBufferAPDU + mNumBytesSent, num_to_send);
+		// Determine whether this is the FIRst and/or FINal transport segment
+		bool firFlag = (numBytesQueued == 0);
+		numBytesQueued += payloadSize;
+		bool finFlag = (numBytesQueued == aNumBytes);
 
-		bool fir = (mNumBytesSent == 0);
-		mNumBytesSent += num_to_send;
-		bool fin = (mNumBytesSent == mNumBytesToSend);
+		// Fill out the transport layer header
+		tpdu[0] = GetHeader(firFlag, finFlag, mSeq);
+		LOG_BLOCK(LEV_INTERPRET, "-> " << TransportLayer::ToString(tpdu[0]));
 
-		mBufferTPDU[0] = GetHeader(fir, fin, mSeq);
-		LOG_BLOCK(LEV_INTERPRET, "-> " << TransportLayer::ToString(mBufferTPDU[0]));
-		mpContext->TransmitTPDU(mBufferTPDU, num_to_send + 1);
-		return false;
+		// Add the transport packet to the outbound queue
+		mTpduBuffer.push_back(tpdu);
+
+		// Increment the persistent sequence counter in preparation for the next packet
+		mSeq = (mSeq + 1) & 63; // rollover the sequence number at 5 bits
 	}
-	else {
-		mNumBytesSent = mNumBytesToSend = 0;
-		return true;
-	}
+
+	mpContext->TransmitTPDU(mTpduBuffer);
 }
 
 bool TransportTx::SendSuccess()
 {
-	mSeq = (mSeq + 1) % 64;
-
-	return this->CheckForSend();
+	mTpduBuffer.clear();
+	return true;
 }
 
 boost::uint8_t TransportTx::GetHeader(bool aFir, bool aFin, int aSeq)
@@ -98,4 +96,6 @@ boost::uint8_t TransportTx::GetHeader(bool aFir, bool aFin, int aSeq)
 
 }
 }
+
+/* vim: set ts=4 sw=4: */
 

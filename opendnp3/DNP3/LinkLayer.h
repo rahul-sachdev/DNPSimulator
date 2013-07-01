@@ -20,6 +20,7 @@
 #define __LINK_LAYER_H_
 
 #include <opendnp3/APL/AsyncLayerInterfaces.h>
+#include <opendnp3/APL/CopyableBuffer.h>
 #include <opendnp3/APL/ITimerSource.h>
 #include <opendnp3/DNP3/ILinkContext.h>
 #include <opendnp3/DNP3/LinkConfig.h>
@@ -104,7 +105,7 @@ public:
 	void SendAck();
 	void SendLinkStatus();
 	void SendResetLinks();
-	void SendUnconfirmedUserData(const boost::uint8_t* apData, size_t aLength);
+	void SendUnconfirmedUserData(std::deque<apl::CopyableBuffer>&);
 	void SendDelayedUserData(bool aFCB);
 
 	void StartTimer();
@@ -122,6 +123,8 @@ public:
 	LinkFrame mPriFrame;
 	LinkFrame mSecFrame;
 	LinkFrame mDelayedPriFrame;
+
+	void Send(std::deque<apl::CopyableBuffer>&);
 
 private:
 
@@ -151,6 +154,8 @@ private:
 	ILinkRouter* mpRouter;
 	PriStateBase* mpPriState;
 	SecStateBase* mpSecState;
+
+	std::deque<LinkFrame> mTxBuffer;
 };
 
 }

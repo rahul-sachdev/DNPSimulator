@@ -16,6 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 //
+#include <opendnp3/APL/CopyableBuffer.h>
 #include <opendnp3/APL/Exception.h>
 #include <opendnp3/APL/Logger.h>
 #include <opendnp3/DNP3/DNPConstants.h>
@@ -138,11 +139,18 @@ void LinkLayer::SendResetLinks()
 	this->Transmit(mPriFrame);
 }
 
-void LinkLayer::SendUnconfirmedUserData(const boost::uint8_t* apData, size_t aLength)
+void LinkLayer::SendUnconfirmedUserData(std::deque<CopyableBuffer>& queue)
 {
-	mPriFrame.FormatUnconfirmedUserData(mCONFIG.IsMaster, mCONFIG.RemoteAddr, mCONFIG.LocalAddr, apData, aLength);
-	this->Transmit(mPriFrame);
-	this->DoSendSuccess();
+	std::deque<CopyableBuffer>::iterator it = queue.begin();
+	while (it != queue.end()) {
+		LinkFrame frame;
+		frame.FormatUnconfirmedUserData(mCONFIG.IsMaster, mCONFIG.RemoteAddr, mCONFIG.LocalAddr, it->Buffer(), it->Size());
+		mTxBuffer.push_back(frame);
+		it++;
+	}
+	// TODO
+	//this->Transmit(mTxBuffer);
+	//this->DoSendSuccess();
 }
 
 void LinkLayer::SendDelayedUserData(bool aFCB)
@@ -242,10 +250,12 @@ void LinkLayer::UnconfirmedUserData(bool aIsMaster, boost::uint16_t aDest, boost
 
 void LinkLayer::_Send(const boost::uint8_t* apData, size_t aDataLength)
 {
+	// TODO deprecate this function
+	assert(1 == 0);
 	if(!mIsOnline)
 		throw InvalidStateException(LOCATION, "LowerLayerDown");
-	if(mCONFIG.UseConfirms) mpPriState->SendConfirmed(this, apData, aDataLength);
-	else mpPriState->SendUnconfirmed(this, apData, aDataLength);
+	//if(mCONFIG.UseConfirms) mpPriState->SendConfirmed(this, apData, aDataLength);
+	//else mpPriState->SendUnconfirmed(this, apData, aDataLength);
 }
 
 void LinkLayer::OnTimeout()
@@ -253,6 +263,18 @@ void LinkLayer::OnTimeout()
 	assert(mpTimer);
 	mpTimer = NULL;
 	mpPriState->OnTimeout(this);
+}
+
+void LinkLayer::Send(std::deque<apl::CopyableBuffer>& queue)
+{
+	if (!mIsOnline)
+		throw InvalidStateException(LOCATION, "LowerLayerDown");
+	
+	if (mCONFIG.UseConfirms) {
+		// TODO - How the hell are we supposed to do this?
+	} else {
+		
+	}
 }
 
 }

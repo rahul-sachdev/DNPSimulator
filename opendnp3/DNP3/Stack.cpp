@@ -30,6 +30,7 @@ Stack::Stack(Logger* apLogger, ITimerSource* apTimerSrc, AppConfig aAppCfg, Link
 	mApplication(apLogger->GetSubLogger("app"), apTimerSrc, aAppCfg)
 {
 	mLink.SetUpperLayer(&mTransport);
+	mTransport.SetLinkLayer(&mLink);
 	mTransport.SetUpperLayer(&mApplication);
 }
 

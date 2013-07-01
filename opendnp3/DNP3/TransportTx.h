@@ -23,6 +23,7 @@
 #include <opendnp3/APL/Loggable.h>
 #include <opendnp3/APL/Types.h>
 #include <opendnp3/DNP3/TransportConstants.h>
+#include <deque>
 
 namespace apl
 {
@@ -47,21 +48,22 @@ public:
 	static boost::uint8_t GetHeader(bool aFir, bool aFin, int aSeq);
 
 private:
-
-	bool CheckForSend();
-
 	TransportLayer* mpContext;
 
-	CopyableBuffer mBufferAPDU;
-	CopyableBuffer mBufferTPDU;
-
-	size_t mNumBytesSent;
-	size_t mNumBytesToSend;
+	/**
+	 * A persistent sequence counter that is incremented by
+	 * TransportTx::Send().
+	 */
 	int mSeq;
 
-	size_t BytesRemaining() {
-		return mNumBytesToSend - mNumBytesSent;
-	}
+	/**
+	 * A queue of transport layer packets that are being processed
+	 * by the link layer.  This queue is built up by
+	 * TransportTx::Send() and cleared away by
+	 * TransportTx::SendSuccess().  Each transport packet is encoded
+	 * as a CopyableBuffer of the exact length required.
+	 */
+	std::deque<CopyableBuffer> mTpduBuffer;
 };
 
 }

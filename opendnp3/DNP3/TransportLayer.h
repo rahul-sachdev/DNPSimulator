@@ -23,6 +23,7 @@
 #include <opendnp3/DNP3/DNPConstants.h>
 #include <opendnp3/DNP3/TransportRx.h>
 #include <opendnp3/DNP3/TransportTx.h>
+#include <opendnp3/DNP3/LinkLayer.h>
 
 namespace apl
 {
@@ -48,13 +49,15 @@ public:
 	void ChangeState(TLS_Base* apNewState);
 
 	void TransmitAPDU(const boost::uint8_t* apData, size_t aNumBytes);
-	void TransmitTPDU(const boost::uint8_t* apData, size_t aNumBytes);
+	void TransmitTPDU(std::deque<CopyableBuffer>&);
 	void ReceiveAPDU(const boost::uint8_t* apData, size_t aNumBytes);
 	void ReceiveTPDU(const boost::uint8_t* apData, size_t aNumBytes);
 
 	bool ContinueSend(); // return true if
 	void SignalSendSuccess();
 	void SignalSendFailure();
+
+	void SetLinkLayer(LinkLayer *);
 
 	/* Events - NVII delegates from ILayerUp/ILayerDown and Events produced internally */
 	static std::string ToString(boost::uint8_t aHeader);
@@ -80,6 +83,7 @@ private:
 	TransportTx mTransmitter;
 
 	bool mThisLayerUp;
+	LinkLayer *mpLink;
 };
 
 }

@@ -40,9 +40,16 @@ TransportLayer::TransportLayer(apl::Logger* apLogger, size_t aFragSize) :
 	M_FRAG_SIZE(aFragSize),
 	mReceiver(apLogger, this, aFragSize),
 	mTransmitter(apLogger, this, aFragSize),
-	mThisLayerUp(false)
+	mThisLayerUp(false),
+	mpLink(NULL)
 {
 
+}
+
+void TransportLayer::SetLinkLayer(LinkLayer *apLink)
+{
+	assert(mpLink == NULL);
+	mpLink = apLink;
 }
 
 ///////////////////////////////////////
@@ -73,9 +80,13 @@ void TransportLayer::TransmitAPDU(const boost::uint8_t* apData, size_t aNumBytes
 	mTransmitter.Send(apData, aNumBytes);
 }
 
-void TransportLayer::TransmitTPDU(const boost::uint8_t* apData, size_t aNumBytes)
+void TransportLayer::TransmitTPDU(std::deque<CopyableBuffer>& queue)
 {
-	if(mpLowerLayer != NULL) mpLowerLayer->Send(apData, aNumBytes);
+	if (mpLowerLayer == NULL)
+		return;
+	
+	assert(mpLink != NULL);
+	mpLink->Send(queue);
 }
 
 void TransportLayer::ReceiveTPDU(const boost::uint8_t* apData, size_t aNumBytes)
