@@ -458,6 +458,122 @@ BOOST_AUTO_TEST_CASE(UnsolData)
 	BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //check that no more frags are sent
 }
 
+BOOST_AUTO_TEST_CASE(UnsolDataWithZeroLenObjectGroup)
+{
+	SlaveConfig cfg;
+	cfg.mDisableUnsol = false;
+	cfg.mUnsolMask = ClassMask(false, false, false);
+	cfg.mAllowTimeSync = false;
+	cfg.mEventBinary = GrpVar(2, 2);
+	cfg.mEventAnalog = GrpVar(32, 3);
+
+	SlaveTestObject t(cfg, LEV_DEBUG, true);
+
+	t.db.Configure(DT_BINARY, 5);
+	t.db.SetClass(DT_BINARY, 0, PC_CLASS_0);
+	t.db.SetClass(DT_BINARY, 1, PC_CLASS_0);
+	t.db.SetClass(DT_BINARY, 2, PC_CLASS_0);
+	t.db.SetClass(DT_BINARY, 3, PC_CLASS_0);
+	t.db.SetClass(DT_BINARY, 4, PC_CLASS_1);
+
+	t.db.Configure(DT_ANALOG, 16);
+	t.db.SetClass(DT_ANALOG, 0, PC_CLASS_0);
+	t.db.SetClass(DT_ANALOG, 1, PC_CLASS_0);
+	t.db.SetClass(DT_ANALOG, 2, PC_CLASS_0);
+	t.db.SetClass(DT_ANALOG, 3, PC_CLASS_0);
+	t.db.SetClass(DT_ANALOG, 4, PC_CLASS_0);
+	t.db.SetClass(DT_ANALOG, 5, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 6, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 7, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 8, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 9, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 10, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 11, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 12, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 13, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 14, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 15, PC_CLASS_1);
+	for (size_t pt = 5; pt < 16; pt++)
+		t.db.SetDeadband(DT_ANALOG, pt, 10000);
+
+	t.db.Configure(DT_COUNTER, 8);
+	for (size_t pt = 0; pt < 8; pt++)
+		t.db.SetClass(DT_COUNTER, pt, PC_CLASS_0);
+
+	t.db.Configure(DT_SETPOINT_STATUS, 2);
+	t.db.Configure(DT_CONTROL_STATUS, 2);
+
+	// do a transaction before the layer comes online to prove that the null transaction
+	// is occuring before unsol data is sent
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Binary(false, BQ_ONLINE), 0);
+		t.slave.GetDataObserver()->Update(Binary(false, BQ_ONLINE), 1);
+		t.slave.GetDataObserver()->Update(Binary(false, BQ_ONLINE), 2);
+		t.slave.GetDataObserver()->Update(Binary(false, BQ_ONLINE), 3);
+		t.slave.GetDataObserver()->Update(Binary(true,  BQ_ONLINE), 4);
+
+		t.slave.GetDataObserver()->Update(Analog(131072, AQ_ONLINE), 0);
+		t.slave.GetDataObserver()->Update(Analog(500000, AQ_ONLINE), 1);
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 2);
+		t.slave.GetDataObserver()->Update(Analog(400000, AQ_ONLINE), 3);
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 4);
+		t.slave.GetDataObserver()->Update(Analog(80,     AQ_ONLINE), 5);
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 6);
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 7);
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 8);
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 9);
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 10);
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 11);
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 12);
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 13);
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 14);
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 15);
+		
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 0);
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 1);
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 2);
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 3);
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 4);
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 5);
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 6);
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 7);
+	}
+
+	// Bring up the app layer
+	t.slave.OnLowerLayerUp();
+
+	// Receive the DEVICE_RESTART unsol message
+	BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
+
+	// Dispatch the data update event
+	BOOST_REQUIRE(t.mts.DispatchOne());
+
+	// Don't have the stack help us during this test	
+	t.app.DisableAutoSendCallback();
+
+	// Acknowledge the DEVICE_RESTART unsol message
+	t.slave.OnUnsolSendSuccess();
+	
+	// Set the start/stop indices
+	t.SendToSlave("C0 02 50 01 00 07 07 00");
+	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 00 00");
+	t.slave.OnSolSendSuccess();
+
+	// Enable unsolicited messages for classes 1 thru 3
+	std::cout << "Enabling unsolicted messages" << std::endl;
+	t.SendToSlave("C0 14 3C 04 06 3C 03 06 3C 02 06");
+	std::cout << "Transitioning state machine" << std::endl;
+	t.slave.OnSolSendSuccess();
+	std::cout << "Reading response" << std::endl;
+	BOOST_REQUIRE_EQUAL(t.Read(), "C1 81 00 00");
+
+	return;
+
+	// Receive the data update event
+	std::cout << t.Read() << std::endl;
+}
+
 BOOST_AUTO_TEST_CASE(UnsolEventBufferOverflow)
 {
 	SlaveConfig cfg;
