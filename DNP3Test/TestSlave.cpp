@@ -491,8 +491,8 @@ BOOST_AUTO_TEST_CASE(UnsolDataWithZeroLenObjectGroup)
 	t.db.SetClass(DT_ANALOG, 11, PC_CLASS_1);
 	t.db.SetClass(DT_ANALOG, 12, PC_CLASS_1);
 	t.db.SetClass(DT_ANALOG, 13, PC_CLASS_1);
-	t.db.SetClass(DT_ANALOG, 14, PC_CLASS_1);
-	t.db.SetClass(DT_ANALOG, 15, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 14, PC_CLASS_3);
+	t.db.SetClass(DT_ANALOG, 15, PC_CLASS_3);
 	for (size_t pt = 5; pt < 16; pt++)
 		t.db.SetDeadband(DT_ANALOG, pt, 10000);
 
@@ -502,47 +502,157 @@ BOOST_AUTO_TEST_CASE(UnsolDataWithZeroLenObjectGroup)
 
 	t.db.Configure(DT_SETPOINT_STATUS, 2);
 	t.db.Configure(DT_CONTROL_STATUS, 2);
-
+	
 	// do a transaction before the layer comes online to prove that the null transaction
 	// is occuring before unsol data is sent
 	{
 		Transaction tr(t.slave.GetDataObserver());
 		t.slave.GetDataObserver()->Update(Binary(false, BQ_ONLINE), 0);
-		t.slave.GetDataObserver()->Update(Binary(false, BQ_ONLINE), 1);
-		t.slave.GetDataObserver()->Update(Binary(false, BQ_ONLINE), 2);
-		t.slave.GetDataObserver()->Update(Binary(false, BQ_ONLINE), 3);
-		t.slave.GetDataObserver()->Update(Binary(true,  BQ_ONLINE), 4);
-
-		t.slave.GetDataObserver()->Update(Analog(131072, AQ_ONLINE), 0);
-		t.slave.GetDataObserver()->Update(Analog(500000, AQ_ONLINE), 1);
-		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 2);
-		t.slave.GetDataObserver()->Update(Analog(400000, AQ_ONLINE), 3);
-		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 4);
-		t.slave.GetDataObserver()->Update(Analog(80,     AQ_ONLINE), 5);
-		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 6);
-		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 7);
-		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 8);
-		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 9);
-		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 10);
-		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 11);
-		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 12);
-		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 13);
-		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 14);
-		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 15);
-
-		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 0);
-		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 1);
-		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 2);
-		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 3);
-		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 4);
-		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 5);
-		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 6);
-		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 7);
 	}
-
-	// Dispatch the data update event
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Binary(false, BQ_ONLINE), 1);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Binary(false, BQ_ONLINE), 2);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Binary(false, BQ_ONLINE), 3);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Binary(true,  BQ_ONLINE), 4);
+	}
 	BOOST_REQUIRE(t.mts.DispatchOne());
 
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(131072, AQ_ONLINE), 0);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(500000, AQ_ONLINE), 1);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 2);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(400000, AQ_ONLINE), 3);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 4);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(80,     AQ_ONLINE), 5);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 6);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 7);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 8);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 9);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 10);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 11);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 12);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 13);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 14);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 15);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 0);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 1);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 2);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 3);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 4);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 5);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 6);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 7);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	
 	// Bring up the app layer
 	t.slave.OnLowerLayerUp();
 
