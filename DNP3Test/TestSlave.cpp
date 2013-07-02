@@ -529,7 +529,7 @@ BOOST_AUTO_TEST_CASE(UnsolDataWithZeroLenObjectGroup)
 		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 13);
 		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 14);
 		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 15);
-		
+
 		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 0);
 		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 1);
 		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 2);
@@ -540,38 +540,47 @@ BOOST_AUTO_TEST_CASE(UnsolDataWithZeroLenObjectGroup)
 		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 7);
 	}
 
-	// Bring up the app layer
-	t.slave.OnLowerLayerUp();
-
-	// Receive the DEVICE_RESTART unsol message
-	BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
-
 	// Dispatch the data update event
 	BOOST_REQUIRE(t.mts.DispatchOne());
 
-	// Don't have the stack help us during this test	
-	t.app.DisableAutoSendCallback();
+	// Bring up the app layer
+	t.slave.OnLowerLayerUp();
 
-	// Acknowledge the DEVICE_RESTART unsol message
-	t.slave.OnUnsolSendSuccess();
+	// Disable spontaneous messages
+	t.SendToSlave("C0 15 3C 02 06 3C 03 06 3C 04 06");
+
+	// Receive the DEVICE_RESTART unsol message
+	BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
 	
-	// Set the start/stop indices
-	t.SendToSlave("C0 02 50 01 00 07 07 00");
+	// Response to disabling sponatenous messages
+	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00");
+
+	// Confirm
+	t.SendToSlave("D0 00");
+
+	// Function not supported
+	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 01");
+	
+	// Write
+	t.SendToSlave("C1 02 50 01 00 07 07 00");
+
+	// Response to write
 	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 00 00");
-	t.slave.OnSolSendSuccess();
 
-	// Enable unsolicited messages for classes 1 thru 3
-	std::cout << "Enabling unsolicted messages" << std::endl;
-	t.SendToSlave("C0 14 3C 04 06 3C 03 06 3C 02 06");
-	std::cout << "Transitioning state machine" << std::endl;
-	t.slave.OnSolSendSuccess();
-	std::cout << "Reading response" << std::endl;
-	BOOST_REQUIRE_EQUAL(t.Read(), "C1 81 00 00");
+	// Read class 0
+	t.SendToSlave("C2 01 3C 01 06");
 
-	return;
+	// Response to read class 0
+	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 00 00 01 02 00 00 04 01 01 01 01 81 1E 01 00 00 0F 01 00 00 02 00 01 20 A1 07 00 01 00 00 00 00 01 80 1A 06 00 01 00 00 00 00 01 50 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 14 01 00 00 07 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 0A 02 00 00 01 02 02 28 01 00 00 01 02 00 00 00 00 02 00 00 00 00");
 
-	// Receive the data update event
-	std::cout << t.Read() << std::endl;
+	// Enable spontaneous messages
+	t.SendToSlave("C3 14 3C 02 06 3C 03 06 3C 04 06");
+
+	// Response to enabling spontaneous messages
+	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 00 00");
+
+	// Read the unsolicited response
+	BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 00 00 02 02 17 01 04 81 00 00 00 00 00 00 20 03 17 0B 05 01 50 00 00 00 00 00 00 00 00 00 06 01 00 00 00 00 00 00 00 00 00 00 07 01 00 00 00 00 00 00 00 00 00 00 08 01 00 00 00 00 00 00 00 00 00 00 09 01 00 00 00 00 00 00 00 00 00 00 0A 01 00 00 00 00 00 00 00 00 00 00 0B 01 00 00 00 00 00 00 00 00 00 00 0C 01 00 00 00 00 00 00 00 00 00 00 0D 01 00 00 00 00 00 00 00 00 00 00 0E 01 00 00 00 00 00 00 00 00 00 00 0F 01 00 00 00 00 00 00 00 00 00 00");
 }
 
 BOOST_AUTO_TEST_CASE(UnsolEventBufferOverflow)
