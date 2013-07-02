@@ -261,15 +261,32 @@ IINField ResponseContext::Configure(const APDU& arRequest)
 void ResponseContext::SelectEvents(PointClass aClass, size_t aNum)
 {
 	size_t remain = aNum;
+	size_t numBinaryEvents = 0;
+	size_t numAnalogEvents = 0;
+	size_t numCounterEvents = 0;
+	size_t numVtoEvents = 0;
 
 	if (mBuffer.IsOverflow()) {
 		mTempIIN.SetEventBufferOverflow(true);
 	}
 
-	remain -= this->SelectEvents(aClass, mpRspTypes->mpEventBinary, mBinaryEvents, remain);
-	remain -= this->SelectEvents(aClass, mpRspTypes->mpEventAnalog, mAnalogEvents, remain);
-	remain -= this->SelectEvents(aClass, mpRspTypes->mpEventCounter, mCounterEvents, remain);
-	remain -= this->SelectVtoEvents(aClass, mpRspTypes->mpEventVto, remain);
+	numBinaryEvents  = this->SelectEvents(aClass, mpRspTypes->mpEventBinary, mBinaryEvents, remain);
+	remain -= numBinaryEvents;
+
+	numAnalogEvents  = this->SelectEvents(aClass, mpRspTypes->mpEventAnalog, mAnalogEvents, remain);
+	remain -= numBinaryEvents;
+
+	numCounterEvents = this->SelectEvents(aClass, mpRspTypes->mpEventCounter, mCounterEvents, remain);
+	remain -= numBinaryEvents;
+
+	numVtoEvents     = this->SelectVtoEvents(aClass, mpRspTypes->mpEventVto, remain);
+	remain -= numBinaryEvents;
+
+	LOG_BLOCK(LEV_DEBUG, "ResponseContext::SelectEvents(PointClass=" << aClass << ", size_t=" << aNum << ")");
+	LOG_BLOCK(LEV_DEBUG, "Selected: " << numBinaryEvents  << " binary event(s)");
+	LOG_BLOCK(LEV_DEBUG, "Selected: " << numAnalogEvents  << " analog event(s)");
+	LOG_BLOCK(LEV_DEBUG, "Selected: " << numCounterEvents << " counter event(s)");
+	LOG_BLOCK(LEV_DEBUG, "Selected: " << numVtoEvents     << " vto event(s)");
 }
 
 size_t ResponseContext::SelectVtoEvents(PointClass aClass, const SizeByVariationObject* apObj, size_t aNum)
@@ -305,10 +322,12 @@ void ResponseContext::LoadResponse(APDU& arAPDU)
 
 bool ResponseContext::SelectUnsol(ClassMask m)
 {
+	LOG_BLOCK(LEV_DEBUG, "ResponseContext::SelectUnsol(ClassMask)");
 	if(m.class1) this->SelectEvents(PC_CLASS_1);
 	if(m.class2) this->SelectEvents(PC_CLASS_2);
 	if(m.class3) this->SelectEvents(PC_CLASS_3);
 
+	LOG_BLOCK(LEV_DEBUG, "Selected events: " << mBuffer.NumSelected());
 	return mBuffer.NumSelected() > 0;
 }
 
@@ -323,6 +342,7 @@ bool ResponseContext::HasEvents(ClassMask m)
 
 void ResponseContext::LoadUnsol(APDU& arAPDU, const IINField& arIIN, ClassMask m)
 {
+	LOG_BLOCK(LEV_DEBUG, "ResponseContext::LoadUnsol(arAPDU, IINField, ClassMask)");
 	this->SelectUnsol(m);
 
 	arAPDU.Set(FC_UNSOLICITED_RESPONSE, true, true, true, true);

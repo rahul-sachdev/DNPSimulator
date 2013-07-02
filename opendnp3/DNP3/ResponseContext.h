@@ -334,36 +334,57 @@ bool ResponseContext::WriteStaticObjects(StreamObject<typename T::MeasType>* apO
 template <class T>
 bool ResponseContext::LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> >& arQueue)
 {
+	LOG_BLOCK(LEV_DEBUG, "ResponseContext::LoadEvents<" << typeid(T).name() << ">(APDU&, std::deque<EventRequest<T>>&)");
+
 	typename EvtItr< EventInfo<T> >::Type itr;
 	mBuffer.Begin(itr);
 	size_t remain = mBuffer.NumSelected(Convert(T::MeasEnum));
 
-	while (arQueue.size() > 0) {
+	while (arQueue.size() > 0 && remain > 0) {
 		/* Get the number of events requested */
 		EventRequest<T>& r = arQueue.front();
 
+		LOG_BLOCK(LEV_DEBUG, "[" << __LINE__ << "] " << arAPDU.ToString());
+		LOG_BLOCK(LEV_DEBUG, "[" << __LINE__ << "] arQueue.size() = " << arQueue.size());
+		LOG_BLOCK(LEV_DEBUG, "[" << __LINE__ << "] r.count = " << r.count);
+		LOG_BLOCK(LEV_DEBUG, "[" << __LINE__ << "] remain = " << remain);
+
 		if (r.count > remain) {
+			LOG_BLOCK(LEV_DEBUG, "[" << __LINE__ << "] r.count = remain");
 			r.count = remain;
 		}
 
+		LOG_BLOCK(LEV_DEBUG, "[" << __LINE__ << "] r.pObj->UseCTO() = " << r.pObj->UseCTO());
+
 		size_t written = r.pObj->UseCTO() ? this->IterateCTO<T>(r.pObj, r.count, itr, arAPDU) : this->IterateIndexed<T>(r, itr, arAPDU);
+		LOG_BLOCK(LEV_DEBUG, "[" << __LINE__ << "] written = " << written);
 		remain -= written;
+		LOG_BLOCK(LEV_DEBUG, "[" << __LINE__ << "] remain = " << remain);
 
 		if (written > 0) {
+			LOG_BLOCK(LEV_DEBUG, "[" << __LINE__ << "] at least one event loaded");
 			/* At least one event was loaded */
 			this->mLoadedEventData = true;
+		} else {
+			LOG_BLOCK(LEV_DEBUG, "[" << __LINE__ << "] no events loaded");
 		}
 
 		if (written == r.count) {
+			LOG_BLOCK(LEV_DEBUG, "[" << __LINE__ << "] all events written, finished with request");
 			/* all events were written, finished with request */
 			arQueue.pop_front();
-		}
-		else {
+		} else {
+			LOG_BLOCK(LEV_DEBUG, "[" << __LINE__ << "] more event data remains in the queue");
 			/* more event data remains in the queue */
 			r.count -= written;
+			LOG_BLOCK(LEV_DEBUG, "[" << __LINE__ << "] r.count = " << r.count);
+			LOG_BLOCK(LEV_DEBUG, "[" << __LINE__ << "] " << arAPDU.ToString());
 			return false;
 		}
 	}
+
+	LOG_BLOCK(LEV_DEBUG, "[" << __LINE__ << "] queue emptied");
+	LOG_BLOCK(LEV_DEBUG, "[" << __LINE__ << "] " << arAPDU.ToString());
 
 	return true;	// the queue has been exhausted on this iteration
 }
