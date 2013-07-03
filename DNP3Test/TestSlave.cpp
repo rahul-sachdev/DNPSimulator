@@ -490,7 +490,7 @@ BOOST_AUTO_TEST_CASE(UnsolDataWithZeroLenObjectGroup)
 	t.db.SetClass(DT_ANALOG, 10, PC_CLASS_1);
 	t.db.SetClass(DT_ANALOG, 11, PC_CLASS_1);
 	t.db.SetClass(DT_ANALOG, 12, PC_CLASS_1);
-	t.db.SetClass(DT_ANALOG, 13, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 13, PC_CLASS_2);
 	t.db.SetClass(DT_ANALOG, 14, PC_CLASS_3);
 	t.db.SetClass(DT_ANALOG, 15, PC_CLASS_3);
 	for (size_t pt = 5; pt < 16; pt++)
