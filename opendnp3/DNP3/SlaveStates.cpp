@@ -224,6 +224,7 @@ void AS_Idle::OnRequest(Slave* c, const APDU& arAPDU, SequenceInfo aSeqInfo)
 
 void AS_Idle::OnDataUpdate(Slave* c)
 {
+	LOGGER_BLOCK(c->mpLogger, LEV_DEBUG, "AS_Idle::OnDataUpdate(Slave*)");
 	c->FlushUpdates();
 
 	// start the unsol timer or act immediately if there's no pack timer
@@ -241,6 +242,7 @@ void AS_Idle::OnDataUpdate(Slave* c)
 
 void AS_Idle::OnUnsolExpiration(Slave* c)
 {
+	LOGGER_BLOCK(c->mpLogger, LEV_DEBUG, "AS_Idle::OnUnsolExpiration(Slave*)");
 	if (c->mStartupNullUnsol) {
 		if (c->mRspContext.HasEvents(c->mConfig.mUnsolMask)) {
 			ChangeState(c, AS_WaitForUnsolSuccess::Inst());
@@ -258,6 +260,7 @@ void AS_Idle::OnUnsolExpiration(Slave* c)
 
 void AS_Idle::OnUnknown(Slave* c)
 {
+	LOGGER_BLOCK(c->mpLogger, LEV_DEBUG, "AS_Idle::OnUnknown(Slave*)");
 	c->HandleUnknown();
 	ChangeState(c, AS_WaitForRspSuccess::Inst());
 	c->Send(c->mResponse);
@@ -269,12 +272,14 @@ AS_WaitForRspSuccess AS_WaitForRspSuccess::mInstance;
 
 void AS_WaitForRspSuccess::OnSolFailure(Slave* c)
 {
+	LOGGER_BLOCK(c->mpLogger, LEV_DEBUG, "AS_WaitForRspSuccess::OnSolFailure(Slave*)");
 	ChangeState(c, AS_Idle::Inst());
 	c->mRspContext.Reset();
 }
 
 void AS_WaitForRspSuccess::OnSolSendSuccess(Slave* c)
 {
+	LOGGER_BLOCK(c->mpLogger, LEV_DEBUG, "AS_WaitForRspSuccess::OnSolSendSuccess(Slave*)");
 	c->mRspContext.ClearWritten();
 
 	if (c->mRspContext.IsComplete()) {
@@ -292,6 +297,7 @@ void AS_WaitForRspSuccess::OnSolSendSuccess(Slave* c)
 // The callback may still succeed if
 void AS_WaitForRspSuccess::OnRequest(Slave* c, const APDU& arAPDU, SequenceInfo aSeqInfo)
 {
+	LOGGER_BLOCK(c->mpLogger, LEV_DEBUG, "AS_WaitForRspSuccess::OnSolOnRequest(Slave*)");
 	c->mpAppLayer->CancelResponse();
 	c->mRequest = arAPDU;
 	c->mSeqInfo = aSeqInfo;
@@ -304,6 +310,7 @@ AS_WaitForUnsolSuccess AS_WaitForUnsolSuccess::mInstance;
 
 void AS_WaitForUnsolSuccess::OnUnsolFailure(Slave* c)
 {
+	LOGGER_BLOCK(c->mpLogger, LEV_DEBUG, "AS_WaitForUnsolSuccess::OnUnsolFailure(Slave*)");
 	// if any unsol transaction fails, we re-enable the timer with the unsol retry delay
 	ChangeState(c, AS_Idle::Inst());
 	c->mRspContext.Reset();
@@ -312,12 +319,14 @@ void AS_WaitForUnsolSuccess::OnUnsolFailure(Slave* c)
 
 void AS_WaitForUnsolSuccess::OnUnsolSendSuccess(Slave* c)
 {
+	LOGGER_BLOCK(c->mpLogger, LEV_DEBUG, "AS_WaitForUnsolSuccess::OnUnsolSendSuccess(Slave*)");
 	ChangeState(c, AS_Idle::Inst());	// transition to the idle state
 	this->DoUnsolSuccess(c);
 }
 
 void AS_WaitForUnsolSuccess::OnRequest(Slave* c, const APDU& arAPDU, SequenceInfo aSeqInfo)
 {
+	LOGGER_BLOCK(c->mpLogger, LEV_DEBUG, "AS_WaitForUnsolSuccess::OnRequest(Slave*)");
 	if (arAPDU.GetFunction() == FC_READ) {
 		//read requests should be defered until after the unsol
 		c->mRequest = arAPDU;
@@ -337,6 +346,7 @@ AS_WaitForSolUnsolSuccess AS_WaitForSolUnsolSuccess::mInstance;
 
 void AS_WaitForSolUnsolSuccess::OnRequest(Slave* c, const APDU& arAPDU, SequenceInfo aSeqInfo)
 {
+	LOGGER_BLOCK(c->mpLogger, LEV_DEBUG, "AS_WaitForSolUnsolSuccess::OnRequest(Slave*)");
 	// Both channels are busy... buffer the request
 	c->mRequest = arAPDU;
 	c->mSeqInfo = aSeqInfo;
@@ -345,16 +355,19 @@ void AS_WaitForSolUnsolSuccess::OnRequest(Slave* c, const APDU& arAPDU, Sequence
 
 void AS_WaitForSolUnsolSuccess::OnSolFailure(Slave* c)
 {
+	LOGGER_BLOCK(c->mpLogger, LEV_DEBUG, "AS_WaitForSolUnsolSuccess::OnSolFailure(Slave*)");
 	ChangeState(c, AS_WaitForUnsolSuccess::Inst());
 }
 
 void AS_WaitForSolUnsolSuccess::OnSolSendSuccess(Slave* c)
 {
+	LOGGER_BLOCK(c->mpLogger, LEV_DEBUG, "AS_WaitForSolUnsolSuccess::OnSolSendSuccess(Slave*)");
 	ChangeState(c, AS_WaitForUnsolSuccess::Inst());
 }
 
 void AS_WaitForSolUnsolSuccess::OnUnsolFailure(Slave* c)
 {
+	LOGGER_BLOCK(c->mpLogger, LEV_DEBUG, "AS_WaitForSolUnsolSuccess::OnUnsolFailure(Slave*)");
 	ChangeState(c, AS_WaitForRspSuccess::Inst());
 	c->mRspContext.Reset();
 	if (c->mConfig.mUnsolRetryDelay > 0)
@@ -365,6 +378,7 @@ void AS_WaitForSolUnsolSuccess::OnUnsolFailure(Slave* c)
 
 void AS_WaitForSolUnsolSuccess::OnUnsolSendSuccess(Slave* c)
 {
+	LOGGER_BLOCK(c->mpLogger, LEV_DEBUG, "AS_WaitForSolUnsolSuccess::OnUnsolSendSuccess(Slave*)");
 	ChangeState(c, AS_WaitForRspSuccess::Inst());
 	this->DoUnsolSuccess(c);
 }

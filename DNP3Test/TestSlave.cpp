@@ -458,6 +458,241 @@ BOOST_AUTO_TEST_CASE(UnsolData)
 	BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //check that no more frags are sent
 }
 
+BOOST_AUTO_TEST_CASE(UnsolDataWithZeroLenObjectGroup)
+{
+	SlaveConfig cfg;
+	cfg.mDisableUnsol = false;
+	cfg.mUnsolMask = ClassMask(false, false, false);
+	cfg.mAllowTimeSync = false;
+	cfg.mEventBinary = GrpVar(2, 2);
+	cfg.mEventAnalog = GrpVar(32, 3);
+
+	SlaveTestObject t(cfg, LEV_DEBUG, true);
+
+	t.db.Configure(DT_BINARY, 5);
+	t.db.SetClass(DT_BINARY, 0, PC_CLASS_0);
+	t.db.SetClass(DT_BINARY, 1, PC_CLASS_0);
+	t.db.SetClass(DT_BINARY, 2, PC_CLASS_0);
+	t.db.SetClass(DT_BINARY, 3, PC_CLASS_0);
+	t.db.SetClass(DT_BINARY, 4, PC_CLASS_1);
+
+	t.db.Configure(DT_ANALOG, 16);
+	t.db.SetClass(DT_ANALOG, 0, PC_CLASS_0);
+	t.db.SetClass(DT_ANALOG, 1, PC_CLASS_0);
+	t.db.SetClass(DT_ANALOG, 2, PC_CLASS_0);
+	t.db.SetClass(DT_ANALOG, 3, PC_CLASS_0);
+	t.db.SetClass(DT_ANALOG, 4, PC_CLASS_0);
+	t.db.SetClass(DT_ANALOG, 5, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 6, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 7, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 8, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 9, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 10, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 11, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 12, PC_CLASS_1);
+	t.db.SetClass(DT_ANALOG, 13, PC_CLASS_2);
+	t.db.SetClass(DT_ANALOG, 14, PC_CLASS_3);
+	t.db.SetClass(DT_ANALOG, 15, PC_CLASS_3);
+	for (size_t pt = 5; pt < 16; pt++)
+		t.db.SetDeadband(DT_ANALOG, pt, 10000);
+
+	t.db.Configure(DT_COUNTER, 8);
+	for (size_t pt = 0; pt < 8; pt++)
+		t.db.SetClass(DT_COUNTER, pt, PC_CLASS_0);
+
+	t.db.Configure(DT_SETPOINT_STATUS, 2);
+	t.db.Configure(DT_CONTROL_STATUS, 2);
+	
+	// do a transaction before the layer comes online to prove that the null transaction
+	// is occuring before unsol data is sent
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Binary(false, BQ_ONLINE), 0);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Binary(false, BQ_ONLINE), 1);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Binary(false, BQ_ONLINE), 2);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Binary(false, BQ_ONLINE), 3);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Binary(true,  BQ_ONLINE), 4);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(131072, AQ_ONLINE), 0);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(500000, AQ_ONLINE), 1);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 2);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(400000, AQ_ONLINE), 3);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 4);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(80,     AQ_ONLINE), 5);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 6);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 7);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 8);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 9);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 10);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 11);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 12);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 13);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 14);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Analog(0,      AQ_ONLINE), 15);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 0);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 1);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 2);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 3);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 4);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 5);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 6);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	{
+		Transaction tr(t.slave.GetDataObserver());
+		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 7);
+	}
+	BOOST_REQUIRE(t.mts.DispatchOne());
+	
+	// Bring up the app layer
+	t.slave.OnLowerLayerUp();
+
+	// Disable spontaneous messages
+	t.SendToSlave("C0 15 3C 02 06 3C 03 06 3C 04 06");
+
+	// Receive the DEVICE_RESTART unsol message
+	BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
+	
+	// Response to disabling sponatenous messages
+	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00");
+
+	// Confirm
+	t.SendToSlave("D0 00");
+
+	// Function not supported
+	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 01");
+	
+	// Write
+	t.SendToSlave("C1 02 50 01 00 07 07 00");
+
+	// Response to write
+	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 00 00");
+
+	// Read class 0
+	t.SendToSlave("C2 01 3C 01 06");
+
+	// Response to read class 0
+	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 00 00 01 02 00 00 04 01 01 01 01 81 1E 01 00 00 0F 01 00 00 02 00 01 20 A1 07 00 01 00 00 00 00 01 80 1A 06 00 01 00 00 00 00 01 50 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 14 01 00 00 07 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 01 00 00 00 00 0A 02 00 00 01 02 02 28 01 00 00 01 02 00 00 00 00 02 00 00 00 00");
+
+	// Enable spontaneous messages
+	t.SendToSlave("C3 14 3C 02 06 3C 03 06 3C 04 06");
+
+	// Response to enabling spontaneous messages
+	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 00 00");
+
+	// Read the unsolicited response
+	BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 00 00 02 02 17 01 04 81 00 00 00 00 00 00 20 03 17 0B 05 01 50 00 00 00 00 00 00 00 00 00 06 01 00 00 00 00 00 00 00 00 00 00 07 01 00 00 00 00 00 00 00 00 00 00 08 01 00 00 00 00 00 00 00 00 00 00 09 01 00 00 00 00 00 00 00 00 00 00 0A 01 00 00 00 00 00 00 00 00 00 00 0B 01 00 00 00 00 00 00 00 00 00 00 0C 01 00 00 00 00 00 00 00 00 00 00 0D 01 00 00 00 00 00 00 00 00 00 00 0E 01 00 00 00 00 00 00 00 00 00 00 0F 01 00 00 00 00 00 00 00 00 00 00");
+}
+
 BOOST_AUTO_TEST_CASE(UnsolEventBufferOverflow)
 {
 	SlaveConfig cfg;
