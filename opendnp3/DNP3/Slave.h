@@ -177,6 +177,8 @@ private:
 	bool mHaveLastRequest;
 	APDU mLastRequest;						// APDU used to form responses
 
+	bool mFirstTimeSyncIssued;				// track whether a time sync has been issued
+
 	ITimeManager* mpTime;
 	CachedLogVariable mCommsStatus;
 
@@ -228,6 +230,7 @@ private:
 	// Task handlers
 
 	void ResetTimeIIN();
+	void RestartTimeSyncTimer();
 	ITimer* mpTimeTimer;
 
 	/**

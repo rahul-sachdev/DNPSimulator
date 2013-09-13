@@ -47,6 +47,7 @@ Slave::Slave(Logger* apLogger, IAppLayer* apAppLayer, ITimerSource* apTimerSrc, 
 	mRspContext(apLogger, apDatabase, &mRspTypes, arCfg.mEventMaxConfig),
 	mHaveLastRequest(false),
 	mLastRequest(arCfg.mMaxFragSize),
+	mFirstTimeSyncIssued(false),
 	mpTime(apTime),
 	mCommsStatus(apLogger, "comms_status"),
 	mDeferredUpdate(false),
@@ -599,6 +600,13 @@ void Slave::ResetTimeIIN()
 {
 	mpTimeTimer = NULL;
 	mIIN.SetNeedTime(true);
+	mFirstTimeSyncIssued = true;
+	RestartTimeSyncTimer();
+}
+
+void Slave::RestartTimeSyncTimer()
+{
+	mpTimeTimer = NULL;
 	mpTimeTimer = mpTimerSrc->Start(mConfig.mTimeSyncPeriod, boost::bind(&Slave::ResetTimeIIN, this));
 }
 

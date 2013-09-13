@@ -197,10 +197,10 @@ void AS_Closed::OnLowerLayerUp(Slave* c)
 {
 	// this is implemented as a simple timer because it can run if the slave is connected/disconnected etc
 	if (c->mConfig.mAllowTimeSync) {
-		static bool firstTimeSyncIssued = false;
-		if (c->mConfig.mResetTimeSyncOnDown || !firstTimeSyncIssued) {
+		if (c->mConfig.mResetTimeSyncOnDown || !c->mFirstTimeSyncIssued) {
 			c->ResetTimeIIN();
-			firstTimeSyncIssued = true;
+		} else if (!c->mConfig.mResetTimeSyncOnDown) {
+			c->RestartTimeSyncTimer();
 		}
 	}
 
