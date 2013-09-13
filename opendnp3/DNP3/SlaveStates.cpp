@@ -196,7 +196,13 @@ AS_Closed AS_Closed::mInstance;
 void AS_Closed::OnLowerLayerUp(Slave* c)
 {
 	// this is implemented as a simple timer because it can run if the slave is connected/disconnected etc
-	if (c->mConfig.mAllowTimeSync) c->ResetTimeIIN();
+	if (c->mConfig.mAllowTimeSync) {
+		static bool firstTimeSyncIssued = false;
+		if (c->mConfig.mResetTimeSyncOnDown || !firstTimeSyncIssued) {
+			c->ResetTimeIIN();
+			firstTimeSyncIssued = true;
+		}
+	}
 
 	ChangeState(c, AS_Idle::Inst());
 }

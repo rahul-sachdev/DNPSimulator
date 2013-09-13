@@ -44,6 +44,7 @@ SlaveConfig::SlaveConfig() :
 	mDisableUnsol(false),
 	mUnsolMask(true, true, true),
 	mAllowTimeSync(false),
+	mResetTimeSyncOnDown(true),
 	mTimeSyncPeriod(10 * 60 * 1000), //every 10 min
 	mUnsolPackDelay(200),
 	mUnsolRetryDelay(2000),

@@ -70,7 +70,6 @@ when the master requests class data or variation 0.
 struct SlaveConfig {
 	SlaveConfig();
 
-
 	// The maximum number of controls the slave will attempt to process from a single APDU
 	size_t mMaxControls;
 
@@ -83,6 +82,8 @@ struct SlaveConfig {
 	// if true, the slave will request time synchronization on an interval
 	bool mAllowTimeSync;
 
+	// if true, the slave will reset the time sync IIN whenever the stack goes down
+	bool mResetTimeSyncOnDown;
 
 	// The period of time sync interval in milliseconds
 	millis_t mTimeSyncPeriod;
@@ -92,7 +93,6 @@ struct SlaveConfig {
 
 	// How long the slave will wait before retrying an unsuccessful unsol response
 	millis_t mUnsolRetryDelay;
-
 
 	// The maximum fragment size the slave will use for data it sends
 	size_t mMaxFragSize;
@@ -116,7 +116,6 @@ struct SlaveConfig {
 
 	// The default group/variation to use for static setpoint status responses
 	GrpVar mStaticSetpointStatus;
-
 
 	// default event response types
 
