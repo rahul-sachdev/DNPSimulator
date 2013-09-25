@@ -94,4 +94,11 @@ void PhysicalLayerManager ::AddSerial(const std::string& arName, PhysLayerSettin
 	this->AddLayer(arName, s, pli);
 }
 
+void PhysicalLayerManager::CloseAllPhysicalLayers()
+{
+	for (NameToInstanceMap::iterator itr = this->mNameToInstanceMap.begin(); itr != mNameToInstanceMap.end(); itr++ ) {
+		itr->second.Close();
+	}
+}
+
 }

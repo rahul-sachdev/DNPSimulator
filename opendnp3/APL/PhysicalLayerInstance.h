@@ -48,6 +48,8 @@ public:
 
 	void Release();
 
+	void Close();
+
 private:
 
 	IPhysicalLayerAsyncFactory mFactoryAsync;

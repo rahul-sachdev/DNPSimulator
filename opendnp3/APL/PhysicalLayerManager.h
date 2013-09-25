@@ -46,6 +46,8 @@ public:
 
 	// Removes a physical layer and deletes it if the manager has ownership.
 	void Remove(const std::string& arName);
+
+	void CloseAllPhysicalLayers();
 };
 }
 

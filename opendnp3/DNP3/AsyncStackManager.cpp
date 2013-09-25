@@ -365,6 +365,11 @@ void AsyncStackManager::AddStackToChannel(const std::string& arStackName, Stack*
 	mStackMap[arStackName] = StackRecord(apStack, apChannel);
 }
 
+void AsyncStackManager::CloseAllPhysicalLayers()
+{
+	mMgr.CloseAllPhysicalLayers();
+}
+
 }
 }
 

@@ -55,5 +55,10 @@ IPhysicalLayerAsync*  PhysLayerInstance::GetLayer(Logger* apLogger, boost::asio:
 	return mpLayer;
 }
 
+void PhysLayerInstance::Close() {
+	if (mpLayer != NULL)
+		mpLayer->AsyncClose();
+}
+
 }
 

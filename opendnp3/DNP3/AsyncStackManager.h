@@ -320,6 +320,7 @@ private:
 
 	StackRecord GetStackRecordByName(const std::string& arName);
 
+	void CloseAllPhysicalLayers();
 };
 
 }
