@@ -269,6 +269,8 @@ public:
 		return mService.Get();
 	}
 
+	void CloseAllPhysicalLayers();
+
 private:
 
 	// Implement IThreadable
@@ -319,8 +321,6 @@ private:
 	LinkChannel* CreateChannel(const std::string& arName);
 
 	StackRecord GetStackRecordByName(const std::string& arName);
-
-	void CloseAllPhysicalLayers();
 };
 
 }
