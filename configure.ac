@@ -71,6 +71,7 @@ AC_CHECK_HEADERS([unistd.h]	,,AC_MSG_ERROR(missing header))
 
 AC_CHECK_LIB([c],	[atexit]		,,AC_MSG_ERROR(missing library))
 AC_CHECK_LIB([pthread],	[pthread_join]		,,AC_MSG_ERROR(missing library))
+AC_CHECK_LIB([rt],	[clock_gettime]		,,AC_MSG_ERROR(missing library))
 
 AC_PROG_AWK
 AC_PROG_CXX

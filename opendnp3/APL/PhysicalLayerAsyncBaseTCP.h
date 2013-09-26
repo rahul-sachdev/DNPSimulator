@@ -52,7 +52,6 @@ protected:
 
 private:
 	void ShutdownSocket();
-
 };
 }
 

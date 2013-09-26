@@ -37,6 +37,7 @@ PhysicalLayerAsyncTCPServer::PhysicalLayerAsyncTCPServer(Logger* apLogger, boost
 	: PhysicalLayerAsyncBaseTCP(apLogger, apIOService)
 	, mLocalEndpoint(arEndpoint)
 	, mAcceptor(*apIOService)
+	, mSocketCheckTimer(*apIOService)
 {
 	mLocalEndpoint.address( ResolveAddress(arAddress) );
 }
@@ -76,6 +77,7 @@ void PhysicalLayerAsyncTCPServer::CloseAcceptor()
 void PhysicalLayerAsyncTCPServer::DoOpenCallback()
 {
 	this->CloseAcceptor();
+	ArmSocketCheckTimer();
 }
 
 void PhysicalLayerAsyncTCPServer::DoOpeningClose()
@@ -88,6 +90,30 @@ void PhysicalLayerAsyncTCPServer::DoOpenSuccess()
 	LOG_BLOCK(LEV_INFO, "Accepted connection from: " << mRemoteEndpoint);
 }
 
+void PhysicalLayerAsyncTCPServer::ArmSocketCheckTimer()
+{
+	mSocketCheckTimer.expires_from_now(boost::posix_time::seconds(10));
+	mSocketCheckTimer.async_wait(
+		bind(
+			&PhysicalLayerAsyncTCPServer::SocketCheckTimerCallback,
+			this,
+			_1
+		)
+	);
 }
 
+void PhysicalLayerAsyncTCPServer::SocketCheckTimerCallback(const boost::system::error_code &arErr)
+{
+	if (arErr != 0)
+		return;
+
+	if (!mSocket.is_open())
+		return;
+
+	LOG_BLOCK(LEV_DEBUG, "Checking socket status via zero-length write()");
+	boost::asio::write(mSocket, boost::asio::buffer("", 0));
+	ArmSocketCheckTimer();
+}
+
+}
 /* vim: set ts=4 sw=4: */

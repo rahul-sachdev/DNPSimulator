@@ -19,6 +19,7 @@
 #define __PHYSICAL_LAYER_ASYNC_TCP_SERVER_H_
 
 #include <opendnp3/APL/PhysicalLayerAsyncBaseTCP.h>
+#include <opendnp3/APL/steady_timer.hpp>
 
 #include <boost/asio/ip/tcp.hpp>
 
@@ -39,10 +40,15 @@ public:
 private:
 	void CloseAcceptor();
 
+	void ArmSocketCheckTimer();
+	void SocketCheckTimerCallback(const boost::system::error_code &arErr);
+
 	boost::asio::ip::tcp::endpoint mLocalEndpoint;
 	boost::asio::ip::tcp::endpoint mRemoteEndpoint;
 
 	boost::asio::ip::tcp::acceptor mAcceptor;
+
+	steady_timer mSocketCheckTimer;
 };
 
 }
