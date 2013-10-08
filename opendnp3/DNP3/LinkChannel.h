@@ -60,10 +60,6 @@ public:
 	void RemoveStackFromChannel(const std::string& arStackName);
 	std::vector<std::string> StacksOnChannel();
 
-	std::string Name() {
-		return mName;
-	}
-
 	void AddPhysicalLayerObserver(IPhysicalLayerObserver* apObserver) {
 		this->AddObserver(apObserver);
 	}
@@ -82,7 +78,6 @@ public:
 
 private:
 
-	std::string mName;
 	AsyncTaskGroup* mpTaskGroup;
 
 	typedef std::map<std::string, StackRecord> StackMap;

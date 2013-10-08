@@ -48,7 +48,11 @@ class LinkLayerRouter : public PhysicalLayerMonitor, public IFrameSink, public I
 {
 public:
 
-	LinkLayerRouter(apl::Logger*, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);
+	LinkLayerRouter(apl::Logger*, const std::string& arName, IPhysicalLayerAsync*, ITimerSource*, millis_t aOpenRetry);
+
+	std::string Name() {
+		return mName;
+	}
 
 	// Ties the lower part of the link layer to the upper part
 	void AddContext(ILinkContext*, const LinkRoute& arRoute);
@@ -77,6 +81,7 @@ private:
 
 	void CheckForSend();
 
+	std::string mName;
 
 	typedef std::map<LinkRoute, ILinkContext*, LinkRoute::LessThan> AddressMap;
 	typedef std::deque<LinkFrame> TransmitQueue;

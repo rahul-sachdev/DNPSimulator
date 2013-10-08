@@ -27,7 +27,7 @@ LinkLayerRouterTest::LinkLayerRouterTest(FilterLevel aLevel, bool aImmediate) :
 	LogTester(aImmediate),
 	mts(),
 	phys(mLog.GetLogger(aLevel, "Physical")),
-	router(mLog.GetLogger(aLevel, "Router"), &phys, &mts, 100)
+	router(mLog.GetLogger(aLevel, "Router"), "router_test", &phys, &mts, 100)
 {
 
 }

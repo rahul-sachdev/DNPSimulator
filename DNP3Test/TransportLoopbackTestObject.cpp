@@ -48,7 +48,7 @@ TransportLoopbackTestObject::TransportLoopbackTestObject(
 	mLinkB(mpLogger, &mTimerSource, aCfgB),
 	mTransA(mpLogger),
 	mTransB(mpLogger),
-	mRouter(mpLogger, apPhys, &mTimerSource, 1000),
+	mRouter(mpLogger, "loopback_test", apPhys, &mTimerSource, 1000),
 	mUpperA(mpLogger),
 	mUpperB(mpLogger)
 {

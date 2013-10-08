@@ -26,7 +26,7 @@ namespace dnp
 {
 
 TransportIntegrationStack::TransportIntegrationStack(Logger* apLogger, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, LinkConfig aCfg) :
-	mRouter(apLogger, apPhys, apTimerSrc, 1000),
+	mRouter(apLogger, "integration", apPhys, apTimerSrc, 1000),
 	mLink(apLogger, apTimerSrc, aCfg),
 	mTransport(apLogger),
 	mUpper(apLogger)

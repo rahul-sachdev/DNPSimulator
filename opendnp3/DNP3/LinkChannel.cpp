@@ -33,8 +33,7 @@ namespace dnp
 
 LinkChannel::LinkChannel(Logger* apLogger, const std::string& arName, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, AsyncTaskGroup* apTaskGroup, millis_t aOpenRetry) :
 	Loggable(apLogger),
-	LinkLayerRouter(apLogger, apPhys, apTimerSrc, aOpenRetry),
-	mName(arName),
+	LinkLayerRouter(apLogger, arName, apPhys, apTimerSrc, aOpenRetry),
 	mpTaskGroup(apTaskGroup)
 {
 

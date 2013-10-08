@@ -33,9 +33,10 @@ namespace apl
 namespace dnp
 {
 
-LinkLayerRouter::LinkLayerRouter(apl::Logger* apLogger, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc, millis_t aOpenRetry) :
+LinkLayerRouter::LinkLayerRouter(apl::Logger* apLogger, const std::string& arName, IPhysicalLayerAsync* apPhys, ITimerSource* apTimerSrc, millis_t aOpenRetry) :
 	Loggable(apLogger),
 	PhysicalLayerMonitor(apLogger, apPhys, apTimerSrc, aOpenRetry),
+	mName(arName),
 	mReceiver(apLogger, this),
 	mTransmitting(false)
 {}
@@ -103,6 +104,7 @@ ILinkContext* LinkLayerRouter::GetDestination(boost::uint16_t aDest, boost::uint
 		LogEntry le(LEV_WARNING, mpLogger->GetName(), LOCATION, oss.str(), DLERR_UNKNOWN_ROUTE);
 		le.AddValue("SOURCE", aSrc);
 		le.AddValue("DESTINATION", aDest);
+		le.AddValue("PHYS_LAYER_NAME", mName);
 		mpLogger->Log(le);
 	}
 
