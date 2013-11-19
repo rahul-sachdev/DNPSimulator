@@ -33,10 +33,11 @@ using namespace std;
 namespace apl
 {
 
-PhysicalLayerAsyncTCPServer::PhysicalLayerAsyncTCPServer(Logger* apLogger, boost::asio::io_service* apIOService, const boost::asio::ip::tcp::endpoint& arEndpoint, const std::string& arAddress)
+PhysicalLayerAsyncTCPServer::PhysicalLayerAsyncTCPServer(Logger* apLogger, boost::asio::io_service* apIOService, const boost::asio::ip::tcp::endpoint& arEndpoint, const std::string& arAddress, bool aUseKeepAlives)
 	: PhysicalLayerAsyncBaseTCP(apLogger, apIOService)
 	, mLocalEndpoint(arEndpoint)
 	, mAcceptor(*apIOService)
+	, mUseKeepAlives(aUseKeepAlives)
 {
 	mLocalEndpoint.address( ResolveAddress(arAddress) );
 }
@@ -86,6 +87,11 @@ void PhysicalLayerAsyncTCPServer::DoOpeningClose()
 void PhysicalLayerAsyncTCPServer::DoOpenSuccess()
 {
 	LOG_BLOCK(LEV_INFO, "Accepted connection from: " << mRemoteEndpoint);
+	if (mUseKeepAlives) {
+		LOG_BLOCK(LEV_DEBUG, "Enabling keepalives on the socket connection to " << mRemoteEndpoint);
+		boost::asio::socket_base::keep_alive option(true);
+		mSocket.set_option(option);
+	}
 }
 
 }

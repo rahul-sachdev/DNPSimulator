@@ -28,9 +28,9 @@ namespace apl
 class PhysicalLayerAsyncTCPServer : public PhysicalLayerAsyncBaseTCP
 {
 public:
-	PhysicalLayerAsyncTCPServer(Logger*, boost::asio::io_service* apIOService, const boost::asio::ip::tcp::endpoint& arEndpoint, const std::string& arAddress);
+	PhysicalLayerAsyncTCPServer(Logger*, boost::asio::io_service* apIOService, const boost::asio::ip::tcp::endpoint& arEndpoint, const std::string& arAddress, bool aUseKeepAlives = false);
 
-	/* Implement the remainging actions */
+	/* Implement the remaining actions */
 	void DoOpen();
 	void DoOpeningClose(); //override this to cancel the acceptor instead of the socket
 	void DoOpenSuccess();
@@ -43,6 +43,7 @@ private:
 	boost::asio::ip::tcp::endpoint mRemoteEndpoint;
 
 	boost::asio::ip::tcp::acceptor mAcceptor;
+	bool mUseKeepAlives;
 };
 
 }

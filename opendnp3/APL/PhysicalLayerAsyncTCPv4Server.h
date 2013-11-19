@@ -28,7 +28,7 @@ namespace apl
 class PhysicalLayerAsyncTCPv4Server : public PhysicalLayerAsyncTCPServer
 {
 public:
-	PhysicalLayerAsyncTCPv4Server(Logger* apLogger, boost::asio::io_service* apIOService, const std::string& arAddress, boost::uint16_t aPort)
+	PhysicalLayerAsyncTCPv4Server(Logger* apLogger, boost::asio::io_service* apIOService, const std::string& arAddress, boost::uint16_t aPort, bool aUseKeepAlives = false)
 		: PhysicalLayerAsyncTCPServer(
 			apLogger,
 			apIOService,
@@ -36,7 +36,8 @@ public:
 				boost::asio::ip::tcp::v4(),
 				aPort
 			),
-			arAddress
+			arAddress,
+			aUseKeepAlives
 		)
 	{}
 };

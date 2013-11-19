@@ -29,7 +29,7 @@ namespace apl
 class PhysicalLayerAsyncTCPv4Client : public PhysicalLayerAsyncTCPClient
 {
 public:
-	PhysicalLayerAsyncTCPv4Client(Logger* apLogger, boost::asio::io_service* apIOService, const std::string& arAddress, boost::uint16_t aPort)
+	PhysicalLayerAsyncTCPv4Client(Logger* apLogger, boost::asio::io_service* apIOService, const std::string& arAddress, boost::uint16_t aPort, bool aUseKeepAlives = false)
 		: PhysicalLayerAsyncTCPClient(
 			apLogger,
 			apIOService,
@@ -37,7 +37,8 @@ public:
 				boost::asio::ip::tcp::v4(),
 				aPort
 			),
-			arAddress
+			arAddress,
+			aUseKeepAlives
 		)
 	{}
 };

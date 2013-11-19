@@ -57,25 +57,25 @@ IPhysicalLayerAsyncFactory PhysicalLayerXMLFactory :: GetAsync(const APLXML_Base
 IPhysicalLayerAsyncFactory PhysicalLayerXMLFactory :: GetAsync(const APLXML_Base::TCPv4Client_t* apCfg)
 {
 	boost::uint16_t port = boost::numeric::converter<boost::uint16_t, int>::convert(apCfg->Port);
-	return PhysicalLayerFactory::GetTCPv4ClientAsync(apCfg->Address, port);
+	return PhysicalLayerFactory::GetTCPv4ClientAsync(apCfg->Address, port, false);
 }
 
 IPhysicalLayerAsyncFactory PhysicalLayerXMLFactory :: GetAsync(const APLXML_Base::TCPv4Server_t* apCfg)
 {
 	boost::uint16_t port = boost::numeric::converter<boost::uint16_t, int>::convert(apCfg->Port);
-	return PhysicalLayerFactory::GetTCPv4ServerAsync(apCfg->Endpoint, port);
+	return PhysicalLayerFactory::GetTCPv4ServerAsync(apCfg->Endpoint, port, false);
 }
 
 IPhysicalLayerAsyncFactory PhysicalLayerXMLFactory :: GetAsync(const APLXML_Base::TCPv6Client_t* apCfg)
 {
 	boost::uint16_t port = boost::numeric::converter<boost::uint16_t, int>::convert(apCfg->Port);
-	return PhysicalLayerFactory::GetTCPv6ClientAsync(apCfg->Address, port);
+	return PhysicalLayerFactory::GetTCPv6ClientAsync(apCfg->Address, port, false);
 }
 
 IPhysicalLayerAsyncFactory PhysicalLayerXMLFactory :: GetAsync(const APLXML_Base::TCPv6Server_t* apCfg)
 {
 	boost::uint16_t port = boost::numeric::converter<boost::uint16_t, int>::convert(apCfg->Port);
-	return PhysicalLayerFactory::GetTCPv6ServerAsync(apCfg->Endpoint, port);
+	return PhysicalLayerFactory::GetTCPv6ServerAsync(apCfg->Endpoint, port, false);
 }
 
 SerialSettings GetSerialSettings(const APLXML_Base::Serial_t* apCfg)

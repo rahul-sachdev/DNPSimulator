@@ -61,28 +61,28 @@ void PhysicalLayerManager ::AddPhysicalLayer(const std::string& arName, PhysLaye
 
 void PhysicalLayerManager ::AddTCPv4Client(const std::string& arName, PhysLayerSettings s, const std::string& arAddr, boost::uint16_t aPort)
 {
-	IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetTCPv4ClientAsync(arAddr, aPort);
+	IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetTCPv4ClientAsync(arAddr, aPort, s.UseKeepAlives);
 	PhysLayerInstance pli(fac);
 	this->AddLayer(arName, s, pli);
 }
 
 void PhysicalLayerManager ::AddTCPv4Server(const std::string& arName, PhysLayerSettings s, const std::string& arEndpoint, boost::uint16_t aPort)
 {
-	IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetTCPv4ServerAsync(arEndpoint, aPort);
+	IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetTCPv4ServerAsync(arEndpoint, aPort, s.UseKeepAlives);
 	PhysLayerInstance pli(fac);
 	this->AddLayer(arName, s, pli);
 }
 
 void PhysicalLayerManager ::AddTCPv6Client(const std::string& arName, PhysLayerSettings s, const std::string& arAddr, boost::uint16_t aPort)
 {
-	IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetTCPv6ClientAsync(arAddr, aPort);
+	IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetTCPv6ClientAsync(arAddr, aPort, s.UseKeepAlives);
 	PhysLayerInstance pli(fac);
 	this->AddLayer(arName, s, pli);
 }
 
 void PhysicalLayerManager ::AddTCPv6Server(const std::string& arName, PhysLayerSettings s, const std::string& arEndpoint, boost::uint16_t aPort)
 {
-	IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetTCPv6ServerAsync(arEndpoint, aPort);
+	IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetTCPv6ServerAsync(arEndpoint, aPort, s.UseKeepAlives);
 	PhysLayerInstance pli(fac);
 	this->AddLayer(arName, s, pli);
 }

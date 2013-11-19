@@ -29,7 +29,7 @@ namespace apl
 class PhysicalLayerAsyncTCPClient : public PhysicalLayerAsyncBaseTCP
 {
 public:
-	PhysicalLayerAsyncTCPClient(Logger* apLogger, boost::asio::io_service* apIOService, const boost::asio::ip::tcp::endpoint& arEndpoint, const std::string& arAddress);
+	PhysicalLayerAsyncTCPClient(Logger* apLogger, boost::asio::io_service* apIOService, const boost::asio::ip::tcp::endpoint& arEndpoint, const std::string& arAddress, bool aUseKeepAlives = false);
 
 	/* Implement the remaining actions */
 	void DoOpen();
@@ -38,6 +38,7 @@ public:
 
 private:
 	boost::asio::ip::tcp::endpoint mRemoteEndpoint;
+	bool mUseKeepAlives;
 };
 
 }
