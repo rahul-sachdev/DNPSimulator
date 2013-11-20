@@ -36,13 +36,14 @@ PhysicalLayerAsyncTCPClient::PhysicalLayerAsyncTCPClient(Logger* apLogger, boost
 	: PhysicalLayerAsyncBaseTCP(apLogger, apIOService)
 	, mRemoteEndpoint(arEndpoint)
 	, mUseKeepAlives(aUseKeepAlives)
-{
-	mRemoteEndpoint.address( ResolveAddress(arAddress) );
-}
+	, mRemoteAddress(arAddress)
+{}
 
 /* Implement the actions */
 void PhysicalLayerAsyncTCPClient::DoOpen()
 {
+	/* Re-resolve the remote address each time just in case DNS shifts things on us */
+	mRemoteEndpoint.address( ResolveAddress(mRemoteAddress) );
 	mSocket.async_connect(mRemoteEndpoint,
 	                      boost::bind(&PhysicalLayerAsyncTCPClient::OnOpenCallback,
 	                                  this,

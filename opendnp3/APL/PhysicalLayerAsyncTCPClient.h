@@ -39,6 +39,7 @@ public:
 private:
 	boost::asio::ip::tcp::endpoint mRemoteEndpoint;
 	bool mUseKeepAlives;
+	std::string mRemoteAddress;
 };
 
 }
