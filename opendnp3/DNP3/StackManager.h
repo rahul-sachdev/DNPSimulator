@@ -51,7 +51,7 @@ class AsyncStackManager;
 class StackManager
 {
 public:
-	StackManager();
+	explicit StackManager(FilterLevel aLevel);
 	~StackManager();
 
 	void AddTCPClient(const std::string& arName,
