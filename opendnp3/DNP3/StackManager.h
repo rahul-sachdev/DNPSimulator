@@ -21,6 +21,7 @@
 #include <opendnp3/APL/CommandInterfaces.h>
 #include <opendnp3/APL/DataInterfaces.h>
 #include <opendnp3/APL/LogBase.h>
+#include <opendnp3/APL/LogToFile.h>
 #include <opendnp3/APL/PhysLayerSettings.h>
 #include <opendnp3/APL/SerialTypes.h>
 #include <opendnp3/DNP3/MasterStackConfig.h>
@@ -51,7 +52,7 @@ class AsyncStackManager;
 class StackManager
 {
 public:
-	explicit StackManager(FilterLevel aLevel);
+	StackManager(FilterLevel aLevel, const std::string& logFile);
 	~StackManager();
 
 	void AddTCPClient(const std::string& arName,
@@ -131,6 +132,7 @@ public:
 
 private:
 	EventLog* mpLog;
+	LogToFile* mpLogToFile;
 	AsyncStackManager* mpImpl;
 };
 

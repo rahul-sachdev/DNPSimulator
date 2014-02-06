@@ -24,9 +24,10 @@ namespace apl
 namespace dnp
 {
 
-StackManager::StackManager(FilterLevel aLevel)
-	: mpLog  ( new EventLog() )
-	, mpImpl ( new AsyncStackManager(mpLog->GetLogger(aLevel, "dnp")) )
+StackManager::StackManager(FilterLevel aLevel, const std::string& logFile)
+	: mpLog      ( new EventLog() )
+	, mpLogToFile( new LogToFile(mpLog, logFile) )
+	, mpImpl     ( new AsyncStackManager(mpLog->GetLogger(aLevel, "dnp")) )
 {}
 
 void StackManager::AddLogHook(ILogBase* apHook)
