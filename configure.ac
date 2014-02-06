@@ -35,7 +35,7 @@ if test "$ac_lcov_enabled" = yes; then
   AC_CHECK_PROGS(genhtml, genhtml)
   AC_CHECK_PROGS(gendesc, gendesc)
   AC_CHECK_PROGS(geninfo, geninfo)
-  if ! test "$lcov" || ! test "$genhtml" || ! test "$gendesc" || 
+  if ! test "$lcov" || ! test "$genhtml" || ! test "$gendesc" ||
      ! test "$geninfo"; then
     AC_MSG_ERROR([Could not find lcov utilities, do you have lcov installed?])
   fi
@@ -106,6 +106,9 @@ if test "$want_java" = yes; then
   else
     CPPFLAGS="$CPPFLAGS -I/usr/lib/jvm/default-java/include"
   fi
+  CFLAGS="-g -O2 -fno-strict-aliasing"
+  CXXFLAGS="-g -O2 -fno-strict-aliasing"
+
   AC_CHECK_HEADERS([jni.h]	,,AC_MSG_ERROR(missing header))
   AM_PROG_GCJ
 fi
