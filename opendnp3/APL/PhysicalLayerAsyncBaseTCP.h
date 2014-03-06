@@ -48,7 +48,8 @@ protected:
 	boost::asio::ip::tcp::socket mSocket;
 	void CloseSocket();
 
-	boost::asio::ip::address ResolveAddress(const std::string& arEndpoint);
+	boost::asio::ip::address ResolveAddress(const std::string& arEndpoint,
+			boost::system::error_code& ec);
 
 private:
 	void ShutdownSocket();

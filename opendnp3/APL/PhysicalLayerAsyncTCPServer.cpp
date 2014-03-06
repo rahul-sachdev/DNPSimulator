@@ -39,7 +39,13 @@ PhysicalLayerAsyncTCPServer::PhysicalLayerAsyncTCPServer(Logger* apLogger, boost
 	, mAcceptor(*apIOService)
 	, mUseKeepAlives(aUseKeepAlives)
 {
-	mLocalEndpoint.address( ResolveAddress(arAddress) );
+	boost::system::error_code ec;
+	boost::asio::ip::address addr = ResolveAddress(arAddress, ec);
+	if (ec) {
+		throw ArgumentException(LOCATION, "endpoint: " + arAddress + ", " + ec.message());
+	}
+
+	mLocalEndpoint.address(addr);
 }
 
 /* Implement the actions */

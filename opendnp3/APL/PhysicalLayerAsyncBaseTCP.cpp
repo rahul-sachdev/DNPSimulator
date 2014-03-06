@@ -91,16 +91,18 @@ void PhysicalLayerAsyncBaseTCP::ShutdownSocket()
 	if(ec) LOG_BLOCK(LEV_WARNING, "Error while shutting down socket: " << ec.message());
 }
 
-boost::asio::ip::address PhysicalLayerAsyncBaseTCP::ResolveAddress(const std::string& arEndpoint)
+boost::asio::ip::address PhysicalLayerAsyncBaseTCP::ResolveAddress(const std::string& arEndpoint,
+		boost::system::error_code& ec)
 {
 	LOG_BLOCK(LEV_DEBUG, "converting address '" << arEndpoint << "' to an IP address object");
 	try {
-		boost::system::error_code ec;
-		boost::asio::ip::address addr = boost::asio::ip::address::from_string(arEndpoint, ec);
-		if (ec) {
+		boost::system::error_code address_ec;
+		boost::asio::ip::address addr = boost::asio::ip::address::from_string(arEndpoint, address_ec);
+		if (address_ec) {
 			LOG_BLOCK(LEV_DEBUG, "unable to convert address to object");
 			throw ArgumentException(LOCATION, "endpoint: " + arEndpoint + " is invalid");
 		}
+
 		LOG_BLOCK(LEV_DEBUG, "address converted to object: " << addr.to_string());
 		if (addr.is_v6()) {
 			boost::asio::ip::address_v6 addrv6(addr.to_v6());
@@ -110,10 +112,15 @@ boost::asio::ip::address PhysicalLayerAsyncBaseTCP::ResolveAddress(const std::st
 		return addr;
 	} catch (...) {
 		LOG_BLOCK(LEV_DEBUG, "attempting to resolve address '" << arEndpoint << "'");
+
 		boost::asio::io_service                  io_service;
 		boost::asio::ip::tcp::resolver           resolver(io_service);
 		boost::asio::ip::tcp::resolver::query    query(arEndpoint, "");
-		boost::asio::ip::tcp::resolver::iterator iter = resolver.resolve(query);
+		boost::asio::ip::tcp::resolver::iterator iter = resolver.resolve(query, ec);
+
+		// On failure to resolve
+		if (ec) return boost::asio::ip::address();
+
 		boost::asio::ip::tcp::resolver::iterator end;
 		while (iter != end)
 		{
@@ -126,8 +133,6 @@ boost::asio::ip::address PhysicalLayerAsyncBaseTCP::ResolveAddress(const std::st
 			}
 			return ep.address();
 		}
-		LOG_BLOCK(LEV_DEBUG, "unable to resolve address '" << arEndpoint << "'")
-		throw ArgumentException(LOCATION, "endpoint: " + arEndpoint + " is invalid");
 	}
 }
 

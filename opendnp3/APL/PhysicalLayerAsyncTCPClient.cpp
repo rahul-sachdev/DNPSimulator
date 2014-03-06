@@ -43,11 +43,18 @@ PhysicalLayerAsyncTCPClient::PhysicalLayerAsyncTCPClient(Logger* apLogger, boost
 void PhysicalLayerAsyncTCPClient::DoOpen()
 {
 	/* Re-resolve the remote address each time just in case DNS shifts things on us */
-	mRemoteEndpoint.address( ResolveAddress(mRemoteAddress) );
-	mSocket.async_connect(mRemoteEndpoint,
-	                      boost::bind(&PhysicalLayerAsyncTCPClient::OnOpenCallback,
-	                                  this,
-	                                  boost::asio::placeholders::error));
+	boost::system::error_code ec;
+	boost::asio::ip::address addr = ResolveAddress(mRemoteAddress, ec);
+	if (ec) {
+		OnOpenCallback(ec);
+	}
+	else {
+		mRemoteEndpoint.address(addr);
+		mSocket.async_connect(mRemoteEndpoint,
+	                      	  boost::bind(&PhysicalLayerAsyncTCPClient::OnOpenCallback,
+	                      			  	  this,
+	                      			  	  boost::asio::placeholders::error));
+	}
 }
 
 void PhysicalLayerAsyncTCPClient::DoOpeningClose()
