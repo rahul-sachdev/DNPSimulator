@@ -335,6 +335,7 @@ void AS_WaitForUnsolSuccess::OnRequest(Slave* c, const APDU& arAPDU, SequenceInf
 	LOGGER_BLOCK(c->mpLogger, LEV_DEBUG, "AS_WaitForUnsolSuccess::OnRequest(Slave*)");
 	if (arAPDU.GetFunction() == FC_READ) {
 		//read requests should be defered until after the unsol
+		c->mpAppLayer->CancelUnsolicitedRetries();
 		c->mRequest = arAPDU;
 		c->mSeqInfo = aSeqInfo;
 		c->mDeferredRequest = true;

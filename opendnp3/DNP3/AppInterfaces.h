@@ -103,6 +103,13 @@ public:
 		4.2.1 - ReadRules - Rule 1
 	*/
 	virtual void CancelResponse() = 0;
+
+	/**
+		Cancel a running unsolicited transaction
+
+		This behavior is necessary so that retries can be aborted if a READ is received
+	*/
+	virtual void CancelUnsolicitedRetries() = 0;
 };
 
 

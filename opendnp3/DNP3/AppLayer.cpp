@@ -88,6 +88,11 @@ void AppLayer::CancelResponse()
 	mSolicited.Cancel();
 }
 
+void AppLayer::CancelUnsolicitedRetries()
+{
+	mUnsolicited.CancelRetries();
+}
+
 ////////////////////
 // External events
 ////////////////////

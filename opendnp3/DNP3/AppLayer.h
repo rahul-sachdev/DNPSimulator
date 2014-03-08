@@ -65,6 +65,7 @@ public:
 	void SendResponse(APDU&);
 	void SendRequest(APDU&);
 	void CancelResponse();
+	void CancelUnsolicitedRetries();
 
 private:
 

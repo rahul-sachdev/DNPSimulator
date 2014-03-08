@@ -50,8 +50,10 @@ public:
 	void SendUnsolicited(APDU&);
 	void SendRequest(APDU&);
 	void CancelResponse();
+	void CancelUnsolicitedRetries();
 
 	size_t mNumCancel;
+	size_t mNumCancelUnsolicited;
 
 	void EnableAutoSendCallback(bool aIsSuccess);
 	void DisableAutoSendCallback();
