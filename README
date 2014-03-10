@@ -368,3 +368,32 @@ installed.  Enable the build tree to create the Python library:
 The Python library is called pyopendnp3.  The Python class and shared
 library are installed to the 'opendnp3' package directory.
 
+## Generate Debian Package ##
+*Dependencies -- once per compile machine*
+sudo apt-get install -y \
+    dh-make devscripts dh-autoreconf \
+    libboost-all-dev \
+    oracle-java7-installer \
+    swig
+
+*Common variables used below*
+export PN="opendnp3"
+export PV="1.1.2"
+export P="${PN}-${PV}"
+export ORIG_TARBALL="${PN}_${PV}.orig.tar.gz"
+
+# Step 1 - create the .orig.tar.gz file
+git clone github:sentient-energy/dnp3.git ${P}
+rm -rf ${P}/debian/ ${P}/.git
+tar cfz ${ORIG_TARBALL} ${P}
+rm -rf ${P}
+
+# Step 2 - create the DEB(s)
+git clone github:sentient-energy/dnp3.git ${P}
+rm -rf ${P}/.git
+cd ${P}
+debuild -uc -us
+
+# Step 3 - get the DEB(s)
+cd ..
+ls -la *.deb
