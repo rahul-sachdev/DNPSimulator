@@ -1,0 +1,14 @@
+Source: opendnp3
+Section: misc
+Priority: extra
+Maintainer: Chris Verges <cverges@sentient-energy.com>
+Build-Depends: autotools-dev, dh-autoreconf, debhelper (>= 8.0.0), libboost1.46-all-dev | libboost-all-dev, default-jvm | oracle-java7-installer, swig
+Standards-Version: 3.9.2
+Homepage: https://github.com/cverges/dnp3
+
+Package: opendnp3
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Open source DNP3 stack
+ The OpenDNP3 project provides an open source DNP3 implementation.
+

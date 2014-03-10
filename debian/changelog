@@ -1,0 +1,53 @@
+opendnp3 (1.1.2-0sentient0) unstable; urgency=low
+
+  * Fixed unsolicited message conformance issue
+  * Enabled logging to file within Java StackManager
+  * Disabled strict aliasing optimization as per Swig recommendations
+  * Handled case where host name resolution fails
+
+ -- Chris Verges <cverges@sentient-energy.com>  Mon, 10 Mar 2014 13:48:00 -0800
+
+opendnp3 (1.1.1-0sentient0) unstable; urgency=low
+
+  * Fixed 'Time Needed' IIN bit algorithm to handle COMMS_DOWN more gracefully
+  * Added name of the physical layer in unknown route log entries
+  * Added SO_KEEPALIVE support for TCP sockets
+  * Fixed DNS resolution of endpoint addresses
+
+ -- Chris Verges <cverges@sentient-energy.com>  Wed, 20 Nov 2013 00:13:00 -0700
+
+opendnp3 (1.1.0-0sentient0) unstable; urgency=low
+
+  * Added AddTCP[Client|Server] API for backwards compatibility
+
+ -- Chris Verges <cverges@sentient-energy.com>  Tue, 16 Apr 2013 21:41:41 -0700
+
+opendnp3 (1.1.0pre6-0sentient0) unstable; urgency=low
+
+  * Added AddTCP[Client|Server] API for backwards compatibility
+
+ -- Chris Verges <cverges@sentient-energy.com>  Wed, 12 Sep 2012 00:31:05 -0700
+
+opendnp3 (1.1.0pre5-0sentient0) unstable; urgency=low
+
+  * Added AddTCP[Client|Server] API for backwards compatibility
+
+ -- Chris Verges <cverges@sentient-energy.com>  Tue, 11 Sep 2012 11:07:34 -0700
+
+opendnp3 (1.1.0pre4-0sentient0) unstable; urgency=low
+
+  * Added TCPv6[Client|Server] headers for development
+
+ -- Chris Verges <cverges@sentient-energy.com>  Wed, 18 Jul 2012 16:28:42 -0700
+
+opendnp3 (1.1.0pre3-0sentient0) unstable; urgency=low
+
+  * Reverted TCPClient/TCPServer XML tags
+
+ -- Chris Verges <cverges@sentient-energy.com>  Sat, 14 Jul 2012 02:47:48 -0700
+
+opendnp3 (1.1.0pre2-0sentient0) unstable; urgency=low
+
+  * Initial release.
+
+ -- Chris Verges <cverges@sentient-energy.com>  Sat, 14 Jul 2012 00:32:00 -0700

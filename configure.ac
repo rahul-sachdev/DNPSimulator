@@ -102,9 +102,9 @@ AC_ARG_WITH([java],
 if test "$want_java" = yes; then
   want_swig="yes"
   if test "x$ac_java_path" != "x"; then
-    CPPFLAGS="$CPPFLAGS -I$ac_java_path"
+    CPPFLAGS="$CPPFLAGS -I$ac_java_path -I$ac_java_path/linux"
   else
-    CPPFLAGS="$CPPFLAGS -I/usr/lib/jvm/default-java/include"
+    CPPFLAGS="$CPPFLAGS -I/usr/lib/jvm/default-java/include -I/usr/lib/jvm/default-java/include/linux -I/usr/lib/jvm/java-7-oracle/include -I/usr/lib/jvm/java-7-oracle/include/linux"
   fi
   CFLAGS="-g -O2 -fno-strict-aliasing"
   CXXFLAGS="-g -O2 -fno-strict-aliasing"

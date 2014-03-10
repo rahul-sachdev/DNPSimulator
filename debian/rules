@@ -1,0 +1,30 @@
+#!/usr/bin/make -f
+
+
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+export MAKEFLAGS="-j8"
+
+DEB_CONFIGURE_FLAGS = --with-java=/usr/lib/jvm/java-7-oracle/include
+
+%:
+	dh $@ --parallel --max-parallel=8 --with=autoreconf
+
+override_dh_auto_configure:
+	dh_auto_configure -- $(DEB_CONFIGURE_FLAGS)
+
+override_dh_auto_build:
+	dh_auto_build
+
+override_dh_auto_install:
+	# Install the Java files first, since dh_auto_install will
+	# attempt to package them
+	#install -d $(CURDIR)/debian/tmp/usr/share/java
+	#find $(CURDIR)/java -name "*.jar" -exec install -m 0644 {} $(CURDIR)/debian/tmp/usr/share/java \;
+	# Now run the regular deb packaging sequence
+	dh_auto_install
