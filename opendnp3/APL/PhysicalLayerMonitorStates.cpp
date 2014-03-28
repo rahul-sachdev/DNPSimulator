@@ -355,8 +355,8 @@ void MonitorStateWaiting::OnStartOneRequest(PhysicalLayerMonitor* apContext)
 
 void MonitorStateWaiting::OnOpenTimeout(PhysicalLayerMonitor* apContext)
 {
-	MonitorStateActions::AsyncOpen(apContext);
 	MonitorStateActions::ChangeState(apContext, MonitorStateOpening::Inst());
+	MonitorStateActions::AsyncOpen(apContext);
 }
 
 /* --- WaitingOne --- */
@@ -370,8 +370,8 @@ void MonitorStateWaitingOne::OnStartRequest(PhysicalLayerMonitor* apContext)
 
 void MonitorStateWaitingOne::OnOpenTimeout(PhysicalLayerMonitor* apContext)
 {
-	MonitorStateActions::AsyncOpen(apContext);
 	MonitorStateActions::ChangeState(apContext, MonitorStateOpeningOne::Inst());
+	MonitorStateActions::AsyncOpen(apContext);
 }
 
 /* --- Closing --- */
