@@ -1,3 +1,10 @@
+opendnp3 (1.1.3-0sentient0) unstable; urgency=low
+
+  * Fixed incorrect handling of socket open failure when an async
+    open results in host name resolution failure.
+
+ -- Hung Le <hle@sentient-energy.com>  Mon, 28 Mar 2014 12:20:00 -0800
+
 opendnp3 (1.1.2-0sentient0) unstable; urgency=low
 
   * Fixed unsolicited message conformance issue
