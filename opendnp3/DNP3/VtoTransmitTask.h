@@ -20,6 +20,7 @@
 
 #include <opendnp3/DNP3/EventBuffers.h>
 #include <opendnp3/DNP3/MasterTaskBase.h>
+#include <opendnp3/DNP3/VtoData.h>
 
 #include <boost/function.hpp>
 
@@ -40,8 +41,7 @@ public:
 
 	/**
 	 * Creates a new VtoTransmitTask instance.  The internal buffer
-	 * size is set to be an order of magnitude larger than a single
-	 * fragment size, to prevent back-ups in the user application.
+	 * size is set based on a single fragment size.
 	 *
 	 * @param log		the Logger that the task should use for
 	 * 					message reporting
@@ -51,7 +51,7 @@ public:
 	 */
 	VtoTransmitTask(Logger* log, size_t fragSize, bool aUseNonStandardCode) :
 		MasterTaskBase(log),
-		mBuffer(fragSize * 10),
+		mBuffer((fragSize / VtoData::MAX_SIZE) * 2),
 		mUseNonStandardCode(aUseNonStandardCode)
 	{}
 

@@ -111,7 +111,7 @@ void VtoRouter::_OnSendFailure()
 
 void VtoRouter::CheckForPhysRead()
 {
-	if(mpPhys->CanRead() && mVtoTxBuffer.size() < 10) {	//TODO - Make this configurable or track the size in bytes
+	if(mpPhys->CanRead() && mVtoTxBuffer.size() < 3) {	//TODO - Make this configurable or track the size in bytes
 		mpPhys->AsyncRead(mReadBuffer, mReadBuffer.Size());
 	}
 }

@@ -57,6 +57,9 @@ size_t VtoWriter::Write(const boost::uint8_t* apData,
 		 * Chop up the data into Max(255) segments and add it to the queue.
 		 */
 		this->Commit(apData, num, aChannelId);
+
+		LOG_BLOCK(LEV_INTERPRET, "VtoWriter: " << this->NumBytesAvailable() << " available out of "
+			<< (mMaxVtoChunks * VtoData::MAX_SIZE));
 	}
 
 	/* Tell any listeners that the queue has new data to be read. */
