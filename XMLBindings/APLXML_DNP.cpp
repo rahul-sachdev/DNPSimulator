@@ -353,6 +353,9 @@ void MasterSettings_t :: fromXml(TiXmlNode* pNode){
 	TaskRetryMS = FromString_int(pEm, pEm->Attribute("TaskRetryMS"));
 	IntegrityPeriodMS = FromString_int(pEm, pEm->Attribute("IntegrityPeriodMS"));
 	UseNonStandardVtoTransferCode = FromString_bool(pEm, pEm->Attribute("UseNonStandardVtoTransferCode"));
+
+	const char* attr = pEm->Attribute("VtoWriterQueueSize");
+	VtoWriterQueueSize = FromString_int(pEm, attr ? attr : "0");
 	valid=true;
 };
 void MasterSettings_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid){
@@ -368,6 +371,7 @@ void MasterSettings_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnor
 	pEm->SetAttribute("TaskRetryMS", ToString_int(TaskRetryMS));
 	pEm->SetAttribute("IntegrityPeriodMS", ToString_int(IntegrityPeriodMS));
 	pEm->SetAttribute("UseNonStandardVtoTransferCode", ToString_bool(UseNonStandardVtoTransferCode));
+	pEm->SetAttribute("VtoWriterQueueSize", ToString_int(VtoWriterQueueSize));
 };
 
 ScanList_t::ScanList_t():

@@ -176,6 +176,7 @@ public:
 	int TaskRetryMS;
 	int IntegrityPeriodMS;
 	bool UseNonStandardVtoTransferCode;
+	int VtoWriterQueueSize;
 };
 #ifdef SWIG
 }
