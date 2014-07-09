@@ -49,22 +49,22 @@ bool XmlToConfig::Configure(const APLXML_Base::PhysicalLayerList_t& arList, Filt
 	for (size_t i = 0; i < arList.TCPv4ClientVector.size(); i++ ) {
 		TCPv4Client_t* pCfg = arList.TCPv4ClientVector[i];
 		PhysLayerSettings s(aLevel, pCfg->OpenRetryMS);
-		arMgr.AddTCPv4Client(pCfg->Name, s, pCfg->Address, pCfg->Port);
+		arMgr.AddTCPv4Client(pCfg->Name, s, xml::GetTcpV4ClientSettings(pCfg));
 	}
 	for (size_t i = 0; i < arList.TCPv4ServerVector.size(); i++ ) {
 		TCPv4Server_t* pCfg = arList.TCPv4ServerVector[i];
 		PhysLayerSettings s(aLevel, pCfg->OpenRetryMS);
-		arMgr.AddTCPv4Server(pCfg->Name, s, pCfg->Endpoint, pCfg->Port);
+		arMgr.AddTCPv4Server(pCfg->Name, s, xml::GetTcpV4ServerSettings(pCfg));
 	}
 	for (size_t i = 0; i < arList.TCPv6ClientVector.size(); i++ ) {
 		TCPv6Client_t* pCfg = arList.TCPv6ClientVector[i];
 		PhysLayerSettings s(aLevel, pCfg->OpenRetryMS);
-		arMgr.AddTCPv6Client(pCfg->Name, s, pCfg->Address, pCfg->Port);
+		arMgr.AddTCPv6Client(pCfg->Name, s, xml::GetTcpV6ClientSettings(pCfg));
 	}
 	for (size_t i = 0; i < arList.TCPv6ServerVector.size(); i++ ) {
 		TCPv6Server_t* pCfg = arList.TCPv6ServerVector[i];
 		PhysLayerSettings s(aLevel, pCfg->OpenRetryMS);
-		arMgr.AddTCPv6Server(pCfg->Name, s, pCfg->Endpoint, pCfg->Port);
+		arMgr.AddTCPv6Server(pCfg->Name, s, xml::GetTcpV6ServerSettings(pCfg));
 	}
 	for (size_t i = 0; i < arList.SerialVector.size(); i++ ) {
 		Serial_t* pCfg = arList.SerialVector[i];

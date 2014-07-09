@@ -32,17 +32,15 @@ public:
 	PhysLayerSettings() : LogLevel(LEV_INFO), RetryTimeout(5000), mpObserver(NULL) {}
 
 
-	PhysLayerSettings(FilterLevel aLevel, millis_t aRetryTimeout, IPhysicalLayerObserver* apObserver = NULL, bool aUseKeepAlives = false) :
+	PhysLayerSettings(FilterLevel aLevel, millis_t aRetryTimeout, IPhysicalLayerObserver* apObserver = NULL) :
 		LogLevel(aLevel),
 		RetryTimeout(aRetryTimeout),
-		mpObserver(apObserver),
-		UseKeepAlives(aUseKeepAlives)
+		mpObserver(apObserver)
 	{}
 
 	FilterLevel LogLevel;
 	millis_t RetryTimeout;
 	IPhysicalLayerObserver* mpObserver;
-	bool UseKeepAlives;
 };
 
 }

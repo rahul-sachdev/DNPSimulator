@@ -21,6 +21,7 @@
 
 #include <opendnp3/APL/PhysicalLayerMap.h>
 #include <opendnp3/APL/SerialTypes.h>
+#include <opendnp3/APL/TcpSettings.h>
 
 namespace apl
 {
@@ -37,10 +38,10 @@ public:
 
 	//function for manually adding entires
 
-	void AddTCPv4Client(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort);
-	void AddTCPv4Server(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
-	void AddTCPv6Client(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort);
-	void AddTCPv6Server(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
+	void AddTCPv4Client(const std::string& arName, PhysLayerSettings, TcpSettings);
+	void AddTCPv4Server(const std::string& arName, PhysLayerSettings, TcpSettings);
+	void AddTCPv6Client(const std::string& arName, PhysLayerSettings, TcpSettings);
+	void AddTCPv6Server(const std::string& arName, PhysLayerSettings, TcpSettings);
 	void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
 	void AddPhysicalLayer(const std::string& arName, PhysLayerSettings, IPhysicalLayerAsync*);
 

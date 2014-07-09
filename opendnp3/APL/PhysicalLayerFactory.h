@@ -22,6 +22,7 @@
 #include <opendnp3/APL/Exception.h>
 #include <opendnp3/APL/PhysicalLayerFunctors.h>
 #include <opendnp3/APL/SerialTypes.h>
+#include <opendnp3/APL/TcpSettings.h>
 
 #include <boost/cstdint.hpp>
 #include <map>
@@ -34,17 +35,17 @@ class PhysicalLayerFactory
 public:
 
 	static IPhysicalLayerAsyncFactory GetSerialAsync(SerialSettings s);
-	static IPhysicalLayerAsyncFactory GetTCPv4ClientAsync(std::string aAddress, boost::uint16_t aPort, bool aUseKeepAlives);
-	static IPhysicalLayerAsyncFactory GetTCPv4ServerAsync(std::string aEndpoint, boost::uint16_t aPort, bool aUseKeepAlives);
-	static IPhysicalLayerAsyncFactory GetTCPv6ClientAsync(std::string aAddress, boost::uint16_t aPort, bool aUseKeepAlives);
-	static IPhysicalLayerAsyncFactory GetTCPv6ServerAsync(std::string aEndpoint, boost::uint16_t aPort, bool aUseKeepAlives);
+	static IPhysicalLayerAsyncFactory GetTCPv4ClientAsync(TcpSettings s);
+	static IPhysicalLayerAsyncFactory GetTCPv4ServerAsync(TcpSettings s);
+	static IPhysicalLayerAsyncFactory GetTCPv6ClientAsync(TcpSettings s);
+	static IPhysicalLayerAsyncFactory GetTCPv6ServerAsync(TcpSettings s);
 
 	//normal factory functions
 	static IPhysicalLayerAsync* FGetSerialAsync(SerialSettings s, boost::asio::io_service* apSrv, Logger* apLogger);
-	static IPhysicalLayerAsync* FGetTCPv4ClientAsync(std::string aAddress, boost::uint16_t aPort, bool aUseKeepAlives, boost::asio::io_service* apSrv, Logger* apLogger);
-	static IPhysicalLayerAsync* FGetTCPv4ServerAsync(std::string aEndpoint, boost::uint16_t aPort, bool aUseKeepAlives, boost::asio::io_service* apSrv, Logger* apLogger);
-	static IPhysicalLayerAsync* FGetTCPv6ClientAsync(std::string aAddress, boost::uint16_t aPort, bool aUseKeepAlives, boost::asio::io_service* apSrv, Logger* apLogger);
-	static IPhysicalLayerAsync* FGetTCPv6ServerAsync(std::string aEndpoint, boost::uint16_t aPort, bool aUseKeepAlives, boost::asio::io_service* apSrv, Logger* apLogger);
+	static IPhysicalLayerAsync* FGetTCPv4ClientAsync(TcpSettings s, boost::asio::io_service* apSrv, Logger* apLogger);
+	static IPhysicalLayerAsync* FGetTCPv4ServerAsync(TcpSettings s, boost::asio::io_service* apSrv, Logger* apLogger);
+	static IPhysicalLayerAsync* FGetTCPv6ClientAsync(TcpSettings s, boost::asio::io_service* apSrv, Logger* apLogger);
+	static IPhysicalLayerAsync* FGetTCPv6ServerAsync(TcpSettings s, boost::asio::io_service* apSrv, Logger* apLogger);
 };
 
 }

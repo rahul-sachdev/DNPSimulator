@@ -16,32 +16,42 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __PHYSICAL_LAYER_ASYNC_TCP_CLIENT_H_
-#define __PHYSICAL_LAYER_ASYNC_TCP_CLIENT_H_
+#ifndef __TCP_SETTINGS_H_
+#define __TCP_SETTINGS_H_
 
-#include <opendnp3/APL/PhysicalLayerAsyncBaseTCP.h>
-#include <opendnp3/APL/TcpSettings.h>
-
-#include <boost/asio/ip/tcp.hpp>
+#include <string>
+#include <boost/cstdint.hpp>
 
 namespace apl
 {
 
-class PhysicalLayerAsyncTCPClient : public PhysicalLayerAsyncBaseTCP
-{
-public:
-	PhysicalLayerAsyncTCPClient(Logger* apLogger, boost::asio::io_service* apIOService, const boost::asio::ip::tcp::endpoint& arEndpoint, const TcpSettings& arSettings);
+struct TcpSettings {
+	TcpSettings() :
+		mAddress(),
+		mPort(0),
+		mUseKeepAlives(false),
+		mSendBufferSize(0),
+		mRecvBufferSize(0)
+	{
+	}
 
-	/* Implement the remaining actions */
-	void DoOpen();
-	void DoOpeningClose(); //override this to just close the socket insead of shutting is down too
-	void DoOpenSuccess();
+	TcpSettings(const std::string& aAddress, boost::uint16_t aPort) :
+		mAddress(aAddress),
+		mPort(aPort),
+		mUseKeepAlives(false),
+		mSendBufferSize(0),
+		mRecvBufferSize(0)
+	{
+	}
 
-private:
-	boost::asio::ip::tcp::endpoint mRemoteEndpoint;
-	TcpSettings mSettings;
+	std::string mAddress; // For server, this is the endpoint
+	boost::uint16_t mPort;
+	bool mUseKeepAlives;
+	size_t mSendBufferSize; // 0 indicates to use system default
+	size_t mRecvBufferSize; // 0 indicates to use system default
 };
 
 }
 
 #endif
+

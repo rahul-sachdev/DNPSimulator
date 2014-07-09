@@ -22,6 +22,7 @@
 #include <XMLBindings/APLXML_Base.h>
 #include <opendnp3/APL/PhysicalLayerFunctors.h>
 #include <opendnp3/APL/SerialTypes.h>
+#include <opendnp3/APL/TcpSettings.h>
 
 namespace apl
 {
@@ -45,8 +46,13 @@ public:
 
 int BaudToInt(APLXML_Base::BaudRateEnum aBaud);
 ParityType EnumToParity(APLXML_Base::ParityEnum aParity);
-SerialSettings GetSerialSettings(const APLXML_Base::Serial_t* apCfg);
 FlowType EnumToFlow(APLXML_Base::FlowControlEnum);
+
+SerialSettings GetSerialSettings(const APLXML_Base::Serial_t* apCfg);
+TcpSettings GetTcpV4ClientSettings(const APLXML_Base::TCPv4Client_t* apCfg);
+TcpSettings GetTcpV4ServerSettings(const APLXML_Base::TCPv4Server_t* apCfg);
+TcpSettings GetTcpV6ClientSettings(const APLXML_Base::TCPv6Client_t* apCfg);
+TcpSettings GetTcpV6ServerSettings(const APLXML_Base::TCPv6Server_t* apCfg);
 
 }
 }

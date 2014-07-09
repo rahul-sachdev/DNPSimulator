@@ -31,9 +31,11 @@
 #include <opendnp3/APL/Thread.h>
 #include <opendnp3/APL/Threadable.h>
 #include <opendnp3/APL/TimerSourceASIO.h>
+#include <opendnp3/APL/TcpSettings.h>
 #include <opendnp3/DNP3/LinkRoute.h>
 #include <opendnp3/DNP3/VtoDataInterface.h>
 #include <opendnp3/DNP3/VtoRouterManager.h>
+
 
 #include <map>
 #include <vector>
@@ -76,18 +78,18 @@ public:
 	// All the io_service marshalling now occurs here. It's now safe to add/remove while the manager is running.
 
 	// Adds a TCPv4Client port, excepts if the port already exists
-	void AddTCPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort);
-	void AddTCPv4Client(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort);
+	void AddTCPClient(const std::string& arName, PhysLayerSettings, TcpSettings);
+	void AddTCPv4Client(const std::string& arName, PhysLayerSettings, TcpSettings);
 
 	// Adds a TCPv4Server port, excepts if the port already exists
-	void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
-	void AddTCPv4Server(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
+	void AddTCPServer(const std::string& arName, PhysLayerSettings, TcpSettings);
+	void AddTCPv4Server(const std::string& arName, PhysLayerSettings, TcpSettings);
 
 	// Adds a TCPv6Client port, excepts if the port already exists
-	void AddTCPv6Client(const std::string& arName, PhysLayerSettings, const std::string& arAddr, boost::uint16_t aPort);
+	void AddTCPv6Client(const std::string& arName, PhysLayerSettings, TcpSettings);
 
 	// Adds a TCPv6Server port, excepts if the port already exists
-	void AddTCPv6Server(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, boost::uint16_t aPort);
+	void AddTCPv6Server(const std::string& arName, PhysLayerSettings, TcpSettings);
 
 	// Adds a Serial port, excepts if the port already exists
 	void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);

@@ -19,6 +19,7 @@
 #define __PHYSICAL_LAYER_ASYNC_TCP_SERVER_H_
 
 #include <opendnp3/APL/PhysicalLayerAsyncBaseTCP.h>
+#include <opendnp3/APL/TcpSettings.h>
 
 #include <boost/asio/ip/tcp.hpp>
 
@@ -28,7 +29,7 @@ namespace apl
 class PhysicalLayerAsyncTCPServer : public PhysicalLayerAsyncBaseTCP
 {
 public:
-	PhysicalLayerAsyncTCPServer(Logger*, boost::asio::io_service* apIOService, const boost::asio::ip::tcp::endpoint& arEndpoint, const std::string& arAddress, bool aUseKeepAlives = false);
+	PhysicalLayerAsyncTCPServer(Logger*, boost::asio::io_service* apIOService, const boost::asio::ip::tcp::endpoint& arEndpoint, const TcpSettings& arSettings);
 
 	/* Implement the remaining actions */
 	void DoOpen();
@@ -43,7 +44,7 @@ private:
 	boost::asio::ip::tcp::endpoint mRemoteEndpoint;
 
 	boost::asio::ip::tcp::acceptor mAcceptor;
-	bool mUseKeepAlives;
+	TcpSettings mSettings;
 };
 
 }

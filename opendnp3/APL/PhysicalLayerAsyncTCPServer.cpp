@@ -33,16 +33,16 @@ using namespace std;
 namespace apl
 {
 
-PhysicalLayerAsyncTCPServer::PhysicalLayerAsyncTCPServer(Logger* apLogger, boost::asio::io_service* apIOService, const boost::asio::ip::tcp::endpoint& arEndpoint, const std::string& arAddress, bool aUseKeepAlives)
+PhysicalLayerAsyncTCPServer::PhysicalLayerAsyncTCPServer(Logger* apLogger, boost::asio::io_service* apIOService, const boost::asio::ip::tcp::endpoint& arEndpoint, const TcpSettings& arSettings)
 	: PhysicalLayerAsyncBaseTCP(apLogger, apIOService)
 	, mLocalEndpoint(arEndpoint)
 	, mAcceptor(*apIOService)
-	, mUseKeepAlives(aUseKeepAlives)
+	, mSettings(arSettings)
 {
 	boost::system::error_code ec;
-	boost::asio::ip::address addr = ResolveAddress(arAddress, ec);
+	boost::asio::ip::address addr = ResolveAddress(mSettings.mAddress, ec);
 	if (ec) {
-		throw ArgumentException(LOCATION, "endpoint: " + arAddress + ", " + ec.message());
+		throw ArgumentException(LOCATION, "endpoint: " + mSettings.mAddress + ", " + ec.message());
 	}
 
 	mLocalEndpoint.address(addr);
@@ -93,10 +93,24 @@ void PhysicalLayerAsyncTCPServer::DoOpeningClose()
 void PhysicalLayerAsyncTCPServer::DoOpenSuccess()
 {
 	LOG_BLOCK(LEV_INFO, "Accepted connection from: " << mRemoteEndpoint);
-	if (mUseKeepAlives) {
-		LOG_BLOCK(LEV_DEBUG, "Enabling keepalives on the socket connection to " << mRemoteEndpoint);
-		boost::asio::socket_base::keep_alive option(true);
+	if (mSettings.mUseKeepAlives) {
+			boost::asio::socket_base::keep_alive option(true);
+			mSocket.set_option(option);
+			LOG_BLOCK(LEV_DEBUG, "Enabled keepalives on the socket connection to " << mRemoteEndpoint);
+	}
+
+	if (mSettings.mSendBufferSize > 0) {
+		boost::asio::socket_base::send_buffer_size option(mSettings.mSendBufferSize);
 		mSocket.set_option(option);
+		mSocket.get_option(option);
+		LOG_BLOCK(LEV_DEBUG, "Set send buffer size to " << option.value());
+	}
+
+	if (mSettings.mRecvBufferSize > 0) {
+		boost::asio::socket_base::receive_buffer_size option(mSettings.mRecvBufferSize);
+		mSocket.set_option(option);
+		mSocket.get_option(option);
+		LOG_BLOCK(LEV_DEBUG, "Set receive buffer size to " << option.value());
 	}
 }
 

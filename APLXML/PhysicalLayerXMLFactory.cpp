@@ -56,26 +56,22 @@ IPhysicalLayerAsyncFactory PhysicalLayerXMLFactory :: GetAsync(const APLXML_Base
 
 IPhysicalLayerAsyncFactory PhysicalLayerXMLFactory :: GetAsync(const APLXML_Base::TCPv4Client_t* apCfg)
 {
-	boost::uint16_t port = boost::numeric::converter<boost::uint16_t, int>::convert(apCfg->Port);
-	return PhysicalLayerFactory::GetTCPv4ClientAsync(apCfg->Address, port, false);
+	return PhysicalLayerFactory::GetTCPv4ClientAsync(GetTcpV4ClientSettings(apCfg));
 }
 
 IPhysicalLayerAsyncFactory PhysicalLayerXMLFactory :: GetAsync(const APLXML_Base::TCPv4Server_t* apCfg)
 {
-	boost::uint16_t port = boost::numeric::converter<boost::uint16_t, int>::convert(apCfg->Port);
-	return PhysicalLayerFactory::GetTCPv4ServerAsync(apCfg->Endpoint, port, false);
+	return PhysicalLayerFactory::GetTCPv4ServerAsync(GetTcpV4ServerSettings(apCfg));
 }
 
 IPhysicalLayerAsyncFactory PhysicalLayerXMLFactory :: GetAsync(const APLXML_Base::TCPv6Client_t* apCfg)
 {
-	boost::uint16_t port = boost::numeric::converter<boost::uint16_t, int>::convert(apCfg->Port);
-	return PhysicalLayerFactory::GetTCPv6ClientAsync(apCfg->Address, port, false);
+	return PhysicalLayerFactory::GetTCPv6ClientAsync(GetTcpV6ClientSettings(apCfg));
 }
 
 IPhysicalLayerAsyncFactory PhysicalLayerXMLFactory :: GetAsync(const APLXML_Base::TCPv6Server_t* apCfg)
 {
-	boost::uint16_t port = boost::numeric::converter<boost::uint16_t, int>::convert(apCfg->Port);
-	return PhysicalLayerFactory::GetTCPv6ServerAsync(apCfg->Endpoint, port, false);
+	return PhysicalLayerFactory::GetTCPv6ServerAsync(GetTcpV6ServerSettings(apCfg));
 }
 
 SerialSettings GetSerialSettings(const APLXML_Base::Serial_t* apCfg)
@@ -128,6 +124,50 @@ FlowType EnumToFlow(APLXML_Base::FlowControlEnum aFlow)
 	}
 	assert(false);
 	return FLOW_NONE;
+}
+
+TcpSettings GetTcpV4ClientSettings(const APLXML_Base::TCPv4Client_t* apCfg)
+{
+	TcpSettings s;
+	s.mAddress = apCfg->Address;
+	s.mPort = boost::numeric::converter<boost::uint16_t, int>::convert(apCfg->Port);
+	s.mUseKeepAlives = apCfg->UseKeepAlives;
+	s.mSendBufferSize = boost::numeric::converter<size_t, int>::convert(apCfg->SendBufferSize);
+	s.mRecvBufferSize = boost::numeric::converter<size_t, int>::convert(apCfg->RecvBufferSize);
+	return s;
+}
+
+TcpSettings GetTcpV4ServerSettings(const APLXML_Base::TCPv4Server_t* apCfg)
+{
+	TcpSettings s;
+	s.mAddress = apCfg->Endpoint;
+	s.mPort = boost::numeric::converter<boost::uint16_t, int>::convert(apCfg->Port);
+	s.mUseKeepAlives = apCfg->UseKeepAlives;
+	s.mSendBufferSize = boost::numeric::converter<size_t, int>::convert(apCfg->SendBufferSize);
+	s.mRecvBufferSize = boost::numeric::converter<size_t, int>::convert(apCfg->RecvBufferSize);
+	return s;
+}
+
+TcpSettings GetTcpV6ClientSettings(const APLXML_Base::TCPv6Client_t* apCfg)
+{
+	TcpSettings s;
+	s.mAddress = apCfg->Address;
+	s.mPort = boost::numeric::converter<boost::uint16_t, int>::convert(apCfg->Port);
+	s.mUseKeepAlives = apCfg->UseKeepAlives;
+	s.mSendBufferSize = boost::numeric::converter<size_t, int>::convert(apCfg->SendBufferSize);
+	s.mRecvBufferSize = boost::numeric::converter<size_t, int>::convert(apCfg->RecvBufferSize);
+	return s;
+}
+
+TcpSettings GetTcpV6ServerSettings(const APLXML_Base::TCPv6Server_t* apCfg)
+{
+	TcpSettings s;
+	s.mAddress = apCfg->Endpoint;
+	s.mPort = boost::numeric::converter<boost::uint16_t, int>::convert(apCfg->Port);
+	s.mUseKeepAlives = apCfg->UseKeepAlives;
+	s.mSendBufferSize = boost::numeric::converter<size_t, int>::convert(apCfg->SendBufferSize);
+	s.mRecvBufferSize = boost::numeric::converter<size_t, int>::convert(apCfg->RecvBufferSize);
+	return s;
 }
 
 }

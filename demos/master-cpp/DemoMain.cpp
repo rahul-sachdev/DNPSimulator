@@ -116,8 +116,7 @@ int main(int argc, char* argv[])
 	mgr.AddTCPv4Client(
 		"tcpclient",
 		PhysLayerSettings(LOG_LEVEL, 3000),
-		remote_ip.c_str(),
-		remote_port
+		TcpSettings(remote_ip.c_str(), remote_port)
 	);
 
 	// The master config object for a master. The default are

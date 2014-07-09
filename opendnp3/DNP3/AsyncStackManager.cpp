@@ -79,38 +79,38 @@ std::vector<std::string> AsyncStackManager::GetPortNames()
 	return GetKeys<ChannelToChannelMap, string>(mChannelNameToChannel);
 }
 
-void AsyncStackManager::AddTCPClient(const std::string& arName, PhysLayerSettings aSettings, const std::string& arAddr, boost::uint16_t aPort)
+void AsyncStackManager::AddTCPClient(const std::string& arName, PhysLayerSettings aSettings, TcpSettings aTcp)
 {
-	AddTCPv4Client(arName, aSettings, arAddr, aPort);
+	AddTCPv4Client(arName, aSettings, aTcp);
 }
 
-void AsyncStackManager::AddTCPv4Client(const std::string& arName, PhysLayerSettings aSettings, const std::string& arAddr, boost::uint16_t aPort)
+void AsyncStackManager::AddTCPv4Client(const std::string& arName, PhysLayerSettings aSettings, TcpSettings aTcp)
 {
 	this->ThrowIfAlreadyShutdown();
-	mMgr.AddTCPv4Client(arName, aSettings, arAddr, aPort);
+	mMgr.AddTCPv4Client(arName, aSettings, aTcp);
 }
 
-void AsyncStackManager::AddTCPServer(const std::string& arName, PhysLayerSettings aSettings, const std::string& arEndpoint, boost::uint16_t aPort)
+void AsyncStackManager::AddTCPServer(const std::string& arName, PhysLayerSettings aSettings, TcpSettings aTcp)
 {
-	AddTCPv4Server(arName, aSettings, arEndpoint, aPort);
+	AddTCPv4Server(arName, aSettings, aTcp);
 }
 
-void AsyncStackManager::AddTCPv4Server(const std::string& arName, PhysLayerSettings aSettings, const std::string& arEndpoint, boost::uint16_t aPort)
-{
-	this->ThrowIfAlreadyShutdown();
-	mMgr.AddTCPv4Server(arName, aSettings, arEndpoint, aPort);
-}
-
-void AsyncStackManager::AddTCPv6Client(const std::string& arName, PhysLayerSettings aSettings, const std::string& arAddr, boost::uint16_t aPort)
+void AsyncStackManager::AddTCPv4Server(const std::string& arName, PhysLayerSettings aSettings, TcpSettings aTcp)
 {
 	this->ThrowIfAlreadyShutdown();
-	mMgr.AddTCPv6Client(arName, aSettings, arAddr, aPort);
+	mMgr.AddTCPv4Server(arName, aSettings, aTcp);
 }
 
-void AsyncStackManager::AddTCPv6Server(const std::string& arName, PhysLayerSettings aSettings, const std::string& arEndpoint, boost::uint16_t aPort)
+void AsyncStackManager::AddTCPv6Client(const std::string& arName, PhysLayerSettings aSettings, TcpSettings aTcp)
 {
 	this->ThrowIfAlreadyShutdown();
-	mMgr.AddTCPv6Server(arName, aSettings, arEndpoint, aPort);
+	mMgr.AddTCPv6Client(arName, aSettings, aTcp);
+}
+
+void AsyncStackManager::AddTCPv6Server(const std::string& arName, PhysLayerSettings aSettings, TcpSettings aTcp)
+{
+	this->ThrowIfAlreadyShutdown();
+	mMgr.AddTCPv6Server(arName, aSettings, aTcp);
 }
 
 void AsyncStackManager::AddSerial(const std::string& arName, PhysLayerSettings aSettings, SerialSettings aSerial)

@@ -115,8 +115,7 @@ int main(int argc, char* argv[])
 	mgr.AddTCPv4Server(
 		"tcpserver",
 		PhysLayerSettings(LOG_LEVEL, 3000),
-		local_ip,
-		local_port
+		TcpSettings(local_ip, local_port)
 	);
 
 	// The master config object for a slave. The default are

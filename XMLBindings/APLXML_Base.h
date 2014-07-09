@@ -78,6 +78,9 @@ public:
 	void fromXml(TiXmlNode* pNode);
 	string Address;
 	int Port;
+	bool UseKeepAlives;
+	int SendBufferSize;
+	int RecvBufferSize;
 };
 
 class TCPv4Server_t : public APLXML_Base::PhysicalLayerDescriptor_t{
@@ -86,6 +89,9 @@ public:
 	void fromXml(TiXmlNode* pNode);
 	string Endpoint;
 	int Port;
+	bool UseKeepAlives;
+	int SendBufferSize;
+	int RecvBufferSize;
 };
 
 class TCPv6Client_t : public APLXML_Base::PhysicalLayerDescriptor_t{
@@ -94,6 +100,9 @@ public:
 	void fromXml(TiXmlNode* pNode);
 	string Address;
 	int Port;
+	bool UseKeepAlives;
+	int SendBufferSize;
+	int RecvBufferSize;
 };
 class TCPv6Server_t : public APLXML_Base::PhysicalLayerDescriptor_t{
 public:
@@ -101,6 +110,9 @@ public:
 	void fromXml(TiXmlNode* pNode);
 	string Endpoint;
 	int Port;
+	bool UseKeepAlives;
+	int SendBufferSize;
+	int RecvBufferSize;
 };
 
 class Log_t : public IXMLDataBound {

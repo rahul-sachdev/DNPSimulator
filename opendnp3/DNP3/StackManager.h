@@ -24,6 +24,7 @@
 #include <opendnp3/APL/LogToFile.h>
 #include <opendnp3/APL/PhysLayerSettings.h>
 #include <opendnp3/APL/SerialTypes.h>
+#include <opendnp3/APL/TcpSettings.h>
 #include <opendnp3/DNP3/MasterStackConfig.h>
 #include <opendnp3/DNP3/SlaveStackConfig.h>
 #include <opendnp3/DNP3/VtoDataInterface.h>
@@ -57,33 +58,27 @@ public:
 
 	void AddTCPClient(const std::string& arName,
 	                  PhysLayerSettings aPhys,
-	                  const std::string& arAddr,
-	                  boost::uint16_t aPort);
+	                  TcpSettings aTcp);
 
 	void AddTCPv4Client(const std::string& arName,
 	                    PhysLayerSettings aPhys,
-	                    const std::string& arAddr,
-	                    boost::uint16_t aPort);
+	                    TcpSettings aTcp);
 
 	void AddTCPServer(const std::string& arName,
 	                  PhysLayerSettings aPhys,
-	                  const std::string& arEndpoint,
-	                  boost::uint16_t aPort);
+	                  TcpSettings aTcp);
 
 	void AddTCPv4Server(const std::string& arName,
 	                    PhysLayerSettings aPhys,
-	                    const std::string& arEndpoint,
-	                    boost::uint16_t aPort);
+	                    TcpSettings aTcp);
 
 	void AddTCPv6Client(const std::string& arName,
 	                    PhysLayerSettings aPhys,
-	                    const std::string& arAddr,
-	                    boost::uint16_t aPort);
+	                    TcpSettings aTcp);
 
 	void AddTCPv6Server(const std::string& arName,
 	                    PhysLayerSettings aPhys,
-	                    const std::string& arEndpoint,
-	                    boost::uint16_t aPort);
+	                    TcpSettings aTcp);
 
 	void AddSerial(const std::string& arName,
 	               PhysLayerSettings aPhys,

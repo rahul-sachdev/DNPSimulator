@@ -28,16 +28,15 @@ namespace apl
 class PhysicalLayerAsyncTCPv6Server : public PhysicalLayerAsyncTCPServer
 {
 public:
-	PhysicalLayerAsyncTCPv6Server(Logger* apLogger, boost::asio::io_service* apIOService, const std::string& arAddress, boost::uint16_t aPort, bool aUseKeepAlives = false)
+	PhysicalLayerAsyncTCPv6Server(Logger* apLogger, boost::asio::io_service* apIOService, const TcpSettings& arSettings)
 		: PhysicalLayerAsyncTCPServer(
 			apLogger,
 			apIOService,
 			boost::asio::ip::tcp::endpoint(
 				boost::asio::ip::tcp::v6(),
-				aPort
+				arSettings.mPort
 			),
-			arAddress,
-			aUseKeepAlives
+			arSettings
 		)
 	{}
 };

@@ -175,8 +175,25 @@ void TCPv4Client_t :: fromXml(TiXmlNode* pNode){
 	this->APLXML_Base::PhysicalLayerDescriptor_t::fromXml(pNode);
 	Address = FromString_string(pEm, pEm->Attribute("Address"));
 	Port = FromString_int(pEm, pEm->Attribute("Port"));
+
+	UseKeepAlives = false;
+	if (pEm->Attribute("UseKeepAlives")) {
+		UseKeepAlives = FromString_bool(pEm, pEm->Attribute("UseKeepAlives"));
+	}
+
+	SendBufferSize = 0;
+	if (pEm->Attribute("SendBufferSize")) {
+		SendBufferSize = FromString_int(pEm, pEm->Attribute("SendBufferSize"));
+	}
+
+	RecvBufferSize = 0;
+	if (pEm->Attribute("RecvBufferSize")) {
+		RecvBufferSize = FromString_int(pEm, pEm->Attribute("RecvBufferSize"));
+	}
+
 	valid=true;
 };
+
 void TCPv4Client_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid){
 	if(!aIgnoreValid && !valid) return;
 	TiXmlElement * pEm;
@@ -189,6 +206,9 @@ void TCPv4Client_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreVa
 	this->APLXML_Base::PhysicalLayerDescriptor_t::toXml(pEm, false, aIgnoreValid);
 	pEm->SetAttribute("Address", ToString_string(Address));
 	pEm->SetAttribute("Port", ToString_int(Port));
+	pEm->SetAttribute("UseKeepAlives", ToString_bool(UseKeepAlives));
+	pEm->SetAttribute("SendBufferSize", ToString_int(SendBufferSize));
+	pEm->SetAttribute("RecvBufferSize", ToString_int(RecvBufferSize));
 };
 
 void TCPv4Server_t :: fromXml(TiXmlNode* pNode){
@@ -199,8 +219,25 @@ void TCPv4Server_t :: fromXml(TiXmlNode* pNode){
 	this->APLXML_Base::PhysicalLayerDescriptor_t::fromXml(pNode);
 	Endpoint = FromString_string(pEm, pEm->Attribute("Endpoint"));
 	Port = FromString_int(pEm, pEm->Attribute("Port"));
+
+	UseKeepAlives = false;
+	if (pEm->Attribute("UseKeepAlives")) {
+		UseKeepAlives = FromString_bool(pEm, pEm->Attribute("UseKeepAlives"));
+	}
+
+	SendBufferSize = 0;
+	if (pEm->Attribute("SendBufferSize")) {
+		SendBufferSize = FromString_int(pEm, pEm->Attribute("SendBufferSize"));
+	}
+
+	RecvBufferSize = 0;
+	if (pEm->Attribute("RecvBufferSize")) {
+		RecvBufferSize = FromString_int(pEm, pEm->Attribute("RecvBufferSize"));
+	}
+
 	valid=true;
 };
+
 void TCPv4Server_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid){
 	if(!aIgnoreValid && !valid) return;
 	TiXmlElement * pEm;
@@ -213,6 +250,9 @@ void TCPv4Server_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreVa
 	this->APLXML_Base::PhysicalLayerDescriptor_t::toXml(pEm, false, aIgnoreValid);
 	pEm->SetAttribute("Endpoint", ToString_string(Endpoint));
 	pEm->SetAttribute("Port", ToString_int(Port));
+	pEm->SetAttribute("UseKeepAlives", ToString_bool(UseKeepAlives));
+	pEm->SetAttribute("SendBufferSize", ToString_int(SendBufferSize));
+	pEm->SetAttribute("RecvBufferSize", ToString_int(RecvBufferSize));
 };
 
 void TCPv6Client_t :: fromXml(TiXmlNode* pNode){
@@ -223,8 +263,25 @@ void TCPv6Client_t :: fromXml(TiXmlNode* pNode){
 	this->APLXML_Base::PhysicalLayerDescriptor_t::fromXml(pNode);
 	Address = FromString_string(pEm, pEm->Attribute("Address"));
 	Port = FromString_int(pEm, pEm->Attribute("Port"));
+
+	UseKeepAlives = false;
+	if (pEm->Attribute("UseKeepAlives")) {
+		UseKeepAlives = FromString_bool(pEm, pEm->Attribute("UseKeepAlives"));
+	}
+
+	SendBufferSize = 0;
+	if (pEm->Attribute("SendBufferSize")) {
+		SendBufferSize = FromString_int(pEm, pEm->Attribute("SendBufferSize"));
+	}
+
+	RecvBufferSize = 0;
+	if (pEm->Attribute("RecvBufferSize")) {
+		RecvBufferSize = FromString_int(pEm, pEm->Attribute("RecvBufferSize"));
+	}
+
 	valid=true;
 };
+
 void TCPv6Client_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid){
 	if(!aIgnoreValid && !valid) return;
 	TiXmlElement * pEm;
@@ -237,6 +294,9 @@ void TCPv6Client_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreVa
 	this->APLXML_Base::PhysicalLayerDescriptor_t::toXml(pEm, false, aIgnoreValid);
 	pEm->SetAttribute("Address", ToString_string(Address));
 	pEm->SetAttribute("Port", ToString_int(Port));
+	pEm->SetAttribute("UseKeepAlives", ToString_bool(UseKeepAlives));
+	pEm->SetAttribute("SendBufferSize", ToString_int(SendBufferSize));
+	pEm->SetAttribute("RecvBufferSize", ToString_int(RecvBufferSize));
 };
 
 void TCPv6Server_t :: fromXml(TiXmlNode* pNode){
@@ -247,6 +307,22 @@ void TCPv6Server_t :: fromXml(TiXmlNode* pNode){
 	this->APLXML_Base::PhysicalLayerDescriptor_t::fromXml(pNode);
 	Endpoint = FromString_string(pEm, pEm->Attribute("Endpoint"));
 	Port = FromString_int(pEm, pEm->Attribute("Port"));
+
+	UseKeepAlives = false;
+	if (pEm->Attribute("UseKeepAlives")) {
+		UseKeepAlives = FromString_bool(pEm, pEm->Attribute("UseKeepAlives"));
+	}
+
+	SendBufferSize = 0;
+	if (pEm->Attribute("SendBufferSize")) {
+		SendBufferSize = FromString_int(pEm, pEm->Attribute("SendBufferSize"));
+	}
+
+	RecvBufferSize = 0;
+	if (pEm->Attribute("RecvBufferSize")) {
+		RecvBufferSize = FromString_int(pEm, pEm->Attribute("RecvBufferSize"));
+	}
+
 	valid=true;
 };
 void TCPv6Server_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid){
@@ -261,6 +337,9 @@ void TCPv6Server_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreVa
 	this->APLXML_Base::PhysicalLayerDescriptor_t::toXml(pEm, false, aIgnoreValid);
 	pEm->SetAttribute("Endpoint", ToString_string(Endpoint));
 	pEm->SetAttribute("Port", ToString_int(Port));
+	pEm->SetAttribute("UseKeepAlives", ToString_bool(UseKeepAlives));
+	pEm->SetAttribute("SendBufferSize", ToString_int(SendBufferSize));
+	pEm->SetAttribute("RecvBufferSize", ToString_int(RecvBufferSize));
 };
 
 void Log_t :: fromXml(TiXmlNode* pNode){

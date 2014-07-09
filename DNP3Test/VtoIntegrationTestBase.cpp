@@ -43,8 +43,8 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 	mpLtf(aLogToFile ? new LogToFile(&mLog, "integration.log", true) : NULL),
 	testObj(),
 	timerSource(testObj.GetService()),
-	vtoClient(mLog.GetLogger(level, "local-tcp-client"), testObj.GetService(), "127.0.0.1", port + 20),
-	vtoServer(mLog.GetLogger(level, "loopback-tcp-server"), testObj.GetService(), "0.0.0.0", port + 10),
+	vtoClient(mLog.GetLogger(level, "local-tcp-client"), testObj.GetService(), TcpSettings("127.0.0.1", port + 20)),
+	vtoServer(mLog.GetLogger(level, "loopback-tcp-server"), testObj.GetService(), TcpSettings("0.0.0.0", port + 10)),
 	manager(mLog.GetLogger(level, "manager")),
 	tcpPipe(mLog.GetLogger(level,  "pipe"), manager.GetIOService(), port)
 {
@@ -73,9 +73,9 @@ VtoIntegrationTestBase::VtoIntegrationTestBase(
 	std::string clientSideOfStack = clientOnSlave ? "slave" : "master";
 	std::string serverSideOfStack = clientOnSlave ? "master" : "slave";
 
-	manager.AddTCPv4Client("vto-tcp-client", PhysLayerSettings(), "localhost", port + 10);
+	manager.AddTCPv4Client("vto-tcp-client", PhysLayerSettings(), TcpSettings("localhost", port + 10));
 	manager.StartVtoRouter("vto-tcp-client", clientSideOfStack, VtoRouterSettings(88, false, false, 1000));
-	manager.AddTCPv4Server("vto-tcp-server", PhysLayerSettings(), "localhost", port + 20);
+	manager.AddTCPv4Server("vto-tcp-server", PhysLayerSettings(), TcpSettings("localhost", port + 20));
 	manager.StartVtoRouter("vto-tcp-server", serverSideOfStack, VtoRouterSettings(88, true, false, 1000));
 }
 
