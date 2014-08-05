@@ -406,6 +406,7 @@ aplheaders_HEADERS = \
 	opendnp3/APL/SubjectBase.h \
 	opendnp3/APL/SuspendTimerSource.h \
 	opendnp3/APL/SyncVar.h \
+	opendnp3/APL/TcpSettings.h \
 	opendnp3/APL/Threadable.h \
 	opendnp3/APL/ThreadBase.h \
 	opendnp3/APL/ThreadBoost.h \
