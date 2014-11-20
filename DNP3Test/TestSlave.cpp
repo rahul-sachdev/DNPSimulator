@@ -141,13 +141,25 @@ BOOST_AUTO_TEST_CASE(WriteIINEnabled)
 	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 04");
 }
 
+BOOST_AUTO_TEST_CASE(WriteIINNeedTime)
+{
+	SlaveConfig cfg;
+	cfg.mDisableUnsol = true;
+	cfg.mAllowTimeSync = true;
+	SlaveTestObject t(cfg);
+	t.slave.OnLowerLayerUp();
+
+	t.SendToSlave("C0 02 50 01 00 04 04 00");
+	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00");
+}
+
 BOOST_AUTO_TEST_CASE(WriteIINWrongBit)
 {
 	SlaveConfig cfg; cfg.mDisableUnsol = true;
 	SlaveTestObject t(cfg);
 	t.slave.OnLowerLayerUp();
 
-	t.SendToSlave("C0 02 50 01 00 04 04 01");
+	t.SendToSlave("C0 02 50 01 01 00 80 00 80 01");
 	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 04");
 }
 
@@ -349,11 +361,9 @@ BOOST_AUTO_TEST_CASE(ReadClass1)
 
 	t.SendToSlave("C0 01 3C 02 06");
 
-	/*
-	 * The indices should be in reverse-order from how they were
-	 * added, but the values for a given index should be in the same
-	 * order.
-	 */
+	// The indices should be in reverse-order from how they were
+	// added, but the values for a given index should be in the same
+	// order.
 	BOOST_REQUIRE_EQUAL(t.Read(), "E0 81 80 00 20 01 17 05 10 01 87 09 00 00 17 01 34 12 00 00 05 01 22 22 00 00 05 01 33 33 00 00 05 01 44 44 00 00");
 
 	t.SendToSlave("C0 01 3C 02 06");			// Repeat read class 1
@@ -384,10 +394,9 @@ BOOST_AUTO_TEST_CASE(ReadClass1TimeOrdered)
 		Analog a3(0x3333, AQ_ONLINE);
 		a3.SetTime(TimeStamp_t(15));
 
-		/*
-		 * Expected order in packet should be:
-		 * a2 -> a0 -> a3 -> a1
-		 */
+
+		// Expected order in packet should be:
+		// a2 -> a0 -> a3 -> a1
 		t.db.Update(a0, 0x10);
 		t.db.Update(a1, 0x10);
 		t.db.Update(a2, 0x10);
@@ -396,11 +405,9 @@ BOOST_AUTO_TEST_CASE(ReadClass1TimeOrdered)
 
 	t.SendToSlave("C0 01 3C 02 06");
 
-	/*
-	 * The indices should be in reverse-order from how they were
-	 * added, but the values for a given index should be in the same
-	 * order.
-	 */
+	// The indices should be in reverse-order from how they were
+	// added, but the values for a given index should be in the same
+	// order.
 	BOOST_REQUIRE_EQUAL(t.Read(), "E0 81 80 00 20 01 17 04 10 01 11 11 00 00 10 01 22 22 00 00 10 01 33 33 00 00 10 01 44 44 00 00");
 
 	t.SendToSlave("C0 01 3C 02 06");			// Repeat read class 1
@@ -502,7 +509,7 @@ BOOST_AUTO_TEST_CASE(UnsolDataWithZeroLenObjectGroup)
 
 	t.db.Configure(DT_SETPOINT_STATUS, 2);
 	t.db.Configure(DT_CONTROL_STATUS, 2);
-	
+
 	// do a transaction before the layer comes online to prove that the null transaction
 	// is occuring before unsol data is sent
 	{
@@ -652,7 +659,7 @@ BOOST_AUTO_TEST_CASE(UnsolDataWithZeroLenObjectGroup)
 		t.slave.GetDataObserver()->Update(Counter(0,     CQ_ONLINE), 7);
 	}
 	BOOST_REQUIRE(t.mts.DispatchOne());
-	
+
 	// Bring up the app layer
 	t.slave.OnLowerLayerUp();
 
@@ -661,7 +668,7 @@ BOOST_AUTO_TEST_CASE(UnsolDataWithZeroLenObjectGroup)
 
 	// Receive the DEVICE_RESTART unsol message
 	BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
-	
+
 	// Response to disabling sponatenous messages
 	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00");
 
@@ -670,7 +677,7 @@ BOOST_AUTO_TEST_CASE(UnsolDataWithZeroLenObjectGroup)
 
 	// Function not supported
 	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 01");
-	
+
 	// Write
 	t.SendToSlave("C1 02 50 01 00 07 07 00");
 
@@ -1607,12 +1614,12 @@ BOOST_AUTO_TEST_CASE(ReadByRangeHeader)
 
 	{
 		Transaction tr(&t.db);
-		t.db.Update(Analog(42, AQ_ONLINE), 5);		
+		t.db.Update(Analog(42, AQ_ONLINE), 5);
 		t.db.Update(Analog(41, AQ_ONLINE), 6);
 	}
 
 	t.SendToSlave("C0 01 1E 02 00 05 06"); // read 30 var 2, [05 : 06]
-	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 1E 02 00 05 06 01 2A 00 01 29 00"); 
+	BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 1E 02 00 05 06 01 2A 00 01 29 00");
 }
 
 template <class PointType, class T>

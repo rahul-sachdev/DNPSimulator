@@ -354,6 +354,14 @@ void Slave::HandleWriteIIN(HeaderReadIterator& arHdr)
 				}
 				break;
 			}
+
+		case IINI_NEED_TIME:
+			mpTimeTimer->Cancel();
+			mpTimeTimer = NULL;
+			mIIN.SetNeedTime(false);
+			LOG_BLOCK(LEV_INFO, "Master forced clear time needed flag");
+			break;
+
 		default:
 			mRspIIN.SetParameterError(true);
 			ERROR_BLOCK(LEV_WARNING, "", SERR_INVALID_IIN_WRITE);
