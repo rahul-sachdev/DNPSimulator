@@ -137,7 +137,7 @@ public:
 		SetQuality(aQuality);
 	}
 
-	typedef boost::uint8_t ValueType;
+	typedef boost::uint32_t ValueType;
 	typedef CounterQuality QualityType;
 	typedef QualityConverter<CounterQualInfo> QualConverter;
 

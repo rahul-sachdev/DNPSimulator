@@ -36,9 +36,9 @@ void DOTerminalExtension::_BindToTerminal(ITerminal* apTerminal)
 
 	cmd.mName = "c";
 	oss.str("");
-	oss << "queue c <index> <0|1> <quality: #|" << Counter::QualConverter::GetAllSymbols() << ">";
+	oss << "queue c <index> <#.#> <quality: #|" << Counter::QualConverter::GetAllSymbols() << ">";
 	cmd.mUsage = oss.str();
-	cmd.mDesc = "Queues an counter value into the transaction buffer";
+	cmd.mDesc = "Queues a counter value into the transaction buffer";
 	cmd.mHandler = boost::bind(&DOTerminalExtension::HandleQueueCounter, this, _1);
 	apTerminal->BindCommand(cmd, "queue c");
 

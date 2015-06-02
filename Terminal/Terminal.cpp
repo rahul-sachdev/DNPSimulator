@@ -77,6 +77,14 @@ void Terminal::InitCmdHandlers()
 		quit.mDesc = "Terminates the program";
 
 		this->BindCommand(quit, "quit");
+
+		CommandNode exit;
+		exit.mName = "exit";
+		exit.mHandler = boost::bind(&Terminal::HandleQuit, this, _1);
+		exit.mUsage = "exit";
+		exit.mDesc = "Terminates the program (alias for quit)";
+
+		this->BindCommand(exit, "exit");
 	}
 	else {
 
