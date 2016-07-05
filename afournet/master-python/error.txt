@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "master_demo.py", line 123, in <module>
+    main()
+  File "master_demo.py", line 87, in main
+    stack_manager.AddTCPv4Client('tcpclient', phys_layer_settings, '127.0.0.1', 4999)
+  File "/usr/lib/python2.7/dist-packages/opendnp3/pyopendnp3.py", line 2055, in AddTCPv4Client
+    def AddTCPv4Client(self, *args): return _pyopendnp3.StackManager_AddTCPv4Client(self, *args)
+TypeError: StackManager_AddTCPv4Client() takes exactly 4 arguments (5 given)
